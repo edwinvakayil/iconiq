@@ -8,7 +8,7 @@ const CommentBlock = () => {
         <div className="flex items-center gap-2">
           <Avatar size="sm">
             <AvatarImage
-              alt="Edwin Vakayil, the author of Lucidwave"
+              alt="Edwin Vakayil, the author of lucidwave"
               className="select-none"
               src="https://avatars.githubusercontent.com/u/180170746?v=4"
             />
@@ -26,7 +26,7 @@ const CommentBlock = () => {
             >
               edwin vakayil
             </a>
-            , creator of Lucidwave
+            , creator of lucidwave
           </p>
         </div>
         <CommentButtonClient />

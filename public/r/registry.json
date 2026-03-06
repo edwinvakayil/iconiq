@@ -1,6 +1,6 @@
 {
   "$schema": "https://ui.shadcn.com/schema/registry.json",
-  "name": "Lucidwave",
+  "name": "lucidwave",
   "homepage": "https://lucidwave.vercel.app",
   "items": [
     {

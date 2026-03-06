@@ -1,8 +1,8 @@
-# Lucidwave
+# lucidwave
 
 Animated React icon library. 350+ copy-paste ready icons built with [Motion](https://motion.dev) and based on [Lucide](https://lucide.dev).
 
-![Lucidwave — Animated React Icons](./public/og.png)
+![lucidwave — Animated React Icons](./public/og.png)
 
 **[→ Live demo](https://lucidwave.vercel.app)**
 
@@ -51,7 +51,7 @@ Icons are SVG components. Pass `className`, `size`, `color`, and other standard 
 
 ## Contributing
 
-Contributions are welcome. Please read [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines. Lucidwave only accepts icons based on Lucide; custom or third-party icon sets are not accepted.
+Contributions are welcome. Please read [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines. lucidwave only accepts icons based on Lucide; custom or third-party icon sets are not accepted.
 
 ---
 

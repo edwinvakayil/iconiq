@@ -1,10 +1,10 @@
 # Contributing
 
-**IMPORTANT:** Lucidwave only accepts contributions based on [Lucide icons](https://lucide.dev/). Pull requests containing custom icons or icons from other icon packs will be closed.
+**IMPORTANT:** lucidwave only accepts contributions based on [Lucide icons](https://lucide.dev/). Pull requests containing custom icons or icons from other icon packs will be closed.
 
 **Animation quality:** Pull requests with simple path length animations (`strokeDasharray`/`strokeDashoffset` "drawing" effect) will likely be rejected. This type of animation looks generic and doesn't add meaningful interaction. We're looking for creative, purposeful animations that enhance the icon's meaning.
 
-We welcome contributions to Lucidwave! Please follow these steps to contribute:
+We welcome contributions to lucidwave! Please follow these steps to contribute:
 
 1. Fork the repository on GitHub.
 
@@ -26,7 +26,7 @@ We welcome contributions to Lucidwave! Please follow these steps to contribute:
    git checkout -b your-branch-name
    ```
 
-5. Install the project dependencies (Lucidwave uses `pnpm`):
+5. Install the project dependencies (lucidwave uses `pnpm`):
 
    ```bash
    pnpm install
