@@ -95,7 +95,7 @@ const CliBlock = ({ icons, staticIconName, className }: CliBlockProps) => {
                 )}
               >
                 <span className="sr-only">
-                  {getPackageManagerPrefix(pm)} shadcn add iconiq/
+                  {getPackageManagerPrefix(pm)} shadcn add @arc/
                   {staticIconName || currentIconName.current}
                 </span>
                 <span
@@ -105,7 +105,7 @@ const CliBlock = ({ icons, staticIconName, className }: CliBlockProps) => {
                   {getPackageManagerPrefix(pm)}
                 </span>{" "}
                 <span aria-hidden="true" className="text-black dark:text-white">
-                  shadcn add iconiq/
+                  shadcn add @arc/
                 </span>
                 {isStatic ? (
                   <span className="shrink-0 text-primary">
