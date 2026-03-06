@@ -1,5 +1,5 @@
 {
-  "cSpell.words": ["Downvote", "LUCIDE", "nuqs", "pqoqubbw", "Upvote"],
+  "cSpell.words": ["Downvote", "LUCIDE", "nuqs", "iconiq", "Upvote"],
   "typescript.tsdk": "node_modules/typescript/lib",
   "css.lint.unknownAtRules": "ignore",
   "editor.defaultFormatter": "biomejs.biome",
