@@ -2,7 +2,7 @@
 
 Animated React icon library. 350+ copy-paste ready icons built with [Motion](https://motion.dev) and based on [Lucide](https://lucide.dev).
 
-![Iconiq — Animated React Icons](./public/assets/og.png)
+![Iconiq — Animated React Icons](./public/og.png)
 
 **[→ Live demo](https://iconiqs.vercel.app)**
 
