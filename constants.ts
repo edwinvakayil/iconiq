@@ -1,6 +1,6 @@
 const SITE = {
   NAME: "Iconiq",
-  URL: "https://lucide-animated.com",
+  URL: "https://iconiqs.vercel.app",
   OG_IMAGE: "/og.png",
   AUTHOR: {
     NAME: "pqoqubbw",
