@@ -113,10 +113,7 @@ const CliBlock = ({ icons, staticIconName, className }: CliBlockProps) => {
                   </span>
                 ) : (
                   <>
-                    <span
-                      aria-hidden="true"
-                      className="text-primary shrink-0"
-                    >
+                    <span aria-hidden="true" className="shrink-0 text-primary">
                       {SITE.URL}/r/
                     </span>
                     <TextLoop
