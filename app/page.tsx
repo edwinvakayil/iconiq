@@ -16,7 +16,7 @@ const Home = () => {
             React icon library
           </p>
           <HeroName />
-          <p className="max-w-[720px] font-mono text-xs leading-relaxed text-secondary min-[640px]:text-sm min-[640px]:leading-normal min-[960px]:text-base text-justify">
+          <p className="max-w-[720px] font-mono text-[13px] leading-relaxed text-secondary text-justify">
             Iconiq is an open-source collection of carefully crafted, motion-powered
             animated icons designed for modern React applications. The icons are
             copy-paste ready, fully customizable, and built for product teams that
