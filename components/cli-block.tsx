@@ -37,7 +37,7 @@ const CliBlock = ({ icons, staticIconName, className }: CliBlockProps) => {
 
       try {
         await navigator.clipboard.writeText(
-          `${getPackageManagerPrefix(packageName)} shadcn add @lucide-animated/${iconName}`
+          `${getPackageManagerPrefix(packageName)} shadcn add iconiq/${iconName}`
         );
 
         setState("done");
@@ -95,7 +95,7 @@ const CliBlock = ({ icons, staticIconName, className }: CliBlockProps) => {
                 )}
               >
                 <span className="sr-only">
-                  {getPackageManagerPrefix(pm)} shadcn add @lucide-animated/
+                  {getPackageManagerPrefix(pm)} shadcn add iconiq/
                   {staticIconName || currentIconName.current}
                 </span>
                 <span
@@ -105,7 +105,7 @@ const CliBlock = ({ icons, staticIconName, className }: CliBlockProps) => {
                   {getPackageManagerPrefix(pm)}
                 </span>{" "}
                 <span aria-hidden="true" className="text-black dark:text-white">
-                  shadcn add @lucide-animated/
+                  shadcn add iconiq/
                 </span>
                 {isStatic ? (
                   <span className="shrink-0 text-primary">
