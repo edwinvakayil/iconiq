@@ -2,11 +2,11 @@ import { AmountSelector } from "@/components/sponsorship/amount-selector";
 import { createMetadata } from "@/seo/metadata";
 
 export const metadata = createMetadata({
-  title: "Sponsor lucidewave",
+  title: "Sponsor iconiqs",
   description:
-    "Support the development of lucidewave - free open-source animated React icons library. Your sponsorship helps maintain and grow this MIT licensed project.",
+    "Support the development of iconiqs - free open-source animated React icons library. Your sponsorship helps maintain and grow this MIT licensed project.",
   canonical: "/sponsorship",
-  ogTitle: "Sponsor lucidewave | Support Open Source",
+  ogTitle: "Sponsor iconiqs | Support Open Source",
 });
 
 const SUPPORT_LIST = [

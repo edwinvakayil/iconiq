@@ -5,7 +5,7 @@ const Footer = () => {
     <footer className="mt-auto mb-6 flex w-full items-center justify-center px-4">
       <div className="flex w-full max-w-[1292px] items-center justify-between gap-3 border-neutral-200 border-t pt-4 font-mono text-[11px] text-secondary">
         <span>
-          © {new Date().getFullYear()} lucidewave. All rights reserved.
+          © {new Date().getFullYear()} iconiqs. All rights reserved.
         </span>
         <div className="flex items-center gap-3">
           <a
