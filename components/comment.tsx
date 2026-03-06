@@ -18,16 +18,16 @@ const CommentBlock = () => {
         <div className="flex items-center gap-2">
           <Avatar size="sm">
             <AvatarImage
-              alt="Dmytro Tovstokor, the author of Iconiq"
+              alt="Edwin Vakayil, the author of Iconiq"
               className="select-none"
-              src="https://pqoqubbw.b-cdn.net/me.jpg"
+              src="https://avatars.githubusercontent.com/u/180170746?v=4"
             />
             <AvatarFallback className="bg-neutral-200 font-sans dark:bg-neutral-800">
-              DT
+              EV
             </AvatarFallback>
           </Avatar>
           <p className="text-[13px] text-neutral-600 tracking-[0.01em] dark:text-neutral-400">
-            dmytro, creator of Iconiq
+            edwin vakayil, creator of Iconiq
           </p>
         </div>
         <CommentButtonClient />
