@@ -6,9 +6,9 @@
 ## `Iconiq` is beautifully crafted animated icons.
 ![preview](./public/og.png)
 
-**Demo** → [Iconiq](https://lucide-animated.com)
+**Demo** → [Iconiq](https://iconiqs.vercel.app)
 
-**Sponsorship** → [Iconiq/sponsorship](https://lucide-animated.com/sponsorship)
+**Sponsorship** → [Iconiq/sponsorship](https://iconiqs.vercel.app/sponsorship)
 
 #### Svelte icons: [movingicons.dev](https://www.movingicons.dev/) by [@jis3r](https://github.com/jis3r)
 #### Vue icons: [imfenghuang.github.io/icons](https://imfenghuang.github.io/icons/) by [@imfenghuang](https://github.com/imfenghuang)

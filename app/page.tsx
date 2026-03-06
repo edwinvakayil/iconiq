@@ -8,52 +8,65 @@ const Home = () => {
   const icons = getIcons();
 
   return (
-    <section className="mx-auto mt-[60px] flex w-full flex-col items-center justify-center">
-      <h1 className="px-4 text-center font-sans text-[32px] min-[640px]:text-[42px]">
-        Beautifully crafted <br />
-        animated icons<span className="text-primary">*</span>
-      </h1>
-      <p className="mt-5 max-w-[582px] px-4 text-center font-mono text-secondary text-sm">
-        an open-source (
-        <a
-          className="underline underline-offset-3 transition-[decoration-color] duration-100 focus-within:outline-offset-0 hover:decoration-primary focus-visible:outline-1 focus-visible:outline-primary"
-          href={`${LINK.GITHUB}/blob/main/LICENSE`}
-          rel="noopener noreferrer"
-          tabIndex={0}
-          target="_blank"
-        >
-          MIT License
-        </a>
-        ) collection of smooth animated icons for your projects. feel free to
-        use them, share your feedback, and let&apos;s make this library awesome
-        together
-      </p>
-      <p className="mt-4 font-mono text-secondary text-xs min-[640px]:text-sm">
-        Crafted with{" "}
-        <a
-          className="bg-[#E5E5E5] px-2 py-0.5 text-primary focus-within:outline-offset-1 focus-visible:outline-1 focus-visible:outline-primary dark:bg-[#262626]"
-          href={LINK.MOTION}
-          rel="noopener noreferrer"
-          tabIndex={0}
-          target="_blank"
-        >
-          Motion
-        </a>{" "}
-        &{" "}
-        <a
-          className="bg-[#E5E5E5] px-2 py-0.5 text-primary focus-within:outline-offset-1 focus-visible:outline-1 focus-visible:outline-primary dark:bg-[#262626]"
-          href={LINK.LUCIDE}
-          rel="noopener noreferrer"
-          tabIndex={0}
-          target="_blank"
-        >
-          Lucide
-        </a>
-      </p>
-      <CliBlock icons={icons.filter((icon) => icon.name.length <= 20)} />
-      <CommentBlock />
-      <IconsList icons={icons} />
-    </section>
+    <main className="mx-auto w-full max-w-[1292px] px-4 pt-[80px] pb-16">
+      <section className="flex flex-col gap-10">
+        <div className="max-w-[840px] space-y-6">
+          <p className="font-mono text-xs uppercase tracking-[0.24em] text-secondary">
+            React icon library
+          </p>
+          <h1 className="font-sans text-[40px] leading-[0.95] text-black min-[640px]:text-[56px] min-[960px]:text-[72px] dark:text-white">
+            Iconiq
+          </h1>
+          <p className="max-w-[720px] font-mono text-sm text-secondary min-[640px]:text-base text-justify">
+            Iconiq is an open-source collection of carefully crafted, motion-powered
+            animated icons designed for modern React applications. The icons are
+            copy-paste ready, fully customizable, and built for product teams that
+            value precision, clarity, and refined user interface details.
+          </p>
+          <CliBlock
+            className="mt-6 px-0"
+            icons={icons.filter((icon) => icon.name.length <= 20)}
+          />
+          <p className="font-mono text-xs text-secondary">
+            Open-source under the{" "}
+            <a
+              className="underline underline-offset-3 transition-[decoration-color] duration-100 focus-within:outline-offset-0 hover:decoration-primary focus-visible:outline-1 focus-visible:outline-primary"
+              href={LINK.LICENSE}
+              rel="noopener noreferrer"
+              tabIndex={0}
+              target="_blank"
+            >
+              MIT License
+            </a>{" "}
+            · Crafted with{" "}
+            <a
+              className="bg-[#E5E5E5] px-2 py-0.5 text-primary focus-within:outline-offset-1 focus-visible:outline-1 focus-visible:outline-primary dark:bg-[#262626]"
+              href={LINK.MOTION}
+              rel="noopener noreferrer"
+              tabIndex={0}
+              target="_blank"
+            >
+              Motion
+            </a>{" "}
+            &{" "}
+            <a
+              className="bg-[#E5E5E5] px-2 py-0.5 text-primary focus-within:outline-offset-1 focus-visible:outline-1 focus-visible:outline-primary dark:bg-[#262626]"
+              href={LINK.LUCIDE}
+              rel="noopener noreferrer"
+              tabIndex={0}
+              target="_blank"
+            >
+              Lucide
+            </a>
+          </p>
+          <CommentBlock />
+        </div>
+
+        <div id="icons" className="mt-8">
+          <IconsList icons={icons} />
+        </div>
+      </section>
+    </main>
   );
 };
 

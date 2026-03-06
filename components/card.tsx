@@ -82,7 +82,7 @@ const Card = ({ children, animationRef, className, ...props }: CardProps) => {
   return (
     <div
       className={cn(
-        "group/card supports-[corner-shape:squircle]:corner-squircle relative flex flex-col items-center justify-center rounded-[20px] bg-white px-[28px] pt-[50px] supports-[corner-shape:squircle]:rounded-[30px] dark:bg-[#0A0A0A]",
+        "group/card supports-[corner-shape:squircle]:corner-squircle relative flex h-full flex-col items-stretch justify-between rounded-[18px] border border-neutral-200 bg-white px-4 pb-4 pt-5 shadow-[0_14px_30px_rgba(0,0,0,0.04)] supports-[corner-shape:squircle]:rounded-[24px]",
         className
       )}
       {...props}
@@ -93,19 +93,19 @@ const Card = ({ children, animationRef, className, ...props }: CardProps) => {
         <button
           aria-label={isAnimating ? "Stop animation" : "Play animation"}
           aria-pressed={isAnimating}
-          className="supports-[corner-shape:squircle]:corner-squircle absolute top-3 right-3 z-10 flex size-10 cursor-pointer items-center justify-center rounded-[14px] bg-neutral-200/20 transition-[background-color] duration-100 focus-within:-outline-offset-1 hover:bg-neutral-200 focus-visible:outline-1 focus-visible:outline-primary supports-[corner-shape:squircle]:rounded-[20px] dark:bg-neutral-800/20 dark:hover:bg-neutral-700"
+          className="supports-[corner-shape:squircle]:corner-squircle absolute right-3 top-3 z-10 flex size-8 cursor-pointer items-center justify-center rounded-full bg-neutral-100/80 text-neutral-700 transition-[background-color] duration-100 hover:bg-neutral-200 focus-visible:outline-1 focus-visible:outline-primary supports-[corner-shape:squircle]:rounded-[999px]"
           onClick={handlePlayClick}
           type="button"
         >
           {isAnimating ? (
             <PauseIcon
               aria-hidden="true"
-              className="size-4 text-neutral-800 dark:text-neutral-100"
+              className="size-4 text-neutral-800"
             />
           ) : (
             <PlayIcon
               aria-hidden="true"
-              className="size-4 text-neutral-800 dark:text-neutral-100"
+              className="size-4 text-neutral-800"
             />
           )}
         </button>
@@ -117,7 +117,7 @@ const Card = ({ children, animationRef, className, ...props }: CardProps) => {
 
 const Title = ({ children }: { children: React.ReactNode }) => {
   return (
-    <p className="mt-[36px] text-center font-mono text-[#9F9FA9] text-xs dark:text-[#D4D4D4]">
+    <p className="mt-4 text-left font-mono text-[11px] uppercase tracking-[0.18em] text-neutral-500">
       {children}
     </p>
   );
@@ -153,7 +153,7 @@ const CopyCLIAction = ({ name }: Pick<Icon, "name">) => {
       <TooltipTrigger
         aria-disabled={state !== "idle"}
         aria-label="Copy shadcn/cli command"
-        className="supports-[corner-shape:squircle]:corner-squircle flex size-10 cursor-pointer items-center justify-center rounded-[14px] bg-neutral-200/20 transition-[background-color] duration-100 focus-within:-outline-offset-1 hover:bg-neutral-200 focus-visible:outline-1 focus-visible:outline-primary supports-[corner-shape:squircle]:rounded-[20px] dark:bg-neutral-800/20 dark:hover:bg-neutral-700"
+        className="supports-[corner-shape:squircle]:corner-squircle flex size-9 cursor-pointer items-center justify-center rounded-[999px] bg-neutral-100 transition-[background-color] duration-100 hover:bg-neutral-200 focus-visible:outline-1 focus-visible:outline-primary supports-[corner-shape:squircle]:rounded-[999px]"
         data-busy={state !== "idle" ? "" : undefined}
         onClick={handleCopy}
         tabIndex={0}
@@ -161,7 +161,7 @@ const CopyCLIAction = ({ name }: Pick<Icon, "name">) => {
         <IconState status={state}>
           <Terminal
             aria-hidden="true"
-            className="size-4 text-neutral-800 dark:text-neutral-100"
+            className="size-4 text-neutral-800"
           />
         </IconState>
       </TooltipTrigger>
@@ -207,7 +207,7 @@ const CopyCodeAction = ({ name }: Pick<Icon, "name">) => {
       <TooltipTrigger
         aria-disabled={state !== "idle"}
         aria-label="Copy .tsx code"
-        className="supports-[corner-shape:squircle]:corner-squircle flex size-10 cursor-pointer items-center justify-center rounded-[14px] bg-neutral-200/20 transition-[background-color] duration-100 focus-within:-outline-offset-1 hover:bg-neutral-200 focus-visible:outline-1 focus-visible:outline-primary supports-[corner-shape:squircle]:rounded-[20px] dark:bg-neutral-800/20 dark:hover:bg-neutral-700"
+        className="supports-[corner-shape:squircle]:corner-squircle flex size-9 cursor-pointer items-center justify-center rounded-[999px] bg-neutral-100 transition-[background-color] duration-100 hover:bg-neutral-200 focus-visible:outline-1 focus-visible:outline-primary supports-[corner-shape:squircle]:rounded-[999px]"
         data-busy={state !== "idle" ? "" : undefined}
         onClick={handleCopy}
         tabIndex={0}
@@ -215,7 +215,7 @@ const CopyCodeAction = ({ name }: Pick<Icon, "name">) => {
         <IconState status={state}>
           <Copy
             aria-hidden="true"
-            className="size-4 text-neutral-800 dark:text-neutral-100"
+            className="size-4 text-neutral-800"
           />
         </IconState>
       </TooltipTrigger>
@@ -275,7 +275,7 @@ const OpenInV0Action = ({ name }: Pick<Icon, "name">) => {
       <TooltipTrigger
         aria-disabled={state !== "idle"}
         aria-label="Open in v0"
-        className="supports-[corner-shape:squircle]:corner-squircle flex size-10 cursor-pointer items-center justify-center rounded-[14px] bg-neutral-200/20 transition-[background-color] duration-100 focus-within:-outline-offset-1 hover:bg-neutral-200 focus-visible:outline-1 focus-visible:outline-primary supports-[corner-shape:squircle]:rounded-[20px] dark:bg-neutral-800/20 dark:hover:bg-neutral-700"
+        className="supports-[corner-shape:squircle]:corner-squircle flex size-9 cursor-pointer items-center justify-center rounded-[999px] bg-neutral-100 transition-[background-color] duration-100 hover:bg-neutral-200 focus-visible:outline-1 focus-visible:outline-primary supports-[corner-shape:squircle]:rounded-[999px]"
         data-busy={state !== "idle" ? "" : undefined}
         onClick={handleOpenInV0}
         tabIndex={0}
@@ -283,7 +283,7 @@ const OpenInV0Action = ({ name }: Pick<Icon, "name">) => {
         <IconState status={state}>
           <V0Icon
             aria-hidden="true"
-            className="size-5 text-neutral-800 dark:text-neutral-100"
+            className="size-5 text-neutral-800"
           />
         </IconState>
       </TooltipTrigger>

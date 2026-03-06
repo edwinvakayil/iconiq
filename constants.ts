@@ -32,11 +32,11 @@ const SITE = {
 } as const;
 
 const LINK = {
-  TWITTER: "https://x.com/pqoqubbw",
-  GITHUB: "https://github.com/pqoqubbw/icons",
+  TWITTER: "https://x.com/edwinvakayil",
+  GITHUB: "https://github.com/edwinvakayil/iconiq",
   LUCIDE: "https://lucide.dev",
   MOTION: "https://motion.dev",
-  LICENSE: "https://github.com/pqoqubbw/icons/blob/main/LICENSE",
+  LICENSE: "https://github.com/edwinvakayil/iconiq/blob/main/LICENSE",
 } as const;
 
 const PACKAGE_MANAGER = {
