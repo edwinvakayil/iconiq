@@ -37,7 +37,7 @@ const CliBlock = ({ icons, staticIconName, className }: CliBlockProps) => {
 
       try {
         await navigator.clipboard.writeText(
-          `${getPackageManagerPrefix(packageName)} shadcn add iconiq/${iconName}`
+          `${getPackageManagerPrefix(packageName)} shadcn add @arc/${iconName}`
         );
 
         setState("done");

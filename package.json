@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "prebuild": "node scripts/download-fonts.js",
-    "build": "pnpm run sync-registry && pnpm run build-registry && next build",
+    "build": "next build",
     "start": "next start",
     "lint": "pnpm run check-style:fix && npx ultracite fix",
     "lint:check": "pnpm run check-style && npx ultracite check",

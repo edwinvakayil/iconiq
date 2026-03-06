@@ -8,16 +8,11 @@ import type { Schema } from "./registry-schema";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const registryComponents = path.join(__dirname, "../public/r");
-const scopedRegistryComponents = path.join(registryComponents, "iconiq");
 const registryIndexPath = path.join(__dirname, "../public/r/registry.json");
 const registryRootPath = path.join(__dirname, "../registry.json");
 
 if (!fs.existsSync(registryComponents)) {
   fs.mkdirSync(registryComponents, { recursive: true });
-}
-
-if (!fs.existsSync(scopedRegistryComponents)) {
-  fs.mkdirSync(scopedRegistryComponents, { recursive: true });
 }
 
 console.log("\n🔨 Building registry components...\n");
@@ -54,19 +49,9 @@ for (const component of components) {
   if (component.categories) schema.categories = component.categories;
   if (component.meta) schema.meta = component.meta;
 
-  const itemJson = JSON.stringify(schema, null, 2);
-
-  // Unscoped path: /r/{name}.json (backwards compatibility, direct URL usage)
   fs.writeFileSync(
     path.join(registryComponents, `${component.name}.json`),
-    itemJson
-  );
-
-  // Scoped path: /r/iconiq/{name}.json so that
-  // npx shadcn add iconiq/{name} works when registry URL is .../r/{name}.json
-  fs.writeFileSync(
-    path.join(scopedRegistryComponents, `${component.name}.json`),
-    itemJson
+    JSON.stringify(schema, null, 2)
   );
 
   const { files, $schema: _itemSchema, ...schemaWithoutContent } = schema;
