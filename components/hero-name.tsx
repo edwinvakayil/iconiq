@@ -1,6 +1,6 @@
 "use client";
 
-const NAME = "iconiqs";
+const NAME = "Iconiq";
 
 const HeroName = () => {
   return (

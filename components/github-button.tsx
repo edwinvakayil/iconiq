@@ -7,7 +7,7 @@ const CACHE_TIME = 86_400; // 1 day
 const fetchGithubStars = async (): Promise<number> => {
   try {
     const res = await fetch(
-      "https://api.github.com/repos/edwinvakayil/iconiqs",
+      "https://api.github.com/repos/edwinvakayil/iconiq",
       {
         headers: {
           Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,

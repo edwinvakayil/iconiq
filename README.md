@@ -1,8 +1,8 @@
-# iconiqs
+# Iconiq
 
 Animated React icon library. 350+ copy-paste ready icons built with [Motion](https://motion.dev) and based on [Lucide](https://lucide.dev).
 
-![iconiqs — Animated React Icons](./public/og.png)
+![Iconiq — Animated React Icons](./public/og.png)
 
 **[→ Live demo](https://iconiqs.vercel.app)**
 
@@ -11,17 +11,17 @@ Animated React icon library. 350+ copy-paste ready icons built with [Motion](htt
 ## Install
 
 ```bash
-pnpm add @iconiqs/core
+pnpm add @iconiq/core
 # or
-npm i @iconiqs/core
+npm i @iconiq/core
 # or
-yarn add @iconiqs/core
+yarn add @iconiq/core
 ```
 
 ## Use
 
 ```tsx
-import { Heart } from "@iconiqs/core";
+import { Heart } from "@iconiq/core";
 
 export default function Example() {
   return <Heart className="size-8" />;
@@ -51,7 +51,7 @@ Icons are SVG components. Pass `className`, `size`, `color`, and other standard 
 
 ## Contributing
 
-Contributions are welcome. Please read [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines. iconiqs only accepts icons based on Lucide; custom or third-party icon sets are not accepted.
+Contributions are welcome. Please read [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines. Iconiq only accepts icons based on Lucide; custom or third-party icon sets are not accepted.
 
 ---
 

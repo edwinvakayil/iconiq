@@ -10,7 +10,7 @@ import type { IconStatus } from "@/components/ui/icon-state";
 import { IconState } from "@/components/ui/icon-state";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { TextLoop } from "@/components/ui/text-loop";
-import { PACKAGE_MANAGER, SITE } from "@/constants";
+import { PACKAGE_MANAGER } from "@/constants";
 import { getPackageManagerPrefix } from "@/lib/get-package-manager-prefix";
 import { cn } from "@/lib/utils";
 import { usePackageNameContext } from "@/providers/package-name";
@@ -37,7 +37,7 @@ const CliBlock = ({ icons, staticIconName, className }: CliBlockProps) => {
 
       try {
         await navigator.clipboard.writeText(
-          `${getPackageManagerPrefix(packageName)} shadcn@latest add "${SITE.URL}/r/${iconName}.json"`
+          `${getPackageManagerPrefix(packageName)} shadcn add @iconiq/${iconName}`
         );
 
         setState("done");
@@ -95,8 +95,8 @@ const CliBlock = ({ icons, staticIconName, className }: CliBlockProps) => {
                 )}
               >
                 <span className="sr-only">
-                  {getPackageManagerPrefix(pm)} shadcn@latest add "{SITE.URL}/r/
-                  {staticIconName || currentIconName.current}.json"
+                  {getPackageManagerPrefix(pm)} shadcn add @iconiq/
+                  {staticIconName || currentIconName.current}
                 </span>
                 <span
                   aria-hidden="true"
@@ -105,58 +105,50 @@ const CliBlock = ({ icons, staticIconName, className }: CliBlockProps) => {
                   {getPackageManagerPrefix(pm)}
                 </span>{" "}
                 <span aria-hidden="true" className="text-black dark:text-white">
-                  shadcn@latest add "
+                  shadcn add @iconiq/
                 </span>
                 {isStatic ? (
                   <span className="shrink-0 text-primary">
-                    {SITE.URL}/r/{staticIconName}.json"
+                    {staticIconName}
                   </span>
                 ) : (
-                  <>
-                    <span aria-hidden="true" className="shrink-0 text-primary">
-                      {SITE.URL}/r/
-                    </span>
-                    <TextLoop
-                      interval={1.5}
-                      onIndexChange={(index) => {
-                        currentIconName.current = icons?.[index]?.name || "";
-                      }}
-                      transition={{
-                        duration: 0.25,
-                      }}
-                      variants={{
-                        initial: {
-                          y: -12,
-                          rotateX: -90,
-                          opacity: 0,
-                          filter: "blur(2px)",
-                        },
-                        animate: {
-                          y: 0,
-                          rotateX: 0,
-                          opacity: 1,
-                          filter: "blur(0px)",
-                        },
-                        exit: {
-                          y: 12,
-                          rotateX: 90,
-                          opacity: 0,
-                          filter: "blur(2px)",
-                        },
-                      }}
-                    >
-                      {(icons || [])
-                        .filter((icon) => icon.name.length <= 20)
-                        .map((icon) => (
-                          <span
-                            className="shrink-0 text-primary"
-                            key={icon.name}
-                          >
-                            {icon.name}.json"
-                          </span>
-                        ))}
-                    </TextLoop>
-                  </>
+                  <TextLoop
+                    interval={1.5}
+                    onIndexChange={(index) => {
+                      currentIconName.current = icons?.[index]?.name || "";
+                    }}
+                    transition={{
+                      duration: 0.25,
+                    }}
+                    variants={{
+                      initial: {
+                        y: -12,
+                        rotateX: -90,
+                        opacity: 0,
+                        filter: "blur(2px)",
+                      },
+                      animate: {
+                        y: 0,
+                        rotateX: 0,
+                        opacity: 1,
+                        filter: "blur(0px)",
+                      },
+                      exit: {
+                        y: 12,
+                        rotateX: 90,
+                        opacity: 0,
+                        filter: "blur(2px)",
+                      },
+                    }}
+                  >
+                    {(icons || [])
+                      .filter((icon) => icon.name.length <= 20)
+                      .map((icon) => (
+                        <span className="shrink-0 text-primary" key={icon.name}>
+                          {icon.name}
+                        </span>
+                      ))}
+                  </TextLoop>
                 )}
               </BaseScrollArea.Viewport>
               <BaseScrollArea.Scrollbar
