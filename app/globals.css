@@ -86,4 +86,18 @@
     @apply bg-neutral-200 text-neutral-500 dark:bg-neutral-800 dark:text-neutral-300;
     @apply cursor-pointer transition-transform duration-100 active:scale-95;
   }
+
+  @keyframes hero-name-fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  .hero-name-char {
+    animation: hero-name-fade-in 0.5s ease forwards;
+    margin-right: 0.01em;
+  }
 }
