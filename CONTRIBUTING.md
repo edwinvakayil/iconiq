@@ -1,23 +1,23 @@
 # Contributing
 
-**IMPORTANT:** This project only accepts contributions based on [lucide icons](https://lucide.dev/). Pull requests containing custom icons or icons from other icon packs will be closed.
+**IMPORTANT:** Iconiq only accepts contributions based on [Lucide icons](https://lucide.dev/). Pull requests containing custom icons or icons from other icon packs will be closed.
 
-**Animation Quality:** Pull requests with simple path length animations (`strokeDasharray`/`strokeDashoffset` "drawing" effect) will likely be rejected. This type of animation looks generic and doesn't add meaningful interaction. We're looking for creative, purposeful animations that enhance the icon's meaning.
+**Animation quality:** Pull requests with simple path length animations (`strokeDasharray`/`strokeDashoffset` "drawing" effect) will likely be rejected. This type of animation looks generic and doesn't add meaningful interaction. We're looking for creative, purposeful animations that enhance the icon's meaning.
 
-We welcome contributions to our project! Please follow these steps to contribute:
+We welcome contributions to Iconiq! Please follow these steps to contribute:
 
 1. Fork the repository on GitHub.
 
 2. Clone your forked repository to your local machine:
 
-   ```
-   git clone https://github.com/pqoqubbw/icons.git
+   ```bash
+   git clone https://github.com/edwinvakayil/iconiq.git
    ```
 
 3. Navigate to the project directory:
 
-   ```
-   cd icons
+   ```bash
+   cd iconiq
    ```
 
 4. Create a new branch for your feature or bug fix:
@@ -26,9 +26,9 @@ We welcome contributions to our project! Please follow these steps to contribute
    git checkout -b your-branch-name
    ```
 
-5. Install the project dependencies:
+5. Install the project dependencies (Iconiq uses `pnpm`):
 
-   ```
+   ```bash
    pnpm install
    ```
 
@@ -134,7 +134,7 @@ We welcome contributions to our project! Please follow these steps to contribute
 
 7. **Add your icon to the icon list:**
 
-   a. Open the `icons/index.tsx` file.
+   a. Open the `icons/index.ts` file.
 
    b. Import your new icon component at the top of the file:
 
