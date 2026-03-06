@@ -24,6 +24,14 @@ const SearchInput = ({ searchValue, setSearchValue }: SearchInputProps) => {
     }
   );
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Escape") {
+      e.preventDefault();
+      setSearchValue("");
+      inputRef.current?.blur();
+    }
+  };
+
   return (
     <div className="relative w-full max-w-[260px]">
       <Input
@@ -37,6 +45,7 @@ const SearchInput = ({ searchValue, setSearchValue }: SearchInputProps) => {
           <SearchIcon className="size-4 text-neutral-400" strokeWidth={2.5} />
         }
         onChange={(e) => setSearchValue(e.target.value)}
+        onKeyDown={handleKeyDown}
         placeholder="Search icons..."
         ref={inputRef}
         role="search"
