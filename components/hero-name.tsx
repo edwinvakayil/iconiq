@@ -1,6 +1,6 @@
 "use client";
 
-const NAME = "Iconiq";
+const NAME = "Lucidwave";
 
 const HeroName = () => {
   return (

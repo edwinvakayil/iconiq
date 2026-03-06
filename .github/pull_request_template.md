@@ -1,4 +1,4 @@
-## I have read the [CONTRIBUTING.md](https://github.com/edwinvakayil/iconiq/blob/main/CONTRIBUTING.md) file.
+## I have read the [CONTRIBUTING.md](https://github.com/edwinvakayil/lucidwave/blob/main/CONTRIBUTING.md) file.
 
 YES/NO
 

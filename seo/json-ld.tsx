@@ -124,21 +124,21 @@ const BreadcrumbJsonLd = ({
 const FAQJsonLd = () => {
   const faqs = [
     {
-      question: "What is Iconiq?",
+      question: "What is Lucidwave?",
       answer: `${SITE.NAME} is a free, open-source library of 350+ beautifully crafted animated React icons. Built with Motion library and based on Lucide icons.`,
     },
     {
-      question: "How do I install Iconiq icons?",
+      question: "How do I install Lucidwave icons?",
       answer: `You can install icons using npx shadcn@latest add "${SITE.URL}/r/{icon-name}.json". Replace {icon-name} with the desired icon name in kebab-case.`,
     },
     {
-      question: "Is Iconiq free to use?",
+      question: "Is Lucidwave free to use?",
       answer: `Yes! ${SITE.NAME} is completely free and open-source under the MIT license. You can use it for personal and commercial projects.`,
     },
     {
-      question: "What technologies are used in Iconiq?",
+      question: "What technologies are used in Lucidwave?",
       answer:
-        "Iconiq icons are React components written in TypeScript. Animations are powered by Motion (formerly Framer Motion), and the icons are based on Lucide.",
+        "Lucidwave icons are React components written in TypeScript. Animations are powered by Motion (formerly Framer Motion), and the icons are based on Lucide.",
     },
   ];
 

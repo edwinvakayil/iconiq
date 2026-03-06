@@ -1,15 +1,15 @@
 const SITE = {
-  NAME: "Iconiq",
-  URL: "https://iconiqs.vercel.app",
+  NAME: "Lucidwave",
+  URL: "https://lucidwave.vercel.app",
   OG_IMAGE: "/og.png",
   AUTHOR: {
     NAME: "Edwin Vakayil",
     TWITTER: "@edwinvakayil",
   },
   DESCRIPTION: {
-    LONG: "Iconiq is a free open-source library of 350+ beautifully crafted animated React icons. Built with Motion and based on Lucide icons. Copy-paste ready, MIT licensed, fully customizable SVG icons with smooth animations.",
+    LONG: "Lucidwave is a free open-source library of 350+ beautifully crafted animated React icons. Built with Motion and based on Lucide icons. Copy-paste ready, MIT licensed, fully customizable SVG icons with smooth animations.",
     SHORT:
-      "Iconiq is a free animated React icons library with 350+ smooth Motion-powered icons based on Lucide icons. MIT licensed and copy-paste ready.",
+      "Lucidwave is a free animated React icons library with 350+ smooth Motion-powered icons based on Lucide icons. MIT licensed and copy-paste ready.",
   },
   KEYWORDS: [
     "animated icons",
@@ -33,10 +33,10 @@ const SITE = {
 
 const LINK = {
   TWITTER: "https://x.com/edwinvakayil",
-  GITHUB: "https://github.com/edwinvakayil/iconiq",
+  GITHUB: "https://github.com/edwinvakayil/Lucidwave",
   LUCIDE: "https://lucide.dev",
   MOTION: "https://motion.dev",
-  LICENSE: "https://github.com/edwinvakayil/iconiq/blob/main/LICENSE",
+  LICENSE: "https://github.com/edwinvakayil/Lucidwave/blob/main/LICENSE",
 } as const;
 
 const PACKAGE_MANAGER = {

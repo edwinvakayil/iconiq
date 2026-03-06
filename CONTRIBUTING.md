@@ -1,23 +1,23 @@
 # Contributing
 
-**IMPORTANT:** Iconiq only accepts contributions based on [Lucide icons](https://lucide.dev/). Pull requests containing custom icons or icons from other icon packs will be closed.
+**IMPORTANT:** Lucidwave only accepts contributions based on [Lucide icons](https://lucide.dev/). Pull requests containing custom icons or icons from other icon packs will be closed.
 
 **Animation quality:** Pull requests with simple path length animations (`strokeDasharray`/`strokeDashoffset` "drawing" effect) will likely be rejected. This type of animation looks generic and doesn't add meaningful interaction. We're looking for creative, purposeful animations that enhance the icon's meaning.
 
-We welcome contributions to Iconiq! Please follow these steps to contribute:
+We welcome contributions to Lucidwave! Please follow these steps to contribute:
 
 1. Fork the repository on GitHub.
 
 2. Clone your forked repository to your local machine:
 
    ```bash
-   git clone https://github.com/edwinvakayil/iconiq.git
+   git clone https://github.com/edwinvakayil/lucidwave.git
    ```
 
 3. Navigate to the project directory:
 
    ```bash
-   cd iconiq
+   cd lucidwave
    ```
 
 4. Create a new branch for your feature or bug fix:
@@ -26,7 +26,7 @@ We welcome contributions to Iconiq! Please follow these steps to contribute:
    git checkout -b your-branch-name
    ```
 
-5. Install the project dependencies (Iconiq uses `pnpm`):
+5. Install the project dependencies (Lucidwave uses `pnpm`):
 
    ```bash
    pnpm install

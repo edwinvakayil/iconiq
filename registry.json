@@ -1,7 +1,7 @@
 {
   "$schema": "https://ui.shadcn.com/schema/registry.json",
-  "name": "Iconiq",
-  "homepage": "https://iconiqs.vercel.app",
+  "name": "Lucidwave",
+  "homepage": "https://lucidwave.vercel.app",
   "items": [
     {
       "name": "a-arrow-down",

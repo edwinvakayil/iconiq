@@ -1,27 +1,27 @@
-# Iconiq
+# Lucidwave
 
 Animated React icon library. 350+ copy-paste ready icons built with [Motion](https://motion.dev) and based on [Lucide](https://lucide.dev).
 
-![Iconiq — Animated React Icons](./public/og.png)
+![Lucidwave — Animated React Icons](./public/og.png)
 
-**[→ Live demo](https://iconiqs.vercel.app)**
+**[→ Live demo](https://lucidwave.vercel.app)**
 
 ---
 
 ## Install
 
 ```bash
-pnpm add @iconiq/core
+pnpm add @lucidwave/core
 # or
-npm i @iconiq/core
+npm i @lucidwave/core
 # or
-yarn add @iconiq/core
+yarn add @lucidwave/core
 ```
 
 ## Use
 
 ```tsx
-import { Heart } from "@iconiq/core";
+import { Heart } from "@lucidwave/core";
 
 export default function Example() {
   return <Heart className="size-8" />;
@@ -51,7 +51,7 @@ Icons are SVG components. Pass `className`, `size`, `color`, and other standard 
 
 ## Contributing
 
-Contributions are welcome. Please read [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines. Iconiq only accepts icons based on Lucide; custom or third-party icon sets are not accepted.
+Contributions are welcome. Please read [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines. Lucidwave only accepts icons based on Lucide; custom or third-party icon sets are not accepted.
 
 ---
 

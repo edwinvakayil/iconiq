@@ -48,7 +48,7 @@ const getIconForV0 = async (name: string) => {
             "})\n\n" +
             "export const metadata: Metadata = {\n" +
             `  title: '${name} Icon',\n` +
-            `  description: 'Animated ${name} icon component from Iconiq',\n` +
+            `  description: 'Animated ${name} icon component from Lucidwave',\n` +
             "}\n\n" +
             "export default function RootLayout({\n" +
             "  children,\n" +
