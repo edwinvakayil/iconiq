@@ -1,7 +1,7 @@
 {
   "$schema": "https://ui.shadcn.com/schema/registry.json",
-  "name": "lucidwave",
-  "homepage": "https://lucidwave.vercel.app",
+  "name": "lucidewave",
+  "homepage": "https://lucidewave.vercel.app",
   "items": [
     {
       "name": "a-arrow-down",

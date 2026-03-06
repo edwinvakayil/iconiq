@@ -17,7 +17,7 @@ const Home = () => {
           </p>
           <HeroName />
           <p className="max-w-[720px] text-justify font-mono text-[13px] text-secondary leading-relaxed">
-            lucidwave is an open-source collection of carefully crafted,
+            lucidewave is an open-source collection of carefully crafted,
             motion-powered animated icons designed for modern React
             applications. The icons are copy-paste ready, fully customizable,
             and built for product teams that value precision, clarity, and
