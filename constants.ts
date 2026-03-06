@@ -40,8 +40,8 @@ const LINK = {
 } as const;
 
 const PACKAGE_MANAGER = {
-  PNPM: "pnpm",
   NPM: "npm",
+  PNPM: "pnpm",
   YARN: "yarn",
   BUN: "bun",
 } as const;
