@@ -3,13 +3,14 @@ const SITE = {
   URL: "https://iconiqs.vercel.app",
   OG_IMAGE: "/og.png",
   AUTHOR: {
-    NAME: "pqoqubbw",
-    TWITTER: "@pqoqubbw",
+    NAME: "Edwin Vakayil",
+    TWITTER: "@edwinvakayil",
   },
   DESCRIPTION: {
-    LONG: "Free open-source library of 350+ beautifully crafted animated React icons. Built with Motion and based on Lucide icons. Copy-paste ready, MIT licensed, fully customizable SVG icons with smooth animations.",
+    LONG:
+      "Iconiq is a free open-source library of 350+ beautifully crafted animated React icons. Built with Motion and based on Lucide icons. Copy-paste ready, MIT licensed, fully customizable SVG icons with smooth animations.",
     SHORT:
-      "Free animated React icons library with 350+ smooth Motion-powered icons based on Lucide icons. MIT licensed, copy-paste ready.",
+      "Iconiq is a free animated React icons library with 350+ smooth Motion-powered icons based on Lucide icons. MIT licensed and copy-paste ready.",
   },
   KEYWORDS: [
     "animated icons",

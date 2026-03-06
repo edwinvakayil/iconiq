@@ -53,6 +53,10 @@ const baseMetadata: Metadata = {
   alternates: {
     canonical: "/",
   },
+  icons: {
+    icon: "/favicon.ico",
+    shortcut: "/favicon.ico",
+  },
   openGraph: {
     title: SITE.NAME,
     description: SITE.DESCRIPTION.SHORT,
