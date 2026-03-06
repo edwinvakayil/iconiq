@@ -82,7 +82,7 @@ const Card = ({ children, animationRef, className, ...props }: CardProps) => {
   return (
     <div
       className={cn(
-        "group/card supports-[corner-shape:squircle]:corner-squircle relative flex h-full flex-col items-stretch justify-between rounded-[18px] border border-neutral-200 bg-white px-4 pt-5 pb-4 shadow-[0_14px_30px_rgba(0,0,0,0.04)] supports-[corner-shape:squircle]:rounded-[24px]",
+        "group/card supports-[corner-shape:squircle]:corner-squircle relative flex h-full flex-col items-stretch justify-between rounded-[18px] border border-neutral-200 bg-white px-4 pt-5 pb-4 shadow-[0_2px_6px_rgba(0,0,0,0.04)] supports-[corner-shape:squircle]:rounded-[24px]",
         className
       )}
       {...props}
