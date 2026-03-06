@@ -3,7 +3,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 
 const CommentBlock = () => {
   return (
-    <div className="relative my-[40px] flex w-full max-w-[610px] flex-col items-center justify-center pl-4 after:absolute after:left-0 after:h-full after:w-[4px] after:bg-neutral-400/50 max-[655px]:px-4 max-[655px]:after:left-4">
+    <div className="relative my-[40px] flex w-full max-w-[610px] flex-col items-center justify-center pl-4 max-[655px]:px-4">
       <div className="flex w-full flex-wrap items-center justify-between gap-4 border-neutral-200 border-t pt-4 max-[655px]:pl-4 dark:border-neutral-800">
         <div className="flex items-center gap-2">
           <Avatar size="sm">

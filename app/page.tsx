@@ -27,17 +27,7 @@ const Home = () => {
             icons={icons.filter((icon) => icon.name.length <= 20)}
           />
           <p className="font-mono text-xs text-secondary">
-            Open-source under the{" "}
-            <a
-              className="underline underline-offset-3 transition-[decoration-color] duration-100 focus-within:outline-offset-0 hover:decoration-primary focus-visible:outline-1 focus-visible:outline-primary"
-              href={LINK.LICENSE}
-              rel="noopener noreferrer"
-              tabIndex={0}
-              target="_blank"
-            >
-              MIT License
-            </a>{" "}
-            · Crafted with{" "}
+            Crafted with{" "}
             <a
               className="bg-[#E5E5E5] px-2 py-0.5 text-primary focus-within:outline-offset-1 focus-visible:outline-1 focus-visible:outline-primary dark:bg-[#262626]"
               href={LINK.MOTION}
