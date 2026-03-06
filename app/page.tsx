@@ -12,21 +12,22 @@ const Home = () => {
     <main className="mx-auto w-full max-w-[1292px] px-4 pt-[80px] pb-16">
       <section className="flex flex-col gap-10">
         <div className="max-w-[890px] space-y-6">
-          <p className="font-mono text-xs uppercase tracking-[0.24em] text-secondary">
+          <p className="font-mono text-secondary text-xs uppercase tracking-[0.24em]">
             React icon library
           </p>
           <HeroName />
-          <p className="max-w-[720px] font-mono text-[13px] leading-relaxed text-secondary text-justify">
-            Iconiq is an open-source collection of carefully crafted, motion-powered
-            animated icons designed for modern React applications. The icons are
-            copy-paste ready, fully customizable, and built for product teams that
-            value precision, clarity, and refined user interface details.
+          <p className="max-w-[720px] text-justify font-mono text-[13px] text-secondary leading-relaxed">
+            Iconiq is an open-source collection of carefully crafted,
+            motion-powered animated icons designed for modern React
+            applications. The icons are copy-paste ready, fully customizable,
+            and built for product teams that value precision, clarity, and
+            refined user interface details.
           </p>
           <CliBlock
             className="mt-6 px-0"
             icons={icons.filter((icon) => icon.name.length <= 20)}
           />
-          <p className="font-mono text-xs text-secondary">
+          <p className="font-mono text-secondary text-xs">
             Crafted with{" "}
             <a
               className="bg-[#E5E5E5] px-2 py-0.5 text-primary focus-within:outline-offset-1 focus-visible:outline-1 focus-visible:outline-primary dark:bg-[#262626]"
@@ -51,7 +52,7 @@ const Home = () => {
           <CommentBlock />
         </div>
 
-        <div id="icons" className="mt-8">
+        <div className="mt-8" id="icons">
           <IconsList icons={icons} />
         </div>
       </section>

@@ -4929,6 +4929,19 @@
           "type": "registry:ui"
         }
       ]
+    },
+    {
+      "name": "phone-call",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": ["motion"],
+      "devDependencies": [],
+      "files": [
+        {
+          "path": "phone-call.tsx",
+          "type": "registry:ui"
+        }
+      ]
     }
   ]
 }

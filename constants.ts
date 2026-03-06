@@ -7,8 +7,7 @@ const SITE = {
     TWITTER: "@edwinvakayil",
   },
   DESCRIPTION: {
-    LONG:
-      "Iconiq is a free open-source library of 350+ beautifully crafted animated React icons. Built with Motion and based on Lucide icons. Copy-paste ready, MIT licensed, fully customizable SVG icons with smooth animations.",
+    LONG: "Iconiq is a free open-source library of 350+ beautifully crafted animated React icons. Built with Motion and based on Lucide icons. Copy-paste ready, MIT licensed, fully customizable SVG icons with smooth animations.",
     SHORT:
       "Iconiq is a free animated React icons library with 350+ smooth Motion-powered icons based on Lucide icons. MIT licensed and copy-paste ready.",
   },

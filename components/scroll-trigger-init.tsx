@@ -28,9 +28,11 @@ export function ScrollTriggerInit() {
     const triggers: ScrollTrigger[] = [];
 
     els.forEach((el) => {
-      const delay = parseFloat(el.dataset.gsapDelay ?? "0");
-      const y = parseFloat(el.dataset.gsapY ?? String(defaultScrollVars.y));
-      const duration = parseFloat(
+      const delay = Number.parseFloat(el.dataset.gsapDelay ?? "0");
+      const y = Number.parseFloat(
+        el.dataset.gsapY ?? String(defaultScrollVars.y)
+      );
+      const duration = Number.parseFloat(
         el.dataset.gsapDuration ?? String(defaultScrollVars.duration)
       );
 
@@ -51,7 +53,7 @@ export function ScrollTriggerInit() {
     });
 
     return () => {
-      triggers.forEach((st) => st.kill());
+      for (const st of triggers) st.kill();
       gsap.killTweensOf(SCROLL_SELECTOR);
     };
   }, []);

@@ -82,7 +82,7 @@ const Card = ({ children, animationRef, className, ...props }: CardProps) => {
   return (
     <div
       className={cn(
-        "group/card supports-[corner-shape:squircle]:corner-squircle relative flex h-full flex-col items-stretch justify-between rounded-[18px] border border-neutral-200 bg-white px-4 pb-4 pt-5 shadow-[0_14px_30px_rgba(0,0,0,0.04)] supports-[corner-shape:squircle]:rounded-[24px]",
+        "group/card supports-[corner-shape:squircle]:corner-squircle relative flex h-full flex-col items-stretch justify-between rounded-[18px] border border-neutral-200 bg-white px-4 pt-5 pb-4 shadow-[0_14px_30px_rgba(0,0,0,0.04)] supports-[corner-shape:squircle]:rounded-[24px]",
         className
       )}
       {...props}
@@ -93,20 +93,14 @@ const Card = ({ children, animationRef, className, ...props }: CardProps) => {
         <button
           aria-label={isAnimating ? "Stop animation" : "Play animation"}
           aria-pressed={isAnimating}
-          className="supports-[corner-shape:squircle]:corner-squircle absolute right-3 top-3 z-10 flex size-8 cursor-pointer items-center justify-center rounded-full bg-neutral-100/80 text-neutral-700 transition-[background-color] duration-100 hover:bg-neutral-200 focus-visible:outline-1 focus-visible:outline-primary supports-[corner-shape:squircle]:rounded-[999px]"
+          className="supports-[corner-shape:squircle]:corner-squircle absolute top-3 right-3 z-10 flex size-8 cursor-pointer items-center justify-center rounded-full bg-neutral-100/80 text-neutral-700 transition-[background-color] duration-100 hover:bg-neutral-200 focus-visible:outline-1 focus-visible:outline-primary supports-[corner-shape:squircle]:rounded-[999px]"
           onClick={handlePlayClick}
           type="button"
         >
           {isAnimating ? (
-            <PauseIcon
-              aria-hidden="true"
-              className="size-4 text-neutral-800"
-            />
+            <PauseIcon aria-hidden="true" className="size-4 text-neutral-800" />
           ) : (
-            <PlayIcon
-              aria-hidden="true"
-              className="size-4 text-neutral-800"
-            />
+            <PlayIcon aria-hidden="true" className="size-4 text-neutral-800" />
           )}
         </button>
       )}
@@ -117,7 +111,7 @@ const Card = ({ children, animationRef, className, ...props }: CardProps) => {
 
 const Title = ({ children }: { children: React.ReactNode }) => {
   return (
-    <p className="mt-4 text-left font-mono text-[11px] uppercase tracking-[0.18em] text-neutral-500">
+    <p className="mt-4 text-left font-mono text-[11px] text-neutral-500 uppercase tracking-[0.18em]">
       {children}
     </p>
   );
@@ -159,10 +153,7 @@ const CopyCLIAction = ({ name }: Pick<Icon, "name">) => {
         tabIndex={0}
       >
         <IconState status={state}>
-          <Terminal
-            aria-hidden="true"
-            className="size-4 text-neutral-800"
-          />
+          <Terminal aria-hidden="true" className="size-4 text-neutral-800" />
         </IconState>
       </TooltipTrigger>
       <TooltipContent>
@@ -213,10 +204,7 @@ const CopyCodeAction = ({ name }: Pick<Icon, "name">) => {
         tabIndex={0}
       >
         <IconState status={state}>
-          <Copy
-            aria-hidden="true"
-            className="size-4 text-neutral-800"
-          />
+          <Copy aria-hidden="true" className="size-4 text-neutral-800" />
         </IconState>
       </TooltipTrigger>
       <TooltipContent>
@@ -281,10 +269,7 @@ const OpenInV0Action = ({ name }: Pick<Icon, "name">) => {
         tabIndex={0}
       >
         <IconState status={state}>
-          <V0Icon
-            aria-hidden="true"
-            className="size-5 text-neutral-800"
-          />
+          <V0Icon aria-hidden="true" className="size-5 text-neutral-800" />
         </IconState>
       </TooltipTrigger>
       <TooltipContent>

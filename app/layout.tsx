@@ -49,9 +49,7 @@ export default function RootLayout({
       <head>
         <JsonLdScripts />
       </head>
-      <body
-        className={`${geist.className} relative bg-background antialiased`}
-      >
+      <body className={`${geist.className} relative bg-background antialiased`}>
         <div className="root">
           <PackageNameProvider>
             <Header />
@@ -60,9 +58,7 @@ export default function RootLayout({
                 {children}
                 <Toaster
                   icons={{
-                    error: (
-                      <CircleXIcon className="size-4 text-red-600" />
-                    ),
+                    error: <CircleXIcon className="size-4 text-red-600" />,
                     warning: (
                       <TriangleAlertIcon className="size-4 text-yellow-500" />
                     ),

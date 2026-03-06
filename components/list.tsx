@@ -81,10 +81,10 @@ const IconsList = ({ icons }: Props) => {
     <section className="mb-20 w-full space-y-4">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div className="space-y-1">
-          <h2 className="font-sans text-xs uppercase tracking-[0.18em] text-secondary">
+          <h2 className="font-sans text-secondary text-xs uppercase tracking-[0.18em]">
             Icon library
           </h2>
-          <p className="font-mono text-xs text-secondary">
+          <p className="font-mono text-secondary text-xs">
             Showing {filteredIcons.length.toLocaleString()} of{" "}
             {totalCount.toLocaleString()} icons
           </p>

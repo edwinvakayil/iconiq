@@ -27,23 +27,23 @@ const SearchInput = ({ searchValue, setSearchValue }: SearchInputProps) => {
   return (
     <div className="relative w-full max-w-[260px]">
       <Input
-        ref={inputRef}
         aria-label="Search icons"
         autoCapitalize="off"
         autoComplete="off"
         autoCorrect="off"
-        className="pl-8 pr-20"
+        className="pr-20 pl-8"
         inputMode="search"
-        onChange={(e) => setSearchValue(e.target.value)}
-        placeholder="Search icons..."
-        role="search"
-        spellCheck="false"
-        value={searchValue}
         leadingIcon={
           <SearchIcon className="size-4 text-neutral-400" strokeWidth={2.5} />
         }
+        onChange={(e) => setSearchValue(e.target.value)}
+        placeholder="Search icons..."
+        ref={inputRef}
+        role="search"
+        spellCheck="false"
+        value={searchValue}
       />
-      <div className="pointer-events-none absolute right-2.5 top-1/2 hidden -translate-y-1/2 items-center gap-1 rounded-full bg-neutral-100 px-2 py-0.5 font-mono text-[10px] text-neutral-500 md:flex">
+      <div className="pointer-events-none absolute top-1/2 right-2.5 hidden -translate-y-1/2 items-center gap-1 rounded-full bg-neutral-100 px-2 py-0.5 font-mono text-[10px] text-neutral-500 md:flex">
         <kbd className="flex h-4 min-w-4 items-center justify-center rounded-[3px] bg-neutral-200 px-1 text-[10px] leading-4">
           ⌘
         </kbd>
