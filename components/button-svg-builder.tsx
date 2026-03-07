@@ -330,7 +330,7 @@ export function ButtonSvgBuilder({ icons }: ButtonSvgBuilderProps) {
         {/* Copy npm / shadcn CLI */}
         <div>
           <p className="mb-2 font-medium font-sans text-[11px] text-neutral-500 uppercase tracking-wider">
-            Install via npm / shadcn CLI
+            Install via {packageName} / SHADCN CLI
           </p>
           <div className="flex items-center gap-2 rounded-lg border border-neutral-200 bg-neutral-50/50 px-4 py-3 font-mono text-sm">
             <code className="flex-1 truncate text-neutral-900">
