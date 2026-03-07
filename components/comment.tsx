@@ -1,7 +1,24 @@
 import { CommentButtonClient } from "./comment.client";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 
-const CommentBlock = () => {
+const GITHUB_REPO_API = "https://api.github.com/repos/edwinvakayil/iconiq";
+
+async function getRepoOwnerAvatar(): Promise<string | null> {
+  try {
+    const res = await fetch(GITHUB_REPO_API, {
+      headers: { Accept: "application/vnd.github.v3+json" },
+      next: { revalidate: 3600 },
+    });
+    const data = (await res.json()) as { owner?: { avatar_url?: string } };
+    return data?.owner?.avatar_url ?? null;
+  } catch {
+    return null;
+  }
+}
+
+const CommentBlock = async () => {
+  const avatarUrl = await getRepoOwnerAvatar();
+
   return (
     <div className="relative my-[40px] flex w-full max-w-[610px] flex-col items-center justify-center max-[655px]:px-0">
       <div className="flex w-full flex-wrap items-center justify-between gap-4 border-neutral-200 border-t pt-4 max-[655px]:pl-0 dark:border-neutral-800">
@@ -10,7 +27,7 @@ const CommentBlock = () => {
             <AvatarImage
               alt="Edwin Vakayil, the author of Iconiq"
               className="select-none"
-              src="https://avatars.githubusercontent.com/u/180170746?v=4"
+              src={avatarUrl ?? undefined}
             />
             <AvatarFallback className="bg-neutral-200 font-sans dark:bg-neutral-800">
               EV
