@@ -98,9 +98,15 @@ const Card = ({ children, animationRef, className, ...props }: CardProps) => {
           type="button"
         >
           {isAnimating ? (
-            <PauseIcon aria-hidden="true" className="size-4 text-neutral-800 dark:text-neutral-200" />
+            <PauseIcon
+              aria-hidden="true"
+              className="size-4 text-neutral-800 dark:text-neutral-200"
+            />
           ) : (
-            <PlayIcon aria-hidden="true" className="size-4 text-neutral-800 dark:text-neutral-200" />
+            <PlayIcon
+              aria-hidden="true"
+              className="size-4 text-neutral-800 dark:text-neutral-200"
+            />
           )}
         </button>
       )}
@@ -153,7 +159,10 @@ const CopyCLIAction = ({ name }: Pick<Icon, "name">) => {
         tabIndex={0}
       >
         <IconState status={state}>
-          <Terminal aria-hidden="true" className="size-4 text-neutral-800 dark:text-neutral-200" />
+          <Terminal
+            aria-hidden="true"
+            className="size-4 text-neutral-800 dark:text-neutral-200"
+          />
         </IconState>
       </TooltipTrigger>
       <TooltipContent>
@@ -204,7 +213,10 @@ const CopyCodeAction = ({ name }: Pick<Icon, "name">) => {
         tabIndex={0}
       >
         <IconState status={state}>
-          <Copy aria-hidden="true" className="size-4 text-neutral-800 dark:text-neutral-200" />
+          <Copy
+            aria-hidden="true"
+            className="size-4 text-neutral-800 dark:text-neutral-200"
+          />
         </IconState>
       </TooltipTrigger>
       <TooltipContent>
@@ -269,7 +281,10 @@ const OpenInV0Action = ({ name }: Pick<Icon, "name">) => {
         tabIndex={0}
       >
         <IconState status={state}>
-          <V0Icon aria-hidden="true" className="size-5 text-neutral-800 dark:text-neutral-200" />
+          <V0Icon
+            aria-hidden="true"
+            className="size-5 text-neutral-800 dark:text-neutral-200"
+          />
         </IconState>
       </TooltipTrigger>
       <TooltipContent>

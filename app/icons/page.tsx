@@ -27,7 +27,10 @@ export default function IconLibraryPage() {
               <li aria-hidden="true">
                 <ChevronRight className="size-4 text-neutral-400 dark:text-neutral-500" />
               </li>
-              <li aria-current="page" className="text-neutral-900 dark:text-white">
+              <li
+                aria-current="page"
+                className="text-neutral-900 dark:text-white"
+              >
                 Icon Library
               </li>
             </ol>

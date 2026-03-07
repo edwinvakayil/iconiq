@@ -163,7 +163,7 @@ export function ButtonSvgBuilder({ icons }: ButtonSvgBuilderProps) {
               ref={iconSearchRef}
               value={searchValue}
             />
-            <div className="pointer-events-none absolute top-1/2 right-2.5 hidden -translate-y-1/2 items-center gap-1 font-mono text-[10px] text-neutral-500 dark:text-neutral-400 md:flex">
+            <div className="pointer-events-none absolute top-1/2 right-2.5 hidden -translate-y-1/2 items-center gap-1 font-mono text-[10px] text-neutral-500 md:flex dark:text-neutral-400">
               <kbd className="flex h-4 min-w-4 items-center justify-center rounded-[3px] bg-neutral-200 px-1 text-[10px] leading-4 dark:bg-neutral-700 dark:text-neutral-200">
                 ⌘
               </kbd>
@@ -228,7 +228,7 @@ export function ButtonSvgBuilder({ icons }: ButtonSvgBuilderProps) {
             </label>
             <select
               aria-label="Button variant"
-              className="flex h-9 max-w-[180px] rounded-md border border-neutral-200 bg-background px-3 py-1 font-sans text-sm outline-none ring-1 ring-neutral-200 transition-colors hover:ring-neutral-300 focus:ring-2 focus:ring-neutral-400 focus:ring-offset-0 dark:border-neutral-700 dark:bg-neutral-900 dark:text-white dark:ring-neutral-700 dark:hover:ring-neutral-600 dark:focus:ring-neutral-500"
+              className="flex h-9 max-w-[180px] rounded-md border border-neutral-200 bg-background px-3 py-1 font-sans text-sm outline-none ring-1 ring-neutral-200 transition-colors hover:ring-neutral-300 focus:ring-2 focus:ring-neutral-400 focus:ring-offset-0 dark:border-neutral-700 dark:bg-neutral-900 dark:text-white dark:ring-neutral-700 dark:focus:ring-neutral-500 dark:hover:ring-neutral-600"
               id="button-variant"
               onChange={(e) =>
                 setButtonVariant(
