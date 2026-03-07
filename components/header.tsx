@@ -33,6 +33,7 @@ const mobileNavLinks = [
   { label: "Introduction", href: "/introduction" },
   { label: "Installation", href: "/installation" },
   { label: "Icon Library", href: "/icons" },
+  { label: "Button + Icon", href: "/icons/button-svg" },
 ];
 
 const mobileNavContributing = [

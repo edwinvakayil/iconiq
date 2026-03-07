@@ -13,7 +13,10 @@ const nav = [
   },
   {
     title: "Icons",
-    items: [{ label: "Icon Library", href: "/icons" }],
+    items: [
+      { label: "Icon Library", href: "/icons" },
+      { label: "Button + Icon", href: "/icons/button-svg" },
+    ],
   },
   {
     title: "Contributing",
@@ -42,11 +45,7 @@ export function SidebarNav() {
               <ul className="space-y-0.5">
                 {section.items.map((item) => {
                   const isExternal = item.href.startsWith("http");
-                  const isActive =
-                    !isExternal &&
-                    (pathname === item.href ||
-                      (item.href !== "/" &&
-                        pathname.startsWith(`${item.href}/`)));
+                  const isActive = !isExternal && pathname === item.href;
                   const linkClass =
                     "block py-1 font-sans text-sm underline-offset-4 transition-colors hover:text-neutral-900 focus-visible:outline-1 focus-visible:outline-primary " +
                     (isActive
