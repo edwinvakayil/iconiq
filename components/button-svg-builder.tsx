@@ -319,17 +319,6 @@ export function ButtonSvgBuilder({ icons }: ButtonSvgBuilderProps) {
               Code (Button + Icon)
             </p>
             <Tooltip>
-              <TooltipTrigger
-                aria-label="Copy code"
-                className="flex size-9 items-center justify-center rounded-full bg-neutral-100 transition-colors hover:bg-neutral-200 focus-visible:outline-1 focus-visible:outline-primary disabled:opacity-50"
-                data-busy={codeState !== "idle" ? "" : undefined}
-                disabled={codeState !== "idle"}
-                onClick={handleCopyCode}
-              >
-                <IconState status={codeState}>
-                  <Copy className="size-4 text-neutral-800" />
-                </IconState>
-              </TooltipTrigger>
               <TooltipContent>
                 Copy code (Button + Icon component)
               </TooltipContent>
