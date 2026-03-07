@@ -10,7 +10,7 @@ on:
   pull_request_review:
     types: [submitted]
   pull_request:
-    types: [opened, synchronize]
+    types: [opened, synchronize, reopened]
 
 jobs:
   claude:
@@ -30,18 +30,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Full history so Claude can create branches and diffs
+          fetch-depth: 0
 
       - name: Run Claude Code
         id: claude
-        uses: anthropics/claude-code-action@v1
+        uses: anthropics/claude-code-action@01e756b  # pinned to last known working SHA
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
-          # Optional: customize trigger phrase (default: @claude)
-          # trigger_phrase: "/claude"
-
-          # Optional: trigger when specific user is assigned to an issue
-          # assignee_trigger: "claude-bot"
-
-          # Optional: restrict what Claude can run
-          # claude_args: "--allowedTools \"Bash(pnpm install),Bash(pnpm run build),Bash(pnpm run lint)\" --model claude-sonnet-4-5 --max-turns 10"
+          github_token: ${{ secrets.GITHUB_TOKEN }}
