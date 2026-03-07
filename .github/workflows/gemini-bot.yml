@@ -31,8 +31,8 @@ jobs:
         uses: google-github-actions/run-gemini-cli@main
         with:
           gemini_api_key: ${{ secrets.GEMINI_API_KEY }}
-          # Using Flash to avoid "Quota Exceeded" errors
-          gemini_model: "gemini-1.5-flash"
+          # Use -latest suffix; bare "gemini-1.5-flash" is not a valid model ID for generateContent
+          gemini_model: "gemini-1.5-flash-latest"
           prompt: |
             You are a Senior Developer. 
             
