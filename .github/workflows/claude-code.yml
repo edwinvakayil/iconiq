@@ -28,7 +28,15 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v6
         with:
-          fetch-depth: 1
+          fetch-depth: 0  # Full clone so Claude can push new branches and compare refs
+
+      - name: Verify Anthropic API key
+        run: |
+          if [ -z "${{ secrets.ANTHROPIC_API_KEY }}" ]; then
+            echo "::error::ANTHROPIC_API_KEY secret is not set. Add it in repo Settings → Secrets and variables → Actions."
+            exit 1
+          fi
+          echo "API key is set."
 
       - name: Run Claude Code
         id: claude
