@@ -12,17 +12,21 @@ import { getPackageManagerPrefix } from "@/lib/get-package-manager-prefix";
 import { cn } from "@/lib/utils";
 import { usePackageNameContext } from "@/providers/package-name";
 
-export function CodeBlockInstall() {
+export function CodeBlockInstall({
+  componentName = "code-block",
+}: {
+  componentName?: string;
+}) {
   const [state, setState] = useState<IconStatus>("idle");
   const [_, startTransition] = useTransition();
   const { packageName, setPackageName } = usePackageNameContext();
 
+  const cliCommand = `${getPackageManagerPrefix(packageName)} shadcn add @iconiq/${componentName}`;
+
   const handleCopyToClipboard = () => {
     startTransition(async () => {
       try {
-        await navigator.clipboard.writeText(
-          `${getPackageManagerPrefix(packageName)} shadcn add @iconiq/code-block`
-        );
+        await navigator.clipboard.writeText(cliCommand);
         setState("done");
         await new Promise((resolve) => setTimeout(resolve, 2000));
         setState("idle");
@@ -74,7 +78,7 @@ export function CodeBlockInstall() {
                 )}
               >
                 <span className="sr-only">
-                  {getPackageManagerPrefix(pm)} shadcn add @iconiq/code-block
+                  {getPackageManagerPrefix(pm)} shadcn add @iconiq/{componentName}
                 </span>
                 <span
                   aria-hidden="true"
@@ -85,7 +89,7 @@ export function CodeBlockInstall() {
                 <span aria-hidden="true" className="text-black dark:text-white">
                   shadcn add @iconiq/
                 </span>
-                <span className="shrink-0 text-primary">code-block</span>
+                <span className="shrink-0 text-primary">{componentName}</span>
               </BaseScrollArea.Viewport>
               <BaseScrollArea.Scrollbar
                 className="pointer-events-none absolute right-2! bottom-1! left-2! flex h-0.5 touch-none rounded bg-neutral-200 opacity-0 transition-opacity duration-100 data-hovering:pointer-events-auto data-scrolling:pointer-events-auto data-hovering:opacity-100 data-scrolling:opacity-100 data-hovering:delay-0 data-scrolling:duration-0 dark:bg-neutral-700"

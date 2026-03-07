@@ -1,5 +1,6 @@
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
+import { CodeBlockInstall } from "@/components/code-block-install";
 import { OnThisPage } from "@/components/on-this-page";
 import { SidebarNav } from "@/components/sidebar-nav";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -57,22 +58,35 @@ export default async function AnimatedTooltipPage() {
             Animated Tooltip
           </h1>
           <p className="mt-2 font-sans text-lg text-neutral-600">
-            A tooltip that tilts and shifts with mouse movement, with spring
-            enter/exit animations.
+          A dynamic tooltip that tilts and shifts based on cursor movement, 
+          enhanced with smooth spring-based enter and exit animations.
           </p>
           <p className="mt-6 font-sans text-neutral-600 text-sm">
-            Uses Motion for parallax-style rotation and translation based on
-            hover position, plus AnimatePresence for show/hide. Ideal for
-            avatars, buttons, or any trigger where you want a playful, reactive
-            tooltip.
+          Built with Motion to create a subtle parallax effect using 
+          hover position for rotation and translation. 
+          AnimatePresence manages smooth mounting and unmounting transitions. 
+          Ideal for avatars, buttons, and interactive UI triggers where a responsive, 
+          playful tooltip enhances the experience.
           </p>
 
-          <h2 className="mt-12 font-sans font-semibold text-lg text-neutral-900">
+          <p className="mt-6 font-sans text-neutral-600 text-sm">
+          Install using the shadcn CLI to add a clean, developer-friendly 
+          tooltip component to your application.
+          </p>
+
+          <div className="mt-10">
+            <CodeBlockInstall componentName="animated-tooltip" />
+          </div>
+
+          <h2
+            className="mt-12 font-sans font-semibold text-lg text-neutral-900"
+            id="preview"
+          >
             Preview
           </h2>
           <p className="mt-1 font-sans text-neutral-600 text-sm">
-            Hover the button and move the cursor to see the tooltip tilt and
-            translate.
+            Hover over the trigger and move your cursor to see the tooltip 
+            tilt and translate in response to pointer movement.
           </p>
           <div className="mt-6 flex flex-wrap items-center gap-4">
             <AnimatedTooltip
@@ -117,7 +131,10 @@ export default async function AnimatedTooltipPage() {
             />
           </div>
 
-          <h3 className="mt-8 font-sans font-semibold text-base text-neutral-900">
+          <h3
+            className="mt-8 font-sans font-semibold text-base text-neutral-900"
+            id="props"
+          >
             Props
           </h3>
           <ul className="mt-2 list-inside list-disc font-sans text-neutral-600 text-sm">

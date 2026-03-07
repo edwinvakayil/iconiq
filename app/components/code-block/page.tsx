@@ -53,7 +53,10 @@ export default function CodeBlockPage() {
             <CodeBlockInstall />
           </div>
 
-          <h2 className="mt-12 font-sans font-semibold text-lg text-neutral-900">
+          <h2
+            className="mt-12 font-sans font-semibold text-lg text-neutral-900"
+            id="preview"
+          >
             Preview
           </h2>
           <p className="mt-1 font-sans text-neutral-600 text-sm">
@@ -78,7 +81,10 @@ greet("World");`}
             />
           </div>
 
-          <h2 className="mt-12 font-sans font-semibold text-lg text-neutral-900">
+          <h2
+            className="mt-12 font-sans font-semibold text-lg text-neutral-900"
+            id="usage"
+          >
             Usage
           </h2>
           <p className="mt-1 font-sans text-neutral-600 text-sm">

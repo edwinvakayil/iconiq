@@ -21,8 +21,8 @@ const nav = [
   {
     title: "Components",
     items: [
-      { label: "Code Block", href: "/components/code-block" },
       { label: "Animated Tooltip", href: "/components/animated-tooltip" },
+      { label: "Code Block", href: "/components/code-block" },
     ],
   },
   {
