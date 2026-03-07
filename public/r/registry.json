@@ -4947,7 +4947,7 @@
       "name": "code-block",
       "type": "registry:ui",
       "registryDependencies": [],
-      "dependencies": [],
+      "dependencies": ["motion"],
       "devDependencies": [],
       "title": "Code Block",
       "description": "A code block component with language label and copy button. Styled for docs and writing content.",

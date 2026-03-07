@@ -11,15 +11,18 @@ const registryComponents = path.join(__dirname, "../public/r");
 const registryIndexPath = path.join(__dirname, "../public/r/registry.json");
 const registryRootPath = path.join(__dirname, "../registry.json");
 
-/** Optional title/description for registry UI components (from registry/ folder). */
-const REGISTRY_UI_META: Record<string, { title: string; description: string }> =
-  {
-    "code-block": {
-      title: "Code Block",
-      description:
-        "A code block component with language label and copy button. Styled for docs and writing content.",
-    },
-  };
+/** Optional title, description, and dependencies for registry UI components. */
+const REGISTRY_UI_META: Record<
+  string,
+  { title: string; description: string; dependencies?: string[] }
+> = {
+  "code-block": {
+    title: "Code Block",
+    description:
+      "A code block component with language label and copy button. Styled for docs and writing content.",
+    dependencies: ["motion"],
+  },
+};
 
 if (!fs.existsSync(registryComponents)) {
   fs.mkdirSync(registryComponents, { recursive: true });
@@ -65,9 +68,11 @@ for (const component of components) {
 
   if (component.title) schema.title = component.title;
   if (component.description) schema.description = component.description;
-  if (!schema.title && REGISTRY_UI_META[component.name]) {
-    schema.title = REGISTRY_UI_META[component.name].title;
-    schema.description = REGISTRY_UI_META[component.name].description;
+  const uiMeta = REGISTRY_UI_META[component.name];
+  if (uiMeta) {
+    if (!schema.title) schema.title = uiMeta.title;
+    if (!schema.description) schema.description = uiMeta.description;
+    if (uiMeta.dependencies?.length) schema.dependencies = uiMeta.dependencies;
   }
   if (component.author) schema.author = component.author;
   if (component.tailwind) schema.tailwind = component.tailwind;

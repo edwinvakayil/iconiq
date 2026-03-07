@@ -1,5 +1,6 @@
 "use client";
 
+import { AnimatePresence, motion } from "motion/react";
 import { useState } from "react";
 
 import { cn } from "@/lib/utils";
@@ -112,7 +113,7 @@ export function CodeBlock({
           <CodeIcon className="shrink-0 text-gray-800 dark:text-neutral-300" />
           {language}
         </span>
-        <button
+        <motion.button
           aria-label="Copy code"
           className={cn(
             "inline-flex size-7 items-center justify-center rounded-md border-0 bg-transparent p-0",
@@ -121,14 +122,36 @@ export function CodeBlock({
             copied && "text-gray-800 dark:text-neutral-300"
           )}
           onClick={handleCopy}
+          transition={{ type: "spring", stiffness: 400, damping: 20 }}
           type="button"
+          whileTap={{ scale: 0.88 }}
         >
-          {copied ? (
-            <CheckIcon className="text-green-600 dark:text-green-400" />
-          ) : (
-            <CopyIcon />
-          )}
-        </button>
+          <AnimatePresence mode="wait">
+            {copied ? (
+              <motion.span
+                animate={{ scale: 1, opacity: 1 }}
+                className="inline-flex"
+                exit={{ scale: 0.6, opacity: 0 }}
+                initial={{ scale: 0.6, opacity: 0 }}
+                key="check"
+                transition={{ duration: 0.12, ease: "easeOut" }}
+              >
+                <CheckIcon className="text-green-600 dark:text-green-400" />
+              </motion.span>
+            ) : (
+              <motion.span
+                animate={{ scale: 1, opacity: 1 }}
+                className="inline-flex"
+                exit={{ scale: 0.6, opacity: 0 }}
+                initial={{ scale: 0.6, opacity: 0 }}
+                key="copy"
+                transition={{ duration: 0.12, ease: "easeOut" }}
+              >
+                <CopyIcon />
+              </motion.span>
+            )}
+          </AnimatePresence>
+        </motion.button>
       </div>
       <pre
         className={cn(
