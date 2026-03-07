@@ -29,7 +29,7 @@ const Home = () => {
               Iconiq
             </h1>
             <p className="mt-2 font-sans text-lg text-neutral-600">
-              Motion-powered animated icons for your React projects.
+              Motion-powered animated icons for your React projects
             </p>
             <div className="mt-10 space-y-4 font-sans text-neutral-600 text-sm leading-relaxed">
               <p>
