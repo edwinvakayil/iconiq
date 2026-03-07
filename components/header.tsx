@@ -114,15 +114,15 @@ export function Header() {
               </Link>
             ))}
             <div className="mt-2 border-neutral-200 border-t pt-2">
-              <p className="px-4 pb-1.5 font-sans text-[11px] font-semibold uppercase tracking-wider text-neutral-500">
+              <p className="px-4 pb-1.5 font-sans font-semibold text-[11px] text-neutral-500 uppercase tracking-wider">
                 Contributing
               </p>
               <div className="ml-4 border-neutral-200 border-l-2 pl-4">
                 {mobileNavContributing.map((item) => (
                   <Link
-                    key={item.label}
                     className="block py-2 font-sans text-neutral-700 text-sm hover:bg-neutral-100"
                     href={item.href}
+                    key={item.label}
                     onClick={() => setMobileMenuOpen(false)}
                   >
                     {item.label}
