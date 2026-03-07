@@ -11,7 +11,6 @@ on:
 
 jobs:
   gemini-process:
-    # Logic: Run on new issues/PRs OR if explicitly tagged @gemini
     if: |
       github.event.action == 'opened' || 
       (github.event.comment && contains(github.event.comment.body, '@gemini'))
@@ -25,25 +24,22 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 2 # Fetches enough history for a diff
+          fetch-depth: 2
 
       - name: Gemini Task Handler
         uses: google-github-actions/run-gemini-cli@main
         with:
           gemini_api_key: ${{ secrets.GEMINI_API_KEY }}
-          # Use -latest suffix; bare "gemini-1.5-flash" is not a valid model ID for generateContent
-          gemini_model: "gemini-1.5-flash-latest"
+          # gemini_model is the correct input name for this action
+          gemini_model: "gemini-2.5-flash" 
           prompt: |
             You are a Senior Developer. 
             
-            Task:
-            1. If NEW ISSUE/PR: Summarize the goal in 2 sentences.
-            2. If "@gemini review": Review the code diff for bugs/security.
-            3. If "@gemini fix": Provide a code snippet to solve the issue.
+            Current Event: ${{ github.event_name }}
+            Title: ${{ github.event.issue.title || github.event.pull_request.title }}
+            User Input: "${{ github.event.comment.body || github.event.issue.body || github.event.pull_request.body }}"
 
-            Context:
-            - Event: ${{ github.event_name }}
-            - Title: ${{ github.event.issue.title || github.event.pull_request.title }}
-            - Content: ${{ github.event.comment.body || github.event.issue.body || github.event.pull_request.body }}
-
-            Format your response clearly using Markdown.
+            Instructions:
+            - If NEW ISSUE/PR: Summarize the goal and check for technical clarity.
+            - If "@gemini review": Perform a code review on the diff.
+            - If "@gemini fix": Provide a code snippet solution.
