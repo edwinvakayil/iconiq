@@ -9,8 +9,6 @@ on:
     types: [opened, assigned]
   pull_request_review:
     types: [submitted]
-  pull_request:
-    types: [opened, synchronize, reopened]
 
 jobs:
   claude:
@@ -28,12 +26,33 @@ jobs:
       actions: read
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
-          fetch-depth: 0
+          fetch-depth: 1
 
       - name: Run Claude Code
         id: claude
-        uses: anthropics/claude-code-action@01e756b
+        uses: anthropics/claude-code-action@v1
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+
+          # Optional: Customize the trigger phrase (default: @claude)
+          # trigger_phrase: "/claude"
+
+          # Optional: Trigger when specific user is assigned to an issue
+          # assignee_trigger: "claude-bot"
+
+          # Optional: Configure Claude's behavior with CLI arguments
+          # claude_args: |
+          #   --model claude-opus-4-1-20250805
+          #   --max-turns 10
+          #   --allowedTools "Bash(pnpm install),Bash(pnpm run build),Bash(pnpm run lint:*),Bash(pnpm run check-imports),Bash(pnpm run check-duplicates)"
+          #   --system-prompt "Follow project coding standards. Use pnpm. Ensure TypeScript and existing patterns are respected."
+
+          # Optional: Advanced settings configuration
+          # settings: |
+          #   {
+          #     "env": {
+          #       "NODE_ENV": "test"
+          #     }
+          #   }
