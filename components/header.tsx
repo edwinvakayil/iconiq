@@ -1,10 +1,32 @@
 "use client";
 
-import { Github, Menu, Twitter, X } from "lucide-react";
+import { Github, Menu, X } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { LINK, SITE } from "@/constants";
+
+const GITHUB_REPO_API = "https://api.github.com/repos/edwinvakayil/iconiq";
+
+function XLogoIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      aria-hidden
+      className={className}
+      fill="currentColor"
+      viewBox="0 0 24 24"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+    </svg>
+  );
+}
+
+function formatStarCount(n: number): string {
+  if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1)}M`;
+  if (n >= 1000) return `${(n / 1000).toFixed(0)}k`;
+  return n.toLocaleString();
+}
 
 const mobileNavLinks = [
   { label: "Overview", href: "/" },
@@ -20,6 +42,20 @@ const mobileNavContributing = [
 
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [starCount, setStarCount] = useState<number | null>(null);
+
+  useEffect(() => {
+    fetch(GITHUB_REPO_API, {
+      headers: { Accept: "application/vnd.github.v3+json" },
+    })
+      .then((res) => res.json())
+      .then((data: { stargazers_count?: number }) => {
+        if (typeof data?.stargazers_count === "number") {
+          setStarCount(data.stargazers_count);
+        }
+      })
+      .catch(() => undefined);
+  }, []);
 
   return (
     <header className="z-[100] w-full shrink-0 border-neutral-200 border-b bg-background">
@@ -35,14 +71,21 @@ export function Header() {
 
         <div className="flex items-center gap-2">
           <a
-            aria-label="GitHub"
-            className="hidden size-9 items-center justify-center rounded-md text-neutral-500 transition-colors hover:bg-neutral-100 hover:text-neutral-900 focus-visible:outline-1 focus-visible:outline-primary sm:flex"
+            aria-label="GitHub repository"
+            className="hidden items-center gap-2 px-3 py-1.5 font-sans text-neutral-600 text-sm transition-colors hover:text-neutral-900 focus-visible:outline-1 focus-visible:outline-primary sm:flex"
             href={LINK.GITHUB}
             rel="noopener noreferrer"
             target="_blank"
           >
-            <Github className="size-5" />
+            <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-neutral-900 text-white">
+              <Github aria-hidden className="size-3.5" />
+            </span>
+            <span>{starCount !== null ? formatStarCount(starCount) : "—"}</span>
           </a>
+          <span
+            aria-hidden
+            className="hidden h-5 w-px bg-neutral-200 sm:block"
+          />
           <a
             aria-label="X (Twitter)"
             className="hidden size-9 items-center justify-center rounded-md text-neutral-500 transition-colors hover:bg-neutral-100 hover:text-neutral-900 focus-visible:outline-1 focus-visible:outline-primary sm:flex"
@@ -50,7 +93,7 @@ export function Header() {
             rel="noopener noreferrer"
             target="_blank"
           >
-            <Twitter className="size-5" />
+            <XLogoIcon className="size-5" />
           </a>
 
           <button
@@ -130,26 +173,32 @@ export function Header() {
                 ))}
               </div>
             </div>
-            <div className="mt-2 flex gap-2 border-neutral-200 border-t px-4 pt-4">
+            <div className="mt-2 flex flex-wrap items-center gap-2 border-neutral-200 border-t px-4 pt-4">
               <a
-                aria-label="GitHub"
-                className="flex size-10 items-center justify-center rounded-md border border-neutral-200 text-neutral-600 hover:bg-neutral-100"
+                aria-label="GitHub repository"
+                className="flex items-center gap-2 rounded-md px-3 py-2 font-sans text-neutral-600 text-sm hover:bg-neutral-100"
                 href={LINK.GITHUB}
                 onClick={() => setMobileMenuOpen(false)}
                 rel="noopener noreferrer"
                 target="_blank"
               >
-                <Github className="size-5" />
+                <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-neutral-900 text-white">
+                  <Github aria-hidden className="size-3.5" />
+                </span>
+                <span>
+                  {starCount !== null ? formatStarCount(starCount) : "—"}
+                </span>
               </a>
+              <span aria-hidden className="h-8 w-px shrink-0 bg-neutral-200" />
               <a
                 aria-label="X (Twitter)"
-                className="flex size-10 items-center justify-center rounded-md border border-neutral-200 text-neutral-600 hover:bg-neutral-100"
+                className="flex size-10 items-center justify-center rounded-md text-neutral-600 hover:bg-neutral-100"
                 href={LINK.TWITTER}
                 onClick={() => setMobileMenuOpen(false)}
                 rel="noopener noreferrer"
                 target="_blank"
               >
-                <Twitter className="size-5" />
+                <XLogoIcon className="size-5" />
               </a>
             </div>
           </nav>
