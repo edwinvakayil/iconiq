@@ -2314,4 +2314,10 @@ export const components: ComponentDefinition[] = [
     registryDependencies: [],
     dependencies: [],
   },
+  {
+    name: "animated-tooltip",
+    path: path.join(__dirname, "../registry", "animated-tooltip.tsx"),
+    registryDependencies: [],
+    dependencies: [],
+  },
 ];

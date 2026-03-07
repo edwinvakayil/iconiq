@@ -16,6 +16,12 @@ const REGISTRY_UI_META: Record<
   string,
   { title: string; description: string; dependencies?: string[] }
 > = {
+  "animated-tooltip": {
+    title: "Animated Tooltip",
+    description:
+      "A tooltip that tilts and shifts with mouse movement, with spring enter/exit animations. Uses Motion for parallax-style rotation and translation.",
+    dependencies: ["motion"],
+  },
   "code-block": {
     title: "Code Block",
     description:

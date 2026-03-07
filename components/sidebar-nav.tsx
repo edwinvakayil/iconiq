@@ -20,7 +20,10 @@ const nav = [
   },
   {
     title: "Components",
-    items: [{ label: "Code Block", href: "/components/code-block" }],
+    items: [
+      { label: "Code Block", href: "/components/code-block" },
+      { label: "Animated Tooltip", href: "/components/animated-tooltip" },
+    ],
   },
   {
     title: "Contributing",

@@ -41,11 +41,12 @@ export default function CodeBlockPage() {
             Code Block
           </h1>
           <p className="mt-2 font-sans text-lg text-neutral-600">
-          A minimal code block component featuring a language indicator and copy-to-clipboard action.
+            A minimal code block component featuring a language indicator and
+            copy-to-clipboard action.
           </p>
           <p className="mt-6 font-sans text-neutral-600 text-sm">
-          Install via the shadcn CLI and use it to present code snippets with a clean, 
-          developer-friendly interface.
+            Install via the shadcn CLI and use it to present code snippets with
+            a clean, developer-friendly interface.
           </p>
 
           <div className="mt-10">
@@ -80,6 +81,18 @@ greet("World");`}
           <h2 className="mt-12 font-sans font-semibold text-lg text-neutral-900">
             Usage
           </h2>
+          <p className="mt-1 font-sans text-neutral-600 text-sm">
+            Import the component and pass a{" "}
+            <code className="rounded bg-neutral-200 px-1 font-mono text-xs">
+              code
+            </code>{" "}
+            string and optional{" "}
+            <code className="rounded bg-neutral-200 px-1 font-mono text-xs">
+              language
+            </code>{" "}
+            label. Use it in docs, README sections, or any place you need to
+            display snippets with a copy button.
+          </p>
           <div className="mt-4">
             <RegistryCodeBlock
               code={

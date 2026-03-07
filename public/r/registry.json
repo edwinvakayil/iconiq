@@ -4957,6 +4957,21 @@
           "type": "registry:ui"
         }
       ]
+    },
+    {
+      "name": "animated-tooltip",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": ["motion"],
+      "devDependencies": [],
+      "title": "Animated Tooltip",
+      "description": "A tooltip that tilts and shifts with mouse movement, with spring enter/exit animations. Uses Motion for parallax-style rotation and translation.",
+      "files": [
+        {
+          "path": "animated-tooltip.tsx",
+          "type": "registry:ui"
+        }
+      ]
     }
   ]
 }

@@ -35,6 +35,7 @@ const mobileNavLinks = [
   { label: "Icon Library", href: "/icons" },
   { label: "Button + Icon", href: "/icons/button-svg" },
   { label: "Code Block", href: "/components/code-block" },
+  { label: "Animated Tooltip", href: "/components/animated-tooltip" },
 ];
 
 const mobileNavContributing = [
