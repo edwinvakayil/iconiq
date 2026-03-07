@@ -28,6 +28,8 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v6
         with:
+          # Use PR head SHA when available so we don't fail if the branch was deleted or renamed (e.g. ref 'test')
+          ref: ${{ github.event.pull_request.head.sha || github.ref }}
           fetch-depth: 1
 
       - name: Run Claude Code
