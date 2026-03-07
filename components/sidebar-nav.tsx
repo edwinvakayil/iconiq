@@ -21,7 +21,10 @@ const nav = [
     title: "Contributing",
     items: [
       { label: "Introduction", href: `${LINK.GITHUB}#readme` },
-      { label: "Contributing Code", href: `${LINK.GITHUB}/blob/main/CONTRIBUTING.md` },
+      {
+        label: "Contributing Code",
+        href: `${LINK.GITHUB}/blob/main/CONTRIBUTING.md`,
+      },
     ],
   },
 ];
@@ -32,13 +35,13 @@ export function SidebarNav() {
   return (
     <aside
       aria-label="Main navigation"
-      className="hidden w-90 shrink-0 border-r border-neutral-200 bg-background lg:block"
+      className="hidden w-90 shrink-0 border-neutral-200 border-r bg-background lg:block"
     >
-      <nav className="sticky top-0 max-h-[calc(100vh-0px)] overflow-y-auto py-6 pl-0 pr-4">
+      <nav className="sticky top-0 max-h-[calc(100vh-0px)] overflow-y-auto py-6 pr-4 pl-0">
         <ul className="space-y-6">
           {nav.map((section) => (
             <li key={section.title}>
-              <h2 className="mb-2 font-sans text-[11px] font-semibold uppercase tracking-wider text-neutral-500">
+              <h2 className="mb-2 font-sans font-semibold text-[11px] text-neutral-500 uppercase tracking-wider">
                 {section.title}
               </h2>
               <ul className="space-y-0.5">
@@ -47,7 +50,8 @@ export function SidebarNav() {
                   const isActive =
                     !isExternal &&
                     (pathname === item.href ||
-                      (item.href !== "/" && pathname.startsWith(`${item.href}/`)));
+                      (item.href !== "/" &&
+                        pathname.startsWith(`${item.href}/`)));
                   const linkClass =
                     "block py-1 font-sans text-sm underline-offset-4 transition-colors hover:text-neutral-900 focus-visible:outline-1 focus-visible:outline-primary " +
                     (isActive

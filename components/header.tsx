@@ -11,7 +11,11 @@ const mobileNavLinks = [
   { label: "Introduction", href: "/introduction" },
   { label: "Installation", href: "/installation" },
   { label: "Icon Library", href: "/icons" },
-  { label: "Contributing", href: `${LINK.GITHUB}#readme`, external: true },
+];
+
+const mobileNavContributing = [
+  { label: "Introduction", href: "/contributing/introduction" },
+  { label: "Contributing Code", href: "/contributing/code" },
 ];
 
 export function Header() {
@@ -99,29 +103,33 @@ export function Header() {
             </button>
           </div>
           <nav aria-label="Mobile" className="flex flex-col gap-0 py-4">
-            {mobileNavLinks.map((item) =>
-              item.external ? (
-                <a
-                  className="block px-4 py-3 font-sans text-neutral-700 text-sm hover:bg-neutral-100"
-                  href={item.href}
-                  key={item.label}
-                  onClick={() => setMobileMenuOpen(false)}
-                  rel="noopener noreferrer"
-                  target="_blank"
-                >
-                  {item.label}
-                </a>
-              ) : (
-                <Link
-                  className="block px-4 py-3 font-sans text-neutral-700 text-sm hover:bg-neutral-100"
-                  href={item.href}
-                  key={item.label}
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  {item.label}
-                </Link>
-              )
-            )}
+            {mobileNavLinks.map((item) => (
+              <Link
+                className="block px-4 py-3 font-sans text-neutral-700 text-sm hover:bg-neutral-100"
+                href={item.href}
+                key={item.label}
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                {item.label}
+              </Link>
+            ))}
+            <div className="mt-2 border-neutral-200 border-t pt-2">
+              <p className="px-4 pb-1.5 font-sans font-semibold text-[11px] text-neutral-500 uppercase tracking-wider">
+                Contributing
+              </p>
+              <div className="flex flex-col">
+                {mobileNavContributing.map((item) => (
+                  <Link
+                    className="block border-neutral-200 border-l-2 py-2 pr-4 pl-5 font-sans text-neutral-700 text-sm hover:border-neutral-400 hover:bg-neutral-100"
+                    href={item.href}
+                    key={item.label}
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    {item.label}
+                  </Link>
+                ))}
+              </div>
+            </div>
             <div className="mt-2 flex gap-2 border-neutral-200 border-t px-4 pt-4">
               <a
                 aria-label="GitHub"
