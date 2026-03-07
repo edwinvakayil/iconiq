@@ -42,7 +42,7 @@ const SearchInput = ({ searchValue, setSearchValue }: SearchInputProps) => {
         className="pr-20 pl-8"
         inputMode="search"
         leadingIcon={
-          <SearchIcon className="size-4 text-neutral-400" strokeWidth={2.5} />
+          <SearchIcon className="size-4 text-neutral-400 dark:text-neutral-500" strokeWidth={2.5} />
         }
         onChange={(e) => setSearchValue(e.target.value)}
         onKeyDown={handleKeyDown}
@@ -52,7 +52,7 @@ const SearchInput = ({ searchValue, setSearchValue }: SearchInputProps) => {
         spellCheck="false"
         value={searchValue}
       />
-      <div className="pointer-events-none absolute top-1/2 right-2.5 hidden -translate-y-1/2 items-center gap-1 rounded-full bg-neutral-100 px-2 py-0.5 font-mono text-[10px] text-neutral-500 md:flex">
+      <div className="pointer-events-none absolute top-1/2 right-2.5 hidden -translate-y-1/2 items-center gap-1 font-mono text-[10px] text-neutral-500 dark:text-neutral-400 md:flex">
         <kbd className="flex h-4 min-w-4 items-center justify-center rounded-[3px] bg-neutral-200 px-1 text-[10px] leading-4 dark:bg-neutral-700 dark:text-neutral-200">
           ⌘
         </kbd>

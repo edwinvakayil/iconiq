@@ -40,7 +40,7 @@ const IconItem = ({
     >
       <div className="flex items-center justify-start">
         <Icon
-          className="flex items-center justify-center [&>svg]:size-10 [&>svg]:text-neutral-900"
+          className="flex items-center justify-center [&>svg]:size-10 [&>svg]:text-neutral-900 [&>svg]:dark:text-white"
           ref={animationRef}
         />
       </div>
@@ -96,7 +96,7 @@ const IconsList = ({ icons }: Props) => {
       </div>
       <div className="mt-2 grid grid-cols-[repeat(auto-fill,minmax(220px,1fr))] gap-4">
         {filteredIcons.length === 0 && (
-          <div className="col-span-full pt-10 text-center text-neutral-500 text-sm">
+          <div className="col-span-full pt-10 text-center text-neutral-500 text-sm dark:text-neutral-400">
             No icons found
           </div>
         )}
