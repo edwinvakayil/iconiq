@@ -23,12 +23,17 @@ jobs:
       pull-requests: write
       issues: write
       id-token: write
-      actions: read # Required for Claude to read CI results on PRs
+      actions: read
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Full clone so Claude can push new branches and compare refs
+          fetch-depth: 0
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: "1.2.0"
 
       - name: Verify Anthropic API key
         run: |
@@ -42,9 +47,8 @@ jobs:
         id: claude
         uses: anthropics/claude-code-action@v1
         with:
-          show_full_output: true # Show full output from Claude
+          show_full_output: true
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
-
           # Optional: Customize the trigger phrase (default: @claude)
           # trigger_phrase: "/claude"
 
