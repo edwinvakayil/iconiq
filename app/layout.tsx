@@ -69,8 +69,8 @@ export default function RootLayout({
                       toastOptions={{
                         classNames: {
                           toast:
-                            "!bg-white !px-4 !py-4 !flex-wrap !gap-0 !border-neutral-900/5 supports-[corner-shape:squircle]:!corner-squircle supports-[corner-shape:squircle]:!rounded-[30px] !rounded-[14px]",
-                          title: "font-sans text-black",
+                            "!flex !items-center !justify-center !bg-white !px-4 !py-4 !gap-2 !border-neutral-900/5 supports-[corner-shape:squircle]:!corner-squircle supports-[corner-shape:squircle]:!rounded-[30px] !rounded-[14px]",
+                          title: "font-sans text-black !text-center",
                           icon: "translate-y-[-9.5px]",
                           actionButton:
                             "!mt-2 w-full flex items-center justify-center !font-sans !bg-primary focus-visible:outline-primary cursor-pointer !h-8 !text-[14px] transition-colors duration-100 hover:!bg-[color-mix(in_oklab,var(--color-primary),black_10%)] focus-visible:outline-1 focus-visible:outline-offset-1 supports-[corner-shape:squircle]:!corner-squircle supports-[corner-shape:squircle]:!rounded-[30px] !rounded-[14px]",

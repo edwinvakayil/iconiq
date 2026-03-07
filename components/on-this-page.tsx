@@ -19,6 +19,18 @@ const tocByPath = {
     { label: "Installation", href: "/installation" },
     { label: "Icon Library", href: "/icons" },
   ],
+  contributingIntroduction: [
+    { label: "Overview", href: "/" },
+    { label: "Introduction", href: "/introduction" },
+    { label: "Installation", href: "/installation" },
+    { label: "Icon Library", href: "/icons" },
+  ],
+  contributingCode: [
+    { label: "Overview", href: "/" },
+    { label: "Introduction", href: "/introduction" },
+    { label: "Installation", href: "/installation" },
+    { label: "Icon Library", href: "/icons" },
+  ],
 };
 
 function getTocForPath(pathname: string) {
@@ -27,6 +39,9 @@ function getTocForPath(pathname: string) {
   if (pathname === "/installation") return tocByPath.installation;
   if (pathname === "/icons" || pathname.startsWith("/icons/"))
     return tocByPath.icons;
+  if (pathname === "/contributing/introduction")
+    return tocByPath.contributingIntroduction;
+  if (pathname === "/contributing/code") return tocByPath.contributingCode;
   return tocByPath.home;
 }
 
@@ -39,8 +54,8 @@ export function OnThisPage() {
       aria-label="On this page"
       className="hidden w-72 shrink-0 border-neutral-200 bg-background xl:block"
     >
-      <nav className="sticky top-0 z-10 max-h-[calc(100vh-0px)] overflow-y-auto py-6 pl-4 pr-6 bg-background">
-        <h2 className="mb-3 font-sans text-[11px] font-semibold uppercase tracking-wider text-neutral-500">
+      <nav className="sticky top-0 z-10 max-h-[calc(100vh-0px)] overflow-y-auto bg-background py-6 pr-6 pl-4">
+        <h2 className="mb-3 font-sans font-semibold text-[11px] text-neutral-500 uppercase tracking-wider">
           On this page
         </h2>
         <ul className="space-y-1">

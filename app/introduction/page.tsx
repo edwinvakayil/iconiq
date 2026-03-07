@@ -3,7 +3,6 @@ import Link from "next/link";
 
 import { OnThisPage } from "@/components/on-this-page";
 import { SidebarNav } from "@/components/sidebar-nav";
-import { LINK } from "@/constants";
 
 export default function IntroductionPage() {
   return (
@@ -12,7 +11,7 @@ export default function IntroductionPage() {
       <main className="min-w-0 flex-1">
         <div className="mx-auto max-w-[720px] px-4 py-10 sm:px-6 sm:py-12">
           <nav aria-label="Breadcrumb" className="mb-6">
-            <ol className="flex items-center gap-1.5 font-sans text-sm text-neutral-500">
+            <ol className="flex items-center gap-1.5 font-sans text-neutral-500 text-sm">
               <li>
                 <Link
                   className="transition-colors hover:text-neutral-900"
@@ -24,45 +23,46 @@ export default function IntroductionPage() {
               <li aria-hidden="true">
                 <ChevronRight className="size-4 text-neutral-400" />
               </li>
-              <li className="text-neutral-900" aria-current="page">
+              <li aria-current="page" className="text-neutral-900">
                 Introduction
               </li>
             </ol>
           </nav>
 
-          <h1 className="font-sans text-3xl font-bold tracking-tight text-neutral-900 sm:text-4xl">
+          <h1 className="font-bold font-sans text-3xl text-neutral-900 tracking-tight sm:text-4xl">
             Introduction
           </h1>
           <p className="mt-2 font-sans text-lg text-neutral-600">
-            Iconiq brings motion to interface icons while keeping the simplicity of Lucide.
+            Iconiq brings motion to interface icons while keeping the simplicity
+            of Lucide.
           </p>
 
-          <div className="mt-10 space-y-4 font-sans text-sm leading-relaxed text-neutral-600">
+          <div className="mt-10 space-y-4 font-sans text-neutral-600 text-sm leading-relaxed">
             <p>
-            Instead of shipping a heavy icon package, 
-            Iconiq provides copy-paste React components that live directly in your project.
+              Instead of shipping a heavy icon package, Iconiq provides
+              copy-paste React components that live directly in your project.
             </p>
             <p>
               This gives you full control over styling, animation, and behavior.
             </p>
             <div>
-              <h2 className="mb-2 font-sans text-sm font-semibold text-neutral-900">
+              <h2 className="mb-2 font-sans font-semibold text-neutral-900 text-sm">
                 Principles
               </h2>
-              <ul className="list-disc space-y-1 pl-5 font-sans text-sm text-neutral-600">
+              <ul className="list-disc space-y-1 pl-5 font-sans text-neutral-600 text-sm">
                 <li>Minimal and consistent design</li>
                 <li>Subtle, purposeful motion</li>
                 <li>Easy developer integration</li>
               </ul>
             </div>
             <p>
-            Works with any React framework including Next.js, Vite, and Remix.
+              Works with any React framework including Next.js, Vite, and Remix.
             </p>
           </div>
 
-          <div className="mt-12 flex flex-wrap items-center justify-end border-t border-neutral-200 pt-6">
+          <div className="mt-12 flex flex-wrap items-center justify-end border-neutral-200 border-t pt-6">
             <Link
-              className="inline-flex items-center gap-1 font-sans text-sm font-medium text-neutral-700 transition-colors hover:text-neutral-900"
+              className="inline-flex items-center gap-1 font-medium font-sans text-neutral-700 text-sm transition-colors hover:text-neutral-900"
               href="/installation"
             >
               Installation
