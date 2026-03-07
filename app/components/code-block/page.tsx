@@ -41,12 +41,11 @@ export default function CodeBlockPage() {
             Code Block
           </h1>
           <p className="mt-2 font-sans text-lg text-neutral-600">
-            A code block component with language label and copy button. Styled
-            for docs and writing content.
+          A minimal code block component featuring a language indicator and copy-to-clipboard action.
           </p>
           <p className="mt-6 font-sans text-neutral-600 text-sm">
-            Install the component with the shadcn CLI, then use it anywhere you
-            need to display code with a copy button and optional language label.
+          Install via the shadcn CLI and use it to present code snippets with a clean, 
+          developer-friendly interface.
           </p>
 
           <div className="mt-10">

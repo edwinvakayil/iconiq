@@ -1,85 +1,115 @@
 "use client";
 
-import { Terminal } from "lucide-react";
-import { useState } from "react";
+import { ScrollArea as BaseScrollArea } from "@base-ui/react/scroll-area";
+import { CopyIcon } from "lucide-react";
+import { useState, useTransition } from "react";
 import { toast } from "sonner";
 import type { IconStatus } from "@/components/ui/icon-state";
 import { IconState } from "@/components/ui/icon-state";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PACKAGE_MANAGER } from "@/constants";
 import { getPackageManagerPrefix } from "@/lib/get-package-manager-prefix";
+import { cn } from "@/lib/utils";
 import { usePackageNameContext } from "@/providers/package-name";
 
 export function CodeBlockInstall() {
-  const [cliState, setCliState] = useState<IconStatus>("idle");
+  const [state, setState] = useState<IconStatus>("idle");
+  const [_, startTransition] = useTransition();
   const { packageName, setPackageName } = usePackageNameContext();
-  const cliCommand = `${getPackageManagerPrefix(packageName)} shadcn add @iconiq/code-block`;
 
-  const handleCopyCli = async () => {
-    if (cliState !== "idle") return;
-    try {
-      await navigator.clipboard.writeText(cliCommand);
-      setCliState("done");
-      toast.success("Command copied", {
-        description: "Run this in your project to add the component.",
-      });
-      setTimeout(() => setCliState("idle"), 2000);
-    } catch {
-      toast.error("Failed to copy");
-      setCliState("error");
-      setTimeout(() => setCliState("idle"), 2000);
-    }
+  const handleCopyToClipboard = () => {
+    startTransition(async () => {
+      try {
+        await navigator.clipboard.writeText(
+          `${getPackageManagerPrefix(packageName)} shadcn add @iconiq/code-block`
+        );
+        setState("done");
+        await new Promise((resolve) => setTimeout(resolve, 2000));
+        setState("idle");
+      } catch {
+        toast.error("Failed to copy to clipboard", {
+          description: "Please check your browser permissions.",
+        });
+        setState("error");
+        await new Promise((resolve) => setTimeout(resolve, 2000));
+        setState("idle");
+      }
+    });
   };
 
   return (
-    <TooltipProvider>
-      <div className="space-y-3">
-        <p className="font-medium font-sans text-[11px] text-neutral-500 uppercase tracking-wider">
-          Package manager
-        </p>
-        <Tabs
-          onValueChange={(value) =>
-            setPackageName(
-              value as (typeof PACKAGE_MANAGER)[keyof typeof PACKAGE_MANAGER]
-            )
-          }
-          value={packageName}
-        >
-          <TabsList className="w-full max-w-[320px]">
-            {Object.values(PACKAGE_MANAGER).map((pm) => (
-              <TabsTrigger key={pm} value={pm}>
-                {pm}
-              </TabsTrigger>
-            ))}
-          </TabsList>
-        </Tabs>
-        <p className="font-medium font-sans text-[11px] text-neutral-500 uppercase tracking-wider">
-          Install via {packageName} / shadcn CLI
-        </p>
-        <div className="flex items-center gap-2 rounded-lg border border-neutral-200 bg-neutral-50/50 px-4 py-3 font-mono text-sm">
-          <code className="flex-1 truncate text-neutral-900">{cliCommand}</code>
-          <Tooltip>
-            <TooltipTrigger
-              aria-label="Copy CLI command"
-              className="flex size-9 shrink-0 items-center justify-center rounded-full bg-neutral-100 transition-colors hover:bg-neutral-200 focus-visible:outline-1 focus-visible:outline-primary disabled:opacity-50"
-              data-busy={cliState !== "idle" ? "" : undefined}
-              disabled={cliState !== "idle"}
-              onClick={handleCopyCli}
-            >
-              <IconState status={cliState}>
-                <Terminal className="size-4 text-neutral-800" />
-              </IconState>
-            </TooltipTrigger>
-            <TooltipContent>Copy shadcn CLI command</TooltipContent>
-          </Tooltip>
-        </div>
-      </div>
-    </TooltipProvider>
+    <div className="relative mt-[40px] w-full max-w-[642px] px-0">
+      <Tabs
+        className="w-full"
+        onValueChange={setPackageName}
+        value={packageName}
+      >
+        <TabsList className="w-full" onClick={(e) => e.stopPropagation()}>
+          {Object.values(PACKAGE_MANAGER).map((pm) => (
+            <TabsTrigger key={pm} value={pm}>
+              {pm}
+            </TabsTrigger>
+          ))}
+        </TabsList>
+        {Object.values(PACKAGE_MANAGER).map((pm) => (
+          <TabsContent
+            className="supports-[corner-shape:squircle]:corner-tr-squircle supports-[corner-shape:squircle]:corner-br-squircle supports-[corner-shape:squircle]:corner-bl-squircle mt-px overflow-hidden rounded-tr-[10px] rounded-br-[10px] rounded-bl-[10px] focus-within:outline-offset-0 focus-visible:outline-1 focus-visible:outline-primary supports-[corner-shape:squircle]:rounded-tr-[14px] supports-[corner-shape:squircle]:rounded-br-[14px] supports-[corner-shape:squircle]:rounded-bl-[14px]"
+            key={pm}
+            value={pm}
+          >
+            <BaseScrollArea.Root className="relative w-full overflow-hidden">
+              <BaseScrollArea.Viewport
+                className={cn(
+                  "overflow-hidden rounded-tr-[10px] rounded-br-[10px] rounded-bl-[10px] bg-white focus-visible:outline-1 focus-visible:outline-primary focus-visible:outline-offset-0 dark:bg-white/10",
+                  "supports-[corner-shape:squircle]:corner-tr-squircle supports-[corner-shape:squircle]:corner-br-squircle supports-[corner-shape:squircle]:corner-bl-squircle supports-[corner-shape:squircle]:rounded-tr-[14px] supports-[corner-shape:squircle]:rounded-br-[14px] supports-[corner-shape:squircle]:rounded-bl-[14px]",
+                  "isolate whitespace-nowrap px-4 py-3 pr-20 font-mono text-sm tracking-[-0.39px]",
+                  "before:pointer-events-none before:absolute before:top-0 before:left-0 before:z-10 before:block before:h-full before:rounded-bl-[10px]",
+                  "supports-[corner-shape:squircle]:before:corner-bl-squircle supports-[corner-shape:squircle]:before:rounded-bl-[14px]",
+                  "before:transition-[width] before:duration-50 before:ease-out before:content-['']",
+                  "before:w-[min(40px,var(--scroll-area-overflow-x-start))] before:bg-[linear-gradient(to_right,white,transparent)] dark:before:bg-[linear-gradient(to_right,rgb(47_47_47/1),transparent)] before:[--scroll-area-overflow-x-start:inherit]",
+                  "after:pointer-events-none after:absolute after:top-0 after:right-0 after:z-10 after:block after:h-full after:rounded-r-[10px]",
+                  "supports-[corner-shape:squircle]:after:corner-r-squircle supports-[corner-shape:squircle]:after:rounded-r-[14px]",
+                  "after:transition-[width] after:duration-50 after:ease-out after:content-['']",
+                  "after:w-[calc(min(40px,var(--scroll-area-overflow-x-end,100px))+100px)] after:bg-[linear-gradient(to_left,white_0%,white_30%,transparent)] dark:after:bg-[linear-gradient(to_left,rgb(47_47_47/1)_0%,rgb(47_47_47/1)_30%,transparent)] after:[--scroll-area-overflow-x-end:inherit]"
+                )}
+              >
+                <span className="sr-only">
+                  {getPackageManagerPrefix(pm)} shadcn add @iconiq/code-block
+                </span>
+                <span
+                  aria-hidden="true"
+                  className="text-neutral-600 dark:text-neutral-400"
+                >
+                  {getPackageManagerPrefix(pm)}
+                </span>{" "}
+                <span aria-hidden="true" className="text-black dark:text-white">
+                  shadcn add @iconiq/
+                </span>
+                <span className="shrink-0 text-primary">code-block</span>
+              </BaseScrollArea.Viewport>
+              <BaseScrollArea.Scrollbar
+                className="pointer-events-none absolute right-2! bottom-1! left-2! flex h-0.5 touch-none rounded bg-neutral-200 opacity-0 transition-opacity duration-100 data-hovering:pointer-events-auto data-scrolling:pointer-events-auto data-hovering:opacity-100 data-scrolling:opacity-100 data-hovering:delay-0 data-scrolling:duration-0 dark:bg-neutral-700"
+                keepMounted={false}
+                orientation="horizontal"
+              >
+                <BaseScrollArea.Thumb className="relative w-full rounded bg-neutral-600 dark:bg-neutral-400" />
+              </BaseScrollArea.Scrollbar>
+              <button
+                aria-disabled={state !== "idle"}
+                aria-label="Copy to clipboard"
+                className="supports-[corner-shape:squircle]:corner-squircle absolute top-1/2 right-1.5 z-20 -translate-y-1/2 cursor-pointer rounded-[6px] p-2 transition-[background-color] duration-100 focus-within:outline-offset-1 hover:bg-neutral-100 focus-visible:outline-1 focus-visible:outline-primary supports-[corner-shape:squircle]:rounded-[8px] dark:hover:bg-neutral-700"
+                onClick={handleCopyToClipboard}
+                tabIndex={0}
+                type="button"
+              >
+                <IconState status={state}>
+                  <CopyIcon aria-hidden="true" className="size-4" />
+                </IconState>
+              </button>
+            </BaseScrollArea.Root>
+          </TabsContent>
+        ))}
+      </Tabs>
+    </div>
   );
 }
