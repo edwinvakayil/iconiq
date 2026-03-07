@@ -19,6 +19,10 @@ const nav = [
     ],
   },
   {
+    title: "Components",
+    items: [{ label: "Code Block", href: "/components/code-block" }],
+  },
+  {
     title: "Contributing",
     items: [
       { label: "Introduction", href: "/contributing/introduction" },

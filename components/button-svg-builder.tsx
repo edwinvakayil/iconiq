@@ -2,7 +2,7 @@
 
 import { useHotkey } from "@tanstack/react-hotkeys";
 import Fuse from "fuse.js";
-import { Copy, SearchIcon, Terminal } from "lucide-react";
+import { CopyIcon, SearchIcon, Terminal } from "lucide-react";
 import { useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 import type { Icon } from "@/actions/get-icons";
@@ -319,6 +319,17 @@ export function ButtonSvgBuilder({ icons }: ButtonSvgBuilderProps) {
               Code (Button + Icon)
             </p>
             <Tooltip>
+              <TooltipTrigger
+                aria-label="Copy code"
+                className="flex size-9 items-center justify-center rounded-full bg-neutral-100 transition-colors hover:bg-neutral-200 focus-visible:outline-1 focus-visible:outline-primary disabled:opacity-50"
+                data-busy={codeState !== "idle" ? "" : undefined}
+                disabled={codeState !== "idle"}
+                onClick={handleCopyCode}
+              >
+                <IconState status={codeState}>
+                  <CopyIcon className="size-4 text-neutral-800" />
+                </IconState>
+              </TooltipTrigger>
               <TooltipContent>
                 Copy code (Button + Icon component)
               </TooltipContent>

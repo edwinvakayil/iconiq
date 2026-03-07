@@ -2308,4 +2308,10 @@ export const components: ComponentDefinition[] = [
     registryDependencies: [],
     dependencies: ["motion"],
   },
+  {
+    name: "code-block",
+    path: path.join(__dirname, "../registry", "code-block.tsx"),
+    registryDependencies: [],
+    dependencies: [],
+  },
 ];

@@ -51,9 +51,9 @@ export default function ButtonSvgPage() {
             Use any Iconiq icon inside a shadcn Button.
           </p>
           <p className="mt-6 font-sans text-neutral-600 text-sm">
-          Select an icon below to preview it inside a button. 
-          You can then copy the complete example (Button + Icon) or 
-          run the CLI command to add the icon to your project.
+            Select an icon below to preview it inside a button. You can then
+            copy the complete example (Button + Icon) or run the CLI command to
+            add the icon to your project.
           </p>
 
           <div className="mt-10">

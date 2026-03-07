@@ -27,6 +27,14 @@ const tocByPath = {
     { label: "Icon Library", href: "/icons" },
     { label: "Button + Icon", href: "/icons/button-svg" },
   ],
+  codeBlock: [
+    { label: "Overview", href: "/" },
+    { label: "Introduction", href: "/introduction" },
+    { label: "Installation", href: "/installation" },
+    { label: "Icon Library", href: "/icons" },
+    { label: "Button + Icon", href: "/icons/button-svg" },
+    { label: "Code Block", href: "/components/code-block" },
+  ],
   contributingIntroduction: [
     { label: "Overview", href: "/" },
     { label: "Introduction", href: "/introduction" },
@@ -46,6 +54,7 @@ function getTocForPath(pathname: string) {
   if (pathname === "/introduction") return tocByPath.introduction;
   if (pathname === "/installation") return tocByPath.installation;
   if (pathname === "/icons/button-svg") return tocByPath.buttonSvg;
+  if (pathname === "/components/code-block") return tocByPath.codeBlock;
   if (pathname === "/icons" || pathname.startsWith("/icons/"))
     return tocByPath.icons;
   if (pathname === "/contributing/introduction")

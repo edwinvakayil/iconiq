@@ -8,8 +8,16 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 function updateRegistryComponents() {
   const iconsDir = path.join(process.cwd(), "icons");
-  const existingComponents = new Map(
-    components.map((c) => [path.basename(c.path.replace("../icons/", "")), c])
+  const registryDir = path.join(__dirname, "..", "registry");
+  const existingIcons = new Map(
+    components
+      .filter((c) => c.path.includes("icons"))
+      .map((c) => [path.basename(c.path), c])
+  );
+  const existingRegistryNames = new Set(
+    components
+      .filter((c) => c.path.includes("registry"))
+      .map((c) => path.basename(c.path, ".tsx"))
   );
 
   const newComponents: {
@@ -19,13 +27,13 @@ function updateRegistryComponents() {
     dependencies: string[];
   }[] = [];
 
-  const files = fs
+  const iconFiles = fs
     .readdirSync(iconsDir)
     .filter((file) => file.endsWith(".tsx") && file !== "index.ts")
     .sort();
 
-  for (const file of files) {
-    if (!existingComponents.has(file)) {
+  for (const file of iconFiles) {
+    if (!existingIcons.has(file)) {
       const name = path.basename(file, ".tsx");
       newComponents.push({
         name,
@@ -33,6 +41,25 @@ function updateRegistryComponents() {
         registryDependencies: [],
         dependencies: ["motion"],
       });
+    }
+  }
+
+  if (fs.existsSync(registryDir)) {
+    const registryFiles = fs
+      .readdirSync(registryDir)
+      .filter((file) => file.endsWith(".tsx"))
+      .sort();
+
+    for (const file of registryFiles) {
+      const name = path.basename(file, ".tsx");
+      if (!existingRegistryNames.has(name)) {
+        newComponents.push({
+          name,
+          path: path.join(__dirname, "../registry", file),
+          registryDependencies: [],
+          dependencies: [],
+        });
+      }
     }
   }
 
@@ -47,14 +74,20 @@ function updateRegistryComponents() {
   const lastComponentIndex = content.lastIndexOf("}");
 
   const newComponentsString = newComponents
-    .map(
-      (comp) => `  {
-    'name': '${comp.name}',
-    'path': path.join(__dirname, '../icons/${path.basename(comp.path)}'),
-    'registryDependencies': [],
-    'dependencies': ['motion'],
-  }`
-    )
+    .map((comp) => {
+      const basename = path.basename(comp.path);
+      const isRegistry = comp.path.includes("registry");
+      const pathJoin = isRegistry
+        ? `path.join(__dirname, "../registry", "${basename}")`
+        : `path.join(__dirname, "../icons", "${basename}")`;
+      const deps = isRegistry ? "[]" : '["motion"]';
+      return `  {
+    name: "${comp.name}",
+    path: ${pathJoin},
+    registryDependencies: [],
+    dependencies: ${deps},
+  }`;
+    })
     .join(",\n");
 
   const updatedContent =
