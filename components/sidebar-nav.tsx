@@ -1,0 +1,82 @@
+"use client";
+
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+
+import { LINK } from "@/constants";
+
+const nav = [
+  {
+    title: "Getting Started",
+    items: [
+      { label: "Introduction", href: "/introduction" },
+      { label: "Installation", href: "/installation" },
+    ],
+  },
+  {
+    title: "Icons",
+    items: [{ label: "Icon Library", href: "/icons" }],
+  },
+  {
+    title: "Contributing",
+    items: [
+      { label: "Introduction", href: `${LINK.GITHUB}#readme` },
+      { label: "Contributing Code", href: `${LINK.GITHUB}/blob/main/CONTRIBUTING.md` },
+    ],
+  },
+];
+
+export function SidebarNav() {
+  const pathname = usePathname();
+
+  return (
+    <aside
+      aria-label="Main navigation"
+      className="hidden w-90 shrink-0 border-r border-neutral-200 bg-background lg:block"
+    >
+      <nav className="sticky top-0 max-h-[calc(100vh-0px)] overflow-y-auto py-6 pl-0 pr-4">
+        <ul className="space-y-6">
+          {nav.map((section) => (
+            <li key={section.title}>
+              <h2 className="mb-2 font-sans text-[11px] font-semibold uppercase tracking-wider text-neutral-500">
+                {section.title}
+              </h2>
+              <ul className="space-y-0.5">
+                {section.items.map((item) => {
+                  const isExternal = item.href.startsWith("http");
+                  const isActive =
+                    !isExternal &&
+                    (pathname === item.href ||
+                      (item.href !== "/" && pathname.startsWith(`${item.href}/`)));
+                  const linkClass =
+                    "block py-1 font-sans text-sm underline-offset-4 transition-colors hover:text-neutral-900 focus-visible:outline-1 focus-visible:outline-primary " +
+                    (isActive
+                      ? "font-medium text-neutral-900 underline"
+                      : "text-neutral-700 hover:underline");
+                  return (
+                    <li key={item.label}>
+                      {isExternal ? (
+                        <a
+                          className={linkClass}
+                          href={item.href}
+                          rel="noopener noreferrer"
+                          target="_blank"
+                        >
+                          {item.label}
+                        </a>
+                      ) : (
+                        <Link className={linkClass} href={item.href}>
+                          {item.label}
+                        </Link>
+                      )}
+                    </li>
+                  );
+                })}
+              </ul>
+            </li>
+          ))}
+        </ul>
+      </nav>
+    </aside>
+  );
+}

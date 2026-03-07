@@ -2,8 +2,8 @@ import { LINK } from "@/constants";
 
 const Footer = () => {
   return (
-    <footer className="mt-auto mb-6 flex w-full items-center justify-center px-4">
-      <div className="flex w-full max-w-[1292px] items-center justify-between gap-3 border-neutral-200 border-t pt-4 font-mono text-[11px] text-secondary">
+    <footer className="mt-auto mb-6 w-full border-t border-neutral-200">
+      <div className="flex w-full items-center justify-between gap-3 px-4 py-4 font-mono text-[11px] text-secondary sm:px-6 lg:px-[80px]">
         <span>© {new Date().getFullYear()} Iconiq. All rights reserved.</span>
         <div className="flex items-center gap-3">
           <a

@@ -1,5 +1,6 @@
 const SITE = {
   NAME: "Iconiq",
+  LOGO: "iconiq.",
   URL: "https://iconiqs.vercel.app",
   OG_IMAGE: "/og.png",
   AUTHOR: {
