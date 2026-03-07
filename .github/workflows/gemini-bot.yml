@@ -11,10 +11,10 @@ on:
 
 jobs:
   gemini-process:
-    # This condition ensures it runs on new items OR when tagged
+    # Logic: Run on new issues/PRs OR if explicitly tagged @gemini
     if: |
       github.event.action == 'opened' || 
-      contains(github.event.comment.body, '@gemini')
+      (github.event.comment && contains(github.event.comment.body, '@gemini'))
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -25,24 +25,25 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          fetch-depth: 2 # Fetches enough history for a diff
 
       - name: Gemini Task Handler
         uses: google-github-actions/run-gemini-cli@main
         with:
           gemini_api_key: ${{ secrets.GEMINI_API_KEY }}
+          # Using Flash to avoid "Quota Exceeded" errors
+          gemini_model: "gemini-1.5-flash"
           prompt: |
-            You are a Senior Software Engineer assistant.
+            You are a Senior Developer. 
             
+            Task:
+            1. If NEW ISSUE/PR: Summarize the goal in 2 sentences.
+            2. If "@gemini review": Review the code diff for bugs/security.
+            3. If "@gemini fix": Provide a code snippet to solve the issue.
+
             Context:
             - Event: ${{ github.event_name }}
-            - User Command: "${{ github.event.comment.body }}"
-            - Issue/PR Title: "${{ github.event.issue.title || github.event.pull_request.title }}"
-            - Body Content: "${{ github.event.issue.body || github.event.pull_request.body }}"
+            - Title: ${{ github.event.issue.title || github.event.pull_request.title }}
+            - Content: ${{ github.event.comment.body || github.event.issue.body || github.event.pull_request.body }}
 
-            Instructions:
-            1. If this is a NEW ISSUE/PR (no comment tag): Provide a 3-bullet point summary and check for missing information.
-            2. If tagged "@gemini review": Review the code changes in the PR and suggest improvements for performance and security.
-            3. If tagged "@gemini fix": Provide a clear code block with the solution to the described problem.
-            
-            Always be concise and professional. 
+            Format your response clearly using Markdown.
