@@ -48,13 +48,12 @@ export default function ButtonSvgPage() {
             Button + Icon
           </h1>
           <p className="mt-2 font-sans text-lg text-neutral-600">
-            Put any Iconiq icon on a shadcn Button. Copy the code or install the
-            icon with the npm/shadcn CLI.
+            Use any Iconiq icon inside a shadcn Button.
           </p>
           <p className="mt-6 font-sans text-neutral-600 text-sm">
-            Choose an icon below, see the preview on a button, then copy the
-            full code (Button + Icon) or run the CLI command to add the icon to
-            your project.
+          Select an icon below to preview it inside a button. 
+          You can then copy the complete example (Button + Icon) or 
+          run the CLI command to add the icon to your project.
           </p>
 
           <div className="mt-10">
