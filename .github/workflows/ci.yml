@@ -67,6 +67,7 @@ jobs:
 
   claude:
     if: |
+      (github.event_name == 'pull_request' && (contains(github.event.pull_request.body || '', '@claude') || contains(github.event.pull_request.title || '', '@claude'))) ||
       (github.event_name == 'issue_comment' && contains(github.event.comment.body, '@claude')) ||
       (github.event_name == 'pull_request_review_comment' && contains(github.event.comment.body, '@claude')) ||
       (github.event_name == 'pull_request_review' && contains(github.event.review.body, '@claude')) ||
@@ -110,3 +111,4 @@ jobs:
           #       "NODE_ENV": "test"
           #     }
           #   }
+          #
