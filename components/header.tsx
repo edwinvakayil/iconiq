@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 
 import { LINK, SITE } from "@/constants";
+import { BASE_LINKS, SITE_SECTIONS } from "@/lib/site-nav";
 
 const GITHUB_REPO_API = "https://api.github.com/repos/edwinvakayil/iconiq";
 
@@ -28,20 +29,13 @@ function formatStarCount(n: number): string {
   return n.toLocaleString();
 }
 
-const mobileNavLinks = [
-  { label: "Overview", href: "/" },
-  { label: "Introduction", href: "/introduction" },
-  { label: "Installation", href: "/installation" },
-  { label: "Icon Library", href: "/icons" },
-  { label: "Button + Icon", href: "/icons/button-svg" },
-  { label: "Animated Tooltip", href: "/components/animated-tooltip" },
-  { label: "Code Block", href: "/components/code-block" },
-];
-
-const mobileNavContributing = [
-  { label: "Introduction", href: "/contributing/introduction" },
-  { label: "Contributing Code", href: "/contributing/code" },
-];
+const contributingSection = {
+  label: "Contributing",
+  children: [
+    { label: "Introduction", href: "/contributing/introduction" },
+    { label: "Contributing Code", href: "/contributing/code" },
+  ],
+};
 
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -149,7 +143,7 @@ export function Header() {
             </button>
           </div>
           <nav aria-label="Mobile" className="flex flex-col gap-0 py-4">
-            {mobileNavLinks.map((item) => (
+            {BASE_LINKS.map((item) => (
               <Link
                 className="block px-4 py-3 font-sans text-neutral-700 text-sm hover:bg-neutral-100"
                 href={item.href}
@@ -159,22 +153,43 @@ export function Header() {
                 {item.label}
               </Link>
             ))}
+            {SITE_SECTIONS.map((section) => (
+              <div key={section.label} className="mt-2 border-neutral-200 border-t pt-2">
+                <p className="px-4 pb-1.5 font-sans font-semibold text-[11px] text-neutral-500 uppercase tracking-wider">
+                  {section.label}
+                </p>
+                <ul className="ml-3 space-y-0 pl-4">
+                  {section.children.map((item) => (
+                    <li key={item.href + item.label}>
+                      <Link
+                        className="block py-2 font-sans text-neutral-700 text-sm hover:bg-neutral-100"
+                        href={item.href}
+                        onClick={() => setMobileMenuOpen(false)}
+                      >
+                        {item.label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
             <div className="mt-2 border-neutral-200 border-t pt-2">
               <p className="px-4 pb-1.5 font-sans font-semibold text-[11px] text-neutral-500 uppercase tracking-wider">
-                Contributing
+                {contributingSection.label}
               </p>
-              <div className="ml-4 border-neutral-200 border-l-2 pl-4">
-                {mobileNavContributing.map((item) => (
-                  <Link
-                    className="block py-2 font-sans text-neutral-700 text-sm hover:bg-neutral-100"
-                    href={item.href}
-                    key={item.label}
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    {item.label}
-                  </Link>
+              <ul className="ml-3 space-y-0 pl-4">
+                {contributingSection.children.map((item) => (
+                  <li key={item.href + item.label}>
+                    <Link
+                      className="block py-2 font-sans text-neutral-700 text-sm hover:bg-neutral-100"
+                      href={item.href}
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      {item.label}
+                    </Link>
+                  </li>
                 ))}
-              </div>
+              </ul>
             </div>
             <div className="mt-2 flex flex-wrap items-center gap-2 border-neutral-200 border-t px-4 pt-4">
               <a
