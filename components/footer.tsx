@@ -13,7 +13,7 @@ const Footer = () => {
             tabIndex={0}
             target="_blank"
           >
-            GitHub
+            GitHub 
           </a>
         </div>
       </div>
