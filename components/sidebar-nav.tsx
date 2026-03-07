@@ -3,8 +3,6 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-import { LINK } from "@/constants";
-
 const nav = [
   {
     title: "Getting Started",
@@ -20,11 +18,8 @@ const nav = [
   {
     title: "Contributing",
     items: [
-      { label: "Introduction", href: `${LINK.GITHUB}#readme` },
-      {
-        label: "Contributing Code",
-        href: `${LINK.GITHUB}/blob/main/CONTRIBUTING.md`,
-      },
+      { label: "Introduction", href: "/contributing/introduction" },
+      { label: "Contributing Code", href: "/contributing/code" },
     ],
   },
 ];
