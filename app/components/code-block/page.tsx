@@ -61,11 +61,11 @@ export default function CodeBlockPage() {
           </h2>
           <p className="mt-1 font-sans text-neutral-600 text-sm">
             The component supports a{" "}
-            <code className="rounded bg-neutral-200 px-1 font-mono text-xs">
+            <code className="rounded bg-neutral-200 px-1 font-mono text-xs dark:bg-neutral-700 dark:text-neutral-200">
               code
             </code>{" "}
             string, optional{" "}
-            <code className="rounded bg-neutral-200 px-1 font-mono text-xs">
+            <code className="rounded bg-neutral-200 px-1 font-mono text-xs dark:bg-neutral-700 dark:text-neutral-200">
               language
             </code>{" "}
             label, and dark mode.
@@ -89,11 +89,11 @@ greet("World");`}
           </h2>
           <p className="mt-1 font-sans text-neutral-600 text-sm">
             Import the component and pass a{" "}
-            <code className="rounded bg-neutral-200 px-1 font-mono text-xs">
+            <code className="rounded bg-neutral-200 px-1 font-mono text-xs dark:bg-neutral-700 dark:text-neutral-200">
               code
             </code>{" "}
             string and optional{" "}
-            <code className="rounded bg-neutral-200 px-1 font-mono text-xs">
+            <code className="rounded bg-neutral-200 px-1 font-mono text-xs dark:bg-neutral-700 dark:text-neutral-200">
               language
             </code>{" "}
             label. Use it in docs, README sections, or any place you need to

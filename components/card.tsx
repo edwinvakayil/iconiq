@@ -158,7 +158,7 @@ const CopyCLIAction = ({ name }: Pick<Icon, "name">) => {
       </TooltipTrigger>
       <TooltipContent>
         Copy{" "}
-        <code className="rounded-[4px] bg-neutral-50/20 px-1 py-0.5 font-mono">
+        <code className="rounded-[4px] bg-neutral-50/20 px-1 py-0.5 font-mono dark:bg-neutral-700/80 dark:text-neutral-200">
           shadcn/cli
         </code>{" "}
         command
@@ -209,7 +209,7 @@ const CopyCodeAction = ({ name }: Pick<Icon, "name">) => {
       </TooltipTrigger>
       <TooltipContent>
         Copy{" "}
-        <code className="rounded-[4px] bg-neutral-50/20 px-1 py-0.5 font-mono">
+        <code className="rounded-[4px] bg-neutral-50/20 px-1 py-0.5 font-mono dark:bg-neutral-700/80 dark:text-neutral-200">
           .tsx
         </code>{" "}
         code
@@ -274,7 +274,7 @@ const OpenInV0Action = ({ name }: Pick<Icon, "name">) => {
       </TooltipTrigger>
       <TooltipContent>
         Open in{" "}
-        <code className="rounded-[4px] bg-neutral-50/20 px-1 py-0.5 font-mono">
+        <code className="rounded-[4px] bg-neutral-50/20 px-1 py-0.5 font-mono dark:bg-neutral-700/80 dark:text-neutral-200">
           v0
         </code>
       </TooltipContent>

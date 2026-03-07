@@ -2,7 +2,7 @@ import { LINK } from "@/constants";
 
 const Footer = () => {
   return (
-    <footer className="mt-auto mb-6 w-full border-neutral-200 border-t">
+    <footer className="mt-auto mb-6 w-full border-neutral-200 border-t dark:border-neutral-800">
       <div className="flex w-full items-center justify-between gap-3 px-4 py-4 font-mono text-[11px] text-secondary sm:px-6 lg:px-[80px]">
         <span>
           © {new Date().getFullYear()} Iconiq. Built by{" "}

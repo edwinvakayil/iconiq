@@ -32,6 +32,53 @@
   --primary: #000000;
 }
 
+/* Ensure main content text is visible in dark mode (overrides Tailwind text-neutral-* inside main) */
+.dark main .text-neutral-500 {
+  color: rgb(163 163 163);
+}
+.dark main .text-neutral-600 {
+  color: rgb(212 212 212);
+}
+.dark main .text-neutral-700 {
+  color: rgb(230 230 230);
+}
+.dark main .text-neutral-800 {
+  color: rgb(245 245 245);
+}
+.dark main .text-neutral-900 {
+  color: rgb(255 255 255);
+}
+.dark main .text-neutral-400 {
+  color: rgb(163 163 163);
+}
+.dark main code {
+  color: rgb(212 212 212);
+}
+/* Inline code (rounded / bg-neutral-200): dark background + light text in dark mode */
+.dark main code.rounded,
+.dark main code.rounded-md,
+.dark main code[class*="bg-neutral-200"],
+.dark main code[class*="bg-neutral-50"] {
+  background-color: rgb(38 38 38);
+  color: rgb(230 230 230);
+}
+.dark code.rounded,
+.dark code.rounded-md,
+.dark code[class*="bg-neutral-200"] {
+  background-color: rgb(38 38 38);
+  color: rgb(230 230 230);
+}
+.dark code[class*="bg-amber-200"] {
+  background-color: rgb(69 69 40);
+  color: rgb(253 253 230);
+}
+.dark main a.text-neutral-700 {
+  color: rgb(230 230 230);
+}
+.dark main a:hover {
+  color: rgb(255 255 255);
+}
+
 @layer base {
   * {
     scrollbar-width: thin;

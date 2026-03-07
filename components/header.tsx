@@ -4,6 +4,7 @@ import { Github, Menu, X } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
+import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { LINK, SITE } from "@/constants";
 import { BASE_LINKS, SITE_SECTIONS } from "@/lib/site-nav";
 
@@ -55,11 +56,11 @@ export function Header() {
   }, []);
 
   return (
-    <header className="z-[100] w-full shrink-0 border-neutral-200 border-b bg-background">
+    <header className="z-[100] w-full shrink-0 border-neutral-200 border-b bg-background dark:border-neutral-800 dark:bg-background">
       <div className="mx-auto flex h-14 w-full items-center justify-between gap-4 px-4 sm:px-6 lg:px-[80px]">
         <div className="flex min-w-0 flex-1 items-center gap-6">
           <Link
-            className="flex items-center gap-2 font-sans font-semibold text-lg text-neutral-900 focus-visible:outline-1 focus-visible:outline-primary"
+            className="flex items-center gap-2 font-sans font-semibold text-lg text-neutral-900 focus-visible:outline-1 focus-visible:outline-primary dark:text-white"
             href="/"
           >
             {SITE.LOGO}
@@ -67,9 +68,14 @@ export function Header() {
         </div>
 
         <div className="flex items-center gap-2">
+          <ThemeToggle />
+          <span
+            aria-hidden
+            className="hidden h-5 w-px bg-neutral-200 sm:block dark:bg-neutral-700"
+          />
           <a
             aria-label="GitHub repository"
-            className="hidden items-center gap-2 px-3 py-1.5 font-sans text-neutral-600 text-sm transition-colors hover:text-neutral-900 focus-visible:outline-1 focus-visible:outline-primary sm:flex"
+            className="hidden items-center gap-2 px-3 py-1.5 font-sans text-neutral-600 text-sm transition-colors hover:text-neutral-900 focus-visible:outline-1 focus-visible:outline-primary sm:flex dark:text-neutral-400 dark:hover:text-white"
             href={LINK.GITHUB}
             rel="noopener noreferrer"
             target="_blank"
@@ -81,7 +87,7 @@ export function Header() {
           </a>
           <span
             aria-hidden
-            className="hidden h-5 w-px bg-neutral-200 sm:block"
+            className="hidden h-5 w-px bg-neutral-200 sm:block dark:bg-neutral-700"
           />
           <a
             aria-label="X (Twitter)"
@@ -129,13 +135,13 @@ export function Header() {
             transform: mobileMenuOpen ? "translateX(0)" : "translateX(100%)",
           }}
         >
-          <div className="flex h-14 items-center justify-between border-neutral-200 border-b px-4">
-            <span className="font-medium font-sans text-neutral-900 text-sm">
+          <div className="flex h-14 items-center justify-between border-neutral-200 border-b px-4 dark:border-neutral-800">
+            <span className="font-medium font-sans text-neutral-900 text-sm dark:text-white">
               {SITE.LOGO}
             </span>
             <button
               aria-label="Close menu"
-              className="flex size-9 items-center justify-center rounded-md text-neutral-600 hover:bg-neutral-100 focus-visible:outline-1 focus-visible:outline-primary"
+              className="flex size-9 items-center justify-center rounded-md text-neutral-600 hover:bg-neutral-100 focus-visible:outline-1 focus-visible:outline-primary dark:text-neutral-200 dark:hover:bg-neutral-800 dark:hover:text-white"
               onClick={() => setMobileMenuOpen(false)}
               type="button"
             >
@@ -145,7 +151,7 @@ export function Header() {
           <nav aria-label="Mobile" className="flex flex-col gap-0 py-4">
             {BASE_LINKS.map((item) => (
               <Link
-                className="block px-4 py-3 font-sans text-neutral-700 text-sm hover:bg-neutral-100"
+                className="block px-4 py-3 font-sans text-neutral-700 text-sm hover:bg-neutral-100 dark:text-neutral-200 dark:hover:bg-neutral-800 dark:hover:text-white"
                 href={item.href}
                 key={item.label}
                 onClick={() => setMobileMenuOpen(false)}
@@ -154,15 +160,18 @@ export function Header() {
               </Link>
             ))}
             {SITE_SECTIONS.map((section) => (
-              <div key={section.label} className="mt-2 border-neutral-200 border-t pt-2">
-                <p className="px-4 pb-1.5 font-sans font-semibold text-[11px] text-neutral-500 uppercase tracking-wider">
+              <div
+                className="mt-2 border-neutral-200 border-t pt-2 dark:border-neutral-800"
+                key={section.label}
+              >
+                <p className="px-4 pb-1.5 font-sans font-semibold text-[11px] text-neutral-500 uppercase tracking-wider dark:text-neutral-400">
                   {section.label}
                 </p>
                 <ul className="ml-3 space-y-0 pl-4">
                   {section.children.map((item) => (
                     <li key={item.href + item.label}>
                       <Link
-                        className="block py-2 font-sans text-neutral-700 text-sm hover:bg-neutral-100"
+                        className="block py-2 font-sans text-neutral-700 text-sm hover:bg-neutral-100 dark:text-neutral-200 dark:hover:bg-neutral-800 dark:hover:text-white"
                         href={item.href}
                         onClick={() => setMobileMenuOpen(false)}
                       >
@@ -173,15 +182,15 @@ export function Header() {
                 </ul>
               </div>
             ))}
-            <div className="mt-2 border-neutral-200 border-t pt-2">
-              <p className="px-4 pb-1.5 font-sans font-semibold text-[11px] text-neutral-500 uppercase tracking-wider">
+            <div className="mt-2 border-neutral-200 border-t pt-2 dark:border-neutral-800">
+              <p className="px-4 pb-1.5 font-sans font-semibold text-[11px] text-neutral-500 uppercase tracking-wider dark:text-neutral-400">
                 {contributingSection.label}
               </p>
               <ul className="ml-3 space-y-0 pl-4">
                 {contributingSection.children.map((item) => (
                   <li key={item.href + item.label}>
                     <Link
-                      className="block py-2 font-sans text-neutral-700 text-sm hover:bg-neutral-100"
+                      className="block py-2 font-sans text-neutral-700 text-sm hover:bg-neutral-100 dark:text-neutral-200 dark:hover:bg-neutral-800 dark:hover:text-white"
                       href={item.href}
                       onClick={() => setMobileMenuOpen(false)}
                     >
@@ -191,10 +200,15 @@ export function Header() {
                 ))}
               </ul>
             </div>
-            <div className="mt-2 flex flex-wrap items-center gap-2 border-neutral-200 border-t px-4 pt-4">
+            <div className="mt-2 flex flex-wrap items-center gap-2 border-neutral-200 border-t px-4 pt-4 dark:border-neutral-800">
+              <ThemeToggle />
+              <span
+                aria-hidden
+                className="h-8 w-px shrink-0 bg-neutral-200 dark:bg-neutral-700"
+              />
               <a
                 aria-label="GitHub repository"
-                className="flex items-center gap-2 rounded-md px-3 py-2 font-sans text-neutral-600 text-sm hover:bg-neutral-100"
+                className="flex items-center gap-2 rounded-md px-3 py-2 font-sans text-neutral-600 text-sm hover:bg-neutral-100 dark:text-neutral-400 dark:hover:bg-neutral-800"
                 href={LINK.GITHUB}
                 onClick={() => setMobileMenuOpen(false)}
                 rel="noopener noreferrer"
@@ -207,10 +221,13 @@ export function Header() {
                   {starCount !== null ? formatStarCount(starCount) : "—"}
                 </span>
               </a>
-              <span aria-hidden className="h-8 w-px shrink-0 bg-neutral-200" />
+              <span
+                aria-hidden
+                className="h-8 w-px shrink-0 bg-neutral-200 dark:bg-neutral-700"
+              />
               <a
                 aria-label="X (Twitter)"
-                className="flex size-10 items-center justify-center rounded-md text-neutral-600 hover:bg-neutral-100"
+                className="flex size-10 items-center justify-center rounded-md text-neutral-600 hover:bg-neutral-100 dark:text-neutral-400 dark:hover:bg-neutral-800"
                 href={LINK.TWITTER}
                 onClick={() => setMobileMenuOpen(false)}
                 rel="noopener noreferrer"

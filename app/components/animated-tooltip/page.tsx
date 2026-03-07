@@ -58,20 +58,20 @@ export default async function AnimatedTooltipPage() {
             Animated Tooltip
           </h1>
           <p className="mt-2 font-sans text-lg text-neutral-600">
-          A dynamic tooltip that tilts and shifts based on cursor movement, 
-          enhanced with smooth spring-based enter and exit animations.
+            A dynamic tooltip that tilts and shifts based on cursor movement,
+            enhanced with smooth spring-based enter and exit animations.
           </p>
           <p className="mt-6 font-sans text-neutral-600 text-sm">
-          Built with Motion to create a subtle parallax effect using 
-          hover position for rotation and translation. 
-          AnimatePresence manages smooth mounting and unmounting transitions. 
-          Ideal for avatars, buttons, and interactive UI triggers where a responsive, 
-          playful tooltip enhances the experience.
+            Built with Motion to create a subtle parallax effect using hover
+            position for rotation and translation. AnimatePresence manages
+            smooth mounting and unmounting transitions. Ideal for avatars,
+            buttons, and interactive UI triggers where a responsive, playful
+            tooltip enhances the experience.
           </p>
 
           <p className="mt-6 font-sans text-neutral-600 text-sm">
-          Install using the shadcn CLI to add a clean, developer-friendly 
-          tooltip component to your application.
+            Install using the shadcn CLI to add a clean, developer-friendly
+            tooltip component to your application.
           </p>
 
           <div className="mt-10">
@@ -85,8 +85,8 @@ export default async function AnimatedTooltipPage() {
             Preview
           </h2>
           <p className="mt-1 font-sans text-neutral-600 text-sm">
-            Hover over the trigger and move your cursor to see the tooltip 
-            tilt and translate in response to pointer movement.
+            Hover over the trigger and move your cursor to see the tooltip tilt
+            and translate in response to pointer movement.
           </p>
           <div className="mt-6 flex flex-wrap items-center gap-4">
             <AnimatedTooltip
@@ -111,11 +111,11 @@ export default async function AnimatedTooltipPage() {
           </h2>
           <p className="mt-1 font-sans text-neutral-600 text-sm">
             Import from{" "}
-            <code className="rounded bg-neutral-200 px-1 font-mono text-xs">
+            <code className="rounded bg-neutral-200 px-1 font-mono text-xs dark:bg-neutral-700 dark:text-neutral-200">
               @/components/ui/animated-tooltip
             </code>{" "}
             and wrap any trigger with{" "}
-            <code className="rounded bg-neutral-200 px-1 font-mono text-xs">
+            <code className="rounded bg-neutral-200 px-1 font-mono text-xs dark:bg-neutral-700 dark:text-neutral-200">
               content
             </code>{" "}
             for the tooltip.
@@ -139,39 +139,39 @@ export default async function AnimatedTooltipPage() {
           </h3>
           <ul className="mt-2 list-inside list-disc font-sans text-neutral-600 text-sm">
             <li>
-              <code className="rounded bg-neutral-200 px-1 font-mono text-xs">
+              <code className="rounded bg-neutral-200 px-1 font-mono text-xs dark:bg-neutral-700 dark:text-neutral-200">
                 children
               </code>{" "}
               — trigger element (hover target)
             </li>
             <li>
-              <code className="rounded bg-neutral-200 px-1 font-mono text-xs">
+              <code className="rounded bg-neutral-200 px-1 font-mono text-xs dark:bg-neutral-700 dark:text-neutral-200">
                 content
               </code>{" "}
               — tooltip content (ReactNode)
             </li>
             <li>
-              <code className="rounded bg-neutral-200 px-1 font-mono text-xs">
+              <code className="rounded bg-neutral-200 px-1 font-mono text-xs dark:bg-neutral-700 dark:text-neutral-200">
                 className
               </code>{" "}
               — optional class for the tooltip popup
             </li>
             <li>
-              <code className="rounded bg-neutral-200 px-1 font-mono text-xs">
+              <code className="rounded bg-neutral-200 px-1 font-mono text-xs dark:bg-neutral-700 dark:text-neutral-200">
                 wrapperClassName
               </code>{" "}
               — optional class for the trigger wrapper
             </li>
             <li>
-              <code className="rounded bg-neutral-200 px-1 font-mono text-xs">
+              <code className="rounded bg-neutral-200 px-1 font-mono text-xs dark:bg-neutral-700 dark:text-neutral-200">
                 backgroundClassName
               </code>{" "}
               — optional class for the tooltip background (e.g.{" "}
-              <code className="rounded bg-neutral-200 px-1 font-mono text-xs">
+              <code className="rounded bg-neutral-200 px-1 font-mono text-xs dark:bg-neutral-700 dark:text-neutral-200">
                 bg-blue-600
               </code>
               ). Defaults to{" "}
-              <code className="rounded bg-neutral-200 px-1 font-mono text-xs">
+              <code className="rounded bg-neutral-200 px-1 font-mono text-xs dark:bg-neutral-700 dark:text-neutral-200">
                 bg-black
               </code>
             </li>

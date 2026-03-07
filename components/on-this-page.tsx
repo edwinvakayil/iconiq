@@ -54,19 +54,19 @@ export function OnThisPage() {
   const toc = getTocForPath(pathname);
 
   const linkClass = (href: string, isAnchor = false) =>
-    `block py-0.5 font-sans text-[13px] underline-offset-4 transition-colors hover:text-neutral-900 hover:underline focus-visible:outline-1 focus-visible:outline-primary ${
+    `block py-0.5 font-sans text-[13px] underline-offset-4 transition-colors hover:text-neutral-900 hover:underline focus-visible:outline-1 focus-visible:outline-primary dark:hover:text-white ${
       !isAnchor && pathname === href
-        ? "font-medium text-neutral-900 underline"
-        : "text-neutral-600"
+        ? "font-medium text-neutral-900 underline dark:text-white"
+        : "text-neutral-600 dark:text-neutral-300"
     }`;
 
   return (
     <aside
       aria-label="On this page"
-      className="hidden w-72 shrink-0 border-neutral-200 bg-background xl:block"
+      className="hidden w-72 shrink-0 border-neutral-200 bg-background xl:block dark:border-neutral-800 dark:bg-background"
     >
-      <nav className="sticky top-0 z-10 max-h-[calc(100vh-0px)] overflow-y-auto bg-background py-6 pr-6 pl-4">
-        <h2 className="mb-3 font-sans font-semibold text-[11px] text-neutral-500 uppercase tracking-wider">
+      <nav className="sticky top-0 z-10 max-h-[calc(100vh-0px)] overflow-y-auto bg-background py-6 pr-6 pl-4 dark:bg-background">
+        <h2 className="mb-3 font-sans font-semibold text-[11px] text-neutral-500 uppercase tracking-wider dark:text-neutral-400">
           On this page
         </h2>
         <ul className="space-y-1">
@@ -74,7 +74,7 @@ export function OnThisPage() {
             if (isCategory(entry)) {
               return (
                 <li key={entry.label}>
-                  <span className="block py-1 pt-2 font-sans font-semibold text-[11px] text-neutral-500 uppercase tracking-wider">
+                  <span className="block py-1 pt-2 font-sans font-semibold text-[11px] text-neutral-500 uppercase tracking-wider dark:text-neutral-400">
                     {entry.label}
                   </span>
                   <ul className="space-y-0.5 pl-4">

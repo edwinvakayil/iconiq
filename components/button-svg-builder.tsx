@@ -164,10 +164,10 @@ export function ButtonSvgBuilder({ icons }: ButtonSvgBuilderProps) {
               value={searchValue}
             />
             <div className="pointer-events-none absolute top-1/2 right-2.5 hidden -translate-y-1/2 items-center gap-1 rounded-full bg-neutral-100 px-2 py-0.5 font-mono text-[10px] text-neutral-500 md:flex">
-              <kbd className="flex h-4 min-w-4 items-center justify-center rounded-[3px] bg-neutral-200 px-1 text-[10px] leading-4">
+              <kbd className="flex h-4 min-w-4 items-center justify-center rounded-[3px] bg-neutral-200 px-1 text-[10px] leading-4 dark:bg-neutral-700 dark:text-neutral-200">
                 ⌘
               </kbd>
-              <kbd className="flex h-4 min-w-4 items-center justify-center rounded-[3px] bg-neutral-200 px-1 text-[10px] leading-4">
+              <kbd className="flex h-4 min-w-4 items-center justify-center rounded-[3px] bg-neutral-200 px-1 text-[10px] leading-4 dark:bg-neutral-700 dark:text-neutral-200">
                 F
               </kbd>
             </div>
@@ -344,7 +344,7 @@ export function ButtonSvgBuilder({ icons }: ButtonSvgBuilderProps) {
             Install via {packageName} / SHADCN CLI
           </p>
           <div className="flex items-center gap-2 rounded-lg border border-neutral-200 bg-neutral-50/50 px-4 py-3 font-mono text-sm">
-            <code className="flex-1 truncate text-neutral-900">
+            <code className="flex-1 truncate text-neutral-900 dark:text-neutral-100">
               {cliCommand}
             </code>
             <Tooltip>
@@ -365,7 +365,7 @@ export function ButtonSvgBuilder({ icons }: ButtonSvgBuilderProps) {
           <p className="mt-2 font-sans text-neutral-500 text-sm">
             Run this in your project to add the icon. Add the Button component
             with{" "}
-            <code className="rounded bg-neutral-200 px-1 font-mono text-xs">
+            <code className="rounded bg-neutral-200 px-1 font-mono text-xs dark:bg-neutral-700 dark:text-neutral-200">
               shadcn add button
             </code>{" "}
             if you don’t have it yet.

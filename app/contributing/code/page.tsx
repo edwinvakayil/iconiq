@@ -156,11 +156,11 @@ export default function ContributingCodePage() {
               </p>
               <p className="mt-2 text-amber-800">
                 Animation quality: PRs with simple path length animations (
-                <code className="rounded bg-amber-200/60 px-1 font-mono text-xs">
+                <code className="rounded bg-amber-200/60 px-1 font-mono text-xs dark:bg-amber-900/40 dark:text-amber-100">
                   strokeDasharray
                 </code>
                 /
-                <code className="rounded bg-amber-200/60 px-1 font-mono text-xs">
+                <code className="rounded bg-amber-200/60 px-1 font-mono text-xs dark:bg-amber-900/40 dark:text-amber-100">
                   strokeDashoffset
                 </code>{" "}
                 &quot;drawing&quot; effect) will likely be rejected. We want
@@ -202,23 +202,23 @@ git checkout -b your-branch-name`}</CodeBlock>
               <ul className="list-disc space-y-2 pl-5">
                 <li>
                   In{" "}
-                  <code className="rounded bg-neutral-200 px-1 font-mono text-xs">
+                  <code className="rounded bg-neutral-200 px-1 font-mono text-xs dark:bg-neutral-700 dark:text-neutral-200">
                     /icons/
                   </code>
                   , create a new file with the icon name in lowercase and
                   hyphens (e.g.{" "}
-                  <code className="rounded bg-neutral-200 px-1 font-mono text-xs">
+                  <code className="rounded bg-neutral-200 px-1 font-mono text-xs dark:bg-neutral-700 dark:text-neutral-200">
                     heart-icon.tsx
                   </code>
                   ,{" "}
-                  <code className="rounded bg-neutral-200 px-1 font-mono text-xs">
+                  <code className="rounded bg-neutral-200 px-1 font-mono text-xs dark:bg-neutral-700 dark:text-neutral-200">
                     arrow-up.tsx
                   </code>
                   ).
                 </li>
                 <li>
                   Use the template below. Replace{" "}
-                  <code className="rounded bg-neutral-200 px-1 font-mono text-xs">
+                  <code className="rounded bg-neutral-200 px-1 font-mono text-xs dark:bg-neutral-700 dark:text-neutral-200">
                     [YourIconName]
                   </code>{" "}
                   with your icon name in PascalCase, and replace the SVG comment
@@ -235,11 +235,11 @@ git checkout -b your-branch-name`}</CodeBlock>
                 </li>
                 <li>
                   Add your animation logic using Framer Motion&apos;s{" "}
-                  <code className="rounded bg-neutral-200 px-1 font-mono text-xs">
+                  <code className="rounded bg-neutral-200 px-1 font-mono text-xs dark:bg-neutral-700 dark:text-neutral-200">
                     motion
                   </code>{" "}
                   components and the{" "}
-                  <code className="rounded bg-neutral-200 px-1 font-mono text-xs">
+                  <code className="rounded bg-neutral-200 px-1 font-mono text-xs dark:bg-neutral-700 dark:text-neutral-200">
                     controls
                   </code>{" "}
                   object.
@@ -254,11 +254,11 @@ git checkout -b your-branch-name`}</CodeBlock>
               </h2>
               <p className="mb-2">
                 Open{" "}
-                <code className="rounded bg-neutral-200 px-1 font-mono text-xs">
+                <code className="rounded bg-neutral-200 px-1 font-mono text-xs dark:bg-neutral-700 dark:text-neutral-200">
                   icons/index.ts
                 </code>
                 . Import your icon and add it to the top of{" "}
-                <code className="rounded bg-neutral-200 px-1 font-mono text-xs">
+                <code className="rounded bg-neutral-200 px-1 font-mono text-xs dark:bg-neutral-700 dark:text-neutral-200">
                   ICON_LIST
                 </code>
                 :

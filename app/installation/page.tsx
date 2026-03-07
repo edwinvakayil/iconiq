@@ -49,7 +49,7 @@ export default function InstallationPage() {
           </p>
           <p className="mt-2 font-sans text-neutral-600 text-sm">
             Simply run the command below and replace{" "}
-            <code className="rounded-md bg-neutral-200 px-1 py-0.5 font-mono text-neutral-900 text-sm">
+            <code className="rounded-md bg-neutral-200 px-1 py-0.5 font-mono text-neutral-900 text-sm dark:bg-neutral-700 dark:text-neutral-200">
               iconiq-icon-name
             </code>{" "}
             with the icon you want to add.

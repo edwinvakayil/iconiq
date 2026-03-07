@@ -78,7 +78,8 @@ export function CodeBlockInstall({
                 )}
               >
                 <span className="sr-only">
-                  {getPackageManagerPrefix(pm)} shadcn add @iconiq/{componentName}
+                  {getPackageManagerPrefix(pm)} shadcn add @iconiq/
+                  {componentName}
                 </span>
                 <span
                   aria-hidden="true"
@@ -89,7 +90,9 @@ export function CodeBlockInstall({
                 <span aria-hidden="true" className="text-black dark:text-white">
                   shadcn add @iconiq/
                 </span>
-                <span className="shrink-0 text-primary">{componentName}</span>
+                <span className="shrink-0 text-primary dark:text-white">
+                  {componentName}
+                </span>
               </BaseScrollArea.Viewport>
               <BaseScrollArea.Scrollbar
                 className="pointer-events-none absolute right-2! bottom-1! left-2! flex h-0.5 touch-none rounded bg-neutral-200 opacity-0 transition-opacity duration-100 data-hovering:pointer-events-auto data-scrolling:pointer-events-auto data-hovering:opacity-100 data-scrolling:opacity-100 data-hovering:delay-0 data-scrolling:duration-0 dark:bg-neutral-700"

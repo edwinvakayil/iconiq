@@ -40,13 +40,13 @@ export function SidebarNav() {
   return (
     <aside
       aria-label="Main navigation"
-      className="hidden w-90 shrink-0 border-neutral-200 border-r bg-background lg:block"
+      className="hidden w-90 shrink-0 border-neutral-200 border-r bg-background lg:block dark:border-neutral-800 dark:bg-background"
     >
       <nav className="sticky top-0 max-h-[calc(100vh-0px)] overflow-y-auto py-6 pr-4 pl-0">
         <ul className="space-y-6">
           {nav.map((section) => (
             <li key={section.title}>
-              <h2 className="mb-2 font-sans font-semibold text-[11px] text-neutral-500 uppercase tracking-wider">
+              <h2 className="mb-2 font-sans font-semibold text-[11px] text-neutral-500 uppercase tracking-wider dark:text-neutral-400">
                 {section.title}
               </h2>
               <ul className="space-y-0.5">
@@ -54,10 +54,10 @@ export function SidebarNav() {
                   const isExternal = item.href.startsWith("http");
                   const isActive = !isExternal && pathname === item.href;
                   const linkClass =
-                    "block py-1 font-sans text-sm underline-offset-4 transition-colors hover:text-neutral-900 focus-visible:outline-1 focus-visible:outline-primary " +
+                    "block py-1 font-sans text-sm underline-offset-4 transition-colors hover:text-neutral-900 focus-visible:outline-1 focus-visible:outline-primary dark:hover:text-white " +
                     (isActive
-                      ? "font-medium text-neutral-900 underline"
-                      : "text-neutral-700 hover:underline");
+                      ? "font-medium text-neutral-900 underline dark:text-white"
+                      : "text-neutral-700 hover:underline dark:text-neutral-300");
                   return (
                     <li key={item.label}>
                       {isExternal ? (

@@ -53,10 +53,10 @@ const SearchInput = ({ searchValue, setSearchValue }: SearchInputProps) => {
         value={searchValue}
       />
       <div className="pointer-events-none absolute top-1/2 right-2.5 hidden -translate-y-1/2 items-center gap-1 rounded-full bg-neutral-100 px-2 py-0.5 font-mono text-[10px] text-neutral-500 md:flex">
-        <kbd className="flex h-4 min-w-4 items-center justify-center rounded-[3px] bg-neutral-200 px-1 text-[10px] leading-4">
+        <kbd className="flex h-4 min-w-4 items-center justify-center rounded-[3px] bg-neutral-200 px-1 text-[10px] leading-4 dark:bg-neutral-700 dark:text-neutral-200">
           ⌘
         </kbd>
-        <kbd className="flex h-4 min-w-4 items-center justify-center rounded-[3px] bg-neutral-200 px-1 text-[10px] leading-4">
+        <kbd className="flex h-4 min-w-4 items-center justify-center rounded-[3px] bg-neutral-200 px-1 text-[10px] leading-4 dark:bg-neutral-700 dark:text-neutral-200">
           F
         </kbd>
       </div>

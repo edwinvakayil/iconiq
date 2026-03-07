@@ -108,7 +108,7 @@ const CliBlock = ({ icons, staticIconName, className }: CliBlockProps) => {
                   shadcn add @iconiq/
                 </span>
                 {isStatic ? (
-                  <span className="shrink-0 text-primary">
+                  <span className="shrink-0 text-primary dark:text-white">
                     {staticIconName}
                   </span>
                 ) : (
@@ -144,7 +144,10 @@ const CliBlock = ({ icons, staticIconName, className }: CliBlockProps) => {
                     {(icons || [])
                       .filter((icon) => icon.name.length <= 20)
                       .map((icon) => (
-                        <span className="shrink-0 text-primary" key={icon.name}>
+                        <span
+                          className="shrink-0 text-primary dark:text-white"
+                          key={icon.name}
+                        >
                           {icon.name}
                         </span>
                       ))}
@@ -276,7 +279,7 @@ const CliBlockUrl = ({
                   shadcn@latest add &quot;{SITE.URL}/r/
                 </span>
                 {isStatic ? (
-                  <span className="shrink-0 text-primary">
+                  <span className="shrink-0 text-primary dark:text-white">
                     {staticIconName}.json&quot;
                   </span>
                 ) : (
@@ -310,7 +313,10 @@ const CliBlockUrl = ({
                     {(icons || [])
                       .filter((icon) => icon.name.length <= 20)
                       .map((icon) => (
-                        <span className="shrink-0 text-primary" key={icon.name}>
+                        <span
+                          className="shrink-0 text-primary dark:text-white"
+                          key={icon.name}
+                        >
                           {icon.name}.json&quot;
                         </span>
                       ))}
