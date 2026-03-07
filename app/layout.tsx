@@ -9,6 +9,7 @@ import { Toaster } from "sonner";
 import { Analytics } from "@/components/analytics";
 import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
+import { StarPromptCard } from "@/components/star-prompt-card";
 import { PackageNameProvider } from "@/providers/package-name";
 import { ThemeProvider } from "@/providers/theme";
 import { JsonLdScripts } from "@/seo/json-ld";
@@ -88,6 +89,7 @@ export default function RootLayout({
                 </div>
                 <Footer />
               </div>
+              <StarPromptCard />
             </PackageNameProvider>
           </div>
         </ThemeProvider>
