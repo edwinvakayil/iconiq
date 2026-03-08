@@ -10,6 +10,8 @@ jobs:
   check-imports:
     name: Check Imports
     runs-on: ubuntu-latest
+    env:
+      TZ: Asia/Kolkata
 
     steps:
       - name: Checkout
@@ -35,6 +37,8 @@ jobs:
   check-duplicates:
     name: Check Duplicates
     runs-on: ubuntu-latest
+    env:
+      TZ: Asia/Kolkata
 
     steps:
       - name: Checkout
