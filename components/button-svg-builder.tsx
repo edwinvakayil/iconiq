@@ -318,7 +318,7 @@ export function ButtonSvgBuilder({ icons }: ButtonSvgBuilderProps) {
             <p className="font-medium font-sans text-[11px] text-neutral-500 uppercase tracking-wider dark:text-neutral-400">
               Code (Button + Icon)
             </p>
-            <Tooltip>
+            {/* <Tooltip>
               <TooltipTrigger
                 aria-label="Copy code"
                 className="flex size-9 items-center justify-center rounded-full bg-neutral-100 transition-colors hover:bg-neutral-200 focus-visible:outline-1 focus-visible:outline-primary disabled:opacity-50 dark:bg-neutral-800 dark:hover:bg-neutral-700"
@@ -333,7 +333,7 @@ export function ButtonSvgBuilder({ icons }: ButtonSvgBuilderProps) {
               <TooltipContent>
                 Copy code (Button + Icon component)
               </TooltipContent>
-            </Tooltip>
+            </Tooltip> */}
           </div>
           <CodeBlock className="text-xs">{codeSnippet}</CodeBlock>
         </div>
