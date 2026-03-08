@@ -51,7 +51,7 @@ export function StarPromptCard() {
         <motion.div
           animate="visible"
           aria-label="Star Iconiq on GitHub"
-          className="fixed right-6 bottom-24 z-50 w-full max-w-[240px] overflow-hidden rounded-lg border border-neutral-200/80 bg-white shadow-[0_8px_30px_rgba(0,0,0,0.08)] sm:right-8 lg:right-[80px] dark:border-neutral-700/80 dark:bg-neutral-900 dark:shadow-[0_8px_30px_rgba(0,0,0,0.4)]"
+          className="fixed right-6 bottom-24 z-50 hidden w-full max-w-[240px] overflow-hidden rounded-lg border border-neutral-200/80 bg-white shadow-[0_8px_30px_rgba(0,0,0,0.08)] dark:border-neutral-700/80 dark:bg-neutral-900 dark:shadow-[0_8px_30px_rgba(0,0,0,0.4)] sm:right-8 sm:block lg:right-[80px]"
           exit="exit"
           initial="hidden"
           role="dialog"
