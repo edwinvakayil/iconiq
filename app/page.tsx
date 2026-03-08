@@ -29,17 +29,23 @@ const Home = () => {
               Iconiq
             </h1>
             <p className="mt-2 font-sans text-lg text-neutral-600">
-              Motion-powered animated icons for your React projects
+              Motion-powered icons and components for your React projects
             </p>
-            <div className="mt-10 space-y-4 font-sans text-neutral-600 text-sm leading-relaxed">
+            <div className="mt-10 space-y-4 text-justify font-sans text-neutral-600 text-sm leading-relaxed">
               <p>
-                Iconiq is a collection of animated icons built with Motion and
-                based on the Lucide icon system. Each icon is designed for
-                modern interfaces, combining clean visuals with subtle motion.
+                Iconiq is a collection of motion-powered icons and UI components
+                built with Motion and inspired by the Lucide icon system. It is
+                designed for modern interfaces, combining clean iconography with
+                subtle, purposeful animations to enhance user experience.
               </p>
               <p>
-                Icons are copy-paste React components, so you can integrate them
-                directly into your codebase and customize them freely.
+                Each icon is provided as a copy-paste React component, making it
+                easy to integrate directly into your codebase and customize as
+                needed.
+              </p>
+              <p>
+                Iconiq helps developers quickly add polished, animated visuals
+                to their interfaces without extra setup.
               </p>
               <p>
                 If you’d like to suggest new icons or contribute, open an issue

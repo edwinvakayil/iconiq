@@ -8,6 +8,7 @@ import { Toaster } from "sonner";
 
 import { Analytics } from "@/components/analytics";
 import { ConditionalFooter } from "@/components/conditional-footer";
+import { GridBackground } from "@/components/grid-background";
 import { Header } from "@/components/header";
 import { StarPromptCard } from "@/components/star-prompt-card";
 import { PackageNameProvider } from "@/providers/package-name";
@@ -54,10 +55,11 @@ export default function RootLayout({
       <body className={`${geist.className} relative bg-background antialiased`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <div className="root">
+            <GridBackground />
             <PackageNameProvider>
               <Header />
               <div className="root-content">
-                <div className="min-w-0 px-4 sm:px-6 lg:px-[80px]">
+                <div className="min-h-0 min-w-0 flex-1 px-4 sm:px-6 lg:px-[80px]">
                   <main className="flex-1">
                     <NuqsAdapter>
                       {children}

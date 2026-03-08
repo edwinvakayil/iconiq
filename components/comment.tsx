@@ -21,7 +21,7 @@ const CommentBlock = async () => {
 
   return (
     <div className="relative my-[40px] flex w-full max-w-[610px] flex-col items-center justify-center max-[655px]:px-0">
-      <div className="flex w-full flex-wrap items-center justify-between gap-4 border-neutral-200 border-t pt-4 max-[655px]:pl-0 dark:border-neutral-800">
+      <div className="flex w-full flex-wrap items-center justify-between gap-4 border-neutral-200 pt-4 max-[655px]:pl-0 dark:border-neutral-800">
         <div className="flex items-center gap-2">
           <Avatar size="sm">
             <AvatarImage

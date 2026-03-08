@@ -2,7 +2,7 @@
 
 import { useHotkey } from "@tanstack/react-hotkeys";
 import Fuse from "fuse.js";
-import { CopyIcon, SearchIcon, Terminal } from "lucide-react";
+import { SearchIcon, Terminal } from "lucide-react";
 import { useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 import type { Icon } from "@/actions/get-icons";
@@ -36,7 +36,6 @@ export function ButtonSvgBuilder({ icons }: ButtonSvgBuilderProps) {
   const [buttonLabel, setButtonLabel] = useState("Click me");
   const [buttonVariant, setButtonVariant] =
     useState<(typeof BUTTON_VARIANTS)[number]>("default");
-  const [codeState, setCodeState] = useState<IconStatus>("idle");
   const [cliState, setCliState] = useState<IconStatus>("idle");
 
   const previewAnimationRef = useRef<{
@@ -91,25 +90,6 @@ export function ButtonSvgBuilder({ icons }: ButtonSvgBuilderProps) {
   });
 
   const cliCommand = `${cliPrefix} shadcn add @iconiq/${selectedName}`;
-
-  const handleCopyCode = async () => {
-    if (codeState !== "idle") return;
-    try {
-      setCodeState("loading");
-      await navigator.clipboard.writeText(codeSnippet);
-      setCodeState("done");
-      toast.success("Code copied", {
-        description: "Button + icon code copied to clipboard.",
-      });
-      setTimeout(() => setCodeState("idle"), 2000);
-    } catch {
-      toast.error("Failed to copy", {
-        description: "Please check your browser permissions.",
-      });
-      setCodeState("error");
-      setTimeout(() => setCodeState("idle"), 2000);
-    }
-  };
 
   const handleCopyCli = async () => {
     if (cliState !== "idle") return;

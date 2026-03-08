@@ -50,17 +50,21 @@ export default function ContributingIntroductionPage() {
 
           <div className="mt-10 space-y-4 font-sans text-neutral-600 text-sm leading-relaxed">
             <p>
-              Whether you want to report a bug, suggest a new icon, improve the
-              docs, or submit a pull request, your help makes the project better
-              for everyone.
+              Whether you want to report a bug, suggest a new icon or component,
+              improve the docs, or submit a pull request, your help makes the
+              project better for everyone.
             </p>
             <div>
               <h2 className="mb-2 font-sans font-semibold text-neutral-900 text-sm">
                 How you can contribute
               </h2>
               <ul className="list-disc space-y-1 pl-5 font-sans text-neutral-600 text-sm">
-                <li>Report issues or request new icons on GitHub</li>
-                <li>Submit pull requests for new icons or fixes</li>
+                <li>
+                  Report issues or request new icons or components on GitHub
+                </li>
+                <li>
+                  Submit pull requests for new icons or components or fixes
+                </li>
                 <li>Improve documentation and examples</li>
                 <li>Share feedback and ideas in discussions</li>
               </ul>
@@ -90,7 +94,7 @@ export default function ContributingIntroductionPage() {
             </p>
           </div>
 
-          <div className="mt-12 flex flex-wrap items-center justify-end border-neutral-200 border-t pt-6">
+          <div className="mt-12 flex flex-wrap items-center justify-end pt-6">
             <Link
               className="inline-flex items-center gap-1 font-medium font-sans text-neutral-700 text-sm transition-colors hover:text-neutral-900"
               href="/contributing/code"

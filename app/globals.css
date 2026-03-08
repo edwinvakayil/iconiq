@@ -20,6 +20,7 @@
   --foreground: #000;
   --primary: #000000;
   --secondary: #3f3f47;
+  --surface-border: #d4d4d4;
 
   --radius: 0.4rem;
 }
@@ -30,6 +31,15 @@
   --secondary-bg: #262626;
   --secondary: #d4d4d4;
   --primary: #000000;
+  --surface-border: #262626;
+}
+
+/* Cross grid background */
+.cross-grid {
+  background-image:
+    linear-gradient(var(--surface-border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--surface-border) 1px, transparent 1px);
+  background-size: 60px 60px;
 }
 
 /* Ensure main content text is visible in dark mode (overrides Tailwind text-neutral-* inside main) */
@@ -108,6 +118,7 @@
   }
 
   .root {
+    position: relative;
     isolation: isolate;
     display: flex;
     flex-direction: column;
@@ -116,11 +127,13 @@
   }
 
   .root-content {
+    display: flex;
     flex: 1 1 0%;
+    flex-direction: column;
     min-height: 0;
-    overflow-y: auto;
-    overflow-x: hidden;
     min-width: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
   }
 
   ::-webkit-scrollbar {

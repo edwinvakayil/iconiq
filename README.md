@@ -1,8 +1,8 @@
 # Iconiq
 
-Animated React icon library. 350+ copy-paste ready icons built with [Motion](https://motion.dev) and based on [Lucide](https://lucide.dev).
+Motion-powered icons and components library. 350+ copy-paste ready icons built with [Motion](https://motion.dev) and based on [Lucide](https://lucide.dev).
 
-![Iconiq — Animated React Icons](./public/og.png)
+![Iconiq — Motion-Powered Icons and Components](./public/og.png)
 
 **[→ Live demo](https://iconiqs.vercel.app)**
 
@@ -34,7 +34,7 @@ Icons are SVG components. Pass `className`, `size`, `color`, and other standard 
 
 ## What’s included
 
-- **350+ animated icons** — Same vocabulary as Lucide, with smooth Motion animations.
+- **350+ motion-powered icons and components** — Same vocabulary as Lucide, with smooth Motion animations.
 - **Copy-paste or package** — Use the CLI to copy source into your repo or install the package.
 - **MIT licensed** — Free for personal and commercial use.
 - **Customizable** — SVG + React; tweak stroke, duration, and behavior as needed.

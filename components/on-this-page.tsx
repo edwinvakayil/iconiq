@@ -63,9 +63,9 @@ export function OnThisPage() {
   return (
     <aside
       aria-label="On this page"
-      className="hidden w-72 shrink-0 border-neutral-200 bg-background xl:block dark:border-neutral-800 dark:bg-background"
+      className="hidden w-72 shrink-0 border-neutral-200 xl:block dark:border-neutral-800"
     >
-      <nav className="sticky top-0 z-10 max-h-[calc(100vh-0px)] overflow-y-auto bg-background py-6 pr-6 pl-4 dark:bg-background">
+      <nav className="sticky top-0 z-10 max-h-[calc(100vh-0px)] overflow-y-auto py-6 pr-6 pl-4">
         <h2 className="mb-3 font-sans font-semibold text-[11px] text-neutral-500 uppercase tracking-wider dark:text-neutral-400">
           On this page
         </h2>

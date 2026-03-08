@@ -125,7 +125,7 @@ const FAQJsonLd = () => {
   const faqs = [
     {
       question: "What is iconiqs?",
-      answer: `${SITE.NAME} is a free, open-source library of 350+ beautifully crafted animated React icons. Built with Motion library and based on Lucide icons.`,
+      answer: `${SITE.NAME} is a free, open-source library of 350+ beautifully crafted motion-powered icons and components. Built with Motion library and based on Lucide icons.`,
     },
     {
       question: "How do I install iconiqs icons?",

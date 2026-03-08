@@ -41,8 +41,8 @@ export const generateMetadata = async ({
   const pascalName = kebabToPascalCase(slug);
   const [keyword] = pascalName.split("Icon");
 
-  const title = `${keyword} Icon - Animated React Icon`;
-  const description = `Free animated ${icon.name} icon for React. Smooth Motion-powered animation, copy-paste ready. Keywords: ${icon.keywords.slice(0, 5).join(", ")}.`;
+  const title = `${keyword} Icon - Motion-Powered React Icon`;
+  const description = `Free motion-powered ${icon.name} icon for React. Part of the Motion-powered icons and components library, copy-paste ready. Keywords: ${icon.keywords.slice(0, 5).join(", ")}.`;
 
   return {
     title,
@@ -64,6 +64,7 @@ export const generateMetadata = async ({
     },
     keywords: [
       ...icon.keywords,
+      "motion-powered icon",
       "animated icon",
       "react icon",
       "motion icon",

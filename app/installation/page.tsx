@@ -44,15 +44,15 @@ export default function InstallationPage() {
             Framework and package manager don’t matter.
           </p>
           <p className="mt-2 font-sans text-neutral-600 text-sm">
-            Installing Iconiq icons works the same way as installing any other
-            shadcn component.
+            Installing Iconiq icons and components works the same way as
+            installing any other shadcn component.
           </p>
           <p className="mt-2 font-sans text-neutral-600 text-sm">
             Simply run the command below and replace{" "}
             <code className="rounded-md bg-neutral-200 px-1 py-0.5 font-mono text-neutral-900 text-sm dark:bg-neutral-700 dark:text-neutral-200">
               iconiq-icon-name
             </code>{" "}
-            with the icon you want to add.
+            with the icon or component you want to add.
           </p>
 
           <div className="mt-6">
@@ -72,11 +72,11 @@ export default function InstallationPage() {
 
           <p className="mt-6 font-sans text-neutral-600 text-sm">
             The entire process is handled by the shadcn CLI, which fetches the
-            icon from the Iconiq registry and adds it directly to your project
-            as a ready-to-use React component.
+            icon or component from the Iconiq registry and adds it directly to
+            your project as a ready-to-use React component.
           </p>
 
-          <div className="mt-12 flex flex-wrap items-center justify-between gap-4 border-neutral-200 border-t pt-6">
+          <div className="mt-12 flex flex-wrap items-center justify-between gap-4 pt-6">
             <Link
               className="inline-flex items-center gap-1 font-medium font-sans text-neutral-700 text-sm transition-colors hover:text-neutral-900"
               href="/introduction"

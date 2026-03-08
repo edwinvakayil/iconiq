@@ -7,9 +7,9 @@ export function GET() {
 
   const content = `# ${SITE.NAME}
 
-> Beautifully crafted animated icons
+> Beautifully crafted motion-powered icons and components
 
-${SITE.NAME} is an open-source (MIT License) collection of smooth animated icons for React projects.
+${SITE.NAME} is an open-source (MIT License) collection of smooth motion-powered icons and components for React projects.
 
 ## Overview
 

@@ -307,7 +307,7 @@ git push origin your-branch-name`}</CodeBlock>
             </p>
           </div>
 
-          <div className="mt-12 flex flex-wrap items-center justify-between gap-4 border-neutral-200 border-t pt-6">
+          <div className="mt-12 flex flex-wrap items-center justify-between gap-4 pt-6">
             <Link
               className="inline-flex items-center gap-1 font-medium font-sans text-neutral-700 text-sm transition-colors hover:text-neutral-900"
               href="/contributing/introduction"
