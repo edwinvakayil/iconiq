@@ -4,7 +4,7 @@ import { CodeBlockInstall } from "@/components/code-block-install";
 import { HighlighterPreviewBlock } from "@/components/highlighter-preview-block";
 import { OnThisPage } from "@/components/on-this-page";
 import { SidebarNav } from "@/components/sidebar-nav";
-import { CodeBlock } from "@/registry/code-block";
+import { CodeBlock } from "@/components/code-block";
 
 export default function HighlighterPage() {
   return (

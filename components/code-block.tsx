@@ -1,46 +1,179 @@
 "use client";
 
-import { Check, Copy } from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
 import { useState } from "react";
 
-type CodeBlockProps = {
-  children: string;
+import { cn } from "@/lib/utils";
+
+function CopyIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      aria-hidden
+      className={className}
+      fill="none"
+      height="16"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="2"
+      viewBox="0 0 24 24"
+      width="16"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <rect height="14" rx="2" ry="2" width="14" x="8" y="8" />
+      <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" />
+    </svg>
+  );
+}
+
+function CheckIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      aria-hidden
+      className={className}
+      fill="none"
+      height="16"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="2"
+      viewBox="0 0 24 24"
+      width="16"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path d="M20 6 9 17l-5-5" />
+    </svg>
+  );
+}
+
+function CodeIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      aria-hidden
+      className={className}
+      fill="none"
+      height="14"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="2"
+      viewBox="0 0 24 24"
+      width="14"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <polyline points="16 18 22 12 16 6" />
+      <polyline points="8 6 2 12 8 18" />
+    </svg>
+  );
+}
+
+interface CodeBlockProps {
+  /** Code content (use when you need language label) */
+  code?: string;
+  /** Alias for code – use children for simple snippets */
+  children?: React.ReactNode;
+  language?: string;
   className?: string;
-};
+}
 
-const blockClassName =
-  "rounded-lg border border-neutral-200 bg-transparent px-4 py-3 pr-12 font-mono text-[13px] leading-relaxed text-neutral-900 overflow-x-auto relative";
-
-export function CodeBlock({ children, className = "" }: CodeBlockProps) {
+export function CodeBlock({
+  code,
+  children,
+  language = "text",
+  className,
+}: CodeBlockProps) {
+  const content =
+    typeof code === "string"
+      ? code
+      : typeof children === "string"
+        ? children
+        : String(children ?? "");
   const [copied, setCopied] = useState(false);
 
   const handleCopy = async () => {
     try {
-      await navigator.clipboard.writeText(children.trim());
+      await navigator.clipboard.writeText(content.trim());
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch {
-      console.error("Failed to copy to clipboard");
+      // ignore
     }
   };
 
   return (
-    <div className="relative">
-      <pre className={`${blockClassName} ${className}`}>
-        <code className="whitespace-pre">{children}</code>
-      </pre>
-      <button
-        aria-label="Copy code"
-        className="absolute top-2 right-2 flex size-8 items-center justify-center rounded-md text-neutral-500 transition-colors hover:bg-neutral-200 hover:text-neutral-900 focus-visible:outline-1 focus-visible:outline-primary"
-        onClick={handleCopy}
-        type="button"
-      >
-        {copied ? (
-          <Check aria-hidden className="size-4 text-green-600" />
-        ) : (
-          <Copy aria-hidden className="size-4" />
+    <div
+      className={cn(
+        "my-8 overflow-hidden rounded-[14px] border border-black/8 bg-[#F9F9F9]",
+        "dark:border-neutral-600 dark:bg-[#1c1c1e]",
+        className,
+      )}
+    >
+      <div
+        className={cn(
+          "flex items-center justify-between gap-2 px-4 pt-2.5 pb-2",
+          "bg-[#F9F9F9] dark:bg-[#1c1c1e]",
         )}
-      </button>
+      >
+        <span
+          className={cn(
+            "inline-flex items-center gap-1.5 font-medium text-xs",
+            "text-gray-800 dark:text-neutral-300",
+          )}
+        >
+          <CodeIcon className="shrink-0 text-gray-800 dark:text-neutral-300" />
+          {language}
+        </span>
+        <motion.button
+          aria-label="Copy code"
+          className={cn(
+            "inline-flex size-7 items-center justify-center rounded-md border-0 bg-transparent p-0",
+            "text-gray-800 transition-colors duration-150 hover:bg-black/6 hover:text-gray-900",
+            "dark:text-neutral-300 dark:hover:bg-white/10 dark:hover:text-white",
+            copied && "text-gray-800 dark:text-neutral-300",
+          )}
+          onClick={handleCopy}
+          transition={{ type: "spring", stiffness: 400, damping: 20 }}
+          type="button"
+          whileTap={{ scale: 0.88 }}
+        >
+          <AnimatePresence mode="wait">
+            {copied ? (
+              <motion.span
+                animate={{ scale: 1, opacity: 1 }}
+                className="inline-flex"
+                exit={{ scale: 0.6, opacity: 0 }}
+                initial={{ scale: 0.6, opacity: 0 }}
+                key="check"
+                transition={{ duration: 0.12, ease: "easeOut" }}
+              >
+                <CheckIcon className="text-green-600 dark:text-green-400" />
+              </motion.span>
+            ) : (
+              <motion.span
+                animate={{ scale: 1, opacity: 1 }}
+                className="inline-flex"
+                exit={{ scale: 0.6, opacity: 0 }}
+                initial={{ scale: 0.6, opacity: 0 }}
+                key="copy"
+                transition={{ duration: 0.12, ease: "easeOut" }}
+              >
+                <CopyIcon />
+              </motion.span>
+            )}
+          </AnimatePresence>
+        </motion.button>
+      </div>
+      <pre
+        className={cn(
+          "m-0 overflow-x-auto px-5 pt-4 pb-5 font-mono text-sm leading-[1.65]",
+          "bg-[#F9F9F9] text-gray-800",
+          "dark:bg-[#1c1c1e] dark:text-neutral-200",
+        )}
+      >
+        <code className="bg-transparent p-0 font-inherit text-inherit">
+          {content}
+        </code>
+      </pre>
     </div>
   );
 }

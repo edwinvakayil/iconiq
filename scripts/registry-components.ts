@@ -2309,12 +2309,6 @@ export const components: ComponentDefinition[] = [
     dependencies: ["motion"],
   },
   {
-    name: "code-block",
-    path: path.join(__dirname, "../registry", "code-block.tsx"),
-    registryDependencies: [],
-    dependencies: [],
-  },
-  {
     name: "animated-tooltip",
     path: path.join(__dirname, "../registry", "animated-tooltip.tsx"),
     registryDependencies: [],

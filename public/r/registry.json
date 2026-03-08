@@ -4944,21 +4944,6 @@
       ]
     },
     {
-      "name": "code-block",
-      "type": "registry:ui",
-      "registryDependencies": [],
-      "dependencies": ["motion"],
-      "devDependencies": [],
-      "title": "Code Block",
-      "description": "A code block component with language label and copy button. Styled for docs and writing content.",
-      "files": [
-        {
-          "path": "code-block.tsx",
-          "type": "registry:ui"
-        }
-      ]
-    },
-    {
       "name": "animated-tooltip",
       "type": "registry:ui",
       "registryDependencies": [],

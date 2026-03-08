@@ -5,7 +5,7 @@ import { OnThisPage } from "@/components/on-this-page";
 import { SidebarNav } from "@/components/sidebar-nav";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { AnimatedTooltip } from "@/registry/animated-tooltip";
-import { CodeBlock } from "@/registry/code-block";
+import { CodeBlock } from "@/components/code-block";
 
 const GITHUB_REPO_API = "https://api.github.com/repos/edwinvakayil/iconiq";
 
@@ -182,16 +182,16 @@ export default async function AnimatedTooltipPage() {
           <div className="flex flex-wrap items-center justify-between gap-4 pt-6">
             <Link
               className="inline-flex items-center gap-1 font-medium font-sans text-neutral-700 text-sm transition-colors hover:text-neutral-900"
-              href="/components/code-block"
+              href="/installation"
             >
               <span aria-hidden="true">←</span>
-              Code Block
+              Installation
             </Link>
             <Link
               className="inline-flex items-center gap-1 font-medium font-sans text-neutral-700 text-sm transition-colors hover:text-neutral-900"
-              href="/icons"
+              href="/components/highlighter"
             >
-              Icon Library
+              Highlighter
               <span aria-hidden="true"> →</span>
             </Link>
           </div>

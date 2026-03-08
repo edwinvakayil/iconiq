@@ -22,12 +22,6 @@ const REGISTRY_UI_META: Record<
       "A tooltip that tilts and shifts with mouse movement, with spring enter/exit animations. Uses Motion for parallax-style rotation and translation.",
     dependencies: ["motion"],
   },
-  "code-block": {
-    title: "Code Block",
-    description:
-      "A code block component with language label and copy button. Styled for docs and writing content.",
-    dependencies: ["motion"],
-  },
   highlighter: {
     title: "Highlighter",
     description:

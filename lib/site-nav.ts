@@ -20,7 +20,6 @@ export const SITE_SECTIONS = [
     label: "Components",
     children: [
       { label: "Animated Tooltip", href: "/components/animated-tooltip" },
-      { label: "Code Block", href: "/components/code-block" },
       { label: "Highlighter", href: "/components/highlighter" },
     ],
   },
@@ -32,10 +31,6 @@ export const PAGE_SECTIONS: Record<string, { label: string; id: string }[]> = {
     { label: "Preview", id: "preview" },
     { label: "Usage", id: "usage" },
     { label: "Props", id: "props" },
-  ],
-  "/components/code-block": [
-    { label: "Preview", id: "preview" },
-    { label: "Usage", id: "usage" },
   ],
   "/components/highlighter": [
     { label: "Preview", id: "preview" },
