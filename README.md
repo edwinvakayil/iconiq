@@ -4,7 +4,7 @@ Motion-powered icons and components library. 350+ copy-paste ready icons built w
 
 ![Iconiq — Motion-Powered Icons and Components](./public/og.png)
 
-**[→ Live demo](https://iconiqs.vercel.app)**
+**[→ Live demo](https://iconiqui.com)**
 
 ---
 

@@ -1,7 +1,7 @@
 const SITE = {
   NAME: "Iconiq",
   LOGO: "iconiq.",
-  URL: "https://iconiqs.vercel.app",
+  URL: "https://iconiqui.com",
   OG_IMAGE: "/og.png",
   AUTHOR: {
     NAME: "Edwin Vakayil",
