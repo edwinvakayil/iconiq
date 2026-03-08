@@ -1,66 +1,38 @@
-import { AmountSelector } from "@/components/sponsorship/amount-selector";
+import { BeatingHeartTitle } from "@/components/sponsorship/beating-heart-title";
+import { BuyMeACoffeeEmbed } from "@/components/sponsorship/buy-me-a-coffee-embed";
+import { SITE } from "@/constants";
 import { createMetadata } from "@/seo/metadata";
 
 export const metadata = createMetadata({
-  title: "Sponsor iconiqs",
-  description:
-    "Support the development of iconiqs - free open-source animated React icons library. Your sponsorship helps maintain and grow this MIT licensed project.",
+  title: `Sponsor ${SITE.NAME}`,
+  description: `Support the development of ${SITE.NAME} — free open-source animated React icons library. Your support helps keep this MIT licensed project growing.`,
   canonical: "/sponsorship",
-  ogTitle: "Sponsor iconiqs | Support Open Source",
+  ogTitle: `Sponsor ${SITE.NAME} | Support Open Source`,
 });
-
-const SUPPORT_LIST = [
-  {
-    price: 5,
-    link: "https://www.creem.io/payment/prod_1G8q9yoWDEMUuMaYXjdMnk",
-  },
-  {
-    price: 10,
-    link: "https://www.creem.io/payment/prod_2fx79crTzRv8c6DCBiYSt4",
-  },
-  {
-    price: 25,
-    link: "https://www.creem.io/payment/prod_5GxIWzOFwl7JvFxtWV1x1O",
-  },
-  {
-    price: 50,
-    link: "https://www.creem.io/payment/prod_4wOq9XhPSA4jIt1EBdVEcR",
-  },
-  {
-    price: 100,
-    link: "https://www.creem.io/payment/prod_2BWHaJvZZUTYQONb5xpQIR",
-  },
-  {
-    price: 200,
-    link: "https://www.creem.io/payment/prod_49xErbm5DmJJZDBW7lA2lO",
-  },
-  {
-    price: 500,
-    link: "https://www.creem.io/payment/prod_2HSF38lRw7yMNy8Lb9f3p1",
-  },
-];
 
 const Sponsorship = () => {
   return (
-    <section className="mx-auto mt-[60px] flex w-full flex-col items-center justify-center overflow-hidden pb-20">
-      <h1 className="px-4 text-center font-sans text-[32px] min-[640px]:text-[42px]">
-        Support the project
-      </h1>
-      <p className="mt-5 max-w-[582px] px-4 text-center font-mono text-secondary text-sm">
-        this is a place for those who want to go beyond a simple thank you.
-        I&apos;m grateful for any kind of support, whether it&apos;s just a DM
-        with kind words or something more. your donation is by no means required
-        - this page is made just for those who asked for it. I am incredibly
-        grateful for any support you choose to provide
-        <br />
-        <br />
-        Choose amount you want to support the project with:
+    <section className="relative left-1/2 flex min-h-screen w-screen max-w-none -translate-x-1/2 flex-col items-start justify-center overflow-x-hidden px-5 pt-[60px] pb-20 sm:items-center sm:px-[70px]">
+      <BeatingHeartTitle />
+      <p className="mt-5 w-full text-justify font-mono text-secondary text-sm leading-relaxed sm:text-center">
+        Iconiq is a free, open-source collection of animated icons and
+        motion-powered UI components for modern React apps.
+      </p>
+      <p className="mt-5 w-full text-justify font-mono text-secondary text-sm leading-relaxed sm:text-center">
+        If Iconiq saves you time, makes your UI smoother, or simply sparks joy
+        ✨, consider supporting the project.
       </p>
 
-      <AmountSelector amounts={SUPPORT_LIST} />
+      <p className="mt-5 w-full text-justify font-mono text-secondary text-sm leading-relaxed sm:text-center">
+        Whether it&apos;s a coffee, kind words, or a GitHub star — every bit
+        helps keep the animations flowing.
+      </p>
+
+      <div className="mt-10 flex w-full justify-center sm:mt-12">
+        <BuyMeACoffeeEmbed />
+      </div>
     </section>
   );
 };
 
-export { SUPPORT_LIST };
 export default Sponsorship;

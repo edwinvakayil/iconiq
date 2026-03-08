@@ -7,7 +7,7 @@ import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { Toaster } from "sonner";
 
 import { Analytics } from "@/components/analytics";
-import { Footer } from "@/components/footer";
+import { ConditionalFooter } from "@/components/conditional-footer";
 import { Header } from "@/components/header";
 import { StarPromptCard } from "@/components/star-prompt-card";
 import { PackageNameProvider } from "@/providers/package-name";
@@ -87,7 +87,7 @@ export default function RootLayout({
                   </main>
                   <Analytics />
                 </div>
-                <Footer />
+                <ConditionalFooter />
               </div>
               <StarPromptCard />
             </PackageNameProvider>

@@ -1,8 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import type { SUPPORT_LIST } from "@/app/sponsorship/page";
-
+import { toast } from "sonner";
 import { Radio, RadioGroup } from "@/components/ui/radio";
 import { cn } from "@/lib/utils";
 import { Stamp } from "./stamp";
@@ -10,8 +9,10 @@ import { Stamp } from "./stamp";
 const DESIGN_WIDTH = 1040;
 const DESIGN_HEIGHT = 460;
 
+type SupportItem = { price: number; link: string };
+
 type AmountSelectorProps = {
-  amounts: typeof SUPPORT_LIST;
+  amounts: SupportItem[];
 };
 
 const AmountSelector = ({ amounts }: AmountSelectorProps) => {
@@ -48,9 +49,36 @@ const AmountSelector = ({ amounts }: AmountSelectorProps) => {
   };
 
   const isLastItemOdd = amounts.length % 2 !== 0;
-  const buyLink = amounts.find(
+  const selectedItem = amounts.find(
     (amount) => amount.price.toString() === selectedAmount
-  )?.link;
+  );
+  const baseLink = selectedItem?.link ?? "";
+  const price = selectedItem?.price ?? 0;
+
+  // Buy Me a Coffee: append amount in URL (in case they support it) and copy to clipboard for custom amount field
+  const isBuyMeACoffee = baseLink.includes("buymeacoffee.com");
+  const buyLink =
+    isBuyMeACoffee && price > 0
+      ? `${baseLink}${baseLink.includes("?") ? "&" : "?"}amount=${price}`
+      : baseLink;
+
+  const handleSponsorClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    if (!isBuyMeACoffee || price <= 0) return;
+    e.preventDefault();
+    const amountText = price.toString();
+    navigator.clipboard
+      .writeText(amountText)
+      .then(() => {
+        toast.success(
+          `${formatCurrency(price)} copied — paste into the custom amount field on the next page`,
+          { duration: 5000 }
+        );
+        window.open(buyLink, "_blank", "noopener,noreferrer");
+      })
+      .catch(() => {
+        window.open(buyLink, "_blank", "noopener,noreferrer");
+      });
+  };
 
   return (
     <div className="mx-auto mt-8 flex w-full max-w-[1016px] flex-col items-center gap-6 px-4">
@@ -267,6 +295,7 @@ const AmountSelector = ({ amounts }: AmountSelectorProps) => {
               <a
                 className="mt-[16px] flex w-fit cursor-pointer items-center justify-center bg-primary px-[24px] py-[8px] font-sans text-[18px] text-white transition-colors duration-100 hover:bg-[color-mix(in_oklab,var(--color-primary),black_10%)] focus-visible:outline-1 focus-visible:outline-primary focus-visible:outline-offset-1"
                 href={buyLink}
+                onClick={handleSponsorClick}
                 rel="noopener noreferrer"
                 tabIndex={0}
                 target="_blank"
@@ -282,6 +311,7 @@ const AmountSelector = ({ amounts }: AmountSelectorProps) => {
       <a
         className="supports-[corner-shape:squircle]:corner-squircle hidden w-full cursor-pointer items-center justify-center rounded-[12px] bg-primary px-[24px] py-[8px] font-sans text-[18px] text-white transition-colors duration-100 hover:bg-[color-mix(in_oklab,var(--color-primary),black_10%)] focus-visible:outline-1 focus-visible:outline-primary focus-visible:outline-offset-1 supports-[corner-shape:squircle]:rounded-[20px] max-[610px]:flex"
         href={buyLink}
+        onClick={handleSponsorClick}
         rel="noopener noreferrer"
         tabIndex={0}
         target="_blank"
