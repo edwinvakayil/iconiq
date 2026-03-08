@@ -2320,4 +2320,10 @@ export const components: ComponentDefinition[] = [
     registryDependencies: [],
     dependencies: [],
   },
+  {
+    name: "highlighter",
+    path: path.join(__dirname, "../registry", "highlighter.tsx"),
+    registryDependencies: [],
+    dependencies: [],
+  },
 ];

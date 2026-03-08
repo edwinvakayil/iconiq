@@ -28,6 +28,12 @@ const REGISTRY_UI_META: Record<
       "A code block component with language label and copy button. Styled for docs and writing content.",
     dependencies: ["motion"],
   },
+  highlighter: {
+    title: "Highlighter",
+    description:
+      "A highlighter component that highlights text with a subtle animation. Uses Motion for the highlight effect.",
+    dependencies: ["motion"],
+  },
 };
 
 if (!fs.existsSync(registryComponents)) {

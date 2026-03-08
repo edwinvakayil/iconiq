@@ -21,6 +21,7 @@ export const SITE_SECTIONS = [
     children: [
       { label: "Animated Tooltip", href: "/components/animated-tooltip" },
       { label: "Code Block", href: "/components/code-block" },
+      { label: "Highlighter", href: "/components/highlighter" },
     ],
   },
 ] as const;
@@ -35,5 +36,10 @@ export const PAGE_SECTIONS: Record<string, { label: string; id: string }[]> = {
   "/components/code-block": [
     { label: "Preview", id: "preview" },
     { label: "Usage", id: "usage" },
+  ],
+  "/components/highlighter": [
+    { label: "Preview", id: "preview" },
+    { label: "Usage", id: "usage" },
+    { label: "Props", id: "props" },
   ],
 };

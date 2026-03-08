@@ -1,5 +1,6 @@
 import { CommentBlock } from "@/components/comment";
 import { OnThisPage } from "@/components/on-this-page";
+import { PointerHighlight } from "@/components/pointer-highlight";
 import { SidebarNav } from "@/components/sidebar-nav";
 import { LINK } from "@/constants";
 
@@ -25,12 +26,15 @@ const Home = () => {
           </div>
 
           <section className="scroll-mt-24" id="overview">
-            <h1 className="font-bold font-sans text-3xl text-neutral-900 tracking-tight sm:text-4xl">
+            <h1 className="font-bold font-sans text-3xl text-neutral-900 tracking-tight sm:text-4xl dark:text-white">
               Iconiq
             </h1>
-            <p className="mt-2 font-sans text-lg text-neutral-600">
-              Motion-powered icons and components for your React projects
-            </p>
+            <div className="mt-2 font-sans text-lg text-neutral-600 dark:text-neutral-400">
+              Motion-powered icons and components for your{" "}
+              <PointerHighlight containerClassName="relative z-10 inline-block align-baseline">
+                <span className="relative z-10 px-1 py-1">React projects</span>
+              </PointerHighlight>
+            </div>
             <div className="mt-10 space-y-4 text-justify font-sans text-neutral-600 text-sm leading-relaxed">
               <p>
                 Iconiq is a collection of motion-powered icons and UI components
