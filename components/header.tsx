@@ -57,7 +57,7 @@ export function Header() {
 
   return (
     <header className="z-[100] w-full shrink-0 border-neutral-200 border-b bg-background dark:border-neutral-800 dark:bg-background">
-      <div className="mx-auto flex h-14 w-full items-center justify-between gap-4 px-4 sm:px-6 lg:px-[80px]">
+      <div className="mx-auto flex h-14 w-full items-center justify-between gap-4 px-4 sm:px-6 lg:h-[59px] lg:px-[80px]">
         <div className="flex min-w-0 flex-1 items-center gap-6">
           <Link
             className="flex items-center gap-2 font-sans font-semibold text-lg text-neutral-900 focus-visible:outline-1 focus-visible:outline-primary dark:text-white"
