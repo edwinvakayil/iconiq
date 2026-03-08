@@ -105,19 +105,19 @@ export function CodeBlock({
       className={cn(
         "my-8 overflow-hidden rounded-[14px] border border-black/8 bg-[#F9F9F9]",
         "dark:border-neutral-600 dark:bg-[#1c1c1e]",
-        className,
+        className
       )}
     >
       <div
         className={cn(
           "flex items-center justify-between gap-2 px-4 pt-2.5 pb-2",
-          "bg-[#F9F9F9] dark:bg-[#1c1c1e]",
+          "bg-[#F9F9F9] dark:bg-[#1c1c1e]"
         )}
       >
         <span
           className={cn(
             "inline-flex items-center gap-1.5 font-medium text-xs",
-            "text-gray-800 dark:text-neutral-300",
+            "text-gray-800 dark:text-neutral-300"
           )}
         >
           <CodeIcon className="shrink-0 text-gray-800 dark:text-neutral-300" />
@@ -129,7 +129,7 @@ export function CodeBlock({
             "inline-flex size-7 items-center justify-center rounded-md border-0 bg-transparent p-0",
             "text-gray-800 transition-colors duration-150 hover:bg-black/6 hover:text-gray-900",
             "dark:text-neutral-300 dark:hover:bg-white/10 dark:hover:text-white",
-            copied && "text-gray-800 dark:text-neutral-300",
+            copied && "text-gray-800 dark:text-neutral-300"
           )}
           onClick={handleCopy}
           transition={{ type: "spring", stiffness: 400, damping: 20 }}
@@ -167,7 +167,7 @@ export function CodeBlock({
         className={cn(
           "m-0 overflow-x-auto px-5 pt-4 pb-5 font-mono text-sm leading-[1.65]",
           "bg-[#F9F9F9] text-gray-800",
-          "dark:bg-[#1c1c1e] dark:text-neutral-200",
+          "dark:bg-[#1c1c1e] dark:text-neutral-200"
         )}
       >
         <code className="bg-transparent p-0 font-inherit text-inherit">

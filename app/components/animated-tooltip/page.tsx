@@ -1,11 +1,11 @@
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
+import { CodeBlock } from "@/components/code-block";
 import { CodeBlockInstall } from "@/components/code-block-install";
 import { OnThisPage } from "@/components/on-this-page";
 import { SidebarNav } from "@/components/sidebar-nav";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { AnimatedTooltip } from "@/registry/animated-tooltip";
-import { CodeBlock } from "@/components/code-block";
 
 const GITHUB_REPO_API = "https://api.github.com/repos/edwinvakayil/iconiq";
 
