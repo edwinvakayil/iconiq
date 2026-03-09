@@ -129,9 +129,20 @@ export function OnThisPage() {
         <h2 className="mb-3 font-sans font-semibold text-[11px] text-neutral-500 uppercase tracking-wider dark:text-neutral-400">
           On this page
         </h2>
-        {/* For component pages, show only local sections (Installation, Usage, Props, etc.) */}
-        {pathname.startsWith("/components/") &&
-        PAGE_SECTIONS[pathname]?.length ? (
+        {pathname.startsWith("/icons") ? (
+          <ul className="mt-1 space-y-0.5">
+            {SITE_SECTIONS.find((section) => section.label === "Icons")
+              ?.children.filter((child) => child.href === pathname)
+              .map((child) => (
+                <li key={child.href}>
+                  <a className={linkClass(child.href)} href={child.href}>
+                    {child.label}
+                  </a>
+                </li>
+              ))}
+          </ul>
+        ) : pathname.startsWith("/components/") &&
+          PAGE_SECTIONS[pathname]?.length ? (
           <ul className="mt-1 space-y-0.5">
             {PAGE_SECTIONS[pathname].map((section) => (
               <li key={section.id}>
