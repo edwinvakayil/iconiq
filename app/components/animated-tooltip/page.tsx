@@ -3,6 +3,7 @@ import Link from "next/link";
 import { CodeBlock } from "@/components/code-block";
 import { CodeBlockInstall } from "@/components/code-block-install";
 import { ComponentActions } from "@/components/component-actions";
+import { ComponentPager } from "@/components/component-pager";
 import { OnThisPage } from "@/components/on-this-page";
 import { SidebarNav } from "@/components/sidebar-nav";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -32,7 +33,10 @@ export default async function AnimatedTooltipPage() {
 
       <main className="min-w-0 flex-1">
         <div className="mx-auto max-w-[720px] px-4 py-10 sm:px-6 sm:py-12">
-          <nav aria-label="Breadcrumb" className="mb-6">
+          <nav
+            aria-label="Breadcrumb"
+            className="mb-6 flex items-center justify-between gap-3"
+          >
             <ol className="flex items-center gap-1.5 font-sans text-neutral-500 text-sm">
               <li>
                 <Link
@@ -59,6 +63,7 @@ export default async function AnimatedTooltipPage() {
                 Animated Tooltip
               </li>
             </ol>
+            <ComponentPager />
           </nav>
 
           <h1 className="font-bold font-sans text-3xl text-neutral-900 tracking-tight sm:text-4xl">
@@ -231,26 +236,6 @@ export default async function AnimatedTooltipPage() {
               </code>
             </li>
           </ul>
-        </div>
-
-        <div className="mx-auto max-w-[720px] px-4 pb-12 sm:px-6">
-          <div className="flex flex-wrap items-center justify-between gap-4 pt-6">
-            <Link
-              className="inline-flex items-center gap-1 font-medium font-sans text-neutral-700 text-sm transition-colors hover:text-neutral-900"
-              href="/installation"
-            >
-              <span aria-hidden="true">←</span>
-              Installation
-            </Link>
-
-            <Link
-              className="inline-flex items-center gap-1 font-medium font-sans text-neutral-700 text-sm transition-colors hover:text-neutral-900"
-              href="/components/highlighter"
-            >
-              Highlighter
-              <span aria-hidden="true"> →</span>
-            </Link>
-          </div>
         </div>
       </main>
 
