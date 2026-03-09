@@ -42,7 +42,7 @@ export function SidebarNav() {
       aria-label="Main navigation"
       className="hidden w-90 shrink-0 lg:block"
     >
-      <nav className="sticky top-0 max-h-[calc(100vh-0px)] overflow-y-auto py-6 pr-4 pl-0">
+      <nav className="sticky top-[74px] max-h-[calc(100vh-74px)] overflow-y-auto py-6 pr-4 pl-0">
         <ul className="space-y-6">
           {nav.map((section) => (
             <li key={section.title}>

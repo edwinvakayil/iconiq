@@ -17,7 +17,6 @@ function XLogoIcon({ className }: { className?: string }) {
       className={className}
       fill="currentColor"
       viewBox="0 0 24 24"
-      xmlns="http://www.w3.org/2000/svg"
     >
       <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
     </svg>
@@ -55,142 +54,129 @@ export function Header() {
       .catch(() => undefined);
   }, []);
 
+  /* Prevent body scroll when menu open */
+  useEffect(() => {
+    if (mobileMenuOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [mobileMenuOpen]);
+
   return (
-    <header className="z-[100] w-full shrink-0 border-neutral-200 border-b bg-background dark:border-neutral-800 dark:bg-background">
-      <div className="mx-auto flex h-14 w-full items-center justify-between gap-4 px-4 sm:px-6 lg:h-[59px] lg:px-[80px]">
-        <div className="flex min-w-0 flex-1 items-center gap-6">
+    <>
+      <header className="sticky top-0 z-[150] w-full border-neutral-200 border-b bg-background/90 backdrop-blur-sm dark:border-neutral-800">
+        <div className="mx-auto flex h-14 items-center justify-between px-4 sm:px-6 lg:h-[59px] lg:px-[80px]">
+          {/* Logo */}
           <Link
-            className="flex items-center gap-2 font-sans font-semibold text-lg text-neutral-900 focus-visible:outline-1 focus-visible:outline-primary dark:text-white"
+            className="flex items-center gap-2 font-semibold text-lg"
             href="/"
           >
             {SITE.LOGO}
           </Link>
-        </div>
 
-        <div className="flex items-center gap-2">
-          <ThemeToggle />
-          <span
-            aria-hidden
-            className="hidden h-5 w-px bg-neutral-200 sm:block dark:bg-neutral-700"
-          />
-          <a
-            aria-label="GitHub repository"
-            className="hidden items-center gap-2 px-3 py-1.5 font-sans text-neutral-600 text-sm transition-colors hover:text-neutral-900 focus-visible:outline-1 focus-visible:outline-primary sm:flex dark:text-neutral-400 dark:hover:text-white"
-            href={LINK.GITHUB}
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-neutral-900 text-white">
-              <Github aria-hidden className="size-3.5" />
-            </span>
-            <span>{starCount !== null ? formatStarCount(starCount) : "—"}</span>
-          </a>
-          <span
-            aria-hidden
-            className="hidden h-5 w-px bg-neutral-200 sm:block dark:bg-neutral-700"
-          />
-          <a
-            aria-label="X (Twitter)"
-            className="hidden size-9 items-center justify-center rounded-md text-neutral-500 transition-colors hover:bg-neutral-100 hover:text-neutral-900 focus-visible:outline-1 focus-visible:outline-primary sm:flex"
-            href={LINK.TWITTER}
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            <XLogoIcon className="size-5" />
-          </a>
+          {/* Right actions */}
+          <div className="flex items-center gap-2">
+            <ThemeToggle />
 
-          <button
-            aria-controls="mobile-menu"
-            aria-expanded={mobileMenuOpen}
-            aria-label="Open menu"
-            className="flex size-9 items-center justify-center rounded-md text-neutral-600 transition-colors hover:bg-neutral-100 hover:text-neutral-900 focus-visible:outline-1 focus-visible:outline-primary sm:hidden"
-            onClick={() => setMobileMenuOpen(true)}
-            type="button"
-          >
-            <Menu className="size-5" />
-          </button>
-        </div>
-      </div>
+            <span className="hidden h-5 w-px bg-neutral-200 sm:block dark:bg-neutral-700" />
 
-      {/* Mobile menu overlay + panel */}
-      <div
-        aria-hidden={!mobileMenuOpen}
-        className="fixed inset-0 z-[100] sm:hidden"
-        id="mobile-menu"
-        style={{
-          pointerEvents: mobileMenuOpen ? "auto" : "none",
-          visibility: mobileMenuOpen ? "visible" : "hidden",
-        }}
-      >
-        <button
-          aria-label="Close menu"
-          className="absolute inset-0 w-full border-0 bg-neutral-900/20 p-0 transition-opacity duration-200 focus:outline-none focus-visible:outline-1 focus-visible:outline-primary"
-          onClick={() => setMobileMenuOpen(false)}
-          style={{ opacity: mobileMenuOpen ? 1 : 0 }}
-          type="button"
-        />
-        <div
-          className="absolute top-0 right-0 z-[101] h-full w-full max-w-[280px] border-neutral-200 border-l bg-background shadow-lg transition-transform duration-200 ease-out"
-          style={{
-            transform: mobileMenuOpen ? "translateX(0)" : "translateX(100%)",
-          }}
-        >
-          <div className="flex h-14 items-center justify-between border-neutral-200 border-b px-4 dark:border-neutral-800">
-            <span className="font-medium font-sans text-neutral-900 text-sm dark:text-white">
-              {SITE.LOGO}
-            </span>
+            {/* GitHub */}
+            <a
+              className="hidden items-center gap-2 px-3 py-1.5 text-neutral-600 text-sm hover:text-neutral-900 sm:flex dark:text-neutral-400 dark:hover:text-white"
+              href={LINK.GITHUB}
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              <span className="flex size-6 items-center justify-center rounded-full bg-neutral-900 text-white">
+                <Github className="size-3.5" />
+              </span>
+              <span>
+                {starCount !== null ? formatStarCount(starCount) : "—"}
+              </span>
+            </a>
+
+            <span className="hidden h-5 w-px bg-neutral-200 sm:block dark:bg-neutral-700" />
+
+            {/* Twitter */}
+            <a
+              className="hidden size-9 items-center justify-center rounded-md text-neutral-500 hover:bg-neutral-100 hover:text-neutral-900 sm:flex"
+              href={LINK.TWITTER}
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              <XLogoIcon className="size-5" />
+            </a>
+
+            {/* Hamburger */}
             <button
-              aria-label="Close menu"
-              className="flex size-9 items-center justify-center rounded-md text-neutral-600 hover:bg-neutral-100 focus-visible:outline-1 focus-visible:outline-primary dark:text-neutral-200 dark:hover:bg-neutral-800 dark:hover:text-white"
-              onClick={() => setMobileMenuOpen(false)}
+              className="flex size-9 items-center justify-center rounded-md text-neutral-600 hover:bg-neutral-100 sm:hidden"
+              onClick={() => setMobileMenuOpen(true)}
               type="button"
             >
-              <X className="size-5" />
+              <Menu className="size-5" />
             </button>
           </div>
-          <nav aria-label="Mobile" className="flex flex-col gap-0 py-4">
-            {BASE_LINKS.map((item) => (
-              <Link
-                className="block px-4 py-3 font-sans text-neutral-700 text-sm hover:bg-neutral-100 dark:text-neutral-200 dark:hover:bg-neutral-800 dark:hover:text-white"
-                href={item.href}
-                key={item.label}
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                {item.label}
-              </Link>
-            ))}
-            {SITE_SECTIONS.map((section) => (
-              <div
-                className="mt-2 border-neutral-200 border-t pt-2 dark:border-neutral-800"
-                key={section.label}
-              >
-                <p className="px-4 pb-1.5 font-sans font-semibold text-[11px] text-neutral-500 uppercase tracking-wider dark:text-neutral-400">
-                  {section.label}
-                </p>
-                <ul className="ml-3 space-y-0 pl-4">
-                  {section.children.map((item) => (
-                    <li key={item.href + item.label}>
-                      <Link
-                        className="block py-2 font-sans text-neutral-700 text-sm hover:bg-neutral-100 dark:text-neutral-200 dark:hover:bg-neutral-800 dark:hover:text-white"
-                        href={item.href}
-                        onClick={() => setMobileMenuOpen(false)}
-                      >
-                        {item.label}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-            <div className="mt-2 border-neutral-200 border-t pt-2 dark:border-neutral-800">
-              <p className="px-4 pb-1.5 font-sans font-semibold text-[11px] text-neutral-500 uppercase tracking-wider dark:text-neutral-400">
-                {contributingSection.label}
+        </div>
+      </header>
+
+      {/* Overlay */}
+      <button
+        aria-hidden={!mobileMenuOpen}
+        className={`fixed inset-0 z-[200] bg-black/30 transition-opacity sm:hidden ${
+          mobileMenuOpen ? "opacity-100" : "pointer-events-none opacity-0"
+        }`}
+        onClick={() => setMobileMenuOpen(false)}
+        type="button"
+      />
+
+      {/* Sidebar */}
+      <div
+        className={`fixed top-0 right-0 z-[201] h-full w-[280px] transform border-neutral-200 border-l bg-background shadow-xl transition-transform duration-300 sm:hidden dark:border-neutral-800 ${
+          mobileMenuOpen ? "translate-x-0" : "translate-x-full"
+        }`}
+      >
+        {/* Sidebar header */}
+        <div className="flex h-14 items-center justify-between px-4">
+          <span className="font-medium text-sm">{SITE.LOGO}</span>
+
+          <button
+            className="flex size-9 items-center justify-center rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800"
+            onClick={() => setMobileMenuOpen(false)}
+            type="button"
+          >
+            <X className="size-5" />
+          </button>
+        </div>
+
+        {/* Navigation */}
+        <nav className="flex-1 overflow-y-auto py-4">
+          {BASE_LINKS.map((item) => (
+            <Link
+              className="block px-4 py-3 text-neutral-700 text-sm hover:bg-neutral-100 dark:text-neutral-200 dark:hover:bg-neutral-800"
+              href={item.href}
+              key={item.label}
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              {item.label}
+            </Link>
+          ))}
+
+          {SITE_SECTIONS.map((section) => (
+            <div className="mt-3 pt-2" key={section.label}>
+              <p className="px-4 pb-1 font-semibold text-[11px] text-neutral-500 uppercase dark:text-neutral-400">
+                {section.label}
               </p>
-              <ul className="ml-3 space-y-0 pl-4">
-                {contributingSection.children.map((item) => (
-                  <li key={item.href + item.label}>
+
+              <ul className="pl-7">
+                {section.children.map((item) => (
+                  <li key={item.href}>
                     <Link
-                      className="block py-2 font-sans text-neutral-700 text-sm hover:bg-neutral-100 dark:text-neutral-200 dark:hover:bg-neutral-800 dark:hover:text-white"
+                      className="block py-2 text-neutral-700 text-sm hover:bg-neutral-100 dark:text-neutral-200 dark:hover:bg-neutral-800"
                       href={item.href}
                       onClick={() => setMobileMenuOpen(false)}
                     >
@@ -200,45 +186,54 @@ export function Header() {
                 ))}
               </ul>
             </div>
-            <div className="mt-2 flex flex-wrap items-center gap-2 border-neutral-200 border-t px-4 pt-4 dark:border-neutral-800">
-              <ThemeToggle />
-              <span
-                aria-hidden
-                className="h-8 w-px shrink-0 bg-neutral-200 dark:bg-neutral-700"
-              />
-              <a
-                aria-label="GitHub repository"
-                className="flex items-center gap-2 rounded-md px-3 py-2 font-sans text-neutral-600 text-sm hover:bg-neutral-100 dark:text-neutral-400 dark:hover:bg-neutral-800"
-                href={LINK.GITHUB}
-                onClick={() => setMobileMenuOpen(false)}
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-neutral-900 text-white">
-                  <Github aria-hidden className="size-3.5" />
-                </span>
-                <span>
-                  {starCount !== null ? formatStarCount(starCount) : "—"}
-                </span>
-              </a>
-              <span
-                aria-hidden
-                className="h-8 w-px shrink-0 bg-neutral-200 dark:bg-neutral-700"
-              />
-              <a
-                aria-label="X (Twitter)"
-                className="flex size-10 items-center justify-center rounded-md text-neutral-600 hover:bg-neutral-100 dark:text-neutral-400 dark:hover:bg-neutral-800"
-                href={LINK.TWITTER}
-                onClick={() => setMobileMenuOpen(false)}
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                <XLogoIcon className="size-5" />
-              </a>
-            </div>
-          </nav>
-        </div>
+          ))}
+
+          {/* Contributing */}
+          <div className="mt-3">
+            <p className="px-4 pb-1 font-semibold text-[11px] text-neutral-500 uppercase dark:text-neutral-400">
+              {contributingSection.label}
+            </p>
+
+            <ul className="pl-7">
+              {contributingSection.children.map((item) => (
+                <li key={item.href}>
+                  <Link
+                    className="block py-2 text-neutral-700 text-sm hover:bg-neutral-100 dark:text-neutral-200 dark:hover:bg-neutral-800"
+                    href={item.href}
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    {item.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Footer actions */}
+          <div className="mt-4 flex items-center gap-3 px-4 pt-4">
+            <ThemeToggle />
+
+            <a
+              className="flex items-center gap-2 text-neutral-600 text-sm dark:text-neutral-400"
+              href={LINK.GITHUB}
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              <Github className="size-4" />
+              {starCount !== null ? formatStarCount(starCount) : "—"}
+            </a>
+
+            <a
+              className="flex items-center"
+              href={LINK.TWITTER}
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              <XLogoIcon className="size-5" />
+            </a>
+          </div>
+        </nav>
       </div>
-    </header>
+    </>
   );
 }
