@@ -4972,6 +4972,21 @@
           "type": "registry:ui"
         }
       ]
+    },
+    {
+      "name": "hover-flip-card",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": [],
+      "devDependencies": [],
+      "title": "Hover Flip Card",
+      "description": "A card that flips when hovered. Uses Motion for the flip effect.",
+      "files": [
+        {
+          "path": "hover-flip-card.tsx",
+          "type": "registry:ui"
+        }
+      ]
     }
   ]
 }

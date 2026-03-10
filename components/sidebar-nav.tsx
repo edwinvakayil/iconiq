@@ -23,6 +23,7 @@ const nav = [
     items: [
       { label: "Animated Tooltip", href: "/components/animated-tooltip" },
       { label: "Highlighter", href: "/components/highlighter" },
+      { label: "Hover Flip Card", href: "/components/hover-flip-card" },
     ],
   },
   {

@@ -2320,4 +2320,10 @@ export const components: ComponentDefinition[] = [
     registryDependencies: [],
     dependencies: [],
   },
+  {
+    name: "hover-flip-card",
+    path: path.join(__dirname, "../registry", "hover-flip-card.tsx"),
+    registryDependencies: [],
+    dependencies: [],
+  },
 ];

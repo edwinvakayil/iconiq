@@ -28,6 +28,12 @@ const REGISTRY_UI_META: Record<
       "A highlighter component that highlights text with a subtle animation. Uses Motion for the highlight effect.",
     dependencies: ["motion"],
   },
+  "hover-flip-card": {
+    title: "Hover Flip Card",
+    description:
+      "A card that flips when hovered. Uses Motion for the flip effect.",
+    dependencies: [],
+  },
 };
 
 if (!fs.existsSync(registryComponents)) {
