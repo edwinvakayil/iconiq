@@ -2,7 +2,7 @@
   "$schema": "https://ui.shadcn.com/schema/registry-item.json",
   "name": "accordion-animated",
   "type": "registry:ui",
-  "registryDependencies": [],
+  "registryDependencies": ["accordion"],
   "dependencies": ["@radix-ui/react-accordion"],
   "devDependencies": [],
   "files": [

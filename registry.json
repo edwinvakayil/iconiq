@@ -5056,7 +5056,7 @@
     {
       "name": "accordion-animated",
       "type": "registry:ui",
-      "registryDependencies": [],
+      "registryDependencies": ["accordion"],
       "dependencies": ["@radix-ui/react-accordion"],
       "devDependencies": [],
       "title": "Accordion (Animated)",

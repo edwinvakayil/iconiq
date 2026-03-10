@@ -2359,7 +2359,7 @@ export const components: ComponentDefinition[] = [
   {
     name: "accordion-animated",
     path: path.join(__dirname, "../registry", "accordion-animated.tsx"),
-    registryDependencies: [],
+    registryDependencies: ["accordion"],
     dependencies: [],
   },
 ];
