@@ -168,7 +168,7 @@ export default function AccordionAnimatedPage() {
 
           <div className="mt-4">
             <CodeBlock
-              code={`import { AccordionAnimated } from "@/registry/accordion-animated";
+              code={`import { AccordionAnimated } from "@/components/ui/accordion-animated";
 import { FileTextIcon } from "@/icons/file-text";
 import { FoldersIcon } from "@/icons/folders";
 import { SettingsIcon } from "@/icons/settings";
