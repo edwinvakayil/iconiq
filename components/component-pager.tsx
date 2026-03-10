@@ -7,8 +7,8 @@ import { usePathname } from "next/navigation";
 import { SITE_SECTIONS } from "@/lib/site-nav";
 
 const COMPONENT_ROUTES =
-  SITE_SECTIONS.find((section) => section.label === "Components")?.children ??
-  [];
+  SITE_SECTIONS.find((section) => section.label === "Animated Components")
+    ?.children ?? [];
 
 export function ComponentPager() {
   const pathname = usePathname();

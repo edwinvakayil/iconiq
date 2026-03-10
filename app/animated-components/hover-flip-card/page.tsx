@@ -68,7 +68,7 @@ export default function HoverFlipCardPage() {
               </li>
 
               <li aria-current="page" className="text-neutral-900">
-                Components
+                Animated Components
               </li>
 
               <li aria-hidden="true">

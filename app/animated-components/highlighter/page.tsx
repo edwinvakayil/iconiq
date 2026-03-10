@@ -4,29 +4,11 @@ import { CodeBlock } from "@/components/code-block";
 import { CodeBlockInstall } from "@/components/code-block-install";
 import { ComponentActions } from "@/components/component-actions";
 import { ComponentPager } from "@/components/component-pager";
+import { HighlighterPreviewBlock } from "@/components/highlighter-preview-block";
 import { OnThisPage } from "@/components/on-this-page";
 import { SidebarNav } from "@/components/sidebar-nav";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { AnimatedTooltip } from "@/registry/animated-tooltip";
 
-const GITHUB_REPO_API = "https://api.github.com/repos/edwinvakayil/iconiq";
-
-async function getRepoOwnerAvatar(): Promise<string | null> {
-  try {
-    const res = await fetch(GITHUB_REPO_API, {
-      headers: { Accept: "application/vnd.github.v3+json" },
-      next: { revalidate: 3600 },
-    });
-    const data = (await res.json()) as { owner?: { avatar_url?: string } };
-    return data?.owner?.avatar_url ?? null;
-  } catch {
-    return null;
-  }
-}
-
-export default async function AnimatedTooltipPage() {
-  const avatarUrl = await getRepoOwnerAvatar();
-
+export default function HighlighterPage() {
   return (
     <div className="flex min-h-[calc(100vh-0px)] w-full min-w-0">
       <SidebarNav />
@@ -52,105 +34,93 @@ export default async function AnimatedTooltipPage() {
               </li>
 
               <li aria-current="page" className="text-neutral-900">
-                Components
+                Animated Components
               </li>
 
               <li aria-hidden="true">
                 <ChevronRight className="size-4 text-neutral-400" />
               </li>
 
-              <li
-                aria-current="page"
-                className="max-w-[90px] truncate text-neutral-900 sm:max-w-none"
-              >
-                Animated Tooltip
+              <li aria-current="page" className="text-neutral-900">
+                Highlighter
               </li>
             </ol>
             <ComponentPager />
           </nav>
 
-          <h1 className="font-bold font-sans text-3xl text-neutral-900 tracking-tight sm:text-4xl">
-            Animated Tooltip
+          <h1 className="font-bold font-sans text-3xl text-neutral-900 tracking-tight sm:text-4xl dark:text-white">
+            Highlighter
           </h1>
 
-          <p className="mt-2 font-sans text-lg text-neutral-600">
-            A dynamic tooltip that tilts and shifts based on cursor movement,
-            enhanced with smooth spring-based enter and exit animations.
+          <p className="mt-2 font-sans text-lg text-neutral-600 dark:text-neutral-400">
+            A highlighter component that draws a border and pointer around text
+            with a subtle animation. Uses Motion for the reveal effect.
           </p>
 
-          <p className="mt-6 font-sans text-neutral-600 text-sm">
-            Built with Motion to create a subtle parallax effect using hover
-            position for rotation and translation. AnimatePresence manages
-            smooth mounting and unmounting transitions. Ideal for avatars,
-            buttons, and interactive UI triggers where a responsive, playful
-            tooltip enhances the experience.
+          <p className="mt-6 font-sans text-neutral-600 text-sm dark:text-neutral-400">
+            Built with Motion to animate a rectangle growing around the content
+            and a pointer icon appearing at the bottom-right. ResizeObserver
+            keeps the highlight in sync with the wrapped element. Ideal for
+            callouts, labels, or drawing attention to key phrases in copy.
           </p>
 
-          <p className="mt-6 font-sans text-neutral-600 text-sm">
-            Install using the shadcn CLI to add a clean, developer-friendly
-            tooltip component to your application.
+          <p className="mt-6 font-sans text-neutral-600 text-sm dark:text-neutral-400">
+            Install using the shadcn CLI to add the highlighter component to
+            your application.
           </p>
 
           <div className="mt-10">
-            <CodeBlockInstall componentName="animated-tooltip" />
+            <CodeBlockInstall componentName="highlighter" />
           </div>
 
           <h2
-            className="mt-12 font-sans font-semibold text-lg text-neutral-900"
+            className="mt-12 font-sans font-semibold text-lg text-neutral-900 dark:text-white"
             id="preview"
           >
             Preview
           </h2>
 
-          <p className="mt-1 font-sans text-neutral-600 text-sm">
-            Hover over the trigger and move your cursor to see the tooltip tilt
-            and translate in response to pointer movement.
+          <p className="mt-1 font-sans text-neutral-600 text-sm dark:text-neutral-400">
+            The highlight draws around the wrapped content when it enters the
+            viewport; the pointer appears at the corner. Use Replay to see the
+            animation again.
           </p>
 
-          <div className="mt-6 flex flex-wrap items-center gap-4">
-            <AnimatedTooltip
-              className="bg-emerald-800"
-              content="Edwin Vakayil, creator of Iconiq"
-            >
-              <Avatar size="md">
-                <AvatarImage
-                  alt="Edwin Vakayil, the author of Iconiq"
-                  className="select-none"
-                  src={avatarUrl ?? undefined}
-                />
-                <AvatarFallback className="bg-neutral-200 font-sans dark:bg-neutral-800">
-                  EV
-                </AvatarFallback>
-              </Avatar>
-            </AnimatedTooltip>
-          </div>
+          <HighlighterPreviewBlock className="mt-6" />
 
           <h2
-            className="mt-12 font-sans font-semibold text-lg text-neutral-900"
+            className="mt-12 font-sans font-semibold text-lg text-neutral-900 dark:text-white"
             id="usage"
           >
             Usage
           </h2>
 
-          <p className="mt-1 font-sans text-neutral-600 text-sm">
+          <p className="mt-1 font-sans text-neutral-600 text-sm dark:text-neutral-400">
             Import from{" "}
             <code className="rounded bg-neutral-200 px-1 font-mono text-xs dark:bg-neutral-700 dark:text-neutral-200">
-              @/components/ui/animated-tooltip
+              @/components/ui/highlighter
             </code>{" "}
-            and wrap any trigger with{" "}
+            and wrap any content. Use{" "}
             <code className="rounded bg-neutral-200 px-1 font-mono text-xs dark:bg-neutral-700 dark:text-neutral-200">
-              content
+              containerClassName
             </code>{" "}
-            for the tooltip.
+            for inline use (e.g.{" "}
+            <code className="rounded bg-neutral-200 px-1 font-mono text-xs dark:bg-neutral-700 dark:text-neutral-200">
+              inline-block align-baseline
+            </code>
+            ).
           </p>
 
           <div className="mt-4">
             <CodeBlock
-              code={`import { AnimatedTooltip } from "@/components/ui/animated-tooltip";
+              code={`import { Highlighter } from "@/components/ui/highlighter";
 
-<AnimatedTooltip content="Your tooltip text">
-  <button type="button">Hover me</button>
-</AnimatedTooltip>`}
+<div>
+  Your text here{" "}
+  <Highlighter containerClassName="inline-block align-baseline">
+    <span className="relative z-10">highlighted phrase</span>
+  </Highlighter>
+</div>`}
               language="tsx"
             />
           </div>
@@ -158,15 +128,15 @@ export default async function AnimatedTooltipPage() {
           {/* GET COMPONENT SECTION */}
 
           <h2
-            className="mt-12 font-sans font-semibold text-lg text-neutral-900"
+            className="mt-12 font-sans font-semibold text-lg text-neutral-900 dark:text-white"
             id="get-code"
           >
             Get the Component
           </h2>
 
-          <p className="mt-1 font-sans text-neutral-600 text-sm">
-            Copy the Animated Tooltip component directly into your project or
-            open it in{" "}
+          <p className="mt-1 font-sans text-neutral-600 text-sm dark:text-neutral-400">
+            Copy the Highlighter component directly into your project or open it
+            in{" "}
             <span className="inline-flex align-baseline">
               <svg
                 aria-hidden
@@ -180,63 +150,63 @@ export default async function AnimatedTooltipPage() {
               </svg>
               <span className="sr-only">v0</span>
             </span>{" "}
-            to customize and generate variations. This allows you to quickly
-            integrate the component or experiment with different UI
-            implementations.
+            to customize and generate variations. This makes it easy to adapt
+            the component to your UI and workflow.
           </p>
 
           <div className="mt-6">
-            <ComponentActions name="animated-tooltip" />
+            <ComponentActions name="highlighter" />
           </div>
 
           <h3
-            className="mt-8 font-sans font-semibold text-base text-neutral-900"
+            className="mt-8 font-sans font-semibold text-base text-neutral-900 dark:text-white"
             id="props"
           >
             Props
           </h3>
 
-          <ul className="mt-2 list-inside list-disc font-sans text-neutral-600 text-sm">
+          <ul className="mt-2 list-inside list-disc font-sans text-neutral-600 text-sm dark:text-neutral-400">
             <li>
               <code className="rounded bg-neutral-200 px-1 font-mono text-xs dark:bg-neutral-700 dark:text-neutral-200">
                 children
               </code>{" "}
-              — trigger element (hover target)
+              — content to highlight (wrap in a span with{" "}
+              <code className="rounded bg-neutral-200 px-1 font-mono text-xs dark:bg-neutral-700 dark:text-neutral-200">
+                relative z-10
+              </code>{" "}
+              so text sits above the border)
             </li>
 
             <li>
               <code className="rounded bg-neutral-200 px-1 font-mono text-xs dark:bg-neutral-700 dark:text-neutral-200">
-                content
+                containerClassName
               </code>{" "}
-              — tooltip content (ReactNode)
+              — optional class for the wrapper (e.g. inline alignment)
             </li>
 
             <li>
               <code className="rounded bg-neutral-200 px-1 font-mono text-xs dark:bg-neutral-700 dark:text-neutral-200">
-                className
+                rectangleClassName
               </code>{" "}
-              — optional class for the tooltip popup
+              — optional class for the border rectangle
             </li>
 
             <li>
               <code className="rounded bg-neutral-200 px-1 font-mono text-xs dark:bg-neutral-700 dark:text-neutral-200">
-                wrapperClassName
+                pointerColor
               </code>{" "}
-              — optional class for the trigger wrapper
-            </li>
-
-            <li>
+              — optional CSS color for the pointer (e.g.{" "}
               <code className="rounded bg-neutral-200 px-1 font-mono text-xs dark:bg-neutral-700 dark:text-neutral-200">
-                backgroundClassName
-              </code>{" "}
-              — optional class for the tooltip background (e.g.{" "}
-              <code className="rounded bg-neutral-200 px-1 font-mono text-xs dark:bg-neutral-700 dark:text-neutral-200">
-                bg-blue-600
+                #22c55e
               </code>
-              ). Defaults to{" "}
+              ). Defaults to blue.
+            </li>
+
+            <li>
               <code className="rounded bg-neutral-200 px-1 font-mono text-xs dark:bg-neutral-700 dark:text-neutral-200">
-                bg-black
-              </code>
+                pointerClassName
+              </code>{" "}
+              — optional class for the pointer icon (size, etc.)
             </li>
           </ul>
         </div>

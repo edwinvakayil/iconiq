@@ -30,7 +30,7 @@ function getTocForPath(pathname: string): TocEntry[] {
       children: [...SITE_SECTIONS[0].children],
     });
   }
-  if (pathname.startsWith("/components/")) {
+  if (pathname.startsWith("/animated-components/")) {
     if (!hasIcons())
       toc.push({
         label: SITE_SECTIONS[0].label,
@@ -135,7 +135,7 @@ export function OnThisPage() {
                 </li>
               ))}
           </ul>
-        ) : pathname.startsWith("/components/") &&
+        ) : pathname.startsWith("/animated-components/") &&
           PAGE_SECTIONS[pathname]?.length ? (
           <ul className="mt-1 space-y-0.5">
             {PAGE_SECTIONS[pathname].map((section) => (

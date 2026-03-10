@@ -17,28 +17,34 @@ export const SITE_SECTIONS = [
     ],
   },
   {
-    label: "Components",
+    label: "Animated Components",
     children: [
-      { label: "Animated Tooltip", href: "/components/animated-tooltip" },
-      { label: "Highlighter", href: "/components/highlighter" },
-      { label: "Hover Flip Card", href: "/components/hover-flip-card" },
+      {
+        label: "Animated Tooltip",
+        href: "/animated-components/animated-tooltip",
+      },
+      { label: "Highlighter", href: "/animated-components/highlighter" },
+      {
+        label: "Hover Flip Card",
+        href: "/animated-components/hover-flip-card",
+      },
     ],
   },
 ] as const;
 
 /** Section headings (h2/h3) per page for "On this page" anchor links. */
 export const PAGE_SECTIONS: Record<string, { label: string; id: string }[]> = {
-  "/components/animated-tooltip": [
+  "/animated-components/animated-tooltip": [
     { label: "Preview", id: "preview" },
     { label: "Usage", id: "usage" },
     { label: "Props", id: "props" },
   ],
-  "/components/highlighter": [
+  "/animated-components/highlighter": [
     { label: "Preview", id: "preview" },
     { label: "Usage", id: "usage" },
     { label: "Props", id: "props" },
   ],
-  "/components/hover-flip-card": [
+  "/animated-components/hover-flip-card": [
     { label: "Preview", id: "preview" },
     { label: "Usage", id: "usage" },
     { label: "Props", id: "props" },

@@ -19,11 +19,17 @@ const nav = [
     ],
   },
   {
-    title: "Components",
+    title: "Animated Components",
     items: [
-      { label: "Animated Tooltip", href: "/components/animated-tooltip" },
-      { label: "Highlighter", href: "/components/highlighter" },
-      { label: "Hover Flip Card", href: "/components/hover-flip-card" },
+      {
+        label: "Animated Tooltip",
+        href: "/animated-components/animated-tooltip",
+      },
+      { label: "Highlighter", href: "/animated-components/highlighter" },
+      {
+        label: "Hover Flip Card",
+        href: "/animated-components/hover-flip-card",
+      },
     ],
   },
 ];
