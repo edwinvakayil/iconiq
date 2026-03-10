@@ -338,6 +338,7 @@ import { CornerRightDownIcon } from "./corner-right-down";
 import { CornerRightUpIcon } from "./corner-right-up";
 import { CornerUpLeftIcon } from "./corner-up-left";
 import { CornerUpRightIcon } from "./corner-up-right";
+import { DatabaseBackupIcon } from "./database-backup";
 import { FolderArchiveIcon } from "./folder-archive";
 import { FolderCheckIcon } from "./folder-check";
 import { FolderClockIcon } from "./folder-clock";
@@ -376,7 +377,9 @@ import { HandGrabIcon } from "./hand-grab";
 import { HandHelpingIcon } from "./hand-helping";
 import { HandMetalIcon } from "./hand-metal";
 import { HeartHandshakeIcon } from "./heart-handshake";
+import { MotorbikeIcon } from "./motorbike";
 import { PhoneCallIcon } from "./phone-call";
+import { PickaxeIcon } from "./pickaxe";
 import { TruckIcon } from "./truck";
 
 type IconListItem = {
@@ -3328,6 +3331,21 @@ const ICON_LIST: IconListItem[] = [
     name: "phone-call",
     icon: PhoneCallIcon,
     keywords: ["phone", "call", "communication", "contact", "telephone"],
+  },
+  {
+    name: "pickaxe",
+    icon: PickaxeIcon,
+    keywords: ["pickaxe", "mining", "dig", "excavate", "explore"],
+  },
+  {
+    name: "database-backup",
+    icon: DatabaseBackupIcon,
+    keywords: ["database", "backup", "restore", "restore", "restore"],
+  },
+  {
+    name: "motorbike",
+    icon: MotorbikeIcon,
+    keywords: ["motorbike", "bike", "motorcycle", "vehicle", "transport"],
   },
 ].sort((a, b) => a.name.localeCompare(b.name));
 

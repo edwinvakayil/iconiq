@@ -2326,4 +2326,22 @@ export const components: ComponentDefinition[] = [
     registryDependencies: [],
     dependencies: [],
   },
+  {
+    name: "database-backup",
+    path: path.join(__dirname, "../icons", "database-backup.tsx"),
+    registryDependencies: [],
+    dependencies: ["motion"],
+  },
+  {
+    name: "motorbike",
+    path: path.join(__dirname, "../icons", "motorbike.tsx"),
+    registryDependencies: [],
+    dependencies: ["motion"],
+  },
+  {
+    name: "pickaxe",
+    path: path.join(__dirname, "../icons", "pickaxe.tsx"),
+    registryDependencies: [],
+    dependencies: ["motion"],
+  },
 ];

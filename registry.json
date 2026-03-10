@@ -4987,6 +4987,45 @@
           "type": "registry:ui"
         }
       ]
+    },
+    {
+      "name": "database-backup",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": ["motion"],
+      "devDependencies": [],
+      "files": [
+        {
+          "path": "database-backup.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "motorbike",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": ["motion"],
+      "devDependencies": [],
+      "files": [
+        {
+          "path": "motorbike.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "pickaxe",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": ["motion"],
+      "devDependencies": [],
+      "files": [
+        {
+          "path": "pickaxe.tsx",
+          "type": "registry:ui"
+        }
+      ]
     }
   ]
 }
