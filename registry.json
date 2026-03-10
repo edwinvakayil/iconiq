@@ -5052,6 +5052,21 @@
           "type": "registry:ui"
         }
       ]
+    },
+    {
+      "name": "accordion-animated",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": ["@radix-ui/react-accordion"],
+      "devDependencies": [],
+      "title": "Accordion (Animated)",
+      "description": "An accordion component that animates the icons when opened. Uses Motion for the animation.",
+      "files": [
+        {
+          "path": "accordion-animated.tsx",
+          "type": "registry:ui"
+        }
+      ]
     }
   ]
 }

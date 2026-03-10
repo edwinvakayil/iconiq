@@ -34,6 +34,12 @@ const REGISTRY_UI_META: Record<
       "A card that flips when hovered. Uses Motion for the flip effect.",
     dependencies: [],
   },
+  "accordion-animated": {
+    title: "Accordion (Animated)",
+    description:
+      "An accordion component that animates the icons when opened. Uses Motion for the animation.",
+    dependencies: ["@radix-ui/react-accordion"],
+  },
 };
 
 if (!fs.existsSync(registryComponents)) {

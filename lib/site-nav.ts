@@ -25,6 +25,10 @@ export const SITE_SECTIONS = [
       },
       { label: "Highlighter", href: "/animated-components/highlighter" },
       {
+        label: "Accordion (Animated)",
+        href: "/animated-components/accordion-animated",
+      },
+      {
         label: "Hover Flip Card",
         href: "/animated-components/hover-flip-card",
       },
@@ -40,6 +44,11 @@ export const PAGE_SECTIONS: Record<string, { label: string; id: string }[]> = {
     { label: "Props", id: "props" },
   ],
   "/animated-components/highlighter": [
+    { label: "Preview", id: "preview" },
+    { label: "Usage", id: "usage" },
+    { label: "Props", id: "props" },
+  ],
+  "/animated-components/accordion-animated": [
     { label: "Preview", id: "preview" },
     { label: "Usage", id: "usage" },
     { label: "Props", id: "props" },

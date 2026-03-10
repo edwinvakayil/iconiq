@@ -109,7 +109,7 @@ export default async function AnimatedTooltipPage() {
 
           <div className="mt-6 flex flex-wrap items-center gap-4">
             <AnimatedTooltip
-              className="bg-emerald-800"
+              className="bg-blue-800"
               content="Edwin Vakayil, creator of Iconiq"
             >
               <Avatar size="md">

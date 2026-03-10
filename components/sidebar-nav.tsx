@@ -27,6 +27,10 @@ const nav = [
       },
       { label: "Highlighter", href: "/animated-components/highlighter" },
       {
+        label: "Accordion (Animated)",
+        href: "/animated-components/accordion-animated",
+      },
+      {
         label: "Hover Flip Card",
         href: "/animated-components/hover-flip-card",
       },
