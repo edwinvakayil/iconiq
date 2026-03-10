@@ -41,12 +41,6 @@ function getTocForPath(pathname: string): TocEntry[] {
       children: [...SITE_SECTIONS[1].children],
     });
   }
-  if (pathname.startsWith("/contributing/") && !hasIcons())
-    toc.push({
-      label: SITE_SECTIONS[0].label,
-      children: [...SITE_SECTIONS[0].children],
-    });
-
   return toc;
 }
 

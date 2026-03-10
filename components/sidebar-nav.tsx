@@ -26,13 +26,6 @@ const nav = [
       { label: "Hover Flip Card", href: "/components/hover-flip-card" },
     ],
   },
-  {
-    title: "Contributing",
-    items: [
-      { label: "Introduction", href: "/contributing/introduction" },
-      { label: "Contributing Code", href: "/contributing/code" },
-    ],
-  },
 ];
 
 export function SidebarNav() {

@@ -29,14 +29,6 @@ function formatStarCount(n: number): string {
   return n.toLocaleString();
 }
 
-const contributingSection = {
-  label: "Contributing",
-  children: [
-    { label: "Introduction", href: "/contributing/introduction" },
-    { label: "Contributing Code", href: "/contributing/code" },
-  ],
-};
-
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [starCount, setStarCount] = useState<number | null>(null);
@@ -187,27 +179,6 @@ export function Header() {
               </ul>
             </div>
           ))}
-
-          {/* Contributing */}
-          <div className="mt-3">
-            <p className="px-4 pb-1 font-semibold text-[11px] text-neutral-500 uppercase dark:text-neutral-400">
-              {contributingSection.label}
-            </p>
-
-            <ul className="pl-7">
-              {contributingSection.children.map((item) => (
-                <li key={item.href}>
-                  <Link
-                    className="block py-2 text-neutral-700 text-sm hover:bg-neutral-100 dark:text-neutral-200 dark:hover:bg-neutral-800"
-                    href={item.href}
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    {item.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
 
           {/* Footer actions */}
           <div className="mt-4 flex items-center gap-3 px-4 pt-4">
