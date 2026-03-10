@@ -377,7 +377,9 @@ import { HandGrabIcon } from "./hand-grab";
 import { HandHelpingIcon } from "./hand-helping";
 import { HandMetalIcon } from "./hand-metal";
 import { HeartHandshakeIcon } from "./heart-handshake";
+import { MonitorCogIcon } from "./monitor-cog";
 import { MotorbikeIcon } from "./motorbike";
+import { PackagePlusIcon } from "./package-plus";
 import { PhoneCallIcon } from "./phone-call";
 import { PickaxeIcon } from "./pickaxe";
 import { TruckIcon } from "./truck";
@@ -3346,6 +3348,16 @@ const ICON_LIST: IconListItem[] = [
     name: "motorbike",
     icon: MotorbikeIcon,
     keywords: ["motorbike", "bike", "motorcycle", "vehicle", "transport"],
+  },
+  {
+    name: "monitor-cog",
+    icon: MonitorCogIcon,
+    keywords: ["monitor", "cog", "settings", "preferences", "controls"],
+  },
+  {
+    name: "package-plus",
+    icon: PackagePlusIcon,
+    keywords: ["package", "plus", "add", "create", "new"],
   },
 ].sort((a, b) => a.name.localeCompare(b.name));
 
