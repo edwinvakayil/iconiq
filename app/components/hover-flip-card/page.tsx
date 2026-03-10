@@ -4,6 +4,7 @@ import Link from "next/link";
 
 import { CodeBlock } from "@/components/code-block";
 import { CodeBlockInstall } from "@/components/code-block-install";
+import { ComponentActions } from "@/components/component-actions";
 import { ComponentPager } from "@/components/component-pager";
 import { OnThisPage } from "@/components/on-this-page";
 import { SidebarNav } from "@/components/sidebar-nav";
@@ -237,6 +238,23 @@ function GenericCardBack({ data }: GenericCardBackProps) {
             />
           </div>
 
+          <h2
+            className="mt-12 font-sans font-semibold text-lg text-neutral-900 dark:text-white"
+            id="get-code"
+          >
+            Get the Component
+          </h2>
+
+          <p className="mt-1 font-sans text-neutral-600 text-sm dark:text-neutral-400">
+            Copy the Hover Flip Card component directly into your project or
+            open it in v0 to customize and generate variations. This helps you
+            quickly adapt the card to your UI and workflow.
+          </p>
+
+          <div className="mt-6">
+            <ComponentActions name="hover-flip-card" />
+          </div>
+
           <h3
             className="mt-8 font-sans font-semibold text-base text-neutral-900 dark:text-white"
             id="props"
@@ -285,25 +303,6 @@ function GenericCardBack({ data }: GenericCardBackProps) {
               styling.
             </li>
           </ul>
-        </div>
-
-        <div className="mx-auto max-w-[720px] px-4 pb-12 sm:px-6">
-          <div className="flex flex-wrap items-center justify-between gap-4 pt-6">
-            <Link
-              className="inline-flex items-center gap-1 font-medium font-sans text-neutral-700 text-sm transition-colors hover:text-neutral-900 dark:text-neutral-300 dark:hover:text-white"
-              href="/components/highlighter"
-            >
-              <span aria-hidden="true">←</span>
-              Highlighter
-            </Link>
-            <Link
-              className="inline-flex items-center gap-1 font-medium font-sans text-neutral-700 text-sm transition-colors hover:text-neutral-900 dark:text-neutral-300 dark:hover:text-white"
-              href="/icons"
-            >
-              Icon Library
-              <span aria-hidden="true"> →</span>
-            </Link>
-          </div>
         </div>
       </main>
 
