@@ -149,7 +149,7 @@ export default function HoverFlipCardPage() {
 
           <div className="mt-4">
             <CodeBlock
-              code={`import { FlippingCard } from "@/components/ui/flipping-card"
+              code={`import { HoverFlipCard } from "@/components/ui/hover-flip-card;"
 
 interface CardData {
   id: string
