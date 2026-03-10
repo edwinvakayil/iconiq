@@ -116,7 +116,7 @@ export function OnThisPage() {
   const sectionLinkClass = (id: string) =>
     `block py-0.5 pl-3 font-sans text-[13px] border-l-2 transition-colors ${
       activeSectionId === id
-        ? "border-primary font-semibold text-neutral-950 dark:text-white"
+        ? "border-primary dark:border-white font-semibold text-neutral-950 dark:text-white"
         : "border-transparent text-neutral-600 hover:text-neutral-900 dark:text-neutral-300"
     }`;
 
