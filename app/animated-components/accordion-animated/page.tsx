@@ -101,17 +101,17 @@ export default function AccordionAnimatedPage() {
             Accordion (Animated)
           </h1>
 
-          <p className="mt-2 font-sans text-lg text-neutral-600 dark:text-neutral-400">
+          <p className="mt-2 font-sans text-lg leading-relaxed text-neutral-600 dark:text-neutral-400">
             An animated accordion that uses motion-powered icons from the Iconiq
             library to bring each section to life.
           </p>
 
-          <p className="mt-6 font-sans text-neutral-600 text-sm dark:text-neutral-400">
+          <p className="mt-6 font-sans text-neutral-600 text-sm leading-relaxed dark:text-neutral-400">
             Use it to group related content into collapsible sections, each with
             its own animated icon that responds to user interaction.
           </p>
 
-          <p className="mt-6 font-sans text-neutral-600 text-sm dark:text-neutral-400">
+          <p className="mt-6 font-sans text-neutral-600 text-sm leading-relaxed dark:text-neutral-400">
             Install using the shadcn CLI to add the accordion component to your
             application, then replace the icons with any animated icons from the
             Iconiq library.

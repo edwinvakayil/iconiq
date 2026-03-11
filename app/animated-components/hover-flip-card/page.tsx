@@ -87,19 +87,19 @@ export default function HoverFlipCardPage() {
             Hover Flip Card
           </h1>
 
-          <p className="mt-2 font-sans text-lg text-neutral-600 dark:text-neutral-300">
+          <p className="mt-2 font-sans text-lg leading-relaxed text-neutral-600 dark:text-neutral-300">
             A 3D flipping card that reveals additional content on hover. Built
             with CSS transforms and Motion-friendly structure for smooth,
             interactive effects.
           </p>
 
-          <p className="mt-6 font-sans text-neutral-600 text-sm dark:text-neutral-300">
+          <p className="mt-6 font-sans text-neutral-600 text-sm leading-relaxed dark:text-neutral-300">
             Use it to showcase features, profiles, or product details on the
             front, with extended descriptions or actions on the back. The card
             exposes props for height, width, and custom front/back content.
           </p>
 
-          <p className="mt-6 font-sans text-neutral-600 text-sm dark:text-neutral-300">
+          <p className="mt-6 font-sans text-neutral-600 text-sm leading-relaxed dark:text-neutral-300">
             Install using the shadcn CLI to add the flipping card component to
             your application.
           </p>

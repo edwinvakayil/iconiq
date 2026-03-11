@@ -74,12 +74,12 @@ export default async function AnimatedTooltipPage() {
             Animated Tooltip
           </h1>
 
-          <p className="mt-2 font-sans text-lg text-neutral-600">
+          <p className="mt-2 font-sans text-lg leading-relaxed text-neutral-600">
             A dynamic tooltip that tilts and shifts based on cursor movement,
             enhanced with smooth spring-based enter and exit animations.
           </p>
 
-          <p className="mt-6 font-sans text-neutral-600 text-sm">
+          <p className="mt-6 font-sans text-neutral-600 text-sm leading-relaxed">
             Built with Motion to create a subtle parallax effect using hover
             position for rotation and translation. AnimatePresence manages
             smooth mounting and unmounting transitions. Ideal for avatars,
@@ -87,7 +87,7 @@ export default async function AnimatedTooltipPage() {
             tooltip enhances the experience.
           </p>
 
-          <p className="mt-6 font-sans text-neutral-600 text-sm">
+          <p className="mt-6 font-sans text-neutral-600 text-sm leading-relaxed">
             Install using the shadcn CLI to add a clean, developer-friendly
             tooltip component to your application.
           </p>

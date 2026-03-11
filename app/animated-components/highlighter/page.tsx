@@ -53,19 +53,19 @@ export default function HighlighterPage() {
             Highlighter
           </h1>
 
-          <p className="mt-2 font-sans text-lg text-neutral-600 dark:text-neutral-400">
+          <p className="mt-2 font-sans text-lg leading-relaxed text-neutral-600 dark:text-neutral-400">
             A highlighter component that draws a border and pointer around text
             with a subtle animation. Uses Motion for the reveal effect.
           </p>
 
-          <p className="mt-6 font-sans text-neutral-600 text-sm dark:text-neutral-400">
+          <p className="mt-6 font-sans text-neutral-600 text-sm leading-relaxed dark:text-neutral-400">
             Built with Motion to animate a rectangle growing around the content
             and a pointer icon appearing at the bottom-right. ResizeObserver
             keeps the highlight in sync with the wrapped element. Ideal for
             callouts, labels, or drawing attention to key phrases in copy.
           </p>
 
-          <p className="mt-6 font-sans text-neutral-600 text-sm dark:text-neutral-400">
+          <p className="mt-6 font-sans text-neutral-600 text-sm leading-relaxed dark:text-neutral-400">
             Install using the shadcn CLI to add the highlighter component to
             your application.
           </p>

@@ -54,18 +54,18 @@ export default function FileTreePage() {
             File Tree
           </h1>
 
-          <p className="mt-2 font-sans text-lg text-neutral-600 dark:text-neutral-400">
+          <p className="mt-2 font-sans text-lg leading-relaxed text-neutral-600 dark:text-neutral-400">
             A composable file tree with search, nested folders, and keyboard
             focus styles built on top of Radix Accordion.
           </p>
 
-          <p className="mt-6 font-sans text-neutral-600 text-sm dark:text-neutral-400">
+          <p className="mt-6 font-sans text-neutral-600 text-sm leading-relaxed dark:text-neutral-400">
             Use it to render project structures, navigation sidebars, or any
             hierarchical data where folders and files need to be browsed and
             filtered.
           </p>
 
-          <p className="mt-6 font-sans text-neutral-600 text-sm dark:text-neutral-400">
+          <p className="mt-6 font-sans text-neutral-600 text-sm leading-relaxed dark:text-neutral-400">
             Install using the shadcn CLI to add the file tree component to your
             application.
           </p>
