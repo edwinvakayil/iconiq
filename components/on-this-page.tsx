@@ -65,6 +65,8 @@ export function OnThisPage() {
     updateFromHash();
 
     let observer: IntersectionObserver | null = null;
+    let domObserver: MutationObserver | null = null;
+    const observedIds = new Set<string>();
 
     if (sections.length) {
       observer = new IntersectionObserver(
@@ -86,16 +88,31 @@ export function OnThisPage() {
         }
       );
 
-      sections.forEach((section) => {
-        const el = document.getElementById(section.id);
-        if (el) observer?.observe(el);
+      const observeAvailableSections = () => {
+        sections.forEach((section) => {
+          if (observedIds.has(section.id)) return;
+          const el = document.getElementById(section.id);
+          if (!el) return;
+          observer?.observe(el);
+          observedIds.add(section.id);
+        });
+      };
+
+      // Initial bind (some sections may not exist yet, e.g. accordion content).
+      observeAvailableSections();
+
+      // Re-bind as sections mount/unmount (Radix Accordion unmounts closed panels).
+      domObserver = new MutationObserver(() => {
+        observeAvailableSections();
       });
+      domObserver.observe(document.body, { childList: true, subtree: true });
     }
 
     window.addEventListener("hashchange", updateFromHash);
 
     return () => {
       window.removeEventListener("hashchange", updateFromHash);
+      if (domObserver) domObserver.disconnect();
       if (observer) observer.disconnect();
     };
   }, []);
