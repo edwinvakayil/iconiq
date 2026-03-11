@@ -44,6 +44,165 @@ function getTocForPath(pathname: string): TocEntry[] {
   return toc;
 }
 
+function renderIconsNav(
+  pathname: string,
+  linkClass: (href: string, isAnchor?: boolean) => string
+) {
+  return (
+    <ul className="mt-1 space-y-0.5">
+      {SITE_SECTIONS.find((section) => section.label === "Icons")
+        ?.children.filter((child) => child.href === pathname)
+        .map((child) => (
+          <li key={child.href}>
+            <a className={linkClass(child.href)} href={child.href}>
+              {child.label}
+            </a>
+          </li>
+        ))}
+    </ul>
+  );
+}
+
+function renderComponentsNav(params: {
+  pathname: string;
+  activeSectionId: string | null;
+  isInputGroups: boolean;
+  isAnimatedComponent: boolean;
+  isComponentsPage: boolean;
+  animatedSection: (typeof SITE_SECTIONS)[number] | undefined;
+  componentsSection: (typeof SITE_SECTIONS)[number] | undefined;
+  parentSectionLinkClass: (isActive: boolean) => string;
+}) {
+  const {
+    pathname,
+    activeSectionId,
+    isInputGroups,
+    isAnimatedComponent,
+    isComponentsPage,
+    animatedSection,
+    componentsSection,
+    parentSectionLinkClass,
+  } = params;
+
+  const isPasswordFieldActive =
+    activeSectionId === "password-field" ||
+    activeSectionId === "preview" ||
+    activeSectionId === "usage" ||
+    activeSectionId === "props";
+
+  const isInputLabelActive =
+    activeSectionId === "input-label" ||
+    activeSectionId === "input-label-preview" ||
+    activeSectionId === "input-label-usage" ||
+    activeSectionId === "input-label-props";
+
+  if (isInputGroups) {
+    return (
+      <ul className="mt-1 space-y-1">
+        <li>
+          <a
+            className={parentSectionLinkClass(isPasswordFieldActive)}
+            href="#password-field"
+          >
+            Password field
+          </a>
+        </li>
+        <li>
+          <a
+            className={parentSectionLinkClass(isInputLabelActive)}
+            href="#input-label"
+          >
+            Input Label
+          </a>
+        </li>
+      </ul>
+    );
+  }
+
+  const componentLabel = isAnimatedComponent
+    ? (animatedSection?.children.find((child) => child.href === pathname)
+        ?.label ?? "Preview")
+    : isComponentsPage
+      ? (componentsSection?.children.find((child) => child.href === pathname)
+          ?.label ?? "Preview")
+      : "Preview";
+
+  const isActive = activeSectionId === "preview";
+
+  return (
+    <ul className="mt-1 space-y-0.5">
+      <li>
+        <a
+          className={`block py-0.5 font-sans text-[13px] transition-colors ${
+            isActive
+              ? "font-semibold text-neutral-950 dark:text-white"
+              : "text-neutral-600 hover:text-neutral-900 dark:text-neutral-300"
+          }`}
+          href="#preview"
+        >
+          {componentLabel}
+        </a>
+      </li>
+    </ul>
+  );
+}
+
+function renderDefaultNav(
+  toc: TocEntry[],
+  pathname: string,
+  linkClass: (href: string, isAnchor?: boolean) => string,
+  sectionLinkClass: (id: string) => string
+) {
+  return (
+    <ul className="space-y-1">
+      {toc.map((entry) => {
+        if (isCategory(entry)) {
+          const pageSections =
+            pathname in PAGE_SECTIONS ? PAGE_SECTIONS[pathname] : undefined;
+
+          return (
+            <li key={entry.label}>
+              <span className="block py-1 pt-2 font-sans font-semibold text-[11px] text-neutral-500 uppercase tracking-wider dark:text-neutral-400">
+                {entry.label}
+              </span>
+              <ul className="space-y-0.5 pl-4">
+                {entry.children.map((child: TocLink) => (
+                  <li key={child.href + child.label}>
+                    <a className={linkClass(child.href)} href={child.href}>
+                      {child.label}
+                    </a>
+                    {pathname === child.href && pageSections ? (
+                      <ul className="mt-0.5 space-y-0.5 pl-4">
+                        {pageSections.map((section) => (
+                          <li key={section.id}>
+                            <a
+                              className={sectionLinkClass(section.id)}
+                              href={`#${section.id}`}
+                            >
+                              {section.label}
+                            </a>
+                          </li>
+                        ))}
+                      </ul>
+                    ) : null}
+                  </li>
+                ))}
+              </ul>
+            </li>
+          );
+        }
+        return (
+          <li key={entry.href + entry.label}>
+            <a className={linkClass(entry.href)} href={entry.href}>
+              {entry.label}
+            </a>
+          </li>
+        );
+      })}
+    </ul>
+  );
+}
+
 export function OnThisPage() {
   const pathname = usePathname();
   const toc = getTocForPath(pathname);
@@ -133,17 +292,15 @@ export function OnThisPage() {
 
   const isInputGroups = pathname === "/components/input-groups";
   const isAnimatedComponent = pathname.startsWith("/animated-components/");
-  const isPasswordFieldActive =
-    activeSectionId === "password-field" ||
-    activeSectionId === "preview" ||
-    activeSectionId === "usage" ||
-    activeSectionId === "props";
+  const isComponentsPage =
+    pathname.startsWith("/components/") && !isInputGroups;
 
-  const isInputLabelActive =
-    activeSectionId === "input-label" ||
-    activeSectionId === "input-label-preview" ||
-    activeSectionId === "input-label-usage" ||
-    activeSectionId === "input-label-props";
+  const animatedSection = SITE_SECTIONS.find(
+    (section) => section.label === "Animated Components"
+  );
+  const componentsSection = SITE_SECTIONS.find(
+    (section) => section.label === "Components"
+  );
 
   const parentSectionLinkClass = (isActive: boolean) =>
     `block py-0.5 font-sans text-[13px] transition-colors ${
@@ -161,114 +318,22 @@ export function OnThisPage() {
         <h2 className="mb-3 font-sans font-semibold text-[11px] text-neutral-500 uppercase tracking-wider dark:text-neutral-400">
           On this page
         </h2>
-        {pathname.startsWith("/icons") ? (
-          <ul className="mt-1 space-y-0.5">
-            {SITE_SECTIONS.find((section) => section.label === "Icons")
-              ?.children.filter((child) => child.href === pathname)
-              .map((child) => (
-                <li key={child.href}>
-                  <a className={linkClass(child.href)} href={child.href}>
-                    {child.label}
-                  </a>
-                </li>
-              ))}
-          </ul>
-        ) : (pathname.startsWith("/animated-components/") ||
-            pathname.startsWith("/components/")) &&
-          PAGE_SECTIONS[pathname]?.length ? (
-          isInputGroups ? (
-            <ul className="mt-1 space-y-1">
-              <li>
-                <a
-                  className={parentSectionLinkClass(isPasswordFieldActive)}
-                  href="#password-field"
-                >
-                  Password field
-                </a>
-              </li>
-              <li>
-                <a
-                  className={parentSectionLinkClass(isInputLabelActive)}
-                  href="#input-label"
-                >
-                  Input Label
-                </a>
-              </li>
-            </ul>
-          ) : (
-            <ul className="mt-1 space-y-0.5">
-              <li>
-                <a
-                  className={`block py-0.5 font-sans text-[13px] transition-colors ${
-                    activeSectionId === "preview"
-                      ? "font-semibold text-neutral-950 dark:text-white"
-                      : "text-neutral-600 hover:text-neutral-900 dark:text-neutral-300"
-                  }`}
-                  href="#preview"
-                >
-                  {isAnimatedComponent
-                    ? (SITE_SECTIONS[1].children.find(
-                        (child) => child.href === pathname
-                      )?.label ?? "Preview")
-                    : "Preview"}
-                </a>
-              </li>
-            </ul>
-          )
-        ) : (
-          <ul className="space-y-1">
-            {toc.map((entry) => {
-              if (isCategory(entry)) {
-                return (
-                  <li key={entry.label}>
-                    <span className="block py-1 pt-2 font-sans font-semibold text-[11px] text-neutral-500 uppercase tracking-wider dark:text-neutral-400">
-                      {entry.label}
-                    </span>
-                    <ul className="space-y-0.5 pl-4">
-                      {entry.children.map((child) => {
-                        const pageSections =
-                          pathname === child.href
-                            ? PAGE_SECTIONS[pathname]
-                            : undefined;
-                        return (
-                          <li key={child.href + child.label}>
-                            <a
-                              className={linkClass(child.href)}
-                              href={child.href}
-                            >
-                              {child.label}
-                            </a>
-                            {pageSections?.length ? (
-                              <ul className="mt-0.5 space-y-0.5 pl-4">
-                                {pageSections.map((section) => (
-                                  <li key={section.id}>
-                                    <a
-                                      className={sectionLinkClass(section.id)}
-                                      href={`#${section.id}`}
-                                    >
-                                      {section.label}
-                                    </a>
-                                  </li>
-                                ))}
-                              </ul>
-                            ) : null}
-                          </li>
-                        );
-                      })}
-                    </ul>
-                  </li>
-                );
-              }
-              return (
-                <li key={entry.href + entry.label}>
-                  <a className={linkClass(entry.href)} href={entry.href}>
-                    {entry.label}
-                  </a>
-                </li>
-              );
-            })}
-          </ul>
-        )}
+        {pathname.startsWith("/icons")
+          ? renderIconsNav(pathname, linkClass)
+          : (pathname.startsWith("/animated-components/") ||
+                pathname.startsWith("/components/")) &&
+              PAGE_SECTIONS[pathname]?.length
+            ? renderComponentsNav({
+                pathname,
+                activeSectionId,
+                isInputGroups,
+                isAnimatedComponent,
+                isComponentsPage,
+                animatedSection,
+                componentsSection,
+                parentSectionLinkClass,
+              })
+            : renderDefaultNav(toc, pathname, linkClass, sectionLinkClass)}
       </nav>
     </aside>
   );

@@ -38,7 +38,10 @@ const nav = [
   },
   {
     title: "Components",
-    items: [{ label: "Input Groups", href: "/components/input-groups" }],
+    items: [
+      { label: "Input Groups", href: "/components/input-groups" },
+      { label: "File Tree", href: "/components/file-tree" },
+    ],
   },
 ];
 

@@ -52,6 +52,12 @@ const REGISTRY_UI_META: Record<
       "Floating label input that keeps the label visible while the user types. Uses Input from shadcn.",
     dependencies: [],
   },
+  "file-tree": {
+    title: "File Tree",
+    description:
+      "A file tree component that displays a tree of files and folders. Uses Accordion from shadcn.",
+    dependencies: ["@radix-ui/react-accordion"],
+  },
 };
 
 if (!fs.existsSync(registryComponents)) {

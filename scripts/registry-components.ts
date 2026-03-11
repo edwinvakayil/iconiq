@@ -2374,4 +2374,10 @@ export const components: ComponentDefinition[] = [
     registryDependencies: ["input"],
     dependencies: [],
   },
+  {
+    name: "file-tree",
+    path: path.join(__dirname, "../registry", "file-tree.tsx"),
+    registryDependencies: [],
+    dependencies: [],
+  },
 ];

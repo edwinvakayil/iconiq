@@ -5097,6 +5097,21 @@
           "type": "registry:ui"
         }
       ]
+    },
+    {
+      "name": "file-tree",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": ["@radix-ui/react-accordion"],
+      "devDependencies": [],
+      "title": "File Tree",
+      "description": "A file tree component that displays a tree of files and folders. Uses Accordion from shadcn.",
+      "files": [
+        {
+          "path": "file-tree.tsx",
+          "type": "registry:ui"
+        }
+      ]
     }
   ]
 }
