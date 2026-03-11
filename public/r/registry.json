@@ -5112,6 +5112,21 @@
           "type": "registry:ui"
         }
       ]
+    },
+    {
+      "name": "smart-tooltip",
+      "type": "registry:ui",
+      "registryDependencies": ["button"],
+      "dependencies": [],
+      "devDependencies": [],
+      "title": "Smart Tooltip",
+      "description": "A tooltip button that tracks hover and copy interactions to show contextual labels like hover prompts and copy status. Uses the Button component from shadcn.",
+      "files": [
+        {
+          "path": "smart-tooltip.tsx",
+          "type": "registry:ui"
+        }
+      ]
     }
   ]
 }

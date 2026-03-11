@@ -2380,4 +2380,10 @@ export const components: ComponentDefinition[] = [
     registryDependencies: [],
     dependencies: [],
   },
+  {
+    name: "smart-tooltip",
+    path: path.join(__dirname, "../registry", "smart-tooltip.tsx"),
+    registryDependencies: ["button"],
+    dependencies: [],
+  },
 ];

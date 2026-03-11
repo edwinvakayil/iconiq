@@ -40,6 +40,7 @@ const nav = [
     title: "Components",
     items: [
       { label: "Input Groups", href: "/components/input-groups" },
+      { label: "Smart Tooltip", href: "/components/smart-tooltip" },
       { label: "File Tree", href: "/components/file-tree" },
     ],
   },

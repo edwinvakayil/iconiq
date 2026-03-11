@@ -2,17 +2,17 @@ import { SITE } from "@/constants";
 
 const COMPONENT_EXAMPLE: Record<string, string> = {
   "file-tree":
-    `import {\n` +
-    `  FileTree,\n` +
-    `  FileTreeSearch,\n` +
-    `  Folder,\n` +
-    `  File,\n` +
+    "import {\n" +
+    "  FileTree,\n" +
+    "  FileTreeSearch,\n" +
+    "  Folder,\n" +
+    "  File,\n" +
     `} from "@/components/ui/file-tree"\n\n` +
     "export default function Page() {\n" +
     "  return (\n" +
     '    <div className="flex min-h-svh items-center justify-center bg-neutral-50 px-4 py-8 dark:bg-neutral-950">\n' +
     '      <div className="w-full max-w-md rounded-lg border border-neutral-200 bg-white p-4 shadow-sm dark:border-neutral-800 dark:bg-neutral-900">\n' +
-    '        <FileTree\n' +
+    "        <FileTree\n" +
     '          aria-label="Project files"\n' +
     '          defaultExpanded={["src", "components"]}\n' +
     '          defaultSelected="FileTree.tsx"\n' +

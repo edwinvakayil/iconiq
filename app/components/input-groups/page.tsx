@@ -111,7 +111,7 @@ export default function InputGroupsPage() {
             Input Groups
           </h1>
 
-          <p className="mt-2 font-sans text-lg leading-relaxed text-neutral-600 dark:text-neutral-400">
+          <p className="mt-2 font-sans text-lg text-neutral-600 leading-relaxed dark:text-neutral-400">
             Input groups combine a label, input, and optional controls (buttons,
             icons, validation) into a single cohesive block. Use them for forms,
             search bars, and any field that needs extra UI around the input.

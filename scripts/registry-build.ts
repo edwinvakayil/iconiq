@@ -58,6 +58,12 @@ const REGISTRY_UI_META: Record<
       "A file tree component that displays a tree of files and folders. Uses Accordion from shadcn.",
     dependencies: ["@radix-ui/react-accordion"],
   },
+  "smart-tooltip": {
+    title: "Smart Tooltip",
+    description:
+      "A tooltip button that tracks hover and copy interactions to show contextual labels like hover prompts and copy status. Uses the Button component from shadcn.",
+    dependencies: [],
+  },
 };
 
 if (!fs.existsSync(registryComponents)) {

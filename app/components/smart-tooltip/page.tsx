@@ -1,33 +1,16 @@
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
+
 import { CodeBlock } from "@/components/code-block";
 import { CodeBlockInstall } from "@/components/code-block-install";
 import { ComponentActions } from "@/components/component-actions";
 import { ComponentPager } from "@/components/component-pager";
 import { OnThisPage } from "@/components/on-this-page";
 import { SidebarNav } from "@/components/sidebar-nav";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { AnimatedTooltip } from "@/registry/animated-tooltip";
+import { SmartTooltip } from "@/registry/smart-tooltip";
 
-const GITHUB_REPO_API = "https://api.github.com/repos/edwinvakayil/iconiq";
-
-async function getRepoOwnerAvatar(): Promise<string | null> {
-  try {
-    const res = await fetch(GITHUB_REPO_API, {
-      headers: { Accept: "application/vnd.github.v3+json" },
-      next: { revalidate: 3600 },
-    });
-    const data = (await res.json()) as { owner?: { avatar_url?: string } };
-    return data?.owner?.avatar_url ?? null;
-  } catch {
-    return null;
-  }
-}
-
-export default async function AnimatedTooltipPage() {
-  const avatarUrl = await getRepoOwnerAvatar();
-
+export default function SmartTooltipPage() {
   return (
     <div className="flex min-h-[calc(100vh-0px)] w-full min-w-0">
       <SidebarNav />
@@ -56,7 +39,7 @@ export default async function AnimatedTooltipPage() {
                 aria-current="page"
                 className="w-[90px] truncate text-neutral-900 sm:w-auto"
               >
-                Animated Components
+                Components
               </li>
 
               <li aria-hidden="true">
@@ -67,36 +50,31 @@ export default async function AnimatedTooltipPage() {
                 aria-current="page"
                 className="w-[90px] truncate text-neutral-900 sm:w-auto"
               >
-                Animated Tooltip
+                Smart Tooltip
               </li>
             </ol>
             <ComponentPager />
           </nav>
 
-          <h1 className="font-bold font-sans text-3xl text-neutral-900 tracking-tight sm:text-4xl">
-            Animated Tooltip
+          <h1 className="font-bold font-sans text-3xl text-neutral-900 tracking-tight sm:text-4xl dark:text-white">
+            Smart Tooltip
           </h1>
 
-          <p className="mt-2 font-sans text-lg text-neutral-600 leading-relaxed">
-            A dynamic tooltip that tilts and shifts based on cursor movement,
-            enhanced with smooth spring-based enter and exit animations.
+          <p className="mt-2 font-sans text-lg text-neutral-600 leading-relaxed dark:text-neutral-400">
+            A tooltip that changes its message based on how the user has
+            interacted with it: first hover, click to copy, and post-copy
+            hovers.
           </p>
 
-          <p className="mt-6 font-sans text-neutral-600 text-sm leading-relaxed">
-            Built with Motion to create a subtle parallax effect using hover
-            position for rotation and translation. AnimatePresence manages
-            smooth mounting and unmounting transitions. Ideal for avatars,
-            buttons, and interactive UI triggers where a responsive, playful
-            tooltip enhances the experience.
-          </p>
-
-          <p className="mt-6 font-sans text-neutral-600 text-sm leading-relaxed">
-            Install using the shadcn CLI to add a clean, developer-friendly
-            tooltip component to your application.
+          <p className="mt-6 font-sans text-neutral-600 text-sm leading-relaxed dark:text-neutral-400">
+            This component is ideal for copy-to-clipboard actions where you want
+            to clearly guide the user the first time, prompt them to click on
+            subsequent hovers, and then acknowledge that they have already
+            copied the value.
           </p>
 
           <div className="mt-10">
-            <CodeBlockInstall componentName="animated-tooltip" />
+            <CodeBlockInstall componentName="smart-tooltip" />
           </div>
 
           <h2 className="sr-only" id="preview">
@@ -105,7 +83,7 @@ export default async function AnimatedTooltipPage() {
 
           <div className="mt-10 rounded-sm border border-neutral-200 bg-neutral-50/80 p-4 shadow-[0_18px_45px_rgba(15,23,42,0.06)] backdrop-blur-sm sm:p-6 dark:border-neutral-800 dark:bg-neutral-900/70 dark:shadow-[0_18px_45px_rgba(15,23,42,0.7)]">
             <Tabs
-              aria-label="Animated Tooltip preview, code, and get the component"
+              aria-label="Smart Tooltip preview, code, and get the component"
               className="w-full"
               defaultValue="preview"
             >
@@ -134,27 +112,16 @@ export default async function AnimatedTooltipPage() {
                 className="space-y-4 pt-4 focus-visible:outline-none"
                 value="preview"
               >
-                <p className="font-sans text-neutral-600 text-sm">
-                  Hover over the trigger and move your cursor to see the tooltip
-                  tilt and translate in response to pointer movement.
+                <p className="font-sans text-neutral-600 text-sm dark:text-neutral-400">
+                  Hover the button to see different tooltip messages, then click
+                  to copy the email address. Hover again to see post-copy
+                  states.
                 </p>
 
                 <div className="mt-6 flex flex-wrap items-center gap-4">
-                  <AnimatedTooltip
-                    className="bg-blue-800"
-                    content="Edwin Vakayil, creator of Iconiq"
-                  >
-                    <Avatar size="md">
-                      <AvatarImage
-                        alt="Edwin Vakayil, the author of Iconiq"
-                        className="select-none"
-                        src={avatarUrl ?? undefined}
-                      />
-                      <AvatarFallback className="bg-neutral-200 font-sans dark:bg-neutral-800">
-                        EV
-                      </AvatarFallback>
-                    </Avatar>
-                  </AnimatedTooltip>
+                  <SmartTooltip copyValue="haaha !! you tested it">
+                    Copy to Clipboard
+                  </SmartTooltip>
                 </div>
               </TabsContent>
 
@@ -166,25 +133,27 @@ export default async function AnimatedTooltipPage() {
                   Usage
                 </h2>
 
-                <p className="font-sans text-neutral-600 text-sm">
-                  Import from{" "}
+                <p className="font-sans text-neutral-600 text-sm dark:text-neutral-400">
+                  Import{" "}
                   <code className="rounded bg-neutral-200 px-1 font-mono text-xs dark:bg-neutral-700 dark:text-neutral-200">
-                    @/components/ui/animated-tooltip
+                    SmartTooltip
                   </code>{" "}
-                  and wrap any trigger with{" "}
-                  <code className="rounded bg-neutral-200 px-1 font-mono text-xs dark:bg-neutral-700 dark:text-neutral-200">
-                    content
-                  </code>{" "}
-                  for the tooltip.
+                  and wrap any trigger that should both show behavior-aware
+                  messaging and copy a value on click.
                 </p>
 
                 <div className="mt-4">
                   <CodeBlock
-                    code={`import { AnimatedTooltip } from "@/components/ui/animated-tooltip";
+                    code={`import { SmartTooltip } from "@/components/ui/smart-tooltip";
 
-<AnimatedTooltip content="Your tooltip text">
-  <button type="button">Hover me</button>
-</AnimatedTooltip>`}
+export function Example() {
+  return (
+    <SmartTooltip copyValue="user@example.com">
+      Copy email
+    </SmartTooltip>
+  );
+}
+`}
                     language="tsx"
                   />
                 </div>
@@ -198,7 +167,7 @@ export default async function AnimatedTooltipPage() {
                   Get the Component
                 </h2>
 
-                <p className="font-sans text-neutral-600 text-sm">
+                <p className="font-sans text-neutral-600 text-sm dark:text-neutral-400">
                   Build with{" "}
                   <span className="inline-flex align-baseline">
                     <svg
@@ -213,13 +182,11 @@ export default async function AnimatedTooltipPage() {
                     </svg>
                     <span className="sr-only">v0</span>
                   </span>{" "}
-                  to customize and generate variations. This allows you to
-                  quickly integrate the component or experiment with different
-                  UI implementations.
+                  to customize and generate variations.
                 </p>
 
                 <div className="mt-6">
-                  <ComponentActions name="animated-tooltip" />
+                  <ComponentActions name="smart-tooltip" />
                 </div>
               </TabsContent>
             </Tabs>
@@ -232,62 +199,44 @@ export default async function AnimatedTooltipPage() {
           <div className="mt-6 border-neutral-200 border-t pt-4 text-sm dark:border-neutral-800">
             <div className="mb-2 inline-flex items-center gap-2 rounded-full border border-neutral-200 px-2.5 py-0.5 font-mono text-[11px] text-neutral-500 uppercase tracking-[0.16em] dark:border-neutral-800 dark:text-neutral-400">
               <span className="rounded bg-neutral-100 px-1.5 py-0.5 font-semibold text-[10px] text-neutral-700 dark:bg-neutral-800 dark:text-neutral-200">
-                animated-tooltip
+                smart-tooltip
               </span>
               <span>Props</span>
             </div>
 
             <dl className="mt-3 divide-y divide-neutral-200 border border-neutral-200 text-[13px] dark:divide-neutral-800 dark:border-neutral-800">
-              <div className="grid grid-cols-[minmax(0,140px)_minmax(0,1fr)] gap-x-4 px-3 py-2.5">
+              <div className="grid grid-cols-[minmax(0,150px)_minmax(0,1fr)] gap-x-4 px-3 py-2.5">
                 <dt className="font-mono text-neutral-900 text-xs dark:text-neutral-100">
                   children
                 </dt>
                 <dd className="text-neutral-600 dark:text-neutral-300">
-                  Trigger element (hover target).
+                  Trigger element inside the tooltip (typically a button label).
                 </dd>
               </div>
-              <div className="grid grid-cols-[minmax(0,140px)_minmax(0,1fr)] gap-x-4 px-3 py-2.5">
+              <div className="grid grid-cols-[minmax(0,150px)_minmax(0,1fr)] gap-x-4 px-3 py-2.5">
                 <dt className="font-mono text-neutral-900 text-xs dark:text-neutral-100">
-                  content
+                  copyValue
                 </dt>
                 <dd className="text-neutral-600 dark:text-neutral-300">
-                  Tooltip content (
-                  <code className="rounded bg-neutral-200 px-1 font-mono text-[11px] dark:bg-neutral-700 dark:text-neutral-200">
-                    ReactNode
-                  </code>
-                  ).
+                  String value to copy to the clipboard when the trigger is
+                  clicked.
                 </dd>
               </div>
-              <div className="grid grid-cols-[minmax(0,140px)_minmax(0,1fr)] gap-x-4 px-3 py-2.5">
+              <div className="grid grid-cols-[minmax(0,150px)_minmax(0,1fr)] gap-x-4 px-3 py-2.5">
                 <dt className="font-mono text-neutral-900 text-xs dark:text-neutral-100">
                   className
                 </dt>
                 <dd className="text-neutral-600 dark:text-neutral-300">
-                  Optional class for the tooltip popup.
+                  Optional class applied to the tooltip bubble.
                 </dd>
               </div>
-              <div className="grid grid-cols-[minmax(0,140px)_minmax(0,1fr)] gap-x-4 px-3 py-2.5">
+              <div className="grid grid-cols-[minmax(0,150px)_minmax(0,1fr)] gap-x-4 px-3 py-2.5">
                 <dt className="font-mono text-neutral-900 text-xs dark:text-neutral-100">
                   wrapperClassName
                 </dt>
                 <dd className="text-neutral-600 dark:text-neutral-300">
-                  Optional class for the trigger wrapper.
-                </dd>
-              </div>
-              <div className="grid grid-cols-[minmax(0,140px)_minmax(0,1fr)] gap-x-4 px-3 py-2.5">
-                <dt className="font-mono text-neutral-900 text-xs dark:text-neutral-100">
-                  backgroundClassName
-                </dt>
-                <dd className="text-neutral-600 dark:text-neutral-300">
-                  Optional class for the tooltip background (for example{" "}
-                  <code className="rounded bg-neutral-200 px-1 font-mono text-[11px] dark:bg-neutral-700 dark:text-neutral-200">
-                    bg-blue-600
-                  </code>
-                  ). Defaults to{" "}
-                  <code className="rounded bg-neutral-200 px-1 font-mono text-[11px] dark:bg-neutral-700 dark:text-neutral-200">
-                    bg-black
-                  </code>
-                  .
+                  Optional class for the outer wrapper around the trigger and
+                  tooltip.
                 </dd>
               </div>
             </dl>

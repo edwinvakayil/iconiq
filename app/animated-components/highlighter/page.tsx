@@ -59,7 +59,7 @@ export default function HighlighterPage() {
             Highlighter
           </h1>
 
-          <p className="mt-2 font-sans text-lg leading-relaxed text-neutral-600 dark:text-neutral-400">
+          <p className="mt-2 font-sans text-lg text-neutral-600 leading-relaxed dark:text-neutral-400">
             A highlighter component that draws a border and pointer around text
             with a subtle animation. Uses Motion for the reveal effect.
           </p>

@@ -107,7 +107,7 @@ export default function AccordionAnimatedPage() {
             Accordion (Animated)
           </h1>
 
-          <p className="mt-2 font-sans text-lg leading-relaxed text-neutral-600 dark:text-neutral-400">
+          <p className="mt-2 font-sans text-lg text-neutral-600 leading-relaxed dark:text-neutral-400">
             An animated accordion that uses motion-powered icons from the Iconiq
             library to bring each section to life.
           </p>
