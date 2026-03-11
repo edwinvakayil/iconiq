@@ -125,13 +125,13 @@ export default function AccordionAnimatedPage() {
             Preview
           </h2>
 
-          <div className="mt-10 rounded-sm border border-neutral-200 bg-neutral-50/80 p-4 sm:p-6 shadow-[0_18px_45px_rgba(15,23,42,0.06)] backdrop-blur-sm dark:border-neutral-800 dark:bg-neutral-900/70 dark:shadow-[0_18px_45px_rgba(15,23,42,0.7)]">
+          <div className="mt-10 rounded-sm border border-neutral-200 bg-neutral-50/80 p-4 shadow-[0_18px_45px_rgba(15,23,42,0.06)] backdrop-blur-sm sm:p-6 dark:border-neutral-800 dark:bg-neutral-900/70 dark:shadow-[0_18px_45px_rgba(15,23,42,0.7)]">
             <Tabs
+              aria-label="Accordion (Animated) preview, code, and get the component"
               className="w-full"
               defaultValue="preview"
-              aria-label="Accordion (Animated) preview, code, and get the component"
             >
-              <TabsList className="border-b border-neutral-200 pb-1 text-sm font-medium text-neutral-500 dark:border-neutral-800 dark:text-neutral-400">
+              <TabsList className="border-neutral-200 border-b pb-1 font-medium text-neutral-500 text-sm dark:border-neutral-800 dark:text-neutral-400">
                 <TabsTrigger value="preview">Preview</TabsTrigger>
                 <TabsTrigger value="code">Code</TabsTrigger>
                 <TabsTrigger value="get-component">
@@ -153,7 +153,7 @@ export default function AccordionAnimatedPage() {
               </TabsList>
 
               <TabsContent
-                className="pt-4 space-y-4 focus-visible:outline-none"
+                className="space-y-4 pt-4 focus-visible:outline-none"
                 value="preview"
               >
                 <p className="font-sans text-neutral-600 text-sm dark:text-neutral-400">
@@ -170,13 +170,10 @@ export default function AccordionAnimatedPage() {
               </TabsContent>
 
               <TabsContent
-                className="pt-4 space-y-4 focus-visible:outline-none"
+                className="space-y-4 pt-4 focus-visible:outline-none"
                 value="code"
               >
-                <h2
-                  className="sr-only"
-                  id="usage"
-                >
+                <h2 className="sr-only" id="usage">
                   Usage
                 </h2>
 
@@ -236,13 +233,10 @@ export function AccordionAnimatedExample() {
               </TabsContent>
 
               <TabsContent
-                className="pt-4 space-y-4 focus-visible:outline-none"
+                className="space-y-4 pt-4 focus-visible:outline-none"
                 value="get-component"
               >
-                <h2
-                  className="sr-only"
-                  id="get-code"
-                >
+                <h2 className="sr-only" id="get-code">
                   Get the Component
                 </h2>
 
@@ -276,9 +270,9 @@ export function AccordionAnimatedExample() {
             Props
           </h3>
 
-          <div className="mt-6 border-t border-neutral-200 pt-4 text-sm dark:border-neutral-800">
-            <div className="mb-2 inline-flex items-center gap-2 rounded-full border border-neutral-200 px-2.5 py-0.5 font-mono text-[11px] uppercase tracking-[0.16em] text-neutral-500 dark:border-neutral-800 dark:text-neutral-400">
-              <span className="rounded bg-neutral-100 px-1.5 py-0.5 text-[10px] font-semibold text-neutral-700 dark:bg-neutral-800 dark:text-neutral-200">
+          <div className="mt-6 border-neutral-200 border-t pt-4 text-sm dark:border-neutral-800">
+            <div className="mb-2 inline-flex items-center gap-2 rounded-full border border-neutral-200 px-2.5 py-0.5 font-mono text-[11px] text-neutral-500 uppercase tracking-[0.16em] dark:border-neutral-800 dark:text-neutral-400">
+              <span className="rounded bg-neutral-100 px-1.5 py-0.5 font-semibold text-[10px] text-neutral-700 dark:bg-neutral-800 dark:text-neutral-200">
                 accordion-animated
               </span>
               <span>Props</span>
@@ -286,7 +280,7 @@ export function AccordionAnimatedExample() {
 
             <dl className="mt-3 divide-y divide-neutral-200 border border-neutral-200 text-[13px] dark:divide-neutral-800 dark:border-neutral-800">
               <div className="grid grid-cols-[minmax(0,170px)_minmax(0,1fr)] gap-x-4 px-3 py-2.5">
-                <dt className="font-mono text-xs text-neutral-900 dark:text-neutral-100">
+                <dt className="font-mono text-neutral-900 text-xs dark:text-neutral-100">
                   items
                 </dt>
                 <dd className="text-neutral-600 dark:text-neutral-300">
@@ -314,7 +308,7 @@ export function AccordionAnimatedExample() {
                 </dd>
               </div>
               <div className="grid grid-cols-[minmax(0,170px)_minmax(0,1fr)] gap-x-4 px-3 py-2.5">
-                <dt className="font-mono text-xs text-neutral-900 dark:text-neutral-100">
+                <dt className="font-mono text-neutral-900 text-xs dark:text-neutral-100">
                   defaultValue
                 </dt>
                 <dd className="text-neutral-600 dark:text-neutral-300">
@@ -326,7 +320,7 @@ export function AccordionAnimatedExample() {
                 </dd>
               </div>
               <div className="grid grid-cols-[minmax(0,170px)_minmax(0,1fr)] gap-x-4 px-3 py-2.5">
-                <dt className="font-mono text-xs text-neutral-900 dark:text-neutral-100">
+                <dt className="font-mono text-neutral-900 text-xs dark:text-neutral-100">
                   className
                 </dt>
                 <dd className="text-neutral-600 dark:text-neutral-300">

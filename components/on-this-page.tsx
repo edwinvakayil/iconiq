@@ -5,15 +5,6 @@ import { useEffect, useState } from "react";
 
 import { BASE_LINKS, PAGE_SECTIONS, SITE_SECTIONS } from "@/lib/site-nav";
 
-type OnThisPageProps = {
-  /**
-   * For the input groups page, indicates which accordion group is open.
-   * Used to hide subsection links (Preview, Usage, Props) when their
-   * corresponding accordion panel is collapsed.
-   */
-  inputGroupsOpenGroup?: string;
-};
-
 type TocLink = { label: string; href: string };
 type TocCategory = { label: string; children: TocLink[] };
 type TocEntry = TocLink | TocCategory;
@@ -53,7 +44,7 @@ function getTocForPath(pathname: string): TocEntry[] {
   return toc;
 }
 
-export function OnThisPage({ inputGroupsOpenGroup }: OnThisPageProps) {
+export function OnThisPage() {
   const pathname = usePathname();
   const toc = getTocForPath(pathname);
   const [activeSectionId, setActiveSectionId] = useState<string | null>(null);
@@ -216,9 +207,9 @@ export function OnThisPage({ inputGroupsOpenGroup }: OnThisPageProps) {
                   href="#preview"
                 >
                   {isAnimatedComponent
-                    ? SITE_SECTIONS[1].children.find(
+                    ? (SITE_SECTIONS[1].children.find(
                         (child) => child.href === pathname
-                      )?.label ?? "Preview"
+                      )?.label ?? "Preview")
                     : "Preview"}
                 </a>
               </li>

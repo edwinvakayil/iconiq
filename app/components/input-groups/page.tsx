@@ -145,13 +145,13 @@ export default function InputGroupsPage() {
                   Preview
                 </h3>
 
-                <div className="mt-8 rounded-sm border border-neutral-200 bg-neutral-50/80 p-4 sm:p-6 shadow-[0_18px_45px_rgba(15,23,42,0.06)] backdrop-blur-sm dark:border-neutral-800 dark:bg-neutral-900/70 dark:shadow-[0_18px_45px_rgba(15,23,42,0.7)]">
+                <div className="mt-8 rounded-sm border border-neutral-200 bg-neutral-50/80 p-4 shadow-[0_18px_45px_rgba(15,23,42,0.06)] backdrop-blur-sm sm:p-6 dark:border-neutral-800 dark:bg-neutral-900/70 dark:shadow-[0_18px_45px_rgba(15,23,42,0.7)]">
                   <Tabs
+                    aria-label="Password field preview, code, and get the component"
                     className="w-full"
                     defaultValue="preview"
-                    aria-label="Password field preview, code, and get the component"
                   >
-                    <TabsList className="border-b border-neutral-200 pb-1 text-sm font-medium text-neutral-500 dark:border-neutral-800 dark:text-neutral-400">
+                    <TabsList className="border-neutral-200 border-b pb-1 font-medium text-neutral-500 text-sm dark:border-neutral-800 dark:text-neutral-400">
                       <TabsTrigger value="preview">Preview</TabsTrigger>
                       <TabsTrigger value="code">Code</TabsTrigger>
                       <TabsTrigger value="get-component">
@@ -173,7 +173,7 @@ export default function InputGroupsPage() {
                     </TabsList>
 
                     <TabsContent
-                      className="pt-4 space-y-4 focus-visible:outline-none"
+                      className="space-y-4 pt-4 focus-visible:outline-none"
                       value="preview"
                     >
                       <p className="font-sans text-neutral-600 text-sm dark:text-neutral-400">
@@ -183,18 +183,17 @@ export default function InputGroupsPage() {
                       </p>
 
                       <div className="mt-6 flex flex-wrap gap-4 pl-2">
-                        <PasswordValidationInput validations={demoValidations} />
+                        <PasswordValidationInput
+                          validations={demoValidations}
+                        />
                       </div>
                     </TabsContent>
 
                     <TabsContent
-                      className="pt-4 space-y-4 focus-visible:outline-none"
+                      className="space-y-4 pt-4 focus-visible:outline-none"
                       value="code"
                     >
-                      <h3
-                        className="sr-only"
-                        id="usage"
-                      >
+                      <h3 className="sr-only" id="usage">
                         Usage
                       </h3>
 
@@ -254,13 +253,10 @@ export function MyPasswordForm() {
                     </TabsContent>
 
                     <TabsContent
-                      className="pt-4 space-y-4 focus-visible:outline-none"
+                      className="space-y-4 pt-4 focus-visible:outline-none"
                       value="get-component"
                     >
-                      <h3
-                        className="sr-only"
-                        id="get-code"
-                      >
+                      <h3 className="sr-only" id="get-code">
                         Get the Component
                       </h3>
 
@@ -293,9 +289,9 @@ export function MyPasswordForm() {
                   Props
                 </h4>
 
-                <div className="mt-6 border-t border-neutral-200 pt-4 text-sm dark:border-neutral-800">
-                  <div className="mb-2 inline-flex items-center gap-2 rounded-full border border-neutral-200 px-2.5 py-0.5 font-mono text-[11px] uppercase tracking-[0.16em] text-neutral-500 dark:border-neutral-800 dark:text-neutral-400">
-                    <span className="rounded bg-neutral-100 px-1.5 py-0.5 text-[10px] font-semibold text-neutral-700 dark:bg-neutral-800 dark:text-neutral-200">
+                <div className="mt-6 border-neutral-200 border-t pt-4 text-sm dark:border-neutral-800">
+                  <div className="mb-2 inline-flex items-center gap-2 rounded-full border border-neutral-200 px-2.5 py-0.5 font-mono text-[11px] text-neutral-500 uppercase tracking-[0.16em] dark:border-neutral-800 dark:text-neutral-400">
+                    <span className="rounded bg-neutral-100 px-1.5 py-0.5 font-semibold text-[10px] text-neutral-700 dark:bg-neutral-800 dark:text-neutral-200">
                       password field
                     </span>
                     <span>Props</span>
@@ -303,7 +299,7 @@ export function MyPasswordForm() {
 
                   <dl className="mt-3 divide-y divide-neutral-200 border border-neutral-200 text-[13px] dark:divide-neutral-800 dark:border-neutral-800">
                     <div className="grid grid-cols-[minmax(0,170px)_minmax(0,1fr)] gap-x-4 px-3 py-2.5">
-                      <dt className="font-mono text-xs text-neutral-900 dark:text-neutral-100">
+                      <dt className="font-mono text-neutral-900 text-xs dark:text-neutral-100">
                         validations
                       </dt>
                       <dd className="text-neutral-600 dark:text-neutral-300">
@@ -320,7 +316,7 @@ export function MyPasswordForm() {
                       </dd>
                     </div>
                     <div className="grid grid-cols-[minmax(0,170px)_minmax(0,1fr)] gap-x-4 px-3 py-2.5">
-                      <dt className="font-mono text-xs text-neutral-900 dark:text-neutral-100">
+                      <dt className="font-mono text-neutral-900 text-xs dark:text-neutral-100">
                         label
                       </dt>
                       <dd className="text-neutral-600 dark:text-neutral-300">
@@ -332,7 +328,7 @@ export function MyPasswordForm() {
                       </dd>
                     </div>
                     <div className="grid grid-cols-[minmax(0,170px)_minmax(0,1fr)] gap-x-4 px-3 py-2.5">
-                      <dt className="font-mono text-xs text-neutral-900 dark:text-neutral-100">
+                      <dt className="font-mono text-neutral-900 text-xs dark:text-neutral-100">
                         placeholder
                       </dt>
                       <dd className="text-neutral-600 dark:text-neutral-300">
@@ -344,7 +340,7 @@ export function MyPasswordForm() {
                       </dd>
                     </div>
                     <div className="grid grid-cols-[minmax(0,170px)_minmax(0,1fr)] gap-x-4 px-3 py-2.5">
-                      <dt className="font-mono text-xs text-neutral-900 dark:text-neutral-100">
+                      <dt className="font-mono text-neutral-900 text-xs dark:text-neutral-100">
                         inputId
                       </dt>
                       <dd className="text-neutral-600 dark:text-neutral-300">
@@ -356,7 +352,7 @@ export function MyPasswordForm() {
                       </dd>
                     </div>
                     <div className="grid grid-cols-[minmax(0,170px)_minmax(0,1fr)] gap-x-4 px-3 py-2.5">
-                      <dt className="font-mono text-xs text-neutral-900 dark:text-neutral-100">
+                      <dt className="font-mono text-neutral-900 text-xs dark:text-neutral-100">
                         className
                       </dt>
                       <dd className="text-neutral-600 dark:text-neutral-300">
@@ -389,13 +385,13 @@ export function MyPasswordForm() {
                   Preview
                 </h3>
 
-                <div className="mt-8 rounded-sm border border-neutral-200 bg-neutral-50/80 p-4 sm:p-6 shadow-[0_18px_45px_rgba(15,23,42,0.06)] backdrop-blur-sm dark:border-neutral-800 dark:bg-neutral-900/70 dark:shadow-[0_18px_45px_rgba(15,23,42,0.7)]">
+                <div className="mt-8 rounded-sm border border-neutral-200 bg-neutral-50/80 p-4 shadow-[0_18px_45px_rgba(15,23,42,0.06)] backdrop-blur-sm sm:p-6 dark:border-neutral-800 dark:bg-neutral-900/70 dark:shadow-[0_18px_45px_rgba(15,23,42,0.7)]">
                   <Tabs
+                    aria-label="Input Label preview, code, and get the component"
                     className="w-full"
                     defaultValue="preview"
-                    aria-label="Input Label preview, code, and get the component"
                   >
-                    <TabsList className="border-b border-neutral-200 pb-1 text-sm font-medium text-neutral-500 dark:border-neutral-800 dark:text-neutral-400">
+                    <TabsList className="border-neutral-200 border-b pb-1 font-medium text-neutral-500 text-sm dark:border-neutral-800 dark:text-neutral-400">
                       <TabsTrigger value="preview">Preview</TabsTrigger>
                       <TabsTrigger value="code">Code</TabsTrigger>
                       <TabsTrigger value="get-component">
@@ -417,7 +413,7 @@ export function MyPasswordForm() {
                     </TabsList>
 
                     <TabsContent
-                      className="pt-4 space-y-4 focus-visible:outline-none"
+                      className="space-y-4 pt-4 focus-visible:outline-none"
                       value="preview"
                     >
                       <p className="font-sans text-neutral-600 text-sm dark:text-neutral-400">
@@ -431,13 +427,10 @@ export function MyPasswordForm() {
                     </TabsContent>
 
                     <TabsContent
-                      className="pt-4 space-y-4 focus-visible:outline-none"
+                      className="space-y-4 pt-4 focus-visible:outline-none"
                       value="code"
                     >
-                      <h3
-                        className="sr-only"
-                        id="input-label-usage"
-                      >
+                      <h3 className="sr-only" id="input-label-usage">
                         Usage
                       </h3>
 
@@ -463,13 +456,10 @@ export function Example() {
                     </TabsContent>
 
                     <TabsContent
-                      className="pt-4 space-y-4 focus-visible:outline-none"
+                      className="space-y-4 pt-4 focus-visible:outline-none"
                       value="get-component"
                     >
-                      <h3
-                        className="sr-only"
-                        id="input-label-get-code"
-                      >
+                      <h3 className="sr-only" id="input-label-get-code">
                         Get the Component
                       </h3>
 
@@ -502,9 +492,9 @@ export function Example() {
                   Props
                 </h4>
 
-                <div className="mt-6 border-t border-neutral-200 pt-4 text-sm dark:border-neutral-800">
-                  <div className="mb-2 inline-flex items-center gap-2 rounded-full border border-neutral-200 px-2.5 py-0.5 font-mono text-[11px] uppercase tracking-[0.16em] text-neutral-500 dark:border-neutral-800 dark:text-neutral-400">
-                    <span className="rounded bg-neutral-100 px-1.5 py-0.5 text-[10px] font-semibold text-neutral-700 dark:bg-neutral-800 dark:text-neutral-200">
+                <div className="mt-6 border-neutral-200 border-t pt-4 text-sm dark:border-neutral-800">
+                  <div className="mb-2 inline-flex items-center gap-2 rounded-full border border-neutral-200 px-2.5 py-0.5 font-mono text-[11px] text-neutral-500 uppercase tracking-[0.16em] dark:border-neutral-800 dark:text-neutral-400">
+                    <span className="rounded bg-neutral-100 px-1.5 py-0.5 font-semibold text-[10px] text-neutral-700 dark:bg-neutral-800 dark:text-neutral-200">
                       input label
                     </span>
                     <span>Props</span>
@@ -512,7 +502,7 @@ export function Example() {
 
                   <dl className="mt-3 divide-y divide-neutral-200 border border-neutral-200 text-[13px] dark:divide-neutral-800 dark:border-neutral-800">
                     <div className="grid grid-cols-[minmax(0,150px)_minmax(0,1fr)] gap-x-4 px-3 py-2.5">
-                      <dt className="font-mono text-xs text-neutral-900 dark:text-neutral-100">
+                      <dt className="font-mono text-neutral-900 text-xs dark:text-neutral-100">
                         id
                       </dt>
                       <dd className="text-neutral-600 dark:text-neutral-300">
@@ -524,7 +514,7 @@ export function Example() {
                       </dd>
                     </div>
                     <div className="grid grid-cols-[minmax(0,150px)_minmax(0,1fr)] gap-x-4 px-3 py-2.5">
-                      <dt className="font-mono text-xs text-neutral-900 dark:text-neutral-100">
+                      <dt className="font-mono text-neutral-900 text-xs dark:text-neutral-100">
                         placeholder
                       </dt>
                       <dd className="text-neutral-600 dark:text-neutral-300">
@@ -532,7 +522,7 @@ export function Example() {
                       </dd>
                     </div>
                     <div className="grid grid-cols-[minmax(0,150px)_minmax(0,1fr)] gap-x-4 px-3 py-2.5">
-                      <dt className="font-mono text-xs text-neutral-900 dark:text-neutral-100">
+                      <dt className="font-mono text-neutral-900 text-xs dark:text-neutral-100">
                         className
                       </dt>
                       <dd className="text-neutral-600 dark:text-neutral-300">
@@ -551,7 +541,7 @@ export function Example() {
         </div>
       </main>
 
-      <OnThisPage inputGroupsOpenGroup={openGroup} />
+      <OnThisPage />
     </div>
   );
 }

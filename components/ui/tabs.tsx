@@ -22,10 +22,7 @@ type TabsListProps = React.ComponentProps<typeof BaseTabs.List>;
 const TabsList = ({ className, children, ...props }: TabsListProps) => {
   return (
     <BaseTabs.List
-      className={cn(
-        "inline-flex items-center justify-start gap-6",
-        className
-      )}
+      className={cn("inline-flex items-center justify-start gap-6", className)}
       data-slot="tabs-list"
       {...props}
     >
@@ -40,7 +37,7 @@ const TabsTrigger = ({ className, ...props }: TabsTriggerProps) => {
   return (
     <BaseTabs.Tab
       className={cn(
-        "inline-flex cursor-pointer items-center justify-center whitespace-nowrap border-b-2 border-transparent pb-1.5 text-xs font-medium uppercase tracking-[0.12em] text-neutral-500 transition-colors duration-150 hover:text-neutral-900 aria-selected:border-neutral-900 aria-selected:text-neutral-950 dark:text-neutral-400 dark:hover:text-white dark:aria-selected:border-white dark:aria-selected:text-white",
+        "inline-flex cursor-pointer items-center justify-center whitespace-nowrap border-transparent border-b-2 pb-1.5 font-medium text-neutral-500 text-xs uppercase tracking-[0.12em] transition-colors duration-150 hover:text-neutral-900 aria-selected:border-neutral-900 aria-selected:text-neutral-950 dark:text-neutral-400 dark:aria-selected:border-white dark:aria-selected:text-white dark:hover:text-white",
         "focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-neutral-400 dark:focus-visible:ring-neutral-500",
         className
       )}

@@ -14,7 +14,7 @@ export function PropsTable({ rows }: PropsTableProps) {
   return (
     <div className="mt-4 overflow-hidden rounded-sm border border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-950">
       <table className="w-full border-collapse text-left text-sm">
-        <thead className="bg-neutral-50 text-[13px] font-medium text-neutral-500 dark:bg-neutral-900 dark:text-neutral-400">
+        <thead className="bg-neutral-50 font-medium text-[13px] text-neutral-500 dark:bg-neutral-900 dark:text-neutral-400">
           <tr>
             <th className="px-4 py-2 font-medium">Prop</th>
             <th className="px-4 py-2 font-medium">Type</th>
@@ -23,11 +23,11 @@ export function PropsTable({ rows }: PropsTableProps) {
         </thead>
         <tbody className="divide-y divide-neutral-200 dark:divide-neutral-800">
           {rows.map((row) => (
-            <tr key={row.name} className="align-top">
-              <td className="px-4 py-2 font-mono text-xs text-neutral-900 dark:text-neutral-100">
+            <tr className="align-top" key={row.name}>
+              <td className="px-4 py-2 font-mono text-neutral-900 text-xs dark:text-neutral-100">
                 {row.name}
               </td>
-              <td className="px-4 py-2 font-mono text-xs text-neutral-700 dark:text-neutral-300">
+              <td className="px-4 py-2 font-mono text-neutral-700 text-xs dark:text-neutral-300">
                 {row.type}
               </td>
               <td className="px-4 py-2">
@@ -42,4 +42,3 @@ export function PropsTable({ rows }: PropsTableProps) {
     </div>
   );
 }
-
