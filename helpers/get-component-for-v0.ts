@@ -1,6 +1,42 @@
 import { SITE } from "@/constants";
 
 const COMPONENT_EXAMPLE: Record<string, string> = {
+  "file-tree":
+    `import {\n` +
+    `  FileTree,\n` +
+    `  FileTreeSearch,\n` +
+    `  Folder,\n` +
+    `  File,\n` +
+    `} from "@/components/ui/file-tree"\n\n` +
+    "export default function Page() {\n" +
+    "  return (\n" +
+    '    <div className="flex min-h-svh items-center justify-center bg-neutral-50 px-4 py-8 dark:bg-neutral-950">\n' +
+    '      <div className="w-full max-w-md rounded-lg border border-neutral-200 bg-white p-4 shadow-sm dark:border-neutral-800 dark:bg-neutral-900">\n' +
+    '        <FileTree\n' +
+    '          aria-label="Project files"\n' +
+    '          defaultExpanded={["src", "components"]}\n' +
+    '          defaultSelected="FileTree.tsx"\n' +
+    "        >\n" +
+    '          <FileTreeSearch placeholder="Search files..." />\n' +
+    '          <Folder id="src" label="src">\n' +
+    '            <Folder id="components" label="components">\n' +
+    '              <File label="FileTree.tsx" />\n' +
+    '              <File label="Sidebar.tsx" />\n' +
+    "            </Folder>\n" +
+    '            <Folder id="app" label="app">\n' +
+    '              <File label="layout.tsx" />\n' +
+    '              <File label="page.tsx" />\n' +
+    "            </Folder>\n" +
+    "          </Folder>\n" +
+    '          <Folder id="public" label="public">\n' +
+    '            <File label="favicon.ico" />\n' +
+    "          </Folder>\n" +
+    '          <File label="package.json" />\n' +
+    "        </FileTree>\n" +
+    "      </div>\n" +
+    "    </div>\n" +
+    "  )\n" +
+    "}\n",
   highlighter:
     `import { Highlighter } from "@/components/ui/highlighter"\n\n` +
     "export default function Page() {\n" +
