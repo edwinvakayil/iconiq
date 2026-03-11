@@ -21,8 +21,8 @@ const demoItems = [
     content:
       "Monitor response times, traffic spikes, and throughput to keep your product fast under real-world workloads.",
     icon: GaugeIcon,
-    textColor: "text-sky-500",
-    bgColor: "bg-sky-500/10",
+    textColor: "text-white dark:text-black",
+    bgColor: "bg-neutral-800 dark:bg-neutral-200",
   },
   {
     value: "projects",
@@ -31,8 +31,8 @@ const demoItems = [
     content:
       "Group related tasks, assets, and releases so teams always know what ships together and when.",
     icon: FoldersIcon,
-    textColor: "text-amber-500",
-    bgColor: "bg-amber-500/10",
+    textColor: "text-white dark:text-black",
+    bgColor: "bg-neutral-800 dark:bg-neutral-200",
   },
   {
     value: "security",
@@ -41,8 +41,8 @@ const demoItems = [
     content:
       "Configure roles, permissions, and enforcement policies to keep sensitive data safe by default.",
     icon: ShieldCheckIcon,
-    textColor: "text-emerald-500",
-    bgColor: "bg-emerald-500/10",
+    textColor: "text-white dark:text-black",
+    bgColor: "bg-neutral-800 dark:bg-neutral-200",
   },
   {
     value: "team",
@@ -51,9 +51,9 @@ const demoItems = [
     content:
       "Invite collaborators, assign responsibilities, and see who is actively contributing to each area.",
     icon: UsersIcon,
-    textColor: "text-rose-500",
-    bgColor: "bg-rose-500/10",
-  },
+    textColor: "text-white dark:text-black",
+    bgColor: "bg-neutral-800 dark:bg-neutral-200",
+  }
 ] as const;
 
 export default function AccordionAnimatedPage() {
