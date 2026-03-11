@@ -35,7 +35,10 @@ export default function FileTreePage() {
                 <ChevronRight className="size-4 text-neutral-400" />
               </li>
 
-              <li aria-current="page" className="text-neutral-900">
+              <li
+                aria-current="page"
+                className="w-[90px] truncate text-neutral-900 sm:w-auto"
+              >
                 Components
               </li>
 
@@ -43,7 +46,10 @@ export default function FileTreePage() {
                 <ChevronRight className="size-4 text-neutral-400" />
               </li>
 
-              <li aria-current="page" className="text-neutral-900">
+              <li
+                aria-current="page"
+                className="w-[90px] truncate text-neutral-900 sm:w-auto"
+              >
                 File Tree
               </li>
             </ol>

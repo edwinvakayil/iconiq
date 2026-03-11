@@ -52,7 +52,10 @@ export default async function AnimatedTooltipPage() {
                 <ChevronRight className="size-4 text-neutral-400" />
               </li>
 
-              <li aria-current="page" className="text-neutral-900">
+              <li
+                aria-current="page"
+                className="w-[90px] truncate text-neutral-900 sm:w-auto"
+              >
                 Animated Components
               </li>
 
@@ -62,7 +65,7 @@ export default async function AnimatedTooltipPage() {
 
               <li
                 aria-current="page"
-                className="max-w-[90px] truncate text-neutral-900 sm:max-w-none"
+                className="w-[90px] truncate text-neutral-900 sm:w-auto"
               >
                 Animated Tooltip
               </li>

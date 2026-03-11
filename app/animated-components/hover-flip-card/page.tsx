@@ -68,7 +68,10 @@ export default function HoverFlipCardPage() {
                 <ChevronRight className="size-4 text-neutral-400" />
               </li>
 
-              <li aria-current="page" className="text-neutral-900">
+              <li
+                aria-current="page"
+                className="w-[90px] truncate text-neutral-900 sm:w-auto"
+              >
                 Animated Components
               </li>
 
@@ -76,7 +79,10 @@ export default function HoverFlipCardPage() {
                 <ChevronRight className="size-4 text-neutral-400" />
               </li>
 
-              <li aria-current="page" className="text-neutral-900">
+              <li
+                aria-current="page"
+                className="w-[90px] truncate text-neutral-900 sm:w-auto"
+              >
                 Hover Flip Card
               </li>
             </ol>
