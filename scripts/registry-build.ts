@@ -40,6 +40,12 @@ const REGISTRY_UI_META: Record<
       "An accordion component that animates the icons when opened. Uses Motion for the animation.",
     dependencies: ["@radix-ui/react-accordion"],
   },
+  "input-group-01": {
+    title: "Input Group",
+    description:
+      "Password validation input with label, visibility toggle, and strength indicator. Uses Input, Label, and Button from shadcn.",
+    dependencies: [],
+  },
 };
 
 if (!fs.existsSync(registryComponents)) {

@@ -6,18 +6,23 @@ import { usePathname } from "next/navigation";
 
 import { SITE_SECTIONS } from "@/lib/site-nav";
 
-const COMPONENT_ROUTES =
-  SITE_SECTIONS.find((section) => section.label === "Animated Components")
-    ?.children ?? [];
+function getComponentRoutes(pathname: string) {
+  for (const section of SITE_SECTIONS) {
+    const children = section.children ?? [];
+    if (children.some((item) => item.href === pathname)) return children;
+  }
+  return [];
+}
 
 export function ComponentPager() {
   const pathname = usePathname();
+  const componentRoutes = getComponentRoutes(pathname);
 
-  const index = COMPONENT_ROUTES.findIndex((item) => item.href === pathname);
+  const index = componentRoutes.findIndex((item) => item.href === pathname);
   if (index === -1) return null;
 
-  const prev = COMPONENT_ROUTES[index - 1];
-  const next = COMPONENT_ROUTES[index + 1];
+  const prev = componentRoutes[index - 1];
+  const next = componentRoutes[index + 1];
 
   return (
     <div className="flex items-center gap-2">

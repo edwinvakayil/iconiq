@@ -36,6 +36,10 @@ const nav = [
       },
     ],
   },
+  {
+    title: "Components",
+    items: [{ label: "Input Groups", href: "/components/input-groups" }],
+  },
 ];
 
 export function SidebarNav() {

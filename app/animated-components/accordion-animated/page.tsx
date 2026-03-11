@@ -53,7 +53,7 @@ const demoItems = [
     icon: UsersIcon,
     textColor: "text-white dark:text-black",
     bgColor: "bg-neutral-800 dark:bg-neutral-200",
-  }
+  },
 ] as const;
 
 export default function AccordionAnimatedPage() {

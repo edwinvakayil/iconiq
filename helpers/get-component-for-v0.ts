@@ -208,6 +208,28 @@ const COMPONENT_EXAMPLE: Record<string, string> = {
     "    </div>\n" +
     "  )\n" +
     "}\n",
+  "input-group-01":
+    '"use client";\n\n' +
+    "import {\n" +
+    "  PasswordValidationInput,\n" +
+    "  type PasswordValidationRule,\n" +
+    `} from "@/components/ui/input-group-01"\n\n` +
+    "const HAS_DIGIT = /\\\\d/;\n" +
+    "const HAS_UPPERCASE = /[A-Z]/;\n" +
+    "const HAS_SPECIAL = /[!@#$%^&*]/;\n\n" +
+    "const validations: PasswordValidationRule[] = [\n" +
+    '  { text: "At least 8 characters", validate: (v) => v.length >= 8 },\n' +
+    '  { text: "Contains a number", validate: (v) => HAS_DIGIT.test(v) },\n' +
+    '  { text: "Contains uppercase letter", validate: (v) => HAS_UPPERCASE.test(v) },\n' +
+    '  { text: "Contains special character", validate: (v) => HAS_SPECIAL.test(v) },\n' +
+    "]\n\n" +
+    "export default function Page() {\n" +
+    "  return (\n" +
+    '    <div className="flex min-h-svh items-center justify-center p-8">\n' +
+    "      <PasswordValidationInput validations={validations} />\n" +
+    "    </div>\n" +
+    "  )\n" +
+    "}\n",
 };
 
 const getComponentForV0 = async (name: string) => {

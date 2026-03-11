@@ -34,6 +34,10 @@ export const SITE_SECTIONS = [
       },
     ],
   },
+  {
+    label: "Components",
+    children: [{ label: "Input Groups", href: "/components/input-groups" }],
+  },
 ] as const;
 
 /** Section headings (h2/h3) per page for "On this page" anchor links. */
@@ -56,6 +60,13 @@ export const PAGE_SECTIONS: Record<string, { label: string; id: string }[]> = {
   "/animated-components/hover-flip-card": [
     { label: "Preview", id: "preview" },
     { label: "Usage", id: "usage" },
+    { label: "Props", id: "props" },
+  ],
+  "/components/input-groups": [
+    { label: "Password validation", id: "password-validation" },
+    { label: "Preview", id: "preview" },
+    { label: "Usage", id: "usage" },
+    { label: "Get the Component", id: "get-code" },
     { label: "Props", id: "props" },
   ],
 };

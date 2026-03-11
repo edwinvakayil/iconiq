@@ -5067,6 +5067,21 @@
           "type": "registry:ui"
         }
       ]
+    },
+    {
+      "name": "input-group-01",
+      "type": "registry:ui",
+      "registryDependencies": ["input", "label", "button"],
+      "dependencies": [],
+      "devDependencies": [],
+      "title": "Input Group",
+      "description": "Password validation input with label, visibility toggle, and strength indicator. Uses Input, Label, and Button from shadcn.",
+      "files": [
+        {
+          "path": "input-group-01.tsx",
+          "type": "registry:ui"
+        }
+      ]
     }
   ]
 }
