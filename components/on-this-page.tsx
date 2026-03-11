@@ -5,6 +5,15 @@ import { useEffect, useState } from "react";
 
 import { BASE_LINKS, PAGE_SECTIONS, SITE_SECTIONS } from "@/lib/site-nav";
 
+type OnThisPageProps = {
+  /**
+   * For the input groups page, indicates which accordion group is open.
+   * Used to hide subsection links (Preview, Usage, Props) when their
+   * corresponding accordion panel is collapsed.
+   */
+  inputGroupsOpenGroup?: string;
+};
+
 type TocLink = { label: string; href: string };
 type TocCategory = { label: string; children: TocLink[] };
 type TocEntry = TocLink | TocCategory;
@@ -44,7 +53,7 @@ function getTocForPath(pathname: string): TocEntry[] {
   return toc;
 }
 
-export function OnThisPage() {
+export function OnThisPage({ inputGroupsOpenGroup }: OnThisPageProps) {
   const pathname = usePathname();
   const toc = getTocForPath(pathname);
   const [activeSectionId, setActiveSectionId] = useState<string | null>(null);
@@ -184,23 +193,28 @@ export function OnThisPage() {
                 >
                   Password field
                 </a>
-                <ul className="mt-0.5 space-y-0.5">
-                  <li>
-                    <a className={sectionLinkClass("preview")} href="#preview">
-                      Preview
-                    </a>
-                  </li>
-                  <li>
-                    <a className={sectionLinkClass("usage")} href="#usage">
-                      Usage
-                    </a>
-                  </li>
-                  <li>
-                    <a className={sectionLinkClass("props")} href="#props">
-                      Props
-                    </a>
-                  </li>
-                </ul>
+                {inputGroupsOpenGroup === "password-field" ? (
+                  <ul className="mt-0.5 space-y-0.5">
+                    <li>
+                      <a
+                        className={sectionLinkClass("preview")}
+                        href="#preview"
+                      >
+                        Preview
+                      </a>
+                    </li>
+                    <li>
+                      <a className={sectionLinkClass("usage")} href="#usage">
+                        Usage
+                      </a>
+                    </li>
+                    <li>
+                      <a className={sectionLinkClass("props")} href="#props">
+                        Props
+                      </a>
+                    </li>
+                  </ul>
+                ) : null}
               </li>
               <li>
                 <a
@@ -209,32 +223,34 @@ export function OnThisPage() {
                 >
                   Input Label
                 </a>
-                <ul className="mt-0.5 space-y-0.5">
-                  <li>
-                    <a
-                      className={sectionLinkClass("input-label-preview")}
-                      href="#input-label-preview"
-                    >
-                      Preview
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      className={sectionLinkClass("input-label-usage")}
-                      href="#input-label-usage"
-                    >
-                      Usage
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      className={sectionLinkClass("input-label-props")}
-                      href="#input-label-props"
-                    >
-                      Props
-                    </a>
-                  </li>
-                </ul>
+                {inputGroupsOpenGroup === "input-label" ? (
+                  <ul className="mt-0.5 space-y-0.5">
+                    <li>
+                      <a
+                        className={sectionLinkClass("input-label-preview")}
+                        href="#input-label-preview"
+                      >
+                        Preview
+                      </a>
+                    </li>
+                    <li>
+                      <a
+                        className={sectionLinkClass("input-label-usage")}
+                        href="#input-label-usage"
+                      >
+                        Usage
+                      </a>
+                    </li>
+                    <li>
+                      <a
+                        className={sectionLinkClass("input-label-props")}
+                        href="#input-label-props"
+                      >
+                        Props
+                      </a>
+                    </li>
+                  </ul>
+                ) : null}
               </li>
             </ul>
           ) : (

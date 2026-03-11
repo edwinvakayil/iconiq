@@ -405,7 +405,7 @@ export function Example() {
         </div>
       </main>
 
-      <OnThisPage />
+      <OnThisPage inputGroupsOpenGroup={openGroup} />
     </div>
   );
 }
