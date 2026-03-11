@@ -5086,7 +5086,7 @@
     {
       "name": "input-group-02",
       "type": "registry:ui",
-      "registryDependencies": [],
+      "registryDependencies": ["input"],
       "dependencies": [],
       "devDependencies": [],
       "title": "Input Group",
