@@ -113,8 +113,9 @@ export default function SmartTooltipPage() {
                 value="preview"
               >
                 <p className="font-sans text-neutral-600 text-sm dark:text-neutral-400">
-                  Hover the button to see different tooltip messages, then click
-                  to copy the email address. Hover again to see post-copy
+                  Hover the button to preview the tooltip message. Click to copy
+                  the email address to your clipboard, then hover again to see
+                  how the tooltip updates based on the copy interaction state.
                   states.
                 </p>
 
