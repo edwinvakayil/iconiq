@@ -83,9 +83,9 @@ export default function InputGroupsPage() {
 
           <h2
             className="mt-12 font-sans font-semibold text-lg text-neutral-900 dark:text-white"
-            id="password-validation"
+            id="password-field"
           >
-            Password validation
+            Password field
           </h2>
 
           <p className="mt-1 font-sans text-neutral-600 text-sm dark:text-neutral-400">
@@ -184,8 +184,8 @@ export function MyPasswordForm() {
           </h3>
 
           <p className="mt-1 font-sans text-neutral-600 text-sm dark:text-neutral-400">
-            Copy the password validation component into your project or open it
-            in v0 to customize and generate variations.
+            Copy the password field component into your project or open it in v0
+            to customize and generate variations.
           </p>
 
           <div className="mt-6">

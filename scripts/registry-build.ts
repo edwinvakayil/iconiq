@@ -43,7 +43,7 @@ const REGISTRY_UI_META: Record<
   "input-group-01": {
     title: "Input Group",
     description:
-      "Password validation input with label, visibility toggle, and strength indicator. Uses Input, Label, and Button from shadcn.",
+      "Password field input with label, visibility toggle, and strength indicator. Uses Input, Label, and Button from shadcn.",
     dependencies: [],
   },
 };

@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 
-export const title = "Password Validation";
+export const title = "Password field";
 
 export interface PasswordValidationRule {
   /** Label shown next to the rule (e.g. "At least 8 characters"). */

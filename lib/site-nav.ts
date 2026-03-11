@@ -63,10 +63,9 @@ export const PAGE_SECTIONS: Record<string, { label: string; id: string }[]> = {
     { label: "Props", id: "props" },
   ],
   "/components/input-groups": [
-    { label: "Password validation", id: "password-validation" },
+    { label: "Password field", id: "password-field" },
     { label: "Preview", id: "preview" },
     { label: "Usage", id: "usage" },
-    { label: "Get the Component", id: "get-code" },
     { label: "Props", id: "props" },
   ],
 };

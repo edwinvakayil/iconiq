@@ -114,6 +114,20 @@ export function OnThisPage() {
         : "border-transparent text-neutral-600 hover:text-neutral-900 dark:text-neutral-300"
     }`;
 
+  const isInputGroups = pathname === "/components/input-groups";
+  const isPasswordValidationActive =
+    activeSectionId === "password-field" ||
+    activeSectionId === "preview" ||
+    activeSectionId === "usage" ||
+    activeSectionId === "props";
+
+  const parentSectionLinkClass = (isActive: boolean) =>
+    `block py-0.5 font-sans text-[13px] transition-colors ${
+      isActive
+        ? "font-semibold text-neutral-950 dark:text-white"
+        : "text-neutral-600 hover:text-neutral-900 dark:text-neutral-300"
+    }`;
+
   return (
     <aside
       aria-label="On this page"
@@ -135,20 +149,51 @@ export function OnThisPage() {
                 </li>
               ))}
           </ul>
-        ) : pathname.startsWith("/animated-components/") &&
+        ) : (pathname.startsWith("/animated-components/") ||
+            pathname.startsWith("/components/")) &&
           PAGE_SECTIONS[pathname]?.length ? (
-          <ul className="mt-1 space-y-0.5">
-            {PAGE_SECTIONS[pathname].map((section) => (
-              <li key={section.id}>
+          isInputGroups ? (
+            <ul className="mt-1 space-y-1">
+              <li>
                 <a
-                  className={sectionLinkClass(section.id)}
-                  href={`#${section.id}`}
+                  className={parentSectionLinkClass(isPasswordValidationActive)}
+                  href="#password-field"
                 >
-                  {section.label}
+                  Password field
                 </a>
+                <ul className="mt-0.5 space-y-0.5">
+                  <li>
+                    <a className={sectionLinkClass("preview")} href="#preview">
+                      Preview
+                    </a>
+                  </li>
+                  <li>
+                    <a className={sectionLinkClass("usage")} href="#usage">
+                      Usage
+                    </a>
+                  </li>
+                  <li>
+                    <a className={sectionLinkClass("props")} href="#props">
+                      Props
+                    </a>
+                  </li>
+                </ul>
               </li>
-            ))}
-          </ul>
+            </ul>
+          ) : (
+            <ul className="mt-1 space-y-0.5">
+              {PAGE_SECTIONS[pathname].map((section) => (
+                <li key={section.id}>
+                  <a
+                    className={sectionLinkClass(section.id)}
+                    href={`#${section.id}`}
+                  >
+                    {section.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          )
         ) : (
           <ul className="space-y-1">
             {toc.map((entry) => {
