@@ -2368,4 +2368,10 @@ export const components: ComponentDefinition[] = [
     registryDependencies: ["input", "label", "button"],
     dependencies: [],
   },
+  {
+    name: "input-group-02",
+    path: path.join(__dirname, "../registry", "input-group-02.tsx"),
+    registryDependencies: [],
+    dependencies: [],
+  },
 ];

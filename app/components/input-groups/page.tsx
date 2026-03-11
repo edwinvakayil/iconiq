@@ -13,6 +13,7 @@ import {
   PasswordValidationInput,
   type PasswordValidationRule,
 } from "@/registry/input-group";
+import InputFloatingLabel from "@/registry/input-group-02";
 
 const HAS_DIGIT = /\d/;
 const HAS_UPPERCASE = /[A-Z]/;
@@ -238,6 +239,118 @@ export function MyPasswordForm() {
                 className
               </code>{" "}
               — optional class name for the root container.
+            </li>
+          </ul>
+
+          <h2
+            className="mt-12 font-sans font-semibold text-lg text-neutral-900 dark:text-white"
+            id="input-label"
+          >
+            Input Label
+          </h2>
+
+          <p className="mt-1 font-sans text-neutral-600 text-sm dark:text-neutral-400">
+            A floating label input where the label sits inside the field and
+            animates upward on focus or when the input has a value. Great for
+            compact forms while keeping the label always visible.
+          </p>
+
+          <div className="mt-4">
+            <CodeBlockInstall componentName="input-group-02" />
+          </div>
+
+          <h3
+            className="mt-8 font-sans font-semibold text-base text-neutral-900 dark:text-white"
+            id="input-label-preview"
+          >
+            Preview
+          </h3>
+
+          <p className="mt-1 font-sans text-neutral-600 text-sm dark:text-neutral-400">
+            Click the field to see the label float; type to keep it pinned above
+            the input.
+          </p>
+
+          <div className="mt-6 flex flex-wrap gap-4">
+            <InputFloatingLabel />
+          </div>
+
+          <h3
+            className="mt-8 font-sans font-semibold text-base text-neutral-900 dark:text-white"
+            id="input-label-usage"
+          >
+            Usage
+          </h3>
+
+          <p className="mt-1 font-sans text-neutral-600 text-sm dark:text-neutral-400">
+            Import{" "}
+            <code className="rounded bg-neutral-200 px-1 font-mono text-xs dark:bg-neutral-700 dark:text-neutral-200">
+              InputFloatingLabel
+            </code>{" "}
+            and render it where you need a floating label input.
+          </p>
+
+          <div className="mt-4">
+            <CodeBlock
+              code={`import InputFloatingLabel from "@/components/ui/input-group-02";
+
+export function Example() {
+  return <InputFloatingLabel />;
+}
+`}
+              language="tsx"
+            />
+          </div>
+
+          <h3
+            className="mt-8 font-sans font-semibold text-base text-neutral-900 dark:text-white"
+            id="input-label-get-code"
+          >
+            Get the Component
+          </h3>
+
+          <p className="mt-1 font-sans text-neutral-600 text-sm dark:text-neutral-400">
+            Copy the input label component into your project or open it in v0 to
+            customize and generate variations.
+          </p>
+
+          <div className="mt-6">
+            <ComponentActions name="input-group-02" />
+          </div>
+
+          <h4
+            className="mt-6 font-sans font-semibold text-neutral-900 text-sm dark:text-white"
+            id="input-label-props"
+          >
+            Props
+          </h4>
+
+          <ul className="mt-2 list-inside list-disc font-sans text-neutral-600 text-sm dark:text-neutral-400">
+            <li>
+              <code className="rounded bg-neutral-200 px-1 font-mono text-xs dark:bg-neutral-700 dark:text-neutral-200">
+                id
+              </code>{" "}
+              — generated via{" "}
+              <code className="rounded bg-neutral-200 px-1 font-mono text-xs dark:bg-neutral-700 dark:text-neutral-200">
+                useId
+              </code>{" "}
+              for label association.
+            </li>
+            <li>
+              <code className="rounded bg-neutral-200 px-1 font-mono text-xs dark:bg-neutral-700 dark:text-neutral-200">
+                placeholder
+              </code>{" "}
+              — text shown inside the input (e.g. &quot;Username&quot;).
+            </li>
+            <li>
+              <code className="rounded bg-neutral-200 px-1 font-mono text-xs dark:bg-neutral-700 dark:text-neutral-200">
+                className
+              </code>{" "}
+              — optional class name for the underlying{" "}
+              <code className="rounded bg-neutral-200 px-1 font-mono text-xs dark:bg-neutral-700 dark:text-neutral-200">
+                Input
+              </code>
+              .
             </li>
           </ul>
         </div>

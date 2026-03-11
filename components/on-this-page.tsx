@@ -115,11 +115,17 @@ export function OnThisPage() {
     }`;
 
   const isInputGroups = pathname === "/components/input-groups";
-  const isPasswordValidationActive =
+  const isPasswordFieldActive =
     activeSectionId === "password-field" ||
     activeSectionId === "preview" ||
     activeSectionId === "usage" ||
     activeSectionId === "props";
+
+  const isInputLabelActive =
+    activeSectionId === "input-label" ||
+    activeSectionId === "input-label-preview" ||
+    activeSectionId === "input-label-usage" ||
+    activeSectionId === "input-label-props";
 
   const parentSectionLinkClass = (isActive: boolean) =>
     `block py-0.5 font-sans text-[13px] transition-colors ${
@@ -156,7 +162,7 @@ export function OnThisPage() {
             <ul className="mt-1 space-y-1">
               <li>
                 <a
-                  className={parentSectionLinkClass(isPasswordValidationActive)}
+                  className={parentSectionLinkClass(isPasswordFieldActive)}
                   href="#password-field"
                 >
                   Password field
@@ -174,6 +180,40 @@ export function OnThisPage() {
                   </li>
                   <li>
                     <a className={sectionLinkClass("props")} href="#props">
+                      Props
+                    </a>
+                  </li>
+                </ul>
+              </li>
+              <li>
+                <a
+                  className={parentSectionLinkClass(isInputLabelActive)}
+                  href="#input-label"
+                >
+                  Input Label
+                </a>
+                <ul className="mt-0.5 space-y-0.5">
+                  <li>
+                    <a
+                      className={sectionLinkClass("input-label-preview")}
+                      href="#input-label-preview"
+                    >
+                      Preview
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      className={sectionLinkClass("input-label-usage")}
+                      href="#input-label-usage"
+                    >
+                      Usage
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      className={sectionLinkClass("input-label-props")}
+                      href="#input-label-props"
+                    >
                       Props
                     </a>
                   </li>

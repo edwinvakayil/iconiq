@@ -5082,6 +5082,21 @@
           "type": "registry:ui"
         }
       ]
+    },
+    {
+      "name": "input-group-02",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": [],
+      "devDependencies": [],
+      "title": "Input Group",
+      "description": "Floating label input that keeps the label visible while the user types. Uses Input from shadcn.",
+      "files": [
+        {
+          "path": "input-group-02.tsx",
+          "type": "registry:ui"
+        }
+      ]
     }
   ]
 }

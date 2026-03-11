@@ -46,6 +46,12 @@ const REGISTRY_UI_META: Record<
       "Password field input with label, visibility toggle, and strength indicator. Uses Input, Label, and Button from shadcn.",
     dependencies: [],
   },
+  "input-group-02": {
+    title: "Input Group",
+    description:
+      "Floating label input that keeps the label visible while the user types. Uses Input from shadcn.",
+    dependencies: [],
+  },
 };
 
 if (!fs.existsSync(registryComponents)) {
