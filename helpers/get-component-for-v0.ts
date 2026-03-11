@@ -1,6 +1,21 @@
+import fs from "node:fs/promises";
+import path from "node:path";
+
 import { SITE } from "@/constants";
 
 const COMPONENT_EXAMPLE: Record<string, string> = {
+  "smart-tooltip":
+    `import { SmartTooltip } from "@/components/ui/smart-tooltip"\n\n` +
+    '"use client";\n\n' +
+    "export default function Page() {\n" +
+    "  return (\n" +
+    '    <div className="flex min-h-svh items-center justify-center bg-neutral-50 px-4 py-8 dark:bg-neutral-950">\n' +
+    "      <SmartTooltip copyValue=\"user@example.com\">\n" +
+    "        Copy email\n" +
+    "      </SmartTooltip>\n" +
+    "    </div>\n" +
+    "  )\n" +
+    "}\n",
   "file-tree":
     "import {\n" +
     "  FileTree,\n" +
@@ -270,9 +285,14 @@ const COMPONENT_EXAMPLE: Record<string, string> = {
 
 const getComponentForV0 = async (name: string) => {
   try {
-    const registryData = await (
-      await fetch(`${SITE.URL}/r/${name}.json`)
-    ).json();
+    const registryFilePath = path.join(
+      process.cwd(),
+      "public",
+      "r",
+      `${name}.json`
+    );
+    const registryFile = await fs.readFile(registryFilePath, "utf8");
+    const registryData = JSON.parse(registryFile);
 
     const pageContent =
       COMPONENT_EXAMPLE[name] ??
