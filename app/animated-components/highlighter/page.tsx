@@ -7,6 +7,7 @@ import { ComponentPager } from "@/components/component-pager";
 import { HighlighterPreviewBlock } from "@/components/highlighter-preview-block";
 import { OnThisPage } from "@/components/on-this-page";
 import { SidebarNav } from "@/components/sidebar-nav";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default function HighlighterPage() {
   return (
@@ -73,47 +74,80 @@ export default function HighlighterPage() {
             <CodeBlockInstall componentName="highlighter" />
           </div>
 
-          <h2
-            className="mt-12 font-sans font-semibold text-lg text-neutral-900 dark:text-white"
-            id="preview"
-          >
+          <h2 className="sr-only" id="preview">
             Preview
           </h2>
 
-          <p className="mt-1 font-sans text-neutral-600 text-sm dark:text-neutral-400">
-            The highlight draws around the wrapped content when it enters the
-            viewport; the pointer appears at the corner. Use Replay to see the
-            animation again.
-          </p>
+          <div className="mt-10 rounded-sm border border-neutral-200 bg-neutral-50/80 p-4 sm:p-6 shadow-[0_18px_45px_rgba(15,23,42,0.06)] backdrop-blur-sm dark:border-neutral-800 dark:bg-neutral-900/70 dark:shadow-[0_18px_45px_rgba(15,23,42,0.7)]">
+            <Tabs
+              className="w-full"
+              defaultValue="preview"
+              aria-label="Highlighter preview, code, and get the component"
+            >
+              <TabsList className="border-b border-neutral-200 pb-1 text-sm font-medium text-neutral-500 dark:border-neutral-800 dark:text-neutral-400">
+                <TabsTrigger value="preview">Preview</TabsTrigger>
+                <TabsTrigger value="code">Code</TabsTrigger>
+                <TabsTrigger value="get-component">
+                  Build with{" "}
+                  <span className="inline-flex align-baseline">
+                    <svg
+                      aria-hidden
+                      className="ml-1 inline-block h-[0.95em] w-auto align-[0.1em]"
+                      fill="currentColor"
+                      viewBox="0 0 40 20"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path d="M23.3919 0H32.9188C36.7819 0 39.9136 3.13165 39.9136 6.99475V16.0805H36.0006V6.99475C36.0006 6.90167 35.9969 6.80925 35.9898 6.71766L26.4628 16.079C26.4949 16.08 26.5272 16.0805 26.5595 16.0805H36.0006V19.7762H26.5595C22.6964 19.7762 19.4788 16.6139 19.4788 12.7508V3.68923H23.3919V12.7508C23.3919 12.9253 23.4054 13.0977 23.4316 13.2668L33.1682 3.6995C33.0861 3.6927 33.003 3.68923 32.9188 3.68923H23.3919V0Z" />
+                      <path d="M13.7688 19.0956L0 3.68759H5.53933L13.6231 12.7337V3.68759H17.7535V17.5746C17.7535 19.6705 15.1654 20.6584 13.7688 19.0956Z" />
+                    </svg>
+                    <span className="sr-only">v0</span>
+                  </span>
+                </TabsTrigger>
+              </TabsList>
 
-          <HighlighterPreviewBlock className="mt-6" />
+              <TabsContent
+                className="pt-4 space-y-4 focus-visible:outline-none"
+                value="preview"
+              >
+                <p className="font-sans text-neutral-600 text-sm dark:text-neutral-400">
+                  The highlight draws around the wrapped content when it enters
+                  the viewport; the pointer appears at the corner. Use Replay to
+                  see the animation again.
+                </p>
 
-          <h2
-            className="mt-12 font-sans font-semibold text-lg text-neutral-900 dark:text-white"
-            id="usage"
-          >
-            Usage
-          </h2>
+                <HighlighterPreviewBlock className="mt-6" />
+              </TabsContent>
 
-          <p className="mt-1 font-sans text-neutral-600 text-sm dark:text-neutral-400">
-            Import from{" "}
-            <code className="rounded bg-neutral-200 px-1 font-mono text-xs dark:bg-neutral-700 dark:text-neutral-200">
-              @/components/ui/highlighter
-            </code>{" "}
-            and wrap any content. Use{" "}
-            <code className="rounded bg-neutral-200 px-1 font-mono text-xs dark:bg-neutral-700 dark:text-neutral-200">
-              containerClassName
-            </code>{" "}
-            for inline use (e.g.{" "}
-            <code className="rounded bg-neutral-200 px-1 font-mono text-xs dark:bg-neutral-700 dark:text-neutral-200">
-              inline-block align-baseline
-            </code>
-            ).
-          </p>
+              <TabsContent
+                className="pt-4 space-y-4 focus-visible:outline-none"
+                value="code"
+              >
+                <h2
+                  className="sr-only"
+                  id="usage"
+                >
+                  Usage
+                </h2>
 
-          <div className="mt-4">
-            <CodeBlock
-              code={`import { Highlighter } from "@/components/ui/highlighter";
+                <p className="font-sans text-neutral-600 text-sm dark:text-neutral-400">
+                  Import from{" "}
+                  <code className="rounded bg-neutral-200 px-1 font-mono text-xs dark:bg-neutral-700 dark:text-neutral-200">
+                    @/components/ui/highlighter
+                  </code>{" "}
+                  and wrap any content. Use{" "}
+                  <code className="rounded bg-neutral-200 px-1 font-mono text-xs dark:bg-neutral-700 dark:text-neutral-200">
+                    containerClassName
+                  </code>{" "}
+                  for inline use (e.g.{" "}
+                  <code className="rounded bg-neutral-200 px-1 font-mono text-xs dark:bg-neutral-700 dark:text-neutral-200">
+                    inline-block align-baseline
+                  </code>
+                  ).
+                </p>
+
+                <div className="mt-4">
+                  <CodeBlock
+                    code={`import { Highlighter } from "@/components/ui/highlighter";
 
 <div>
   Your text here{" "}
@@ -121,94 +155,115 @@ export default function HighlighterPage() {
     <span className="relative z-10">highlighted phrase</span>
   </Highlighter>
 </div>`}
-              language="tsx"
-            />
-          </div>
+                    language="tsx"
+                  />
+                </div>
+              </TabsContent>
 
-          {/* GET COMPONENT SECTION */}
-
-          <h2
-            className="mt-12 font-sans font-semibold text-lg text-neutral-900 dark:text-white"
-            id="get-code"
-          >
-            Get the Component
-          </h2>
-
-          <p className="mt-1 font-sans text-neutral-600 text-sm dark:text-neutral-400">
-            Copy the Highlighter component directly into your project or open it
-            in{" "}
-            <span className="inline-flex align-baseline">
-              <svg
-                aria-hidden
-                className="mr-0.5 inline-block h-[0.95em] w-auto align-[0.1em]"
-                fill="currentColor"
-                viewBox="0 0 40 20"
-                xmlns="http://www.w3.org/2000/svg"
+              <TabsContent
+                className="pt-4 space-y-4 focus-visible:outline-none"
+                value="get-component"
               >
-                <path d="M23.3919 0H32.9188C36.7819 0 39.9136 3.13165 39.9136 6.99475V16.0805H36.0006V6.99475C36.0006 6.90167 35.9969 6.80925 35.9898 6.71766L26.4628 16.079C26.4949 16.08 26.5272 16.0805 26.5595 16.0805H36.0006V19.7762H26.5595C22.6964 19.7762 19.4788 16.6139 19.4788 12.7508V3.68923H23.3919V12.7508C23.3919 12.9253 23.4054 13.0977 23.4316 13.2668L33.1682 3.6995C33.0861 3.6927 33.003 3.68923 32.9188 3.68923H23.3919V0Z" />
-                <path d="M13.7688 19.0956L0 3.68759H5.53933L13.6231 12.7337V3.68759H17.7535V17.5746C17.7535 19.6705 15.1654 20.6584 13.7688 19.0956Z" />
-              </svg>
-              <span className="sr-only">v0</span>
-            </span>{" "}
-            to customize and generate variations. This makes it easy to adapt
-            the component to your UI and workflow.
-          </p>
+                <h2
+                  className="sr-only"
+                  id="get-code"
+                >
+                  Get the Component
+                </h2>
 
-          <div className="mt-6">
-            <ComponentActions name="highlighter" />
+                <p className="font-sans text-neutral-600 text-sm dark:text-neutral-400">
+                  Build with{" "}
+                  <span className="inline-flex align-baseline">
+                    <svg
+                      aria-hidden
+                      className="mr-0.5 inline-block h-[0.95em] w-auto align-[0.1em]"
+                      fill="currentColor"
+                      viewBox="0 0 40 20"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path d="M23.3919 0H32.9188C36.7819 0 39.9136 3.13165 39.9136 6.99475V16.0805H36.0006V6.99475C36.0006 6.90167 35.9969 6.80925 35.9898 6.71766L26.4628 16.079C26.4949 16.08 26.5272 16.0805 26.5595 16.0805H36.0006V19.7762H26.5595C22.6964 19.7762 19.4788 16.6139 19.4788 12.7508V3.68923H23.3919V12.7508C23.3919 12.9253 23.4054 13.0977 23.4316 13.2668L33.1682 3.6995C33.0861 3.6927 33.003 3.68923 32.9188 3.68923H23.3919V0Z" />
+                      <path d="M13.7688 19.0956L0 3.68759H5.53933L13.6231 12.7337V3.68759H17.7535V17.5746C17.7535 19.6705 15.1654 20.6584 13.7688 19.0956Z" />
+                    </svg>
+                    <span className="sr-only">v0</span>
+                  </span>{" "}
+                  to customize and generate variations. This makes it easy to
+                  adapt the component to your UI and workflow.
+                </p>
+
+                <div className="mt-6">
+                  <ComponentActions name="highlighter" />
+                </div>
+              </TabsContent>
+            </Tabs>
           </div>
 
-          <h3
-            className="mt-8 font-sans font-semibold text-base text-neutral-900 dark:text-white"
-            id="props"
-          >
+          <h3 className="sr-only" id="props">
             Props
           </h3>
 
-          <ul className="mt-2 list-inside list-disc font-sans text-neutral-600 text-sm dark:text-neutral-400">
-            <li>
-              <code className="rounded bg-neutral-200 px-1 font-mono text-xs dark:bg-neutral-700 dark:text-neutral-200">
-                children
-              </code>{" "}
-              — content to highlight (wrap in a span with{" "}
-              <code className="rounded bg-neutral-200 px-1 font-mono text-xs dark:bg-neutral-700 dark:text-neutral-200">
-                relative z-10
-              </code>{" "}
-              so text sits above the border)
-            </li>
+          <div className="mt-6 border-t border-neutral-200 pt-4 text-sm dark:border-neutral-800">
+            <div className="mb-2 inline-flex items-center gap-2 rounded-full border border-neutral-200 px-2.5 py-0.5 font-mono text-[11px] uppercase tracking-[0.16em] text-neutral-500 dark:border-neutral-800 dark:text-neutral-400">
+              <span className="rounded bg-neutral-100 px-1.5 py-0.5 text-[10px] font-semibold text-neutral-700 dark:bg-neutral-800 dark:text-neutral-200">
+                highlighter
+              </span>
+              <span>Props</span>
+            </div>
 
-            <li>
-              <code className="rounded bg-neutral-200 px-1 font-mono text-xs dark:bg-neutral-700 dark:text-neutral-200">
-                containerClassName
-              </code>{" "}
-              — optional class for the wrapper (e.g. inline alignment)
-            </li>
-
-            <li>
-              <code className="rounded bg-neutral-200 px-1 font-mono text-xs dark:bg-neutral-700 dark:text-neutral-200">
-                rectangleClassName
-              </code>{" "}
-              — optional class for the border rectangle
-            </li>
-
-            <li>
-              <code className="rounded bg-neutral-200 px-1 font-mono text-xs dark:bg-neutral-700 dark:text-neutral-200">
-                pointerColor
-              </code>{" "}
-              — optional CSS color for the pointer (e.g.{" "}
-              <code className="rounded bg-neutral-200 px-1 font-mono text-xs dark:bg-neutral-700 dark:text-neutral-200">
-                #22c55e
-              </code>
-              ). Defaults to blue.
-            </li>
-
-            <li>
-              <code className="rounded bg-neutral-200 px-1 font-mono text-xs dark:bg-neutral-700 dark:text-neutral-200">
-                pointerClassName
-              </code>{" "}
-              — optional class for the pointer icon (size, etc.)
-            </li>
-          </ul>
+            <dl className="mt-3 divide-y divide-neutral-200 border border-neutral-200 text-[13px] dark:divide-neutral-800 dark:border-neutral-800">
+              <div className="grid grid-cols-[minmax(0,160px)_minmax(0,1fr)] gap-x-4 px-3 py-2.5">
+                <dt className="font-mono text-xs text-neutral-900 dark:text-neutral-100">
+                  children
+                </dt>
+                <dd className="text-neutral-600 dark:text-neutral-300">
+                  Content to highlight (wrap in a{" "}
+                  <code className="rounded bg-neutral-200 px-1 font-mono text-[11px] dark:bg-neutral-700 dark:text-neutral-200">
+                    &lt;span className=&quot;relative z-10&quot;&gt;
+                  </code>{" "}
+                  so text sits above the border).
+                </dd>
+              </div>
+              <div className="grid grid-cols-[minmax(0,160px)_minmax(0,1fr)] gap-x-4 px-3 py-2.5">
+                <dt className="font-mono text-xs text-neutral-900 dark:text-neutral-100">
+                  containerClassName
+                </dt>
+                <dd className="text-neutral-600 dark:text-neutral-300">
+                  Optional class for the wrapper (for example{" "}
+                  <code className="rounded bg-neutral-200 px-1 font-mono text-[11px] dark:bg-neutral-700 dark:text-neutral-200">
+                    inline-block align-baseline
+                  </code>
+                  ).
+                </dd>
+              </div>
+              <div className="grid grid-cols-[minmax(0,160px)_minmax(0,1fr)] gap-x-4 px-3 py-2.5">
+                <dt className="font-mono text-xs text-neutral-900 dark:text-neutral-100">
+                  rectangleClassName
+                </dt>
+                <dd className="text-neutral-600 dark:text-neutral-300">
+                  Optional class for the border rectangle.
+                </dd>
+              </div>
+              <div className="grid grid-cols-[minmax(0,160px)_minmax(0,1fr)] gap-x-4 px-3 py-2.5">
+                <dt className="font-mono text-xs text-neutral-900 dark:text-neutral-100">
+                  pointerColor
+                </dt>
+                <dd className="text-neutral-600 dark:text-neutral-300">
+                  Optional CSS color for the pointer (for example{" "}
+                  <code className="rounded bg-neutral-200 px-1 font-mono text-[11px] dark:bg-neutral-700 dark:text-neutral-200">
+                    #22c55e
+                  </code>
+                  ). Defaults to blue.
+                </dd>
+              </div>
+              <div className="grid grid-cols-[minmax(0,160px)_minmax(0,1fr)] gap-x-4 px-3 py-2.5">
+                <dt className="font-mono text-xs text-neutral-900 dark:text-neutral-100">
+                  pointerClassName
+                </dt>
+                <dd className="text-neutral-600 dark:text-neutral-300">
+                  Optional class for the pointer icon (size, etc.).
+                </dd>
+              </div>
+            </dl>
+          </div>
         </div>
       </main>
 

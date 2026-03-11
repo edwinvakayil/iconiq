@@ -22,7 +22,10 @@ type TabsListProps = React.ComponentProps<typeof BaseTabs.List>;
 const TabsList = ({ className, children, ...props }: TabsListProps) => {
   return (
     <BaseTabs.List
-      className={cn("inline-flex items-center justify-start gap-px", className)}
+      className={cn(
+        "inline-flex items-center justify-start gap-6",
+        className
+      )}
       data-slot="tabs-list"
       {...props}
     >
@@ -37,12 +40,8 @@ const TabsTrigger = ({ className, ...props }: TabsTriggerProps) => {
   return (
     <BaseTabs.Tab
       className={cn(
-        "z-50 inline-flex cursor-pointer items-center justify-center whitespace-nowrap bg-white px-4 py-1 font-mono text-black text-sm tracking-[-0.39px] hover:bg-neutral-50 aria-selected:bg-primary aria-selected:text-white dark:bg-white/10 dark:text-white dark:aria-selected:bg-primary dark:hover:bg-white/5",
-        "first:rounded-tl-[8px] last:rounded-tr-[8px]",
-        "supports-[corner-shape:squircle]:first:corner-tl-squircle supports-[corner-shape:squircle]:first:rounded-tl-[14px]",
-        "supports-[corner-shape:squircle]:last:corner-tr-squircle supports-[corner-shape:squircle]:last:rounded-tr-[14px]",
-        "transition-[background-color] duration-50",
-        "focus-within:outline-offset-0 focus-visible:outline-1 focus-visible:outline-primary",
+        "inline-flex cursor-pointer items-center justify-center whitespace-nowrap border-b-2 border-transparent pb-1.5 text-xs font-medium uppercase tracking-[0.12em] text-neutral-500 transition-colors duration-150 hover:text-neutral-900 aria-selected:border-neutral-900 aria-selected:text-neutral-950 dark:text-neutral-400 dark:hover:text-white dark:aria-selected:border-white dark:aria-selected:text-white",
+        "focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-neutral-400 dark:focus-visible:ring-neutral-500",
         className
       )}
       data-slot="tabs-trigger"

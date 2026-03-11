@@ -1,9 +1,8 @@
 "use client";
 
-import { Check, Copy, Loader } from "lucide-react";
+import { Loader } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
-import { getComponentContent } from "@/actions/get-component-content";
 import { openComponentInV0Action } from "@/actions/open-component-in-v0";
 import { cn } from "@/lib/utils";
 
@@ -22,56 +21,7 @@ const V0Icon = ({ className }: { className?: string }) => (
 type ActionState = "idle" | "loading" | "done" | "error";
 
 const btnBase =
-  "inline-flex cursor-pointer items-center gap-1.5 rounded-full border px-3.5 py-1.5 font-sans text-xs font-medium transition-colors duration-150 focus-visible:outline-1 focus-visible:outline-primary disabled:pointer-events-none disabled:opacity-60";
-
-const btnOutline = cn(
-  btnBase,
-  "border-neutral-200 bg-white text-neutral-700 hover:bg-neutral-50 hover:text-neutral-900",
-  "dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-300 dark:hover:bg-neutral-800 dark:hover:text-white"
-);
-
-const CopyCodeButton = ({ name }: { name: string }) => {
-  const [state, setState] = useState<ActionState>("idle");
-
-  const handleCopy = async () => {
-    if (state !== "idle") return;
-    try {
-      setState("loading");
-      const content = await getComponentContent(name);
-      await navigator.clipboard.writeText(content);
-      setState("done");
-      setTimeout(() => setState("idle"), 2000);
-    } catch {
-      toast.error("Failed to copy", {
-        description: "Please check your browser permissions.",
-      });
-      setState("error");
-      setTimeout(() => setState("idle"), 2000);
-    }
-  };
-
-  const icon =
-    state === "loading" ? (
-      <Loader aria-hidden className="size-3 animate-spin" />
-    ) : state === "done" ? (
-      <Check aria-hidden className="size-3 text-green-600" />
-    ) : (
-      <Copy aria-hidden className="size-3" />
-    );
-
-  return (
-    <button
-      aria-label="Copy component source code"
-      className={btnOutline}
-      disabled={state !== "idle"}
-      onClick={handleCopy}
-      type="button"
-    >
-      {icon}
-      {state === "done" ? "Copied!" : "Copy code"}
-    </button>
-  );
-};
+  "inline-flex cursor-pointer items-center gap-1.5 rounded-sm border px-3.5 py-1.5 font-sans text-xs font-medium transition-colors duration-150 focus-visible:outline-1 focus-visible:outline-primary disabled:pointer-events-none disabled:opacity-60";
 
 const OpenInV0Button = ({ name }: { name: string }) => {
   const [state, setState] = useState<ActionState>("idle");
@@ -128,7 +78,7 @@ const OpenInV0Button = ({ name }: { name: string }) => {
       onClick={handleOpenInV0}
       type="button"
     >
-      {icon}
+      Open in {icon}
     </button>
   );
 };
@@ -136,7 +86,6 @@ const OpenInV0Button = ({ name }: { name: string }) => {
 export function ComponentActions({ name }: { name: string }) {
   return (
     <div className="mt-6 flex flex-wrap items-center gap-2">
-      <CopyCodeButton name={name} />
       <OpenInV0Button name={name} />
     </div>
   );

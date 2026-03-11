@@ -141,6 +141,7 @@ export function OnThisPage({ inputGroupsOpenGroup }: OnThisPageProps) {
     }`;
 
   const isInputGroups = pathname === "/components/input-groups";
+  const isAnimatedComponent = pathname.startsWith("/animated-components/");
   const isPasswordFieldActive =
     activeSectionId === "password-field" ||
     activeSectionId === "preview" ||
@@ -193,28 +194,6 @@ export function OnThisPage({ inputGroupsOpenGroup }: OnThisPageProps) {
                 >
                   Password field
                 </a>
-                {inputGroupsOpenGroup === "password-field" ? (
-                  <ul className="mt-0.5 space-y-0.5">
-                    <li>
-                      <a
-                        className={sectionLinkClass("preview")}
-                        href="#preview"
-                      >
-                        Preview
-                      </a>
-                    </li>
-                    <li>
-                      <a className={sectionLinkClass("usage")} href="#usage">
-                        Usage
-                      </a>
-                    </li>
-                    <li>
-                      <a className={sectionLinkClass("props")} href="#props">
-                        Props
-                      </a>
-                    </li>
-                  </ul>
-                ) : null}
               </li>
               <li>
                 <a
@@ -223,48 +202,26 @@ export function OnThisPage({ inputGroupsOpenGroup }: OnThisPageProps) {
                 >
                   Input Label
                 </a>
-                {inputGroupsOpenGroup === "input-label" ? (
-                  <ul className="mt-0.5 space-y-0.5">
-                    <li>
-                      <a
-                        className={sectionLinkClass("input-label-preview")}
-                        href="#input-label-preview"
-                      >
-                        Preview
-                      </a>
-                    </li>
-                    <li>
-                      <a
-                        className={sectionLinkClass("input-label-usage")}
-                        href="#input-label-usage"
-                      >
-                        Usage
-                      </a>
-                    </li>
-                    <li>
-                      <a
-                        className={sectionLinkClass("input-label-props")}
-                        href="#input-label-props"
-                      >
-                        Props
-                      </a>
-                    </li>
-                  </ul>
-                ) : null}
               </li>
             </ul>
           ) : (
             <ul className="mt-1 space-y-0.5">
-              {PAGE_SECTIONS[pathname].map((section) => (
-                <li key={section.id}>
-                  <a
-                    className={sectionLinkClass(section.id)}
-                    href={`#${section.id}`}
-                  >
-                    {section.label}
-                  </a>
-                </li>
-              ))}
+              <li>
+                <a
+                  className={`block py-0.5 font-sans text-[13px] transition-colors ${
+                    activeSectionId === "preview"
+                      ? "font-semibold text-neutral-950 dark:text-white"
+                      : "text-neutral-600 hover:text-neutral-900 dark:text-neutral-300"
+                  }`}
+                  href="#preview"
+                >
+                  {isAnimatedComponent
+                    ? SITE_SECTIONS[1].children.find(
+                        (child) => child.href === pathname
+                      )?.label ?? "Preview"
+                    : "Preview"}
+                </a>
+              </li>
             </ul>
           )
         ) : (

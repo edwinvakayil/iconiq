@@ -16,6 +16,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   PasswordValidationInput,
   type PasswordValidationRule,
@@ -140,54 +141,87 @@ export default function InputGroupsPage() {
                   <CodeBlockInstall componentName="input-group-01" />
                 </div>
 
-                <h3
-                  className="mt-8 font-sans font-semibold text-base text-neutral-900 dark:text-white"
-                  id="preview"
-                >
+                <h3 className="sr-only" id="preview">
                   Preview
                 </h3>
 
-                <p className="mt-1 font-sans text-neutral-600 text-sm dark:text-neutral-400">
-                  Example with custom rules: length, number, uppercase, and
-                  special character. Type in the field to see each rule turn
-                  green as it’s satisfied.
-                </p>
+                <div className="mt-8 rounded-sm border border-neutral-200 bg-neutral-50/80 p-4 sm:p-6 shadow-[0_18px_45px_rgba(15,23,42,0.06)] backdrop-blur-sm dark:border-neutral-800 dark:bg-neutral-900/70 dark:shadow-[0_18px_45px_rgba(15,23,42,0.7)]">
+                  <Tabs
+                    className="w-full"
+                    defaultValue="preview"
+                    aria-label="Password field preview, code, and get the component"
+                  >
+                    <TabsList className="border-b border-neutral-200 pb-1 text-sm font-medium text-neutral-500 dark:border-neutral-800 dark:text-neutral-400">
+                      <TabsTrigger value="preview">Preview</TabsTrigger>
+                      <TabsTrigger value="code">Code</TabsTrigger>
+                      <TabsTrigger value="get-component">
+                        Build with{" "}
+                        <span className="inline-flex align-baseline">
+                          <svg
+                            aria-hidden
+                            className="ml-1 inline-block h-[0.95em] w-auto align-[0.1em]"
+                            fill="currentColor"
+                            viewBox="0 0 40 20"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path d="M23.3919 0H32.9188C36.7819 0 39.9136 3.13165 39.9136 6.99475V16.0805H36.0006V6.99475C36.0006 6.90167 35.9969 6.80925 35.9898 6.71766L26.4628 16.079C26.4949 16.08 26.5272 16.0805 26.5595 16.0805H36.0006V19.7762H26.5595C22.6964 19.7762 19.4788 16.6139 19.4788 12.7508V3.68923H23.3919V12.7508C23.3919 12.9253 23.4054 13.0977 23.4316 13.2668L33.1682 3.6995C33.0861 3.6927 33.003 3.68923 32.9188 3.68923H23.3919V0Z" />
+                            <path d="M13.7688 19.0956L0 3.68759H5.53933L13.6231 12.7337V3.68759H17.7535V17.5746C17.7535 19.6705 15.1654 20.6584 13.7688 19.0956Z" />
+                          </svg>
+                          <span className="sr-only">v0</span>
+                        </span>
+                      </TabsTrigger>
+                    </TabsList>
 
-                <div className="mt-6 flex flex-wrap gap-4 pl-2">
-                  <PasswordValidationInput validations={demoValidations} />
-                </div>
+                    <TabsContent
+                      className="pt-4 space-y-4 focus-visible:outline-none"
+                      value="preview"
+                    >
+                      <p className="font-sans text-neutral-600 text-sm dark:text-neutral-400">
+                        Example with custom rules: length, number, uppercase,
+                        and special character. Type in the field to see each
+                        rule turn green as it’s satisfied.
+                      </p>
 
-                <h3
-                  className="mt-8 font-sans font-semibold text-base text-neutral-900 dark:text-white"
-                  id="usage"
-                >
-                  Usage
-                </h3>
+                      <div className="mt-6 flex flex-wrap gap-4 pl-2">
+                        <PasswordValidationInput validations={demoValidations} />
+                      </div>
+                    </TabsContent>
 
-                <p className="mt-1 font-sans text-neutral-600 text-sm dark:text-neutral-400">
-                  Import{" "}
-                  <code className="rounded bg-neutral-200 px-1 font-mono text-xs dark:bg-neutral-700 dark:text-neutral-200">
-                    PasswordValidationInput
-                  </code>{" "}
-                  and pass your own{" "}
-                  <code className="rounded bg-neutral-200 px-1 font-mono text-xs dark:bg-neutral-700 dark:text-neutral-200">
-                    validations
-                  </code>{" "}
-                  array. Each rule has a{" "}
-                  <code className="rounded bg-neutral-200 px-1 font-mono text-xs dark:bg-neutral-700 dark:text-neutral-200">
-                    text
-                  </code>{" "}
-                  label and a{" "}
-                  <code className="rounded bg-neutral-200 px-1 font-mono text-xs dark:bg-neutral-700 dark:text-neutral-200">
-                    validate
-                  </code>{" "}
-                  function that receives the current value and returns a
-                  boolean.
-                </p>
+                    <TabsContent
+                      className="pt-4 space-y-4 focus-visible:outline-none"
+                      value="code"
+                    >
+                      <h3
+                        className="sr-only"
+                        id="usage"
+                      >
+                        Usage
+                      </h3>
 
-                <div className="mt-4">
-                  <CodeBlock
-                    code={`import {
+                      <p className="font-sans text-neutral-600 text-sm dark:text-neutral-400">
+                        Import{" "}
+                        <code className="rounded bg-neutral-200 px-1 font-mono text-xs dark:bg-neutral-700 dark:text-neutral-200">
+                          PasswordValidationInput
+                        </code>{" "}
+                        and pass your own{" "}
+                        <code className="rounded bg-neutral-200 px-1 font-mono text-xs dark:bg-neutral-700 dark:text-neutral-200">
+                          validations
+                        </code>{" "}
+                        array. Each rule has a{" "}
+                        <code className="rounded bg-neutral-200 px-1 font-mono text-xs dark:bg-neutral-700 dark:text-neutral-200">
+                          text
+                        </code>{" "}
+                        label and a{" "}
+                        <code className="rounded bg-neutral-200 px-1 font-mono text-xs dark:bg-neutral-700 dark:text-neutral-200">
+                          validate
+                        </code>{" "}
+                        function that receives the current value and returns a
+                        boolean.
+                      </p>
+
+                      <div className="mt-4">
+                        <CodeBlock
+                          code={`import {
   PasswordValidationInput,
   type PasswordValidationRule,
 } from "@/components/ui/input-group-01";
@@ -214,77 +248,123 @@ export function MyPasswordForm() {
   );
 }
 `}
-                    language="tsx"
-                  />
+                          language="tsx"
+                        />
+                      </div>
+                    </TabsContent>
+
+                    <TabsContent
+                      className="pt-4 space-y-4 focus-visible:outline-none"
+                      value="get-component"
+                    >
+                      <h3
+                        className="sr-only"
+                        id="get-code"
+                      >
+                        Get the Component
+                      </h3>
+
+                      <p className="font-sans text-neutral-600 text-sm dark:text-neutral-400">
+                        Build with{" "}
+                        <span className="inline-flex align-baseline">
+                          <svg
+                            aria-hidden
+                            className="mr-0.5 inline-block h-[0.95em] w-auto align-[0.1em]"
+                            fill="currentColor"
+                            viewBox="0 0 40 20"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path d="M23.3919 0H32.9188C36.7819 0 39.9136 3.13165 39.9136 6.99475V16.0805H36.0006V6.99475C36.0006 6.90167 35.9969 6.80925 35.9898 6.71766L26.4628 16.079C26.4949 16.08 26.5272 16.0805 26.5595 16.0805H36.0006V19.7762H26.5595C22.6964 19.7762 19.4788 16.6139 19.4788 12.7508V3.68923H23.3919V12.7508C23.3919 12.9253 23.4054 13.0977 23.4316 13.2668L33.1682 3.6995C33.0861 3.6927 33.003 3.68923 32.9188 3.68923H23.3919V0Z" />
+                            <path d="M13.7688 19.0956L0 3.68759H5.53933L13.6231 12.7337V3.68759H17.7535V17.5746C17.7535 19.6705 15.1654 20.6584 13.7688 19.0956Z" />
+                          </svg>
+                          <span className="sr-only">v0</span>
+                        </span>{" "}
+                        to customize and generate variations.
+                      </p>
+
+                      <div className="mt-6">
+                        <ComponentActions name="input-group-01" />
+                      </div>
+                    </TabsContent>
+                  </Tabs>
                 </div>
 
-                <h3
-                  className="mt-8 font-sans font-semibold text-base text-neutral-900 dark:text-white"
-                  id="get-code"
-                >
-                  Get the Component
-                </h3>
-
-                <p className="mt-1 font-sans text-neutral-600 text-sm dark:text-neutral-400">
-                  Copy the password field component into your project or open it
-                  in v0 to customize and generate variations.
-                </p>
-
-                <div className="mt-6">
-                  <ComponentActions name="input-group-01" />
-                </div>
-
-                <h4
-                  className="mt-6 font-sans font-semibold text-neutral-900 text-sm dark:text-white"
-                  id="props"
-                >
+                <h4 className="sr-only" id="props">
                   Props
                 </h4>
 
-                <ul className="mt-2 list-inside list-disc font-sans text-neutral-600 text-sm dark:text-neutral-400">
-                  <li>
-                    <code className="rounded bg-neutral-200 px-1 font-mono text-xs dark:bg-neutral-700 dark:text-neutral-200">
-                      validations
-                    </code>{" "}
-                    — array of rules. Each rule has{" "}
-                    <code className="rounded bg-neutral-200 px-1 font-mono text-xs dark:bg-neutral-700 dark:text-neutral-200">
-                      text
-                    </code>{" "}
-                    (label) and{" "}
-                    <code className="rounded bg-neutral-200 px-1 font-mono text-xs dark:bg-neutral-700 dark:text-neutral-200">
-                      validate
-                    </code>{" "}
-                    (function that takes the current value and returns a
-                    boolean).
-                  </li>
-                  <li>
-                    <code className="rounded bg-neutral-200 px-1 font-mono text-xs dark:bg-neutral-700 dark:text-neutral-200">
-                      label
-                    </code>{" "}
-                    — optional label for the input (default:
-                    &quot;Password&quot;).
-                  </li>
-                  <li>
-                    <code className="rounded bg-neutral-200 px-1 font-mono text-xs dark:bg-neutral-700 dark:text-neutral-200">
-                      placeholder
-                    </code>{" "}
-                    — optional placeholder (default: &quot;Enter
-                    password&quot;).
-                  </li>
-                  <li>
-                    <code className="rounded bg-neutral-200 px-1 font-mono text-xs dark:bg-neutral-700 dark:text-neutral-200">
-                      inputId
-                    </code>{" "}
-                    — optional id for the input element (default:
-                    &quot;password&quot;).
-                  </li>
-                  <li>
-                    <code className="rounded bg-neutral-200 px-1 font-mono text-xs dark:bg-neutral-700 dark:text-neutral-200">
-                      className
-                    </code>{" "}
-                    — optional class name for the root container.
-                  </li>
-                </ul>
+                <div className="mt-6 border-t border-neutral-200 pt-4 text-sm dark:border-neutral-800">
+                  <div className="mb-2 inline-flex items-center gap-2 rounded-full border border-neutral-200 px-2.5 py-0.5 font-mono text-[11px] uppercase tracking-[0.16em] text-neutral-500 dark:border-neutral-800 dark:text-neutral-400">
+                    <span className="rounded bg-neutral-100 px-1.5 py-0.5 text-[10px] font-semibold text-neutral-700 dark:bg-neutral-800 dark:text-neutral-200">
+                      password field
+                    </span>
+                    <span>Props</span>
+                  </div>
+
+                  <dl className="mt-3 divide-y divide-neutral-200 border border-neutral-200 text-[13px] dark:divide-neutral-800 dark:border-neutral-800">
+                    <div className="grid grid-cols-[minmax(0,170px)_minmax(0,1fr)] gap-x-4 px-3 py-2.5">
+                      <dt className="font-mono text-xs text-neutral-900 dark:text-neutral-100">
+                        validations
+                      </dt>
+                      <dd className="text-neutral-600 dark:text-neutral-300">
+                        Array of rules. Each rule has{" "}
+                        <code className="rounded bg-neutral-200 px-1 font-mono text-[11px] dark:bg-neutral-700 dark:text-neutral-200">
+                          text
+                        </code>{" "}
+                        (label) and{" "}
+                        <code className="rounded bg-neutral-200 px-1 font-mono text-[11px] dark:bg-neutral-700 dark:text-neutral-200">
+                          validate
+                        </code>{" "}
+                        (function that takes the current value and returns a
+                        boolean).
+                      </dd>
+                    </div>
+                    <div className="grid grid-cols-[minmax(0,170px)_minmax(0,1fr)] gap-x-4 px-3 py-2.5">
+                      <dt className="font-mono text-xs text-neutral-900 dark:text-neutral-100">
+                        label
+                      </dt>
+                      <dd className="text-neutral-600 dark:text-neutral-300">
+                        Optional label for the input (default{" "}
+                        <code className="rounded bg-neutral-200 px-1 font-mono text-[11px] dark:bg-neutral-700 dark:text-neutral-200">
+                          &quot;Password&quot;
+                        </code>
+                        ).
+                      </dd>
+                    </div>
+                    <div className="grid grid-cols-[minmax(0,170px)_minmax(0,1fr)] gap-x-4 px-3 py-2.5">
+                      <dt className="font-mono text-xs text-neutral-900 dark:text-neutral-100">
+                        placeholder
+                      </dt>
+                      <dd className="text-neutral-600 dark:text-neutral-300">
+                        Optional placeholder (default{" "}
+                        <code className="rounded bg-neutral-200 px-1 font-mono text-[11px] dark:bg-neutral-700 dark:text-neutral-200">
+                          &quot;Enter password&quot;
+                        </code>
+                        ).
+                      </dd>
+                    </div>
+                    <div className="grid grid-cols-[minmax(0,170px)_minmax(0,1fr)] gap-x-4 px-3 py-2.5">
+                      <dt className="font-mono text-xs text-neutral-900 dark:text-neutral-100">
+                        inputId
+                      </dt>
+                      <dd className="text-neutral-600 dark:text-neutral-300">
+                        Optional id for the input element (default{" "}
+                        <code className="rounded bg-neutral-200 px-1 font-mono text-[11px] dark:bg-neutral-700 dark:text-neutral-200">
+                          &quot;password&quot;
+                        </code>
+                        ).
+                      </dd>
+                    </div>
+                    <div className="grid grid-cols-[minmax(0,170px)_minmax(0,1fr)] gap-x-4 px-3 py-2.5">
+                      <dt className="font-mono text-xs text-neutral-900 dark:text-neutral-100">
+                        className
+                      </dt>
+                      <dd className="text-neutral-600 dark:text-neutral-300">
+                        Optional class name for the root container.
+                      </dd>
+                    </div>
+                  </dl>
+                </div>
               </AccordionContent>
             </AccordionItem>
 
@@ -305,100 +385,166 @@ export function MyPasswordForm() {
                   <CodeBlockInstall componentName="input-group-02" />
                 </div>
 
-                <h3
-                  className="mt-8 font-sans font-semibold text-base text-neutral-900 dark:text-white"
-                  id="input-label-preview"
-                >
+                <h3 className="sr-only" id="input-label-preview">
                   Preview
                 </h3>
 
-                <p className="mt-1 font-sans text-neutral-600 text-sm dark:text-neutral-400">
-                  Click the field to see the label float; type to keep it pinned
-                  above the input.
-                </p>
+                <div className="mt-8 rounded-sm border border-neutral-200 bg-neutral-50/80 p-4 sm:p-6 shadow-[0_18px_45px_rgba(15,23,42,0.06)] backdrop-blur-sm dark:border-neutral-800 dark:bg-neutral-900/70 dark:shadow-[0_18px_45px_rgba(15,23,42,0.7)]">
+                  <Tabs
+                    className="w-full"
+                    defaultValue="preview"
+                    aria-label="Input Label preview, code, and get the component"
+                  >
+                    <TabsList className="border-b border-neutral-200 pb-1 text-sm font-medium text-neutral-500 dark:border-neutral-800 dark:text-neutral-400">
+                      <TabsTrigger value="preview">Preview</TabsTrigger>
+                      <TabsTrigger value="code">Code</TabsTrigger>
+                      <TabsTrigger value="get-component">
+                        Build with{" "}
+                        <span className="inline-flex align-baseline">
+                          <svg
+                            aria-hidden
+                            className="ml-1 inline-block h-[0.95em] w-auto align-[0.1em]"
+                            fill="currentColor"
+                            viewBox="0 0 40 20"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path d="M23.3919 0H32.9188C36.7819 0 39.9136 3.13165 39.9136 6.99475V16.0805H36.0006V6.99475C36.0006 6.90167 35.9969 6.80925 35.9898 6.71766L26.4628 16.079C26.4949 16.08 26.5272 16.0805 26.5595 16.0805H36.0006V19.7762H26.5595C22.6964 19.7762 19.4788 16.6139 19.4788 12.7508V3.68923H23.3919V12.7508C23.3919 12.9253 23.4054 13.0977 23.4316 13.2668L33.1682 3.6995C33.0861 3.6927 33.003 3.68923 32.9188 3.68923H23.3919V0Z" />
+                            <path d="M13.7688 19.0956L0 3.68759H5.53933L13.6231 12.7337V3.68759H17.7535V17.5746C17.7535 19.6705 15.1654 20.6584 13.7688 19.0956Z" />
+                          </svg>
+                          <span className="sr-only">v0</span>
+                        </span>
+                      </TabsTrigger>
+                    </TabsList>
 
-                <div className="mt-6 flex flex-wrap gap-4 pl-2">
-                  <InputFloatingLabel />
-                </div>
+                    <TabsContent
+                      className="pt-4 space-y-4 focus-visible:outline-none"
+                      value="preview"
+                    >
+                      <p className="font-sans text-neutral-600 text-sm dark:text-neutral-400">
+                        Click the field to see the label float; type to keep it
+                        pinned above the input.
+                      </p>
 
-                <h3
-                  className="mt-8 font-sans font-semibold text-base text-neutral-900 dark:text-white"
-                  id="input-label-usage"
-                >
-                  Usage
-                </h3>
+                      <div className="mt-6 flex flex-wrap gap-4 pl-2">
+                        <InputFloatingLabel />
+                      </div>
+                    </TabsContent>
 
-                <p className="mt-1 font-sans text-neutral-600 text-sm dark:text-neutral-400">
-                  Import{" "}
-                  <code className="rounded bg-neutral-200 px-1 font-mono text-xs dark:bg-neutral-700 dark:text-neutral-200">
-                    InputFloatingLabel
-                  </code>{" "}
-                  and render it where you need a floating label input.
-                </p>
+                    <TabsContent
+                      className="pt-4 space-y-4 focus-visible:outline-none"
+                      value="code"
+                    >
+                      <h3
+                        className="sr-only"
+                        id="input-label-usage"
+                      >
+                        Usage
+                      </h3>
 
-                <div className="mt-4">
-                  <CodeBlock
-                    code={`import InputFloatingLabel from "@/components/ui/input-group-02";
+                      <p className="font-sans text-neutral-600 text-sm dark:text-neutral-400">
+                        Import{" "}
+                        <code className="rounded bg-neutral-200 px-1 font-mono text-xs dark:bg-neutral-700 dark:text-neutral-200">
+                          InputFloatingLabel
+                        </code>{" "}
+                        and render it where you need a floating label input.
+                      </p>
+
+                      <div className="mt-4">
+                        <CodeBlock
+                          code={`import InputFloatingLabel from "@/components/ui/input-group-02";
 
 export function Example() {
   return <InputFloatingLabel />;
 }
 `}
-                    language="tsx"
-                  />
+                          language="tsx"
+                        />
+                      </div>
+                    </TabsContent>
+
+                    <TabsContent
+                      className="pt-4 space-y-4 focus-visible:outline-none"
+                      value="get-component"
+                    >
+                      <h3
+                        className="sr-only"
+                        id="input-label-get-code"
+                      >
+                        Get the Component
+                      </h3>
+
+                      <p className="font-sans text-neutral-600 text-sm dark:text-neutral-400">
+                        Build with{" "}
+                        <span className="inline-flex align-baseline">
+                          <svg
+                            aria-hidden
+                            className="mr-0.5 inline-block h-[0.95em] w-auto align-[0.1em]"
+                            fill="currentColor"
+                            viewBox="0 0 40 20"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path d="M23.3919 0H32.9188C36.7819 0 39.9136 3.13165 39.9136 6.99475V16.0805H36.0006V6.99475C36.0006 6.90167 35.9969 6.80925 35.9898 6.71766L26.4628 16.079C26.4949 16.08 26.5272 16.0805 26.5595 16.0805H36.0006V19.7762H26.5595C22.6964 19.7762 19.4788 16.6139 19.4788 12.7508V3.68923H23.3919V12.7508C23.3919 12.9253 23.4054 13.0977 23.4316 13.2668L33.1682 3.6995C33.0861 3.6927 33.003 3.68923 32.9188 3.68923H23.3919V0Z" />
+                            <path d="M13.7688 19.0956L0 3.68759H5.53933L13.6231 12.7337V3.68759H17.7535V17.5746C17.7535 19.6705 15.1654 20.6584 13.7688 19.0956Z" />
+                          </svg>
+                          <span className="sr-only">v0</span>
+                        </span>{" "}
+                        to customize and generate variations.
+                      </p>
+
+                      <div className="mt-6">
+                        <ComponentActions name="input-group-02" />
+                      </div>
+                    </TabsContent>
+                  </Tabs>
                 </div>
 
-                <h3
-                  className="mt-8 font-sans font-semibold text-base text-neutral-900 dark:text-white"
-                  id="input-label-get-code"
-                >
-                  Get the Component
-                </h3>
-
-                <p className="mt-1 font-sans text-neutral-600 text-sm dark:text-neutral-400">
-                  Copy the input label component into your project or open it in
-                  v0 to customize and generate variations.
-                </p>
-
-                <div className="mt-6">
-                  <ComponentActions name="input-group-02" />
-                </div>
-
-                <h4
-                  className="mt-6 font-sans font-semibold text-neutral-900 text-sm dark:text-white"
-                  id="input-label-props"
-                >
+                <h4 className="sr-only" id="input-label-props">
                   Props
                 </h4>
 
-                <ul className="mt-2 list-inside list-disc font-sans text-neutral-600 text-sm dark:text-neutral-400">
-                  <li>
-                    <code className="rounded bg-neutral-200 px-1 font-mono text-xs dark:bg-neutral-700 dark:text-neutral-200">
-                      id
-                    </code>{" "}
-                    — generated via{" "}
-                    <code className="rounded bg-neutral-200 px-1 font-mono text-xs dark:bg-neutral-700 dark:text-neutral-200">
-                      useId
-                    </code>{" "}
-                    for label association.
-                  </li>
-                  <li>
-                    <code className="rounded bg-neutral-200 px-1 font-mono text-xs dark:bg-neutral-700 dark:text-neutral-200">
-                      placeholder
-                    </code>{" "}
-                    — used internally to trigger the floating label state.
-                  </li>
-                  <li>
-                    <code className="rounded bg-neutral-200 px-1 font-mono text-xs dark:bg-neutral-700 dark:text-neutral-200">
-                      className
-                    </code>{" "}
-                    — optional class name for the underlying{" "}
-                    <code className="rounded bg-neutral-200 px-1 font-mono text-xs dark:bg-neutral-700 dark:text-neutral-200">
-                      Input
-                    </code>
-                    .
-                  </li>
-                </ul>
+                <div className="mt-6 border-t border-neutral-200 pt-4 text-sm dark:border-neutral-800">
+                  <div className="mb-2 inline-flex items-center gap-2 rounded-full border border-neutral-200 px-2.5 py-0.5 font-mono text-[11px] uppercase tracking-[0.16em] text-neutral-500 dark:border-neutral-800 dark:text-neutral-400">
+                    <span className="rounded bg-neutral-100 px-1.5 py-0.5 text-[10px] font-semibold text-neutral-700 dark:bg-neutral-800 dark:text-neutral-200">
+                      input label
+                    </span>
+                    <span>Props</span>
+                  </div>
+
+                  <dl className="mt-3 divide-y divide-neutral-200 border border-neutral-200 text-[13px] dark:divide-neutral-800 dark:border-neutral-800">
+                    <div className="grid grid-cols-[minmax(0,150px)_minmax(0,1fr)] gap-x-4 px-3 py-2.5">
+                      <dt className="font-mono text-xs text-neutral-900 dark:text-neutral-100">
+                        id
+                      </dt>
+                      <dd className="text-neutral-600 dark:text-neutral-300">
+                        Generated via{" "}
+                        <code className="rounded bg-neutral-200 px-1 font-mono text-[11px] dark:bg-neutral-700 dark:text-neutral-200">
+                          useId
+                        </code>{" "}
+                        for label association.
+                      </dd>
+                    </div>
+                    <div className="grid grid-cols-[minmax(0,150px)_minmax(0,1fr)] gap-x-4 px-3 py-2.5">
+                      <dt className="font-mono text-xs text-neutral-900 dark:text-neutral-100">
+                        placeholder
+                      </dt>
+                      <dd className="text-neutral-600 dark:text-neutral-300">
+                        Used internally to trigger the floating label state.
+                      </dd>
+                    </div>
+                    <div className="grid grid-cols-[minmax(0,150px)_minmax(0,1fr)] gap-x-4 px-3 py-2.5">
+                      <dt className="font-mono text-xs text-neutral-900 dark:text-neutral-100">
+                        className
+                      </dt>
+                      <dd className="text-neutral-600 dark:text-neutral-300">
+                        Optional class name for the underlying{" "}
+                        <code className="rounded bg-neutral-200 px-1 font-mono text-[11px] dark:bg-neutral-700 dark:text-neutral-200">
+                          Input
+                        </code>
+                        .
+                      </dd>
+                    </div>
+                  </dl>
+                </div>
               </AccordionContent>
             </AccordionItem>
           </Accordion>
