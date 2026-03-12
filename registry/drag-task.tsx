@@ -74,7 +74,7 @@ export interface DragTaskProps {
 
 const priorityConfig = {
   high: "bg-destructive/10 text-destructive",
-  medium: "bg-primary/10 text-primary",
+  medium: "bg-destructive/10 text-destructive",
   low: "bg-accent/10 text-accent",
 };
 
