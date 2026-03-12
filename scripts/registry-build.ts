@@ -70,6 +70,12 @@ const REGISTRY_UI_META: Record<
       "A wrapper component that reveals any children under a cursor-following circular mask, with optional click-to-reveal. Uses GSAP for smooth pointer tracking.",
     dependencies: ["gsap"],
   },
+  "drag-task": {
+    title: "Drag Task",
+    description:
+      "A task list component that allows you to drag and drop tasks to reorder them. Uses Framer Motion for the drag and drop effect.",
+    dependencies: ["framer-motion"],
+  },
 };
 
 if (!fs.existsSync(registryComponents)) {

@@ -5142,6 +5142,21 @@
           "type": "registry:ui"
         }
       ]
+    },
+    {
+      "name": "drag-task",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": ["framer-motion"],
+      "devDependencies": [],
+      "title": "Drag Task",
+      "description": "A task list component that allows you to drag and drop tasks to reorder them. Uses Framer Motion for the drag and drop effect.",
+      "files": [
+        {
+          "path": "drag-task.tsx",
+          "type": "registry:ui"
+        }
+      ]
     }
   ]
 }

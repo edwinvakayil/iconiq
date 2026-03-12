@@ -43,6 +43,7 @@ const nav = [
       { label: "Smart Tooltip", href: "/components/smart-tooltip" },
       { label: "File Tree", href: "/components/file-tree" },
       { label: "Magic Pen", href: "/components/magic-pen" },
+      { label: "Drag Task List", href: "/components/drag-task" },
     ],
   },
 ];

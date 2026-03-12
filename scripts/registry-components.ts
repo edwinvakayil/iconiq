@@ -2392,4 +2392,10 @@ export const components: ComponentDefinition[] = [
     registryDependencies: [],
     dependencies: [],
   },
+  {
+    name: "drag-task",
+    path: path.join(__dirname, "../registry", "drag-task.tsx"),
+    registryDependencies: [],
+    dependencies: [],
+  },
 ];
