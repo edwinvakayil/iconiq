@@ -2386,4 +2386,10 @@ export const components: ComponentDefinition[] = [
     registryDependencies: ["button"],
     dependencies: [],
   },
+  {
+    name: "magic-pen",
+    path: path.join(__dirname, "../registry", "magic-pen.tsx"),
+    registryDependencies: [],
+    dependencies: [],
+  },
 ];

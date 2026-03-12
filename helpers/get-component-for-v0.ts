@@ -10,7 +10,7 @@ const COMPONENT_EXAMPLE: Record<string, string> = {
     "export default function Page() {\n" +
     "  return (\n" +
     '    <div className="flex min-h-svh items-center justify-center bg-neutral-50 px-4 py-8 dark:bg-neutral-950">\n' +
-    "      <SmartTooltip copyValue=\"user@example.com\">\n" +
+    '      <SmartTooltip copyValue="user@example.com">\n' +
     "        Copy email\n" +
     "      </SmartTooltip>\n" +
     "    </div>\n" +
@@ -74,6 +74,35 @@ const COMPONENT_EXAMPLE: Record<string, string> = {
     '      <AnimatedTooltip content="Hover me!">\n' +
     '        <button type="button">Hover me</button>\n' +
     "      </AnimatedTooltip>\n" +
+    "    </div>\n" +
+    "  )\n" +
+    "}\n",
+  "magic-pen":
+    `import { MagicPen } from "@/components/ui/magic-pen"\n\n` +
+    '"use client";\n\n' +
+    "export default function Page() {\n" +
+    "  return (\n" +
+    '    <div className="min-h-svh bg-background text-foreground">\n' +
+    '      <MagicPen clipRadiusPx={110} className="min-h-svh">\n' +
+    '        <div className="mx-auto max-w-3xl p-10 sm:p-14">\n' +
+    '          <h1 className="max-w-[24ch] text-balance text-4xl font-black tracking-tight sm:text-6xl">\n' +
+    "            Build bold interfaces with Iconiq.\n" +
+    "          </h1>\n" +
+    '          <p className="mt-5 max-w-[60ch] text-sm text-foreground/70">\n' +
+    "            Wrap your own content with MagicPen to get the cursor reveal effect.\n" +
+    "          </p>\n" +
+    "          <button\n" +
+    '            className="mt-8 rounded-full px-4 py-2 text-sm"\n' +
+    "            style={{\n" +
+    '              backgroundColor: "var(--magicpen-fg)",\n' +
+    '              color: "var(--magicpen-bg)",\n' +
+    "            }}\n" +
+    '            type="button"\n' +
+    "          >\n" +
+    "            Button adapts to theme\n" +
+    "          </button>\n" +
+    "        </div>\n" +
+    "      </MagicPen>\n" +
     "    </div>\n" +
     "  )\n" +
     "}\n",

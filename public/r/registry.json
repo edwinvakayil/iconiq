@@ -5127,6 +5127,21 @@
           "type": "registry:ui"
         }
       ]
+    },
+    {
+      "name": "magic-pen",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": ["gsap"],
+      "devDependencies": [],
+      "title": "Magic Pen",
+      "description": "A wrapper component that reveals any children under a cursor-following circular mask, with optional click-to-reveal. Uses GSAP for smooth pointer tracking.",
+      "files": [
+        {
+          "path": "magic-pen.tsx",
+          "type": "registry:ui"
+        }
+      ]
     }
   ]
 }

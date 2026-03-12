@@ -64,6 +64,12 @@ const REGISTRY_UI_META: Record<
       "A tooltip button that tracks hover and copy interactions to show contextual labels like hover prompts and copy status. Uses the Button component from shadcn.",
     dependencies: [],
   },
+  "magic-pen": {
+    title: "Magic Pen",
+    description:
+      "A wrapper component that reveals any children under a cursor-following circular mask, with optional click-to-reveal. Uses GSAP for smooth pointer tracking.",
+    dependencies: ["gsap"],
+  },
 };
 
 if (!fs.existsSync(registryComponents)) {
