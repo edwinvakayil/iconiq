@@ -106,6 +106,40 @@ const COMPONENT_EXAMPLE: Record<string, string> = {
     "    </div>\n" +
     "  )\n" +
     "}\n",
+  "drag-task":
+    '"use client";\n\n' +
+    'import { Flame, Target, Star } from "lucide-react"\n' +
+    'import { DragTask, type Task } from "@/components/ui/drag-task"\n\n' +
+    "const tasks: Task[] = [\n" +
+    "  {\n" +
+    '    id: "1",\n' +
+    '    text: "Ship the new landing page",\n' +
+    '    priority: "high",\n' +
+    "    done: false,\n" +
+    "    icon: <Flame className=\"h-4 w-4\" />, \n" +
+    "  },\n" +
+    "  {\n" +
+    '    id: "2",\n' +
+    '    text: "Review pull requests",\n' +
+    '    priority: "medium",\n' +
+    "    done: false,\n" +
+    "    icon: <Target className=\"h-4 w-4\" />, \n" +
+    "  },\n" +
+    "  {\n" +
+    '    id: "3",\n' +
+    '    text: "Update design tokens",\n' +
+    '    priority: "low",\n' +
+    "    done: true,\n" +
+    "    icon: <Star className=\"h-4 w-4\" />, \n" +
+    "  },\n" +
+    "]\n\n" +
+    "export default function Page() {\n" +
+    "  return (\n" +
+    '    <div className="flex min-h-svh items-center justify-center bg-neutral-50 px-4 py-8 dark:bg-neutral-950">\n' +
+    "      <DragTask initialTasks={tasks} title=\"Tasks\" />\n" +
+    "    </div>\n" +
+    "  )\n" +
+    "}\n",
   "accordion-animated":
     `import type { ForwardRefRenderFunction } from "react"\n` +
     `import { forwardRef, useImperativeHandle } from "react"\n` +
