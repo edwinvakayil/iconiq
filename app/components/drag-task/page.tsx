@@ -8,7 +8,7 @@ import { ComponentPager } from "@/components/component-pager";
 import { OnThisPage } from "@/components/on-this-page";
 import { SidebarNav } from "@/components/sidebar-nav";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { DragTask } from "@/components/ui/drag-task";
+import { DragTask } from "@/registry/drag-task";
 
 export default function DragTaskPage() {
   return (
