@@ -83,7 +83,7 @@ const COMPONENT_EXAMPLE: Record<string, string> = {
     "export default function Page() {\n" +
     "  return (\n" +
     '    <div className="min-h-svh bg-background text-foreground">\n' +
-    '      <MagicPen clipRadiusPx={110} className="min-h-svh">\n' +
+    '      <MagicPen clipRadiusPx={110} className="min-h-svh" toggleOnClick={false}>\n' +
     '        <div className="mx-auto max-w-3xl p-10 sm:p-14">\n' +
     '          <h1 className="max-w-[24ch] text-balance text-4xl font-black tracking-tight sm:text-6xl">\n' +
     "            Build bold interfaces with Iconiq.\n" +
