@@ -88,7 +88,7 @@ const COMPONENT_EXAMPLE: Record<string, string> = {
     '          <h1 className="max-w-[24ch] text-balance text-4xl font-black tracking-tight sm:text-6xl">\n' +
     "            Build bold interfaces with Iconiq.\n" +
     "          </h1>\n" +
-    '          <p className="mt-5 max-w-[60ch] text-sm text-foreground/70">\n' +
+    '          <p className="mt-5 max-w-[60ch] text-sm opacity-70">\n' +
     "            Wrap your own content with MagicPen to get the cursor reveal effect.\n" +
     "          </p>\n" +
     "          <button\n" +

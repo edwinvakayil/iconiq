@@ -82,7 +82,10 @@ export function MagicPen({
       }
     >
       <div
-        className={cn("relative min-h-[420px] p-8 sm:p-12", baseClassName)}
+        className={cn(
+          "relative min-h-[420px] p-8 text-(--magicpen-fg) sm:p-12",
+          baseClassName
+        )}
         style={
           {
             "--magicpen-bg": "var(--color-background)",
@@ -112,7 +115,7 @@ export function MagicPen({
         }
       >
         <div
-          className={cn("min-h-[420px]", overlayClassName)}
+          className={cn("min-h-[420px] text-(--magicpen-fg)", overlayClassName)}
           style={
             {
               "--magicpen-bg": "var(--color-foreground)",
