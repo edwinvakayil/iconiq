@@ -128,7 +128,7 @@ export function Header() {
 
       {/* Sidebar */}
       <div
-        className={`fixed top-0 right-0 z-[201] h-full w-[280px] transform border-neutral-200 border-l bg-background shadow-xl transition-transform duration-300 sm:hidden dark:border-neutral-800 ${
+        className={`fixed top-0 right-0 z-[201] flex h-full w-[280px] flex-col transform border-neutral-200 border-l bg-background shadow-xl transition-transform duration-300 sm:hidden dark:border-neutral-800 ${
           mobileMenuOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >
