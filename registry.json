@@ -5157,6 +5157,19 @@
           "type": "registry:ui"
         }
       ]
+    },
+    {
+      "name": "accessrequest",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": [],
+      "devDependencies": [],
+      "files": [
+        {
+          "path": "accessrequest.tsx",
+          "type": "registry:ui"
+        }
+      ]
     }
   ]
 }

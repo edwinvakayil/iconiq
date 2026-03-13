@@ -41,6 +41,7 @@ const nav = [
     items: [
       { label: "Input Groups", href: "/components/input-groups" },
       { label: "Smart Tooltip", href: "/components/smart-tooltip" },
+      { label: "Access Request Banner", href: "/components/accessrequest" },
       { label: "File Tree", href: "/components/file-tree" },
       { label: "Magic Pen", href: "/components/magic-pen" },
       { label: "Drag Task List", href: "/components/drag-task" },

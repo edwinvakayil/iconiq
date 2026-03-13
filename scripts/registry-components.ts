@@ -2398,4 +2398,10 @@ export const components: ComponentDefinition[] = [
     registryDependencies: [],
     dependencies: ["motion"],
   },
+  {
+    name: "accessrequest",
+    path: path.join(__dirname, "../registry", "accessrequest.tsx"),
+    registryDependencies: [],
+    dependencies: [],
+  },
 ];
