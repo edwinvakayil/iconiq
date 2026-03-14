@@ -3,6 +3,7 @@
 import { Star, X } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useState } from "react";
 
 import { LINK, SITE } from "@/constants";
@@ -39,11 +40,14 @@ const itemVariants = {
 };
 
 export function StarPromptCard() {
+  const pathname = usePathname();
   const [visible, setVisible] = useState(true);
 
   const handleClose = () => {
     setVisible(false);
   };
+
+  if (pathname === "/") return null;
 
   return (
     <AnimatePresence>
