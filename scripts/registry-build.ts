@@ -76,6 +76,12 @@ const REGISTRY_UI_META: Record<
       "Animated Bar, Line, and Area chart with variant dropdown. Uses Recharts and Framer Motion. Colors defined in component.",
     dependencies: ["framer-motion", "recharts"],
   },
+  select: {
+    title: "Select",
+    description:
+      "Animated dropdown select with spring open/close and optional label. Uses Framer Motion and Lucide icons.",
+    dependencies: ["framer-motion", "lucide-react"],
+  },
   slider: {
     title: "Slider",
     description:

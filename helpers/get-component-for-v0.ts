@@ -115,6 +115,24 @@ const COMPONENT_EXAMPLE: Record<string, string> = {
     "    </div>\n" +
     "  )\n" +
     "}\n",
+  select:
+    '"use client";\n\n' +
+    `import { AnimatedSelect } from "@/components/ui/select"\n` +
+    `import type { SelectOption } from "@/components/ui/select"\n\n` +
+    "const options: SelectOption[] = [\n" +
+    '  { value: "react", label: "React" },\n' +
+    '  { value: "vue", label: "Vue" },\n' +
+    '  { value: "svelte", label: "Svelte" },\n' +
+    "]\n\n" +
+    "export default function Page() {\n" +
+    "  return (\n" +
+    '    <div className="flex min-h-svh items-center justify-center p-8">\n' +
+    '      <div className="w-full max-w-xs">\n' +
+    '        <AnimatedSelect options={options} placeholder="Choose…" label="Framework" />\n' +
+    "      </div>\n" +
+    "    </div>\n" +
+    "  )\n" +
+    "}\n",
   chart:
     '"use client";\n\n' +
     `import { AnimatedChart } from "@/components/ui/chart"\n` +

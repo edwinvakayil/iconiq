@@ -41,6 +41,7 @@ export const SITE_SECTIONS = [
       { label: "Radio Group", href: "/components/radiogroup" },
       { label: "Alert", href: "/components/alert" },
       { label: "Chart", href: "/components/chart" },
+      { label: "Select", href: "/components/select" },
       { label: "Slider", href: "/components/slider" },
       { label: "Smart Tooltip", href: "/components/smart-tooltip" },
       { label: "File Tree", href: "/components/file-tree" },
@@ -93,6 +94,11 @@ export const PAGE_SECTIONS: Record<string, { label: string; id: string }[]> = {
     { label: "Props", id: "props" },
   ],
   "/components/chart": [
+    { label: "Preview", id: "preview" },
+    { label: "Usage", id: "usage" },
+    { label: "Props", id: "props" },
+  ],
+  "/components/select": [
     { label: "Preview", id: "preview" },
     { label: "Usage", id: "usage" },
     { label: "Props", id: "props" },

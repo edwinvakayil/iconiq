@@ -2423,6 +2423,12 @@ export const components: ComponentDefinition[] = [
     dependencies: ["framer-motion", "recharts"],
   },
   {
+    name: "select",
+    path: path.join(__dirname, "../registry", "select.tsx"),
+    registryDependencies: [],
+    dependencies: ["framer-motion", "lucide-react"],
+  },
+  {
     name: "accessrequest",
     path: path.join(__dirname, "../registry", "accessrequest.tsx"),
     registryDependencies: [],

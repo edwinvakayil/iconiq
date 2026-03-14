@@ -43,6 +43,7 @@ const nav = [
       { label: "Radio Group", href: "/components/radiogroup" },
       { label: "Alert", href: "/components/alert" },
       { label: "Chart", href: "/components/chart" },
+      { label: "Select", href: "/components/select" },
       { label: "Slider", href: "/components/slider" },
       { label: "Smart Tooltip", href: "/components/smart-tooltip" },
       { label: "Access Request Banner", href: "/components/accessrequest" },

@@ -5219,6 +5219,21 @@
       ]
     },
     {
+      "name": "select",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": ["framer-motion", "lucide-react"],
+      "devDependencies": [],
+      "title": "Select",
+      "description": "Animated dropdown select with spring open/close and optional label. Uses Framer Motion and Lucide icons.",
+      "files": [
+        {
+          "path": "select.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "accessrequest",
       "type": "registry:ui",
       "registryDependencies": [],
