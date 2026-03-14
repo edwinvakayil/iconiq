@@ -2417,6 +2417,12 @@ export const components: ComponentDefinition[] = [
     dependencies: ["motion"],
   },
   {
+    name: "chart",
+    path: path.join(__dirname, "../registry", "chart.tsx"),
+    registryDependencies: [],
+    dependencies: ["framer-motion", "recharts"],
+  },
+  {
     name: "accessrequest",
     path: path.join(__dirname, "../registry", "accessrequest.tsx"),
     registryDependencies: [],

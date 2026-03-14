@@ -115,6 +115,22 @@ const COMPONENT_EXAMPLE: Record<string, string> = {
     "    </div>\n" +
     "  )\n" +
     "}\n",
+  chart:
+    '"use client";\n\n' +
+    `import { AnimatedChart } from "@/components/ui/chart"\n` +
+    `import type { ChartDataItem } from "@/components/ui/chart"\n\n` +
+    "const items: ChartDataItem[] = [\n" +
+    '  { name: "Jan", value: 400, secondary: 240 },\n' +
+    '  { name: "Feb", value: 300, secondary: 139 },\n' +
+    '  { name: "Mar", value: 520, secondary: 380 },\n' +
+    "]\n\n" +
+    "export default function Page() {\n" +
+    "  return (\n" +
+    '    <div className="flex min-h-svh items-center justify-center p-8">\n' +
+    '      <AnimatedChart items={items} title="Analytics Overview" description="Monthly metrics" />\n' +
+    "    </div>\n" +
+    "  )\n" +
+    "}\n",
   slider:
     '"use client";\n\n' +
     `import { AnimatedSlider } from "@/components/ui/slider"\n\n` +

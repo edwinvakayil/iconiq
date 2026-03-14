@@ -5204,6 +5204,21 @@
       ]
     },
     {
+      "name": "chart",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": ["framer-motion", "recharts"],
+      "devDependencies": [],
+      "title": "Chart",
+      "description": "Animated Bar, Line, and Area chart with variant dropdown. Uses Recharts and Framer Motion. Colors defined in component.",
+      "files": [
+        {
+          "path": "chart.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "accessrequest",
       "type": "registry:ui",
       "registryDependencies": [],

@@ -70,6 +70,12 @@ const REGISTRY_UI_META: Record<
       "Dismissible system alerts with success, error, warning, and info variants. Uses Framer Motion for enter/exit and optional auto-dismiss bar.",
     dependencies: ["framer-motion", "lucide-react"],
   },
+  chart: {
+    title: "Chart",
+    description:
+      "Animated Bar, Line, and Area chart with variant dropdown. Uses Recharts and Framer Motion. Colors defined in component.",
+    dependencies: ["framer-motion", "recharts"],
+  },
   slider: {
     title: "Slider",
     description:
