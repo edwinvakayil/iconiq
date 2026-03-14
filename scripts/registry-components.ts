@@ -2381,6 +2381,12 @@ export const components: ComponentDefinition[] = [
     dependencies: ["framer-motion"],
   },
   {
+    name: "radiogroup",
+    path: path.join(__dirname, "../registry", "radiogroup.tsx"),
+    registryDependencies: [],
+    dependencies: ["@radix-ui/react-radio-group", "framer-motion"],
+  },
+  {
     name: "smart-tooltip",
     path: path.join(__dirname, "../registry", "smart-tooltip.tsx"),
     registryDependencies: ["button"],

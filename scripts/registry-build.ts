@@ -58,6 +58,12 @@ const REGISTRY_UI_META: Record<
       "Animated breadcrumb navigation with spring transitions, hover feedback, and shimmer on the current item. Uses Framer Motion.",
     dependencies: ["framer-motion"],
   },
+  radiogroup: {
+    title: "Radio Group",
+    description:
+      "An animated radio group with staggered entrance, hover/tap feedback, and shimmer on the selected option. Uses Radix UI and Framer Motion.",
+    dependencies: ["@radix-ui/react-radio-group", "framer-motion"],
+  },
   "smart-tooltip": {
     title: "Smart Tooltip",
     description:

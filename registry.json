@@ -5114,6 +5114,21 @@
       ]
     },
     {
+      "name": "radiogroup",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": ["@radix-ui/react-radio-group", "framer-motion"],
+      "devDependencies": [],
+      "title": "Radio Group",
+      "description": "An animated radio group with staggered entrance, hover/tap feedback, and shimmer on the selected option. Uses Radix UI and Framer Motion.",
+      "files": [
+        {
+          "path": "radiogroup.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "smart-tooltip",
       "type": "registry:ui",
       "registryDependencies": ["button"],

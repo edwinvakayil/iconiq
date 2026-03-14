@@ -81,6 +81,20 @@ const COMPONENT_EXAMPLE: Record<string, string> = {
     "    </div>\n" +
     "  )\n" +
     "}\n",
+  radiogroup:
+    '"use client";\n\n' +
+    `import { AnimatedRadioGroup, AnimatedRadioGroupItem } from "@/components/ui/radiogroup"\n\n` +
+    "export default function Page() {\n" +
+    "  return (\n" +
+    '    <div className="flex min-h-svh items-center justify-center p-8">\n' +
+    '      <AnimatedRadioGroup defaultValue="pro" name="plan" className="max-w-md">\n' +
+    '        <AnimatedRadioGroupItem label="Starter" value="starter" description="For individuals." />\n' +
+    '        <AnimatedRadioGroupItem label="Pro" value="pro" description="For growing teams." />\n' +
+    '        <AnimatedRadioGroupItem label="Enterprise" value="enterprise" description="For enterprises." />\n' +
+    "      </AnimatedRadioGroup>\n" +
+    "    </div>\n" +
+    "  )\n" +
+    "}\n",
   "magic-pen":
     `import { MagicPen } from "@/components/ui/magic-pen"\n\n` +
     '"use client";\n\n' +
