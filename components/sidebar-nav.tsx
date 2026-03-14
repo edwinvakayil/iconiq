@@ -60,7 +60,7 @@ export function SidebarNav() {
   return (
     <aside
       aria-label="Main navigation"
-      className="hidden w-90 shrink-0 lg:block"
+      className="hidden w-90 shrink-0 border-neutral-300 border-r lg:block dark:border-neutral-800"
     >
       <nav className="sticky top-[74px] max-h-[calc(100vh-74px)] overflow-y-auto py-6 pr-4 pl-0">
         <ul className="space-y-6">

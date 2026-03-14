@@ -61,7 +61,7 @@ export function Header() {
 
   return (
     <>
-      <header className="sticky top-0 z-[150] w-full border-neutral-200 border-b bg-background/90 backdrop-blur-sm dark:border-neutral-800">
+      <header className="sticky top-0 z-[150] w-full border-neutral-300 border-b bg-background/90 backdrop-blur-sm dark:border-neutral-800">
         <div className="mx-auto flex h-14 items-center justify-between px-4 sm:px-6 lg:h-[59px] lg:px-[80px]">
           {/* Logo */}
           <Link
@@ -128,7 +128,7 @@ export function Header() {
 
       {/* Sidebar */}
       <div
-        className={`fixed top-0 right-0 z-[201] flex h-full w-[280px] transform flex-col border-neutral-200 border-l bg-background shadow-xl transition-transform duration-300 sm:hidden dark:border-neutral-800 ${
+        className={`fixed top-0 right-0 z-[201] flex h-full w-[280px] transform flex-col border-neutral-300 border-l bg-background shadow-xl transition-transform duration-300 sm:hidden dark:border-neutral-800 ${
           mobileMenuOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >

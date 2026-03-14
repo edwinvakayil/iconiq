@@ -34,12 +34,26 @@
   --surface-border: #262626;
 }
 
-/* Cross grid background */
-.cross-grid {
-  background-image:
-    linear-gradient(var(--surface-border) 1px, transparent 1px),
-    linear-gradient(90deg, var(--surface-border) 1px, transparent 1px);
-  background-size: 60px 60px;
+/* Hero brush-stroke underline (highlighter style) */
+.hero-brush-underline {
+  position: relative;
+  display: inline-block;
+}
+.hero-brush-underline::after {
+  content: "";
+  position: absolute;
+  bottom: 0.1em;
+  left: -0.08em;
+  right: -0.08em;
+  height: 0.35em;
+  min-height: 8px;
+  background: #2ae46e;
+  border-radius: 99% 2% 97% 3% / 30% 60% 40% 70%;
+  transform: rotate(-0.5deg);
+  z-index: 0;
+}
+.dark .hero-brush-underline::after {
+  background: #16a34a;
 }
 
 /* Ensure main content text is visible in dark mode (overrides Tailwind text-neutral-* inside main) */

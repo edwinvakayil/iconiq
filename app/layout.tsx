@@ -8,7 +8,6 @@ import { Toaster } from "sonner";
 
 import { Analytics } from "@/components/analytics";
 import { ConditionalFooter } from "@/components/conditional-footer";
-import { GridBackground } from "@/components/grid-background";
 import { Header } from "@/components/header";
 import { StarPromptCard } from "@/components/star-prompt-card";
 import { PackageNameProvider } from "@/providers/package-name";
@@ -55,7 +54,6 @@ export default function RootLayout({
       <body className={`${geist.className} relative bg-background antialiased`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <div className="root">
-            <GridBackground />
             <PackageNameProvider>
               <Header />
               <div className="root-content">
