@@ -1,6 +1,5 @@
 import { CommentBlock } from "@/components/comment";
 import { OnThisPage } from "@/components/on-this-page";
-import { PointerHighlight } from "@/components/pointer-highlight";
 import { SidebarNav } from "@/components/sidebar-nav";
 import { LINK } from "@/constants";
 
@@ -30,10 +29,7 @@ const Home = () => {
               Iconiq
             </h1>
             <div className="mt-2 font-sans text-lg text-neutral-600 dark:text-neutral-400">
-              Motion-powered icons and components for your{" "}
-              <PointerHighlight containerClassName="relative z-10 inline-block align-baseline">
-                <span className="relative z-10 px-1 py-1">React projects</span>
-              </PointerHighlight>
+              Motion-powered icons and components for your React projects
             </div>
             <div className="mt-10 space-y-4 text-justify font-sans text-neutral-600 text-sm leading-relaxed">
               <p>
