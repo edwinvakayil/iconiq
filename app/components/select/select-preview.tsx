@@ -13,9 +13,6 @@ const OPTIONS: SelectOption[] = [
 export function SelectPreview() {
   return (
     <div className="flex flex-col gap-6">
-      <p className="font-sans text-neutral-600 text-sm dark:text-neutral-400">
-        Click to open the dropdown and pick an option.
-      </p>
       <div className="max-w-xs">
         <AnimatedSelect
           label="Framework"

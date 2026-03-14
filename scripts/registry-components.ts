@@ -2351,12 +2351,6 @@ export const components: ComponentDefinition[] = [
     dependencies: [],
   },
   {
-    name: "input-group-02",
-    path: path.join(__dirname, "../registry", "input-group-02.tsx"),
-    registryDependencies: ["input"],
-    dependencies: [],
-  },
-  {
     name: "file-tree",
     path: path.join(__dirname, "../registry", "file-tree.tsx"),
     registryDependencies: [],
@@ -2385,12 +2379,6 @@ export const components: ComponentDefinition[] = [
     path: path.join(__dirname, "../registry", "slider.tsx"),
     registryDependencies: [],
     dependencies: ["@radix-ui/react-slider", "framer-motion"],
-  },
-  {
-    name: "magic-pen",
-    path: path.join(__dirname, "../registry", "magic-pen.tsx"),
-    registryDependencies: [],
-    dependencies: [],
   },
   {
     name: "chart",

@@ -28,12 +28,6 @@ const REGISTRY_UI_META: Record<
       "Password field input with label, visibility toggle, and strength indicator. Uses Input, Label, and Button from shadcn.",
     dependencies: [],
   },
-  "input-group-02": {
-    title: "Input Group",
-    description:
-      "Floating label input that keeps the label visible while the user types. Uses Input from shadcn.",
-    dependencies: [],
-  },
   "file-tree": {
     title: "File Tree",
     description:
@@ -75,12 +69,6 @@ const REGISTRY_UI_META: Record<
     description:
       "An animated range slider with shimmer, hover/drag feedback, and optional floating value tooltip. Uses Radix UI and Framer Motion.",
     dependencies: ["@radix-ui/react-slider", "framer-motion"],
-  },
-  "magic-pen": {
-    title: "Magic Pen",
-    description:
-      "A wrapper component that reveals any children under a cursor-following circular mask, with optional click-to-reveal. Uses GSAP for smooth pointer tracking.",
-    dependencies: ["gsap"],
   },
 };
 

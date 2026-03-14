@@ -5039,21 +5039,6 @@
       ]
     },
     {
-      "name": "input-group-02",
-      "type": "registry:ui",
-      "registryDependencies": ["input"],
-      "dependencies": [],
-      "devDependencies": [],
-      "title": "Input Group",
-      "description": "Floating label input that keeps the label visible while the user types. Uses Input from shadcn.",
-      "files": [
-        {
-          "path": "input-group-02.tsx",
-          "type": "registry:ui"
-        }
-      ]
-    },
-    {
       "name": "file-tree",
       "type": "registry:ui",
       "registryDependencies": [],
@@ -5124,21 +5109,6 @@
       "files": [
         {
           "path": "slider.tsx",
-          "type": "registry:ui"
-        }
-      ]
-    },
-    {
-      "name": "magic-pen",
-      "type": "registry:ui",
-      "registryDependencies": [],
-      "dependencies": ["gsap"],
-      "devDependencies": [],
-      "title": "Magic Pen",
-      "description": "A wrapper component that reveals any children under a cursor-following circular mask, with optional click-to-reveal. Uses GSAP for smooth pointer tracking.",
-      "files": [
-        {
-          "path": "magic-pen.tsx",
           "type": "registry:ui"
         }
       ]
