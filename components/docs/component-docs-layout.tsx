@@ -42,13 +42,13 @@ export function ComponentDocsLayout({
     <div className="flex min-h-[calc(100vh-0px)] w-full min-w-0">
       <SidebarNav />
 
-      <div className="flex min-w-0 flex-1 overflow-x-hidden">
-        <motion.main
-          animate={{ opacity: 1 }}
-          className="mx-auto w-full min-w-0 max-w-[760px] px-4 py-8 sm:px-6 sm:py-10 md:px-8 md:py-12"
-          initial={{ opacity: 0 }}
-          transition={{ duration: 0.4 }}
-        >
+      <motion.main
+        animate={{ opacity: 1 }}
+        className="min-w-0 flex-1 overflow-x-hidden"
+        initial={{ opacity: 0 }}
+        transition={{ duration: 0.4 }}
+      >
+        <div className="mx-auto w-full min-w-0 max-w-[760px] px-4 py-8 sm:px-6 sm:py-10 md:px-8 md:py-12">
           {/* Breadcrumb + pager */}
           <motion.div
             animate={{ opacity: 1, y: 0 }}
@@ -130,10 +130,10 @@ export function ComponentDocsLayout({
             </h2>
             <PropsTable componentTag={propsTag} props={propsRows} />
           </div>
-        </motion.main>
+        </div>
+      </motion.main>
 
-        <OnThisPage />
-      </div>
+      <OnThisPage />
     </div>
   );
 }

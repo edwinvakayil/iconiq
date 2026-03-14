@@ -107,14 +107,6 @@ function renderComponentsNav(params: {
             Password field
           </a>
         </li>
-        <li>
-          <a
-            className={parentSectionLinkClass(isInputLabelActive)}
-            href="#input-label"
-          >
-            Input Label
-          </a>
-        </li>
       </ul>
     );
   }
