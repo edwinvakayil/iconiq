@@ -99,10 +99,11 @@ export function HomeHero() {
               Get started
               <ArrowRight className="size-5" />
             </Link>
-            <div className="flex flex-col items-center gap-2 text-neutral-900 sm:flex-row sm:items-center dark:text-white">
-              <span className="font-sans text-neutral-500 text-sm dark:text-neutral-400">
+            <div className="flex flex-col items-start gap-2 md:flex-row md:items-center text-neutral-900 dark:text-white">
+              <span className="whitespace-nowrap font-sans text-neutral-500 text-sm dark:text-neutral-400">
                 Built with
               </span>
+              <div className="flex flex-wrap items-center justify-start gap-1.5 md:justify-center">
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger
@@ -266,6 +267,7 @@ export function HomeHero() {
                   </TooltipContent>
                 </Tooltip>
               </TooltipProvider>
+              </div>
             </div>
           </motion.div>
         </div>
