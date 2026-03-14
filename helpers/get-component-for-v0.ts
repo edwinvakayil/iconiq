@@ -52,31 +52,6 @@ const COMPONENT_EXAMPLE: Record<string, string> = {
     "    </div>\n" +
     "  )\n" +
     "}\n",
-  highlighter:
-    `import { Highlighter } from "@/components/ui/highlighter"\n\n` +
-    "export default function Page() {\n" +
-    "  return (\n" +
-    '    <div className="flex min-h-svh items-center justify-center p-8">\n' +
-    '      <p className="font-sans text-lg text-neutral-600">\n' +
-    '        Motion-powered icons for your{" "}\n' +
-    '        <Highlighter containerClassName="inline-block align-baseline">\n' +
-    '          <span className="relative z-10">React projects</span>\n' +
-    "        </Highlighter>\n" +
-    "      </p>\n" +
-    "    </div>\n" +
-    "  )\n" +
-    "}\n",
-  "animated-tooltip":
-    `import { AnimatedTooltip } from "@/components/ui/animated-tooltip"\n\n` +
-    "export default function Page() {\n" +
-    "  return (\n" +
-    '    <div className="flex min-h-svh items-center justify-center">\n' +
-    '      <AnimatedTooltip content="Hover me!">\n' +
-    '        <button type="button">Hover me</button>\n' +
-    "      </AnimatedTooltip>\n" +
-    "    </div>\n" +
-    "  )\n" +
-    "}\n",
   "magic-pen":
     `import { MagicPen } from "@/components/ui/magic-pen"\n\n` +
     '"use client";\n\n' +

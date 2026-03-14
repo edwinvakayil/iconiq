@@ -2309,18 +2309,6 @@ export const components: ComponentDefinition[] = [
     dependencies: ["motion"],
   },
   {
-    name: "animated-tooltip",
-    path: path.join(__dirname, "../registry", "animated-tooltip.tsx"),
-    registryDependencies: [],
-    dependencies: [],
-  },
-  {
-    name: "highlighter",
-    path: path.join(__dirname, "../registry", "highlighter.tsx"),
-    registryDependencies: [],
-    dependencies: [],
-  },
-  {
     name: "hover-flip-card",
     path: path.join(__dirname, "../registry", "hover-flip-card.tsx"),
     registryDependencies: [],

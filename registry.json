@@ -4944,36 +4944,6 @@
       ]
     },
     {
-      "name": "animated-tooltip",
-      "type": "registry:ui",
-      "registryDependencies": [],
-      "dependencies": ["motion"],
-      "devDependencies": [],
-      "title": "Animated Tooltip",
-      "description": "A tooltip that tilts and shifts with mouse movement, with spring enter/exit animations. Uses Motion for parallax-style rotation and translation.",
-      "files": [
-        {
-          "path": "animated-tooltip.tsx",
-          "type": "registry:ui"
-        }
-      ]
-    },
-    {
-      "name": "highlighter",
-      "type": "registry:ui",
-      "registryDependencies": [],
-      "dependencies": ["motion"],
-      "devDependencies": [],
-      "title": "Highlighter",
-      "description": "A highlighter component that highlights text with a subtle animation. Uses Motion for the highlight effect.",
-      "files": [
-        {
-          "path": "highlighter.tsx",
-          "type": "registry:ui"
-        }
-      ]
-    },
-    {
       "name": "hover-flip-card",
       "type": "registry:ui",
       "registryDependencies": [],

@@ -22,11 +22,6 @@ const nav = [
     title: "Animated Components",
     items: [
       {
-        label: "Animated Tooltip",
-        href: "/animated-components/animated-tooltip",
-      },
-      { label: "Highlighter", href: "/animated-components/highlighter" },
-      {
         label: "Accordion (Animated)",
         href: "/animated-components/accordion-animated",
       },

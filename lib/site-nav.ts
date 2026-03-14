@@ -20,11 +20,6 @@ export const SITE_SECTIONS = [
     label: "Animated Components",
     children: [
       {
-        label: "Animated Tooltip",
-        href: "/animated-components/animated-tooltip",
-      },
-      { label: "Highlighter", href: "/animated-components/highlighter" },
-      {
         label: "Accordion (Animated)",
         href: "/animated-components/accordion-animated",
       },
@@ -48,16 +43,6 @@ export const SITE_SECTIONS = [
 
 /** Section headings (h2/h3) per page for "On this page" anchor links. */
 export const PAGE_SECTIONS: Record<string, { label: string; id: string }[]> = {
-  "/animated-components/animated-tooltip": [
-    { label: "Preview", id: "preview" },
-    { label: "Usage", id: "usage" },
-    { label: "Props", id: "props" },
-  ],
-  "/animated-components/highlighter": [
-    { label: "Preview", id: "preview" },
-    { label: "Usage", id: "usage" },
-    { label: "Props", id: "props" },
-  ],
   "/animated-components/accordion-animated": [
     { label: "Preview", id: "preview" },
     { label: "Usage", id: "usage" },
