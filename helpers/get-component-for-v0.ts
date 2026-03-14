@@ -53,6 +53,7 @@ const COMPONENT_EXAMPLE: Record<string, string> = {
     "  )\n" +
     "}\n",
   "animated-badges":
+    '"use client";\n\n' +
     `import { StatusBadge } from "@/components/ui/animated-badges"\n\n` +
     "export default function Page() {\n" +
     "  return (\n" +
