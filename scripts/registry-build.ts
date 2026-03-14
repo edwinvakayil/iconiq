@@ -64,6 +64,12 @@ const REGISTRY_UI_META: Record<
       "An animated radio group with staggered entrance, hover/tap feedback, and shimmer on the selected option. Uses Radix UI and Framer Motion.",
     dependencies: ["@radix-ui/react-radio-group", "framer-motion"],
   },
+  slider: {
+    title: "Slider",
+    description:
+      "An animated range slider with shimmer, hover/drag feedback, and optional floating value tooltip. Uses Radix UI and Framer Motion.",
+    dependencies: ["@radix-ui/react-slider", "framer-motion"],
+  },
   "smart-tooltip": {
     title: "Smart Tooltip",
     description:

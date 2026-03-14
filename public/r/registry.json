@@ -5129,6 +5129,21 @@
       ]
     },
     {
+      "name": "slider",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": ["@radix-ui/react-slider", "framer-motion"],
+      "devDependencies": [],
+      "title": "Slider",
+      "description": "An animated range slider with shimmer, hover/drag feedback, and optional floating value tooltip. Uses Radix UI and Framer Motion.",
+      "files": [
+        {
+          "path": "slider.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "smart-tooltip",
       "type": "registry:ui",
       "registryDependencies": ["button"],

@@ -95,6 +95,18 @@ const COMPONENT_EXAMPLE: Record<string, string> = {
     "    </div>\n" +
     "  )\n" +
     "}\n",
+  slider:
+    '"use client";\n\n' +
+    `import { AnimatedSlider } from "@/components/ui/slider"\n\n` +
+    "export default function Page() {\n" +
+    "  return (\n" +
+    '    <div className="flex min-h-svh items-center justify-center p-8">\n' +
+    '      <div className="w-full max-w-md">\n' +
+    '        <AnimatedSlider defaultValue={[50]} unit="%" />\n' +
+    "      </div>\n" +
+    "    </div>\n" +
+    "  )\n" +
+    "}\n",
   "magic-pen":
     `import { MagicPen } from "@/components/ui/magic-pen"\n\n` +
     '"use client";\n\n' +
