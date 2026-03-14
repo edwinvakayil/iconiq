@@ -39,6 +39,7 @@ const nav = [
     title: "Components",
     items: [
       { label: "Input Groups", href: "/components/input-groups" },
+      { label: "Breadcrumb", href: "/components/breadcrumbs" },
       { label: "Smart Tooltip", href: "/components/smart-tooltip" },
       { label: "Access Request Banner", href: "/components/accessrequest" },
       { label: "File Tree", href: "/components/file-tree" },

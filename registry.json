@@ -5099,6 +5099,21 @@
       ]
     },
     {
+      "name": "breadcrumbs",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": ["framer-motion"],
+      "devDependencies": [],
+      "title": "Breadcrumb",
+      "description": "Animated breadcrumb navigation with spring transitions, hover feedback, and shimmer on the current item. Uses Framer Motion.",
+      "files": [
+        {
+          "path": "breadcrumbs.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "smart-tooltip",
       "type": "registry:ui",
       "registryDependencies": ["button"],

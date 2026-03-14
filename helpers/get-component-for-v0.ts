@@ -64,6 +64,23 @@ const COMPONENT_EXAMPLE: Record<string, string> = {
     "    </div>\n" +
     "  )\n" +
     "}\n",
+  breadcrumbs:
+    '"use client";\n\n' +
+    `import { AnimatedBreadcrumbs, type BreadcrumbItem } from "@/components/ui/breadcrumbs"\n` +
+    `import { Home } from "lucide-react"\n\n` +
+    "const items: BreadcrumbItem[] = [\n" +
+    '  { label: "Home", href: "/", icon: <Home className="h-3.5 w-3.5" /> },\n' +
+    '  { label: "Docs", href: "/" },\n' +
+    '  { label: "Components", href: "/components" },\n' +
+    '  { label: "Breadcrumb" },\n' +
+    "]\n\n" +
+    "export default function Page() {\n" +
+    "  return (\n" +
+    '    <div className="flex min-h-svh items-center justify-center p-8">\n' +
+    "      <AnimatedBreadcrumbs items={items} />\n" +
+    "    </div>\n" +
+    "  )\n" +
+    "}\n",
   "magic-pen":
     `import { MagicPen } from "@/components/ui/magic-pen"\n\n` +
     '"use client";\n\n' +

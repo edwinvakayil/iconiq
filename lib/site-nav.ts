@@ -37,6 +37,7 @@ export const SITE_SECTIONS = [
     label: "Components",
     children: [
       { label: "Input Groups", href: "/components/input-groups" },
+      { label: "Breadcrumb", href: "/components/breadcrumbs" },
       { label: "Smart Tooltip", href: "/components/smart-tooltip" },
       { label: "File Tree", href: "/components/file-tree" },
       { label: "Magic Pen", href: "/components/magic-pen" },
@@ -71,6 +72,11 @@ export const PAGE_SECTIONS: Record<string, { label: string; id: string }[]> = {
     { label: "Preview", id: "input-label-preview" },
     { label: "Usage", id: "input-label-usage" },
     { label: "Props", id: "input-label-props" },
+  ],
+  "/components/breadcrumbs": [
+    { label: "Preview", id: "preview" },
+    { label: "Usage", id: "usage" },
+    { label: "Props", id: "props" },
   ],
   "/components/smart-tooltip": [
     { label: "Preview", id: "preview" },

@@ -52,6 +52,12 @@ const REGISTRY_UI_META: Record<
       "A file tree component that displays a tree of files and folders. Uses Accordion from shadcn.",
     dependencies: ["@radix-ui/react-accordion"],
   },
+  breadcrumbs: {
+    title: "Breadcrumb",
+    description:
+      "Animated breadcrumb navigation with spring transitions, hover feedback, and shimmer on the current item. Uses Framer Motion.",
+    dependencies: ["framer-motion"],
+  },
   "smart-tooltip": {
     title: "Smart Tooltip",
     description:
