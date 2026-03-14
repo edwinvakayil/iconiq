@@ -16,6 +16,12 @@ const REGISTRY_UI_META: Record<
   string,
   { title: string; description: string; dependencies?: string[] }
 > = {
+  "animated-badges": {
+    title: "Badges (Animated)",
+    description:
+      "Status badges with shimmer, pulsing dot, and spring animations. Uses Framer Motion for enter/exit and hover effects.",
+    dependencies: ["framer-motion"],
+  },
   "hover-flip-card": {
     title: "Hover Flip Card",
     description:

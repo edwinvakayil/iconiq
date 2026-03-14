@@ -2309,6 +2309,12 @@ export const components: ComponentDefinition[] = [
     dependencies: ["motion"],
   },
   {
+    name: "animated-badges",
+    path: path.join(__dirname, "../registry", "animated-badges.tsx"),
+    registryDependencies: [],
+    dependencies: ["framer-motion"],
+  },
+  {
     name: "hover-flip-card",
     path: path.join(__dirname, "../registry", "hover-flip-card.tsx"),
     registryDependencies: [],

@@ -24,6 +24,10 @@ export const SITE_SECTIONS = [
         href: "/animated-components/accordion-animated",
       },
       {
+        label: "Badges (Animated)",
+        href: "/animated-components/animated-badges",
+      },
+      {
         label: "Hover Flip Card",
         href: "/animated-components/hover-flip-card",
       },
@@ -44,6 +48,11 @@ export const SITE_SECTIONS = [
 /** Section headings (h2/h3) per page for "On this page" anchor links. */
 export const PAGE_SECTIONS: Record<string, { label: string; id: string }[]> = {
   "/animated-components/accordion-animated": [
+    { label: "Preview", id: "preview" },
+    { label: "Usage", id: "usage" },
+    { label: "Props", id: "props" },
+  ],
+  "/animated-components/animated-badges": [
     { label: "Preview", id: "preview" },
     { label: "Usage", id: "usage" },
     { label: "Props", id: "props" },

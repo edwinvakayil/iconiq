@@ -52,6 +52,17 @@ const COMPONENT_EXAMPLE: Record<string, string> = {
     "    </div>\n" +
     "  )\n" +
     "}\n",
+  "animated-badges":
+    `import { StatusBadge } from "@/components/ui/animated-badges"\n\n` +
+    "export default function Page() {\n" +
+    "  return (\n" +
+    '    <div className="flex min-h-svh items-center justify-center gap-3 p-8">\n' +
+    '      <StatusBadge label="Live" variant="live" />\n' +
+    '      <StatusBadge label="Pending" variant="pending" />\n' +
+    '      <StatusBadge label="Critical" variant="critical" />\n' +
+    "    </div>\n" +
+    "  )\n" +
+    "}\n",
   "magic-pen":
     `import { MagicPen } from "@/components/ui/magic-pen"\n\n` +
     '"use client";\n\n' +

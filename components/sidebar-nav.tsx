@@ -26,6 +26,10 @@ const nav = [
         href: "/animated-components/accordion-animated",
       },
       {
+        label: "Badges (Animated)",
+        href: "/animated-components/animated-badges",
+      },
+      {
         label: "Hover Flip Card",
         href: "/animated-components/hover-flip-card",
       },

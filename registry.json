@@ -4944,6 +4944,21 @@
       ]
     },
     {
+      "name": "animated-badges",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": ["framer-motion"],
+      "devDependencies": [],
+      "title": "Badges (Animated)",
+      "description": "Status badges with shimmer, pulsing dot, and spring animations. Uses Framer Motion for enter/exit and hover effects.",
+      "files": [
+        {
+          "path": "animated-badges.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "hover-flip-card",
       "type": "registry:ui",
       "registryDependencies": [],
