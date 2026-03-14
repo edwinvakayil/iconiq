@@ -19,25 +19,9 @@ const nav = [
     ],
   },
   {
-    title: "Animated Components",
-    items: [
-      {
-        label: "Accordion (Animated)",
-        href: "/animated-components/accordion-animated",
-      },
-      {
-        label: "Badges (Animated)",
-        href: "/animated-components/animated-badges",
-      },
-      {
-        label: "Hover Flip Card",
-        href: "/animated-components/hover-flip-card",
-      },
-    ],
-  },
-  {
     title: "Components",
     items: [
+      { label: "Badges", href: "/components/badges" },
       { label: "Input Groups", href: "/components/input-groups" },
       { label: "Breadcrumb", href: "/components/breadcrumbs" },
       { label: "Radio Group", href: "/components/radiogroup" },

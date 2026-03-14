@@ -295,9 +295,7 @@ export function OnThisPage() {
   const isComponentsPage =
     pathname.startsWith("/components/") && !isInputGroups;
 
-  const animatedSection = SITE_SECTIONS.find(
-    (section) => section.label === "Animated Components"
-  );
+  const animatedSection: (typeof SITE_SECTIONS)[number] | undefined = undefined;
   const componentsSection = SITE_SECTIONS.find(
     (section) => section.label === "Components"
   );

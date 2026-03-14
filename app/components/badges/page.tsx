@@ -1,5 +1,4 @@
 import { ChevronRight } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
 
 import { CodeBlock } from "@/components/code-block";
@@ -9,41 +8,9 @@ import { ComponentPager } from "@/components/component-pager";
 import { OnThisPage } from "@/components/on-this-page";
 import { SidebarNav } from "@/components/sidebar-nav";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { HoverFlipCard } from "@/registry/hover-flip-card";
+import { StatusBadge } from "@/registry/animated-badges";
 
-interface CardData {
-  id: string;
-  front: {
-    imageSrc: string;
-    imageAlt: string;
-    title: string;
-    description: string;
-  };
-  back: {
-    description: string;
-    buttonText: string;
-  };
-}
-
-const cardsData: CardData[] = [
-  {
-    id: "Family Guy",
-    front: {
-      imageSrc: "/assets/1771218712332-i.avif",
-      imageAlt: "Family Guy",
-      title: "Family Guy",
-      description:
-        "Family Guy is an American animated sitcom created by Seth MacFarlane for the Fox Broadcasting Company.",
-    },
-    back: {
-      description:
-        "Family Guy is an American animated sitcom created by Seth MacFarlane for the Fox Broadcasting Company.",
-      buttonText: "Learn More",
-    },
-  },
-];
-
-export default function HoverFlipCardPage() {
+export default function BadgesPage() {
   return (
     <div className="flex min-h-[calc(100vh-0px)] w-full min-w-0">
       <SidebarNav />
@@ -72,7 +39,7 @@ export default function HoverFlipCardPage() {
                 aria-current="page"
                 className="w-[90px] truncate text-neutral-900 sm:w-auto"
               >
-                Animated Components
+                Components
               </li>
 
               <li aria-hidden="true">
@@ -83,35 +50,35 @@ export default function HoverFlipCardPage() {
                 aria-current="page"
                 className="w-[90px] truncate text-neutral-900 sm:w-auto"
               >
-                Hover Flip Card
+                Badges
               </li>
             </ol>
             <ComponentPager />
           </nav>
 
           <h1 className="font-bold font-sans text-3xl text-neutral-900 tracking-tight sm:text-4xl dark:text-white">
-            Hover Flip Card
+            Badges
           </h1>
 
           <p className="mt-2 font-sans text-lg text-neutral-600 leading-relaxed dark:text-neutral-300">
-            A 3D flipping card that reveals additional content on hover. Built
-            with CSS transforms and Motion-friendly structure for smooth,
-            interactive effects.
+            Status badges with a shimmer sweep, pulsing dot, and spring
+            enter/exit animations. Built with Framer Motion for hover and
+            visibility transitions.
           </p>
 
           <p className="mt-6 font-sans text-neutral-600 text-sm leading-relaxed dark:text-neutral-300">
-            Use it to showcase features, profiles, or product details on the
-            front, with extended descriptions or actions on the back. The card
-            exposes props for height, width, and custom front/back content.
+            Use them for live indicators, pending states, or critical alerts.
+            The component supports three variants (live, pending, critical) and
+            optional visibility for list animations.
           </p>
 
           <p className="mt-6 font-sans text-neutral-600 text-sm leading-relaxed dark:text-neutral-300">
-            Install using the shadcn CLI to add the flipping card component to
+            Install using the shadcn CLI to add the animated badges component to
             your application.
           </p>
 
           <div className="mt-10">
-            <CodeBlockInstall componentName="hover-flip-card" />
+            <CodeBlockInstall componentName="animated-badges" />
           </div>
 
           <h2 className="sr-only" id="preview">
@@ -120,7 +87,7 @@ export default function HoverFlipCardPage() {
 
           <div className="mt-10 rounded-sm border border-neutral-200 bg-neutral-50/80 p-4 shadow-[0_18px_45px_rgba(15,23,42,0.06)] backdrop-blur-sm sm:p-6 dark:border-neutral-800 dark:bg-neutral-900/70 dark:shadow-[0_18px_45px_rgba(15,23,42,0.7)]">
             <Tabs
-              aria-label="Hover Flip Card preview, code, and get the component"
+              aria-label="Badges preview, code, and get the component"
               className="w-full"
               defaultValue="preview"
             >
@@ -150,12 +117,14 @@ export default function HoverFlipCardPage() {
                 value="preview"
               >
                 <p className="font-sans text-neutral-600 text-sm dark:text-neutral-400">
-                  Hover over each card to flip between the front illustration
-                  and the detailed back description.
+                  Hover over each badge to see the scale and shadow effect. All
+                  three variants use a shimmer and pulsing dot animation.
                 </p>
 
-                <div className="mt-6 flex flex-wrap gap-4">
-                  <FlippingCardDemo />
+                <div className="mt-6 flex flex-wrap items-center gap-3">
+                  <StatusBadge label="Live" variant="live" />
+                  <StatusBadge label="Pending" variant="pending" />
+                  <StatusBadge label="Critical" variant="critical" />
                 </div>
               </TabsContent>
 
@@ -170,107 +139,40 @@ export default function HoverFlipCardPage() {
                 <p className="font-sans text-neutral-600 text-sm dark:text-neutral-400">
                   Import from{" "}
                   <code className="rounded bg-neutral-200 px-1 font-mono text-xs dark:bg-neutral-700 dark:text-neutral-200">
-                    @/components/ui/flipping-card
+                    @/components/ui/animated-badges
                   </code>{" "}
-                  and pass in custom front and back content. You can control the
-                  dimensions via the{" "}
+                  and use the{" "}
                   <code className="rounded bg-neutral-200 px-1 font-mono text-xs dark:bg-neutral-700 dark:text-neutral-200">
-                    width
+                    StatusBadge
                   </code>{" "}
-                  and{" "}
+                  component with{" "}
                   <code className="rounded bg-neutral-200 px-1 font-mono text-xs dark:bg-neutral-700 dark:text-neutral-200">
-                    height
+                    label
+                  </code>
+                  ,{" "}
+                  <code className="rounded bg-neutral-200 px-1 font-mono text-xs dark:bg-neutral-700 dark:text-neutral-200">
+                    variant
+                  </code>
+                  , and optional{" "}
+                  <code className="rounded bg-neutral-200 px-1 font-mono text-xs dark:bg-neutral-700 dark:text-neutral-200">
+                    visible
                   </code>{" "}
-                  props.
+                  for enter/exit animations.
                 </p>
 
                 <div className="mt-4">
                   <CodeBlock
-                    code={`import { HoverFlipCard } from "@/components/ui/hover-flip-card;"
+                    code={`import { StatusBadge } from "@/components/ui/animated-badges";
 
-interface CardData {
-  id: string
-  front: {
-    imageSrc: string
-    imageAlt: string
-    title: string
-    description: string
-  }
-  back: {
-    description: string
-    buttonText: string
-  }
-}
-
-const cardsData: CardData[] = [
-  {
-    id: "Family Guy",
-    front: {
-      imageSrc: "/assets/1771218712332-i.avif",
-      imageAlt: "Family Guy",
-      title: "Family Guy",
-      description:
-        'Family Guy is an American animated sitcom created by Seth MacFarlane for the Fox Broadcasting Company.',
-    },
-    back: {
-      description:
-        'Family Guy is an American animated sitcom created by Seth MacFarlane for the Fox Broadcasting Company.',
-      buttonText: "Learn More",
-    },
-  },
-]
-
-export function FlippingCardDemo() {
+export function BadgeDemo() {
   return (
-    <div className="flex gap-4">
-      <HoverFlipCard
-        width={300}
-        frontContent={<GenericCardFront data={cardsData[0].front} />}
-        backContent={<GenericCardBack data={cardsData[0].back} />}
-      />
+    <div className="flex flex-wrap items-center gap-3">
+      <StatusBadge label="Live" variant="live" />
+      <StatusBadge label="Pending" variant="pending" />
+      <StatusBadge label="Critical" variant="critical" />
     </div>
-  )
-}
-
-interface GenericCardFrontProps {
-  data: CardData["front"]
-}
-
-function GenericCardFront({ data }: GenericCardFrontProps) {
-  return (
-    <div className="flex h-full w-full flex-col p-4">
-      <img
-        src={data.imageSrc}
-        alt={data.imageAlt}
-        className="h-auto min-h-0 w-full grow rounded-md object-cover"
-      />
-      <div className="grow p-2">
-        <h3 className="mt-2 text-base font-semibold">{data.title}</h3>
-        <p className="mt-2 text-[13.5px] text-neutral-600">
-          {data.description}
-        </p>
-      </div>
-    </div>
-  )
-}
-
-interface GenericCardBackProps {
-  data: CardData["back"]
-}
-
-function GenericCardBack({ data }: GenericCardBackProps) {
-  return (
-    <div className="flex h-full w-full flex-col items-center justify-center p-6">
-      <p className="mt-2 text-center text-[13.5px] text-neutral-600">
-        {data.description}
-      </p>
-      <button className="mt-6 flex h-8 w-min items-center justify-center whitespace-nowrap rounded-md bg-neutral-900 px-4 py-2 text-[13.5px] text-white dark:bg-white dark:text-neutral-900">
-        {data.buttonText}
-      </button>
-    </div>
-  )
-}
-`}
+  );
+}`}
                     language="tsx"
                   />
                 </div>
@@ -300,11 +202,11 @@ function GenericCardBack({ data }: GenericCardBackProps) {
                     <span className="sr-only">v0</span>
                   </span>{" "}
                   to customize and generate variations. This helps you quickly
-                  adapt the card to your UI and workflow.
+                  adapt the badges to your UI and workflow.
                 </p>
 
                 <div className="mt-6">
-                  <ComponentActions name="hover-flip-card" />
+                  <ComponentActions name="animated-badges" />
                 </div>
               </TabsContent>
             </Tabs>
@@ -317,7 +219,7 @@ function GenericCardBack({ data }: GenericCardBackProps) {
           <div className="mt-6 border-neutral-200 border-t pt-4 text-sm dark:border-neutral-800">
             <div className="mb-2 inline-flex items-center gap-2 rounded-full border border-neutral-200 px-2.5 py-0.5 font-mono text-[11px] text-neutral-500 uppercase tracking-[0.16em] dark:border-neutral-800 dark:text-neutral-400">
               <span className="rounded bg-neutral-100 px-1.5 py-0.5 font-semibold text-[10px] text-neutral-700 dark:bg-neutral-800 dark:text-neutral-200">
-                hover-flip-card
+                animated-badges
               </span>
               <span>Props</span>
             </div>
@@ -325,42 +227,47 @@ function GenericCardBack({ data }: GenericCardBackProps) {
             <dl className="mt-3 divide-y divide-neutral-200 border border-neutral-200 text-[13px] dark:divide-neutral-800 dark:border-neutral-800">
               <div className="grid grid-cols-[minmax(0,150px)_minmax(0,1fr)] gap-x-4 px-3 py-2.5">
                 <dt className="font-mono text-neutral-900 text-xs dark:text-neutral-100">
-                  width
+                  label
                 </dt>
                 <dd className="text-neutral-600 dark:text-neutral-300">
-                  Optional width of the card in pixels. Defaults to{" "}
+                  Optional text shown in the badge. Defaults to{" "}
                   <code className="rounded bg-neutral-200 px-1 font-mono text-[11px] dark:bg-neutral-700 dark:text-neutral-200">
-                    350
+                    &quot;Live&quot;
                   </code>
                   .
                 </dd>
               </div>
               <div className="grid grid-cols-[minmax(0,150px)_minmax(0,1fr)] gap-x-4 px-3 py-2.5">
                 <dt className="font-mono text-neutral-900 text-xs dark:text-neutral-100">
-                  height
+                  variant
                 </dt>
                 <dd className="text-neutral-600 dark:text-neutral-300">
-                  Optional height of the card in pixels. Defaults to{" "}
+                  One of{" "}
                   <code className="rounded bg-neutral-200 px-1 font-mono text-[11px] dark:bg-neutral-700 dark:text-neutral-200">
-                    300
+                    &quot;live&quot;
+                  </code>
+                  ,{" "}
+                  <code className="rounded bg-neutral-200 px-1 font-mono text-[11px] dark:bg-neutral-700 dark:text-neutral-200">
+                    &quot;pending&quot;
+                  </code>
+                  , or{" "}
+                  <code className="rounded bg-neutral-200 px-1 font-mono text-[11px] dark:bg-neutral-700 dark:text-neutral-200">
+                    &quot;critical&quot;
+                  </code>
+                  . Controls colors and dot/ping styling.
+                </dd>
+              </div>
+              <div className="grid grid-cols-[minmax(0,150px)_minmax(0,1fr)] gap-x-4 px-3 py-2.5">
+                <dt className="font-mono text-neutral-900 text-xs dark:text-neutral-100">
+                  visible
+                </dt>
+                <dd className="text-neutral-600 dark:text-neutral-300">
+                  Optional. When false, the badge animates out and unmounts.
+                  Defaults to{" "}
+                  <code className="rounded bg-neutral-200 px-1 font-mono text-[11px] dark:bg-neutral-700 dark:text-neutral-200">
+                    true
                   </code>
                   .
-                </dd>
-              </div>
-              <div className="grid grid-cols-[minmax(0,150px)_minmax(0,1fr)] gap-x-4 px-3 py-2.5">
-                <dt className="font-mono text-neutral-900 text-xs dark:text-neutral-100">
-                  frontContent
-                </dt>
-                <dd className="text-neutral-600 dark:text-neutral-300">
-                  React node rendered on the front face of the card.
-                </dd>
-              </div>
-              <div className="grid grid-cols-[minmax(0,150px)_minmax(0,1fr)] gap-x-4 px-3 py-2.5">
-                <dt className="font-mono text-neutral-900 text-xs dark:text-neutral-100">
-                  backContent
-                </dt>
-                <dd className="text-neutral-600 dark:text-neutral-300">
-                  React node rendered on the back face of the card.
                 </dd>
               </div>
               <div className="grid grid-cols-[minmax(0,150px)_minmax(0,1fr)] gap-x-4 px-3 py-2.5">
@@ -368,8 +275,8 @@ function GenericCardBack({ data }: GenericCardBackProps) {
                   className
                 </dt>
                 <dd className="text-neutral-600 dark:text-neutral-300">
-                  Optional className applied to the outer card wrapper for
-                  custom styling.
+                  Optional className applied to the badge container for custom
+                  styling.
                 </dd>
               </div>
             </dl>
@@ -378,68 +285,6 @@ function GenericCardBack({ data }: GenericCardBackProps) {
       </main>
 
       <OnThisPage />
-    </div>
-  );
-}
-
-function FlippingCardDemo() {
-  return (
-    <div className="flex flex-wrap gap-4">
-      {cardsData.map((card) => (
-        <HoverFlipCard
-          backContent={<GenericCardBack data={card.back} />}
-          frontContent={<GenericCardFront data={card.front} />}
-          key={card.id}
-          width={300}
-        />
-      ))}
-    </div>
-  );
-}
-
-interface GenericCardFrontProps {
-  data: CardData["front"];
-}
-
-function GenericCardFront({ data }: GenericCardFrontProps) {
-  return (
-    <div className="flex h-full w-full flex-col p-4">
-      <div className="relative h-48 w-full overflow-hidden rounded-md">
-        <Image
-          alt={data.imageAlt}
-          className="object-cover"
-          fill
-          src={data.imageSrc}
-        />
-      </div>
-      <div className="p-2">
-        <h3 className="mt-2 font-semibold text-base text-neutral-900 dark:text-white">
-          {data.title}
-        </h3>
-        <p className="mt-2 text-[13.5px] text-neutral-600 dark:text-neutral-300">
-          {data.description}
-        </p>
-      </div>
-    </div>
-  );
-}
-
-interface GenericCardBackProps {
-  data: CardData["back"];
-}
-
-function GenericCardBack({ data }: GenericCardBackProps) {
-  return (
-    <div className="flex h-full w-full flex-col items-center justify-center p-6">
-      <p className="mt-2 text-center text-[13.5px] text-neutral-600 dark:text-neutral-300">
-        {data.description}
-      </p>
-      <button
-        className="mt-6 flex h-8 w-min items-center justify-center whitespace-nowrap rounded-md bg-neutral-900 px-4 py-2 text-[13.5px] text-white dark:bg-white dark:text-neutral-900"
-        type="button"
-      >
-        {data.buttonText}
-      </button>
     </div>
   );
 }

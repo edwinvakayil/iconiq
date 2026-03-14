@@ -17,25 +17,9 @@ export const SITE_SECTIONS = [
     ],
   },
   {
-    label: "Animated Components",
-    children: [
-      {
-        label: "Accordion (Animated)",
-        href: "/animated-components/accordion-animated",
-      },
-      {
-        label: "Badges (Animated)",
-        href: "/animated-components/animated-badges",
-      },
-      {
-        label: "Hover Flip Card",
-        href: "/animated-components/hover-flip-card",
-      },
-    ],
-  },
-  {
     label: "Components",
     children: [
+      { label: "Badges", href: "/components/badges" },
       { label: "Input Groups", href: "/components/input-groups" },
       { label: "Breadcrumb", href: "/components/breadcrumbs" },
       { label: "Radio Group", href: "/components/radiogroup" },
@@ -53,17 +37,12 @@ export const SITE_SECTIONS = [
 
 /** Section headings (h2/h3) per page for "On this page" anchor links. */
 export const PAGE_SECTIONS: Record<string, { label: string; id: string }[]> = {
-  "/animated-components/accordion-animated": [
-    { label: "Preview", id: "preview" },
-    { label: "Usage", id: "usage" },
-    { label: "Props", id: "props" },
-  ],
   "/animated-components/animated-badges": [
     { label: "Preview", id: "preview" },
     { label: "Usage", id: "usage" },
     { label: "Props", id: "props" },
   ],
-  "/animated-components/hover-flip-card": [
+  "/components/badges": [
     { label: "Preview", id: "preview" },
     { label: "Usage", id: "usage" },
     { label: "Props", id: "props" },

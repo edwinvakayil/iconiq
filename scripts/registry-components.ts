@@ -2315,12 +2315,6 @@ export const components: ComponentDefinition[] = [
     dependencies: ["framer-motion"],
   },
   {
-    name: "hover-flip-card",
-    path: path.join(__dirname, "../registry", "hover-flip-card.tsx"),
-    registryDependencies: [],
-    dependencies: [],
-  },
-  {
     name: "database-backup",
     path: path.join(__dirname, "../icons", "database-backup.tsx"),
     registryDependencies: [],
@@ -2349,12 +2343,6 @@ export const components: ComponentDefinition[] = [
     path: path.join(__dirname, "../icons", "package-plus.tsx"),
     registryDependencies: [],
     dependencies: ["motion"],
-  },
-  {
-    name: "accordion-animated",
-    path: path.join(__dirname, "../registry", "accordion-animated.tsx"),
-    registryDependencies: ["accordion"],
-    dependencies: [],
   },
   {
     name: "input-group-01",

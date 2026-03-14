@@ -22,18 +22,6 @@ const REGISTRY_UI_META: Record<
       "Status badges with shimmer, pulsing dot, and spring animations. Uses Framer Motion for enter/exit and hover effects.",
     dependencies: ["framer-motion"],
   },
-  "hover-flip-card": {
-    title: "Hover Flip Card",
-    description:
-      "A card that flips when hovered. Uses Motion for the flip effect.",
-    dependencies: [],
-  },
-  "accordion-animated": {
-    title: "Accordion (Animated)",
-    description:
-      "An accordion component that animates the icons when opened. Uses Motion for the animation.",
-    dependencies: ["@radix-ui/react-accordion"],
-  },
   "input-group-01": {
     title: "Input Group",
     description:

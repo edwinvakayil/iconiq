@@ -198,15 +198,15 @@ export function HomeHero() {
                     className="cursor-default rounded-full bg-primary/5 p-2 transition-colors hover:bg-primary/10"
                   >
                     <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="20"
+                      aria-hidden
                       height="20"
                       viewBox="0 0 100 100"
-                      aria-hidden
+                      width="20"
+                      xmlns="http://www.w3.org/2000/svg"
                     >
                       <path
-                        fill="currentColor"
                         d="M0 100V0l50 50 50-50v100L75 75l-25 25-25-25z"
+                        fill="currentColor"
                       />
                     </svg>
                   </TooltipTrigger>
