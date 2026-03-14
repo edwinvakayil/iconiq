@@ -76,23 +76,11 @@ const REGISTRY_UI_META: Record<
       "An animated range slider with shimmer, hover/drag feedback, and optional floating value tooltip. Uses Radix UI and Framer Motion.",
     dependencies: ["@radix-ui/react-slider", "framer-motion"],
   },
-  "smart-tooltip": {
-    title: "Smart Tooltip",
-    description:
-      "A tooltip button that tracks hover and copy interactions to show contextual labels like hover prompts and copy status. Uses the Button component from shadcn.",
-    dependencies: [],
-  },
   "magic-pen": {
     title: "Magic Pen",
     description:
       "A wrapper component that reveals any children under a cursor-following circular mask, with optional click-to-reveal. Uses GSAP for smooth pointer tracking.",
     dependencies: ["gsap"],
-  },
-  "drag-task": {
-    title: "Drag Task",
-    description:
-      "A task list component that allows you to drag and drop tasks to reorder them. Uses Framer Motion for the drag and drop effect.",
-    dependencies: ["framer-motion"],
   },
 };
 

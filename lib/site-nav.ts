@@ -27,10 +27,8 @@ export const SITE_SECTIONS = [
       { label: "Chart", href: "/components/chart" },
       { label: "Select", href: "/components/select" },
       { label: "Slider", href: "/components/slider" },
-      { label: "Smart Tooltip", href: "/components/smart-tooltip" },
       { label: "File Tree", href: "/components/file-tree" },
       { label: "Magic Pen", href: "/components/magic-pen" },
-      { label: "Drag Task List", href: "/components/drag-task" },
     ],
   },
 ] as const;
@@ -87,22 +85,12 @@ export const PAGE_SECTIONS: Record<string, { label: string; id: string }[]> = {
     { label: "Usage", id: "usage" },
     { label: "Props", id: "props" },
   ],
-  "/components/smart-tooltip": [
-    { label: "Preview", id: "preview" },
-    { label: "Usage", id: "usage" },
-    { label: "Props", id: "props" },
-  ],
   "/components/file-tree": [
     { label: "Preview", id: "preview" },
     { label: "Usage", id: "usage" },
     { label: "Props", id: "props" },
   ],
   "/components/magic-pen": [
-    { label: "Preview", id: "preview" },
-    { label: "Usage", id: "usage" },
-    { label: "Props", id: "props" },
-  ],
-  "/components/drag-task": [
     { label: "Preview", id: "preview" },
     { label: "Usage", id: "usage" },
     { label: "Props", id: "props" },

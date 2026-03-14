@@ -29,11 +29,9 @@ const nav = [
       { label: "Chart", href: "/components/chart" },
       { label: "Select", href: "/components/select" },
       { label: "Slider", href: "/components/slider" },
-      { label: "Smart Tooltip", href: "/components/smart-tooltip" },
       { label: "Access Request Banner", href: "/components/accessrequest" },
       { label: "File Tree", href: "/components/file-tree" },
       { label: "Magic Pen", href: "/components/magic-pen" },
-      { label: "Drag Task List", href: "/components/drag-task" },
     ],
   },
 ];

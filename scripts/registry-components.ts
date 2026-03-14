@@ -2387,22 +2387,10 @@ export const components: ComponentDefinition[] = [
     dependencies: ["@radix-ui/react-slider", "framer-motion"],
   },
   {
-    name: "smart-tooltip",
-    path: path.join(__dirname, "../registry", "smart-tooltip.tsx"),
-    registryDependencies: ["button"],
-    dependencies: [],
-  },
-  {
     name: "magic-pen",
     path: path.join(__dirname, "../registry", "magic-pen.tsx"),
     registryDependencies: [],
     dependencies: [],
-  },
-  {
-    name: "drag-task",
-    path: path.join(__dirname, "../registry", "drag-task.tsx"),
-    registryDependencies: [],
-    dependencies: ["motion"],
   },
   {
     name: "chart",

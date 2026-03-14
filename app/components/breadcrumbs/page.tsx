@@ -13,7 +13,7 @@ import type { BreadcrumbItem } from "@/registry/breadcrumbs";
 const demoItems: BreadcrumbItem[] = [
   { label: "Home", href: "/", icon: <Home className="h-3.5 w-3.5" /> },
   { label: "Docs", href: "/" },
-  { label: "Components", href: "/components/smart-tooltip" },
+  { label: "Components", href: "/components/alert" },
   { label: "Breadcrumb" },
 ];
 
@@ -160,7 +160,7 @@ import { Home } from "lucide-react";
 const items: BreadcrumbItem[] = [
   { label: "Home", href: "/", icon: <Home className="h-3.5 w-3.5" /> },
   { label: "Docs", href: "/" },
-  { label: "Components", href: "/components/smart-tooltip" },
+  { label: "Components", href: "/components/alert" },
   { label: "Breadcrumb" },
 ];
 
