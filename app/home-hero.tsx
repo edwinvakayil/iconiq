@@ -99,7 +99,7 @@ export function HomeHero() {
               Get started
               <ArrowRight className="size-5" />
             </Link>
-            <div className="flex items-center gap-2 text-neutral-900 dark:text-white">
+            <div className="flex flex-col items-center gap-2 text-neutral-900 sm:flex-row sm:items-center dark:text-white">
               <span className="font-sans text-neutral-500 text-sm dark:text-neutral-400">
                 Built with
               </span>
