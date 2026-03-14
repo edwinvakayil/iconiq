@@ -5129,6 +5129,21 @@
       ]
     },
     {
+      "name": "alert",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": ["framer-motion", "lucide-react"],
+      "devDependencies": [],
+      "title": "Alert",
+      "description": "Dismissible system alerts with success, error, warning, and info variants. Uses Framer Motion for enter/exit and optional auto-dismiss bar.",
+      "files": [
+        {
+          "path": "alert.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "slider",
       "type": "registry:ui",
       "registryDependencies": [],

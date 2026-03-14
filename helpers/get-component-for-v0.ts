@@ -95,6 +95,26 @@ const COMPONENT_EXAMPLE: Record<string, string> = {
     "    </div>\n" +
     "  )\n" +
     "}\n",
+  alert:
+    '"use client";\n\n' +
+    `import { useState } from "react"\n` +
+    `import { SystemAlert } from "@/components/ui/alert"\n\n` +
+    "export default function Page() {\n" +
+    "  const [visible, setVisible] = useState(true)\n" +
+    "  return (\n" +
+    '    <div className="flex min-h-svh items-center justify-center p-8">\n' +
+    "      <SystemAlert\n" +
+    '        id="one"\n' +
+    '        variant="success"\n' +
+    '        title="Success"\n' +
+    '        description="Your changes have been saved."\n' +
+    "        isVisible={visible}\n" +
+    "        onClose={() => setVisible(false)}\n" +
+    "        autoDismiss={5}\n" +
+    "      />\n" +
+    "    </div>\n" +
+    "  )\n" +
+    "}\n",
   slider:
     '"use client";\n\n' +
     `import { AnimatedSlider } from "@/components/ui/slider"\n\n` +

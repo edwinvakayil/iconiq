@@ -2387,6 +2387,12 @@ export const components: ComponentDefinition[] = [
     dependencies: ["@radix-ui/react-radio-group", "framer-motion"],
   },
   {
+    name: "alert",
+    path: path.join(__dirname, "../registry", "alert.tsx"),
+    registryDependencies: [],
+    dependencies: ["framer-motion", "lucide-react"],
+  },
+  {
     name: "slider",
     path: path.join(__dirname, "../registry", "slider.tsx"),
     registryDependencies: [],

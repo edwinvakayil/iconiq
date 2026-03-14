@@ -64,6 +64,12 @@ const REGISTRY_UI_META: Record<
       "An animated radio group with staggered entrance, hover/tap feedback, and shimmer on the selected option. Uses Radix UI and Framer Motion.",
     dependencies: ["@radix-ui/react-radio-group", "framer-motion"],
   },
+  alert: {
+    title: "Alert",
+    description:
+      "Dismissible system alerts with success, error, warning, and info variants. Uses Framer Motion for enter/exit and optional auto-dismiss bar.",
+    dependencies: ["framer-motion", "lucide-react"],
+  },
   slider: {
     title: "Slider",
     description:
