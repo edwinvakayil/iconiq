@@ -5,6 +5,8 @@ on:
     branches: [main]
   push:
     branches: [main]
+  issues:
+    types: [opened, edited]
 
 jobs:
   check-imports:
@@ -21,6 +23,7 @@ jobs:
         uses: pnpm/action-setup@v4
         with:
           version: 9
+          run_install: false
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -48,6 +51,7 @@ jobs:
         uses: pnpm/action-setup@v4
         with:
           version: 9
+          run_install: false
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -60,3 +64,192 @@ jobs:
 
       - name: Check duplicates
         run: pnpm check-duplicates
+
+  groq-pr-review:
+    name: Groq PR Review & Auto-fix
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.head_ref }}
+          token: ${{ secrets.G_TOKEN }}
+
+      - name: Get PR diff
+        id: diff
+        run: |
+          git diff origin/${{ github.base_ref }}...HEAD > pr_diff.txt
+          echo "diff_size=$(wc -c < pr_diff.txt)" >> $GITHUB_OUTPUT
+
+      - name: Groq PR Review
+        id: review
+        env:
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+        run: |
+          DIFF=$(cat pr_diff.txt | head -c 12000)
+
+          RESPONSE=$(curl -s https://api.groq.com/openai/v1/chat/completions \
+            -H "Authorization: Bearer $GROQ_API_KEY" \
+            -H "Content-Type: application/json" \
+            -d "$(jq -n \
+              --arg diff "$DIFF" \
+              '{
+                model: "llama-3.3-70b-versatile",
+                temperature: 0.3,
+                max_tokens: 2048,
+                messages: [
+                  {
+                    role: "system",
+                    content: "You are a senior code reviewer. Review the given PR diff and respond in this exact JSON format (no markdown, raw JSON only):\n{\"summary\": \"brief summary\", \"issues\": [{\"file\": \"filename\", \"line\": \"line info\", \"severity\": \"error|warning|suggestion\", \"description\": \"issue description\", \"fix\": \"suggested fix code\"}], \"auto_fixable\": true or false, \"overall\": \"APPROVE|REQUEST_CHANGES|COMMENT\"}"
+                  },
+                  {
+                    role: "user",
+                    content: ("Review this PR diff:\n\n" + $diff)
+                  }
+                ]
+              }')"
+          )
+
+          REVIEW=$(echo "$RESPONSE" | jq -r '.choices[0].message.content')
+          echo "review=$REVIEW" >> $GITHUB_OUTPUT
+
+          # Save review to file for next steps
+          echo "$REVIEW" > groq_review.json
+
+      - name: Post Review Comment
+        env:
+          GITHUB_TOKEN: ${{ secrets.G_TOKEN }}
+        run: |
+          REVIEW=$(cat groq_review.json)
+
+          SUMMARY=$(echo "$REVIEW" | jq -r '.summary // "No summary"')
+          OVERALL=$(echo "$REVIEW" | jq -r '.overall // "COMMENT"')
+          ISSUES=$(echo "$REVIEW" | jq -r '
+            .issues[]? |
+            "**[\(.severity | ascii_upcase)]** `\(.file)` \(.line)\n> \(.description)\n```\n\(.fix)\n```"
+          ' | head -c 8000)
+
+          BODY="## 🤖 Groq AI Review (llama-3.3-70b)
+
+          **Verdict:** \`$OVERALL\`
+
+          ### Summary
+          $SUMMARY
+
+          ### Issues Found
+          $ISSUES
+
+          ---
+          *Powered by [Groq](https://groq.com) — free & fast inference*"
+
+          gh pr comment ${{ github.event.pull_request.number }} --body "$BODY"
+        
+      - name: Auto-fix and commit
+        env:
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          GITHUB_TOKEN: ${{ secrets.G_TOKEN }}
+        run: |
+          AUTO_FIXABLE=$(cat groq_review.json | jq -r '.auto_fixable // false')
+
+          if [ "$AUTO_FIXABLE" != "true" ]; then
+            echo "No auto-fixable issues found, skipping."
+            exit 0
+          fi
+
+          DIFF=$(cat pr_diff.txt | head -c 12000)
+          ISSUES=$(cat groq_review.json | jq -c '.issues')
+
+          RESPONSE=$(curl -s https://api.groq.com/openai/v1/chat/completions \
+            -H "Authorization: Bearer $GROQ_API_KEY" \
+            -H "Content-Type: application/json" \
+            -d "$(jq -n \
+              --arg diff "$DIFF" \
+              --argjson issues "$ISSUES" \
+              '{
+                model: "llama-3.3-70b-versatile",
+                temperature: 0.1,
+                max_tokens: 4096,
+                messages: [
+                  {
+                    role: "system",
+                    content: "You are an expert code fixer. Given a diff and list of issues, output ONLY a valid shell script (no markdown, no backticks) that uses sed or echo to apply fixes to the affected files."
+                  },
+                  {
+                    role: "user",
+                    content: ("Apply these fixes:\n" + ($issues | tostring) + "\n\nOriginal diff:\n" + $diff)
+                  }
+                ]
+              }')"
+          )
+
+          FIX_SCRIPT=$(echo "$RESPONSE" | jq -r '.choices[0].message.content')
+
+          echo "$FIX_SCRIPT" > fix_script.sh
+          chmod +x fix_script.sh
+          bash fix_script.sh || echo "Fix script failed, skipping auto-commit."
+
+          git config user.name "groq-bot"
+          git config user.email "groq-bot@users.noreply.github.com"
+
+          if git diff --quiet; then
+            echo "No changes to commit."
+          else
+            git add -A
+            git commit -m "fix: auto-fix applied by Groq AI review"
+            git push origin HEAD:${{ github.head_ref }}
+          fi
+
+  groq-issue-comment:
+    name: Groq Issue Comment
+    runs-on: ubuntu-latest
+    if: github.event_name == 'issues'
+    permissions:
+      issues: write
+
+    steps:
+      - name: Groq respond to issue
+        env:
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          GITHUB_TOKEN: ${{ secrets.G_TOKEN}}
+        run: |
+          ISSUE_TITLE="${{ github.event.issue.title }}"
+          ISSUE_BODY="${{ github.event.issue.body }}"
+
+          RESPONSE=$(curl -s https://api.groq.com/openai/v1/chat/completions \
+            -H "Authorization: Bearer $GROQ_API_KEY" \
+            -H "Content-Type: application/json" \
+            -d "$(jq -n \
+              --arg title "$ISSUE_TITLE" \
+              --arg body "$ISSUE_BODY" \
+              '{
+                model: "llama-3.3-70b-versatile",
+                temperature: 0.5,
+                max_tokens: 1024,
+                messages: [
+                  {
+                    role: "system",
+                    content: "You are a helpful open source maintainer. Respond to GitHub issues with clear, constructive, and friendly guidance. Suggest fixes, ask for clarifications if needed, and label the issue type (bug, feature, question)."
+                  },
+                  {
+                    role: "user",
+                    content: ("Issue Title: " + $title + "\n\nIssue Body:\n" + $body)
+                  }
+                ]
+              }')"
+          )
+
+          REPLY=$(echo "$RESPONSE" | jq -r '.choices[0].message.content')
+
+          gh issue comment ${{ github.event.issue.number }} \
+            --body "## 🤖 Groq AI Response
+
+          $REPLY
+
+          ---
+          *Powered by [Groq](https://groq.com) · llama-3.3-70b-versatile*"
