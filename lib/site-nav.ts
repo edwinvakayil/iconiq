@@ -48,7 +48,7 @@ export const PAGE_SECTIONS: Record<string, { label: string; id: string }[]> = {
     { label: "Password field", id: "password-field" },
     { label: "Preview", id: "preview" },
     { label: "Usage", id: "usage" },
-    { label: "Props", id: "props" }
+    { label: "Props", id: "props" },
   ],
   "/components/breadcrumbs": [
     { label: "Preview", id: "preview" },

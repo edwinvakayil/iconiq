@@ -90,12 +90,6 @@ function renderComponentsNav(params: {
     activeSectionId === "usage" ||
     activeSectionId === "props";
 
-  const isInputLabelActive =
-    activeSectionId === "input-label" ||
-    activeSectionId === "input-label-preview" ||
-    activeSectionId === "input-label-usage" ||
-    activeSectionId === "input-label-props";
-
   if (isInputGroups) {
     return (
       <ul className="mt-1 space-y-1">

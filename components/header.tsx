@@ -1,12 +1,132 @@
 "use client";
 
-import { Github, Menu, X } from "lucide-react";
+import { AnimatePresence, motion } from "framer-motion";
+import {
+  BookOpen,
+  ChevronRight,
+  Github,
+  Layers,
+  Menu,
+  Package,
+  Search,
+  X,
+} from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { LINK, SITE } from "@/constants";
 import { BASE_LINKS, SITE_SECTIONS } from "@/lib/site-nav";
+
+const mobileNavSections = [
+  {
+    title: "Getting Started",
+    icon: BookOpen,
+    items: BASE_LINKS.map((item) => ({ label: item.label, href: item.href })),
+  },
+  {
+    title: SITE_SECTIONS[0].label,
+    icon: Package,
+    items: SITE_SECTIONS[0].children.map((item) => ({
+      label: item.label,
+      href: item.href,
+    })),
+  },
+  {
+    title: SITE_SECTIONS[1].label,
+    icon: Layers,
+    items: SITE_SECTIONS[1].children.map((item) => ({
+      label: item.label,
+      href: item.href,
+    })),
+  },
+];
+
+const easeOutExpo = [0.32, 0.72, 0, 1] as const;
+
+const mobileNavVariants = {
+  container: {
+    open: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.3,
+        ease: easeOutExpo,
+        when: "beforeChildren",
+      },
+    },
+    closed: {
+      opacity: 0,
+      y: -8,
+      transition: {
+        duration: 0.25,
+        ease: easeOutExpo,
+        when: "afterChildren",
+      },
+    },
+  },
+  backdrop: {
+    open: { opacity: 1, transition: { duration: 0.2 } },
+    closed: { opacity: 0, transition: { duration: 0.2 } },
+  },
+  panel: {
+    open: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        type: "spring" as const,
+        stiffness: 400,
+        damping: 30,
+        mass: 0.8,
+      },
+    },
+    closed: {
+      opacity: 0,
+      y: -12,
+      transition: {
+        duration: 0.2,
+        ease: easeOutExpo,
+      },
+    },
+  },
+  section: {
+    open: (i: number) => ({
+      opacity: 1,
+      y: 0,
+      transition: { delay: 0.04 + i * 0.03, duration: 0.28, ease: easeOutExpo },
+    }),
+    closed: { opacity: 0, y: -4 },
+  },
+  expandContent: {
+    open: {
+      height: "auto",
+      opacity: 1,
+      transition: {
+        height: { duration: 0.28, ease: easeOutExpo },
+        opacity: { duration: 0.2 },
+      },
+    },
+    closed: {
+      height: 0,
+      opacity: 0,
+      transition: {
+        height: { duration: 0.22, ease: easeOutExpo },
+        opacity: { duration: 0.14 },
+      },
+    },
+  },
+  expandItem: {
+    open: (i: number) => ({
+      opacity: 1,
+      x: 0,
+      transition: {
+        delay: 0.05 + i * 0.025,
+        duration: 0.22,
+        ease: easeOutExpo,
+      },
+    }),
+    closed: { opacity: 0, x: -6 },
+  },
+};
 
 const GITHUB_REPO_API = "https://api.github.com/repos/edwinvakayil/iconiq";
 
@@ -31,7 +151,16 @@ function formatStarCount(n: number): string {
 
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [expandedMobile, setExpandedMobile] = useState<string[]>([
+    "Getting Started",
+  ]);
   const [starCount, setStarCount] = useState<number | null>(null);
+
+  const toggleMobileSection = (title: string) => {
+    setExpandedMobile((prev) =>
+      prev.includes(title) ? prev.filter((t) => t !== title) : [...prev, title]
+    );
+  };
 
   useEffect(() => {
     fetch(GITHUB_REPO_API, {
@@ -106,105 +235,142 @@ export function Header() {
 
             {/* Hamburger */}
             <button
-              className="flex size-9 items-center justify-center rounded-md text-neutral-600 hover:bg-neutral-100 sm:hidden"
-              onClick={() => setMobileMenuOpen(true)}
+              aria-expanded={mobileMenuOpen}
+              className="flex size-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-muted hover:text-foreground sm:hidden"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               type="button"
             >
-              <Menu className="size-5" />
+              {mobileMenuOpen ? (
+                <X className="size-5" />
+              ) : (
+                <Menu className="size-5" />
+              )}
             </button>
           </div>
         </div>
       </header>
 
-      {/* Overlay */}
-      <button
-        aria-hidden={!mobileMenuOpen}
-        className={`fixed inset-0 z-[200] bg-black/30 transition-opacity sm:hidden ${
-          mobileMenuOpen ? "opacity-100" : "pointer-events-none opacity-0"
-        }`}
-        onClick={() => setMobileMenuOpen(false)}
-        type="button"
-      />
-
-      {/* Sidebar */}
-      <div
-        className={`fixed top-0 right-0 z-[201] flex h-full w-[280px] transform flex-col border-neutral-300 border-l bg-background shadow-xl transition-transform duration-300 sm:hidden dark:border-neutral-800 ${
-          mobileMenuOpen ? "translate-x-0" : "translate-x-full"
-        }`}
-      >
-        {/* Sidebar header */}
-        <div className="flex h-14 items-center justify-between px-4">
-          <span className="font-medium text-sm">{SITE.LOGO}</span>
-
-          <button
-            className="flex size-9 items-center justify-center rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800"
-            onClick={() => setMobileMenuOpen(false)}
-            type="button"
+      {/* Mobile slide-down menu */}
+      <AnimatePresence>
+        {mobileMenuOpen && (
+          <motion.div
+            animate="open"
+            className="fixed inset-x-0 top-14 z-[200] sm:hidden"
+            exit="closed"
+            initial="closed"
+            key="mobile-nav"
+            variants={mobileNavVariants.container}
           >
-            <X className="size-5" />
-          </button>
-        </div>
-
-        {/* Navigation */}
-        <nav className="flex-1 overflow-y-auto py-4">
-          {BASE_LINKS.map((item) => (
-            <Link
-              className="block px-4 py-3 text-neutral-700 text-sm hover:bg-neutral-100 dark:text-neutral-200 dark:hover:bg-neutral-800"
-              href={item.href}
-              key={item.label}
+            {/* Backdrop */}
+            <motion.button
+              animate="open"
+              aria-hidden={!mobileMenuOpen}
+              className="fixed inset-0 top-14 bg-background/60 backdrop-blur-sm"
+              initial="closed"
               onClick={() => setMobileMenuOpen(false)}
+              type="button"
+              variants={mobileNavVariants.backdrop}
+            />
+
+            {/* Panel */}
+            <motion.div
+              animate="open"
+              className="relative z-[201] mx-3 mt-2 max-h-[70vh] overflow-y-auto rounded-xl border border-border bg-card shadow-2xl shadow-primary/5"
+              initial="closed"
+              variants={mobileNavVariants.panel}
             >
-              {item.label}
-            </Link>
-          ))}
+              {/* Mobile search */}
+              <div className="border-border border-b p-3">
+                <div className="flex items-center gap-2 rounded-lg border border-border bg-background px-3 py-2 text-[13px] text-muted-foreground">
+                  <Search className="h-3.5 w-3.5 shrink-0" />
+                  <span>Search docs...</span>
+                </div>
+              </div>
 
-          {SITE_SECTIONS.map((section) => (
-            <div className="mt-3 pt-2" key={section.label}>
-              <p className="px-4 pb-1 font-semibold text-[11px] text-neutral-500 uppercase dark:text-neutral-400">
-                {section.label}
-              </p>
-
-              <ul className="pl-7">
-                {section.children.map((item) => (
-                  <li key={item.href}>
-                    <Link
-                      className="block py-2 text-neutral-700 text-sm hover:bg-neutral-100 dark:text-neutral-200 dark:hover:bg-neutral-800"
-                      href={item.href}
-                      onClick={() => setMobileMenuOpen(false)}
+              {/* Navigation sections */}
+              <nav className="p-2">
+                {mobileNavSections.map((section, sectionIndex) => {
+                  const isExpanded = expandedMobile.includes(section.title);
+                  const Icon = section.icon;
+                  return (
+                    <motion.div
+                      animate="open"
+                      className="mb-0.5"
+                      custom={sectionIndex}
+                      initial="closed"
+                      key={section.title}
+                      variants={mobileNavVariants.section}
                     >
-                      {item.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
+                      <motion.button
+                        className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2.5 font-medium text-[13px] text-foreground transition-colors hover:bg-muted active:bg-muted"
+                        onClick={() => toggleMobileSection(section.title)}
+                        type="button"
+                        whileTap={{ scale: 0.98 }}
+                      >
+                        <Icon className="h-4 w-4 shrink-0 text-muted-foreground" />
+                        <span className="flex-1 text-left">
+                          {section.title}
+                        </span>
+                        <motion.span
+                          animate={{ rotate: isExpanded ? 90 : 0 }}
+                          className="inline-flex"
+                          transition={{
+                            type: "spring",
+                            stiffness: 400,
+                            damping: 28,
+                          }}
+                        >
+                          <ChevronRight className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
+                        </motion.span>
+                      </motion.button>
+                      <AnimatePresence initial={false}>
+                        {isExpanded && (
+                          <motion.ul
+                            animate="open"
+                            className="mt-0.5 mb-2 ml-[18px] overflow-hidden border-border border-l pl-2"
+                            exit="closed"
+                            initial="closed"
+                            variants={mobileNavVariants.expandContent}
+                          >
+                            {section.items.map((item, itemIndex) => (
+                              <motion.li
+                                custom={itemIndex}
+                                key={item.href}
+                                variants={mobileNavVariants.expandItem}
+                              >
+                                <Link
+                                  className="flex w-full items-center rounded-md px-3 py-2 text-[13px] text-muted-foreground transition-colors hover:bg-muted hover:text-foreground active:bg-muted"
+                                  href={item.href}
+                                  onClick={() => setMobileMenuOpen(false)}
+                                >
+                                  {item.label}
+                                </Link>
+                              </motion.li>
+                            ))}
+                          </motion.ul>
+                        )}
+                      </AnimatePresence>
+                    </motion.div>
+                  );
+                })}
+              </nav>
 
-          {/* Footer actions */}
-          <div className="mt-4 flex items-center gap-3 px-4 pt-4">
-            <ThemeToggle />
-
-            <a
-              className="flex items-center gap-2 text-neutral-600 text-sm dark:text-neutral-400"
-              href={LINK.GITHUB}
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-              <Github className="size-4" />
-              {starCount !== null ? formatStarCount(starCount) : "—"}
-            </a>
-
-            <a
-              className="flex items-center"
-              href={LINK.TWITTER}
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-              <XLogoIcon className="size-5" />
-            </a>
-          </div>
-        </nav>
-      </div>
+              {/* Bottom link */}
+              <div className="border-border border-t p-3">
+                <a
+                  className="flex w-full items-center justify-center gap-2 rounded-lg border border-border px-3 py-2 font-medium text-[13px] text-muted-foreground transition-colors hover:text-foreground"
+                  href={LINK.GITHUB}
+                  onClick={() => setMobileMenuOpen(false)}
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  GitHub
+                </a>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </>
   );
 }
