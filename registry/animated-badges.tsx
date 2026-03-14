@@ -12,27 +12,31 @@ export interface StatusBadgeProps {
   visible?: boolean;
 }
 
+/** Badge colors kept in component; no globals.css required. */
 const variantStyles: Record<
   BadgeVariant,
   { container: string; dot: string; ping: string; shimmer: string }
 > = {
   live: {
-    container: "bg-badge text-badge-foreground",
-    dot: "bg-badge-dot",
-    ping: "bg-badge-ping",
-    shimmer: "from-transparent via-badge-dot/10 to-transparent",
+    container: "bg-[#22c55e] text-white dark:bg-[#16a34a] dark:text-white",
+    dot: "bg-[#16a34a] dark:bg-[#15803d]",
+    ping: "bg-[#22c55e] dark:bg-[#22c55e]",
+    shimmer:
+      "from-transparent via-[#16a34a]/10 to-transparent dark:via-[#15803d]/10",
   },
   pending: {
-    container: "bg-badge-pending text-badge-pending-foreground",
-    dot: "bg-badge-pending-dot",
-    ping: "bg-badge-pending-ping",
-    shimmer: "from-transparent via-badge-pending-dot/10 to-transparent",
+    container: "bg-[#eab308] text-black dark:bg-[#ca8a04] dark:text-white",
+    dot: "bg-[#ca8a04] dark:bg-[#a16207]",
+    ping: "bg-[#eab308] dark:bg-[#eab308]",
+    shimmer:
+      "from-transparent via-[#ca8a04]/10 to-transparent dark:via-[#a16207]/10",
   },
   critical: {
-    container: "bg-badge-critical text-badge-critical-foreground",
-    dot: "bg-badge-critical-dot",
-    ping: "bg-badge-critical-ping",
-    shimmer: "from-transparent via-badge-critical-dot/10 to-transparent",
+    container: "bg-[#ef4444] text-white dark:bg-[#dc2626] dark:text-white",
+    dot: "bg-[#dc2626] dark:bg-[#b91c1c]",
+    ping: "bg-[#ef4444] dark:bg-[#ef4444]",
+    shimmer:
+      "from-transparent via-[#dc2626]/10 to-transparent dark:via-[#b91c1c]/10",
   },
 };
 
@@ -52,7 +56,7 @@ export function StatusBadge({
           className={cn(
             "relative inline-flex items-center gap-1.5 overflow-hidden rounded-full px-2.5 py-1",
             "font-semibold text-[11px] uppercase tracking-wider",
-            "cursor-default select-none whitespace-nowrap antialiased shadow-badge",
+            "cursor-default select-none whitespace-nowrap antialiased shadow-[0_1px_2px_rgba(0,0,0,0.06)]",
             styles.container,
             className
           )}
