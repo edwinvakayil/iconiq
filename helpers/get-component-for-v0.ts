@@ -149,6 +149,26 @@ const COMPONENT_EXAMPLE: Record<string, string> = {
     "    </div>\n" +
     "  )\n" +
     "}\n",
+  tooltip:
+    '"use client";\n\n' +
+    `import AnimatedTooltip from "@/components/ui/tooltip"\n` +
+    `import Image from "next/image"\n\n` +
+    "const avatars = [\n" +
+    '  { src: "https://iconiqui.com/assets/avatar-3.webp", name: "Alex" },\n' +
+    '  { src: "https://iconiqui.com/assets/avatar-5.webp", name: "Jordan" },\n' +
+    '  { src: "https://iconiqui.com/assets/avatar-16.webp", name: "Sam" },\n' +
+    "]\n\n" +
+    "export default function Page() {\n" +
+    "  return (\n" +
+    '    <div className="flex min-h-svh items-center justify-center -space-x-2 p-8">\n' +
+    "      {avatars.map((avatar) => (\n" +
+    '        <AnimatedTooltip key={avatar.name} content={avatar.name} side="top">\n' +
+    '          <Image src={avatar.src} alt={avatar.name} width={40} height={40} className="size-10 rounded-full border-2 border-background object-cover" />\n' +
+    "        </AnimatedTooltip>\n" +
+    "      ))}\n" +
+    "    </div>\n" +
+    "  )\n" +
+    "}\n",
   "input-group-01":
     '"use client";\n\n' +
     "import {\n" +

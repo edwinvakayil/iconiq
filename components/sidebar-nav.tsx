@@ -93,6 +93,7 @@ const sections: SidebarSection[] = [
       { label: "Slider", href: "/components/slider" },
       { label: "Access Request Banner", href: "/components/accessrequest" },
       { label: "File Tree", href: "/components/file-tree" },
+      { label: "Tooltip", href: "/components/tooltip" },
     ],
   },
 ];

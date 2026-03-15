@@ -5144,6 +5144,21 @@
       ]
     },
     {
+      "name": "tooltip",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": ["framer-motion"],
+      "devDependencies": [],
+      "title": "Tooltip",
+      "description": "An animated tooltip with spring enter/exit, optional delay, and placement (top, bottom, left, right). Uses Framer Motion.",
+      "files": [
+        {
+          "path": "tooltip.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "accessrequest",
       "type": "registry:ui",
       "registryDependencies": [],

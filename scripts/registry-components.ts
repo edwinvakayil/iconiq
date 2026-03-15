@@ -2393,6 +2393,12 @@ export const components: ComponentDefinition[] = [
     dependencies: ["framer-motion", "lucide-react"],
   },
   {
+    name: "tooltip",
+    path: path.join(__dirname, "../registry", "tooltip.tsx"),
+    registryDependencies: [],
+    dependencies: ["framer-motion"],
+  },
+  {
     name: "accessrequest",
     path: path.join(__dirname, "../registry", "accessrequest.tsx"),
     registryDependencies: [],

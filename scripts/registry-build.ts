@@ -70,6 +70,12 @@ const REGISTRY_UI_META: Record<
       "An animated range slider with shimmer, hover/drag feedback, and optional floating value tooltip. Uses Radix UI and Framer Motion.",
     dependencies: ["@radix-ui/react-slider", "framer-motion"],
   },
+  tooltip: {
+    title: "Tooltip",
+    description:
+      "An animated tooltip with spring enter/exit, optional delay, and placement (top, bottom, left, right). Uses Framer Motion.",
+    dependencies: ["framer-motion"],
+  },
 };
 
 if (!fs.existsSync(registryComponents)) {
