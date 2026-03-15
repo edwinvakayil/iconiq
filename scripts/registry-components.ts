@@ -2399,6 +2399,12 @@ export const components: ComponentDefinition[] = [
     dependencies: ["framer-motion"],
   },
   {
+    name: "tabs",
+    path: path.join(__dirname, "../registry", "tabs.tsx"),
+    registryDependencies: [],
+    dependencies: ["framer-motion"],
+  },
+  {
     name: "accessrequest",
     path: path.join(__dirname, "../registry", "accessrequest.tsx"),
     registryDependencies: [],

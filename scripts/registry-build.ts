@@ -76,6 +76,12 @@ const REGISTRY_UI_META: Record<
       "An animated tooltip with spring enter/exit, optional delay, and placement (top, bottom, left, right). Uses Framer Motion.",
     dependencies: ["framer-motion"],
   },
+  tabs: {
+    title: "Tabs",
+    description:
+      "Animated tabs with a sliding indicator. Variants: spotlight, underline, chip. Uses Framer Motion LayoutGroup.",
+    dependencies: ["framer-motion"],
+  },
 };
 
 if (!fs.existsSync(registryComponents)) {

@@ -169,6 +169,20 @@ const COMPONENT_EXAMPLE: Record<string, string> = {
     "    </div>\n" +
     "  )\n" +
     "}\n",
+  tabs:
+    '"use client";\n\n' +
+    `import { useState } from "react"\n` +
+    `import AnimatedTabs from "@/components/ui/tabs"\n\n` +
+    "export default function Page() {\n" +
+    '  const [value, setValue] = useState("Overview")\n' +
+    "  return (\n" +
+    '    <div className="flex min-h-svh flex-col items-center justify-center gap-12 p-8">\n' +
+    '      <AnimatedTabs variant="spotlight" value={value} onValueChange={setValue} />\n' +
+    '      <AnimatedTabs variant="underline" value={value} onValueChange={setValue} />\n' +
+    '      <AnimatedTabs variant="chip" value={value} onValueChange={setValue} />\n' +
+    "    </div>\n" +
+    "  )\n" +
+    "}\n",
   "input-group-01":
     '"use client";\n\n' +
     "import {\n" +

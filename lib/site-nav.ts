@@ -29,6 +29,7 @@ export const SITE_SECTIONS = [
       { label: "Slider", href: "/components/slider" },
       { label: "File Tree", href: "/components/file-tree" },
       { label: "Tooltip", href: "/components/tooltip" },
+      { label: "Tabs", href: "/components/tabs" },
     ],
   },
 ] as const;
@@ -87,6 +88,11 @@ export const PAGE_SECTIONS: Record<string, { label: string; id: string }[]> = {
     { label: "Props", id: "props" },
   ],
   "/components/tooltip": [
+    { label: "Preview", id: "preview" },
+    { label: "Usage", id: "usage" },
+    { label: "Props", id: "props" },
+  ],
+  "/components/tabs": [
     { label: "Preview", id: "preview" },
     { label: "Usage", id: "usage" },
     { label: "Props", id: "props" },

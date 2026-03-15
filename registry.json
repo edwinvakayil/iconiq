@@ -5159,6 +5159,21 @@
       ]
     },
     {
+      "name": "tabs",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": ["framer-motion"],
+      "devDependencies": [],
+      "title": "Tabs",
+      "description": "Animated tabs with a sliding indicator. Variants: spotlight, underline, chip. Uses Framer Motion LayoutGroup.",
+      "files": [
+        {
+          "path": "tabs.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "accessrequest",
       "type": "registry:ui",
       "registryDependencies": [],
