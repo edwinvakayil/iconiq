@@ -16,83 +16,11 @@ export const SITE_SECTIONS = [
       { label: "Button + Icon", href: "/icons/button-svg" },
     ],
   },
-  {
-    label: "Components",
-    children: [
-      { label: "Badges", href: "/components/badges" },
-      { label: "Input Groups", href: "/components/input-groups" },
-      { label: "Breadcrumb", href: "/components/breadcrumbs" },
-      { label: "Radio Group", href: "/components/radiogroup" },
-      { label: "Alert", href: "/components/alert" },
-      { label: "Chart", href: "/components/chart" },
-      { label: "Select", href: "/components/select" },
-      { label: "Slider", href: "/components/slider" },
-      { label: "File Tree", href: "/components/file-tree" },
-      { label: "Tooltip", href: "/components/tooltip" },
-      { label: "Tabs", href: "/components/tabs" },
-    ],
-  },
 ] as const;
 
 /** Section headings (h2/h3) per page for "On this page" anchor links. */
 export const PAGE_SECTIONS: Record<string, { label: string; id: string }[]> = {
   "/animated-components/animated-badges": [
-    { label: "Preview", id: "preview" },
-    { label: "Usage", id: "usage" },
-    { label: "Props", id: "props" },
-  ],
-  "/components/badges": [
-    { label: "Preview", id: "preview" },
-    { label: "Usage", id: "usage" },
-    { label: "Props", id: "props" },
-  ],
-  "/components/input-groups": [
-    { label: "Password field", id: "password-field" },
-    { label: "Preview", id: "preview" },
-    { label: "Usage", id: "usage" },
-    { label: "Props", id: "props" },
-  ],
-  "/components/breadcrumbs": [
-    { label: "Preview", id: "preview" },
-    { label: "Usage", id: "usage" },
-    { label: "Props", id: "props" },
-  ],
-  "/components/radiogroup": [
-    { label: "Preview", id: "preview" },
-    { label: "Usage", id: "usage" },
-    { label: "Props", id: "props" },
-  ],
-  "/components/alert": [
-    { label: "Preview", id: "preview" },
-    { label: "Usage", id: "usage" },
-    { label: "Props", id: "props" },
-  ],
-  "/components/chart": [
-    { label: "Preview", id: "preview" },
-    { label: "Usage", id: "usage" },
-    { label: "Props", id: "props" },
-  ],
-  "/components/select": [
-    { label: "Preview", id: "preview" },
-    { label: "Usage", id: "usage" },
-    { label: "Props", id: "props" },
-  ],
-  "/components/slider": [
-    { label: "Preview", id: "preview" },
-    { label: "Usage", id: "usage" },
-    { label: "Props", id: "props" },
-  ],
-  "/components/file-tree": [
-    { label: "Preview", id: "preview" },
-    { label: "Usage", id: "usage" },
-    { label: "Props", id: "props" },
-  ],
-  "/components/tooltip": [
-    { label: "Preview", id: "preview" },
-    { label: "Usage", id: "usage" },
-    { label: "Props", id: "props" },
-  ],
-  "/components/tabs": [
     { label: "Preview", id: "preview" },
     { label: "Usage", id: "usage" },
     { label: "Props", id: "props" },

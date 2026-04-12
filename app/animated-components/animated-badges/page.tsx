@@ -4,7 +4,6 @@ import Link from "next/link";
 import { CodeBlock } from "@/components/code-block";
 import { CodeBlockInstall } from "@/components/code-block-install";
 import { ComponentActions } from "@/components/component-actions";
-import { ComponentPager } from "@/components/component-pager";
 import { OnThisPage } from "@/components/on-this-page";
 import { SidebarNav } from "@/components/sidebar-nav";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -17,10 +16,7 @@ export default function AnimatedBadgesPage() {
 
       <main className="min-w-0 flex-1">
         <div className="mx-auto max-w-[720px] px-4 py-10 sm:px-6 sm:py-12">
-          <nav
-            aria-label="Breadcrumb"
-            className="mb-6 flex items-center justify-between gap-3"
-          >
+          <nav aria-label="Breadcrumb" className="mb-6 flex items-center gap-3">
             <ol className="flex items-center gap-1.5 font-sans text-neutral-500 text-sm">
               <li>
                 <Link
@@ -53,7 +49,6 @@ export default function AnimatedBadgesPage() {
                 Badges (Animated)
               </li>
             </ol>
-            <ComponentPager />
           </nav>
 
           <h1 className="font-bold font-sans text-3xl text-neutral-900 tracking-tight sm:text-4xl dark:text-white">

@@ -53,10 +53,8 @@ const AnimatedRadioGroupItem = React.forwardRef<
       <motion.div
         className={cn(
           "group relative flex cursor-pointer items-start gap-3 rounded-xl border border-border/60 bg-card px-4 py-3.5",
-          "dark:border-neutral-200/80 dark:bg-white",
-          "transition-colors hover:border-primary/40 hover:bg-accent/40 dark:hover:border-neutral-300 dark:hover:bg-neutral-50",
+          "transition-colors hover:border-primary/40 hover:bg-accent/40",
           "shadow-sm data-[state=checked]:border-primary/60 data-[state=checked]:bg-primary/4 data-[state=checked]:shadow-md",
-          "dark:data-[state=checked]:border-neutral-300 dark:data-[state=checked]:bg-neutral-100 dark:data-[state=checked]:shadow-sm",
           className
         )}
         whileHover={{ scale: 1.015, y: -1 }}
@@ -66,7 +64,7 @@ const AnimatedRadioGroupItem = React.forwardRef<
         <div className="pointer-events-none absolute inset-0 overflow-hidden rounded-xl">
           <motion.div
             animate={{ x: ["-100%", "200%"] }}
-            className="absolute inset-0 bg-linear-to-r from-transparent via-primary/6 to-transparent opacity-0 data-[state=checked]:opacity-100 dark:via-black/5"
+            className="absolute inset-0 bg-linear-to-r from-transparent via-primary/6 to-transparent opacity-0 data-[state=checked]:opacity-100"
             transition={{
               duration: 3.5,
               repeat: Number.POSITIVE_INFINITY,
@@ -80,25 +78,24 @@ const AnimatedRadioGroupItem = React.forwardRef<
           <div
             className={cn(
               "flex h-[18px] w-[18px] items-center justify-center rounded-full border-2 border-muted-foreground/30",
-              "dark:border-black/40 dark:bg-white",
               "ring-offset-background focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
               "disabled:cursor-not-allowed disabled:opacity-50",
-              "data-[state=checked]:border-primary dark:data-[state=checked]:border-black/60"
+              "data-[state=checked]:border-primary"
             )}
           >
             <RadioGroupPrimitive.Indicator className="flex items-center justify-center">
               <AnimatePresence>
                 <motion.div
-                  animate={{ scale: 1, opacity: 1 }}
-                  className="h-2.5 w-2.5 rounded-full bg-primary dark:bg-black/70"
-                  exit={{ scale: 0, opacity: 0 }}
-                  initial={{ scale: 0, opacity: 0 }}
                   key="indicator"
+                  initial={{ scale: 0, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  exit={{ scale: 0, opacity: 0 }}
                   transition={{
                     type: "spring",
                     stiffness: 500,
                     damping: 25,
                   }}
+                  className="h-2.5 w-2.5 rounded-full bg-primary"
                 />
               </AnimatePresence>
             </RadioGroupPrimitive.Indicator>
@@ -106,11 +103,11 @@ const AnimatedRadioGroupItem = React.forwardRef<
 
           {/* Ping ring on selection */}
           <motion.div
+            className="pointer-events-none absolute inset-0 rounded-full border-2 border-primary opacity-0 data-[state=checked]:opacity-100"
             animate={{
               scale: [1, 1.8],
               opacity: [0.5, 0],
             }}
-            className="pointer-events-none absolute inset-0 rounded-full border-2 border-primary opacity-0 data-[state=checked]:opacity-100 dark:border-black/50"
             transition={{
               duration: 1.5,
               repeat: Number.POSITIVE_INFINITY,
@@ -123,12 +120,12 @@ const AnimatedRadioGroupItem = React.forwardRef<
         {(label || description) && (
           <div className="relative flex flex-col gap-0.5">
             {label && (
-              <span className="font-medium text-foreground text-sm leading-tight dark:text-black">
+              <span className="font-medium text-foreground text-sm leading-tight">
                 {label}
               </span>
             )}
             {description && (
-              <span className="text-muted-foreground text-xs leading-snug dark:text-black/60">
+              <span className="text-muted-foreground text-xs leading-snug">
                 {description}
               </span>
             )}

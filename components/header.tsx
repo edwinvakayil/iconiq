@@ -5,7 +5,6 @@ import {
   BookOpen,
   ChevronRight,
   Github,
-  Layers,
   Menu,
   Package,
   Search,
@@ -27,14 +26,6 @@ const mobileNavSections = [
     title: SITE_SECTIONS[0].label,
     icon: Package,
     items: SITE_SECTIONS[0].children.map((item) => ({
-      label: item.label,
-      href: item.href,
-    })),
-  },
-  {
-    title: SITE_SECTIONS[1].label,
-    icon: Layers,
-    items: SITE_SECTIONS[1].children.map((item) => ({
       label: item.label,
       href: item.href,
     })),
@@ -190,7 +181,7 @@ export function Header() {
 
   return (
     <>
-      <header className="sticky top-0 z-[150] w-full border-neutral-300 border-b bg-background/90 backdrop-blur-sm dark:border-neutral-800">
+      <header className="sticky top-0 z-[150] w-full border-neutral-200 border-b bg-background/90 backdrop-blur-sm dark:border-neutral-800/50">
         <div className="mx-auto flex h-14 items-center justify-between px-4 sm:px-6 lg:h-[59px] lg:px-[80px]">
           {/* Logo */}
           <Link
@@ -327,7 +318,7 @@ export function Header() {
                         {isExpanded && (
                           <motion.ul
                             animate="open"
-                            className="mt-0.5 mb-2 ml-[18px] overflow-hidden border-border border-l pl-2"
+                            className="mt-0.5 mb-2 ml-[18px] overflow-hidden border-neutral-200 border-l pl-2 dark:border-neutral-800/50"
                             exit="closed"
                             initial="closed"
                             variants={mobileNavVariants.expandContent}
@@ -356,7 +347,7 @@ export function Header() {
               </nav>
 
               {/* Bottom link */}
-              <div className="border-border border-t p-3">
+              <div className="border-neutral-200 border-t p-3 dark:border-neutral-800/50">
                 <a
                   className="flex w-full items-center justify-center gap-2 rounded-lg border border-border px-3 py-2 font-medium text-[13px] text-muted-foreground transition-colors hover:text-foreground"
                   href={LINK.GITHUB}

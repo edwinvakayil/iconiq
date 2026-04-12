@@ -1,7 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { BookOpen, ChevronRight, Layers, Package } from "lucide-react";
+import { BookOpen, ChevronRight, Package } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
@@ -79,31 +79,13 @@ const sections: SidebarSection[] = [
       { label: "Button + Icon", href: "/icons/button-svg" },
     ],
   },
-  {
-    title: "Components",
-    icon: Layers,
-    items: [
-      { label: "Badges", href: "/components/badges" },
-      { label: "Input Groups", href: "/components/input-groups" },
-      { label: "Breadcrumb", href: "/components/breadcrumbs" },
-      { label: "Radio Group", href: "/components/radiogroup" },
-      { label: "Alert", href: "/components/alert" },
-      { label: "Chart", href: "/components/chart" },
-      { label: "Select", href: "/components/select" },
-      { label: "Slider", href: "/components/slider" },
-      { label: "Access Request Banner", href: "/components/accessrequest" },
-      { label: "File Tree", href: "/components/file-tree" },
-      { label: "Tooltip", href: "/components/tooltip" },
-      { label: "Tabs", href: "/components/tabs" },
-    ],
-  },
 ];
 
 export function SidebarNav() {
   const pathname = usePathname();
   const [expanded, setExpanded] = useState<string[]>([
     "Getting Started",
-    "Components",
+    "Icons",
   ]);
 
   const toggleSection = (title: string) => {
@@ -115,7 +97,7 @@ export function SidebarNav() {
   return (
     <aside
       aria-label="Main navigation"
-      className="hidden w-[260px] shrink-0 border-border border-r md:block"
+      className="hidden w-[260px] shrink-0 border-neutral-200 border-r md:block dark:border-neutral-800/50"
     >
       <nav className="sticky top-14 -ml-[14px] h-[calc(100vh-3.5rem)] overflow-y-auto py-5 pr-4 pl-0">
         {sections.map((section) => {
@@ -152,7 +134,7 @@ export function SidebarNav() {
                 {isExpanded && (
                   <motion.ul
                     animate="open"
-                    className="mt-1 mb-3 ml-[18px] overflow-hidden border-neutral-300 border-l pl-3 dark:border-neutral-600"
+                    className="mt-1 mb-3 ml-[18px] overflow-hidden border-neutral-200 border-l pl-3 dark:border-neutral-800/50"
                     exit="closed"
                     initial="closed"
                     variants={sidebarVariants.section}

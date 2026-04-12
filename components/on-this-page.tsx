@@ -31,15 +31,12 @@ function getTocForPath(pathname: string): TocEntry[] {
     });
   }
   if (pathname.startsWith("/animated-components/")) {
-    if (!hasIcons())
+    if (!hasIcons()) {
       toc.push({
         label: SITE_SECTIONS[0].label,
         children: [...SITE_SECTIONS[0].children],
       });
-    toc.push({
-      label: SITE_SECTIONS[1].label,
-      children: [...SITE_SECTIONS[1].children],
-    });
+    }
   }
   return toc;
 }
@@ -63,72 +60,23 @@ function renderIconsNav(
   );
 }
 
-function renderComponentsNav(params: {
-  pathname: string;
-  activeSectionId: string | null;
-  isInputGroups: boolean;
-  isAnimatedComponent: boolean;
-  isComponentsPage: boolean;
-  animatedSection: (typeof SITE_SECTIONS)[number] | undefined;
-  componentsSection: (typeof SITE_SECTIONS)[number] | undefined;
-  parentSectionLinkClass: (isActive: boolean) => string;
-}) {
-  const {
-    pathname,
-    activeSectionId,
-    isInputGroups,
-    isAnimatedComponent,
-    isComponentsPage,
-    animatedSection,
-    componentsSection,
-    parentSectionLinkClass,
-  } = params;
-
-  const isPasswordFieldActive =
-    activeSectionId === "password-field" ||
-    activeSectionId === "preview" ||
-    activeSectionId === "usage" ||
-    activeSectionId === "props";
-
-  if (isInputGroups) {
-    return (
-      <ul className="mt-1 space-y-1">
-        <li>
-          <a
-            className={parentSectionLinkClass(isPasswordFieldActive)}
-            href="#password-field"
-          >
-            Password field
-          </a>
-        </li>
-      </ul>
-    );
-  }
-
-  const componentLabel = isAnimatedComponent
-    ? (animatedSection?.children.find((child) => child.href === pathname)
-        ?.label ?? "Preview")
-    : isComponentsPage
-      ? (componentsSection?.children.find((child) => child.href === pathname)
-          ?.label ?? "Preview")
-      : "Preview";
-
-  const isActive = activeSectionId === "preview";
-
+function renderAnimatedSectionNav(
+  pathname: string,
+  sectionLinkClass: (id: string) => string
+) {
+  const sections = PAGE_SECTIONS[pathname] ?? [];
   return (
     <ul className="mt-1 space-y-0.5">
-      <li>
-        <a
-          className={`block py-0.5 font-sans text-[13px] transition-colors ${
-            isActive
-              ? "font-semibold text-neutral-950 dark:text-white"
-              : "text-neutral-600 hover:text-neutral-900 dark:text-neutral-300"
-          }`}
-          href="#preview"
-        >
-          {componentLabel}
-        </a>
-      </li>
+      {sections.map((section) => (
+        <li key={section.id}>
+          <a
+            className={sectionLinkClass(section.id)}
+            href={`#${section.id}`}
+          >
+            {section.label}
+          </a>
+        </li>
+      ))}
     </ul>
   );
 }
@@ -276,23 +224,6 @@ export function OnThisPage() {
         : "border-transparent text-neutral-600 hover:text-neutral-900 dark:text-neutral-300"
     }`;
 
-  const isInputGroups = pathname === "/components/input-groups";
-  const isAnimatedComponent = pathname.startsWith("/animated-components/");
-  const isComponentsPage =
-    pathname.startsWith("/components/") && !isInputGroups;
-
-  const animatedSection: (typeof SITE_SECTIONS)[number] | undefined = undefined;
-  const componentsSection = SITE_SECTIONS.find(
-    (section) => section.label === "Components"
-  );
-
-  const parentSectionLinkClass = (isActive: boolean) =>
-    `block py-0.5 font-sans text-[13px] transition-colors ${
-      isActive
-        ? "font-semibold text-neutral-950 dark:text-white"
-        : "text-neutral-600 hover:text-neutral-900 dark:text-neutral-300"
-    }`;
-
   return (
     <aside
       aria-label="On this page"
@@ -304,19 +235,9 @@ export function OnThisPage() {
         </h2>
         {pathname.startsWith("/icons")
           ? renderIconsNav(pathname, linkClass)
-          : (pathname.startsWith("/animated-components/") ||
-                pathname.startsWith("/components/")) &&
+          : pathname.startsWith("/animated-components/") &&
               PAGE_SECTIONS[pathname]?.length
-            ? renderComponentsNav({
-                pathname,
-                activeSectionId,
-                isInputGroups,
-                isAnimatedComponent,
-                isComponentsPage,
-                animatedSection,
-                componentsSection,
-                parentSectionLinkClass,
-              })
+            ? renderAnimatedSectionNav(pathname, sectionLinkClass)
             : renderDefaultNav(toc, pathname, linkClass, sectionLinkClass)}
       </nav>
     </aside>

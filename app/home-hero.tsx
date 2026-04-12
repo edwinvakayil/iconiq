@@ -14,8 +14,7 @@ import {
 
 const stats = [
   { id: 1, name: "Animated Icons", count: "350+" },
-  { id: 2, name: "Components", count: "15+" },
-  { id: 3, name: "Copy-paste", count: "Ready" },
+  { id: 2, name: "Copy-paste", count: "Ready" },
 ];
 
 export function HomeHero() {
@@ -34,14 +33,14 @@ export function HomeHero() {
                 Free
               </div>
             </div>
-            {stats.map((item) => (
+            {stats.map((item, index) => (
               <div className="flex items-center" key={item.id}>
                 <div className="py-1 ps-2.5 pe-3">
                   <p className="font-sans text-neutral-900 text-sm dark:text-white">
                     {item.count} {item.name}
                   </p>
                 </div>
-                {item.id !== stats.length && (
+                {index < stats.length - 1 && (
                   <span
                     aria-hidden
                     className="h-4 w-px bg-neutral-300 dark:bg-neutral-600"
