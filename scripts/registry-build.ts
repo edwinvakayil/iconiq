@@ -28,6 +28,12 @@ const REGISTRY_UI_META: Record<
       "Single-select accordion with spring height, staggered text, and rotating plus control. Built with Framer Motion.",
     dependencies: ["framer-motion", "lucide-react"],
   },
+  breadcrumbs: {
+    title: "Animated Breadcrumbs",
+    description:
+      "Breadcrumb trail with spring separators, hover lift, and a subtle shimmer on the current page. Built with Framer Motion.",
+    dependencies: ["framer-motion", "lucide-react"],
+  },
 };
 
 if (!fs.existsSync(registryComponents)) {

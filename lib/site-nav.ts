@@ -20,6 +20,7 @@ export const SITE_SECTIONS = [
     label: "Components",
     children: [
       { label: "Motion Accordion", href: "/components/motion-accordion" },
+      { label: "Breadcrumbs", href: "/components/breadcrumbs" },
     ],
   },
 ] as const;

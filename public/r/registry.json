@@ -4974,6 +4974,21 @@
       ]
     },
     {
+      "name": "breadcrumbs",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": ["framer-motion", "lucide-react"],
+      "devDependencies": [],
+      "title": "Animated Breadcrumbs",
+      "description": "Breadcrumb trail with spring separators, hover lift, and a subtle shimmer on the current page. Built with Framer Motion.",
+      "files": [
+        {
+          "path": "breadcrumbs.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "database-backup",
       "type": "registry:ui",
       "registryDependencies": [],

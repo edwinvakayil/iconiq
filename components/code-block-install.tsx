@@ -42,15 +42,22 @@ export function CodeBlockInstall({
   };
 
   return (
-    <div className="relative mt-[40px] w-full max-w-[642px] px-0">
+    <div className="relative mt-[40px] w-full min-w-0 max-w-[642px] px-0">
       <Tabs
-        className="w-full"
+        className="w-full min-w-0"
         onValueChange={setPackageName}
         value={packageName}
       >
-        <TabsList className="w-full" onClick={(e) => e.stopPropagation()}>
+        <TabsList
+          className="flex w-full min-w-0 flex-wrap items-center justify-start gap-x-2.5 gap-y-2 sm:inline-flex sm:flex-nowrap sm:gap-x-6 sm:gap-y-0"
+          onClick={(e) => e.stopPropagation()}
+        >
           {Object.values(PACKAGE_MANAGER).map((pm) => (
-            <TabsTrigger key={pm} value={pm}>
+            <TabsTrigger
+              className="shrink-0 pb-1 text-[10px] tracking-[0.08em] sm:pb-1.5 sm:text-xs sm:tracking-[0.12em]"
+              key={pm}
+              value={pm}
+            >
               {pm}
             </TabsTrigger>
           ))}
@@ -66,7 +73,7 @@ export function CodeBlockInstall({
                 className={cn(
                   "overflow-hidden rounded-tr-[10px] rounded-br-[10px] rounded-bl-[10px] bg-white focus-visible:outline-1 focus-visible:outline-primary focus-visible:outline-offset-0 dark:bg-white/10",
                   "supports-[corner-shape:squircle]:corner-tr-squircle supports-[corner-shape:squircle]:corner-br-squircle supports-[corner-shape:squircle]:corner-bl-squircle supports-[corner-shape:squircle]:rounded-tr-[14px] supports-[corner-shape:squircle]:rounded-br-[14px] supports-[corner-shape:squircle]:rounded-bl-[14px]",
-                  "isolate whitespace-nowrap px-4 py-3 pr-20 font-mono text-sm tracking-[-0.39px]",
+                  "isolate whitespace-nowrap px-2.5 py-2.5 pr-12 font-mono text-[13px] tracking-[-0.39px] sm:px-4 sm:py-3 sm:pr-20 sm:text-sm",
                   "before:pointer-events-none before:absolute before:top-0 before:left-0 before:z-10 before:block before:h-full before:rounded-bl-[10px]",
                   "supports-[corner-shape:squircle]:before:corner-bl-squircle supports-[corner-shape:squircle]:before:rounded-bl-[14px]",
                   "before:transition-[width] before:duration-50 before:ease-out before:content-['']",
@@ -74,7 +81,7 @@ export function CodeBlockInstall({
                   "after:pointer-events-none after:absolute after:top-0 after:right-0 after:z-10 after:block after:h-full after:rounded-r-[10px]",
                   "supports-[corner-shape:squircle]:after:corner-r-squircle supports-[corner-shape:squircle]:after:rounded-r-[14px]",
                   "after:transition-[width] after:duration-50 after:ease-out after:content-['']",
-                  "after:w-[calc(min(40px,var(--scroll-area-overflow-x-end,100px))+100px)] after:bg-[linear-gradient(to_left,white_0%,white_30%,transparent)] dark:after:bg-[linear-gradient(to_left,rgb(47_47_47/1)_0%,rgb(47_47_47/1)_30%,transparent)] after:[--scroll-area-overflow-x-end:inherit]"
+                  "after:w-[calc(min(40px,var(--scroll-area-overflow-x-end,100px))+56px)] after:bg-[linear-gradient(to_left,white_0%,white_30%,transparent)] sm:after:w-[calc(min(40px,var(--scroll-area-overflow-x-end,100px))+100px)] dark:after:bg-[linear-gradient(to_left,rgb(47_47_47/1)_0%,rgb(47_47_47/1)_30%,transparent)] after:[--scroll-area-overflow-x-end:inherit]"
                 )}
               >
                 <span className="sr-only">
@@ -104,7 +111,7 @@ export function CodeBlockInstall({
               <button
                 aria-disabled={state !== "idle"}
                 aria-label="Copy to clipboard"
-                className="supports-[corner-shape:squircle]:corner-squircle absolute top-1/2 right-1.5 z-20 -translate-y-1/2 cursor-pointer rounded-[6px] p-2 transition-[background-color] duration-100 focus-within:outline-offset-1 hover:bg-neutral-100 focus-visible:outline-1 focus-visible:outline-primary supports-[corner-shape:squircle]:rounded-[8px] dark:hover:bg-neutral-700"
+                className="supports-[corner-shape:squircle]:corner-squircle absolute top-1/2 right-1 z-20 -translate-y-1/2 cursor-pointer rounded-[6px] p-1.5 transition-[background-color] duration-100 focus-within:outline-offset-1 hover:bg-neutral-100 focus-visible:outline-1 focus-visible:outline-primary supports-[corner-shape:squircle]:rounded-[8px] sm:right-1.5 sm:p-2 dark:hover:bg-neutral-700"
                 onClick={handleCopyToClipboard}
                 tabIndex={0}
                 type="button"

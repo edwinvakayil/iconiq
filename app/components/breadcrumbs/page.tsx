@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, Home } from "lucide-react";
 import { motion, useReducedMotion, type Variants } from "motion/react";
 import Link from "next/link";
 import type { ReactNode } from "react";
@@ -11,101 +11,77 @@ import { ComponentActions } from "@/components/component-actions";
 import { SidebarNav } from "@/components/sidebar-nav";
 import { cn } from "@/lib/utils";
 import {
-  MotionAccordion,
-  type MotionAccordionItem,
-} from "@/registry/motion-accordion";
+  AnimatedBreadcrumbs,
+  type BreadcrumbItem,
+} from "@/registry/breadcrumbs";
 
-const demoItems: MotionAccordionItem[] = [
+const demoItems: BreadcrumbItem[] = [
   {
-    id: "1",
-    title: "What makes this accordion special?",
-    content:
-      "It uses spring-based physics animations powered by Framer Motion, creating fluid and natural feeling transitions that respond organically to user interaction.",
+    label: "Home",
+    href: "/",
+    icon: <Home className="size-3.5" />,
   },
-  {
-    id: "2",
-    title: "How does the animation work?",
-    content:
-      "Each element — the icon rotation, content reveal, and background shift — animates independently with carefully tuned spring parameters for a layered, premium feel.",
-  },
-  {
-    id: "3",
-    title: "Can I customize the content?",
-    content:
-      "Absolutely. Pass any React node as content. The accordion gracefully handles variable-height content with automatic height animation.",
-  },
-  {
-    id: "4",
-    title: "Is it accessible?",
-    content:
-      "Yes. It uses semantic button elements, proper ARIA attributes, and supports full keyboard navigation out of the box.",
-  },
+  { label: "Components", href: "/components/breadcrumbs" },
+  { label: "Breadcrumbs" },
 ];
 
-const usageCode = `import { MotionAccordion } from "@/components/ui/motion-accordion";
+const usageCode = `import { AnimatedBreadcrumbs } from "@/components/ui/breadcrumbs";
+import { Home } from "lucide-react";
 
 const items = [
-  {
-    id: "1",
-    title: "What makes this accordion special?",
-    content:
-      "It uses spring-based physics animations powered by Framer Motion for natural transitions.",
-  },
-  {
-    id: "2",
-    title: "How does the animation work?",
-    content:
-      "The icon, panel height, and text stagger are driven by separate spring transitions.",
-  },
+  { label: "Home", href: "/", icon: <Home className="size-3.5" /> },
+  { label: "Docs", href: "/docs" },
+  { label: "Current page" },
 ];
 
-export function Faq() {
-  return <MotionAccordion items={items} />;
+export function PageHeader() {
+  return <AnimatedBreadcrumbs items={items} />;
 }`;
 
-/** Same shape as accordion rows: documents API, packages, and behavior in the bento “Dependencies” tile. */
-const componentDetailsItems: MotionAccordionItem[] = [
+type DetailRow = { id: string; title: string; content: string };
+
+const componentDetailsItems: DetailRow[] = [
   {
     id: "items",
     title: "items prop (required)",
     content:
-      "Pass an array of objects with id (stable string key per row), title (visible question), and content (answer body as a string — the component splits on spaces for the stagger animation).",
+      "Array of breadcrumb segments: label (visible text), optional href (links use motion.a; last segment is often current page with no href), optional icon (React node, e.g. a Lucide icon).",
   },
   {
     id: "className",
     title: "className (optional)",
     content:
-      "Forwarded to the root wrapper; use it to drop max-width, tweak spacing, or align with your layout grid.",
+      "Forwarded to the root nav element; use it for alignment, max-width, or spacing in your header or page chrome.",
   },
   {
     id: "framer-motion",
     title: "framer-motion",
     content:
-      "Handles layout height springs, AnimatePresence for panel mount/unmount, opacity on list entrance, plus rotation and scale on the trigger icon.",
+      "Drives list item layout, separator pop, hover/tap on links, staggered entrance, and the shimmer on the active crumb.",
   },
   {
     id: "lucide-react",
     title: "lucide-react",
     content:
-      "Supplies the Plus icon. Replace the import with any Lucide icon or your own SVG if you prefer a different affordance.",
+      "ChevronRight is used between segments. You can pass any icon nodes in items for home or section markers.",
   },
   {
     id: "behavior",
-    title: "Interaction model",
+    title: "Current vs. links",
     content:
-      "Only one section stays open at a time (single-select). Clicking the active row closes it. Focus styles use ring tokens for keyboard users.",
+      "The last item is styled as the current page (no hover scale, pulsing dot, shimmer). Earlier items get accent hover background and lift.",
   },
   {
     id: "a11y",
     title: "Accessibility",
     content:
-      "Each trigger is a native button with aria-expanded and aria-controls pointing at the animated panel id. Semantic structure works with screen readers and tab order.",
+      'Root nav uses aria-label="breadcrumb" and an ordered list. Ensure hrefs point to real routes and the current page is last.',
   },
   {
     id: "registry",
     title: "shadcn registry",
     content:
-      "Peer dependencies are declared on the registry item so shadcn add pulls framer-motion and lucide-react into your project when needed.",
+      "Peer dependencies are declared on the registry item so shadcn add pulls framer-motion and lucide-react when needed.",
   },
 ];
 
@@ -180,7 +156,7 @@ function BentoMotion({
   );
 }
 
-export default function MotionAccordionPage() {
+export default function BreadcrumbsPage() {
   const prefersReducedMotion = useReducedMotion();
   const containerVariants = prefersReducedMotion
     ? bentoContainerStatic
@@ -219,7 +195,7 @@ export default function MotionAccordionPage() {
               <li>
                 <Link
                   className="transition-colors hover:text-neutral-800 dark:hover:text-neutral-200"
-                  href="/components/motion-accordion"
+                  href="/components/breadcrumbs"
                 >
                   Components
                 </Link>
@@ -231,7 +207,7 @@ export default function MotionAccordionPage() {
                 aria-current="page"
                 className="text-neutral-700 dark:text-neutral-300"
               >
-                Motion Accordion
+                Breadcrumbs
               </li>
             </ol>
           </motion.nav>
@@ -247,11 +223,11 @@ export default function MotionAccordionPage() {
             }
           >
             <h1 className="font-sans font-semibold text-3xl text-neutral-900 tracking-tight sm:text-[2rem] dark:text-white">
-              Motion Accordion
+              Breadcrumbs
             </h1>
             <p className="mt-2 font-sans text-[15px] text-neutral-500 leading-relaxed dark:text-neutral-400">
-              Single-open rows with spring height and staggered copy. Built with
-              Framer Motion and your theme tokens.
+              Spring separators, hover lift, and a shimmer on the current
+              segment. Built with Framer Motion and your theme tokens.
             </p>
           </motion.header>
 
@@ -264,7 +240,6 @@ export default function MotionAccordionPage() {
             initial="hidden"
             variants={containerVariants}
           >
-            {/* Featured preview — spans 2 rows on large screens */}
             <BentoMotion
               className={cn(
                 "relative overflow-hidden shadow-[0_24px_64px_-28px_rgba(0,0,0,0.12)] lg:col-span-8 lg:row-span-2",
@@ -278,7 +253,7 @@ export default function MotionAccordionPage() {
               />
               <SectionLabel accent="01">Live preview</SectionLabel>
               <div className="relative mt-1 min-h-0 flex-1 rounded-2xl border border-neutral-200/30 bg-neutral-50/90 p-5 sm:p-7 dark:border-neutral-700/25 dark:bg-neutral-900/50">
-                <MotionAccordion className="max-w-none" items={demoItems} />
+                <AnimatedBreadcrumbs items={demoItems} />
               </div>
             </BentoMotion>
 
@@ -288,7 +263,7 @@ export default function MotionAccordionPage() {
             >
               <SectionLabel accent="02">Install</SectionLabel>
               <div className="min-w-0 flex-1 [&>div]:mt-0">
-                <CodeBlockInstall componentName="motion-accordion" />
+                <CodeBlockInstall componentName="breadcrumbs" />
               </div>
             </BentoMotion>
 
@@ -301,7 +276,7 @@ export default function MotionAccordionPage() {
                 Ship the registry bundle to v0 and iterate on motion or layout
                 with prompts.
               </p>
-              <ComponentActions name="motion-accordion" />
+              <ComponentActions name="breadcrumbs" />
             </BentoMotion>
 
             <BentoMotion
@@ -329,19 +304,12 @@ export default function MotionAccordionPage() {
             >
               <SectionLabel accent="05">Dependencies</SectionLabel>
               <p className="mb-3 font-sans text-neutral-500 text-xs leading-snug dark:text-neutral-400">
-                Registry peers and how this component fits your app — same{" "}
+                Registry peers and how this component fits your app — each
+                segment is a{" "}
                 <code className="rounded bg-neutral-100 px-1 py-0.5 font-mono text-[10px] dark:bg-neutral-900">
-                  id
-                </code>
-                ,{" "}
-                <code className="rounded bg-neutral-100 px-1 py-0.5 font-mono text-[10px] dark:bg-neutral-900">
-                  title
-                </code>
-                ,{" "}
-                <code className="rounded bg-neutral-100 px-1 py-0.5 font-mono text-[10px] dark:bg-neutral-900">
-                  content
+                  BreadcrumbItem
                 </code>{" "}
-                shape as accordion data.
+                with label, optional href, and optional icon.
               </p>
               <div className="rounded-xl border border-neutral-200/30 bg-white dark:border-neutral-700/25 dark:bg-neutral-950">
                 <ul className="divide-y divide-neutral-100/90 dark:divide-neutral-800/60">

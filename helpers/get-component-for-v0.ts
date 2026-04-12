@@ -31,6 +31,22 @@ const COMPONENT_EXAMPLE: Record<string, string> = {
     "    </div>\n" +
     "  )\n" +
     "}\n",
+  breadcrumbs:
+    '"use client";\n\n' +
+    `import { AnimatedBreadcrumbs } from "@/components/ui/breadcrumbs"\n` +
+    `import { Home } from "lucide-react"\n\n` +
+    "const items = [\n" +
+    '  { label: "Home", href: "/", icon: <Home className="size-3.5" /> },\n' +
+    '  { label: "Docs", href: "/docs" },\n' +
+    '  { label: "Current" },\n' +
+    "]\n\n" +
+    "export default function Page() {\n" +
+    "  return (\n" +
+    '    <div className="flex min-h-svh items-center justify-center p-8">\n' +
+    "      <AnimatedBreadcrumbs items={items} />\n" +
+    "    </div>\n" +
+    "  )\n" +
+    "}\n",
 };
 
 const getComponentForV0 = async (name: string) => {
