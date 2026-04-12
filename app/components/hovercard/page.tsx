@@ -272,10 +272,6 @@ export default function HovercardPage() {
               )}
               variants={itemVariants}
             >
-              <span
-                aria-hidden
-                className="pointer-events-none absolute -top-24 -right-24 size-56 rounded-full bg-sky-50/55 blur-3xl dark:bg-sky-300/10"
-              />
               <SectionLabel accent="01">Live preview</SectionLabel>
               <div className="relative mt-1 min-h-0 flex-1">
                 <HoverExpand

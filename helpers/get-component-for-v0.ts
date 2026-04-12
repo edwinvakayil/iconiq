@@ -17,6 +17,21 @@ const COMPONENT_EXAMPLE: Record<string, string> = {
     "    </div>\n" +
     "  )\n" +
     "}\n",
+  alert:
+    '"use client";\n\n' +
+    `import Alert from "@/components/ui/alert"\n` +
+    `import { CheckCircle2 } from "lucide-react"\n\n` +
+    "export default function Page() {\n" +
+    "  return (\n" +
+    '    <div className="flex min-h-svh items-center justify-center p-8">\n' +
+    "      <Alert\n" +
+    '        icon={<CheckCircle2 aria-hidden className="size-[18px]" />}\n' +
+    '        message="Your workspace was updated."\n' +
+    '        title="All set"\n' +
+    "      />\n" +
+    "    </div>\n" +
+    "  )\n" +
+    "}\n",
   "motion-accordion":
     '"use client";\n\n' +
     `import { Accordion } from "@/components/ui/motion-accordion"\n\n` +

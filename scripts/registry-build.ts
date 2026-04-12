@@ -28,6 +28,12 @@ const REGISTRY_UI_META: Record<
       "Single-select accordion with spring height, staggered text, and rotating plus control. Built with Framer Motion.",
     dependencies: ["framer-motion", "lucide-react"],
   },
+  alert: {
+    title: "Alert",
+    description:
+      "Dismissible banner with user-provided leading icon, spring enter/exit, blur, and optional fixed viewport positions. Framer Motion.",
+    dependencies: ["framer-motion"],
+  },
   breadcrumbs: {
     title: "Breadcrumbs",
     description:

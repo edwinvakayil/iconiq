@@ -4974,6 +4974,21 @@
       ]
     },
     {
+      "name": "alert",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": ["framer-motion"],
+      "devDependencies": [],
+      "title": "Alert",
+      "description": "Dismissible banner with user-provided leading icon, spring enter/exit, blur, and optional fixed viewport positions. Framer Motion.",
+      "files": [
+        {
+          "path": "alert.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "breadcrumbs",
       "type": "registry:ui",
       "registryDependencies": [],

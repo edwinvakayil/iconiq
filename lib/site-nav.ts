@@ -20,6 +20,7 @@ export const SITE_SECTIONS = [
     label: "Components",
     children: [
       { label: "Accordion", href: "/components/motion-accordion" },
+      { label: "Alert", href: "/components/alert" },
       { label: "Breadcrumbs", href: "/components/breadcrumbs" },
       { label: "Button", href: "/components/button" },
       { label: "Hover expand", href: "/components/hovercard" },
