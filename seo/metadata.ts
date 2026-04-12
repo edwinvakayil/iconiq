@@ -64,14 +64,6 @@ const baseMetadata: Metadata = {
     type: "website",
     locale: "en_US",
     url: SITE.URL,
-    images: [
-      {
-        url: SITE.OG_IMAGE,
-        width: 1200,
-        height: 630,
-        alt: `${SITE.NAME} - Motion-Powered Icons and Components Library`,
-      },
-    ],
   },
   applicationName: SITE.NAME,
   appleWebApp: {
@@ -94,14 +86,6 @@ const baseMetadata: Metadata = {
     description: SITE.DESCRIPTION.SHORT,
     creator: SITE.AUTHOR.TWITTER,
     site: SITE.AUTHOR.TWITTER,
-    images: [
-      {
-        url: SITE.OG_IMAGE,
-        width: 1200,
-        height: 630,
-        alt: `${SITE.NAME} - Motion-Powered Icons and Components Library`,
-      },
-    ],
   },
   category: "technology",
 };

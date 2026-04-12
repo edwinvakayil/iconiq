@@ -13,8 +13,9 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { Logo } from "@/components/logo";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
-import { LINK, SITE } from "@/constants";
+import { LINK } from "@/constants";
 import { BASE_LINKS, SITE_SECTIONS } from "@/lib/site-nav";
 
 const iconsSection = SITE_SECTIONS.find((s) => s.label === "Icons");
@@ -206,7 +207,7 @@ export function Header() {
     <>
       <motion.header
         animate={{ opacity: 1, y: 0 }}
-        className="sticky top-0 z-[150] w-full border-neutral-200/40 border-b-[0.5px] bg-white/95 backdrop-blur-sm dark:border-neutral-700/30 dark:bg-neutral-950/95"
+        className="sticky top-0 z-[150] w-full border-neutral-200/40 border-b-[0.5px] bg-white/95 backdrop-blur-sm dark:border-neutral-700/30 dark:bg-neutral-900/95"
         initial={prefersReducedMotion ? false : { opacity: 0, y: -10 }}
         transition={
           prefersReducedMotion
@@ -216,12 +217,7 @@ export function Header() {
       >
         <div className="mx-auto flex h-14 items-center justify-between px-4 sm:px-6 lg:h-[59px] lg:px-[80px]">
           {/* Logo */}
-          <Link
-            className="flex items-center gap-2 font-semibold text-lg"
-            href="/"
-          >
-            {SITE.LOGO}
-          </Link>
+          <Logo />
 
           {/* Right actions */}
           <div className="flex items-center gap-2">
