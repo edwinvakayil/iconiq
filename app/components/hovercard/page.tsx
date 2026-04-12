@@ -65,7 +65,7 @@ const componentDetailsItems: DetailRow[] = [
     id: "items",
     title: "items (required)",
     content:
-      "Array of HoverExpandItem: label (row title), image (path or URL for next/image), optional sublabel (uppercase rail), optional imageAlt (defaults to label), optional description (shown under the title when expanded).",
+      "Array of HoverExpandItem: label (row title), image (path or URL for next/image), optional sublabel (uppercase rail, hidden below sm to save space), optional imageAlt (defaults to label), optional description (shown under the title when expanded).",
   },
   {
     id: "collapsedHeight",
@@ -100,7 +100,7 @@ const componentDetailsItems: DetailRow[] = [
     id: "behavior",
     title: "Interaction model",
     content:
-      "Pointer hover expands that row and dims siblings; hover end resets. cursor-default on rows — wrap in a link if you need navigation.",
+      "Fine pointer + hover: pointer enter expands a row, leave resets. Touch / coarse pointer: tap a row to expand or collapse (tap again to close). Rows use role=button when in tap mode.",
   },
   {
     id: "registry",

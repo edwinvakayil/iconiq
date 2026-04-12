@@ -31,6 +31,21 @@ export interface HoverExpandProps {
   className?: string;
 }
 
+/** True when the device likely has no usable hover (phones, most tablets). */
+function useTapToExpand() {
+  const [tapToExpand, setTapToExpand] = React.useState(false);
+
+  React.useEffect(() => {
+    const mq = window.matchMedia("(hover: hover) and (pointer: fine)");
+    const sync = () => setTapToExpand(!mq.matches);
+    sync();
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
+  }, []);
+
+  return tapToExpand;
+}
+
 function RowBackground({
   isHovered,
   item,
@@ -77,23 +92,32 @@ function RowCaption({
   return (
     <div
       className={cn(
-        "absolute inset-0 flex px-5",
-        isHovered ? "items-end pt-6 pb-4" : "items-center py-2.5"
+        "absolute inset-0 flex px-3 sm:px-5",
+        isHovered
+          ? "items-end pt-3 pb-2.5 sm:pt-6 sm:pb-4"
+          : "items-center py-1.5 sm:py-2.5"
       )}
     >
       <div
         className={cn(
-          "flex w-full justify-between gap-4",
-          isHovered ? "items-end" : "items-baseline"
+          "flex w-full justify-between gap-2 sm:gap-4",
+          isHovered ? "items-start sm:items-end" : "items-baseline"
         )}
       >
-        <div className="grid min-w-0 flex-1 grid-cols-[auto_minmax(0,1fr)] items-baseline gap-x-3 gap-y-1.5">
+        <div
+          className={cn(
+            "min-w-0 flex-1",
+            isHovered
+              ? "flex flex-col items-start gap-y-1 sm:grid sm:grid-cols-[auto_minmax(0,1fr)] sm:items-baseline sm:gap-x-3 sm:gap-y-1.5"
+              : "grid grid-cols-[auto_minmax(0,1fr)] items-baseline gap-x-2 gap-y-1 sm:gap-x-3 sm:gap-y-1.5"
+          )}
+        >
           <motion.span
             animate={{
               color: isHovered ? "#ffffff" : "currentColor",
               opacity: isHovered ? 0.5 : 0.4,
             }}
-            className="shrink-0 text-xs tabular-nums opacity-40"
+            className="shrink-0 text-[10px] tabular-nums opacity-40 sm:text-xs"
             transition={{ duration: 0.2 }}
           >
             {String(index + 1).padStart(2, "0")}
@@ -103,8 +127,7 @@ function RowCaption({
             animate={{
               color: isHovered ? "#ffffff" : "currentColor",
             }}
-            className="min-w-0 break-words font-semibold tracking-tight"
-            style={{ fontSize: "clamp(1.1rem, 2.2vw, 1.5rem)" }}
+            className="w-full min-w-0 break-words text-left font-semibold text-[clamp(0.88rem,3.4vw,1.12rem)] tracking-tight sm:w-auto sm:text-[clamp(1.1rem,2.2vw,1.5rem)]"
             transition={{ duration: 0.2 }}
           >
             {item.label}
@@ -113,7 +136,7 @@ function RowCaption({
           {item.description && isHovered ? (
             <motion.div
               animate={{ opacity: 1, y: 0 }}
-              className="col-start-2 min-w-0 text-sm text-white/70 leading-snug"
+              className="w-full min-w-0 text-left text-[10px] text-white/70 leading-snug sm:col-start-2 sm:text-sm"
               initial={{ opacity: 0, y: 6 }}
               transition={{
                 duration: 0.3,
@@ -132,7 +155,7 @@ function RowCaption({
               color: isHovered ? "rgba(255,255,255,0.55)" : "currentColor",
               opacity: isHovered ? 1 : 0.45,
             }}
-            className="shrink-0 text-xs uppercase tracking-widest"
+            className="hidden shrink-0 text-[10px] uppercase tracking-widest sm:block sm:text-xs"
             transition={{ duration: 0.2 }}
           >
             {item.sublabel}
@@ -150,6 +173,7 @@ function HoverExpandRow({
   index,
   item,
   setHoveredIndex,
+  tapToExpand,
 }: {
   item: HoverExpandItem;
   index: number;
@@ -157,9 +181,14 @@ function HoverExpandRow({
   setHoveredIndex: React.Dispatch<React.SetStateAction<number | null>>;
   collapsedHeight: number;
   expandedHeight: number;
+  tapToExpand: boolean;
 }) {
   const isHovered = hoveredIndex === index;
   const isOtherHovered = hoveredIndex !== null && !isHovered;
+
+  const toggleRow = React.useCallback(() => {
+    setHoveredIndex((prev) => (prev === index ? null : index));
+  }, [index, setHoveredIndex]);
 
   return (
     <>
@@ -168,9 +197,44 @@ function HoverExpandRow({
           height: isHovered ? expandedHeight : collapsedHeight,
           opacity: isOtherHovered ? 0.38 : 1,
         }}
-        className="relative w-full cursor-default overflow-hidden"
-        onHoverEnd={() => setHoveredIndex(null)}
-        onHoverStart={() => setHoveredIndex(index)}
+        aria-expanded={tapToExpand ? isHovered : undefined}
+        className={cn(
+          "relative w-full overflow-hidden",
+          tapToExpand ? "cursor-pointer" : "cursor-default"
+        )}
+        onClick={
+          tapToExpand
+            ? () => {
+                toggleRow();
+              }
+            : undefined
+        }
+        onHoverEnd={
+          tapToExpand
+            ? undefined
+            : () => {
+                setHoveredIndex(null);
+              }
+        }
+        onHoverStart={
+          tapToExpand
+            ? undefined
+            : () => {
+                setHoveredIndex(index);
+              }
+        }
+        onKeyDown={
+          tapToExpand
+            ? (e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  toggleRow();
+                }
+              }
+            : undefined
+        }
+        role={tapToExpand ? "button" : undefined}
+        tabIndex={tapToExpand ? 0 : undefined}
         transition={{
           height: {
             type: "spring",
@@ -197,6 +261,7 @@ export function HoverExpand({
   className,
 }: HoverExpandProps) {
   const [hoveredIndex, setHoveredIndex] = React.useState<number | null>(null);
+  const tapToExpand = useTapToExpand();
 
   return (
     <div className={cn("flex w-full flex-col", className)}>
@@ -211,6 +276,7 @@ export function HoverExpand({
           item={item}
           key={`${item.label}-${i}`}
           setHoveredIndex={setHoveredIndex}
+          tapToExpand={tapToExpand}
         />
       ))}
     </div>
