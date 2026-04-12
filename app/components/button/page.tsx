@@ -407,17 +407,17 @@ export default function ButtonPage() {
           >
             <BentoMotion
               className={cn(
-                "relative overflow-hidden shadow-[0_24px_64px_-28px_rgba(0,0,0,0.12)] lg:col-span-8 lg:row-span-2",
-                "rounded-3xl border-neutral-200/40 dark:border-neutral-700/30 dark:shadow-black/50"
+                "relative overflow-hidden lg:col-span-8 lg:row-span-2",
+                "rounded-3xl border-neutral-200/40 dark:border-neutral-700/30"
               )}
               variants={itemVariants}
             >
               <span
                 aria-hidden
-                className="pointer-events-none absolute -top-24 -right-24 size-56 rounded-full bg-neutral-100/90 blur-3xl dark:bg-neutral-800/40"
+                className="pointer-events-none absolute -top-24 -right-24 size-56 rounded-full bg-sky-50/55 blur-3xl dark:bg-sky-300/10"
               />
               <SectionLabel accent="01">Live preview</SectionLabel>
-              <div className="relative mt-1 min-h-0 flex-1 space-y-6 rounded-2xl border border-neutral-200/30 bg-neutral-50/90 p-5 sm:p-7 dark:border-neutral-700/25 dark:bg-neutral-900/50">
+              <div className="relative mt-1 min-h-0 flex-1 space-y-6">
                 <div className="flex flex-col gap-5 sm:flex-row sm:flex-wrap sm:items-start sm:gap-8">
                   <PreviewSelectField
                     ariaLabel="Button variant"
@@ -489,7 +489,11 @@ export default function ButtonPage() {
                 </code>
                 , and peer packages.
               </p>
-              <CodeBlock code={usageCode} language="tsx" />
+              <CodeBlock
+                code={usageCode}
+                language="tsx"
+                variant="embedded"
+              />
             </BentoMotion>
 
             <BentoMotion

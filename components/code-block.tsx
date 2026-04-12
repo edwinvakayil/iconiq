@@ -74,6 +74,8 @@ interface CodeBlockProps {
   children?: React.ReactNode;
   language?: string;
   className?: string;
+  /** Flush style for bento / docs tiles (no frame, minimal padding) */
+  variant?: "default" | "embedded";
 }
 
 export function CodeBlock({
@@ -81,6 +83,7 @@ export function CodeBlock({
   children,
   language = "text",
   className,
+  variant = "default",
 }: CodeBlockProps) {
   const content =
     typeof code === "string"
@@ -100,18 +103,23 @@ export function CodeBlock({
     }
   };
 
+  const embedded = variant === "embedded";
+
   return (
     <div
       className={cn(
-        "my-8 overflow-hidden rounded-[14px] border border-neutral-200/50 bg-white",
-        "dark:border-neutral-800/60 dark:bg-neutral-950",
+        embedded
+          ? "my-0 overflow-hidden rounded-none border-0 bg-transparent dark:bg-transparent"
+          : "my-8 overflow-hidden rounded-[14px] border border-neutral-200/50 bg-white dark:border-neutral-800/60 dark:bg-neutral-950",
         className
       )}
     >
       <div
         className={cn(
-          "flex items-center justify-between gap-2 border-neutral-200/40 border-b px-4 pt-2.5 pb-2",
-          "bg-white dark:border-neutral-800/50 dark:bg-neutral-950"
+          "flex items-center justify-between gap-2",
+          embedded
+            ? "border-0 bg-transparent px-0 pt-0 pb-2 dark:bg-transparent"
+            : "border-neutral-200/40 border-b bg-white px-4 pt-2.5 pb-2 dark:border-neutral-800/50 dark:bg-neutral-950"
         )}
       >
         <span
@@ -165,8 +173,10 @@ export function CodeBlock({
       </div>
       <pre
         className={cn(
-          "m-0 overflow-x-auto bg-white px-5 pt-4 pb-5 font-mono text-gray-800 text-sm leading-[1.65]",
-          "dark:bg-neutral-950 dark:text-neutral-200"
+          "m-0 overflow-x-auto font-mono text-gray-800 text-sm leading-[1.65] dark:text-neutral-200",
+          embedded
+            ? "bg-transparent px-0 pt-1 pb-0 dark:bg-transparent"
+            : "bg-white px-5 pt-4 pb-5 dark:bg-neutral-950"
         )}
       >
         <code className="bg-transparent p-0 font-inherit text-inherit">
