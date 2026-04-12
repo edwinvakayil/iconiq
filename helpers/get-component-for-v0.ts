@@ -77,19 +77,18 @@ const COMPONENT_EXAMPLE: Record<string, string> = {
     "    </div>\n" +
     "  )\n" +
     "}\n",
-  card:
+  hovercard:
     '"use client";\n\n' +
-    `import { InfoCard } from "@/components/ui/card"\n\n` +
+    `import { HoverExpand } from "@/components/ui/hovercard"\n\n` +
+    "const items = [\n" +
+    '  { label: "First", image: "/photo.jpg", description: "Shown when expanded" },\n' +
+    '  { label: "Second", image: "/photo-2.jpg", sublabel: "Optional" },\n' +
+    "]\n\n" +
     "export default function Page() {\n" +
     "  return (\n" +
     '    <div className="flex min-h-svh items-center justify-center p-6">\n' +
-    '      <div className="w-full max-w-sm">\n' +
-    "        <InfoCard\n" +
-    '          description="A short line about this place or product."\n' +
-    '          imageSrc="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80"\n' +
-    "          index={0}\n" +
-    '          title="Featured"\n' +
-    "        />\n" +
+    '      <div className="w-full max-w-lg">\n' +
+    "        <HoverExpand items={items} />\n" +
     "      </div>\n" +
     "    </div>\n" +
     "  )\n" +

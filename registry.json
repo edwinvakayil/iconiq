@@ -5019,16 +5019,16 @@
       ]
     },
     {
-      "name": "card",
+      "name": "hovercard",
       "type": "registry:ui",
       "registryDependencies": [],
-      "dependencies": ["framer-motion"],
+      "dependencies": ["motion"],
       "devDependencies": [],
-      "title": "Info card",
-      "description": "Media card with pointer-driven 3D tilt, staggered entrance, hover lift and shadow, and image zoom. Framer Motion.",
+      "title": "Hover expand",
+      "description": "Stacked rows that spring open on hover to reveal a full-bleed image, gradient overlay, and optional descriptor. Motion + next/image.",
       "files": [
         {
-          "path": "card.tsx",
+          "path": "hovercard.tsx",
           "type": "registry:ui"
         }
       ]

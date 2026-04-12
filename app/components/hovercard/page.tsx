@@ -10,79 +10,103 @@ import { CodeBlockInstall } from "@/components/code-block-install";
 import { ComponentActions } from "@/components/component-actions";
 import { SidebarNav } from "@/components/sidebar-nav";
 import { cn } from "@/lib/utils";
-import { InfoCard } from "@/registry/card";
+import { HoverExpand, type HoverExpandItem } from "@/registry/hovercard";
 
-const usageCode = `import { InfoCard } from "@/components/ui/card";
+const demoItems: HoverExpandItem[] = [
+  {
+    label: "Real Madrid",
+    sublabel: "LaLiga",
+    image: "/assets/rma.jpg",
+    imageAlt: "Real Madrid",
+    description:
+      "European royalty — Bernabéu nights and a record haul of continental trophies.",
+  },
+  {
+    label: "Manchester United",
+    sublabel: "Premier League",
+    image: "/assets/manutd.jpg",
+    imageAlt: "Manchester United",
+    description:
+      "Old Trafford, the Class of ’92, and decades of sides chasing silverware in red.",
+  },
+  {
+    label: "Bayern Munich",
+    sublabel: "Bundesliga",
+    image: "/assets/bayern.jpg",
+    imageAlt: "Bayern Munich",
+    description: "Domestic dominance and Allianz Arena under the lights.",
+  },
+];
 
-export function FeaturedCards() {
-  return (
-    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-      <InfoCard
-        imageSrc="/photo.jpg"
-        title="Mountain retreat"
-        description="A quiet cabin with views and slow mornings by the fire."
-        index={0}
-      />
-      <InfoCard
-        imageSrc="/photo-2.jpg"
-        title="Coastal studio"
-        description="Light-filled workspace a few blocks from the water."
-        index={1}
-      />
-    </div>
-  );
+const usageCode = `import { HoverExpand } from "@/components/ui/hovercard";
+
+const items = [
+  {
+    label: "Mountain retreat",
+    image: "/cabin.jpg",
+    sublabel: "Alpine",
+    description: "Quiet mornings and long views.",
+  },
+  {
+    label: "Coastal studio",
+    image: "/studio.jpg",
+    description: "Light-filled workspace near the water.",
+  },
+];
+
+export function Highlights() {
+  return <HoverExpand className="max-w-xl" items={items} />;
 }`;
 
 type DetailRow = { id: string; title: string; content: string };
 
 const componentDetailsItems: DetailRow[] = [
   {
-    id: "imageSrc",
-    title: "imageSrc (required)",
+    id: "items",
+    title: "items (required)",
     content:
-      "URL or path for the hero image. The image uses object-cover inside a fixed-height frame with a subtle zoom on hover.",
+      "Array of HoverExpandItem: label (row title), image (path or URL for next/image), optional sublabel (uppercase rail), optional imageAlt (defaults to label), optional description (shown under the title when expanded).",
   },
   {
-    id: "title",
-    title: "title (required)",
-    content:
-      "Card heading, also passed as the image alt text for basic accessibility.",
+    id: "collapsedHeight",
+    title: "collapsedHeight (optional)",
+    content: "Pixel height of each row when nothing is hovered. Default 76.",
   },
   {
-    id: "description",
-    title: "description (required)",
+    id: "expandedHeight",
+    title: "expandedHeight (optional)",
     content:
-      "Body copy in a scrollable area when text is long; uses muted foreground styling.",
+      "Pixel height of the hovered row. Default 320. Spring physics animate between collapsed and expanded.",
   },
   {
-    id: "index",
-    title: "index (optional)",
+    id: "className",
+    title: "className (optional)",
     content:
-      "Defaults to 0. Staggers the entrance animation delay (index × 0.12s) when rendering multiple cards in a list.",
+      "Merged onto the root flex column — set max-width or typography color (rows use currentColor until hover).",
   },
   {
-    id: "framer-motion",
-    title: "framer-motion",
+    id: "motion",
+    title: "motion/react",
     content:
-      "Springs on rotateX/rotateY from pointer position, whileHover lift and shadow, whileTap scale, and image scale on hover.",
+      "Spring height on each row; crossfade and scale on the background layer; opacity dip on non-hovered rows when one is active.",
+  },
+  {
+    id: "next-image",
+    title: "next/image",
+    content:
+      "Backgrounds use fill + object-cover. Configure images.remotePatterns for external hosts, or use files under /public.",
   },
   {
     id: "behavior",
     title: "Interaction model",
     content:
-      "Pointer move over the card drives subtle 3D tilt; leaving resets springs. Cursor is pointer — wire onClick on a wrapper if you need navigation.",
-  },
-  {
-    id: "a11y",
-    title: "Accessibility",
-    content:
-      "Semantic heading and img with alt from title. Heavy motion users may prefer wrapping with reduced-motion checks in your app.",
+      "Pointer hover expands that row and dims siblings; hover end resets. cursor-default on rows — wrap in a link if you need navigation.",
   },
   {
     id: "registry",
     title: "shadcn registry",
     content:
-      "Install adds card.tsx as components/ui/card; peer dependency is framer-motion.",
+      "Install adds hovercard.tsx as components/ui/hovercard; peer dependency is motion (Motion for React).",
   },
 ];
 
@@ -157,7 +181,7 @@ function BentoMotion({
   );
 }
 
-export default function CardPage() {
+export default function HovercardPage() {
   const prefersReducedMotion = useReducedMotion();
   const containerVariants = prefersReducedMotion
     ? bentoContainerStatic
@@ -208,7 +232,7 @@ export default function CardPage() {
                 aria-current="page"
                 className="text-neutral-700 dark:text-neutral-300"
               >
-                Info card
+                Hover expand
               </li>
             </ol>
           </motion.nav>
@@ -224,11 +248,11 @@ export default function CardPage() {
             }
           >
             <h1 className="font-sans font-semibold text-3xl text-neutral-900 tracking-tight sm:text-[2rem] dark:text-white">
-              Info card
+              Hover expand
             </h1>
             <p className="mt-2 font-sans text-[15px] text-neutral-500 leading-relaxed dark:text-neutral-400">
-              Media card with 3D tilt on pointer move, staggered entrance, and
-              hover lift. Built with Framer Motion and your theme tokens.
+              Stacked rows that spring open on hover to reveal a full-bleed
+              image and overlay copy. Built with Motion and next/image.
             </p>
           </motion.header>
 
@@ -254,20 +278,12 @@ export default function CardPage() {
               />
               <SectionLabel accent="01">Live preview</SectionLabel>
               <div className="relative mt-1 min-h-0 flex-1">
-                <div className="grid gap-4 sm:grid-cols-2">
-                  <InfoCard
-                    description="Founded in 1902, Real Madrid is one of the world’s most decorated clubs, with a record haul of European Cups and a global fanbase. The first team plays at the Santiago Bernabéu in Chamartín, where match nights turn the city white. From Di Stéfano and Raúl to today’s squad, the club’s history is built on attacking football and the relentless pursuit of trophies."
-                    imageSrc="/assets/rma.webp"
-                    index={0}
-                    title="Real Madrid"
-                  />
-                  <InfoCard
-                    description="Formed as Newton Heath in 1878 and renamed in 1902, Manchester United is England’s most successful club in the modern era, with a long line of league titles and European nights. Home matches are played at Old Trafford, the Theatre of Dreams, where generations of supporters have seen Busby’s Babes, the Class of ’92, and decades of teams compete for trophies in red."
-                    imageSrc="/assets/manutd.avif"
-                    index={1}
-                    title="Manchester United"
-                  />
-                </div>
+                <HoverExpand
+                  className="mx-auto max-w-2xl text-neutral-900 dark:text-neutral-100"
+                  collapsedHeight={76}
+                  expandedHeight={280}
+                  items={demoItems}
+                />
               </div>
             </BentoMotion>
 
@@ -277,7 +293,7 @@ export default function CardPage() {
             >
               <SectionLabel accent="02">Install</SectionLabel>
               <div className="min-w-0 flex-1 [&>div]:mt-0">
-                <CodeBlockInstall componentName="card" />
+                <CodeBlockInstall componentName="hovercard" />
               </div>
             </BentoMotion>
 
@@ -305,15 +321,15 @@ export default function CardPage() {
                 </span>{" "}
                 for{" "}
                 <code className="rounded bg-neutral-100 px-1 py-0.5 font-mono text-[11px] dark:bg-neutral-900">
-                  imageSrc
+                  items
                 </code>
                 ,{" "}
                 <code className="rounded bg-neutral-100 px-1 py-0.5 font-mono text-[11px] dark:bg-neutral-900">
-                  title
+                  collapsedHeight
                 </code>
                 ,{" "}
                 <code className="rounded bg-neutral-100 px-1 py-0.5 font-mono text-[11px] dark:bg-neutral-900">
-                  description
+                  expandedHeight
                 </code>
                 , and packages.
               </p>
@@ -328,7 +344,11 @@ export default function CardPage() {
               <p className="mb-3 font-sans text-neutral-500 text-xs leading-snug dark:text-neutral-400">
                 Registry peers and API — export{" "}
                 <code className="rounded bg-neutral-100 px-1 py-0.5 font-mono text-[10px] dark:bg-neutral-900">
-                  InfoCard
+                  HoverExpand
+                </code>
+                ,{" "}
+                <code className="rounded bg-neutral-100 px-1 py-0.5 font-mono text-[10px] dark:bg-neutral-900">
+                  HoverExpandItem
                 </code>
                 .
               </p>
