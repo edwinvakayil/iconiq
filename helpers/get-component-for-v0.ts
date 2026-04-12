@@ -19,7 +19,7 @@ const COMPONENT_EXAMPLE: Record<string, string> = {
     "}\n",
   "motion-accordion":
     '"use client";\n\n' +
-    `import { MotionAccordion } from "@/components/ui/motion-accordion"\n\n` +
+    `import { Accordion } from "@/components/ui/motion-accordion"\n\n` +
     "const items = [\n" +
     '  { id: "1", title: "First question", content: "Answer for the first item." },\n' +
     '  { id: "2", title: "Second question", content: "Answer for the second item." },\n' +
@@ -27,13 +27,13 @@ const COMPONENT_EXAMPLE: Record<string, string> = {
     "export default function Page() {\n" +
     "  return (\n" +
     '    <div className="flex min-h-svh items-center justify-center p-8">\n' +
-    "      <MotionAccordion items={items} />\n" +
+    "      <Accordion items={items} />\n" +
     "    </div>\n" +
     "  )\n" +
     "}\n",
   breadcrumbs:
     '"use client";\n\n' +
-    `import { AnimatedBreadcrumbs } from "@/components/ui/breadcrumbs"\n` +
+    `import { Breadcrumbs } from "@/components/ui/breadcrumbs"\n` +
     `import { Home } from "lucide-react"\n\n` +
     "const items = [\n" +
     '  { label: "Home", href: "/", icon: <Home className="size-3.5" /> },\n' +
@@ -43,21 +43,21 @@ const COMPONENT_EXAMPLE: Record<string, string> = {
     "export default function Page() {\n" +
     "  return (\n" +
     '    <div className="flex min-h-svh items-center justify-center p-8">\n' +
-    "      <AnimatedBreadcrumbs items={items} />\n" +
+    "      <Breadcrumbs items={items} />\n" +
     "    </div>\n" +
     "  )\n" +
     "}\n",
   button:
     '"use client";\n\n' +
-    `import { AnimatedButton } from "@/components/ui/button"\n\n` +
+    `import { Button } from "@/components/ui/button"\n\n` +
     "export default function Page() {\n" +
     "  return (\n" +
     '    <div className="flex min-h-svh flex-wrap items-center justify-center gap-3 p-8">\n' +
-    "      <AnimatedButton>Primary</AnimatedButton>\n" +
-    '      <AnimatedButton variant="outline">Outline</AnimatedButton>\n' +
-    '      <AnimatedButton variant="secondary" size="sm">\n' +
+    "      <Button>Primary</Button>\n" +
+    '      <Button variant="outline">Outline</Button>\n' +
+    '      <Button variant="secondary" size="sm">\n' +
     "        Small\n" +
-    "      </AnimatedButton>\n" +
+    "      </Button>\n" +
     "    </div>\n" +
     "  )\n" +
     "}\n",

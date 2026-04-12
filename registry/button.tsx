@@ -11,7 +11,7 @@ import {
 } from "react";
 import { cn } from "@/lib/utils";
 
-const animatedButtonVariants = cva(
+const buttonVariants = cva(
   "relative inline-flex items-center justify-center overflow-hidden rounded-lg font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50",
   {
     variants: {
@@ -22,7 +22,9 @@ const animatedButtonVariants = cva(
         destructive: "bg-red-600 text-white hover:bg-red-600/90",
         outline:
           "border border-input bg-background text-foreground hover:bg-accent hover:text-accent-foreground",
-        secondary: "bg-secondary text-background hover:bg-secondary/80",
+        /* Neutral greys: light #e5e5e5 (neutral-200), dark #525252 (neutral-600) — works without --secondary-foreground in @theme */
+        secondary:
+          "bg-neutral-200 text-neutral-900 hover:bg-neutral-300 dark:bg-neutral-600 dark:text-neutral-50 dark:hover:bg-neutral-500",
         ghost: "text-foreground hover:bg-accent hover:text-accent-foreground",
         link: "cursor-pointer text-primary underline-offset-4 hover:underline",
       },
@@ -61,14 +63,23 @@ type ButtonHTMLAttributesForMotion = Omit<
   | "onDrop"
 >;
 
-type AnimatedButtonProps = ButtonHTMLAttributesForMotion &
-  VariantProps<typeof animatedButtonVariants> & {
+type ButtonProps = ButtonHTMLAttributesForMotion &
+  VariantProps<typeof buttonVariants> & {
     children?: ReactNode;
   };
 
-const AnimatedButton = forwardRef<HTMLButtonElement, AnimatedButtonProps>(
+const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   (
-    { className, variant, size, children, onPointerDown, disabled, ...props },
+    {
+      className,
+      variant,
+      size,
+      children,
+      onPointerDown,
+      disabled,
+      type = "button",
+      ...props
+    },
     ref
   ) => {
     const [ripples, setRipples] = useState<Ripple[]>([]);
@@ -99,10 +110,11 @@ const AnimatedButton = forwardRef<HTMLButtonElement, AnimatedButtonProps>(
 
     return (
       <motion.button
-        className={cn(animatedButtonVariants({ variant, size }), className)}
+        className={cn(buttonVariants({ variant, size }), className)}
         disabled={disabled}
         onPointerDown={handlePointerDown}
         ref={ref}
+        type={type}
         {...props}
       >
         <span
@@ -139,6 +151,6 @@ const AnimatedButton = forwardRef<HTMLButtonElement, AnimatedButtonProps>(
   }
 );
 
-AnimatedButton.displayName = "AnimatedButton";
+Button.displayName = "Button";
 
-export { AnimatedButton, animatedButtonVariants };
+export { Button, buttonVariants };

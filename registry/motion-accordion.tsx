@@ -6,18 +6,18 @@ import { useState } from "react";
 
 import { cn } from "@/lib/utils";
 
-export interface MotionAccordionItem {
+export interface AccordionItem {
   id: string;
   title: string;
   content: string;
 }
 
-export interface MotionAccordionProps {
-  items: MotionAccordionItem[];
+export interface AccordionProps {
+  items: AccordionItem[];
   className?: string;
 }
 
-export function MotionAccordion({ items, className }: MotionAccordionProps) {
+export function Accordion({ items, className }: AccordionProps) {
   const [openId, setOpenId] = useState<string | null>(null);
 
   const toggle = (id: string) => setOpenId(openId === id ? null : id);
@@ -26,7 +26,7 @@ export function MotionAccordion({ items, className }: MotionAccordionProps) {
     <div className={cn("mx-auto w-full max-w-2xl space-y-3", className)}>
       {items.map((item, index) => {
         const isOpen = openId === item.id;
-        const contentId = `motion-accordion-content-${item.id}`;
+        const contentId = `accordion-content-${item.id}`;
         return (
           <motion.div
             animate={{ opacity: 1, y: 0 }}

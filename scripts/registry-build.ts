@@ -23,21 +23,21 @@ const REGISTRY_UI_META: Record<
     dependencies: ["framer-motion"],
   },
   "motion-accordion": {
-    title: "Motion Accordion",
+    title: "Accordion",
     description:
       "Single-select accordion with spring height, staggered text, and rotating plus control. Built with Framer Motion.",
     dependencies: ["framer-motion", "lucide-react"],
   },
   breadcrumbs: {
-    title: "Animated Breadcrumbs",
+    title: "Breadcrumbs",
     description:
       "Breadcrumb trail with spring separators, hover lift, and a subtle shimmer on the current page. Built with Framer Motion.",
     dependencies: ["framer-motion", "lucide-react"],
   },
   button: {
-    title: "Animated Button",
+    title: "Button",
     description:
-      "Primary action control with CVA variants and spring hover/tap scale via Framer Motion. Forwards ref and native button props.",
+      'Primary action control with CVA variants, pointer ripples via Framer Motion, and default type="button". Forwards ref and native button props.',
     dependencies: ["framer-motion", "class-variance-authority"],
   },
 };

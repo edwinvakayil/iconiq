@@ -83,7 +83,7 @@ const sections: SidebarSection[] = [
     title: "Components",
     icon: LayoutGrid,
     items: [
-      { label: "Motion Accordion", href: "/components/motion-accordion" },
+      { label: "Accordion", href: "/components/motion-accordion" },
       { label: "Breadcrumbs", href: "/components/breadcrumbs" },
       { label: "Button", href: "/components/button" },
     ],

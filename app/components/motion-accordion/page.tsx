@@ -10,12 +10,9 @@ import { CodeBlockInstall } from "@/components/code-block-install";
 import { ComponentActions } from "@/components/component-actions";
 import { SidebarNav } from "@/components/sidebar-nav";
 import { cn } from "@/lib/utils";
-import {
-  MotionAccordion,
-  type MotionAccordionItem,
-} from "@/registry/motion-accordion";
+import { Accordion, type AccordionItem } from "@/registry/motion-accordion";
 
-const demoItems: MotionAccordionItem[] = [
+const demoItems: AccordionItem[] = [
   {
     id: "1",
     title: "What makes this accordion special?",
@@ -42,7 +39,7 @@ const demoItems: MotionAccordionItem[] = [
   },
 ];
 
-const usageCode = `import { MotionAccordion } from "@/components/ui/motion-accordion";
+const usageCode = `import { Accordion } from "@/components/ui/motion-accordion";
 
 const items = [
   {
@@ -60,11 +57,11 @@ const items = [
 ];
 
 export function Faq() {
-  return <MotionAccordion items={items} />;
+  return <Accordion items={items} />;
 }`;
 
 /** Same shape as accordion rows: documents API, packages, and behavior in the bento “Dependencies” tile. */
-const componentDetailsItems: MotionAccordionItem[] = [
+const componentDetailsItems: AccordionItem[] = [
   {
     id: "items",
     title: "items prop (required)",
@@ -180,7 +177,7 @@ function BentoMotion({
   );
 }
 
-export default function MotionAccordionPage() {
+export default function AccordionPage() {
   const prefersReducedMotion = useReducedMotion();
   const containerVariants = prefersReducedMotion
     ? bentoContainerStatic
@@ -231,7 +228,7 @@ export default function MotionAccordionPage() {
                 aria-current="page"
                 className="text-neutral-700 dark:text-neutral-300"
               >
-                Motion Accordion
+                Accordion
               </li>
             </ol>
           </motion.nav>
@@ -247,7 +244,7 @@ export default function MotionAccordionPage() {
             }
           >
             <h1 className="font-sans font-semibold text-3xl text-neutral-900 tracking-tight sm:text-[2rem] dark:text-white">
-              Motion Accordion
+              Accordion
             </h1>
             <p className="mt-2 font-sans text-[15px] text-neutral-500 leading-relaxed dark:text-neutral-400">
               Single-open rows with spring height and staggered copy. Built with
@@ -278,7 +275,7 @@ export default function MotionAccordionPage() {
               />
               <SectionLabel accent="01">Live preview</SectionLabel>
               <div className="relative mt-1 min-h-0 flex-1 rounded-2xl border border-neutral-200/30 bg-neutral-50/90 p-5 sm:p-7 dark:border-neutral-700/25 dark:bg-neutral-900/50">
-                <MotionAccordion className="max-w-none" items={demoItems} />
+                <Accordion className="max-w-none" items={demoItems} />
               </div>
             </BentoMotion>
 

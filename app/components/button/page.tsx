@@ -15,7 +15,7 @@ import { CodeBlockInstall } from "@/components/code-block-install";
 import { ComponentActions } from "@/components/component-actions";
 import { SidebarNav } from "@/components/sidebar-nav";
 import { cn } from "@/lib/utils";
-import { AnimatedButton } from "@/registry/button";
+import { Button } from "@/registry/button";
 
 const PREVIEW_VARIANTS = [
   { value: "default", label: "Default" },
@@ -183,15 +183,13 @@ function PreviewSelectField({
   );
 }
 
-const usageCode = `import { AnimatedButton } from "@/components/ui/button";
+const usageCode = `import { Button } from "@/components/ui/button";
 
 export function SaveBar() {
   return (
     <div className="flex gap-2">
-      <AnimatedButton type="button">Save</AnimatedButton>
-      <AnimatedButton type="button" variant="outline">
-        Cancel
-      </AnimatedButton>
+      <Button>Save</Button>
+      <Button variant="outline">Cancel</Button>
     </div>
   );
 }`;
@@ -218,8 +216,8 @@ const componentDetailsItems: DetailRow[] = [
       "Spreads onto motion.button: type, disabled, onClick, aria-*, data-*, etc. Ref forwarded for focus management or form libraries.",
   },
   {
-    id: "animatedButtonVariants",
-    title: "animatedButtonVariants",
+    id: "buttonVariants",
+    title: "buttonVariants",
     content:
       "Exported CVA config — compose the same classes on links or divs if you need a non-button affordance with matching visuals.",
   },
@@ -227,7 +225,7 @@ const componentDetailsItems: DetailRow[] = [
     id: "framer-motion",
     title: "framer-motion",
     content:
-      "whileHover and whileTap use a spring for subtle lift and press feedback; children stay in a relative z-10 span for stacking.",
+      "motion.button drives the control; pointer ripples expand from the press point and fade out. Respects reduced motion (no ripple).",
   },
   {
     id: "cva",
@@ -239,7 +237,7 @@ const componentDetailsItems: DetailRow[] = [
     id: "a11y",
     title: "Accessibility",
     content:
-      'focus-visible:ring-2 ring-ring matches the rest of the kit. Use an explicit type="button" when not submitting forms.',
+      'focus-visible:ring-2 ring-ring matches the rest of the kit. Defaults to type="button" so it does not submit forms; pass type="submit" when it should.',
   },
   {
     id: "registry",
@@ -442,13 +440,9 @@ export default function ButtonPage() {
                   />
                 </div>
                 <div className="flex min-h-[140px] items-center justify-center rounded-xl border border-neutral-200/40 bg-white/60 p-8 dark:border-neutral-700/40 dark:bg-neutral-950/40">
-                  <AnimatedButton
-                    size={previewSize}
-                    type="button"
-                    variant={previewVariant}
-                  >
+                  <Button size={previewSize} variant={previewVariant}>
                     Button
-                  </AnimatedButton>
+                  </Button>
                 </div>
               </div>
             </BentoMotion>
@@ -506,7 +500,7 @@ export default function ButtonPage() {
               <p className="mb-3 font-sans text-neutral-500 text-xs leading-snug dark:text-neutral-400">
                 Registry peers and API surface —{" "}
                 <code className="rounded bg-neutral-100 px-1 py-0.5 font-mono text-[10px] dark:bg-neutral-900">
-                  AnimatedButton
+                  Button
                 </code>{" "}
                 is a forwardRef{" "}
                 <code className="rounded bg-neutral-100 px-1 py-0.5 font-mono text-[10px] dark:bg-neutral-900">

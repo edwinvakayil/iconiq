@@ -10,10 +10,7 @@ import { CodeBlockInstall } from "@/components/code-block-install";
 import { ComponentActions } from "@/components/component-actions";
 import { SidebarNav } from "@/components/sidebar-nav";
 import { cn } from "@/lib/utils";
-import {
-  AnimatedBreadcrumbs,
-  type BreadcrumbItem,
-} from "@/registry/breadcrumbs";
+import { type BreadcrumbItem, Breadcrumbs } from "@/registry/breadcrumbs";
 
 const demoItems: BreadcrumbItem[] = [
   {
@@ -25,7 +22,7 @@ const demoItems: BreadcrumbItem[] = [
   { label: "Breadcrumbs" },
 ];
 
-const usageCode = `import { AnimatedBreadcrumbs } from "@/components/ui/breadcrumbs";
+const usageCode = `import { Breadcrumbs } from "@/components/ui/breadcrumbs";
 import { Home } from "lucide-react";
 
 const items = [
@@ -35,7 +32,7 @@ const items = [
 ];
 
 export function PageHeader() {
-  return <AnimatedBreadcrumbs items={items} />;
+  return <Breadcrumbs items={items} />;
 }`;
 
 type DetailRow = { id: string; title: string; content: string };
@@ -253,7 +250,7 @@ export default function BreadcrumbsPage() {
               />
               <SectionLabel accent="01">Live preview</SectionLabel>
               <div className="relative mt-1 min-h-0 flex-1 rounded-2xl border border-neutral-200/30 bg-neutral-50/90 p-5 sm:p-7 dark:border-neutral-700/25 dark:bg-neutral-900/50">
-                <AnimatedBreadcrumbs items={demoItems} />
+                <Breadcrumbs items={demoItems} />
               </div>
             </BentoMotion>
 

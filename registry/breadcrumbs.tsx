@@ -10,7 +10,7 @@ export interface BreadcrumbItem {
   icon?: React.ReactNode;
 }
 
-export interface AnimatedBreadcrumbsProps {
+export interface BreadcrumbsProps {
   items: BreadcrumbItem[];
   className?: string;
 }
@@ -25,10 +25,7 @@ const itemVariants = {
   animate: { opacity: 1, x: 0, scale: 1 },
   exit: { opacity: 0, x: 12, scale: 0.85 },
 };
-export function AnimatedBreadcrumbs({
-  items,
-  className,
-}: AnimatedBreadcrumbsProps) {
+export function Breadcrumbs({ items, className }: BreadcrumbsProps) {
   return (
     <nav aria-label="breadcrumb" className={cn("inline-flex", className)}>
       <ol className="flex items-center gap-1">
