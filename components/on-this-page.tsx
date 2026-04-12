@@ -30,13 +30,11 @@ function getTocForPath(pathname: string): TocEntry[] {
       children: [...SITE_SECTIONS[0].children],
     });
   }
-  if (pathname.startsWith("/animated-components/")) {
-    if (!hasIcons()) {
-      toc.push({
-        label: SITE_SECTIONS[0].label,
-        children: [...SITE_SECTIONS[0].children],
-      });
-    }
+  if (pathname.startsWith("/animated-components/") && !hasIcons()) {
+    toc.push({
+      label: SITE_SECTIONS[0].label,
+      children: [...SITE_SECTIONS[0].children],
+    });
   }
   return toc;
 }
@@ -69,10 +67,7 @@ function renderAnimatedSectionNav(
     <ul className="mt-1 space-y-0.5">
       {sections.map((section) => (
         <li key={section.id}>
-          <a
-            className={sectionLinkClass(section.id)}
-            href={`#${section.id}`}
-          >
+          <a className={sectionLinkClass(section.id)} href={`#${section.id}`}>
             {section.label}
           </a>
         </li>

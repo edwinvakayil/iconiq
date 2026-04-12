@@ -22,66 +22,6 @@ const REGISTRY_UI_META: Record<
       "Status badges with shimmer, pulsing dot, and spring animations. Uses Framer Motion for enter/exit and hover effects.",
     dependencies: ["framer-motion"],
   },
-  "input-group-01": {
-    title: "Input Group",
-    description:
-      "Password field input with label, visibility toggle, and strength indicator. Uses Input, Label, and Button from shadcn.",
-    dependencies: [],
-  },
-  "file-tree": {
-    title: "File Tree",
-    description:
-      "A file tree component that displays a tree of files and folders. Uses Accordion from shadcn.",
-    dependencies: ["@radix-ui/react-accordion"],
-  },
-  breadcrumbs: {
-    title: "Breadcrumb",
-    description:
-      "Animated breadcrumb navigation with spring transitions, hover feedback, and shimmer on the current item. Uses Framer Motion.",
-    dependencies: ["framer-motion"],
-  },
-  radiogroup: {
-    title: "Radio Group",
-    description:
-      "An animated radio group with staggered entrance, hover/tap feedback, and shimmer on the selected option. Uses Radix UI and Framer Motion.",
-    dependencies: ["@radix-ui/react-radio-group", "framer-motion"],
-  },
-  alert: {
-    title: "Alert",
-    description:
-      "Dismissible system alerts with success, error, warning, and info variants. Uses Framer Motion for enter/exit and optional auto-dismiss bar.",
-    dependencies: ["framer-motion", "lucide-react"],
-  },
-  chart: {
-    title: "Chart",
-    description:
-      "Animated Bar, Line, and Area chart with variant dropdown. Uses Recharts and Framer Motion. Colors defined in component.",
-    dependencies: ["framer-motion", "recharts"],
-  },
-  select: {
-    title: "Select",
-    description:
-      "Animated dropdown select with spring open/close and optional label. Uses Framer Motion and Lucide icons.",
-    dependencies: ["framer-motion", "lucide-react"],
-  },
-  slider: {
-    title: "Slider",
-    description:
-      "An animated range slider with shimmer, hover/drag feedback, and optional floating value tooltip. Uses Radix UI and Framer Motion.",
-    dependencies: ["@radix-ui/react-slider", "framer-motion"],
-  },
-  tooltip: {
-    title: "Tooltip",
-    description:
-      "An animated tooltip with spring enter/exit, optional delay, and placement (top, bottom, left, right). Uses Framer Motion.",
-    dependencies: ["framer-motion"],
-  },
-  tabs: {
-    title: "Tabs",
-    description:
-      "Animated tabs with a sliding indicator. Variants: spotlight, underline, chip. Uses Framer Motion LayoutGroup.",
-    dependencies: ["framer-motion"],
-  },
 };
 
 if (!fs.existsSync(registryComponents)) {
