@@ -57,8 +57,8 @@ export default function RootLayout({
             <PackageNameProvider>
               <Header />
               <div className="root-content">
-                <div className="min-h-0 min-w-0 flex-1 px-4 sm:px-6 lg:px-[80px]">
-                  <main className="flex-1">
+                <div className="min-h-0 min-w-0 flex-1 bg-background px-4 sm:px-6 lg:px-[80px]">
+                  <main className="flex-1 bg-background">
                     <NuqsAdapter>
                       {children}
                       <Toaster

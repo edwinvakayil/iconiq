@@ -4959,6 +4959,21 @@
       ]
     },
     {
+      "name": "motion-accordion",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": ["framer-motion", "lucide-react"],
+      "devDependencies": [],
+      "title": "Motion Accordion",
+      "description": "Single-select accordion with spring height, staggered text, and rotating plus control. Built with Framer Motion.",
+      "files": [
+        {
+          "path": "motion-accordion.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "database-backup",
       "type": "registry:ui",
       "registryDependencies": [],

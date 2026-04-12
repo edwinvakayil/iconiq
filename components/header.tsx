@@ -1,10 +1,11 @@
 "use client";
 
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import {
   BookOpen,
   ChevronRight,
   Github,
+  LayoutGrid,
   Menu,
   Package,
   Search,
@@ -16,20 +17,39 @@ import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { LINK, SITE } from "@/constants";
 import { BASE_LINKS, SITE_SECTIONS } from "@/lib/site-nav";
 
+const iconsSection = SITE_SECTIONS.find((s) => s.label === "Icons");
+const componentsSection = SITE_SECTIONS.find((s) => s.label === "Components");
+
 const mobileNavSections = [
   {
     title: "Getting Started",
     icon: BookOpen,
     items: BASE_LINKS.map((item) => ({ label: item.label, href: item.href })),
   },
-  {
-    title: SITE_SECTIONS[0].label,
-    icon: Package,
-    items: SITE_SECTIONS[0].children.map((item) => ({
-      label: item.label,
-      href: item.href,
-    })),
-  },
+  ...(iconsSection
+    ? [
+        {
+          title: iconsSection.label,
+          icon: Package,
+          items: iconsSection.children.map((item) => ({
+            label: item.label,
+            href: item.href,
+          })),
+        },
+      ]
+    : []),
+  ...(componentsSection
+    ? [
+        {
+          title: componentsSection.label,
+          icon: LayoutGrid,
+          items: componentsSection.children.map((item) => ({
+            label: item.label,
+            href: item.href,
+          })),
+        },
+      ]
+    : []),
 ];
 
 const easeOutExpo = [0.32, 0.72, 0, 1] as const;
@@ -141,9 +161,12 @@ function formatStarCount(n: number): string {
 }
 
 export function Header() {
+  const prefersReducedMotion = useReducedMotion();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [expandedMobile, setExpandedMobile] = useState<string[]>([
     "Getting Started",
+    ...(iconsSection ? [iconsSection.label] : []),
+    ...(componentsSection ? [componentsSection.label] : []),
   ]);
   const [starCount, setStarCount] = useState<number | null>(null);
 
@@ -181,7 +204,16 @@ export function Header() {
 
   return (
     <>
-      <header className="sticky top-0 z-[150] w-full border-neutral-200 border-b bg-background/90 backdrop-blur-sm dark:border-neutral-800/50">
+      <motion.header
+        animate={{ opacity: 1, y: 0 }}
+        className="sticky top-0 z-[150] w-full border-neutral-200/40 border-b-[0.5px] bg-white/95 backdrop-blur-sm dark:border-neutral-700/30 dark:bg-neutral-950/95"
+        initial={prefersReducedMotion ? false : { opacity: 0, y: -10 }}
+        transition={
+          prefersReducedMotion
+            ? { duration: 0 }
+            : { type: "spring", stiffness: 320, damping: 34, mass: 0.9 }
+        }
+      >
         <div className="mx-auto flex h-14 items-center justify-between px-4 sm:px-6 lg:h-[59px] lg:px-[80px]">
           {/* Logo */}
           <Link
@@ -239,7 +271,7 @@ export function Header() {
             </button>
           </div>
         </div>
-      </header>
+      </motion.header>
 
       {/* Mobile slide-down menu */}
       <AnimatePresence>
@@ -326,7 +358,7 @@ export function Header() {
                             {section.items.map((item, itemIndex) => (
                               <motion.li
                                 custom={itemIndex}
-                                key={item.href}
+                                key={`${section.title}-${item.href}`}
                                 variants={mobileNavVariants.expandItem}
                               >
                                 <Link

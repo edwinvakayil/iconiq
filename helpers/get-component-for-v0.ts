@@ -17,6 +17,20 @@ const COMPONENT_EXAMPLE: Record<string, string> = {
     "    </div>\n" +
     "  )\n" +
     "}\n",
+  "motion-accordion":
+    '"use client";\n\n' +
+    `import { MotionAccordion } from "@/components/ui/motion-accordion"\n\n` +
+    "const items = [\n" +
+    '  { id: "1", title: "First question", content: "Answer for the first item." },\n' +
+    '  { id: "2", title: "Second question", content: "Answer for the second item." },\n' +
+    "]\n\n" +
+    "export default function Page() {\n" +
+    "  return (\n" +
+    '    <div className="flex min-h-svh items-center justify-center p-8">\n' +
+    "      <MotionAccordion items={items} />\n" +
+    "    </div>\n" +
+    "  )\n" +
+    "}\n",
 };
 
 const getComponentForV0 = async (name: string) => {

@@ -1,7 +1,7 @@
 "use client";
 
-import { AnimatePresence, motion } from "framer-motion";
-import { BookOpen, ChevronRight, Package } from "lucide-react";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { BookOpen, ChevronRight, LayoutGrid, Package } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
@@ -79,13 +79,22 @@ const sections: SidebarSection[] = [
       { label: "Button + Icon", href: "/icons/button-svg" },
     ],
   },
+  {
+    title: "Components",
+    icon: LayoutGrid,
+    items: [
+      { label: "Motion Accordion", href: "/components/motion-accordion" },
+    ],
+  },
 ];
 
 export function SidebarNav() {
   const pathname = usePathname();
+  const prefersReducedMotion = useReducedMotion();
   const [expanded, setExpanded] = useState<string[]>([
     "Getting Started",
     "Icons",
+    "Components",
   ]);
 
   const toggleSection = (title: string) => {
@@ -95,9 +104,16 @@ export function SidebarNav() {
   };
 
   return (
-    <aside
+    <motion.aside
+      animate={{ opacity: 1, x: 0 }}
       aria-label="Main navigation"
-      className="hidden w-[260px] shrink-0 border-neutral-200 border-r md:block dark:border-neutral-800/50"
+      className="hidden w-[260px] shrink-0 border-neutral-200/40 border-r-[0.5px] bg-background md:block dark:border-neutral-700/30"
+      initial={prefersReducedMotion ? false : { opacity: 0, x: -12 }}
+      transition={
+        prefersReducedMotion
+          ? { duration: 0 }
+          : { type: "spring", stiffness: 300, damping: 32, delay: 0.04 }
+      }
     >
       <nav className="sticky top-14 -ml-[14px] h-[calc(100vh-3.5rem)] overflow-y-auto py-5 pr-4 pl-0">
         {sections.map((section) => {
@@ -134,7 +150,7 @@ export function SidebarNav() {
                 {isExpanded && (
                   <motion.ul
                     animate="open"
-                    className="mt-1 mb-3 ml-[18px] overflow-hidden border-neutral-200 border-l pl-3 dark:border-neutral-800/50"
+                    className="mt-1 mb-3 ml-[18px] overflow-hidden border-neutral-200/40 border-l-[0.5px] pl-3 dark:border-neutral-700/30"
                     exit="closed"
                     initial="closed"
                     variants={sidebarVariants.section}
@@ -209,6 +225,6 @@ export function SidebarNav() {
           );
         })}
       </nav>
-    </aside>
+    </motion.aside>
   );
 }

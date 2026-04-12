@@ -22,6 +22,12 @@ const REGISTRY_UI_META: Record<
       "Status badges with shimmer, pulsing dot, and spring animations. Uses Framer Motion for enter/exit and hover effects.",
     dependencies: ["framer-motion"],
   },
+  "motion-accordion": {
+    title: "Motion Accordion",
+    description:
+      "Single-select accordion with spring height, staggered text, and rotating plus control. Built with Framer Motion.",
+    dependencies: ["framer-motion", "lucide-react"],
+  },
 };
 
 if (!fs.existsSync(registryComponents)) {

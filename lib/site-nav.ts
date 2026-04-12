@@ -16,6 +16,12 @@ export const SITE_SECTIONS = [
       { label: "Button + Icon", href: "/icons/button-svg" },
     ],
   },
+  {
+    label: "Components",
+    children: [
+      { label: "Motion Accordion", href: "/components/motion-accordion" },
+    ],
+  },
 ] as const;
 
 /** Section headings (h2/h3) per page for "On this page" anchor links. */

@@ -19,7 +19,7 @@ const stats = [
 
 export function HomeHero() {
   return (
-    <section className="flex min-h-[calc(100vh-3.5rem)] flex-col justify-center bg-linear-to-b from-background to-neutral-100 py-8 md:py-16 xl:py-24 dark:to-neutral-900/20">
+    <section className="flex min-h-[calc(100vh-3.5rem)] flex-col justify-center bg-background py-8 md:py-16 xl:py-24">
       <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
         <div className="flex max-w-5xl flex-col gap-6">
           <motion.div

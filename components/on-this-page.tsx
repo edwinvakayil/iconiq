@@ -1,5 +1,6 @@
 "use client";
 
+import { motion, useReducedMotion } from "motion/react";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -24,12 +25,25 @@ function getTocForPath(pathname: string): TocEntry[] {
 
   const hasIcons = () => toc.some((e) => isCategory(e) && e.label === "Icons");
 
-  if (pathname === "/icons" || pathname.startsWith("/icons/")) {
+  const iconsSection = SITE_SECTIONS.find((s) => s.label === "Icons");
+  if (
+    iconsSection &&
+    (pathname === "/icons" || pathname.startsWith("/icons/"))
+  ) {
     toc.push({
-      label: SITE_SECTIONS[0].label,
-      children: [...SITE_SECTIONS[0].children],
+      label: iconsSection.label,
+      children: [...iconsSection.children],
     });
   }
+
+  const componentsSection = SITE_SECTIONS.find((s) => s.label === "Components");
+  if (componentsSection && pathname.startsWith("/components/")) {
+    toc.push({
+      label: componentsSection.label,
+      children: [...componentsSection.children],
+    });
+  }
+
   if (pathname.startsWith("/animated-components/") && !hasIcons()) {
     toc.push({
       label: SITE_SECTIONS[0].label,
@@ -134,6 +148,7 @@ function renderDefaultNav(
 
 export function OnThisPage() {
   const pathname = usePathname();
+  const prefersReducedMotion = useReducedMotion();
   const toc = getTocForPath(pathname);
   const [activeSectionId, setActiveSectionId] = useState<string | null>(null);
 
@@ -220,9 +235,16 @@ export function OnThisPage() {
     }`;
 
   return (
-    <aside
+    <motion.aside
+      animate={{ opacity: 1, x: 0 }}
       aria-label="On this page"
-      className="hidden w-72 shrink-0 border-neutral-200 xl:block dark:border-neutral-800"
+      className="hidden w-72 shrink-0 border-neutral-200/40 border-l-[0.5px] bg-background xl:block dark:border-neutral-700/30"
+      initial={prefersReducedMotion ? false : { opacity: 0, x: 14 }}
+      transition={
+        prefersReducedMotion
+          ? { duration: 0 }
+          : { type: "spring", stiffness: 300, damping: 32, delay: 0.06 }
+      }
     >
       <nav className="sticky top-[74px] z-10 max-h-[calc(100vh-74px)] overflow-y-auto py-6 pr-6 pl-4">
         <h2 className="mb-3 font-sans font-semibold text-[11px] text-neutral-500 uppercase tracking-wider dark:text-neutral-400">
@@ -230,11 +252,12 @@ export function OnThisPage() {
         </h2>
         {pathname.startsWith("/icons")
           ? renderIconsNav(pathname, linkClass)
-          : pathname.startsWith("/animated-components/") &&
-              PAGE_SECTIONS[pathname]?.length
+          : PAGE_SECTIONS[pathname]?.length &&
+              (pathname.startsWith("/animated-components/") ||
+                pathname.startsWith("/components/"))
             ? renderAnimatedSectionNav(pathname, sectionLinkClass)
             : renderDefaultNav(toc, pathname, linkClass, sectionLinkClass)}
       </nav>
-    </aside>
+    </motion.aside>
   );
 }

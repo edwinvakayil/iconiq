@@ -103,15 +103,15 @@ export function CodeBlock({
   return (
     <div
       className={cn(
-        "my-8 overflow-hidden rounded-[14px] border border-black/8 bg-[#F9F9F9]",
-        "dark:border-neutral-600 dark:bg-[#1c1c1e]",
+        "my-8 overflow-hidden rounded-[14px] border border-neutral-200/50 bg-white",
+        "dark:border-neutral-800/60 dark:bg-neutral-950",
         className
       )}
     >
       <div
         className={cn(
-          "flex items-center justify-between gap-2 px-4 pt-2.5 pb-2",
-          "bg-[#F9F9F9] dark:bg-[#1c1c1e]"
+          "flex items-center justify-between gap-2 border-neutral-200/40 border-b px-4 pt-2.5 pb-2",
+          "bg-white dark:border-neutral-800/50 dark:bg-neutral-950"
         )}
       >
         <span
@@ -127,8 +127,8 @@ export function CodeBlock({
           aria-label="Copy code"
           className={cn(
             "inline-flex size-7 items-center justify-center rounded-md border-0 bg-transparent p-0",
-            "text-gray-800 transition-colors duration-150 hover:bg-black/6 hover:text-gray-900",
-            "dark:text-neutral-300 dark:hover:bg-white/10 dark:hover:text-white",
+            "text-gray-800 transition-colors duration-150 hover:bg-neutral-100 hover:text-gray-900",
+            "dark:text-neutral-300 dark:hover:bg-neutral-800/80 dark:hover:text-white",
             copied && "text-gray-800 dark:text-neutral-300"
           )}
           onClick={handleCopy}
@@ -165,9 +165,8 @@ export function CodeBlock({
       </div>
       <pre
         className={cn(
-          "m-0 overflow-x-auto px-5 pt-4 pb-5 font-mono text-sm leading-[1.65]",
-          "bg-[#F9F9F9] text-gray-800",
-          "dark:bg-[#1c1c1e] dark:text-neutral-200"
+          "m-0 overflow-x-auto bg-white px-5 pt-4 pb-5 font-mono text-gray-800 text-sm leading-[1.65]",
+          "dark:bg-neutral-950 dark:text-neutral-200"
         )}
       >
         <code className="bg-transparent p-0 font-inherit text-inherit">
