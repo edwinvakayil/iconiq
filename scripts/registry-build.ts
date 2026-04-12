@@ -40,6 +40,12 @@ const REGISTRY_UI_META: Record<
       'Primary action control with CVA variants, pointer ripples via Framer Motion, and default type="button". Forwards ref and native button props.',
     dependencies: ["framer-motion", "class-variance-authority"],
   },
+  "checkbox-group": {
+    title: "Checkbox group",
+    description:
+      "Multi-select option list with bordered empty state and a primary tick only when checked, plus hover/tap motion on each row. Framer Motion + Lucide.",
+    dependencies: ["framer-motion", "lucide-react"],
+  },
 };
 
 if (!fs.existsSync(registryComponents)) {

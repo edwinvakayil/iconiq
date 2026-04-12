@@ -5004,6 +5004,21 @@
       ]
     },
     {
+      "name": "checkbox-group",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": ["framer-motion", "lucide-react"],
+      "devDependencies": [],
+      "title": "Checkbox group",
+      "description": "Multi-select option list with bordered empty state and a primary tick only when checked, plus hover/tap motion on each row. Framer Motion + Lucide.",
+      "files": [
+        {
+          "path": "checkbox-group.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "database-backup",
       "type": "registry:ui",
       "registryDependencies": [],

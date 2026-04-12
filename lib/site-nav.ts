@@ -22,6 +22,7 @@ export const SITE_SECTIONS = [
       { label: "Accordion", href: "/components/motion-accordion" },
       { label: "Breadcrumbs", href: "/components/breadcrumbs" },
       { label: "Button", href: "/components/button" },
+      { label: "Checkbox group", href: "/components/checkbox-group" },
     ],
   },
 ] as const;

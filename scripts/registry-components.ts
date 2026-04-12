@@ -2333,6 +2333,12 @@ export const components: ComponentDefinition[] = [
     dependencies: ["framer-motion", "class-variance-authority"],
   },
   {
+    name: "checkbox-group",
+    path: path.join(__dirname, "../registry", "checkbox-group.tsx"),
+    registryDependencies: [],
+    dependencies: ["framer-motion", "lucide-react"],
+  },
+  {
     name: "database-backup",
     path: path.join(__dirname, "../icons", "database-backup.tsx"),
     registryDependencies: [],
