@@ -34,6 +34,12 @@ const REGISTRY_UI_META: Record<
       "Breadcrumb trail with spring separators, hover lift, and a subtle shimmer on the current page. Built with Framer Motion.",
     dependencies: ["framer-motion", "lucide-react"],
   },
+  button: {
+    title: "Animated Button",
+    description:
+      "Primary action control with CVA variants and spring hover/tap scale via Framer Motion. Forwards ref and native button props.",
+    dependencies: ["framer-motion", "class-variance-authority"],
+  },
 };
 
 if (!fs.existsSync(registryComponents)) {

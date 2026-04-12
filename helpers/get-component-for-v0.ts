@@ -47,6 +47,20 @@ const COMPONENT_EXAMPLE: Record<string, string> = {
     "    </div>\n" +
     "  )\n" +
     "}\n",
+  button:
+    '"use client";\n\n' +
+    `import { AnimatedButton } from "@/components/ui/button"\n\n` +
+    "export default function Page() {\n" +
+    "  return (\n" +
+    '    <div className="flex min-h-svh flex-wrap items-center justify-center gap-3 p-8">\n' +
+    "      <AnimatedButton>Primary</AnimatedButton>\n" +
+    '      <AnimatedButton variant="outline">Outline</AnimatedButton>\n' +
+    '      <AnimatedButton variant="secondary" size="sm">\n' +
+    "        Small\n" +
+    "      </AnimatedButton>\n" +
+    "    </div>\n" +
+    "  )\n" +
+    "}\n",
 };
 
 const getComponentForV0 = async (name: string) => {

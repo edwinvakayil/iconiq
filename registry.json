@@ -4989,6 +4989,21 @@
       ]
     },
     {
+      "name": "button",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": ["framer-motion", "class-variance-authority"],
+      "devDependencies": [],
+      "title": "Animated Button",
+      "description": "Primary action control with CVA variants and spring hover/tap scale via Framer Motion. Forwards ref and native button props.",
+      "files": [
+        {
+          "path": "button.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "database-backup",
       "type": "registry:ui",
       "registryDependencies": [],
