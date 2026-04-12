@@ -72,7 +72,7 @@ const baseMetadata: Metadata = {
     capable: true,
   },
   title: {
-    default: `${SITE.NAME} | Free Motion-Powered Icons and Components Library`,
+    default: SITE.NAME,
     template: `%s | ${SITE.NAME}`,
   },
   description: SITE.DESCRIPTION.LONG,
