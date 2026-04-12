@@ -3,49 +3,33 @@
 import { ChevronRight } from "lucide-react";
 import { motion, useReducedMotion, type Variants } from "motion/react";
 import Link from "next/link";
-import { type ReactNode, useState } from "react";
+import type { ReactNode } from "react";
 
 import { CodeBlock } from "@/components/code-block";
 import { CodeBlockInstall } from "@/components/code-block-install";
 import { ComponentActions } from "@/components/component-actions";
 import { SidebarNav } from "@/components/sidebar-nav";
 import { cn } from "@/lib/utils";
-import {
-  CheckboxGroup,
-  type CheckboxGroupOption,
-} from "@/registry/checkbox-group";
+import { InfoCard } from "@/registry/card";
 
-const demoOptions: CheckboxGroupOption[] = [
-  {
-    label: "Email notifications",
-    value: "email",
-    description: "Product updates and tips in your inbox",
-  },
-  {
-    label: "SMS alerts",
-    value: "sms",
-    description: "Urgent messages only",
-  },
-  {
-    label: "Push (coming soon)",
-    value: "push",
-    description: "Disabled row example",
-    disabled: true,
-  },
-];
+const usageCode = `import { InfoCard } from "@/components/ui/card";
 
-const usageCode = `import { CheckboxGroup } from "@/components/ui/checkbox-group";
-import { useState } from "react";
-
-const options = [
-  { label: "Email", value: "email", description: "Optional helper text" },
-  { label: "SMS", value: "sms" },
-];
-
-export function Preferences() {
-  const [value, setValue] = useState<string[]>([]);
+export function FeaturedCards() {
   return (
-    <CheckboxGroup onChange={setValue} options={options} value={value} />
+    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <InfoCard
+        imageSrc="/photo.jpg"
+        title="Mountain retreat"
+        description="A quiet cabin with views and slow mornings by the fire."
+        index={0}
+      />
+      <InfoCard
+        imageSrc="/photo-2.jpg"
+        title="Coastal studio"
+        description="Light-filled workspace a few blocks from the water."
+        index={1}
+      />
+    </div>
   );
 }`;
 
@@ -53,52 +37,52 @@ type DetailRow = { id: string; title: string; content: string };
 
 const componentDetailsItems: DetailRow[] = [
   {
-    id: "options",
-    title: "options (required)",
+    id: "imageSrc",
+    title: "imageSrc (required)",
     content:
-      "Array of CheckboxGroupOption: label (visible title), value (stable id used in the controlled array), optional description (muted subline), optional disabled (skips toggle, dims row).",
+      "URL or path for the hero image. The image uses object-cover inside a fixed-height frame with a subtle zoom on hover.",
   },
   {
-    id: "value",
-    title: "value (optional)",
+    id: "title",
+    title: "title (required)",
     content:
-      "Controlled selected values as string[]. Defaults to []. Each entry should match an option value.",
+      "Card heading, also passed as the image alt text for basic accessibility.",
   },
   {
-    id: "onChange",
-    title: "onChange (optional)",
+    id: "description",
+    title: "description (required)",
     content:
-      "Called with the next string[] when a row is toggled. Use with value for controlled usage; omit both for static display only.",
+      "Body copy in a scrollable area when text is long; uses muted foreground styling.",
   },
   {
-    id: "className",
-    title: "className (optional)",
+    id: "index",
+    title: "index (optional)",
     content:
-      "Forwarded to the root flex column wrapper for spacing or max-width in your form layout.",
+      "Defaults to 0. Staggers the entrance animation delay (index × 0.12s) when rendering multiple cards in a list.",
   },
   {
     id: "framer-motion",
     title: "framer-motion",
     content:
-      "motion.button rows with hover background; AnimatePresence for check/uncheck crossfade; checked state shows only a primary-colored tick (no filled box).",
+      "Springs on rotateX/rotateY from pointer position, whileHover lift and shadow, whileTap scale, and image scale on hover.",
   },
   {
-    id: "lucide-react",
-    title: "lucide-react",
+    id: "behavior",
+    title: "Interaction model",
     content:
-      "Lucide Check when selected (no inner fill on the row box). Swap for another icon if you want a different mark.",
+      "Pointer move over the card drives subtle 3D tilt; leaving resets springs. Cursor is pointer — wire onClick on a wrapper if you need navigation.",
   },
   {
     id: "a11y",
     title: "Accessibility",
     content:
-      'Each row is a native button type="button". For full checkbox semantics in production, consider wrapping with a fieldset/legend or pairing with hidden inputs.',
+      "Semantic heading and img with alt from title. Heavy motion users may prefer wrapping with reduced-motion checks in your app.",
   },
   {
     id: "registry",
     title: "shadcn registry",
     content:
-      "Install adds checkbox-group.tsx as components/ui/checkbox-group; peers are framer-motion and lucide-react.",
+      "Install adds card.tsx as components/ui/card; peer dependency is framer-motion.",
   },
 ];
 
@@ -173,8 +157,7 @@ function BentoMotion({
   );
 }
 
-export default function CheckboxGroupPage() {
-  const [selected, setSelected] = useState<string[]>(["email"]);
+export default function CardPage() {
   const prefersReducedMotion = useReducedMotion();
   const containerVariants = prefersReducedMotion
     ? bentoContainerStatic
@@ -225,7 +208,7 @@ export default function CheckboxGroupPage() {
                 aria-current="page"
                 className="text-neutral-700 dark:text-neutral-300"
               >
-                Checkbox group
+                Info card
               </li>
             </ol>
           </motion.nav>
@@ -241,12 +224,11 @@ export default function CheckboxGroupPage() {
             }
           >
             <h1 className="font-sans font-semibold text-3xl text-neutral-900 tracking-tight sm:text-[2rem] dark:text-white">
-              Checkbox group
+              Info card
             </h1>
             <p className="mt-2 font-sans text-[15px] text-neutral-500 leading-relaxed dark:text-neutral-400">
-              Multi-select rows with a bordered empty box when off and a lone
-              animated tick when on. Built with Framer Motion and your theme
-              tokens.
+              Media card with 3D tilt on pointer move, staggered entrance, and
+              hover lift. Built with Framer Motion and your theme tokens.
             </p>
           </motion.header>
 
@@ -272,12 +254,20 @@ export default function CheckboxGroupPage() {
               />
               <SectionLabel accent="01">Live preview</SectionLabel>
               <div className="relative mt-1 min-h-0 flex-1">
-                <CheckboxGroup
-                  className="max-w-md"
-                  onChange={setSelected}
-                  options={demoOptions}
-                  value={selected}
-                />
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <InfoCard
+                    description="Founded in 1902, Real Madrid is one of the world’s most decorated clubs, with a record haul of European Cups and a global fanbase. The first team plays at the Santiago Bernabéu in Chamartín, where match nights turn the city white. From Di Stéfano and Raúl to today’s squad, the club’s history is built on attacking football and the relentless pursuit of trophies."
+                    imageSrc="/assets/rma.webp"
+                    index={0}
+                    title="Real Madrid"
+                  />
+                  <InfoCard
+                    description="Formed as Newton Heath in 1878 and renamed in 1902, Manchester United is England’s most successful club in the modern era, with a long line of league titles and European nights. Home matches are played at Old Trafford, the Theatre of Dreams, where generations of supporters have seen Busby’s Babes, the Class of ’92, and decades of teams compete for trophies in red."
+                    imageSrc="/assets/manutd.avif"
+                    index={1}
+                    title="Manchester United"
+                  />
+                </div>
               </div>
             </BentoMotion>
 
@@ -287,7 +277,7 @@ export default function CheckboxGroupPage() {
             >
               <SectionLabel accent="02">Install</SectionLabel>
               <div className="min-w-0 flex-1 [&>div]:mt-0">
-                <CodeBlockInstall componentName="checkbox-group" />
+                <CodeBlockInstall componentName="card" />
               </div>
             </BentoMotion>
 
@@ -300,7 +290,7 @@ export default function CheckboxGroupPage() {
                 Ship the registry bundle to v0 and iterate on motion or layout
                 with prompts.
               </p>
-              <ComponentActions name="checkbox-group" />
+              <ComponentActions name="card" />
             </BentoMotion>
 
             <BentoMotion
@@ -315,11 +305,15 @@ export default function CheckboxGroupPage() {
                 </span>{" "}
                 for{" "}
                 <code className="rounded bg-neutral-100 px-1 py-0.5 font-mono text-[11px] dark:bg-neutral-900">
-                  options
+                  imageSrc
                 </code>
                 ,{" "}
                 <code className="rounded bg-neutral-100 px-1 py-0.5 font-mono text-[11px] dark:bg-neutral-900">
-                  value
+                  title
+                </code>
+                ,{" "}
+                <code className="rounded bg-neutral-100 px-1 py-0.5 font-mono text-[11px] dark:bg-neutral-900">
+                  description
                 </code>
                 , and packages.
               </p>
@@ -334,11 +328,7 @@ export default function CheckboxGroupPage() {
               <p className="mb-3 font-sans text-neutral-500 text-xs leading-snug dark:text-neutral-400">
                 Registry peers and API — export{" "}
                 <code className="rounded bg-neutral-100 px-1 py-0.5 font-mono text-[10px] dark:bg-neutral-900">
-                  CheckboxGroup
-                </code>{" "}
-                and{" "}
-                <code className="rounded bg-neutral-100 px-1 py-0.5 font-mono text-[10px] dark:bg-neutral-900">
-                  CheckboxGroupOption
+                  InfoCard
                 </code>
                 .
               </p>

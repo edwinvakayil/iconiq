@@ -317,11 +317,7 @@ export default function AccordionPage() {
                 </code>{" "}
                 contract and packages.
               </p>
-              <CodeBlock
-                code={usageCode}
-                language="tsx"
-                variant="embedded"
-              />
+              <CodeBlock code={usageCode} language="tsx" variant="embedded" />
             </BentoMotion>
 
             <BentoMotion

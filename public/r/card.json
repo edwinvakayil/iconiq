@@ -1,0 +1,17 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "card",
+  "type": "registry:ui",
+  "registryDependencies": [],
+  "dependencies": ["framer-motion"],
+  "devDependencies": [],
+  "files": [
+    {
+      "path": "card.tsx",
+      "content": "import { motion, useMotionValue, useSpring, useTransform } from \"framer-motion\";\nimport Image from \"next/image\";\nimport { useRef } from \"react\";\n\ninterface InfoCardProps {\n  imageSrc: string;\n  title: string;\n  description: string;\n  index?: number;\n}\n\nexport function InfoCard({\n  imageSrc,\n  title,\n  description,\n  index = 0,\n}: InfoCardProps) {\n  const ref = useRef<HTMLDivElement>(null);\n\n  const x = useMotionValue(0);\n  const y = useMotionValue(0);\n\n  const rotateX = useSpring(useTransform(y, [-0.5, 0.5], [4, -4]), {\n    stiffness: 200,\n    damping: 20,\n  });\n  const rotateY = useSpring(useTransform(x, [-0.5, 0.5], [-4, 4]), {\n    stiffness: 200,\n    damping: 20,\n  });\n\n  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {\n    const rect = ref.current?.getBoundingClientRect();\n    if (!rect) return;\n    x.set((e.clientX - rect.left) / rect.width - 0.5);\n    y.set((e.clientY - rect.top) / rect.height - 0.5);\n  };\n\n  const handleMouseLeave = () => {\n    x.set(0);\n    y.set(0);\n  };\n\n  return (\n    <motion.div\n      animate={{ opacity: 1, y: 0, scale: 1 }}\n      className=\"flex cursor-pointer flex-col overflow-hidden rounded-2xl bg-card\"\n      initial={{ opacity: 0, y: 40, scale: 0.95 }}\n      onMouseLeave={handleMouseLeave}\n      onMouseMove={handleMouseMove}\n      ref={ref}\n      style={{\n        boxShadow: \"0 1px 3px 0 oklch(0 0 0 / 0.04)\",\n        perspective: 800,\n        rotateX,\n        rotateY,\n        transformStyle: \"preserve-3d\",\n      }}\n      transition={{\n        duration: 0.8,\n        delay: index * 0.12,\n        ease: [0.16, 1, 0.3, 1],\n      }}\n      whileHover={{\n        y: -8,\n        boxShadow:\n          \"0 20px 40px -12px oklch(0 0 0 / 0.12), 0 4px 12px -2px oklch(0 0 0 / 0.06)\",\n        transition: { duration: 0.4, ease: [0.16, 1, 0.3, 1] },\n      }}\n      whileTap={{\n        scale: 0.97,\n        transition: { duration: 0.1, ease: \"easeOut\" },\n      }}\n    >\n      <div\n        className=\"relative m-1 h-56 w-full overflow-hidden rounded-2xl\"\n        style={{ width: \"calc(100% - 0.5rem)\" }}\n      >\n        <motion.div\n          className=\"relative h-full w-full\"\n          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}\n          whileHover={{ scale: 1.08 }}\n        >\n          <Image\n            alt={title}\n            className=\"rounded-2xl object-cover\"\n            fill\n            sizes=\"(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 400px\"\n            src={imageSrc}\n          />\n        </motion.div>\n      </div>\n\n      <div className=\"flex flex-col px-5 pt-4 pb-5\" style={{ height: \"160px\" }}>\n        <h3 className=\"mb-2 shrink-0 font-bold text-foreground text-lg\">\n          {title}\n        </h3>\n        <p className=\"flex-1 overflow-y-auto pr-1 text-muted-foreground text-sm leading-relaxed\">\n          {description}\n        </p>\n      </div>\n    </motion.div>\n  );\n}\n",
+      "type": "registry:ui"
+    }
+  ],
+  "title": "Info card",
+  "description": "Media card with pointer-driven 3D tilt, staggered entrance, hover lift and shadow, and image zoom. Framer Motion."
+}

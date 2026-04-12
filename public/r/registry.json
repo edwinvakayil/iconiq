@@ -5019,6 +5019,21 @@
       ]
     },
     {
+      "name": "card",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": ["framer-motion"],
+      "devDependencies": [],
+      "title": "Info card",
+      "description": "Media card with pointer-driven 3D tilt, staggered entrance, hover lift and shadow, and image zoom. Framer Motion.",
+      "files": [
+        {
+          "path": "card.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "database-backup",
       "type": "registry:ui",
       "registryDependencies": [],

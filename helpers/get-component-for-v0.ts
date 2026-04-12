@@ -77,6 +77,23 @@ const COMPONENT_EXAMPLE: Record<string, string> = {
     "    </div>\n" +
     "  )\n" +
     "}\n",
+  card:
+    '"use client";\n\n' +
+    `import { InfoCard } from "@/components/ui/card"\n\n` +
+    "export default function Page() {\n" +
+    "  return (\n" +
+    '    <div className="flex min-h-svh items-center justify-center p-6">\n' +
+    '      <div className="w-full max-w-sm">\n' +
+    "        <InfoCard\n" +
+    '          description="A short line about this place or product."\n' +
+    '          imageSrc="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80"\n' +
+    "          index={0}\n" +
+    '          title="Featured"\n' +
+    "        />\n" +
+    "      </div>\n" +
+    "    </div>\n" +
+    "  )\n" +
+    "}\n",
 };
 
 const getComponentForV0 = async (name: string) => {

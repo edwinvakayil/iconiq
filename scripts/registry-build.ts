@@ -46,6 +46,12 @@ const REGISTRY_UI_META: Record<
       "Multi-select option list with bordered empty state and a primary tick only when checked, plus hover/tap motion on each row. Framer Motion + Lucide.",
     dependencies: ["framer-motion", "lucide-react"],
   },
+  card: {
+    title: "Info card",
+    description:
+      "Media card with pointer-driven 3D tilt, staggered entrance, hover lift and shadow, and image zoom. Framer Motion.",
+    dependencies: ["framer-motion"],
+  },
 };
 
 if (!fs.existsSync(registryComponents)) {

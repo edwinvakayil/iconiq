@@ -489,11 +489,7 @@ export default function ButtonPage() {
                 </code>
                 , and peer packages.
               </p>
-              <CodeBlock
-                code={usageCode}
-                language="tsx"
-                variant="embedded"
-              />
+              <CodeBlock code={usageCode} language="tsx" variant="embedded" />
             </BentoMotion>
 
             <BentoMotion
