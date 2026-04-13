@@ -1,68 +1,26 @@
 "use client";
 
-import { ChevronRight, ChevronsUpDown, Trophy } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import { motion, useReducedMotion, type Variants } from "motion/react";
 import Link from "next/link";
 import type { ReactNode } from "react";
-import { useState } from "react";
 
 import { CodeBlock } from "@/components/code-block";
 import { CodeBlockInstall } from "@/components/code-block-install";
 import { ComponentActions } from "@/components/component-actions";
 import { RegistryInstallBlock } from "@/components/registry-install-block";
 import { cn } from "@/lib/utils";
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/registry/collapsible";
+import { tooltip as Tooltip } from "@/registry/tooltip";
 
-const usageCode = `import { ChevronsUpDown } from "lucide-react";
-import { useState } from "react";
-import {
-  Collapsible,
-  CollapsibleTrigger,
-  CollapsibleContent,
-} from "@/components/ui/collapsible";
+const usageCode = `import { tooltip as Tooltip } from "@/components/ui/tooltip";
 
-// CollapsibleContent animates height + opacity automatically via
-// Framer Motion spring physics. No extra setup needed.
-export function BillingCard() {
-  const [open, setOpen] = useState(true);
-
+export function HelpLabel() {
   return (
-    <Collapsible open={open} onOpenChange={setOpen}>
-      <div className="flex items-center justify-between mb-3">
-        <span className="font-semibold text-base">Pro Plan</span>
-        <CollapsibleTrigger className="flex size-8 items-center justify-center rounded-full bg-neutral-100 hover:bg-neutral-200">
-          <ChevronsUpDown className="size-4 text-neutral-500" />
-        </CollapsibleTrigger>
-      </div>
-
-      {/* Always visible */}
-      <div className="rounded-xl border px-4 py-3">
-        <div className="flex items-center justify-between">
-          <span className="text-muted-foreground text-sm">Monthly cost</span>
-          <span className="font-semibold text-sm">$29 / mo</span>
-        </div>
-      </div>
-
-      {/* Animated collapsible details */}
-      <CollapsibleContent className="mt-2 flex flex-col gap-2">
-        <div className="rounded-xl border px-4 py-3">
-          <p className="text-muted-foreground text-xs">Next billing</p>
-          <p className="mt-0.5 font-semibold text-sm">May 1, 2026</p>
-        </div>
-        <div className="rounded-xl border px-4 py-3">
-          <p className="text-muted-foreground text-xs">Payment method</p>
-          <p className="mt-0.5 font-semibold text-sm">Visa ••••4242</p>
-        </div>
-        <div className="rounded-xl border px-4 py-3">
-          <p className="text-muted-foreground text-xs">Seats used</p>
-          <p className="mt-0.5 font-semibold text-sm">5 of 10</p>
-        </div>
-      </CollapsibleContent>
-    </Collapsible>
+    <Tooltip content="Changes are saved automatically" side="top" delay={0.1}>
+      <button className="rounded-md border px-3 py-1.5 text-sm">
+        Autosave
+      </button>
+    </Tooltip>
   );
 }`;
 
@@ -75,41 +33,48 @@ type DetailRow = {
 
 const componentDetailsItems: DetailRow[] = [
   {
-    id: "collapsible",
-    title: "Collapsible",
+    id: "children",
+    title: "children (required)",
     content:
-      'Root component. Accepts open and onOpenChange for controlled state, or works uncontrolled. Renders a Radix CollapsiblePrimitive.Root with a data-slot="collapsible" attribute.',
+      "The trigger element. Tooltip opens on mouse enter or keyboard focus and closes on mouse leave or blur.",
   },
   {
-    id: "collapsibletrigger",
-    title: "CollapsibleTrigger",
+    id: "content",
+    title: "content (required)",
     content:
-      'Button that toggles the open state. Receives data-state="open" or data-state="closed" so you can target it with Tailwind variants for icon rotation or color changes.',
+      "Tooltip body. Accepts any React node, so plain text and rich inline markup both work.",
   },
   {
-    id: "collapsiblecontent",
-    title: "CollapsibleContent",
+    id: "side",
+    title: "side (optional)",
     content:
-      "Conditionally rendered content area. Radix handles mount/unmount and adds data-state for CSS-based height animations. Use animate-collapsible-down / animate-collapsible-up from your globals.",
+      'Placement around the trigger: "top", "bottom", "left", or "right". Default is "top".',
   },
   {
-    id: "radix-ui",
-    title: "radix-ui",
+    id: "delay",
+    title: "delay (optional)",
     content:
-      "Peer dependency that provides accessible open/close state management, keyboard navigation, and ARIA attributes. The shadcn CLI adds it automatically.",
+      "Open delay in seconds before showing the tooltip. Default is 0.15 to avoid accidental flicker.",
+  },
+  {
+    id: "classname",
+    title: "className (optional)",
+    content:
+      "Appended to the tooltip bubble. Use it to change sizing, colors, or typography while keeping default motion.",
+  },
+  {
+    id: "framer-motion",
+    title: "framer-motion",
+    content:
+      "Drives AnimatePresence mount/unmount, spring scale, directional offsets, blur fade, and arrow pop animation.",
   },
   {
     id: "registry",
     title: "shadcn registry",
-    content: "Only peer dependency is radix-ui.",
-    registryPath: "collapsible.json",
+    content:
+      "Registry item includes framer-motion so the install command brings in animation support.",
+    registryPath: "tooltip.json",
   },
-];
-
-const MATCH_DETAIL_ROWS: { label: string; value: string }[] = [
-  { label: "Midfield", value: "Press, recycle, stay compact." },
-  { label: "Last line", value: "One ball behind the line." },
-  { label: "Keyboard", value: "Tab in — same note." },
 ];
 
 function SectionLabel({
@@ -142,8 +107,11 @@ const bentoShell =
 
 const bentoContainer = {
   hidden: {},
-  visible: { transition: { delayChildren: 0.06, staggerChildren: 0.07 } },
+  visible: {
+    transition: { delayChildren: 0.06, staggerChildren: 0.07 },
+  },
 };
+
 const bentoItem = {
   hidden: { opacity: 0, y: 22, scale: 0.98 },
   visible: {
@@ -153,10 +121,12 @@ const bentoItem = {
     transition: { type: "spring", stiffness: 320, damping: 28 },
   },
 };
+
 const bentoContainerStatic = {
   hidden: {},
   visible: { transition: { delayChildren: 0, staggerChildren: 0 } },
 };
+
 const bentoItemStatic = {
   hidden: { opacity: 1, scale: 1, y: 0 },
   visible: { opacity: 1, scale: 1, y: 0 },
@@ -178,63 +148,65 @@ function BentoMotion({
   );
 }
 
-function BillingCardDemo() {
-  const [open, setOpen] = useState(true);
+function TooltipPreview() {
+  const triggerClass =
+    "rounded-sm px-0.5 font-semibold underline decoration-dotted underline-offset-[5px] transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-500/60";
 
   return (
-    <div className="w-full max-w-sm">
-      <Collapsible onOpenChange={setOpen} open={open}>
-        <div className="mb-3 flex items-center justify-between">
-          <div className="flex items-center gap-2.5">
-            <span className="flex size-7 items-center justify-center rounded-lg bg-neutral-900 dark:bg-white">
-              <Trophy className="size-3.5 text-white dark:text-neutral-900" />
-            </span>
-            <span className="font-semibold text-base text-neutral-900 dark:text-white">
-              Match sheet
-            </span>
-          </div>
-          <CollapsibleTrigger className="flex size-8 items-center justify-center text-neutral-400 transition-colors hover:text-neutral-700 dark:text-neutral-500 dark:hover:text-neutral-300">
-            <ChevronsUpDown className="size-4" />
-          </CollapsibleTrigger>
-        </div>
-
-        <div className="rounded-xl border border-neutral-200 px-4 py-3 dark:border-neutral-700">
-          <div className="flex items-center justify-between gap-2">
-            <span className="text-neutral-400 text-sm dark:text-neutral-500">
-              Phase
-            </span>
-            <div className="flex items-center gap-2">
-              <span className="text-right font-semibold text-neutral-900 text-sm dark:text-white">
-                Build-up → Break
-              </span>
-              <span className="shrink-0 rounded-full bg-emerald-100 px-2 py-0.5 font-medium text-[10px] text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400">
-                Live
-              </span>
-            </div>
-          </div>
-        </div>
-
-        <CollapsibleContent className="mt-2 flex flex-col gap-2">
-          {MATCH_DETAIL_ROWS.map((row) => (
-            <div
-              className="rounded-xl border border-neutral-200 px-4 py-3 dark:border-neutral-700"
-              key={row.label}
+    <div className="flex min-h-[260px] flex-1 flex-col items-center justify-center gap-8 px-4 py-8">
+      <blockquote className="max-w-lg text-center">
+        <p className="font-medium font-sans text-lg text-neutral-800 leading-relaxed tracking-tight sm:text-xl dark:text-neutral-100">
+          Win the{" "}
+          <Tooltip
+            content="Press, recycle, stay compact."
+            delay={0.12}
+            side="top"
+          >
+            <button
+              className={cn(
+                triggerClass,
+                "text-emerald-700 decoration-emerald-500/40 hover:bg-emerald-500/10 hover:text-emerald-600 dark:text-emerald-400 dark:hover:text-emerald-300"
+              )}
+              type="button"
             >
-              <p className="font-medium text-neutral-400 text-xs dark:text-neutral-500">
-                {row.label}
-              </p>
-              <p className="mt-0.5 font-semibold text-neutral-900 text-sm dark:text-white">
-                {row.value}
-              </p>
-            </div>
-          ))}
-        </CollapsibleContent>
-      </Collapsible>
+              midfield
+            </button>
+          </Tooltip>
+          , then{" "}
+          <Tooltip content="One ball behind the line." side="bottom">
+            <button
+              className={cn(
+                triggerClass,
+                "text-sky-700 decoration-sky-500/40 hover:bg-sky-500/10 hover:text-sky-600 dark:text-sky-400 dark:hover:text-sky-300"
+              )}
+              type="button"
+            >
+              break the last line
+            </button>
+          </Tooltip>
+          — that’s the half in two beats.
+        </p>
+      </blockquote>
+      <p className="max-w-sm text-center font-sans text-[13px] text-neutral-500 leading-relaxed dark:text-neutral-400">
+        Hover the calls or{" "}
+        <Tooltip content="Tab in — same note." side="right">
+          <button
+            className={cn(
+              triggerClass,
+              "text-neutral-700 decoration-neutral-400/70 hover:text-neutral-900 dark:text-neutral-300 dark:hover:text-white"
+            )}
+            type="button"
+          >
+            use the keyboard
+          </button>
+        </Tooltip>
+        .
+      </p>
     </div>
   );
 }
 
-export default function CollapsiblePage() {
+export default function TooltipPage() {
   const prefersReducedMotion = useReducedMotion();
   const containerVariants = prefersReducedMotion
     ? bentoContainerStatic
@@ -244,7 +216,6 @@ export default function CollapsiblePage() {
   return (
     <main className="min-w-0 flex-1">
       <div className="mx-auto w-full max-w-screen-2xl px-4 py-10 sm:px-6 sm:py-12 lg:px-10">
-        {/* Breadcrumb */}
         <motion.nav
           animate={{ opacity: 1, y: 0 }}
           aria-label="Breadcrumb"
@@ -271,7 +242,7 @@ export default function CollapsiblePage() {
             <li>
               <Link
                 className="transition-colors hover:text-neutral-800 dark:hover:text-neutral-200"
-                href="/components/collapsible"
+                href="/components/tooltip"
               >
                 Components
               </Link>
@@ -283,12 +254,11 @@ export default function CollapsiblePage() {
               aria-current="page"
               className="text-neutral-700 dark:text-neutral-300"
             >
-              Collapsible
+              Tooltip
             </li>
           </ol>
         </motion.nav>
 
-        {/* Header */}
         <motion.header
           animate={{ opacity: 1, y: 0 }}
           className="mb-12 max-w-2xl"
@@ -300,13 +270,12 @@ export default function CollapsiblePage() {
           }
         >
           <h1 className="font-sans font-semibold text-3xl text-neutral-900 tracking-tight sm:text-[2rem] dark:text-white">
-            Collapsible
+            Tooltip
           </h1>
           <p className="mt-2 font-sans text-[15px] text-neutral-500 leading-relaxed dark:text-neutral-400">
-            Accessible expand/collapse primitive built on Radix UI. Exports
-            three composable parts — Collapsible, CollapsibleTrigger, and
-            CollapsibleContent — for building FAQs, disclosure sections, and
-            nested navigation.
+            Animated tooltip with spring entrance and directional offset.
+            Supports hover and focus interactions with configurable side and
+            delay.
           </p>
         </motion.header>
 
@@ -319,7 +288,6 @@ export default function CollapsiblePage() {
           initial="hidden"
           variants={containerVariants}
         >
-          {/* Live preview */}
           <BentoMotion
             className={cn(
               "relative overflow-hidden lg:col-span-8 lg:row-span-2",
@@ -328,73 +296,51 @@ export default function CollapsiblePage() {
             variants={itemVariants}
           >
             <SectionLabel accent="01">Live preview</SectionLabel>
-            <div className="flex flex-1 items-start justify-center py-4">
-              <BillingCardDemo />
-            </div>
+            <TooltipPreview />
           </BentoMotion>
 
-          {/* Install */}
           <BentoMotion
             className="justify-between border-neutral-200/40 lg:col-span-4 lg:col-start-9 lg:row-start-1 dark:border-neutral-700/30"
             variants={itemVariants}
           >
             <SectionLabel accent="02">Install</SectionLabel>
             <div className="min-w-0 flex-1 [&>div]:mt-0">
-              <CodeBlockInstall componentName="collapsible" />
+              <CodeBlockInstall componentName="tooltip" />
             </div>
           </BentoMotion>
 
-          {/* v0 */}
           <BentoMotion
             className="border-neutral-200/90 border-dashed lg:col-span-4 lg:col-start-9 lg:row-start-2 dark:border-neutral-700/80"
             variants={itemVariants}
           >
             <SectionLabel accent="03">v0</SectionLabel>
             <p className="mb-5 flex-1 font-sans text-neutral-500 text-sm leading-snug dark:text-neutral-400">
-              Send the registry bundle to v0 to scaffold FAQ sections, navs, or
-              custom disclosure patterns with prompts.
+              Ship the tooltip registry item to v0, then iterate on copy, tone,
+              and microinteractions with prompts.
             </p>
-            <ComponentActions name="collapsible" />
+            <ComponentActions name="tooltip" />
           </BentoMotion>
 
-          {/* Usage */}
           <BentoMotion
             className="border-neutral-200/40 lg:col-span-12 lg:col-start-1 lg:row-start-3 dark:border-neutral-700/30"
             variants={itemVariants}
           >
             <SectionLabel accent="04">Usage</SectionLabel>
             <p className="mb-4 font-sans text-neutral-500 text-sm dark:text-neutral-400">
-              Import the three composable parts and wire them together. The
-              chevron rotation uses the{" "}
+              Wrap any trigger with the component and pass tooltip body via{" "}
               <code className="rounded bg-neutral-100 px-1 py-0.5 font-mono text-[11px] dark:bg-neutral-900">
-                data-state
-              </code>{" "}
-              attribute that Radix sets on the trigger.
+                content
+              </code>
+              .
             </p>
             <CodeBlock code={usageCode} language="tsx" variant="embedded" />
           </BentoMotion>
 
-          {/* API / Dependencies */}
           <BentoMotion
             className="border-neutral-200/40 lg:col-span-12 lg:col-start-1 lg:row-start-4 dark:border-neutral-700/30"
             variants={itemVariants}
           >
             <SectionLabel accent="05">API &amp; dependencies</SectionLabel>
-            <p className="mb-3 font-sans text-neutral-500 text-xs leading-snug dark:text-neutral-400">
-              Three named exports:{" "}
-              <code className="rounded bg-neutral-100 px-1 py-0.5 font-mono text-[10px] dark:bg-neutral-900">
-                Collapsible
-              </code>
-              ,{" "}
-              <code className="rounded bg-neutral-100 px-1 py-0.5 font-mono text-[10px] dark:bg-neutral-900">
-                CollapsibleTrigger
-              </code>
-              ,{" "}
-              <code className="rounded bg-neutral-100 px-1 py-0.5 font-mono text-[10px] dark:bg-neutral-900">
-                CollapsibleContent
-              </code>
-              .
-            </p>
             <div className="divide-y divide-neutral-100 dark:divide-neutral-800/60">
               {componentDetailsItems.map((row) => (
                 <div

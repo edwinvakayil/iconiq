@@ -27,6 +27,7 @@ export const SITE_SECTIONS = [
       { label: "Collapsible", href: "/components/collapsible" },
       { label: "Hover expand", href: "/components/hovercard" },
       { label: "Checkbox group", href: "/components/checkbox-group" },
+      { label: "Tooltip", href: "/components/tooltip" },
     ],
   },
 ] as const;

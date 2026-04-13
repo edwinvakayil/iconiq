@@ -17,19 +17,19 @@ import {
 
 const demoOptions: CheckboxGroupOption[] = [
   {
-    label: "Email notifications",
-    value: "email",
-    description: "Product updates and tips in your inbox",
+    label: "High press",
+    value: "press",
+    description: "Close the alley when they receive on the turn",
   },
   {
-    label: "SMS alerts",
-    value: "sms",
-    description: "Urgent messages only",
+    label: "Hold the half-spaces",
+    value: "halfspaces",
+    description: "Narrow tens, full-backs hold the width",
   },
   {
-    label: "Push (coming soon)",
-    value: "push",
-    description: "Disabled row example",
+    label: "Back-three rehearsal",
+    value: "backthree",
+    description: "Not on the teamsheet for Saturday",
     disabled: true,
   },
 ];
@@ -38,11 +38,15 @@ const usageCode = `import { CheckboxGroup } from "@/components/ui/checkbox-group
 import { useState } from "react";
 
 const options = [
-  { label: "Email", value: "email", description: "Optional helper text" },
-  { label: "SMS", value: "sms" },
+  {
+    label: "High press",
+    value: "press",
+    description: "Optional line under the title",
+  },
+  { label: "Hold the half-spaces", value: "halfspaces" },
 ];
 
-export function Preferences() {
+export function MatchdayToggles() {
   const [value, setValue] = useState<string[]>([]);
   return (
     <CheckboxGroup onChange={setValue} options={options} value={value} />
@@ -180,7 +184,7 @@ function BentoMotion({
 }
 
 export default function CheckboxGroupPage() {
-  const [selected, setSelected] = useState<string[]>(["email"]);
+  const [selected, setSelected] = useState<string[]>(["press"]);
   const prefersReducedMotion = useReducedMotion();
   const containerVariants = prefersReducedMotion
     ? bentoContainerStatic
@@ -216,7 +220,7 @@ export default function CheckboxGroupPage() {
             <li>
               <Link
                 className="transition-colors hover:text-neutral-800 dark:hover:text-neutral-200"
-                href="/components/motion-accordion"
+                href="/components/checkbox-group"
               >
                 Components
               </Link>
@@ -270,13 +274,32 @@ export default function CheckboxGroupPage() {
             variants={itemVariants}
           >
             <SectionLabel accent="01">Live preview</SectionLabel>
-            <div className="relative mt-1 min-h-0 flex-1">
+            <div className="relative mt-1 flex min-h-0 flex-1 flex-col items-center justify-center gap-5 px-2 pb-3">
               <CheckboxGroup
                 className="max-w-md"
                 onChange={setSelected}
                 options={demoOptions}
                 value={selected}
               />
+              <p className="max-w-md text-center font-sans text-[13px] leading-relaxed">
+                <span className="text-emerald-600 dark:text-emerald-400">
+                  Win the midfield
+                </span>
+                <span className="text-neutral-400 dark:text-neutral-500">
+                  {" "}
+                  ·{" "}
+                </span>
+                <span className="text-sky-600 dark:text-sky-400">
+                  Break the last line
+                </span>
+                <span className="text-neutral-400 dark:text-neutral-500">
+                  {" "}
+                  ·{" "}
+                </span>
+                <span className="text-violet-600 dark:text-violet-400">
+                  Subs wait for the call
+                </span>
+              </p>
             </div>
           </BentoMotion>
 

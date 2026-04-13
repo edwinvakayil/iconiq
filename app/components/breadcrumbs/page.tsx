@@ -248,8 +248,27 @@ export default function BreadcrumbsPage() {
             variants={itemVariants}
           >
             <SectionLabel accent="01">Live preview</SectionLabel>
-            <div className="relative mt-1 flex min-h-0 flex-1 items-center justify-center px-2 pb-3">
+            <div className="relative mt-1 flex min-h-0 flex-1 flex-col items-center justify-center gap-5 px-2 pb-3">
               <Breadcrumbs items={demoItems} />
+              <p className="max-w-md text-center font-sans text-[13px] leading-relaxed">
+                <span className="text-emerald-600 dark:text-emerald-400">
+                  Trail of clicks
+                </span>
+                <span className="text-neutral-400 dark:text-neutral-500">
+                  {" "}
+                  ·{" "}
+                </span>
+                <span className="text-sky-600 dark:text-sky-400">
+                  springs between stops
+                </span>
+                <span className="text-neutral-400 dark:text-neutral-500">
+                  {" "}
+                  ·{" "}
+                </span>
+                <span className="text-violet-600 dark:text-violet-400">
+                  shine on where you land
+                </span>
+              </p>
             </div>
           </BentoMotion>
 

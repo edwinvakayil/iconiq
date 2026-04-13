@@ -21,13 +21,13 @@ import Alert, { type AlertPosition } from "@/registry/alert";
 const usageCode = `import Alert from "@/components/ui/alert";
 import { CheckCircle2 } from "lucide-react";
 
-export function SyncNotice() {
+export function FullTimeNotice() {
   return (
     <Alert
       dismissible
       icon={<CheckCircle2 aria-hidden className="size-[18px]" />}
-      message="We saved your draft to the cloud."
-      title="Synced"
+      message="Three points in the bag — debrief in five minutes."
+      title="Full time"
     />
   );
 }`;
@@ -365,7 +365,7 @@ export default function AlertPage() {
             <li>
               <Link
                 className="transition-colors hover:text-neutral-800 dark:hover:text-neutral-200"
-                href="/components/motion-accordion"
+                href="/components/alert"
               >
                 Components
               </Link>
@@ -419,7 +419,7 @@ export default function AlertPage() {
             variants={itemVariants}
           >
             <SectionLabel accent="01">Live preview</SectionLabel>
-            <div className="relative z-10 mt-1 flex min-h-0 flex-1 flex-col items-center justify-center gap-4 px-1 pb-2 sm:gap-5">
+            <div className="relative z-10 mt-1 flex min-h-0 flex-1 flex-col items-center justify-center gap-5 px-1 pb-2">
               <div className="w-full max-w-xs sm:max-w-[220px]">
                 <PositionDropdown
                   onValueChange={(next) => {
@@ -475,19 +475,35 @@ export default function AlertPage() {
                     />
                   </svg>
                 </motion.span>
-                <span className="relative">Show alert</span>
+                <span className="relative">Flash the board</span>
               </motion.button>
-              <p className="max-w-xs text-center font-sans text-neutral-500 text-xs leading-snug dark:text-neutral-400">
-                Opens a dismissible alert at the chosen viewport corner.
+              <p className="max-w-md text-center font-sans text-[13px] leading-relaxed">
+                <span className="text-emerald-600 dark:text-emerald-400">
+                  Calls from the touchline
+                </span>
+                <span className="text-neutral-400 dark:text-neutral-500">
+                  {" "}
+                  ·{" "}
+                </span>
+                <span className="text-sky-600 dark:text-sky-400">
+                  Pins to your post
+                </span>
+                <span className="text-neutral-400 dark:text-neutral-500">
+                  {" "}
+                  ·{" "}
+                </span>
+                <span className="text-violet-600 dark:text-violet-400">
+                  Timer runs it off the pitch
+                </span>
               </p>
             </div>
             {previewKey > 0 ? (
               <Alert
                 icon={<CheckCircle2 aria-hidden className="size-[18px]" />}
                 key={previewKey}
-                message="This is a sample message for the live preview."
+                message="Three points in the bag — debrief in five minutes."
                 position={previewPosition}
-                title="Preview alert"
+                title="Full time"
               />
             ) : null}
           </BentoMotion>

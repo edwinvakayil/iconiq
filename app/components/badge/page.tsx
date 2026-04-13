@@ -79,32 +79,17 @@ const componentDetailsItems: DetailRow[] = [
   },
 ];
 
-const DEMO_BADGES: {
-  label: string;
-  bgColor?: string;
-  textColor?: string;
-  waveColor?: string;
-}[] = [
-  { label: "New feature" },
-  {
-    label: "Beta",
-    bgColor: "#eff6ff",
-    textColor: "#1d4ed8",
-    waveColor: "rgba(29,78,216,0.10)",
-  },
-  {
-    label: "Deprecated",
-    bgColor: "#fef2f2",
-    textColor: "#b91c1c",
-    waveColor: "rgba(185,28,28,0.10)",
-  },
-  {
-    label: "Stable",
-    bgColor: "#f0fdf4",
-    textColor: "#15803d",
-    waveColor: "rgba(21,128,61,0.10)",
-  },
-];
+function BadgePreview() {
+  return (
+    <div className="flex min-h-[260px] flex-1 flex-col items-center justify-center px-4 py-8">
+      <p className="max-w-lg text-center font-medium font-sans text-lg text-neutral-800 leading-relaxed sm:text-xl dark:text-neutral-100">
+        Mark the beat — a <Badge>New</Badge> tag for launches,{" "}
+        <Badge>Beta</Badge> when you&apos;re still tuning, <Badge>Live</Badge>{" "}
+        once it&apos;s out the door.
+      </p>
+    </div>
+  );
+}
 
 function SectionLabel({
   children,
@@ -268,18 +253,7 @@ export default function BadgePage() {
             variants={itemVariants}
           >
             <SectionLabel accent="01">Live preview</SectionLabel>
-            <div className="mt-4 flex min-h-[160px] flex-1 flex-wrap items-center justify-center gap-3">
-              {DEMO_BADGES.map((badge) => (
-                <Badge
-                  bgColor={badge.bgColor}
-                  key={badge.label}
-                  textColor={badge.textColor}
-                  waveColor={badge.waveColor}
-                >
-                  {badge.label}
-                </Badge>
-              ))}
-            </div>
+            <BadgePreview />
           </BentoMotion>
 
           {/* Install */}

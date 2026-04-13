@@ -5142,6 +5142,21 @@
           "type": "registry:ui"
         }
       ]
+    },
+    {
+      "name": "tooltip",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": ["framer-motion"],
+      "devDependencies": [],
+      "title": "Tooltip",
+      "description": "Animated hover/focus tooltip with spring entrance, blur fade, directional offset, and optional delay and side placement. Built with Framer Motion.",
+      "files": [
+        {
+          "path": "tooltip.tsx",
+          "type": "registry:ui"
+        }
+      ]
     }
   ]
 }

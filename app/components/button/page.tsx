@@ -27,21 +27,30 @@ const PREVIEW_VARIANTS = [
 ] as const;
 
 const PREVIEW_SIZES = [
-  { value: "sm", label: "Small (sm)" },
-  { value: "md", label: "Medium (md)" },
-  { value: "lg", label: "Large (lg)" },
+  { value: "sm", label: "Small" },
+  { value: "md", label: "Medium" },
+  { value: "lg", label: "Large" },
 ] as const;
 
 type PreviewVariant = (typeof PREVIEW_VARIANTS)[number]["value"];
 type PreviewSize = (typeof PREVIEW_SIZES)[number]["value"];
 
+/** Caption hue tracks the selected button variant for a tighter preview read. */
+const previewCaptionClassByVariant: Record<PreviewVariant, string> = {
+  default: "text-primary",
+  destructive: "text-red-600 dark:text-red-400",
+  outline: "text-slate-600 dark:text-slate-400",
+  secondary: "text-neutral-800 dark:text-neutral-300",
+  ghost: "text-neutral-500 dark:text-neutral-400",
+  link: "text-sky-700 dark:text-sky-400",
+};
+
 const previewDropdownTriggerClass = cn(
-  "flex h-10 w-full min-w-0 items-center justify-between gap-2 rounded-[14px] border border-neutral-200/70 bg-white px-3.5 font-sans text-neutral-900 text-sm outline-none transition-colors",
-  "supports-[corner-shape:squircle]:corner-squircle supports-[corner-shape:squircle]:rounded-[24px]",
-  "hover:border-neutral-300/80 hover:bg-neutral-50/60",
-  "focus-visible:border-neutral-400 focus-visible:ring-1 focus-visible:ring-neutral-400/35",
-  "dark:border-neutral-700/70 dark:bg-neutral-950 dark:text-neutral-100 dark:hover:border-neutral-600 dark:hover:bg-neutral-900/40",
-  "dark:focus-visible:border-neutral-500 dark:focus-visible:ring-neutral-500/30"
+  "flex h-9 w-full min-w-0 items-center justify-between gap-2 rounded-xl border border-neutral-200/80 bg-white px-3 font-sans text-[13px] text-neutral-900 outline-none transition-colors",
+  "hover:border-neutral-300 hover:bg-neutral-50/80",
+  "focus-visible:border-neutral-400 focus-visible:ring-2 focus-visible:ring-neutral-400/20",
+  "dark:border-neutral-700 dark:bg-neutral-950 dark:text-neutral-100 dark:hover:border-neutral-600 dark:hover:bg-neutral-900/50",
+  "dark:focus-visible:border-neutral-500 dark:focus-visible:ring-neutral-500/25"
 );
 
 function PreviewSelectField({
@@ -91,9 +100,9 @@ function PreviewSelectField({
   }, [open]);
 
   return (
-    <div className="w-full min-w-0 sm:w-auto sm:min-w-60">
+    <div className="w-full min-w-0">
       <label
-        className="mb-2 block font-medium text-[11px] text-neutral-500 uppercase tracking-wider dark:text-neutral-400"
+        className="mb-1.5 block font-medium text-[10px] text-neutral-400 uppercase tracking-[0.14em] dark:text-neutral-500"
         htmlFor={id}
       >
         {label}
@@ -129,9 +138,8 @@ function PreviewSelectField({
               animate={{ opacity: 1, scale: 1, y: 0 }}
               aria-label={ariaLabel}
               className={cn(
-                "absolute left-0 z-50 mt-1.5 w-max min-w-full overflow-y-auto overflow-x-hidden overscroll-contain rounded-[12px] border border-neutral-200/70 bg-white py-1",
-                "supports-[corner-shape:squircle]:corner-squircle supports-[corner-shape:squircle]:rounded-[20px]",
-                "dark:border-neutral-700/70 dark:bg-neutral-950",
+                "absolute left-0 z-50 mt-1.5 w-max min-w-full overflow-y-auto overflow-x-hidden overscroll-contain rounded-xl border border-neutral-200/80 bg-white py-1 shadow-sm",
+                "dark:border-neutral-700 dark:bg-neutral-950",
                 menuMaxHeightClass
               )}
               exit={
@@ -158,7 +166,7 @@ function PreviewSelectField({
                     <button
                       aria-selected={isSelected}
                       className={cn(
-                        "flex w-full min-w-0 whitespace-nowrap rounded-[8px] px-3 py-2 pr-3.5 text-left font-sans text-sm transition-colors",
+                        "flex w-full min-w-0 whitespace-nowrap rounded-lg px-3 py-1.5 pr-3 text-left font-sans text-[13px] transition-colors",
                         isSelected
                           ? "bg-neutral-100 font-medium text-neutral-900 dark:bg-neutral-900 dark:text-neutral-50"
                           : "text-neutral-700 hover:bg-neutral-50 dark:text-neutral-300 dark:hover:bg-neutral-900/70"
@@ -363,7 +371,7 @@ export default function ButtonPage() {
             <li>
               <Link
                 className="transition-colors hover:text-neutral-800 dark:hover:text-neutral-200"
-                href="/components/motion-accordion"
+                href="/components/button"
               >
                 Components
               </Link>
@@ -416,8 +424,8 @@ export default function ButtonPage() {
             variants={itemVariants}
           >
             <SectionLabel accent="01">Live preview</SectionLabel>
-            <div className="relative mt-1 min-h-0 flex-1 space-y-6">
-              <div className="flex flex-col gap-5 sm:flex-row sm:flex-wrap sm:items-start sm:gap-8">
+            <div className="relative mt-1 flex min-h-0 flex-1 flex-col gap-8">
+              <div className="grid grid-cols-1 items-end gap-4 px-1 sm:grid-cols-2 sm:gap-8">
                 <PreviewSelectField
                   ariaLabel="Button variant"
                   id="animated-button-preview-variant"
@@ -436,10 +444,60 @@ export default function ButtonPage() {
                   value={previewSize}
                 />
               </div>
-              <div className="flex min-h-[140px] items-center justify-center rounded-xl border border-neutral-200/40 bg-white/60 p-8 dark:border-neutral-700/40 dark:bg-neutral-950/40">
-                <Button size={previewSize} variant={previewVariant}>
-                  Button
-                </Button>
+
+              <div className="flex min-h-[280px] flex-1 flex-col items-center justify-center gap-9 px-4 py-6">
+                <motion.div
+                  animate={{ opacity: 1, y: 0 }}
+                  initial={prefersReducedMotion ? false : { opacity: 0, y: 8 }}
+                  key={previewVariant}
+                  transition={
+                    prefersReducedMotion
+                      ? { duration: 0 }
+                      : { type: "spring", stiffness: 340, damping: 30 }
+                  }
+                >
+                  <blockquote className="mx-auto max-w-xl text-center">
+                    <p className="flex flex-wrap items-center justify-center gap-x-1.5 gap-y-3 text-balance font-medium font-sans text-lg text-neutral-800 leading-snug tracking-tight sm:gap-x-2 sm:text-xl dark:text-neutral-100">
+                      <span>Win the press,</span>
+                      <span className="font-normal text-neutral-500 dark:text-neutral-400">
+                        then
+                      </span>
+                      <span className="inline-flex translate-y-px align-middle">
+                        <Button size={previewSize} variant={previewVariant}>
+                          Continue
+                        </Button>
+                      </span>
+                      <span>the break</span>
+                      <span className="w-full basis-full font-normal text-[0.92em] text-neutral-500 dark:text-neutral-400">
+                        — that&apos;s the half in two beats.
+                      </span>
+                    </p>
+                  </blockquote>
+                </motion.div>
+                <p className="max-w-md text-center font-sans text-[13px] leading-relaxed">
+                  <span className="text-emerald-600 dark:text-emerald-400">
+                    Shape it above
+                  </span>
+                  <span className="text-neutral-400 dark:text-neutral-500">
+                    {" "}
+                    ·{" "}
+                  </span>
+                  <span
+                    className={cn(
+                      "transition-colors duration-300 ease-out",
+                      previewCaptionClassByVariant[previewVariant]
+                    )}
+                  >
+                    Press on purpose
+                  </span>
+                  <span className="text-neutral-400 dark:text-neutral-500">
+                    {" "}
+                    ·{" "}
+                  </span>
+                  <span className="text-violet-600 dark:text-violet-400">
+                    Ripple follows
+                  </span>
+                </p>
               </div>
             </div>
           </BentoMotion>

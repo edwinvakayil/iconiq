@@ -2392,4 +2392,10 @@ export const components: ComponentDefinition[] = [
     registryDependencies: [],
     dependencies: [],
   },
+  {
+    name: "tooltip",
+    path: path.join(__dirname, "../registry", "tooltip.tsx"),
+    registryDependencies: [],
+    dependencies: ["framer-motion"],
+  },
 ];

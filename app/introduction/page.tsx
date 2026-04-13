@@ -104,7 +104,7 @@ const principles = [
     icon: Zap,
     title: "Copy-paste, no lock-in",
     desc: "Everything lands directly in your source tree. No icon font, no CDN, no provider — just React and Framer Motion.",
-  }
+  },
 ];
 
 const stack = [

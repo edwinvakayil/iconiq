@@ -70,6 +70,12 @@ const REGISTRY_UI_META: Record<
       "Accessible collapsible primitive built on Radix UI. Exports Collapsible, CollapsibleTrigger, and CollapsibleContent for building expandable sections, FAQs, and disclosure patterns.",
     dependencies: ["@radix-ui/react-collapsible", "framer-motion"],
   },
+  tooltip: {
+    title: "Tooltip",
+    description:
+      "Animated hover/focus tooltip with spring entrance, blur fade, directional offset, and optional delay and side placement. Built with Framer Motion.",
+    dependencies: ["framer-motion"],
+  },
 };
 
 if (!fs.existsSync(registryComponents)) {

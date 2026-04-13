@@ -5,6 +5,7 @@ import { BookOpen, ChevronRight, LayoutGrid, Package } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
+import { SITE_SECTIONS } from "@/lib/site-nav";
 import { cn } from "@/lib/utils";
 
 const easeOutExpo = [0.32, 0.72, 0, 1] as const;
@@ -71,28 +72,11 @@ const sections: SidebarSection[] = [
       { label: "Installation", href: "/installation" },
     ],
   },
-  {
-    title: "Icons",
-    icon: Package,
-    items: [
-      { label: "Icon Library", href: "/icons" },
-      { label: "Button + Icon", href: "/icons/button-svg" },
-    ],
-  },
-  {
-    title: "Components",
-    icon: LayoutGrid,
-    items: [
-      { label: "Accordion", href: "/components/motion-accordion" },
-      { label: "Alert", href: "/components/alert" },
-      { label: "Badge", href: "/components/badge" },
-      { label: "Breadcrumbs", href: "/components/breadcrumbs" },
-      { label: "Button", href: "/components/button" },
-      { label: "Collapsible", href: "/components/collapsible" },
-      { label: "Hover expand", href: "/components/hovercard" },
-      { label: "Checkbox group", href: "/components/checkbox-group" },
-    ],
-  },
+  ...SITE_SECTIONS.map((section) => ({
+    title: section.label,
+    icon: section.label === "Icons" ? Package : LayoutGrid,
+    items: section.children.map((c) => ({ label: c.label, href: c.href })),
+  })),
 ];
 
 export function SidebarNav() {
