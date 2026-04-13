@@ -92,6 +92,72 @@ const COMPONENT_EXAMPLE: Record<string, string> = {
     "    </div>\n" +
     "  )\n" +
     "}\n",
+  badge:
+    '"use client";\n\n' +
+    `import Badge from "@/components/ui/badge"\n\n` +
+    "export default function Page() {\n" +
+    "  return (\n" +
+    '    <div className="flex min-h-svh items-center justify-center p-8">\n' +
+    "      <Badge>New</Badge>\n" +
+    "    </div>\n" +
+    "  )\n" +
+    "}\n",
+  select:
+    '"use client";\n\n' +
+    `import { select as Select } from "@/components/ui/select"\n` +
+    `import { useState } from "react"\n\n` +
+    "const options = [\n" +
+    '  { value: "a", label: "Option A" },\n' +
+    '  { value: "b", label: "Option B" },\n' +
+    "]\n\n" +
+    "export default function Page() {\n" +
+    '  const [value, setValue] = useState<string | undefined>("a")\n' +
+    "  return (\n" +
+    '    <div className="flex min-h-svh items-center justify-center p-8">\n' +
+    "      <Select onChange={setValue} options={options} value={value} />\n" +
+    "    </div>\n" +
+    "  )\n" +
+    "}\n",
+  collapsible:
+    '"use client";\n\n' +
+    "import {\n" +
+    "  Collapsible,\n" +
+    "  CollapsibleContent,\n" +
+    "  CollapsibleTrigger,\n" +
+    `} from "@/components/ui/collapsible"\n\n` +
+    "export default function Page() {\n" +
+    "  return (\n" +
+    '    <div className="flex min-h-svh items-center justify-center p-8">\n' +
+    '      <Collapsible className="w-72 rounded-xl border border-border p-2">\n' +
+    '        <CollapsibleTrigger className="flex w-full items-center justify-between px-3 py-2 font-medium text-sm">\n' +
+    "          Toggle\n" +
+    "        </CollapsibleTrigger>\n" +
+    "        <CollapsibleContent>\n" +
+    '          <p className="px-3 pb-2 text-muted-foreground text-sm">\n' +
+    "            Hidden content goes here.\n" +
+    "          </p>\n" +
+    "        </CollapsibleContent>\n" +
+    "      </Collapsible>\n" +
+    "    </div>\n" +
+    "  )\n" +
+    "}\n",
+  tooltip:
+    '"use client";\n\n' +
+    `import { tooltip as Tooltip } from "@/components/ui/tooltip"\n\n` +
+    "export default function Page() {\n" +
+    "  return (\n" +
+    '    <div className="flex min-h-svh items-center justify-center p-8">\n' +
+    '      <Tooltip content="Hello from the tooltip">\n' +
+    "        <button\n" +
+    '          className="rounded-lg border border-border bg-card px-4 py-2 text-sm"\n' +
+    '          type="button"\n' +
+    "        >\n" +
+    "          Hover me\n" +
+    "        </button>\n" +
+    "      </Tooltip>\n" +
+    "    </div>\n" +
+    "  )\n" +
+    "}\n",
 };
 
 const getComponentForV0 = async (name: string) => {
@@ -107,7 +173,23 @@ const getComponentForV0 = async (name: string) => {
 
     const pageContent =
       COMPONENT_EXAMPLE[name] ??
-      `import { } from "@/components/ui/${name}"\n\nexport default function Page() {\n  return <div />\n}\n`;
+      [
+        '"use client";',
+        "",
+        "export default function Page() {",
+        "  return (",
+        `    <div className="flex min-h-svh flex-col items-center justify-center gap-2 p-8 font-sans text-sm">`,
+        "      <p>",
+        `        No v0 preview snippet for{" "}`,
+        `        <code className="rounded bg-muted px-1.5 py-0.5 font-mono">${name}</code>.`,
+        "      </p>",
+        `      <p className="text-muted-foreground">`,
+        "        Add an entry in helpers/get-component-for-v0.ts (COMPONENT_EXAMPLE).",
+        "      </p>",
+        "    </div>",
+        "  )",
+        "}",
+      ].join("\n");
 
     const description =
       registryData.description ?? `${name} component from Iconiq`;
