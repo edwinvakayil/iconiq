@@ -21,7 +21,7 @@ export function RegistryInstallBlock({
   const { packageName, setPackageName } = usePackageNameContext();
 
   const getCommand = (
-    pm: (typeof PACKAGE_MANAGER)[keyof typeof PACKAGE_MANAGER],
+    pm: (typeof PACKAGE_MANAGER)[keyof typeof PACKAGE_MANAGER]
   ) =>
     `${getPackageManagerPrefix(pm)} shadcn@latest add ${SITE.URL}/r/${registryPath}`;
 
@@ -50,10 +50,10 @@ export function RegistryInstallBlock({
         {Object.values(PACKAGE_MANAGER).map((pm) => (
           <button
             className={cn(
-              "rounded-full px-2.5 py-0.5 font-mono text-[10px] font-medium uppercase tracking-wider transition-colors duration-150",
+              "rounded-full px-2.5 py-0.5 font-medium font-mono text-[10px] uppercase tracking-wider transition-colors duration-150",
               packageName === pm
                 ? "bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900"
-                : "bg-neutral-100 text-neutral-500 hover:bg-neutral-200 hover:text-neutral-700 dark:bg-neutral-800 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-200",
+                : "bg-neutral-100 text-neutral-500 hover:bg-neutral-200 hover:text-neutral-700 dark:bg-neutral-800 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-200"
             )}
             key={pm}
             onClick={() => setPackageName(pm)}
@@ -70,16 +70,14 @@ export function RegistryInstallBlock({
           <span className="sr-only">{getCommand(packageName)}</span>
           <p
             aria-hidden="true"
-            className="font-mono text-[12px] leading-none whitespace-nowrap"
+            className="whitespace-nowrap font-mono text-[12px] leading-none"
           >
             <span className="text-neutral-400 dark:text-neutral-500">
               {getPackageManagerPrefix(packageName)}
-            </span>
-            {" "}
+            </span>{" "}
             <span className="text-neutral-600 dark:text-neutral-300">
               shadcn@latest add
-            </span>
-            {" "}
+            </span>{" "}
             <span className="text-neutral-400 dark:text-neutral-500">
               {SITE.URL}/r/
             </span>

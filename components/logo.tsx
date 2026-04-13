@@ -1,18 +1,23 @@
 import Link from "next/link";
-
-import { cn } from "@/lib/utils";
 import { SITE } from "@/constants";
+import { cn } from "@/lib/utils";
 
-function LogoIcon({ size = 20, className }: { size?: number; className?: string }) {
+function LogoIcon({
+  size = 20,
+  className,
+}: {
+  size?: number;
+  className?: string;
+}) {
   return (
     <svg
       aria-hidden
+      className={className}
       fill="none"
       height={size}
       viewBox="0 0 48 48"
       width={size}
       xmlns="http://www.w3.org/2000/svg"
-      className={className}
     >
       <rect
         className="text-primary"

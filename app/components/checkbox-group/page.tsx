@@ -50,7 +50,12 @@ export function Preferences() {
   );
 }`;
 
-type DetailRow = { id: string; title: string; content: string; registryPath?: string };
+type DetailRow = {
+  id: string;
+  title: string;
+  content: string;
+  registryPath?: string;
+};
 
 const componentDetailsItems: DetailRow[] = [
   {

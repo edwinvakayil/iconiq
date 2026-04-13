@@ -90,9 +90,7 @@ export default function OgImage() {
               justifyContent: "space-between",
             }}
           >
-            <div
-              style={{ display: "flex", alignItems: "center", gap: "12px" }}
-            >
+            <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
               <svg
                 fill="none"
                 height={30}
@@ -144,9 +142,7 @@ export default function OgImage() {
           </div>
 
           {/* Headline + subtitle */}
-          <div
-            style={{ display: "flex", flexDirection: "column", gap: "0px" }}
-          >
+          <div style={{ display: "flex", flexDirection: "column", gap: "0px" }}>
             {/* "Free & Open-Source" eyebrow label */}
             <div
               style={{
@@ -217,9 +213,7 @@ export default function OgImage() {
           <div
             style={{ display: "flex", flexDirection: "column", gap: "14px" }}
           >
-            <div
-              style={{ display: "flex", gap: "8px", alignItems: "center" }}
-            >
+            <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
               {[
                 "Open Source",
                 "MIT Licensed",
@@ -298,6 +292,6 @@ export default function OgImage() {
         </div>
       </div>
     </div>,
-    { ...size },
+    { ...size }
   );
 }
