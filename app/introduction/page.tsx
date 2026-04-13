@@ -2,8 +2,8 @@
 
 import {
   ChevronRight,
-  LayoutGrid,
   Layers,
+  LayoutGrid,
   MousePointerClick,
   PackageCheck,
   Sparkles,

@@ -88,6 +88,7 @@ const sections: SidebarSection[] = [
       { label: "Badge", href: "/components/badge" },
       { label: "Breadcrumbs", href: "/components/breadcrumbs" },
       { label: "Button", href: "/components/button" },
+      { label: "Collapsible", href: "/components/collapsible" },
       { label: "Hover expand", href: "/components/hovercard" },
       { label: "Checkbox group", href: "/components/checkbox-group" },
     ],

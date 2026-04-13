@@ -2386,4 +2386,10 @@ export const components: ComponentDefinition[] = [
     registryDependencies: [],
     dependencies: ["framer-motion"],
   },
+  {
+    name: "collapsible",
+    path: path.join(__dirname, "../registry", "collapsible.tsx"),
+    registryDependencies: [],
+    dependencies: [],
+  },
 ];

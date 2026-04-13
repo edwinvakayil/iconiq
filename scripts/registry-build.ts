@@ -64,6 +64,12 @@ const REGISTRY_UI_META: Record<
       "Stacked rows that spring open on hover to reveal a full-bleed image, gradient overlay, and optional descriptor. Motion + next/image.",
     dependencies: ["motion"],
   },
+  collapsible: {
+    title: "Collapsible",
+    description:
+      "Accessible collapsible primitive built on Radix UI. Exports Collapsible, CollapsibleTrigger, and CollapsibleContent for building expandable sections, FAQs, and disclosure patterns.",
+    dependencies: ["@radix-ui/react-collapsible", "framer-motion"],
+  },
 };
 
 if (!fs.existsSync(registryComponents)) {
