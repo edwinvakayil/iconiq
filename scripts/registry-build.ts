@@ -76,6 +76,12 @@ const REGISTRY_UI_META: Record<
       "Animated hover/focus tooltip with spring entrance, blur fade, directional offset, and optional delay and side placement. Built with Framer Motion.",
     dependencies: ["framer-motion"],
   },
+  select: {
+    title: "Select",
+    description:
+      "Animated single-select dropdown with staggered options, chevron rotation, scaleY panel, row hover slide, and check mark on the active item. Framer Motion + Lucide.",
+    dependencies: ["framer-motion", "lucide-react"],
+  },
 };
 
 if (!fs.existsSync(registryComponents)) {

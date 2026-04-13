@@ -2398,4 +2398,10 @@ export const components: ComponentDefinition[] = [
     registryDependencies: [],
     dependencies: ["framer-motion"],
   },
+  {
+    name: "select",
+    path: path.join(__dirname, "../registry", "select.tsx"),
+    registryDependencies: [],
+    dependencies: ["framer-motion", "lucide-react"],
+  },
 ];

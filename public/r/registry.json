@@ -5157,6 +5157,21 @@
           "type": "registry:ui"
         }
       ]
+    },
+    {
+      "name": "select",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": ["framer-motion", "lucide-react"],
+      "devDependencies": [],
+      "title": "Select",
+      "description": "Animated single-select dropdown with staggered options, chevron rotation, scaleY panel, row hover slide, and check mark on the active item. Framer Motion + Lucide.",
+      "files": [
+        {
+          "path": "select.tsx",
+          "type": "registry:ui"
+        }
+      ]
     }
   ]
 }
