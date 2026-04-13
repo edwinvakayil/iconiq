@@ -2345,12 +2345,6 @@ export const components: ComponentDefinition[] = [
     dependencies: ["framer-motion", "lucide-react"],
   },
   {
-    name: "hovercard",
-    path: path.join(__dirname, "../registry", "hovercard.tsx"),
-    registryDependencies: [],
-    dependencies: ["motion"],
-  },
-  {
     name: "database-backup",
     path: path.join(__dirname, "../icons", "database-backup.tsx"),
     registryDependencies: [],

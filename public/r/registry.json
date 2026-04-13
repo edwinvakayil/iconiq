@@ -5034,21 +5034,6 @@
       ]
     },
     {
-      "name": "hovercard",
-      "type": "registry:ui",
-      "registryDependencies": [],
-      "dependencies": ["motion"],
-      "devDependencies": [],
-      "title": "Hover expand",
-      "description": "Stacked rows that spring open on hover to reveal a full-bleed image, gradient overlay, and optional descriptor. Motion + next/image.",
-      "files": [
-        {
-          "path": "hovercard.tsx",
-          "type": "registry:ui"
-        }
-      ]
-    },
-    {
       "name": "database-backup",
       "type": "registry:ui",
       "registryDependencies": [],

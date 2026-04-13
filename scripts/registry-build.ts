@@ -58,12 +58,6 @@ const REGISTRY_UI_META: Record<
       "Multi-select option list with bordered empty state and a primary tick only when checked, plus hover/tap motion on each row. Framer Motion + Lucide.",
     dependencies: ["framer-motion", "lucide-react"],
   },
-  hovercard: {
-    title: "Hover expand",
-    description:
-      "Stacked rows that spring open on hover to reveal a full-bleed image, gradient overlay, and optional descriptor. Motion + next/image.",
-    dependencies: ["motion"],
-  },
   collapsible: {
     title: "Collapsible",
     description:
