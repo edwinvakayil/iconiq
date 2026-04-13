@@ -62,7 +62,11 @@ const REGISTRY_UI_META: Record<
     title: "Collapsible",
     description:
       "Accessible collapsible primitive built on Radix UI. Exports Collapsible, CollapsibleTrigger, and CollapsibleContent for building expandable sections, FAQs, and disclosure patterns.",
-    dependencies: ["@radix-ui/react-collapsible", "framer-motion"],
+    dependencies: [
+      "@radix-ui/react-collapsible",
+      "framer-motion",
+      "lucide-react",
+    ],
   },
   tooltip: {
     title: "Tooltip",

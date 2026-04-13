@@ -3,7 +3,11 @@
   "name": "collapsible",
   "type": "registry:ui",
   "registryDependencies": [],
-  "dependencies": ["@radix-ui/react-collapsible", "framer-motion"],
+  "dependencies": [
+    "@radix-ui/react-collapsible",
+    "framer-motion",
+    "lucide-react"
+  ],
   "devDependencies": [],
   "files": [
     {
