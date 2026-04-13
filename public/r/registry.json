@@ -5161,6 +5161,21 @@
           "type": "registry:ui"
         }
       ]
+    },
+    {
+      "name": "switch",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": ["framer-motion"],
+      "devDependencies": [],
+      "title": "Switch",
+      "description": "Animated toggle with spring thumb travel and smooth track color crossfade. Native button with role=switch, forwards ref. Framer Motion.",
+      "files": [
+        {
+          "path": "switch.tsx",
+          "type": "registry:ui"
+        }
+      ]
     }
   ]
 }

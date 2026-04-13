@@ -186,6 +186,21 @@ const COMPONENT_EXAMPLE: Record<string, string> = {
     "    </div>\n" +
     "  )\n" +
     "}\n",
+  switch:
+    '"use client";\n\n' +
+    `import { switch as Switch } from "@/components/ui/switch"\n` +
+    `import { useState } from "react"\n\n` +
+    "export default function Page() {\n" +
+    "  const [on, setOn] = useState(false)\n" +
+    "  return (\n" +
+    '    <div className="flex min-h-svh flex-col items-center justify-center gap-4 p-8">\n' +
+    '      <div className="flex items-center gap-3">\n' +
+    '        <span className="text-sm text-muted-foreground">High press</span>\n' +
+    '        <Switch size="md" checked={on} onCheckedChange={setOn} />\n' +
+    "      </div>\n" +
+    "    </div>\n" +
+    "  )\n" +
+    "}\n",
   tooltip:
     '"use client";\n\n' +
     `import { tooltip as Tooltip } from "@/components/ui/tooltip"\n\n` +

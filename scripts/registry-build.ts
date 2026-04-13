@@ -80,6 +80,12 @@ const REGISTRY_UI_META: Record<
       "Animated single-select dropdown with staggered options, chevron rotation, scaleY panel, row hover slide, and check mark on the active item. Framer Motion + Lucide.",
     dependencies: ["framer-motion", "lucide-react"],
   },
+  switch: {
+    title: "Switch",
+    description:
+      "Animated toggle with spring thumb travel and smooth track color crossfade. Native button with role=switch, forwards ref. Framer Motion.",
+    dependencies: ["framer-motion"],
+  },
 };
 
 if (!fs.existsSync(registryComponents)) {
