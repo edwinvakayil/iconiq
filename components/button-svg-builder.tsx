@@ -224,48 +224,52 @@ export function ButtonSvgBuilder({ icons }: ButtonSvgBuilderProps) {
               ))}
             </select>
           </div>
-        </div>
 
-        {/* Preview */}
-        <div>
-          <p className="mb-2 font-medium font-sans text-[11px] text-neutral-500 uppercase tracking-wider dark:text-neutral-400">
-            Preview
-          </p>
-          <div className="flex flex-wrap items-center gap-3 rounded-xl border border-neutral-200 bg-neutral-50/50 p-6 dark:border-neutral-800 dark:bg-neutral-900/30">
-            <button
-              className={cn(
-                "inline-flex cursor-default items-center justify-center gap-2 rounded-md px-4 py-2 font-medium font-sans text-sm transition-colors",
-                buttonVariant === "default" &&
-                  "bg-neutral-900 text-white hover:bg-neutral-800",
-                buttonVariant === "destructive" &&
-                  "bg-red-600 text-white hover:bg-red-700",
-                buttonVariant === "outline" &&
-                  "border border-neutral-200 bg-transparent text-neutral-900 hover:bg-neutral-100 dark:border-neutral-600 dark:text-white dark:hover:bg-neutral-800",
-                buttonVariant === "secondary" &&
-                  "bg-neutral-100 text-neutral-900 hover:bg-neutral-200 dark:bg-neutral-800 dark:text-white dark:hover:bg-neutral-700",
-                buttonVariant === "ghost" &&
-                  "text-neutral-900 hover:bg-neutral-100 dark:text-white dark:hover:bg-neutral-800",
-                buttonVariant === "link" &&
-                  "text-neutral-900 underline-offset-4 hover:underline dark:text-white"
-              )}
-              onMouseEnter={() => previewAnimationRef.current?.startAnimation()}
-              onMouseLeave={() => previewAnimationRef.current?.stopAnimation()}
-              type="button"
-            >
-              {SelectedIconComponent && (
-                <SelectedIconComponent
-                  className={cn(
-                    "[&>svg]:size-4",
-                    buttonVariant === "default" ||
-                      buttonVariant === "destructive"
-                      ? "[&>svg]:text-white"
-                      : "[&>svg]:text-neutral-900 [&>svg]:dark:text-white"
-                  )}
-                  ref={previewAnimationRef}
-                />
-              )}
-              {buttonLabel || " "}
-            </button>
+          {/* Preview — inline after variant */}
+          <div>
+            <p className="mb-2 font-medium font-sans text-[11px] text-neutral-500 uppercase tracking-wider dark:text-neutral-400">
+              Preview
+            </p>
+            <div className="flex h-9 items-center px-3 dark:border-neutral-800 dark:bg-neutral-900/30">
+              <button
+                className={cn(
+                  "inline-flex cursor-default items-center justify-center gap-2 rounded-md px-3 py-1.5 font-medium font-sans text-sm transition-colors",
+                  buttonVariant === "default" &&
+                    "bg-neutral-900 text-white hover:bg-neutral-800",
+                  buttonVariant === "destructive" &&
+                    "bg-red-600 text-white hover:bg-red-700",
+                  buttonVariant === "outline" &&
+                    "border border-neutral-200 bg-transparent text-neutral-900 hover:bg-neutral-100 dark:border-neutral-600 dark:text-white dark:hover:bg-neutral-800",
+                  buttonVariant === "secondary" &&
+                    "bg-neutral-100 text-neutral-900 hover:bg-neutral-200 dark:bg-neutral-800 dark:text-white dark:hover:bg-neutral-700",
+                  buttonVariant === "ghost" &&
+                    "text-neutral-900 hover:bg-neutral-100 dark:text-white dark:hover:bg-neutral-800",
+                  buttonVariant === "link" &&
+                    "text-neutral-900 underline-offset-4 hover:underline dark:text-white"
+                )}
+                onMouseEnter={() =>
+                  previewAnimationRef.current?.startAnimation()
+                }
+                onMouseLeave={() =>
+                  previewAnimationRef.current?.stopAnimation()
+                }
+                type="button"
+              >
+                {SelectedIconComponent && (
+                  <SelectedIconComponent
+                    className={cn(
+                      "[&>svg]:size-4",
+                      buttonVariant === "default" ||
+                        buttonVariant === "destructive"
+                        ? "[&>svg]:text-white"
+                        : "[&>svg]:text-neutral-900 [&>svg]:dark:text-white"
+                    )}
+                    ref={previewAnimationRef}
+                  />
+                )}
+                {buttonLabel || " "}
+              </button>
+            </div>
           </div>
         </div>
 

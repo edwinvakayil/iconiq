@@ -15,7 +15,6 @@ import { CodeBlock } from "@/components/code-block";
 import { CodeBlockInstall } from "@/components/code-block-install";
 import { ComponentActions } from "@/components/component-actions";
 import { RegistryInstallBlock } from "@/components/registry-install-block";
-import { SidebarNav } from "@/components/sidebar-nav";
 import { cn } from "@/lib/utils";
 import Alert, { type AlertPosition } from "@/registry/alert";
 
@@ -338,249 +337,241 @@ export default function AlertPage() {
   const [previewKey, setPreviewKey] = useState(0);
 
   return (
-    <div className="flex min-h-[calc(100vh-0px)] w-full min-w-0">
-      <SidebarNav />
-
-      <main className="min-w-0 flex-1 overflow-x-hidden">
-        <div className="mx-auto w-full max-w-screen-2xl px-4 py-10 sm:px-6 sm:py-12 lg:px-10">
-          <motion.nav
-            animate={{ opacity: 1, y: 0 }}
-            aria-label="Breadcrumb"
-            className="mb-8"
-            initial={prefersReducedMotion ? false : { opacity: 0, y: -6 }}
-            transition={
-              prefersReducedMotion
-                ? { duration: 0 }
-                : { type: "spring", stiffness: 380, damping: 35 }
-            }
-          >
-            <ol className="flex flex-wrap items-center gap-1.5 font-sans text-neutral-400 text-xs dark:text-neutral-500">
-              <li>
-                <Link
-                  className="transition-colors hover:text-neutral-800 dark:hover:text-neutral-200"
-                  href="/"
-                >
-                  Docs
-                </Link>
-              </li>
-              <li aria-hidden="true">
-                <ChevronRight className="size-3 opacity-60" />
-              </li>
-              <li>
-                <Link
-                  className="transition-colors hover:text-neutral-800 dark:hover:text-neutral-200"
-                  href="/components/motion-accordion"
-                >
-                  Components
-                </Link>
-              </li>
-              <li aria-hidden="true">
-                <ChevronRight className="size-3 opacity-60" />
-              </li>
-              <li
-                aria-current="page"
-                className="text-neutral-700 dark:text-neutral-300"
+    <main className="min-w-0 flex-1 overflow-x-hidden">
+      <div className="mx-auto w-full max-w-screen-2xl px-4 py-10 sm:px-6 sm:py-12 lg:px-10">
+        <motion.nav
+          animate={{ opacity: 1, y: 0 }}
+          aria-label="Breadcrumb"
+          className="mb-8"
+          initial={prefersReducedMotion ? false : { opacity: 0, y: -6 }}
+          transition={
+            prefersReducedMotion
+              ? { duration: 0 }
+              : { type: "spring", stiffness: 380, damping: 35 }
+          }
+        >
+          <ol className="flex flex-wrap items-center gap-1.5 font-sans text-neutral-400 text-xs dark:text-neutral-500">
+            <li>
+              <Link
+                className="transition-colors hover:text-neutral-800 dark:hover:text-neutral-200"
+                href="/"
               >
-                Alert
-              </li>
-            </ol>
-          </motion.nav>
-
-          <motion.header
-            animate={{ opacity: 1, y: 0 }}
-            className="mb-12 max-w-2xl"
-            initial={prefersReducedMotion ? false : { opacity: 0, y: 10 }}
-            transition={
-              prefersReducedMotion
-                ? { duration: 0 }
-                : { type: "spring", stiffness: 340, damping: 34, delay: 0.05 }
-            }
-          >
-            <h1 className="font-sans font-semibold text-3xl text-neutral-900 tracking-tight sm:text-[2rem] dark:text-white">
+                Docs
+              </Link>
+            </li>
+            <li aria-hidden="true">
+              <ChevronRight className="size-3 opacity-60" />
+            </li>
+            <li>
+              <Link
+                className="transition-colors hover:text-neutral-800 dark:hover:text-neutral-200"
+                href="/components/motion-accordion"
+              >
+                Components
+              </Link>
+            </li>
+            <li aria-hidden="true">
+              <ChevronRight className="size-3 opacity-60" />
+            </li>
+            <li
+              aria-current="page"
+              className="text-neutral-700 dark:text-neutral-300"
+            >
               Alert
-            </h1>
-            <p className="mt-2 font-sans text-[15px] text-neutral-500 leading-relaxed dark:text-neutral-400">
-              Dismissible banners with your own leading icon, spring motion, and
-              optional fixed positions. Built with Framer Motion and your theme
-              tokens.
-            </p>
-          </motion.header>
+            </li>
+          </ol>
+        </motion.nav>
 
-          <motion.div
-            animate="visible"
+        <motion.header
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-12 max-w-2xl"
+          initial={prefersReducedMotion ? false : { opacity: 0, y: 10 }}
+          transition={
+            prefersReducedMotion
+              ? { duration: 0 }
+              : { type: "spring", stiffness: 340, damping: 34, delay: 0.05 }
+          }
+        >
+          <h1 className="font-sans font-semibold text-3xl text-neutral-900 tracking-tight sm:text-[2rem] dark:text-white">
+            Alert
+          </h1>
+          <p className="mt-2 font-sans text-[15px] text-neutral-500 leading-relaxed dark:text-neutral-400">
+            Dismissible banners with your own leading icon, spring motion, and
+            optional fixed positions. Built with Framer Motion and your theme
+            tokens.
+          </p>
+        </motion.header>
+
+        <motion.div
+          animate="visible"
+          className={cn(
+            "grid auto-rows-min grid-cols-1 gap-3 sm:gap-4",
+            "lg:grid-cols-12 lg:gap-x-5 lg:gap-y-5"
+          )}
+          initial="hidden"
+          variants={containerVariants}
+        >
+          <BentoMotion
             className={cn(
-              "grid auto-rows-min grid-cols-1 gap-3 sm:gap-4",
-              "lg:grid-cols-12 lg:gap-x-5 lg:gap-y-5"
+              "relative min-h-[220px] overflow-hidden sm:min-h-[260px] lg:col-span-8 lg:row-span-2",
+              "rounded-3xl border-neutral-200/40 dark:border-neutral-700/30"
             )}
-            initial="hidden"
-            variants={containerVariants}
+            variants={itemVariants}
           >
-            <BentoMotion
-              className={cn(
-                "relative min-h-[220px] overflow-hidden sm:min-h-[260px] lg:col-span-8 lg:row-span-2",
-                "rounded-3xl border-neutral-200/40 dark:border-neutral-700/30"
-              )}
-              variants={itemVariants}
-            >
-              <SectionLabel accent="01">Live preview</SectionLabel>
-              <div className="relative z-10 mt-1 flex min-h-0 flex-1 flex-col items-center justify-center gap-4 px-1 pb-2 sm:gap-5">
-                <div className="w-full max-w-xs sm:max-w-[220px]">
-                  <PositionDropdown
-                    onValueChange={(next) => {
-                      setPreviewPosition(next);
-                      if (previewKey > 0) setPreviewKey((k) => k + 1);
-                    }}
-                    value={previewPosition}
-                  />
-                </div>
-                <motion.button
-                  className={cn(
-                    "group relative isolate flex items-center gap-2.5 overflow-hidden rounded-xl px-6 py-3",
-                    "bg-neutral-900 font-medium font-sans text-[13px] text-white",
-                    "shadow-[0_1px_0_0_rgba(255,255,255,0.08)_inset,0_2px_10px_0_rgba(0,0,0,0.18)]",
-                    "dark:bg-neutral-100 dark:text-neutral-900",
-                    "dark:shadow-[0_1px_0_0_rgba(0,0,0,0.06)_inset,0_2px_10px_0_rgba(0,0,0,0.28)]"
-                  )}
-                  onClick={() => setPreviewKey((k) => k + 1)}
-                  transition={{ type: "spring", stiffness: 400, damping: 22 }}
-                  type="button"
-                  whileHover={
-                    prefersReducedMotion ? {} : { scale: 1.03, y: -1 }
-                  }
-                  whileTap={prefersReducedMotion ? {} : { scale: 0.97, y: 0 }}
-                >
-                  {/* shimmer sweep on hover */}
-                  <motion.span
-                    aria-hidden
-                    className="pointer-events-none absolute inset-0 -translate-x-full bg-linear-to-r from-transparent via-white/10 to-transparent"
-                    transition={{ duration: 0.45, ease: "easeOut" }}
-                    whileHover={
-                      prefersReducedMotion ? {} : { translateX: "200%" }
-                    }
-                  />
-                  {/* bell icon */}
-                  <motion.span
-                    className="relative flex size-[18px] items-center justify-center"
-                    transition={{ type: "spring", stiffness: 500, damping: 14 }}
-                    whileHover={
-                      prefersReducedMotion
-                        ? {}
-                        : { rotate: [0, -18, 14, -8, 0] }
-                    }
-                  >
-                    <svg fill="none" height="16" viewBox="0 0 16 16" width="16">
-                      <path
-                        d="M8 2a4.5 4.5 0 0 0-4.5 4.5c0 2.1-.6 3.3-1.1 4 .5.5 1.4.5 1.6.5h8c.2 0 1.1 0 1.6-.5-.5-.7-1.1-1.9-1.1-4A4.5 4.5 0 0 0 8 2Z"
-                        stroke="currentColor"
-                        strokeLinejoin="round"
-                        strokeWidth="1.3"
-                      />
-                      <path
-                        d="M6.5 11.5c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5"
-                        stroke="currentColor"
-                        strokeLinecap="round"
-                        strokeWidth="1.3"
-                      />
-                    </svg>
-                  </motion.span>
-                  <span className="relative">Show alert</span>
-                </motion.button>
-                <p className="max-w-xs text-center font-sans text-neutral-500 text-xs leading-snug dark:text-neutral-400">
-                  Opens a dismissible alert at the chosen viewport corner.
-                </p>
-              </div>
-              {previewKey > 0 ? (
-                <Alert
-                  icon={<CheckCircle2 aria-hidden className="size-[18px]" />}
-                  key={previewKey}
-                  message="This is a sample message for the live preview."
-                  position={previewPosition}
-                  title="Preview alert"
+            <SectionLabel accent="01">Live preview</SectionLabel>
+            <div className="relative z-10 mt-1 flex min-h-0 flex-1 flex-col items-center justify-center gap-4 px-1 pb-2 sm:gap-5">
+              <div className="w-full max-w-xs sm:max-w-[220px]">
+                <PositionDropdown
+                  onValueChange={(next) => {
+                    setPreviewPosition(next);
+                    if (previewKey > 0) setPreviewKey((k) => k + 1);
+                  }}
+                  value={previewPosition}
                 />
-              ) : null}
-            </BentoMotion>
-
-            <BentoMotion
-              className="justify-between border-neutral-200/40 lg:col-span-4 lg:col-start-9 lg:row-start-1 dark:border-neutral-700/30"
-              variants={itemVariants}
-            >
-              <SectionLabel accent="02">Install</SectionLabel>
-              <div className="min-w-0 flex-1 [&>div]:mt-0">
-                <CodeBlockInstall componentName="alert" />
               </div>
-            </BentoMotion>
-
-            <BentoMotion
-              className="border-neutral-200/90 border-dashed lg:col-span-4 lg:col-start-9 lg:row-start-2 dark:border-neutral-700/80"
-              variants={itemVariants}
-            >
-              <SectionLabel accent="03">v0</SectionLabel>
-              <p className="mb-5 flex-1 font-sans text-neutral-500 text-sm leading-snug dark:text-neutral-400">
-                Ship the registry bundle to v0 and iterate on motion or layout
-                with prompts.
+              <motion.button
+                className={cn(
+                  "group relative isolate flex items-center gap-2.5 overflow-hidden rounded-xl px-6 py-3",
+                  "bg-neutral-900 font-medium font-sans text-[13px] text-white",
+                  "shadow-[0_1px_0_0_rgba(255,255,255,0.08)_inset,0_2px_10px_0_rgba(0,0,0,0.18)]",
+                  "dark:bg-neutral-100 dark:text-neutral-900",
+                  "dark:shadow-[0_1px_0_0_rgba(0,0,0,0.06)_inset,0_2px_10px_0_rgba(0,0,0,0.28)]"
+                )}
+                onClick={() => setPreviewKey((k) => k + 1)}
+                transition={{ type: "spring", stiffness: 400, damping: 22 }}
+                type="button"
+                whileHover={prefersReducedMotion ? {} : { scale: 1.03, y: -1 }}
+                whileTap={prefersReducedMotion ? {} : { scale: 0.97, y: 0 }}
+              >
+                {/* shimmer sweep on hover */}
+                <motion.span
+                  aria-hidden
+                  className="pointer-events-none absolute inset-0 -translate-x-full bg-linear-to-r from-transparent via-white/10 to-transparent"
+                  transition={{ duration: 0.45, ease: "easeOut" }}
+                  whileHover={
+                    prefersReducedMotion ? {} : { translateX: "200%" }
+                  }
+                />
+                {/* bell icon */}
+                <motion.span
+                  className="relative flex size-[18px] items-center justify-center"
+                  transition={{ type: "spring", stiffness: 500, damping: 14 }}
+                  whileHover={
+                    prefersReducedMotion ? {} : { rotate: [0, -18, 14, -8, 0] }
+                  }
+                >
+                  <svg fill="none" height="16" viewBox="0 0 16 16" width="16">
+                    <path
+                      d="M8 2a4.5 4.5 0 0 0-4.5 4.5c0 2.1-.6 3.3-1.1 4 .5.5 1.4.5 1.6.5h8c.2 0 1.1 0 1.6-.5-.5-.7-1.1-1.9-1.1-4A4.5 4.5 0 0 0 8 2Z"
+                      stroke="currentColor"
+                      strokeLinejoin="round"
+                      strokeWidth="1.3"
+                    />
+                    <path
+                      d="M6.5 11.5c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5"
+                      stroke="currentColor"
+                      strokeLinecap="round"
+                      strokeWidth="1.3"
+                    />
+                  </svg>
+                </motion.span>
+                <span className="relative">Show alert</span>
+              </motion.button>
+              <p className="max-w-xs text-center font-sans text-neutral-500 text-xs leading-snug dark:text-neutral-400">
+                Opens a dismissible alert at the chosen viewport corner.
               </p>
-              <ComponentActions name="alert" />
-            </BentoMotion>
+            </div>
+            {previewKey > 0 ? (
+              <Alert
+                icon={<CheckCircle2 aria-hidden className="size-[18px]" />}
+                key={previewKey}
+                message="This is a sample message for the live preview."
+                position={previewPosition}
+                title="Preview alert"
+              />
+            ) : null}
+          </BentoMotion>
 
-            <BentoMotion
-              className="border-neutral-200/40 lg:col-span-12 lg:col-start-1 lg:row-start-3 dark:border-neutral-700/30"
-              variants={itemVariants}
-            >
-              <SectionLabel accent="04">Usage</SectionLabel>
-              <p className="mb-4 font-sans text-neutral-500 text-sm dark:text-neutral-400">
-                Default export — see tile{" "}
-                <span className="font-mono text-neutral-600 text-xs dark:text-neutral-300">
-                  05
-                </span>{" "}
-                for{" "}
-                <code className="rounded bg-neutral-100 px-1 py-0.5 font-mono text-[11px] dark:bg-neutral-900">
-                  icon
-                </code>
-                ,{" "}
-                <code className="rounded bg-neutral-100 px-1 py-0.5 font-mono text-[11px] dark:bg-neutral-900">
-                  position
-                </code>
-                , and packages.
-              </p>
-              <CodeBlock code={usageCode} language="tsx" variant="embedded" />
-            </BentoMotion>
+          <BentoMotion
+            className="justify-between border-neutral-200/40 lg:col-span-4 lg:col-start-9 lg:row-start-1 dark:border-neutral-700/30"
+            variants={itemVariants}
+          >
+            <SectionLabel accent="02">Install</SectionLabel>
+            <div className="min-w-0 flex-1 [&>div]:mt-0">
+              <CodeBlockInstall componentName="alert" />
+            </div>
+          </BentoMotion>
 
-            <BentoMotion
-              className="border-neutral-200/40 lg:col-span-12 lg:col-start-1 lg:row-start-4 dark:border-neutral-700/30"
-              variants={itemVariants}
-            >
-              <SectionLabel accent="05">Dependencies</SectionLabel>
-              <p className="mb-3 font-sans text-neutral-500 text-xs leading-snug dark:text-neutral-400">
-                Registry peers — default export{" "}
-                <code className="rounded bg-neutral-100 px-1 py-0.5 font-mono text-[10px] dark:bg-neutral-900">
-                  Alert
-                </code>
-                .
-              </p>
-              <div className="divide-y divide-neutral-100 dark:divide-neutral-800/60">
-                {componentDetailsItems.map((row) => (
-                  <div
-                    className="grid grid-cols-1 gap-1 py-3.5 sm:grid-cols-[180px_1fr] sm:gap-8 sm:py-4"
-                    key={row.id}
-                  >
-                    <p className="pt-0.5 font-medium text-neutral-800 text-xs dark:text-neutral-200">
-                      {row.title}
+          <BentoMotion
+            className="border-neutral-200/90 border-dashed lg:col-span-4 lg:col-start-9 lg:row-start-2 dark:border-neutral-700/80"
+            variants={itemVariants}
+          >
+            <SectionLabel accent="03">v0</SectionLabel>
+            <p className="mb-5 flex-1 font-sans text-neutral-500 text-sm leading-snug dark:text-neutral-400">
+              Ship the registry bundle to v0 and iterate on motion or layout
+              with prompts.
+            </p>
+            <ComponentActions name="alert" />
+          </BentoMotion>
+
+          <BentoMotion
+            className="border-neutral-200/40 lg:col-span-12 lg:col-start-1 lg:row-start-3 dark:border-neutral-700/30"
+            variants={itemVariants}
+          >
+            <SectionLabel accent="04">Usage</SectionLabel>
+            <p className="mb-4 font-sans text-neutral-500 text-sm dark:text-neutral-400">
+              Default export — see tile{" "}
+              <span className="font-mono text-neutral-600 text-xs dark:text-neutral-300">
+                05
+              </span>{" "}
+              for{" "}
+              <code className="rounded bg-neutral-100 px-1 py-0.5 font-mono text-[11px] dark:bg-neutral-900">
+                icon
+              </code>
+              ,{" "}
+              <code className="rounded bg-neutral-100 px-1 py-0.5 font-mono text-[11px] dark:bg-neutral-900">
+                position
+              </code>
+              , and packages.
+            </p>
+            <CodeBlock code={usageCode} language="tsx" variant="embedded" />
+          </BentoMotion>
+
+          <BentoMotion
+            className="border-neutral-200/40 lg:col-span-12 lg:col-start-1 lg:row-start-4 dark:border-neutral-700/30"
+            variants={itemVariants}
+          >
+            <SectionLabel accent="05">Dependencies</SectionLabel>
+            <p className="mb-3 font-sans text-neutral-500 text-xs leading-snug dark:text-neutral-400">
+              Registry peers — default export{" "}
+              <code className="rounded bg-neutral-100 px-1 py-0.5 font-mono text-[10px] dark:bg-neutral-900">
+                Alert
+              </code>
+              .
+            </p>
+            <div className="divide-y divide-neutral-100 dark:divide-neutral-800/60">
+              {componentDetailsItems.map((row) => (
+                <div
+                  className="grid grid-cols-1 gap-1 py-3.5 sm:grid-cols-[180px_1fr] sm:gap-8 sm:py-4"
+                  key={row.id}
+                >
+                  <p className="pt-0.5 font-medium text-neutral-800 text-xs dark:text-neutral-200">
+                    {row.title}
+                  </p>
+                  <div>
+                    <p className="font-sans text-[13px] text-neutral-500 leading-relaxed dark:text-neutral-400">
+                      {row.content}
                     </p>
-                    <div>
-                      <p className="font-sans text-[13px] text-neutral-500 leading-relaxed dark:text-neutral-400">
-                        {row.content}
-                      </p>
-                      {row.registryPath ? (
-                        <RegistryInstallBlock registryPath={row.registryPath} />
-                      ) : null}
-                    </div>
+                    {row.registryPath ? (
+                      <RegistryInstallBlock registryPath={row.registryPath} />
+                    ) : null}
                   </div>
-                ))}
-              </div>
-            </BentoMotion>
-          </motion.div>
-        </div>
-      </main>
-    </div>
+                </div>
+              ))}
+            </div>
+          </BentoMotion>
+        </motion.div>
+      </div>
+    </main>
   );
 }

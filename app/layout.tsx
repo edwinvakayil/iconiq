@@ -8,6 +8,7 @@ import { Toaster } from "sonner";
 
 import { Analytics } from "@/components/analytics";
 import { ConditionalFooter } from "@/components/conditional-footer";
+import { DocsSidebar } from "@/components/docs-sidebar";
 import { Header } from "@/components/header";
 import { StarPromptCard } from "@/components/star-prompt-card";
 import { PackageNameProvider } from "@/providers/package-name";
@@ -57,8 +58,9 @@ export default function RootLayout({
             <PackageNameProvider>
               <Header />
               <div className="root-content">
-                <div className="min-h-0 min-w-0 flex-1 bg-background px-4 sm:px-6 lg:px-[80px]">
-                  <main className="flex-1 bg-background">
+                <div className="flex min-h-0 min-w-0 flex-1">
+                  <DocsSidebar />
+                  <div className="min-h-0 min-w-0 flex-1 bg-background">
                     <NuqsAdapter>
                       {children}
                       <Toaster
@@ -84,8 +86,8 @@ export default function RootLayout({
                         }}
                       />
                     </NuqsAdapter>
-                  </main>
-                  <Analytics />
+                    <Analytics />
+                  </div>
                 </div>
                 <ConditionalFooter />
               </div>
