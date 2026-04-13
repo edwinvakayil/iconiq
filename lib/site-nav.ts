@@ -21,6 +21,7 @@ export const SITE_SECTIONS = [
     children: [
       { label: "Accordion", href: "/components/motion-accordion" },
       { label: "Alert", href: "/components/alert" },
+      { label: "Avatar", href: "/components/avatar" },
       { label: "Badge", href: "/components/badge" },
       { label: "Breadcrumbs", href: "/components/breadcrumbs" },
       { label: "Button", href: "/components/button" },

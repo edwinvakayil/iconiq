@@ -86,6 +86,12 @@ const REGISTRY_UI_META: Record<
       "Animated toggle with spring thumb travel and smooth track color crossfade. Native button with role=switch, forwards ref. Framer Motion.",
     dependencies: ["framer-motion"],
   },
+  avatar: {
+    title: "Avatar",
+    description:
+      "Circular avatar with spring entrance, image fade-in, fallback initials, hover glow and pulse ring. Fixed 42×42. Framer Motion.",
+    dependencies: ["framer-motion"],
+  },
 };
 
 if (!fs.existsSync(registryComponents)) {

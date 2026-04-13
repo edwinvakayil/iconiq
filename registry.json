@@ -5176,6 +5176,21 @@
           "type": "registry:ui"
         }
       ]
+    },
+    {
+      "name": "avatar",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": ["framer-motion"],
+      "devDependencies": [],
+      "title": "Avatar",
+      "description": "Circular avatar with spring entrance, image fade-in, fallback initials, hover glow and pulse ring. Fixed 42×42. Framer Motion.",
+      "files": [
+        {
+          "path": "avatar.tsx",
+          "type": "registry:ui"
+        }
+      ]
     }
   ]
 }

@@ -9,6 +9,11 @@ const nextConfig: NextConfig = {
         hostname: "iconiqui.com",
         pathname: "/assets/**",
       },
+      {
+        protocol: "https",
+        hostname: "avatars.githubusercontent.com",
+        pathname: "/**",
+      },
     ],
   },
 };
