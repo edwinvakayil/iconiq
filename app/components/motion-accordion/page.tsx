@@ -8,6 +8,7 @@ import type { ReactNode } from "react";
 import { CodeBlock } from "@/components/code-block";
 import { CodeBlockInstall } from "@/components/code-block-install";
 import { ComponentActions } from "@/components/component-actions";
+import { RegistryInstallBlock } from "@/components/registry-install-block";
 import { SidebarNav } from "@/components/sidebar-nav";
 import { cn } from "@/lib/utils";
 import { Accordion, type AccordionItem } from "@/registry/motion-accordion";
@@ -60,8 +61,10 @@ export function Faq() {
   return <Accordion items={items} />;
 }`;
 
-/** Same shape as accordion rows: documents API, packages, and behavior in the bento “Dependencies” tile. */
-const componentDetailsItems: AccordionItem[] = [
+type DetailRow = AccordionItem & { registryPath?: string };
+
+/** Same shape as accordion rows: documents API, packages, and behavior in the bento "Dependencies" tile. */
+const componentDetailsItems: DetailRow[] = [
   {
     id: "items",
     title: "items prop (required)",
@@ -103,6 +106,7 @@ const componentDetailsItems: AccordionItem[] = [
     title: "shadcn registry",
     content:
       "Peer dependencies are declared on the registry item so shadcn add pulls framer-motion and lucide-react into your project when needed.",
+    registryPath: "motion-accordion.json",
   },
 ];
 
@@ -298,7 +302,7 @@ export default function AccordionPage() {
             </BentoMotion>
 
             <BentoMotion
-              className="border-neutral-200/40 lg:col-span-8 lg:col-start-1 lg:row-start-3 dark:border-neutral-700/30"
+              className="border-neutral-200/40 lg:col-span-12 lg:col-start-1 lg:row-start-3 dark:border-neutral-700/30"
               variants={itemVariants}
             >
               <SectionLabel accent="04">Usage</SectionLabel>
@@ -317,7 +321,7 @@ export default function AccordionPage() {
             </BentoMotion>
 
             <BentoMotion
-              className="border-neutral-200/40 bg-neutral-50/50 lg:col-span-4 lg:col-start-9 lg:row-start-3 dark:border-neutral-700/30 dark:bg-neutral-900/40"
+              className="border-neutral-200/40 lg:col-span-12 lg:col-start-1 lg:row-start-4 dark:border-neutral-700/30"
               variants={itemVariants}
             >
               <SectionLabel accent="05">Dependencies</SectionLabel>
@@ -336,24 +340,25 @@ export default function AccordionPage() {
                 </code>{" "}
                 shape as accordion data.
               </p>
-              <div className="rounded-xl border border-neutral-200/30 bg-white dark:border-neutral-700/25 dark:bg-neutral-950">
-                <ul className="divide-y divide-neutral-100/90 dark:divide-neutral-800/60">
-                  {componentDetailsItems.map((row) => (
-                    <li className="px-3 py-2.5 sm:px-3.5 sm:py-3" key={row.id}>
-                      <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
-                        <code className="shrink-0 rounded bg-neutral-100 px-1 py-px font-mono text-[10px] text-neutral-500 dark:bg-neutral-900 dark:text-neutral-400">
-                          {row.id}
-                        </code>
-                        <span className="font-medium text-neutral-900 text-xs dark:text-neutral-100">
-                          {row.title}
-                        </span>
-                      </div>
-                      <p className="mt-1.5 font-sans text-[12px] text-neutral-600 leading-relaxed dark:text-neutral-400">
+              <div className="divide-y divide-neutral-100 dark:divide-neutral-800/60">
+                {componentDetailsItems.map((row) => (
+                  <div
+                    className="grid grid-cols-1 gap-1 py-3.5 sm:grid-cols-[180px_1fr] sm:gap-8 sm:py-4"
+                    key={row.id}
+                  >
+                    <p className="pt-0.5 font-medium text-neutral-800 text-xs dark:text-neutral-200">
+                      {row.title}
+                    </p>
+                    <div>
+                      <p className="font-sans text-[13px] text-neutral-500 leading-relaxed dark:text-neutral-400">
                         {row.content}
                       </p>
-                    </li>
-                  ))}
-                </ul>
+                      {row.registryPath ? (
+                        <RegistryInstallBlock registryPath={row.registryPath} />
+                      ) : null}
+                    </div>
+                  </div>
+                ))}
               </div>
             </BentoMotion>
           </motion.div>
