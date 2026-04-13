@@ -1,3 +1,5 @@
+"use client";
+
 import { AnimatePresence, motion, type Variants } from "framer-motion";
 import { type ReactNode, useCallback, useEffect, useState } from "react";
 import { createPortal } from "react-dom";

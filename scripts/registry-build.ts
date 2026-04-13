@@ -16,6 +16,12 @@ const REGISTRY_UI_META: Record<
   string,
   { title: string; description: string; dependencies?: string[] }
 > = {
+  badge: {
+    title: "Badge",
+    description:
+      "Animated badge with a looping shimmer wave. Spring entrance, optional bg/text/wave color overrides. Framer Motion.",
+    dependencies: ["framer-motion"],
+  },
   "animated-badges": {
     title: "Badges (Animated)",
     description:

@@ -85,6 +85,7 @@ const sections: SidebarSection[] = [
     items: [
       { label: "Accordion", href: "/components/motion-accordion" },
       { label: "Alert", href: "/components/alert" },
+      { label: "Badge", href: "/components/badge" },
       { label: "Breadcrumbs", href: "/components/breadcrumbs" },
       { label: "Button", href: "/components/button" },
       { label: "Hover expand", href: "/components/hovercard" },
