@@ -74,7 +74,7 @@ const componentDetailsItems: DetailRow[] = [
     id: "registry",
     title: "shadcn registry",
     content:
-      "Registry item lists framer-motion so shadcn add pulls the peer with the file.",
+      "Registry item lists framer-motion so shadcn@latest add pulls the peer with the file.",
     registryPath: "avatar.json",
   },
 ];

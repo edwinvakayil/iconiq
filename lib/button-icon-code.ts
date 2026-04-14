@@ -30,10 +30,10 @@ export function getButtonWithIconCode({
   const variantProp = variant === "default" ? "" : ` variant="${variant}"`;
 
   return `// 1. Add the icon (run in your project):
-// ${cliPrefix} shadcn add @iconiq/${iconName}
+// ${cliPrefix} shadcn@latest add @iconiq/${iconName}
 
 // 2. If you don't have the Button component yet:
-// ${cliPrefix} shadcn add button
+// ${cliPrefix} shadcn@latest add button
 
 import { Button } from "@/components/ui/button";
 import { ${componentName} } from "@/components/ui/${iconName}";

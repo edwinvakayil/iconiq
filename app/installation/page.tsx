@@ -92,7 +92,7 @@ const steps = [
   {
     icon: Terminal,
     title: "Run the shadcn command",
-    desc: "Use npx, pnpm, yarn, or bun with the short name — e.g. shadcn add @iconiq/bell for an icon or @iconiq/badge for a component.",
+    desc: "Use npx, pnpm dlx, yarn dlx, or bunx --bun with shadcn@latest add @iconiq/<name> — e.g. @iconiq/bell for an icon or @iconiq/badge for a component.",
   },
   {
     icon: GitBranch,
@@ -168,8 +168,12 @@ export default function InstallationPage() {
             Installation
           </h1>
           <p className="mt-2 font-sans text-[15px] text-neutral-500 leading-relaxed dark:text-neutral-400">
-            Add any Iconiq icon or component with a single shadcn CLI command.
-            Works with npm, pnpm, yarn, and bun.
+            Add any Iconiq icon or component with the shadcn CLI. Use your
+            package runner (npx, pnpm dlx, yarn dlx, or bunx --bun) with{" "}
+            <code className="rounded bg-neutral-100 px-1 py-0.5 font-mono text-[13px] dark:bg-neutral-800">
+              shadcn@latest add @iconiq/&lt;name&gt;
+            </code>
+            .
           </p>
         </motion.header>
 

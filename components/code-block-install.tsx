@@ -21,7 +21,7 @@ export function CodeBlockInstall({
   const [_, startTransition] = useTransition();
   const { packageName, setPackageName } = usePackageNameContext();
 
-  const cliCommand = `${getPackageManagerPrefix(packageName)} shadcn add @iconiq/${componentName}`;
+  const cliCommand = `${getPackageManagerPrefix(packageName)} shadcn@latest add @iconiq/${componentName}`;
 
   const handleCopyToClipboard = () => {
     startTransition(async () => {
@@ -85,7 +85,7 @@ export function CodeBlockInstall({
                 )}
               >
                 <span className="sr-only">
-                  {getPackageManagerPrefix(pm)} shadcn add @iconiq/
+                  {getPackageManagerPrefix(pm)} shadcn@latest add @iconiq/
                   {componentName}
                 </span>
                 <span
@@ -95,7 +95,7 @@ export function CodeBlockInstall({
                   {getPackageManagerPrefix(pm)}
                 </span>{" "}
                 <span aria-hidden="true" className="text-black dark:text-white">
-                  shadcn add @iconiq/
+                  shadcn@latest add @iconiq/
                 </span>
                 <span className="shrink-0 text-primary dark:text-white">
                   {componentName}

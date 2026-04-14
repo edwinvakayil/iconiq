@@ -89,7 +89,7 @@ export function ButtonSvgBuilder({ icons }: ButtonSvgBuilderProps) {
     variant: buttonVariant,
   });
 
-  const cliCommand = `${cliPrefix} shadcn add @iconiq/${selectedName}`;
+  const cliCommand = `${cliPrefix} shadcn@latest add @iconiq/${selectedName}`;
 
   const handleCopyCli = async () => {
     if (cliState !== "idle") return;
@@ -334,7 +334,7 @@ export function ButtonSvgBuilder({ icons }: ButtonSvgBuilderProps) {
             Run this in your project to add the icon. Add the Button component
             with{" "}
             <code className="rounded bg-neutral-200 px-1 font-mono text-xs dark:bg-neutral-700 dark:text-neutral-200">
-              shadcn add button
+              shadcn@latest add button
             </code>{" "}
             if you don’t have it yet.
           </p>

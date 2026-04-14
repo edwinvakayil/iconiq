@@ -104,7 +104,7 @@ const componentDetailsItems: DetailRow[] = [
     id: "registry",
     title: "shadcn registry",
     content:
-      "Peer dependencies are declared on the registry item so shadcn add pulls framer-motion and lucide-react into your project when needed.",
+      "Peer dependencies are declared on the registry item so shadcn@latest add pulls framer-motion and lucide-react into your project when needed.",
     registryPath: "motion-accordion.json",
   },
 ];
