@@ -86,6 +86,12 @@ const REGISTRY_UI_META: Record<
       "Animated single-select dropdown with staggered options, chevron rotation, scaleY panel, row hover slide, and check mark on the active item. Framer Motion + Lucide.",
     dependencies: ["framer-motion", "lucide-react"],
   },
+  radiogroup: {
+    title: "Radio group",
+    description:
+      "Single-select option list with shared layoutId highlight, spring ring/dot on the control, staggered row entrance, and optional descriptions. Framer Motion only — native button radios with role=radiogroup.",
+    dependencies: ["framer-motion"],
+  },
   switch: {
     title: "Switch",
     description:

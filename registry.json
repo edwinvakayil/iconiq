@@ -5182,6 +5182,21 @@
       ]
     },
     {
+      "name": "radiogroup",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": ["framer-motion"],
+      "devDependencies": [],
+      "title": "Radio group",
+      "description": "Single-select option list with shared layoutId highlight, spring ring/dot on the control, staggered row entrance, and optional descriptions. Framer Motion only — native button radios with role=radiogroup.",
+      "files": [
+        {
+          "path": "radiogroup.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "switch",
       "type": "registry:ui",
       "registryDependencies": [],

@@ -109,6 +109,22 @@ const COMPONENT_EXAMPLE: Record<string, string> = {
     "    </div>\n" +
     "  )\n" +
     "}\n",
+  radiogroup:
+    '"use client";\n\n' +
+    `import RadioGroup from "@/components/ui/radiogroup"\n` +
+    `import { useState } from "react"\n\n` +
+    "const options = [\n" +
+    '  { value: "standard", label: "Standard", description: "Ship in 3–5 days" },\n' +
+    '  { value: "express", label: "Express", description: "Next business day" },\n' +
+    "]\n\n" +
+    "export default function Page() {\n" +
+    '  const [value, setValue] = useState("standard")\n' +
+    "  return (\n" +
+    '    <div className="flex min-h-svh items-center justify-center p-8">\n' +
+    "      <RadioGroup onChange={setValue} options={options} value={value} />\n" +
+    "    </div>\n" +
+    "  )\n" +
+    "}\n",
   badge:
     '"use client";\n\n' +
     `import Badge from "@/components/ui/badge"\n\n` +
