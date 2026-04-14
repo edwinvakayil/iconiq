@@ -79,12 +79,17 @@ const DialogContent = React.forwardRef<
             variants={overlayVariants}
           />
         </DialogPrimitive.Overlay>
-        <DialogPrimitive.Content asChild forceMount ref={ref} {...props}>
+        <DialogPrimitive.Content
+          className="fixed inset-0 z-50 grid place-items-center overflow-y-auto bg-transparent p-4 outline-none"
+          forceMount
+          ref={ref}
+          {...props}
+        >
           <motion.div
             animate="visible"
             className={cn(
-              "fixed inset-0 z-50 m-auto grid h-fit w-[calc(100%-2rem)] max-w-lg gap-4 overflow-y-auto rounded-xl border bg-background p-6 shadow-2xl dark:bg-neutral-900",
-              "max-h-[calc(100dvh-env(safe-area-inset-top,0px)-env(safe-area-inset-bottom,0px)-2rem)]",
+              "relative flex w-[min(100%,32rem)] max-w-lg flex-col gap-4 overflow-y-auto rounded-xl border bg-background p-6 shadow-2xl dark:bg-neutral-900",
+              "max-h-[min(90svh,calc(100svh-env(safe-area-inset-top,0px)-env(safe-area-inset-bottom,0px)-2rem))]",
               className
             )}
             exit="exit"
