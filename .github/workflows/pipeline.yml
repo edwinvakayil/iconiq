@@ -139,12 +139,12 @@ jobs:
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
   deploy_preview:
     name: ✨ Deploy → Vercel (Preview)
-    if: >-
-      ((github.event_name == 'push' && (github.ref_name == 'main')) || (github.event_name == 'pull_request' &&
-      (github.base_ref == 'main')) || github.event_name == 'workflow_dispatch') && (github.event_name == 'pull_request'
-      && github.event.pull_request.head.repo.full_name == github.repository)
+    # PRs → main from this repo only. base.ref avoids flaky base_ref; no Environment so branch rules cannot block PR deploys.
+    if: github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'main' && github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
-    environment: preview
+    permissions:
+      contents: read
+      pull-requests: write
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
