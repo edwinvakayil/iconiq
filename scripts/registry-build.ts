@@ -68,6 +68,12 @@ const REGISTRY_UI_META: Record<
       "lucide-react",
     ],
   },
+  dialog: {
+    title: "Dialog",
+    description:
+      "Modal dialog on Radix Dialog with Framer Motion overlay and content springs, staggered children, and an animated close control. Pass the same open boolean to DialogContent as the Dialog root for AnimatePresence.",
+    dependencies: ["@radix-ui/react-dialog", "framer-motion", "lucide-react"],
+  },
   tooltip: {
     title: "Tooltip",
     description:

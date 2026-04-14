@@ -2387,6 +2387,12 @@ export const components: ComponentDefinition[] = [
     dependencies: [],
   },
   {
+    name: "dialog",
+    path: path.join(__dirname, "../registry", "dialog.tsx"),
+    registryDependencies: [],
+    dependencies: ["@radix-ui/react-dialog", "framer-motion", "lucide-react"],
+  },
+  {
     name: "tooltip",
     path: path.join(__dirname, "../registry", "tooltip.tsx"),
     registryDependencies: [],

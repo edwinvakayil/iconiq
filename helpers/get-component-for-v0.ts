@@ -203,6 +203,53 @@ const COMPONENT_EXAMPLE: Record<string, string> = {
     "    </div>\n" +
     "  )\n" +
     "}\n",
+  dialog:
+    '"use client";\n\n' +
+    "import {\n" +
+    "  Dialog,\n" +
+    "  DialogContent,\n" +
+    "  DialogDescription,\n" +
+    "  DialogFooter,\n" +
+    "  DialogHeader,\n" +
+    "  DialogTitle,\n" +
+    "  DialogTrigger,\n" +
+    `} from "@/components/ui/dialog"\n` +
+    `import { useState } from "react"\n\n` +
+    "export default function Page() {\n" +
+    "  const [open, setOpen] = useState(false)\n" +
+    "  return (\n" +
+    '    <div className="flex min-h-svh items-center justify-center p-8">\n' +
+    "      <Dialog onOpenChange={setOpen} open={open}>\n" +
+    "        <DialogTrigger asChild>\n" +
+    "          <button\n" +
+    '            className="rounded-lg border border-border bg-background px-4 py-2 font-medium text-sm"\n' +
+    '            type="button"\n' +
+    "          >\n" +
+    "            Open dialog\n" +
+    "          </button>\n" +
+    "        </DialogTrigger>\n" +
+    '        <DialogContent className="sm:max-w-md" open={open}>\n' +
+    "          <DialogHeader>\n" +
+    "            <DialogTitle>Motion dialog</DialogTitle>\n" +
+    "            <DialogDescription>\n" +
+    "              Overlay blur, spring scale, and staggered copy. Pass the same\n" +
+    "              open boolean to DialogContent as the Dialog root.\n" +
+    "            </DialogDescription>\n" +
+    "          </DialogHeader>\n" +
+    "          <DialogFooter>\n" +
+    "            <button\n" +
+    '              className="rounded-md border border-border px-3 py-1.5 text-sm"\n' +
+    "              onClick={() => setOpen(false)}\n" +
+    '              type="button"\n' +
+    "            >\n" +
+    "              Close\n" +
+    "            </button>\n" +
+    "          </DialogFooter>\n" +
+    "        </DialogContent>\n" +
+    "      </Dialog>\n" +
+    "    </div>\n" +
+    "  )\n" +
+    "}\n",
   switch:
     '"use client";\n\n' +
     `import { switch as Switch } from "@/components/ui/switch"\n` +
