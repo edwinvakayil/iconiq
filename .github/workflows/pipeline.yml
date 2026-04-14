@@ -1,6 +1,6 @@
 
 
-name: Pipeline
+name: Iconiq Deployment
 'on':
   push:
     branches:
@@ -9,9 +9,11 @@ name: Pipeline
     branches:
       - main
   workflow_dispatch: {}
+# Cancelling an in-progress run aborts HTTP uploads (Vercel CLI → AbortError / "Upload aborted").
+# On main, finish the current run so deploys are not torn down mid-upload; still cancel on PRs to save CI.
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
 jobs:
   ci_lint:
     name: 🔍 Lint & Format
@@ -99,8 +101,6 @@ jobs:
           cache: pnpm
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
-      - name: Install Vercel CLI
-        run: npm install -g vercel
       - name: Validate Vercel credentials
         run: >-
           test -n "$VERCEL_TOKEN" || (echo "Missing VERCEL_TOKEN secret. Add it in GitHub Actions secrets, or Dependabot
@@ -116,13 +116,13 @@ jobs:
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
       - name: Pull Vercel environment
-        run: vercel pull --yes --environment=production --token="$VERCEL_TOKEN"
+        run: pnpm exec vercel pull --yes --environment=production --token="$VERCEL_TOKEN"
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
       - name: Build project
-        run: vercel build --prod --token="$VERCEL_TOKEN"
+        run: pnpm exec vercel build --prod --token="$VERCEL_TOKEN"
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
@@ -130,7 +130,7 @@ jobs:
       - name: Deploy to Vercel
         id: deploy
         run: >-
-          vercel deploy --prebuilt --prod --token="$VERCEL_TOKEN" > deployment_url.txt && echo "DEPLOYMENT_URL=$(cat
+          pnpm exec vercel deploy --prebuilt --prod --token="$VERCEL_TOKEN" > deployment_url.txt && echo "DEPLOYMENT_URL=$(cat
           deployment_url.txt)" >> $GITHUB_ENV
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
@@ -160,8 +160,6 @@ jobs:
           cache: pnpm
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
-      - name: Install Vercel CLI
-        run: npm install -g vercel
       - name: Validate Vercel credentials
         run: >-
           test -n "$VERCEL_TOKEN" || (echo "Missing VERCEL_TOKEN secret. Add it in GitHub Actions secrets, or Dependabot
@@ -177,13 +175,13 @@ jobs:
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
       - name: Pull Vercel environment
-        run: vercel pull --yes --environment=preview --token="$VERCEL_TOKEN"
+        run: pnpm exec vercel pull --yes --environment=preview --token="$VERCEL_TOKEN"
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
       - name: Build project
-        run: vercel build --token="$VERCEL_TOKEN"
+        run: pnpm exec vercel build --token="$VERCEL_TOKEN"
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
@@ -191,7 +189,7 @@ jobs:
       - name: Deploy to Vercel
         id: deploy
         run: >-
-          vercel deploy --prebuilt --token="$VERCEL_TOKEN" > deployment_url.txt && echo "DEPLOYMENT_URL=$(cat
+          pnpm exec vercel deploy --prebuilt --token="$VERCEL_TOKEN" > deployment_url.txt && echo "DEPLOYMENT_URL=$(cat
           deployment_url.txt)" >> $GITHUB_ENV
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
