@@ -129,9 +129,9 @@ jobs:
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
       - name: Deploy to Vercel
         id: deploy
-        # Free tier caps per-deploy file uploads (~5000). Tarball upload uses far fewer API requests (api-upload-free).
+        # Flag order matches Vercel docs: --prebuilt --archive=tgz (avoids api-upload-free per-file limits).
         run: >-
-          pnpm exec vercel deploy --prebuilt --prod --archive=tgz --token="$VERCEL_TOKEN" > deployment_url.txt &&
+          pnpm exec vercel deploy --prebuilt --archive=tgz --prod --yes --token="$VERCEL_TOKEN" > deployment_url.txt &&
           echo "DEPLOYMENT_URL=$(cat deployment_url.txt)" >> $GITHUB_ENV
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
@@ -189,9 +189,9 @@ jobs:
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
       - name: Deploy to Vercel
         id: deploy
-        # --archive=tgz like production; --target=preview instead of --prod (never deploy PRs to production).
+        # No --prod → preview deployment. Same --prebuilt --archive=tgz as production (see Vercel deploy docs).
         run: >-
-          pnpm exec vercel deploy --prebuilt --target=preview --archive=tgz --token="$VERCEL_TOKEN" > deployment_url.txt &&
+          pnpm exec vercel deploy --prebuilt --archive=tgz --yes --token="$VERCEL_TOKEN" > deployment_url.txt &&
           echo "DEPLOYMENT_URL=$(cat deployment_url.txt)" >> $GITHUB_ENV
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
