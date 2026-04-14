@@ -10,10 +10,10 @@ name: Iconiq Deployment
       - main
   workflow_dispatch: {}
 # Cancelling an in-progress run aborts HTTP uploads (Vercel CLI → AbortError / "Upload aborted").
-# On main, finish the current run so deploys are not torn down mid-upload; still cancel on PRs to save CI.
+# Do not cancel on main or on pull_request so production and preview deploys can finish (incl. tarball upload).
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' && github.event_name != 'pull_request' }}
 jobs:
   ci_lint:
     name: 🔍 Lint & Format
@@ -189,9 +189,9 @@ jobs:
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
       - name: Deploy to Vercel
         id: deploy
-        # Same as production: tarball avoids free-tier api-upload-free file limits on large .next trees.
+        # --archive=tgz like production; --target=preview instead of --prod (never deploy PRs to production).
         run: >-
-          pnpm exec vercel deploy --prebuilt --archive=tgz --token="$VERCEL_TOKEN" > deployment_url.txt &&
+          pnpm exec vercel deploy --prebuilt --target=preview --archive=tgz --token="$VERCEL_TOKEN" > deployment_url.txt &&
           echo "DEPLOYMENT_URL=$(cat deployment_url.txt)" >> $GITHUB_ENV
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
