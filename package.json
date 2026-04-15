@@ -8,15 +8,7 @@
     "type": "git",
     "url": "https://github.com/edwinvakayil/iconiq"
   },
-  "homepage": "https://iconiq.com",
-  "keywords": [
-    "iconiq",
-    "icons",
-    "components",
-    "motion",
-    "react",
-    "nextjs"
-  ],
+  "homepage": "https://iconiqui.com",
   "scripts": {
     "dev": "next dev",
     "prebuild": "node scripts/download-fonts.js",
