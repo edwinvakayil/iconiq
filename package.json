@@ -2,6 +2,21 @@
   "name": "iconiq",
   "version": "0.1.0",
   "private": true,
+  "author": "Edwin Vakayil",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/edwinvakayil/iconiq"
+  },
+  "homepage": "https://iconiq.com",
+  "keywords": [
+    "iconiq",
+    "icons",
+    "components",
+    "motion",
+    "react",
+    "nextjs"
+  ],
   "scripts": {
     "dev": "next dev",
     "prebuild": "node scripts/download-fonts.js",
