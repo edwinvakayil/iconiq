@@ -2,6 +2,13 @@
   "name": "iconiq",
   "version": "0.1.0",
   "private": true,
+  "author": "Edwin Vakayil",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/edwinvakayil/iconiq"
+  },
+  "homepage": "https://iconiqui.com",
   "scripts": {
     "dev": "next dev",
     "prebuild": "node scripts/download-fonts.js",
@@ -18,7 +25,7 @@
     "gen-cli": "pnpm run check-style:fix && pnpm run sync-registry && pnpm run build-registry && pnpm lint"
   },
   "dependencies": {
-    "@base-ui/react": "^1.2.0",
+    "@base-ui/react": "^1.4.0",
     "@openpanel/nextjs": "^1.4.0",
     "@radix-ui/react-accordion": "^1.2.12",
     "@radix-ui/react-collapsible": "^1.1.12",
@@ -36,7 +43,7 @@
     "motion": "^12.38.0",
     "next": "16.1.6",
     "next-themes": "^0.4.6",
-    "nuqs": "^2.8.8",
+    "nuqs": "^2.8.9",
     "react": "19.2.5",
     "react-dom": "19.2.4",
     "recharts": "^2.15.0",
@@ -56,6 +63,6 @@
     "tsx": "^4.21.0",
     "typescript": "^5.9.3",
     "ultracite": "7.2.0",
-    "vercel": "^50.42.0"
+    "vercel": "^51.2.1"
   }
 }
