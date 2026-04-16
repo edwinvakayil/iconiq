@@ -98,6 +98,12 @@ const REGISTRY_UI_META: Record<
       "Animated toggle with spring thumb travel and smooth track color crossfade. Native button with role=switch, forwards ref. Framer Motion.",
     dependencies: ["framer-motion"],
   },
+  spinner: {
+    title: "Spinner",
+    description:
+      "Loading indicator with an animated ring or bouncing dots. Framer Motion; uses primary and muted theme tokens.",
+    dependencies: ["framer-motion"],
+  },
   avatar: {
     title: "Avatar",
     description:

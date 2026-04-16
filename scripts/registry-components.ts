@@ -2417,6 +2417,12 @@ export const components: ComponentDefinition[] = [
     dependencies: ["framer-motion"],
   },
   {
+    name: "spinner",
+    path: path.join(__dirname, "../registry", "spinner.tsx"),
+    registryDependencies: [],
+    dependencies: ["framer-motion"],
+  },
+  {
     name: "avatar",
     path: path.join(__dirname, "../registry", "avatar.tsx"),
     registryDependencies: [],

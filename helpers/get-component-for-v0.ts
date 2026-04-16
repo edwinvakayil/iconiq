@@ -266,6 +266,17 @@ const COMPONENT_EXAMPLE: Record<string, string> = {
     "    </div>\n" +
     "  )\n" +
     "}\n",
+  spinner:
+    '"use client";\n\n' +
+    `import Spinner from "@/components/ui/spinner"\n\n` +
+    "export default function Page() {\n" +
+    "  return (\n" +
+    '    <div className="flex min-h-svh flex-wrap items-center justify-center gap-8 p-8">\n' +
+    "      <Spinner />\n" +
+    '      <Spinner variant="dots" className="size-5" />\n' +
+    "    </div>\n" +
+    "  )\n" +
+    "}\n",
   switch:
     '"use client";\n\n' +
     `import { switch as Switch } from "@/components/ui/switch"\n` +

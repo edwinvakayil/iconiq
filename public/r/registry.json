@@ -5212,6 +5212,21 @@
       ]
     },
     {
+      "name": "spinner",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": ["framer-motion"],
+      "devDependencies": [],
+      "title": "Spinner",
+      "description": "Loading indicator with an animated ring or bouncing dots. Framer Motion; uses primary and muted theme tokens.",
+      "files": [
+        {
+          "path": "spinner.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "avatar",
       "type": "registry:ui",
       "registryDependencies": [],
