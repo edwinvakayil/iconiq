@@ -86,6 +86,12 @@ const REGISTRY_UI_META: Record<
       "Animated single-select dropdown with staggered options, chevron rotation, scaleY panel, row hover slide, and check mark on the active item. Framer Motion + Lucide.",
     dependencies: ["framer-motion", "lucide-react"],
   },
+  slider: {
+    title: "Slider",
+    description:
+      "Range control with spring-animated track and thumb, full-width pointer drag, and optional label and live value. Framer Motion.",
+    dependencies: ["framer-motion"],
+  },
   radiogroup: {
     title: "Radio group",
     description:

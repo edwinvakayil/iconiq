@@ -5182,6 +5182,21 @@
       ]
     },
     {
+      "name": "slider",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": ["framer-motion"],
+      "devDependencies": [],
+      "title": "Slider",
+      "description": "Range control with spring-animated track and thumb, full-width pointer drag, and optional label and live value. Framer Motion.",
+      "files": [
+        {
+          "path": "slider.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "radiogroup",
       "type": "registry:ui",
       "registryDependencies": [],

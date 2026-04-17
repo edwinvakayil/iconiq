@@ -2405,6 +2405,12 @@ export const components: ComponentDefinition[] = [
     dependencies: ["framer-motion", "lucide-react"],
   },
   {
+    name: "slider",
+    path: path.join(__dirname, "../registry", "slider.tsx"),
+    registryDependencies: [],
+    dependencies: ["framer-motion"],
+  },
+  {
     name: "radiogroup",
     path: path.join(__dirname, "../registry", "radiogroup.tsx"),
     registryDependencies: [],

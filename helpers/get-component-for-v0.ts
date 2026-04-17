@@ -277,6 +277,19 @@ const COMPONENT_EXAMPLE: Record<string, string> = {
     "    </div>\n" +
     "  )\n" +
     "}\n",
+  slider:
+    '"use client";\n\n' +
+    `import { Slider } from "@/components/ui/slider"\n` +
+    `import { useState } from "react"\n\n` +
+    "export default function Page() {\n" +
+    "  const [n, setN] = useState(42)\n" +
+    "  return (\n" +
+    '    <div className="mx-auto flex min-h-svh w-full max-w-md flex-col justify-center gap-10 p-8">\n' +
+    '      <Slider label="Brightness" value={n} onChange={setN} />\n' +
+    '      <Slider defaultValue={30} max={200} min={0} showValue label="Exposure" step={5} />\n' +
+    "    </div>\n" +
+    "  )\n" +
+    "}\n",
   switch:
     '"use client";\n\n' +
     `import { switch as Switch } from "@/components/ui/switch"\n` +
