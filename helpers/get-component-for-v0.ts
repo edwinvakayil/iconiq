@@ -290,6 +290,18 @@ const COMPONENT_EXAMPLE: Record<string, string> = {
     "    </div>\n" +
     "  )\n" +
     "}\n",
+  input:
+    '"use client";\n\n' +
+    `import { input as Input } from "@/components/ui/input"\n` +
+    `import { useState } from "react"\n\n` +
+    "export default function Page() {\n" +
+    '  const [text, setText] = useState("Hello")\n' +
+    "  return (\n" +
+    '    <div className="mx-auto flex min-h-svh w-full max-w-md flex-col justify-center p-8">\n' +
+    '      <Input label="Your name" value={text} onChange={setText} placeholder=" " />\n' +
+    "    </div>\n" +
+    "  )\n" +
+    "}\n",
   switch:
     '"use client";\n\n' +
     `import { switch as Switch } from "@/components/ui/switch"\n` +

@@ -92,6 +92,12 @@ const REGISTRY_UI_META: Record<
       "Range control with spring-animated track and thumb, full-width pointer drag, and optional label and live value. Framer Motion.",
     dependencies: ["framer-motion"],
   },
+  input: {
+    title: "Input",
+    description:
+      "Standard rounded text field with an always-visible label, focus ring motion, and per-character spring animation on the visible text overlay. Framer Motion.",
+    dependencies: ["framer-motion"],
+  },
   radiogroup: {
     title: "Radio group",
     description:

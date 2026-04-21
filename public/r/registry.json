@@ -5197,6 +5197,21 @@
       ]
     },
     {
+      "name": "input",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": ["framer-motion"],
+      "devDependencies": [],
+      "title": "Input",
+      "description": "Standard rounded text field with an always-visible label, focus ring motion, and per-character spring animation on the visible text overlay. Framer Motion.",
+      "files": [
+        {
+          "path": "input.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "radiogroup",
       "type": "registry:ui",
       "registryDependencies": [],

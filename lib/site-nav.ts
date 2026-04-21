@@ -27,6 +27,7 @@ export const SITE_SECTIONS = [
       { label: "Button", href: "/components/button" },
       { label: "Collapsible", href: "/components/collapsible" },
       { label: "Dialog", href: "/components/dialog" },
+      { label: "Input", href: "/components/input" },
       { label: "Checkbox group", href: "/components/checkbox-group" },
       { label: "Radio group", href: "/components/radiogroup" },
       { label: "Select", href: "/components/select" },

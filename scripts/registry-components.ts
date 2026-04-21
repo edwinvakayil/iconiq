@@ -2411,6 +2411,12 @@ export const components: ComponentDefinition[] = [
     dependencies: ["framer-motion"],
   },
   {
+    name: "input",
+    path: path.join(__dirname, "../registry", "input.tsx"),
+    registryDependencies: [],
+    dependencies: ["framer-motion"],
+  },
+  {
     name: "radiogroup",
     path: path.join(__dirname, "../registry", "radiogroup.tsx"),
     registryDependencies: [],
