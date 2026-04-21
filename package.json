@@ -25,7 +25,7 @@
     "gen-cli": "pnpm run check-style:fix && pnpm run sync-registry && pnpm run build-registry && pnpm lint"
   },
   "dependencies": {
-    "@base-ui/react": "^1.4.0",
+    "@base-ui/react": "^1.4.1",
     "@openpanel/nextjs": "^1.4.0",
     "@radix-ui/react-accordion": "^1.2.12",
     "@radix-ui/react-collapsible": "^1.1.12",
