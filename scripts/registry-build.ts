@@ -22,12 +22,6 @@ const REGISTRY_UI_META: Record<
       "Animated badge with a looping shimmer wave. Spring entrance, optional bg/text/wave color overrides. Framer Motion.",
     dependencies: ["framer-motion"],
   },
-  "animated-badges": {
-    title: "Badges (Animated)",
-    description:
-      "Status badges with shimmer, pulsing dot, and spring animations. Uses Framer Motion for enter/exit and hover effects.",
-    dependencies: ["framer-motion"],
-  },
   "motion-accordion": {
     title: "Accordion",
     description:

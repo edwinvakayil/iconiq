@@ -1,30 +1,22 @@
 import type { MetadataRoute } from "next";
 
 import { SITE } from "@/constants";
-import { ICON_LIST } from "@/icons";
+import { BASE_LINKS, SITE_SECTIONS } from "@/lib/site-nav";
 
 // biome-ignore lint/suspicious/useAwait: ignore
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const iconPages: MetadataRoute.Sitemap = ICON_LIST.map((icon) => ({
-    url: `${SITE.URL}/icons/${icon.name}`,
-    lastModified: new Date(),
-    changeFrequency: "monthly",
-    priority: 0.7,
-  }));
-
-  return [
-    {
-      url: SITE.URL,
-      lastModified: new Date(),
-      changeFrequency: "weekly",
-      priority: 1,
-    },
-    {
-      url: `${SITE.URL}/sponsorship`,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.5,
-    },
-    ...iconPages,
+  const docsPages = [
+    ...BASE_LINKS.map((item) => item.href),
+    ...SITE_SECTIONS.flatMap((section) =>
+      section.children.map((item) => item.href)
+    ),
+    "/sponsorship",
   ];
+
+  return docsPages.map((path) => ({
+    url: path === "/" ? SITE.URL : `${SITE.URL}${path}`,
+    lastModified: new Date(),
+    changeFrequency: path === "/" ? "weekly" : "monthly",
+    priority: path === "/" ? 1 : 0.7,
+  }));
 }

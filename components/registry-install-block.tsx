@@ -4,8 +4,8 @@ import { CopyIcon } from "lucide-react";
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
 
-import type { IconStatus } from "@/components/ui/icon-state";
-import { IconState } from "@/components/ui/icon-state";
+import type { ActionStatus } from "@/components/ui/action-state";
+import { ActionState } from "@/components/ui/action-state";
 import { PACKAGE_MANAGER, SITE } from "@/constants";
 import { getPackageManagerPrefix } from "@/lib/get-package-manager-prefix";
 import { cn } from "@/lib/utils";
@@ -16,7 +16,7 @@ export function RegistryInstallBlock({
 }: {
   registryPath: string;
 }) {
-  const [status, setStatus] = useState<IconStatus>("idle");
+  const [status, setStatus] = useState<ActionStatus>("idle");
   const [, startTransition] = useTransition();
   const { packageName, setPackageName } = usePackageNameContext();
 
@@ -90,12 +90,12 @@ export function RegistryInstallBlock({
           tabIndex={0}
           type="button"
         >
-          <IconState status={status}>
+          <ActionState status={status}>
             <CopyIcon
               aria-hidden="true"
               className="size-3.5 text-muted-foreground"
             />
-          </IconState>
+          </ActionState>
         </button>
       </div>
     </div>

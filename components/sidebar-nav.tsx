@@ -1,7 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { BookOpen, ChevronRight, LayoutGrid, Package } from "lucide-react";
+import { BookOpen, ChevronRight, LayoutGrid } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
@@ -74,7 +74,7 @@ const sections: SidebarSection[] = [
   },
   ...SITE_SECTIONS.map((section) => ({
     title: section.label,
-    icon: section.label === "Icons" ? Package : LayoutGrid,
+    icon: LayoutGrid,
     items: section.children.map((c) => ({ label: c.label, href: c.href })),
   })),
 ];
@@ -84,7 +84,6 @@ export function SidebarNav() {
   const prefersReducedMotion = useReducedMotion();
   const [expanded, setExpanded] = useState<string[]>([
     "Getting Started",
-    "Icons",
     "Components",
   ]);
 

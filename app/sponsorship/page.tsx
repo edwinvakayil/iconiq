@@ -6,7 +6,7 @@ import { createMetadata } from "@/seo/metadata";
 
 export const metadata = createMetadata({
   title: `Sponsor ${SITE.NAME}`,
-  description: `Support the development of ${SITE.NAME} — a free open-source library of motion-powered icons and components. Your support helps keep the project growing.`,
+  description: `Support the development of ${SITE.NAME} — a free open-source library of motion-powered React components. Your support helps keep the project growing.`,
   canonical: "/sponsorship",
   ogTitle: `Sponsor ${SITE.NAME} | Support Open Source`,
 });
@@ -24,7 +24,7 @@ const Sponsorship = () => {
       meta={[
         { label: "Source", value: "Open source" },
         { label: "Model", value: "Community supported" },
-        { label: "Impact", value: "Keeps icons and components shipping" },
+        { label: "Impact", value: "Keeps components shipping" },
       ]}
       title={`Sponsor ${SITE.NAME}`}
     >
@@ -38,8 +38,8 @@ const Sponsorship = () => {
           <BeatingHeartTitle />
           <div className="grid gap-4 md:grid-cols-3">
             {[
-              "Iconiq is a free, open-source collection of motion-powered icons and components for modern React apps.",
-              "If the library saves you time, smooths out your UI work, or simply feels good to use, sponsorship helps sustain that work.",
+              "Iconiq is a free, open-source collection of motion-powered components for modern React apps.",
+              "If the library saves you time, smooths out UI work, or simply feels good to use, sponsorship helps sustain that work.",
               "Whether it is a coffee, kind words, or a GitHub star, every bit helps keep the animations flowing.",
             ].map((copy) => (
               <div

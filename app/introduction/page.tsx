@@ -1,120 +1,49 @@
 "use client";
 
 import { Layers, LayoutGrid, Sparkles, Zap } from "lucide-react";
-import { motion, type Variants } from "motion/react";
-import type { ReactNode } from "react";
 
-import { getIcons } from "@/actions/get-icons";
 import { DocsPageShell, DocsSection } from "@/components/docs/page-shell";
 import { SITE_SECTIONS } from "@/lib/site-nav";
-import { cn } from "@/lib/utils";
-
-function _SectionLabel({
-  children,
-  accent,
-}: {
-  children: ReactNode;
-  accent?: string;
-}) {
-  return (
-    <div className="mb-4 flex items-center gap-2.5">
-      {accent ? (
-        <span
-          aria-hidden
-          className="font-mono text-[10px] text-neutral-300 tabular-nums dark:text-neutral-600"
-        >
-          {accent}
-        </span>
-      ) : null}
-      <p className="font-medium text-[10px] text-neutral-400 uppercase tracking-[0.18em] dark:text-neutral-500">
-        {children}
-      </p>
-      <span className="h-px min-w-6 flex-1 bg-linear-to-r from-neutral-200 to-transparent dark:from-neutral-700" />
-    </div>
-  );
-}
-
-const bentoShell =
-  "flex flex-col rounded-2xl border border-neutral-200/80 bg-white px-3 py-4 sm:px-5 sm:py-5 md:p-6 dark:border-neutral-800 dark:bg-neutral-950";
-
-const _bentoContainer = {
-  hidden: {},
-  visible: { transition: { delayChildren: 0.06, staggerChildren: 0.07 } },
-};
-const _bentoItem = {
-  hidden: { opacity: 0, y: 22, scale: 0.98 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    scale: 1,
-    transition: { type: "spring", stiffness: 320, damping: 28 },
-  },
-};
-const _bentoContainerStatic = {
-  hidden: {},
-  visible: { transition: { delayChildren: 0, staggerChildren: 0 } },
-};
-const _bentoItemStatic = {
-  hidden: { opacity: 1, scale: 1, y: 0 },
-  visible: { opacity: 1, scale: 1, y: 0 },
-};
-
-function _BentoMotion({
-  children,
-  className,
-  variants,
-}: {
-  children: ReactNode;
-  className?: string;
-  variants: Variants;
-}) {
-  return (
-    <motion.div className={cn(bentoShell, className)} variants={variants}>
-      {children}
-    </motion.div>
-  );
-}
 
 const principles = [
   {
     icon: Layers,
-    title: "Lucide-grid icons",
-    desc: "Every icon follows the same stroke weight, corner radius, and optical sizing as Lucide — so they sit naturally beside each other and native UI.",
+    title: "Source-first delivery",
+    desc: "Every component installs as real project code, so teams can adjust motion, structure, and styling without waiting on a package release.",
   },
   {
     icon: LayoutGrid,
-    title: "UI components",
-    desc: "Beyond icons, Iconiq ships a growing set of animated UI components — each built with Framer Motion spring physics and drop-in compatible with shadcn/ui.",
+    title: "Focused component set",
+    desc: "Iconiq stays intentionally narrow with reusable UI primitives that cover common product patterns instead of chasing endless surface area.",
   },
   {
     icon: Sparkles,
-    title: "Motion that means something",
-    desc: "Animations are triggered by hover, focus, or state change. They reinforce what the icon represents — a bell rings, a download arrow falls.",
+    title: "Motion with intent",
+    desc: "Animation is there to clarify state changes, hierarchy, and interaction feedback rather than to decorate otherwise static UI.",
   },
   {
     icon: Zap,
-    title: "Copy-paste, no lock-in",
-    desc: "Everything lands directly in your source tree. No icon font, no CDN, no provider — just React and Framer Motion.",
+    title: "Fast installation",
+    desc: "The shadcn-style workflow keeps adoption light: copy a command, pull a file into your app, and keep moving.",
   },
 ];
 
 const stack = [
-  { label: "Framer Motion", note: "spring animations" },
-  { label: "Lucide grid", note: "icon geometry" },
-  { label: "shadcn/ui", note: "component base" },
-  { label: "Tailwind CSS", note: "styling" },
+  { label: "Motion", note: "interaction and state animation" },
+  { label: "TypeScript", note: "typed component APIs" },
+  { label: "shadcn registry", note: "source-first delivery" },
+  { label: "Tailwind CSS", note: "styling layer" },
 ];
 
 const frameworks = ["Next.js", "Vite", "Remix", "Astro"];
 
 export default function IntroductionPage() {
-  const iconCount = getIcons().length;
   const componentCount =
     SITE_SECTIONS.find((s) => s.label === "Components")?.children.length ?? 0;
   const stats = [
-    { value: `${iconCount}+`, label: "Animated icons" },
-    { value: String(componentCount), label: "UI components" },
-    { value: "0", label: "Runtime deps" },
+    { value: String(componentCount), label: "Registry components" },
+    { value: String(frameworks.length), label: "Common app stacks" },
+    { value: "0", label: "Lock-in layers" },
     { value: "shadcn", label: "CLI compatible" },
   ];
 
@@ -125,30 +54,30 @@ export default function IntroductionPage() {
         { label: "Getting Started" },
         { label: "Introduction" },
       ]}
-      description="Iconiq is an open-source library of animated icons and motion UI components for React. It is built to feel precise in production, not just attractive in screenshots."
+      description="Iconiq is an open-source library of motion-powered UI components for React. It is built to feel precise in production, not just attractive in screenshots."
       eyebrow="Getting Started"
       meta={[
-        { label: "Icons", value: `${iconCount}+ animated glyphs` },
         { label: "Components", value: `${componentCount} registry pages` },
-        { label: "Workflow", value: "shadcn CLI compatible" },
+        { label: "Workflow", value: "source first" },
+        { label: "Install", value: "shadcn compatible" },
       ]}
       title="Introduction"
     >
       <DocsSection
         className="lg:col-span-7"
-        description="Instead of shipping an icon package you update as a dependency, Iconiq gives you individual React files that land directly in your codebase."
+        description="Instead of hiding primitives behind a package boundary, Iconiq gives you React files that land directly in your codebase."
         index="01"
         title="What Iconiq Actually Is"
       >
         <div className="space-y-4 text-[15px] text-secondary leading-7">
           <p>
-            Animations are authored with Motion and respect reduced-motion
-            preferences. Icons follow the Lucide grid so they sit naturally
-            beside existing Lucide usage.
+            Components are authored with Motion, respect reduced-motion
+            preferences, and are designed to feel calm in real product UIs.
           </p>
           <p>
-            Components follow the same idea: install once, own the source, and
-            adapt the styling or motion without waiting on an external release.
+            The library favors ownership over abstraction: install once, keep
+            the source, and adapt each primitive to match your app without
+            waiting on an upstream release cycle.
           </p>
         </div>
       </DocsSection>
@@ -178,7 +107,7 @@ export default function IntroductionPage() {
 
       <DocsSection
         className="lg:col-span-12"
-        description="The design system stays intentionally narrow so the library is easy to reason about."
+        description="The system stays intentionally narrow so the library is easier to reason about."
         index="03"
         title="Principles"
       >
@@ -204,7 +133,7 @@ export default function IntroductionPage() {
 
       <DocsSection
         className="lg:col-span-12"
-        description="Iconiq is built for the common modern React stacks rather than a single framework niche."
+        description="Iconiq is built for the common modern React stacks rather than a narrow framework niche."
         index="04"
         title="Stack"
       >

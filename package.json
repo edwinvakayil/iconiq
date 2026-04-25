@@ -14,15 +14,10 @@
     "prebuild": "node scripts/download-fonts.js",
     "build": "next build",
     "start": "next start",
-    "lint": "pnpm run check-style:fix && npx ultracite fix",
-    "lint:check": "pnpm run check-style && npx ultracite check",
-    "check-duplicates": "tsx scripts/check-duplicates.ts",
-    "check-imports": "tsx scripts/check-imports.ts",
-    "check-style": "tsx scripts/check-icon-style.ts",
-    "check-style:fix": "tsx scripts/check-icon-style.ts --fix",
-    "sync-registry": "tsx scripts/sync-registry.ts",
+    "lint": "npx ultracite fix",
+    "lint:check": "npx ultracite check",
     "build-registry": "tsx scripts/registry-build.ts",
-    "gen-cli": "pnpm run check-style:fix && pnpm run sync-registry && pnpm run build-registry && pnpm lint"
+    "gen-cli": "pnpm run build-registry && pnpm lint"
   },
   "dependencies": {
     "@base-ui/react": "^1.4.1",

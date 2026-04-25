@@ -1,15 +1,16 @@
-import { getIcons } from "@/actions/get-icons";
 import { LINK, SITE } from "@/constants";
+import { SITE_SECTIONS } from "@/lib/site-nav";
 
 export function GET() {
-  const icons = getIcons();
-  const iconNames = icons.map((icon) => icon.name).join(", ");
+  const componentNames = SITE_SECTIONS.flatMap((section) =>
+    section.children.map((item) => item.label)
+  ).join(", ");
 
   const content = `# ${SITE.NAME}
 
-> Beautifully crafted motion-powered icons and components
+> Motion-powered React components with a source-first registry workflow
 
-${SITE.NAME} is an open-source collection of smooth motion-powered icons and components for React projects.
+${SITE.NAME} is an open-source collection of motion-aware UI components for React projects.
 
 ## Overview
 
@@ -21,36 +22,33 @@ ${SITE.NAME} is an open-source collection of smooth motion-powered icons and com
 
 - React components with TypeScript
 - Animations powered by Motion (${LINK.MOTION})
-- Based on Lucide icons (${LINK.LUCIDE})
+- Registry delivery aligned with shadcn/ui conventions
 
 ## Installation
 
 \`\`\`bash
-npx shadcn@latest add "${SITE.URL}/r/{icon-name}.json"
+npx shadcn@latest add @iconiq/button
 \`\`\`
 
-Replace {icon-name} with the desired icon name (kebab-case).
+You can also install from a direct registry URL:
 
-## Available Icons (${icons.length} total)
+\`\`\`bash
+npx shadcn@latest add ${SITE.URL}/r/button.json
+\`\`\`
 
-${iconNames}
+## Available Components (${SITE_SECTIONS.flatMap((section) => section.children).length} total)
+
+${componentNames}
 
 ## Usage
 
-Each icon is a React component that animates on hover. Example:
-
 \`\`\`tsx
-import { Activity } from '@/components/icons/activity';
+import { Button } from "@/registry/button";
 
-export function MyComponent() {
-  return <Activity className="size-6" />;
+export function Demo() {
+  return <Button>Launch</Button>;
 }
 \`\`\`
-
-## Ports
-
-- Svelte: https://www.movingicons.dev/ by @jis3r
-- Vue: https://imfenghuang.github.io/icons/ by @imfenghuang
 
 ## Open Source
 

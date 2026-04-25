@@ -82,7 +82,7 @@ const baseMetadata: Metadata = {
   publisher: SITE.AUTHOR.NAME,
   twitter: {
     card: "summary_large_image",
-    title: `${SITE.NAME} | Free Motion-Powered Icons and Components`,
+    title: `${SITE.NAME} | Motion-Powered React Components`,
     description: SITE.DESCRIPTION.SHORT,
     creator: SITE.AUTHOR.TWITTER,
     site: SITE.AUTHOR.TWITTER,

@@ -6,15 +6,15 @@ import { useEffect, useState } from "react";
 
 const DEFAULT_LOADING_DELAY = 150;
 
-type IconStatus = "idle" | "loading" | "done" | "error";
+type ActionStatus = "idle" | "loading" | "done" | "error";
 
-type IconStateProps = {
+type ActionStateProps = {
   children: React.ReactNode;
-  status?: IconStatus;
+  status?: ActionStatus;
   loadingDelay?: number;
 };
 
-const IconState = ({ children, status = "idle" }: IconStateProps) => {
+const ActionState = ({ children, status = "idle" }: ActionStateProps) => {
   const [showLoading, setShowLoading] = useState(false);
 
   useEffect(() => {
@@ -73,5 +73,5 @@ const IconState = ({ children, status = "idle" }: IconStateProps) => {
   );
 };
 
-export { IconState };
-export type { IconStatus, IconStateProps };
+export { ActionState };
+export type { ActionStateProps, ActionStatus };

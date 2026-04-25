@@ -5,18 +5,6 @@ import { SITE } from "@/constants";
 
 /** Example app/page.tsx snippets for v0 templates (registry name → content). */
 const COMPONENT_EXAMPLE: Record<string, string> = {
-  "animated-badges":
-    '"use client";\n\n' +
-    `import { StatusBadge } from "@/components/ui/animated-badges"\n\n` +
-    "export default function Page() {\n" +
-    "  return (\n" +
-    '    <div className="flex min-h-svh items-center justify-center gap-3 p-8">\n' +
-    '      <StatusBadge label="Live" variant="live" />\n' +
-    '      <StatusBadge label="Pending" variant="pending" />\n' +
-    '      <StatusBadge label="Critical" variant="critical" />\n' +
-    "    </div>\n" +
-    "  )\n" +
-    "}\n",
   alert:
     '"use client";\n\n' +
     `import Alert from "@/components/ui/alert"\n` +

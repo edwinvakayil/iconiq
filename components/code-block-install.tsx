@@ -4,8 +4,8 @@ import { ScrollArea as BaseScrollArea } from "@base-ui/react/scroll-area";
 import { CopyIcon } from "lucide-react";
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
-import type { IconStatus } from "@/components/ui/icon-state";
-import { IconState } from "@/components/ui/icon-state";
+import type { ActionStatus } from "@/components/ui/action-state";
+import { ActionState } from "@/components/ui/action-state";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PACKAGE_MANAGER } from "@/constants";
 import { getPackageManagerPrefix } from "@/lib/get-package-manager-prefix";
@@ -17,7 +17,7 @@ export function CodeBlockInstall({
 }: {
   componentName?: string;
 }) {
-  const [state, setState] = useState<IconStatus>("idle");
+  const [state, setState] = useState<ActionStatus>("idle");
   const [_, startTransition] = useTransition();
   const { packageName, setPackageName } = usePackageNameContext();
 
@@ -106,9 +106,9 @@ export function CodeBlockInstall({
                 tabIndex={0}
                 type="button"
               >
-                <IconState status={state}>
+                <ActionState status={state}>
                   <CopyIcon aria-hidden="true" className="size-4" />
-                </IconState>
+                </ActionState>
               </button>
             </BaseScrollArea.Root>
           </TabsContent>

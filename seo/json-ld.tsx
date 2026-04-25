@@ -1,5 +1,9 @@
-import { getIcons } from "@/actions/get-icons";
 import { LINK, SITE } from "@/constants";
+import { SITE_SECTIONS } from "@/lib/site-nav";
+
+const componentCount = SITE_SECTIONS.flatMap(
+  (section) => section.children
+).length;
 
 const WebsiteJsonLd = () => {
   const jsonLd = {
@@ -21,7 +25,7 @@ const WebsiteJsonLd = () => {
 
   return (
     <script
-      // biome-ignore lint/security/noDangerouslySetInnerHtml: ignore
+      // biome-ignore lint/security/noDangerouslySetInnerHtml: JSON-LD script payload
       dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       type="application/ld+json"
     />
@@ -29,8 +33,6 @@ const WebsiteJsonLd = () => {
 };
 
 const SoftwareSourceCodeJsonLd = () => {
-  const icons = getIcons();
-
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "SoftwareSourceCode",
@@ -40,7 +42,6 @@ const SoftwareSourceCodeJsonLd = () => {
     codeRepository: LINK.GITHUB,
     programmingLanguage: ["TypeScript", "React", "JavaScript"],
     runtimePlatform: "Node.js",
-    license: LINK.LICENSE,
     author: {
       "@type": "Person",
       name: SITE.AUTHOR.NAME,
@@ -60,12 +61,12 @@ const SoftwareSourceCodeJsonLd = () => {
     },
     isAccessibleForFree: true,
     dateModified: new Date().toISOString().split("T")[0],
-    numberOfItems: icons.length,
+    numberOfItems: componentCount,
   };
 
   return (
     <script
-      // biome-ignore lint/security/noDangerouslySetInnerHtml: ignore
+      // biome-ignore lint/security/noDangerouslySetInnerHtml: JSON-LD script payload
       dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       type="application/ld+json"
     />
@@ -89,7 +90,7 @@ const OrganizationJsonLd = () => {
 
   return (
     <script
-      // biome-ignore lint/security/noDangerouslySetInnerHtml: ignore
+      // biome-ignore lint/security/noDangerouslySetInnerHtml: JSON-LD script payload
       dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       type="application/ld+json"
     />
@@ -114,7 +115,7 @@ const BreadcrumbJsonLd = ({
 
   return (
     <script
-      // biome-ignore lint/security/noDangerouslySetInnerHtml: ignore
+      // biome-ignore lint/security/noDangerouslySetInnerHtml: JSON-LD script payload
       dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       type="application/ld+json"
     />
@@ -124,21 +125,20 @@ const BreadcrumbJsonLd = ({
 const FAQJsonLd = () => {
   const faqs = [
     {
-      question: "What is iconiqs?",
-      answer: `${SITE.NAME} is a free, open-source library of 350+ beautifully crafted motion-powered icons and components. Built with Motion library and based on Lucide icons.`,
+      question: "What is Iconiq?",
+      answer: `${SITE.NAME} is an open-source library of motion-powered React components with a source-first registry workflow.`,
     },
     {
-      question: "How do I install iconiqs icons?",
-      answer: `You can install icons using npx shadcn@latest add "${SITE.URL}/r/{icon-name}.json". Replace {icon-name} with the desired icon name in kebab-case.`,
+      question: "How do I install an Iconiq component?",
+      answer: `Install components with shadcn using commands like npx shadcn@latest add @iconiq/button, or use a direct registry URL from ${SITE.URL}/r/button.json.`,
     },
     {
-      question: "Is iconiqs free to use?",
-      answer: `Yes! ${SITE.NAME} is completely free and open-source under the MIT license. You can use it for personal and commercial projects.`,
+      question: "Is Iconiq free to use?",
+      answer: `Yes. ${SITE.NAME} is open source and free to use for personal and commercial projects.`,
     },
     {
-      question: "What technologies are used in iconiqs?",
-      answer:
-        "iconiqs icons are React components written in TypeScript. Animations are powered by Motion (formerly Framer Motion), and the icons are based on Lucide.",
+      question: "What technologies power Iconiq?",
+      answer: `${SITE.NAME} components are written in TypeScript and React, with motion powered by Motion and registry delivery built around shadcn/ui conventions.`,
     },
   ];
 
@@ -157,7 +157,7 @@ const FAQJsonLd = () => {
 
   return (
     <script
-      // biome-ignore lint/security/noDangerouslySetInnerHtml: ignore
+      // biome-ignore lint/security/noDangerouslySetInnerHtml: JSON-LD script payload
       dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       type="application/ld+json"
     />
@@ -176,10 +176,10 @@ const JsonLdScripts = () => {
 };
 
 export {
-  JsonLdScripts,
-  WebsiteJsonLd,
-  SoftwareSourceCodeJsonLd,
-  OrganizationJsonLd,
   BreadcrumbJsonLd,
   FAQJsonLd,
+  JsonLdScripts,
+  OrganizationJsonLd,
+  SoftwareSourceCodeJsonLd,
+  WebsiteJsonLd,
 };

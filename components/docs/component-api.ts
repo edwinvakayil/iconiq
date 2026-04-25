@@ -1114,62 +1114,8 @@ const tooltipApiDetails: DetailItem[] = [
   registryItem("tooltip.json", ["framer-motion"]),
 ];
 
-const animatedBadgesApiDetails: DetailItem[] = [
-  {
-    id: "status-badge",
-    title: "StatusBadge",
-    summary:
-      "Small status chip with a built-in color system, pulsing dot, shimmer pass, and AnimatePresence-driven visibility.",
-    fields: [
-      field({
-        name: "label",
-        type: "string",
-        defaultValue: "Live",
-        description: "Visible badge text rendered next to the animated dot.",
-      }),
-      field({
-        name: "variant",
-        type: '"live" | "pending" | "critical"',
-        defaultValue: "live",
-        description:
-          "Selects a container, dot, ping, and shimmer palette from the internal variantStyles map.",
-      }),
-      field({
-        name: "className",
-        type: "string",
-        description:
-          "Merged onto the root badge wrapper for placement or typography adjustments.",
-      }),
-      field({
-        name: "visible",
-        type: "boolean",
-        defaultValue: "true",
-        description:
-          "Controls whether the badge is mounted inside AnimatePresence.",
-      }),
-    ],
-    notes: [
-      "The component keeps all color styling local to the file, so it does not depend on additional global CSS setup.",
-      "When visible flips to false, the badge animates out instead of disappearing immediately.",
-    ],
-  },
-  {
-    id: "status-badge-motion",
-    title: "Variant and motion behavior",
-    summary:
-      "Each badge variant reuses the same motion system with a different color treatment.",
-    notes: [
-      "The shimmer sweep moves across the badge every 3 seconds and waits 4 seconds before repeating.",
-      "The ping ring and solid dot each animate on their own 2-second loops to create the live-status effect.",
-      "Hover slightly scales the badge and strengthens the shadow; tap compresses it back down.",
-    ],
-  },
-  registryItem("animated-badges.json", ["framer-motion"]),
-];
-
 export {
   alertApiDetails,
-  animatedBadgesApiDetails,
   avatarApiDetails,
   badgeApiDetails,
   breadcrumbsApiDetails,

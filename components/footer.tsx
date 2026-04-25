@@ -13,7 +13,7 @@ const productLinks = [
   { label: "Introduction", href: "/introduction" },
   { label: "Installation", href: "/installation" },
   { label: "Components", href: "/components/button" },
-  { label: "Icons", href: "/icons" },
+  { label: "Sponsorship", href: "/sponsorship" },
 ] as const;
 
 const resourceLinks: readonly FooterLink[] = [
@@ -34,8 +34,8 @@ const Footer = () => {
               iconSize={18}
             />
             <p className="max-w-md text-[15px] text-secondary leading-6">
-              Motion-powered icons and registry-ready components for teams that
-              want source-first UI instead of locked packages.
+              Motion-powered, registry-ready components for teams that want
+              source-first UI instead of locked packages.
             </p>
             <div className="flex flex-wrap items-center gap-x-4 gap-y-2 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.18em]">
               <span>React</span>

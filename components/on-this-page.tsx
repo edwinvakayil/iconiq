@@ -23,60 +23,17 @@ function getTocForPath(pathname: string): TocEntry[] {
 
   const toc: TocEntry[] = [...base];
 
-  const hasIcons = () => toc.some((e) => isCategory(e) && e.label === "Icons");
-
-  const iconsSection = SITE_SECTIONS.find((s) => s.label === "Icons");
-  if (
-    iconsSection &&
-    (pathname === "/icons" || pathname.startsWith("/icons/"))
-  ) {
-    toc.push({
-      label: iconsSection.label,
-      children: [...iconsSection.children],
-    });
-  }
-
   const componentsSection = SITE_SECTIONS.find((s) => s.label === "Components");
-  if (componentsSection && pathname.startsWith("/components/")) {
+  if (componentsSection?.children.some((child) => child.href === pathname)) {
     toc.push({
       label: componentsSection.label,
       children: [...componentsSection.children],
     });
   }
-
-  if (
-    iconsSection &&
-    pathname.startsWith("/animated-components/") &&
-    !hasIcons()
-  ) {
-    toc.push({
-      label: iconsSection.label,
-      children: [...iconsSection.children],
-    });
-  }
   return toc;
 }
 
-function renderIconsNav(
-  pathname: string,
-  linkClass: (href: string, isAnchor?: boolean) => string
-) {
-  return (
-    <ul className="mt-1 space-y-0.5">
-      {SITE_SECTIONS.find((section) => section.label === "Icons")
-        ?.children.filter((child) => child.href === pathname)
-        .map((child) => (
-          <li key={child.href}>
-            <a className={linkClass(child.href)} href={child.href}>
-              {child.label}
-            </a>
-          </li>
-        ))}
-    </ul>
-  );
-}
-
-function renderAnimatedSectionNav(
+function renderPageSectionNav(
   pathname: string,
   sectionLinkClass: (id: string) => string
 ) {
@@ -254,13 +211,9 @@ export function OnThisPage() {
         <h2 className="mb-3 font-sans font-semibold text-[11px] text-neutral-500 uppercase tracking-wider dark:text-neutral-400">
           On this page
         </h2>
-        {pathname.startsWith("/icons")
-          ? renderIconsNav(pathname, linkClass)
-          : PAGE_SECTIONS[pathname]?.length &&
-              (pathname.startsWith("/animated-components/") ||
-                pathname.startsWith("/components/"))
-            ? renderAnimatedSectionNav(pathname, sectionLinkClass)
-            : renderDefaultNav(toc, pathname, linkClass, sectionLinkClass)}
+        {PAGE_SECTIONS[pathname]?.length && pathname.startsWith("/components/")
+          ? renderPageSectionNav(pathname, sectionLinkClass)
+          : renderDefaultNav(toc, pathname, linkClass, sectionLinkClass)}
       </nav>
     </motion.aside>
   );

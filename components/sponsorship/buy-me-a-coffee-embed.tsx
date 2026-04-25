@@ -13,7 +13,7 @@ export function BuyMeACoffeeEmbed() {
       <Script
         data-description={`Support ${SITE.NAME} — thank you!`}
         data-id={BMC_SLUG}
-        data-message={`Support ${SITE.NAME} and help keep the motion-powered icons and components free and open-source.`}
+        data-message={`Support ${SITE.NAME} and help keep the motion-powered component library free and open-source.`}
         data-name="BMC-Widget"
         src={WIDGET_SCRIPT_URL}
         strategy="afterInteractive"

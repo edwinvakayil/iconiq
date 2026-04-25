@@ -289,7 +289,7 @@ const AmountSelector = ({ amounts }: AmountSelectorProps) => {
                 Donation
               </h3>
               <p className="max-w-[345px] font-mono text-[#404040] text-[14px] dark:text-[#D4D4D4]">
-                The icons will always be free and open-source, regardless of
+                The library will always stay free and open-source, regardless of
                 donations
               </p>
               <a

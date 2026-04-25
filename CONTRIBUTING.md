@@ -1,203 +1,45 @@
 # Contributing
 
-**IMPORTANT:** Iconiq only accepts contributions based on [Lucide icons](https://lucide.dev/). Pull requests containing custom icons or icons from other icon packs will be closed.
+Thanks for contributing to Iconiq.
 
-**Animation quality:** Pull requests with simple path length animations (`strokeDasharray`/`strokeDashoffset` "drawing" effect) will likely be rejected. This type of animation looks generic and doesn't add meaningful interaction. We're looking for creative, purposeful animations that enhance the icon's meaning.
+## Focus
 
-We welcome contributions to Iconiq! Please follow these steps to contribute:
+This codebase now centers on motion-powered React components and the docs that support them. Good contributions include:
 
-1. Fork the repository on GitHub.
+- New registry-ready components
+- Improvements to existing component APIs
+- Docs fixes, API corrections, and live preview improvements
+- Registry/build tooling updates
 
-2. Clone your forked repository to your local machine:
+## Local workflow
 
-   ```bash
-   git clone https://github.com/edwinvakayil/iconiq.git
-   ```
-
-3. Navigate to the project directory:
-
-   ```bash
-   cd iconiq
-   ```
-
-4. Create a new branch for your feature or bug fix:
-
-   ```
-   git checkout -b your-branch-name
-   ```
-
-5. Install the project dependencies (Iconiq uses `pnpm`):
-
-   ```bash
-   pnpm install
-   ```
-
-6. **Create your animated icon:**
-
-   a. Navigate to the `/icons/` directory and create a new file with the icon name in lowercase, using hyphens for spaces (following Lucide naming convention):
-
-   ```
-   /icons/[icon-name].tsx
-   ```
-
-   For example: `heart-icon.tsx`, `arrow-up.tsx`, `user-profile.tsx`
-
-   b. Copy and paste the following template code into your new file:
-
-   ```tsx
-   'use client';
-
-   import { useAnimation } from 'motion/react';
-   import type { HTMLAttributes } from 'react';
-   import { forwardRef, useCallback, useImperativeHandle, useRef } from 'react';
-   import { cn } from '@/lib/utils';
-
-   export interface [YourIconName]IconHandle {
-     startAnimation: () => void;
-     stopAnimation: () => void;
-   }
-
-   interface [YourIconName]IconProps extends HTMLAttributes<HTMLDivElement> {
-     size?: number;
-   }
-
-   const [YourIconName]Icon = forwardRef<[YourIconName]IconHandle, [YourIconName]IconProps>(
-     ({ onMouseEnter, onMouseLeave, className, size = 28, ...props }, ref) => {
-       const controls = useAnimation();
-       const isControlledRef = useRef(false);
-
-       useImperativeHandle(ref, () => {
-         isControlledRef.current = true;
-         return {
-           startAnimation: () => controls.start('animate'),
-           stopAnimation: () => controls.start('normal'),
-         };
-       });
-
-       const handleMouseEnter = useCallback(
-         (e: React.MouseEvent<HTMLDivElement>) => {
-           if (!isControlledRef.current) {
-             controls.start('animate');
-           } else {
-             onMouseEnter?.(e);
-           }
-         },
-         [controls, onMouseEnter]
-       );
-
-       const handleMouseLeave = useCallback(
-         (e: React.MouseEvent<HTMLDivElement>) => {
-           if (!isControlledRef.current) {
-             controls.start('normal');
-           } else {
-             onMouseLeave?.(e);
-           }
-         },
-         [controls, onMouseLeave]
-       );
-
-       return (
-         <div
-           className={cn(className)}
-           onMouseEnter={handleMouseEnter}
-           onMouseLeave={handleMouseLeave}
-           {...props}
-         >
-           <svg
-             xmlns="http://www.w3.org/2000/svg"
-             width={size}
-             height={size}
-             viewBox="0 0 24 24"
-             fill="none"
-             stroke="currentColor"
-             strokeWidth="2"
-             strokeLinecap="round"
-             strokeLinejoin="round"
-           >
-             {/* your svg code here */}
-           </svg>
-         </div>
-       );
-     }
-   );
-
-   [YourIconName]Icon.displayName = '[YourIconName]Icon';
-
-   export { [YourIconName]Icon };
-   ```
-
-   c. Replace `[YourIconName]` with your icon name in **PascalCase** (e.g., `HeartIcon`, `ArrowUp`, `UserProfile`).
-
-   d. Find your icon on [lucide.dev](https://lucide.dev/), copy the SVG path elements, and replace the `{/* your svg code here */}` comment with the actual SVG content.
-
-   e. Add your animation logic using Framer Motion's `motion` components and the `controls` object to create engaging hover animations.
-
-7. **Add your icon to the icon list:**
-
-   a. Open the `icons/index.ts` file.
-
-   b. Import your new icon component at the top of the file:
-
-   ```tsx
-   import { [YourIconName]Icon } from './[icon-name]';
-   ```
-
-   c. Add your icon to the `ICON_LIST` array at the very beginning (top) of the list in this format:
-
-   ```tsx
-   {
-     name: '[icon-name]',
-     icon: [YourIconName]Icon,
-     keywords: ['keyword1', 'keyword2', 'keyword3'],
-   },
-   ```
-
-   For example:
-
-   ```tsx
-   {
-     name: 'smile-plus',
-     icon: SmilePlusIcon,
-     keywords: ['smile', 'plus', 'emotion', 'face'],
-   },
-   ```
-
-   Note: Use the exact icon name, keywords, and other data from the [lucide.dev](https://lucide.dev/) website for your specific icon.
-
-8. **Update the registry (for new icons):**
-
-   After creating a new icon, you need to update the registry so it can be used with the shadcn CLI:
-
-   ```
-   pnpm run gen-cli
-   ```
-
-   This command will automatically sync your new icon to the registry and build the necessary JSON files.
-
-9. Build the project to check for errors:
-
+```bash
+pnpm install
+pnpm dev
 ```
+
+Run checks before opening a PR:
+
+```bash
+pnpm lint:check
 pnpm build
 ```
 
-10. Test the application to ensure your changes work as expected:
+If you change registry component source files under [`registry`](/Users/edwinvs/Desktop/icons/registry), rebuild the registry payloads:
 
-    ```
-    pnpm lint
-    ```
+```bash
+pnpm build-registry
+```
 
-11. Commit your changes:
+## Component contributions
 
-    ```
-    git commit -m "Add [icon-name] animated icon"
-    ```
+- Add or update the source file in [`registry`](/Users/edwinvs/Desktop/icons/registry)
+- Add or update the matching docs page under [`app/components`](/Users/edwinvs/Desktop/icons/app/components)
+- Document real props and behavior in the docs page
+- Keep styles aligned with the existing white-first, minimal docs UI
 
-12. Push your changes to your fork:
+## Pull requests
 
-    ```
-    git push origin your-branch-name
-    ```
-
-13. Open a pull request on the original repository with a clear description of the icon you've added and the animation you've implemented.
-
-Thank you for contributing to our project!
+- Keep changes scoped
+- Include screenshots or a short walkthrough for UI changes when helpful
+- Avoid unrelated refactors unless they directly support the feature or fix

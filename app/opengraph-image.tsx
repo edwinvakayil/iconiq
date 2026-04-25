@@ -3,7 +3,7 @@ import { ImageResponse } from "next/og";
 import { SITE } from "@/constants";
 
 export const runtime = "edge";
-export const alt = `${SITE.NAME} — Motion-Powered Icons and Components`;
+export const alt = `${SITE.NAME} — Motion-Powered React Components`;
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -169,7 +169,7 @@ export default function OgImage() {
                   textTransform: "uppercase",
                 }}
               >
-                Free &amp; Open-Source Icon Library
+                Free &amp; Open-Source Component Library
               </span>
             </div>
 
@@ -193,7 +193,7 @@ export default function OgImage() {
                 letterSpacing: "-2.5px",
               }}
             >
-              Icons &amp; Components
+              React Components
             </span>
             <span
               style={{
@@ -204,8 +204,9 @@ export default function OgImage() {
                 maxWidth: "540px",
               }}
             >
-              350+ animated icons and components. Built with Motion, based on
-              Lucide. Open-source and copy-paste ready.
+              Motion-powered UI components with source-first installation.
+              Open-source, editable, and ready to land directly in your
+              codebase.
             </span>
           </div>
 
@@ -217,7 +218,7 @@ export default function OgImage() {
               {[
                 "Open Source",
                 "Source First",
-                "350+ Icons",
+                "React Components",
                 "Copy-Paste Ready",
               ].map((b) => (
                 <div

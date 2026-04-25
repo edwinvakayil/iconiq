@@ -7,7 +7,6 @@ import {
   Github,
   LayoutGrid,
   Menu,
-  Package,
   Search,
   X,
 } from "lucide-react";
@@ -19,7 +18,6 @@ import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { LINK } from "@/constants";
 import { BASE_LINKS, SITE_SECTIONS } from "@/lib/site-nav";
 
-const iconsSection = SITE_SECTIONS.find((s) => s.label === "Icons");
 const componentsSection = SITE_SECTIONS.find((s) => s.label === "Components");
 
 const mobileNavSections = [
@@ -34,18 +32,6 @@ const mobileNavSections = [
           title: componentsSection.label,
           icon: LayoutGrid,
           items: componentsSection.children.map((item) => ({
-            label: item.label,
-            href: item.href,
-          })),
-        },
-      ]
-    : []),
-  ...(iconsSection
-    ? [
-        {
-          title: iconsSection.label,
-          icon: Package,
-          items: iconsSection.children.map((item) => ({
             label: item.label,
             href: item.href,
           })),
@@ -172,7 +158,6 @@ export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [expandedMobile, setExpandedMobile] = useState<string[]>([
     "Getting Started",
-    ...(iconsSection ? [iconsSection.label] : []),
     ...(componentsSection ? [componentsSection.label] : []),
   ]);
   const [starCount, setStarCount] = useState<number | null>(null);
