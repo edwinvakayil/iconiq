@@ -422,6 +422,115 @@ const checkboxGroupApiDetails: DetailItem[] = [
   registryItem("checkbox-group.json", ["framer-motion", "lucide-react"]),
 ];
 
+const comboboxApiDetails: DetailItem[] = [
+  {
+    id: "combobox-option",
+    title: "ComboboxOption",
+    summary:
+      "Each selectable row is described by a plain object and can optionally include a secondary description line.",
+    fields: [
+      field({
+        name: "value",
+        type: "string",
+        required: true,
+        description:
+          "Stable identifier used for the selected state and returned through onChange.",
+      }),
+      field({
+        name: "label",
+        type: "string",
+        required: true,
+        description:
+          "Primary text shown in the closed field and inside the dropdown row.",
+      }),
+      field({
+        name: "description",
+        type: "string",
+        description:
+          "Optional helper copy rendered under the label inside the dropdown list.",
+      }),
+    ],
+  },
+  {
+    id: "combobox",
+    title: "combobox",
+    summary:
+      'The registry exports a lowercase function named "combobox". It owns open state, search query, and active row internally, while the selected value stays parent-driven.',
+    fields: [
+      field({
+        name: "options",
+        type: "ComboboxOption[]",
+        required: true,
+        description:
+          "Available rows rendered in display order and used as the filtering source.",
+      }),
+      field({
+        name: "value",
+        type: "string",
+        description:
+          "Currently selected option value. The component derives the visible label entirely from this prop when the field is closed.",
+      }),
+      field({
+        name: "onChange",
+        type: "(value: string) => void",
+        description:
+          "Called when a row is selected and also when the clear action resets the field to an empty string.",
+      }),
+      field({
+        name: "placeholder",
+        type: "string",
+        defaultValue: '"Select an option..."',
+        description:
+          "Shown when no value is selected, and again while the field is open with an empty query.",
+      }),
+      field({
+        name: "emptyMessage",
+        type: "string",
+        defaultValue: '"No results found."',
+        description:
+          "Fallback copy rendered when filtering produces no matching options.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description:
+          "Merged onto the outer relative wrapper so width or placement can be adjusted externally.",
+      }),
+      field({
+        name: "disabled",
+        type: "boolean",
+        defaultValue: "false",
+        description:
+          "Disables the input, blocks opening, and applies a reduced-opacity presentation.",
+      }),
+      field({
+        name: "clearable",
+        type: "boolean",
+        defaultValue: "true",
+        description:
+          "Controls whether the clear button appears once a value has been selected.",
+      }),
+    ],
+    notes: [
+      "This is effectively controlled for selection. If the parent does not feed the next onChange result back into value, the checkmark and closed-field label do not update.",
+      "Closing the popover resets the live query string, so reopening the field starts from the full option list again.",
+    ],
+  },
+  {
+    id: "combobox-filtering",
+    title: "Filtering, keyboard, and layout behavior",
+    summary:
+      "The dropdown stays attached to the field instead of portaling out, and it supports a stronger keyboard model than the simpler select component.",
+    notes: [
+      "Filtering is a case-insensitive substring match across label, value, and description.",
+      "ArrowUp, ArrowDown, Home, End, Enter, Escape, and Tab are all handled directly on the input to drive the internal activeIndex and open state.",
+      "The clear button uses tabIndex={-1}, so it is pointer-accessible but not keyboard reachable in this version.",
+      "Because the list is absolutely positioned under the root instead of portaled to document.body, overflow-hidden ancestors can clip it.",
+    ],
+  },
+  registryItem("combobox.json", ["framer-motion", "lucide-react"]),
+];
+
 const collapsibleApiDetails: DetailItem[] = [
   {
     id: "collapsible-root",
@@ -1121,6 +1230,7 @@ export {
   breadcrumbsApiDetails,
   buttonApiDetails,
   checkboxGroupApiDetails,
+  comboboxApiDetails,
   collapsibleApiDetails,
   dialogApiDetails,
   inputApiDetails,

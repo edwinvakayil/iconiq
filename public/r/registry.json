@@ -113,6 +113,21 @@
       ]
     },
     {
+      "name": "combobox",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": ["framer-motion", "lucide-react"],
+      "devDependencies": [],
+      "title": "Combobox",
+      "description": "Searchable single-select input with inline filtering, arrow-key navigation, animated dropdown motion, and an optional clear action.",
+      "files": [
+        {
+          "path": "combobox.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "dialog",
       "type": "registry:ui",
       "registryDependencies": [],

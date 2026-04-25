@@ -19,6 +19,7 @@ export const SITE_SECTIONS = [
       { label: "Breadcrumbs", href: "/components/breadcrumbs" },
       { label: "Button", href: "/components/button" },
       { label: "Collapsible", href: "/components/collapsible" },
+      { label: "Combobox", href: "/components/combobox" },
       { label: "Dialog", href: "/components/dialog" },
       { label: "Input", href: "/components/input" },
       { label: "Checkbox group", href: "/components/checkbox-group" },

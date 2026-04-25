@@ -97,6 +97,30 @@ const COMPONENT_EXAMPLE: Record<string, string> = {
     "    </div>\n" +
     "  )\n" +
     "}\n",
+  combobox:
+    '"use client";\n\n' +
+    `import { combobox as Combobox, type ComboboxOption } from "@/components/ui/combobox"\n` +
+    `import { useState } from "react"\n\n` +
+    "const options: ComboboxOption[] = [\n" +
+    '  { value: "scout", label: "Scout pass", description: "First scan before the sprint" },\n' +
+    '  { value: "transit", label: "Transit window", description: "Tighter route through midfield" },\n' +
+    '  { value: "deep", label: "Deep field", description: "Longer view with less traffic" },\n' +
+    "]\n\n" +
+    "export default function Page() {\n" +
+    '  const [value, setValue] = useState("transit")\n' +
+    "  return (\n" +
+    '    <div className="mx-auto flex min-h-svh w-full max-w-md items-center justify-center p-8">\n' +
+    "      <Combobox\n" +
+    '        className="w-full"\n' +
+    '        emptyMessage="No route matches that query."\n' +
+    "        onChange={setValue}\n" +
+    "        options={options}\n" +
+    '        placeholder="Pick a route..."\n' +
+    "        value={value}\n" +
+    "      />\n" +
+    "    </div>\n" +
+    "  )\n" +
+    "}\n",
   radiogroup:
     '"use client";\n\n' +
     `import RadioGroup from "@/components/ui/radiogroup"\n` +

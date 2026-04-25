@@ -22,6 +22,12 @@ const REGISTRY_UI_META: Record<
       "Animated badge with a looping shimmer wave. Spring entrance, optional bg/text/wave color overrides. Framer Motion.",
     dependencies: ["framer-motion"],
   },
+  combobox: {
+    title: "Combobox",
+    description:
+      "Searchable single-select input with inline filtering, arrow-key navigation, animated dropdown motion, and an optional clear action.",
+    dependencies: ["framer-motion", "lucide-react"],
+  },
   "motion-accordion": {
     title: "Accordion",
     description:
