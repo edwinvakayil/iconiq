@@ -52,6 +52,12 @@ const REGISTRY_UI_META: Record<
       'Primary action control with CVA variants, pointer ripples via Framer Motion, and default type="button". Forwards ref and native button props.',
     dependencies: ["framer-motion", "class-variance-authority"],
   },
+  calendar: {
+    title: "Calendar",
+    description:
+      "Compact monthly calendar with animated month transitions, selectable days, and date-fns-powered grid generation.",
+    dependencies: ["framer-motion", "lucide-react", "date-fns"],
+  },
   "checkbox-group": {
     title: "Checkbox group",
     description:

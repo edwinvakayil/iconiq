@@ -81,6 +81,16 @@ const COMPONENT_EXAMPLE: Record<string, string> = {
     "    </div>\n" +
     "  )\n" +
     "}\n",
+  calendar:
+    '"use client";\n\n' +
+    `import { Calendar } from "@/components/ui/calendar"\n\n` +
+    "export default function Page() {\n" +
+    "  return (\n" +
+    '    <div className="flex min-h-svh items-center justify-center p-8">\n' +
+    "      <Calendar />\n" +
+    "    </div>\n" +
+    "  )\n" +
+    "}\n",
   "checkbox-group":
     '"use client";\n\n' +
     `import { CheckboxGroup } from "@/components/ui/checkbox-group"\n` +

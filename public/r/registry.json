@@ -79,6 +79,21 @@
       ]
     },
     {
+      "name": "calendar",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": ["framer-motion", "lucide-react", "date-fns"],
+      "devDependencies": [],
+      "title": "Calendar",
+      "description": "Compact monthly calendar with animated month transitions, selectable days, and date-fns-powered grid generation.",
+      "files": [
+        {
+          "path": "calendar.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "checkbox-group",
       "type": "registry:ui",
       "registryDependencies": [],

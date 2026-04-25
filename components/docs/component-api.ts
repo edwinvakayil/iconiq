@@ -202,6 +202,87 @@ const badgeApiDetails: DetailItem[] = [
   registryItem("badge.json", ["framer-motion"]),
 ];
 
+const calendarApiDetails: DetailItem[] = [
+  {
+    id: "calendar",
+    title: "Calendar",
+    summary:
+      "Animated monthly calendar card that now supports both controlled and uncontrolled month and selection state.",
+    fields: [
+      field({
+        name: "selected",
+        type: "Date",
+        description:
+          "Controlled selected day. When provided, the highlighted day is always derived from this prop.",
+      }),
+      field({
+        name: "defaultSelected",
+        type: "Date",
+        description:
+          "Initial selected day for uncontrolled usage when selected is not provided.",
+      }),
+      field({
+        name: "onSelect",
+        type: "(date: Date) => void",
+        description:
+          "Called when the user picks an interactive day in the current month.",
+      }),
+      field({
+        name: "month",
+        type: "Date",
+        description:
+          "Controlled visible month. Prev/next navigation requests flow through onMonthChange.",
+      }),
+      field({
+        name: "defaultMonth",
+        type: "Date",
+        description:
+          "Initial visible month for uncontrolled usage when month is not provided.",
+      }),
+      field({
+        name: "onMonthChange",
+        type: "(month: Date) => void",
+        description:
+          "Called whenever the user navigates to a previous or next month.",
+      }),
+      field({
+        name: "disabled",
+        type: "(date: Date) => boolean",
+        description:
+          "Marks dates as non-interactive. Disabled days keep the same visuals but cannot be selected.",
+      }),
+    ],
+    notes: [
+      "Controlled mode: pass selected/month and respond to onSelect/onMonthChange.",
+      "Uncontrolled mode: omit selected/month and optionally seed with defaultSelected/defaultMonth.",
+      "When no defaults are provided, selected date and visible month both start from new Date().",
+    ],
+  },
+  {
+    id: "calendar-grid",
+    title: "Date math and layout behavior",
+    summary:
+      "The grid is rebuilt with date-fns whenever the visible month changes.",
+    notes: [
+      "The rendered range runs from startOfWeek(startOfMonth(currentMonth)) through endOfWeek(endOfMonth(currentMonth)), so leading and trailing days from adjacent months are always visible.",
+      "Days outside the active month are dimmed and made non-interactive with pointer-events-none, which keeps context without allowing cross-month selection from the overflow cells.",
+      "Weekday labels are hardcoded as Sun through Sat and displayed as single-letter headers, so localization or alternate week starts require editing the component source.",
+    ],
+  },
+  {
+    id: "calendar-motion-a11y",
+    title: "Motion and interaction model",
+    summary:
+      "Month transitions, selected-day changes, and the footer summary each animate independently.",
+    notes: [
+      "Prev and next controls are real buttons with aria-label values, and each in-month day is rendered as a button with hover and tap motion.",
+      "The selected day highlight uses a shared layoutId of selected-day so the active surface glides between dates instead of remounting abruptly.",
+      "This is still not a full calendar input primitive: there is no keyboard date navigation, no ARIA grid semantics, and no range or multi-select mode.",
+    ],
+  },
+  registryItem("calendar.json", ["framer-motion", "lucide-react", "date-fns"]),
+];
+
 const breadcrumbsApiDetails: DetailItem[] = [
   {
     id: "breadcrumb-item",
@@ -1227,6 +1308,7 @@ export {
   alertApiDetails,
   avatarApiDetails,
   badgeApiDetails,
+  calendarApiDetails,
   breadcrumbsApiDetails,
   buttonApiDetails,
   checkboxGroupApiDetails,
