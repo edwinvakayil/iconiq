@@ -106,7 +106,7 @@ export function SidebarNav() {
           : { type: "spring", stiffness: 300, damping: 32, delay: 0.04 }
       }
     >
-      <nav className="sticky top-14 h-[calc(100vh-3.5rem)] overflow-y-auto py-5 pr-4 pl-3">
+      <nav className="sticky top-14 h-[calc(100vh-3.5rem)] overflow-y-auto py-5 pr-4 pl-3 lg:top-[var(--header-height-desktop)] lg:h-[calc(100vh-var(--header-height-desktop))]">
         {sections.map((section) => {
           const isExpanded = expanded.includes(section.title);
           const Icon = section.icon;

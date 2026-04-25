@@ -205,7 +205,7 @@ export default function OgImage() {
               }}
             >
               350+ animated icons and components. Built with Motion, based on
-              Lucide. MIT licensed and copy-paste ready.
+              Lucide. Open-source and copy-paste ready.
             </span>
           </div>
 
@@ -216,7 +216,7 @@ export default function OgImage() {
             <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
               {[
                 "Open Source",
-                "MIT Licensed",
+                "Source First",
                 "350+ Icons",
                 "Copy-Paste Ready",
               ].map((b) => (

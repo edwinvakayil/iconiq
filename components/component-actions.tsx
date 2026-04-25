@@ -21,7 +21,7 @@ const V0Icon = ({ className }: { className?: string }) => (
 type ActionState = "idle" | "loading" | "done" | "error";
 
 const btnBase =
-  "inline-flex cursor-pointer items-center gap-1.5 rounded-sm border px-3.5 py-1.5 font-sans text-xs font-medium transition-colors duration-150 focus-visible:outline-1 focus-visible:outline-primary disabled:pointer-events-none disabled:opacity-60";
+  "inline-flex cursor-pointer items-center gap-1.5 border px-3.5 py-2 font-mono text-[10px] uppercase tracking-[0.18em] transition-colors duration-150 focus-visible:outline-1 focus-visible:outline-primary disabled:pointer-events-none disabled:opacity-60";
 
 const OpenInV0Button = ({ name }: { name: string }) => {
   const [state, setState] = useState<ActionState>("idle");
@@ -71,8 +71,8 @@ const OpenInV0Button = ({ name }: { name: string }) => {
       aria-label="Open in v0"
       className={cn(
         btnBase,
-        "border-neutral-900 bg-neutral-900 text-white hover:bg-neutral-800",
-        "dark:border-neutral-100 dark:bg-white dark:text-neutral-900 dark:hover:bg-neutral-100"
+        "border-border bg-foreground text-background shadow-[0_1px_0_rgba(17,17,17,0.05)] hover:bg-foreground/92",
+        "dark:border-border dark:bg-foreground dark:text-background dark:shadow-none dark:hover:bg-foreground/92"
       )}
       disabled={state !== "idle"}
       onClick={handleOpenInV0}
@@ -85,7 +85,7 @@ const OpenInV0Button = ({ name }: { name: string }) => {
 
 export function ComponentActions({ name }: { name: string }) {
   return (
-    <div className="mt-6 flex flex-wrap items-center gap-2">
+    <div className="mt-4 flex flex-wrap items-center gap-2">
       <OpenInV0Button name={name} />
     </div>
   );

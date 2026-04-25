@@ -33,7 +33,7 @@ const SearchInput = ({ searchValue, setSearchValue }: SearchInputProps) => {
   };
 
   return (
-    <div className="relative w-full max-w-[260px]">
+    <div className="relative w-full max-w-[280px]">
       <Input
         aria-label="Search icons"
         autoCapitalize="off"
@@ -43,7 +43,7 @@ const SearchInput = ({ searchValue, setSearchValue }: SearchInputProps) => {
         inputMode="search"
         leadingIcon={
           <SearchIcon
-            className="size-4 text-neutral-400 dark:text-neutral-500"
+            className="size-4 text-muted-foreground"
             strokeWidth={2.5}
           />
         }
@@ -55,11 +55,11 @@ const SearchInput = ({ searchValue, setSearchValue }: SearchInputProps) => {
         spellCheck="false"
         value={searchValue}
       />
-      <div className="pointer-events-none absolute top-1/2 right-2.5 hidden -translate-y-1/2 items-center gap-1 font-mono text-[10px] text-neutral-500 md:flex dark:text-neutral-400">
-        <kbd className="flex h-4 min-w-4 items-center justify-center rounded-[3px] bg-neutral-200 px-1 text-[10px] leading-4 dark:bg-neutral-700 dark:text-neutral-200">
+      <div className="pointer-events-none absolute top-1/2 right-2.5 hidden -translate-y-1/2 items-center gap-1 font-mono text-[10px] text-muted-foreground md:flex">
+        <kbd className="flex h-4 min-w-4 items-center justify-center px-1 text-[10px] leading-4">
           ⌘
         </kbd>
-        <kbd className="flex h-4 min-w-4 items-center justify-center rounded-[3px] bg-neutral-200 px-1 text-[10px] leading-4 dark:bg-neutral-700 dark:text-neutral-200">
+        <kbd className="flex h-4 min-w-4 items-center justify-center px-1 text-[10px] leading-4">
           F
         </kbd>
       </div>

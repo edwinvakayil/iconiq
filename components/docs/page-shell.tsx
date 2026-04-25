@@ -1,0 +1,531 @@
+import { ChevronRight } from "lucide-react";
+import Link from "next/link";
+import type { ReactNode } from "react";
+
+import { CodeBlock } from "@/components/code-block";
+import { CodeBlockInstall } from "@/components/code-block-install";
+import { ComponentActions } from "@/components/component-actions";
+import { RegistryInstallBlock } from "@/components/registry-install-block";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { Separator } from "@/components/ui/separator";
+import { cn } from "@/lib/utils";
+
+type BreadcrumbItem = {
+  label: string;
+  href?: string;
+};
+
+type HeroMetaItem = {
+  label: string;
+  value: ReactNode;
+};
+
+type DetailField = {
+  name: ReactNode;
+  type?: ReactNode;
+  defaultValue?: ReactNode;
+  required?: boolean;
+  description: ReactNode;
+};
+
+type DetailItem = {
+  id: string;
+  title: string;
+  content?: ReactNode;
+  summary?: ReactNode;
+  fields?: DetailField[];
+  notes?: ReactNode[];
+  registryPath?: string;
+};
+
+function DocsBreadcrumbs({
+  items,
+  className,
+}: {
+  items: BreadcrumbItem[];
+  className?: string;
+}) {
+  const visibleItems = items.filter(
+    (item) => item.label.toLowerCase() !== "docs"
+  );
+
+  return (
+    <nav aria-label="Breadcrumb" className={cn("mb-8", className)}>
+      <ol className="flex flex-wrap items-center gap-2 font-mono text-[11px] text-muted-foreground tracking-[0.16em]">
+        {visibleItems.map((item, index) => {
+          const isLast = index === visibleItems.length - 1;
+          return (
+            <li
+              className="inline-flex items-center gap-2"
+              key={`${item.label}-${index}`}
+            >
+              {item.href && !isLast ? (
+                <Link
+                  className="transition-colors hover:text-foreground"
+                  href={item.href}
+                >
+                  {item.label}
+                </Link>
+              ) : (
+                <span className={isLast ? "text-foreground" : undefined}>
+                  {item.label}
+                </span>
+              )}
+              {isLast ? null : (
+                <span aria-hidden="true" className="inline-flex">
+                  <ChevronRight className="size-3.5 text-muted-foreground/70" />
+                </span>
+              )}
+            </li>
+          );
+        })}
+      </ol>
+    </nav>
+  );
+}
+
+function DocsHero({
+  eyebrow,
+  title,
+  description,
+}: {
+  eyebrow: string;
+  title: string;
+  description: ReactNode;
+  meta?: HeroMetaItem[];
+}) {
+  return (
+    <section className="space-y-8 pt-8">
+      <Separator />
+      <div className="max-w-4xl space-y-4">
+        <p className="font-mono text-[11px] text-muted-foreground uppercase tracking-[0.32em]">
+          {eyebrow}
+        </p>
+        <h1 className="text-4xl text-foreground tracking-[-0.08em] sm:text-5xl lg:text-[3.6rem]">
+          {title}
+        </h1>
+        <p className="max-w-3xl text-[15px] text-secondary leading-7 sm:text-[17px] sm:leading-8">
+          {description}
+        </p>
+      </div>
+    </section>
+  );
+}
+
+function DocsSection({
+  title,
+  description,
+  className,
+  children,
+}: {
+  index?: string;
+  title: string;
+  description?: ReactNode;
+  className?: string;
+  children: ReactNode;
+}) {
+  return (
+    <section
+      className={cn(
+        "relative overflow-hidden border border-border/80 bg-background px-5 py-5 shadow-[0_1px_0_rgba(17,17,17,0.03)] sm:px-7 sm:py-6 dark:shadow-none",
+        className
+      )}
+    >
+      <div className="space-y-5">
+        <div className="space-y-2">
+          <h2 className="text-foreground text-xl tracking-[-0.04em] sm:text-2xl">
+            {title}
+          </h2>
+          {description ? (
+            <p className="max-w-3xl text-[14px] text-secondary leading-6">
+              {description}
+            </p>
+          ) : null}
+        </div>
+        <Separator />
+        <div>{children}</div>
+      </div>
+    </section>
+  );
+}
+
+function DocsPageShell({
+  breadcrumbs,
+  eyebrow,
+  title,
+  description,
+  meta,
+  children,
+  className,
+}: {
+  breadcrumbs: BreadcrumbItem[];
+  eyebrow: string;
+  title: string;
+  description: ReactNode;
+  meta?: HeroMetaItem[];
+  children: ReactNode;
+  className?: string;
+}) {
+  return (
+    <main className="min-w-0 flex-1">
+      <div
+        className={cn(
+          "mx-auto w-full max-w-[1480px] px-4 py-10 sm:px-6 sm:py-12 lg:px-10",
+          className
+        )}
+      >
+        <DocsBreadcrumbs items={breadcrumbs} />
+        <DocsHero
+          description={description}
+          eyebrow={eyebrow}
+          meta={meta}
+          title={title}
+        />
+        <div className="mt-10 grid gap-5 lg:grid-cols-12">{children}</div>
+      </div>
+    </main>
+  );
+}
+
+function DetailMetaValue({ value }: { value: ReactNode }) {
+  if (
+    typeof value === "string" ||
+    typeof value === "number" ||
+    typeof value === "boolean"
+  ) {
+    return (
+      <code className="font-mono text-[11px] text-foreground leading-5">
+        {String(value)}
+      </code>
+    );
+  }
+
+  return <div className="text-[11px] text-foreground leading-5">{value}</div>;
+}
+
+function DetailFields({ fields }: { fields: DetailField[] }) {
+  return (
+    <div className="space-y-3">
+      <p className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">
+        Documented Props
+      </p>
+      <div className="space-y-3">
+        {fields.map((field) => (
+          <div
+            className="grid gap-4 border border-border/70 bg-muted/[0.22] px-4 py-4 lg:grid-cols-[220px_minmax(0,1fr)] dark:bg-muted/[0.3]"
+            key={String(field.name)}
+          >
+            <div className="space-y-3">
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="font-medium text-[15px] text-foreground tracking-[-0.02em]">
+                  {field.name}
+                </span>
+                <span className="rounded-full border border-border/80 border-dashed bg-background px-2 py-0.5 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.14em] dark:bg-background/70">
+                  {field.required ? "Required" : "Optional"}
+                </span>
+              </div>
+              <dl className="space-y-2">
+                {field.type ? (
+                  <div className="space-y-1">
+                    <dt className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.16em]">
+                      Type
+                    </dt>
+                    <dd>
+                      <DetailMetaValue value={field.type} />
+                    </dd>
+                  </div>
+                ) : null}
+                {field.defaultValue !== undefined ? (
+                  <div className="space-y-1">
+                    <dt className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.16em]">
+                      Default
+                    </dt>
+                    <dd>
+                      <DetailMetaValue value={field.defaultValue} />
+                    </dd>
+                  </div>
+                ) : null}
+              </dl>
+            </div>
+            <div className="text-[14px] text-secondary leading-6">
+              {field.description}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function getDetailDescriptor(item: DetailItem) {
+  if (item.fields?.length) {
+    return `${item.fields.length} documented ${item.fields.length === 1 ? "prop" : "props"}`;
+  }
+
+  if (item.notes?.length) {
+    return `${item.notes.length} implementation ${item.notes.length === 1 ? "note" : "notes"}`;
+  }
+
+  if (item.registryPath) {
+    return "Registry bundle";
+  }
+
+  return "Expand detail";
+}
+
+function DetailNotes({
+  itemId,
+  notes,
+}: {
+  itemId: string;
+  notes: ReactNode[];
+}) {
+  return (
+    <div className="space-y-3">
+      <p className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">
+        Notes
+      </p>
+      <div className="space-y-3">
+        {notes.map((note, index) => (
+          <div
+            className="border-border/80 border-l bg-muted/[0.14] px-4 py-3 text-[14px] text-secondary leading-6 dark:bg-muted/[0.22]"
+            key={`${itemId}-note-${index}`}
+          >
+            {note}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function DetailBody({ item }: { item: DetailItem }) {
+  const detailLead = item.summary ?? item.content;
+
+  return (
+    <div className="space-y-5">
+      {detailLead ? (
+        <div className="text-[14px] text-secondary leading-6">{detailLead}</div>
+      ) : null}
+
+      {item.fields?.length ? (
+        <>
+          {detailLead ? <Separator /> : null}
+          <DetailFields fields={item.fields} />
+        </>
+      ) : null}
+
+      {item.notes?.length ? (
+        <>
+          {detailLead || item.fields?.length ? <Separator /> : null}
+          <DetailNotes itemId={item.id} notes={item.notes} />
+        </>
+      ) : null}
+    </div>
+  );
+}
+
+function DetailRegistryRail({ registryPath }: { registryPath?: string }) {
+  if (!registryPath) {
+    return null;
+  }
+
+  return (
+    <div className="space-y-3">
+      <p className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">
+        Registry URL
+      </p>
+      <RegistryInstallBlock registryPath={registryPath} />
+    </div>
+  );
+}
+
+function DetailAccordionItemRow({ item }: { item: DetailItem }) {
+  const descriptor = getDetailDescriptor(item);
+
+  return (
+    <AccordionItem className="border-border/85" key={item.id} value={item.id}>
+      <AccordionTrigger className="py-5 text-base text-foreground hover:no-underline">
+        <div className="grid w-full gap-2 text-left lg:grid-cols-[220px_minmax(0,1fr)] lg:items-start lg:gap-6">
+          <span className="font-medium tracking-[-0.03em]">{item.title}</span>
+          <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">
+            {descriptor}
+          </span>
+        </div>
+      </AccordionTrigger>
+      <AccordionContent className="pb-5">
+        <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_320px] lg:gap-8">
+          <DetailBody item={item} />
+          <DetailRegistryRail registryPath={item.registryPath} />
+        </div>
+      </AccordionContent>
+    </AccordionItem>
+  );
+}
+
+function DetailAccordion({ details }: { details: DetailItem[] }) {
+  return (
+    <Accordion className="w-full" collapsible type="single">
+      {details.map((item) => (
+        <DetailAccordionItemRow item={item} key={item.id} />
+      ))}
+    </Accordion>
+  );
+}
+
+function ComponentDocsPage({
+  breadcrumbs,
+  eyebrow = "Registry Component",
+  title,
+  description,
+  componentName,
+  preview,
+  previewDescription,
+  usageCode,
+  usageDescription,
+  details,
+  detailsDescription,
+  meta,
+  installDescription,
+  actionDescription,
+  railNotes,
+  previewClassName,
+}: {
+  breadcrumbs: BreadcrumbItem[];
+  eyebrow?: string;
+  title: string;
+  description: ReactNode;
+  componentName: string;
+  preview: ReactNode;
+  previewDescription?: ReactNode;
+  usageCode: string;
+  usageDescription?: ReactNode;
+  details: DetailItem[];
+  detailsDescription?: ReactNode;
+  meta?: HeroMetaItem[];
+  installDescription?: ReactNode;
+  actionDescription?: ReactNode;
+  railNotes?: string[];
+  previewClassName?: string;
+}) {
+  return (
+    <DocsPageShell
+      breadcrumbs={breadcrumbs}
+      description={description}
+      eyebrow={eyebrow}
+      meta={
+        meta ?? [
+          { label: "Package", value: `@iconiq/${componentName}` },
+          { label: "Format", value: "Copy-paste registry file" },
+          { label: "Theme", value: "White-first and dark ready" },
+        ]
+      }
+      title={title}
+    >
+      <DocsSection
+        className={cn("lg:col-span-8", previewClassName)}
+        description={
+          previewDescription ??
+          "Preview the component in a quiet layout with room to inspect motion, spacing, and state changes."
+        }
+        index="01"
+        title="Live Playground"
+      >
+        <div className="flex min-h-[320px] w-full items-center justify-center">
+          {preview}
+        </div>
+      </DocsSection>
+
+      <DocsSection
+        className="lg:col-span-4"
+        description={
+          installDescription ??
+          "Install the component directly into your codebase, then branch into v0 if you want to iterate on variations."
+        }
+        index="02"
+        title="Install And Iterate"
+      >
+        <div className="space-y-6">
+          <div className="space-y-3">
+            <p className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">
+              Install
+            </p>
+            <div className="[&>div]:mt-0">
+              <CodeBlockInstall componentName={componentName} />
+            </div>
+          </div>
+          <Separator />
+          <div className="space-y-3">
+            <p className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">
+              Build with v0
+            </p>
+            <p className="text-[14px] text-secondary leading-6">
+              {actionDescription ??
+                "Send the registry bundle into v0 when you want to explore new colorways, copy, or layout directions quickly."}
+            </p>
+            <ComponentActions name={componentName} />
+          </div>
+          {railNotes?.length ? (
+            <>
+              <Separator />
+              <div className="space-y-3">
+                <p className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">
+                  Notes
+                </p>
+                <ul className="space-y-3">
+                  {railNotes.map((note) => (
+                    <li
+                      className="relative pl-4 text-[14px] text-secondary leading-6 before:absolute before:top-[0.72rem] before:left-0 before:size-1 before:-translate-y-1/2 before:rounded-full before:bg-foreground/70 before:content-['']"
+                      key={note}
+                    >
+                      {note}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </>
+          ) : null}
+        </div>
+      </DocsSection>
+
+      <DocsSection
+        className="lg:col-span-12"
+        description={
+          usageDescription ??
+          "Drop the component into a local surface exactly as shown, then adjust props and class names to fit your app."
+        }
+        index="03"
+        title="Usage"
+      >
+        <CodeBlock code={usageCode} language="tsx" variant="embedded" />
+      </DocsSection>
+
+      <DocsSection
+        className="lg:col-span-12"
+        description={
+          detailsDescription ??
+          "Each item below expands into implementation notes, API behavior, and any direct registry file install needed for related assets."
+        }
+        index="04"
+        title="API Details"
+      >
+        <DetailAccordion details={details} />
+      </DocsSection>
+    </DocsPageShell>
+  );
+}
+
+export {
+  DocsBreadcrumbs,
+  DocsHero,
+  DocsPageShell,
+  DocsSection,
+  ComponentDocsPage,
+  DetailAccordion,
+};
+export type { BreadcrumbItem, DetailField, DetailItem, HeroMetaItem };

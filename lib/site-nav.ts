@@ -10,13 +10,6 @@ export const BASE_LINKS = [
 
 export const SITE_SECTIONS = [
   {
-    label: "Icons",
-    children: [
-      { label: "Icon Library", href: "/icons" },
-      { label: "Button + Icon", href: "/icons/button-svg" },
-    ],
-  },
-  {
     label: "Components",
     children: [
       { label: "Accordion", href: "/components/motion-accordion" },
@@ -35,6 +28,13 @@ export const SITE_SECTIONS = [
       { label: "Spinner", href: "/components/spinner" },
       { label: "Switch", href: "/components/switch" },
       { label: "Tooltip", href: "/components/tooltip" },
+    ],
+  },
+  {
+    label: "Icons",
+    children: [
+      { label: "Icon Library", href: "/icons" },
+      { label: "Button + Icon", href: "/icons/button-svg" },
     ],
   },
 ] as const;

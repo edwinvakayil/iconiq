@@ -12,6 +12,7 @@ import {
   X,
 } from "lucide-react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Logo } from "@/components/logo";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
@@ -27,24 +28,24 @@ const mobileNavSections = [
     icon: BookOpen,
     items: BASE_LINKS.map((item) => ({ label: item.label, href: item.href })),
   },
-  ...(iconsSection
-    ? [
-        {
-          title: iconsSection.label,
-          icon: Package,
-          items: iconsSection.children.map((item) => ({
-            label: item.label,
-            href: item.href,
-          })),
-        },
-      ]
-    : []),
   ...(componentsSection
     ? [
         {
           title: componentsSection.label,
           icon: LayoutGrid,
           items: componentsSection.children.map((item) => ({
+            label: item.label,
+            href: item.href,
+          })),
+        },
+      ]
+    : []),
+  ...(iconsSection
+    ? [
+        {
+          title: iconsSection.label,
+          icon: Package,
+          items: iconsSection.children.map((item) => ({
             label: item.label,
             href: item.href,
           })),
@@ -141,6 +142,10 @@ const mobileNavVariants = {
 };
 
 const GITHUB_REPO_API = "https://api.github.com/repos/edwinvakayil/iconiq";
+const desktopIconActionClass =
+  "flex size-10 items-center justify-center rounded-xl text-neutral-950 transition-colors hover:text-neutral-600 focus-visible:outline-1 focus-visible:outline-primary dark:text-white dark:hover:text-neutral-300";
+const desktopGithubBadgeClass =
+  "inline-flex h-12 items-center gap-3 rounded-[18px] bg-muted/72 px-5 text-neutral-950 transition-colors hover:bg-muted dark:bg-white/[0.06] dark:text-white dark:hover:bg-white/[0.1]";
 
 function XLogoIcon({ className }: { className?: string }) {
   return (
@@ -162,6 +167,7 @@ function formatStarCount(n: number): string {
 }
 
 export function Header() {
+  const pathname = usePathname();
   const prefersReducedMotion = useReducedMotion();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [expandedMobile, setExpandedMobile] = useState<string[]>([
@@ -190,6 +196,11 @@ export function Header() {
       .catch(() => undefined);
   }, []);
 
+  useEffect(() => {
+    if (!pathname) return;
+    setMobileMenuOpen(false);
+  }, [pathname]);
+
   /* Prevent body scroll when menu open */
   useEffect(() => {
     if (mobileMenuOpen) {
@@ -207,7 +218,7 @@ export function Header() {
     <>
       <motion.header
         animate={{ opacity: 1, y: 0 }}
-        className="sticky top-0 z-[150] w-full border-neutral-200/40 border-b-[0.5px] bg-white/95 backdrop-blur-sm dark:border-neutral-700/30 dark:bg-neutral-900/95"
+        className="sticky top-0 z-[150] w-full border-neutral-200/80 border-b bg-white/[0.92] backdrop-blur-xl dark:border-neutral-800/80 dark:bg-neutral-950/[0.88]"
         initial={prefersReducedMotion ? false : { opacity: 0, y: -10 }}
         transition={
           prefersReducedMotion
@@ -215,36 +226,31 @@ export function Header() {
             : { type: "spring", stiffness: 320, damping: 34, mass: 0.9 }
         }
       >
-        <div className="mx-auto flex h-14 items-center justify-between px-4 sm:px-6 lg:h-[59px] lg:px-[80px]">
-          {/* Logo */}
+        <div className="mx-auto flex h-[var(--header-height-mobile)] items-center justify-between px-4 sm:px-6 lg:hidden">
           <Logo />
 
-          {/* Right actions */}
           <div className="flex items-center gap-2">
             <ThemeToggle />
 
             <span className="hidden h-5 w-px bg-neutral-200 sm:block dark:bg-neutral-700" />
 
-            {/* GitHub */}
             <a
-              className="hidden items-center gap-2 px-3 py-1.5 text-neutral-600 text-sm hover:text-neutral-900 sm:flex dark:text-neutral-400 dark:hover:text-white"
+              className="hidden items-center gap-2 rounded-xl bg-muted/60 px-3 py-1.5 text-neutral-600 text-sm hover:bg-muted hover:text-neutral-900 sm:flex dark:bg-white/[0.04] dark:text-neutral-300 dark:hover:bg-white/[0.08] dark:hover:text-white"
               href={LINK.GITHUB}
               rel="noopener noreferrer"
               target="_blank"
             >
-              <span className="flex size-6 items-center justify-center rounded-full bg-neutral-900 text-white">
-                <Github className="size-3.5" />
-              </span>
-              <span>
+              <Github className="size-4" />
+              <span className="font-medium">GitHub</span>
+              <span className="font-mono text-[11px] text-neutral-400 dark:text-neutral-500">
                 {starCount !== null ? formatStarCount(starCount) : "—"}
               </span>
             </a>
 
             <span className="hidden h-5 w-px bg-neutral-200 sm:block dark:bg-neutral-700" />
 
-            {/* Twitter */}
             <a
-              className="hidden size-9 items-center justify-center rounded-md text-neutral-500 hover:bg-neutral-100 hover:text-neutral-900 sm:flex"
+              className="hidden size-9 items-center justify-center rounded-md text-neutral-500 hover:bg-neutral-100 hover:text-neutral-900 sm:flex dark:hover:bg-white/10 dark:hover:text-white"
               href={LINK.TWITTER}
               rel="noopener noreferrer"
               target="_blank"
@@ -252,7 +258,6 @@ export function Header() {
               <XLogoIcon className="size-5" />
             </a>
 
-            {/* Hamburger */}
             <button
               aria-expanded={mobileMenuOpen}
               className="flex size-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-muted hover:text-foreground sm:hidden"
@@ -267,6 +272,41 @@ export function Header() {
             </button>
           </div>
         </div>
+
+        <div className="mx-auto hidden h-[var(--header-height-desktop)] items-center justify-between gap-8 px-6 lg:flex xl:px-10 2xl:px-12">
+          <div className="flex min-w-0 items-center">
+            <Logo
+              className="shrink-0 gap-3 text-[17px] tracking-[-0.03em]"
+              iconSize={18}
+            />
+          </div>
+
+          <div className="flex items-center justify-end">
+            <div className="flex items-center gap-2">
+              <ThemeToggle className={desktopIconActionClass} />
+              <a
+                className={desktopIconActionClass}
+                href={LINK.TWITTER}
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                <XLogoIcon className="size-[18px]" />
+              </a>
+              <a
+                aria-label="GitHub stars"
+                className={desktopGithubBadgeClass}
+                href={LINK.GITHUB}
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                <Github className="size-5" />
+                <span className="font-semibold text-[14px] tracking-[-0.03em]">
+                  {starCount !== null ? formatStarCount(starCount) : "—"}
+                </span>
+              </a>
+            </div>
+          </div>
+        </div>
       </motion.header>
 
       {/* Mobile slide-down menu */}
@@ -274,7 +314,7 @@ export function Header() {
         {mobileMenuOpen && (
           <motion.div
             animate="open"
-            className="fixed inset-x-0 top-14 z-[200] sm:hidden"
+            className="fixed inset-x-0 top-[var(--header-height-mobile)] z-[200] sm:hidden"
             exit="closed"
             initial="closed"
             key="mobile-nav"
@@ -284,7 +324,7 @@ export function Header() {
             <motion.button
               animate="open"
               aria-hidden={!mobileMenuOpen}
-              className="fixed inset-0 top-14 bg-background/60 backdrop-blur-sm"
+              className="fixed inset-0 top-[var(--header-height-mobile)] bg-background/60 backdrop-blur-sm"
               initial="closed"
               onClick={() => setMobileMenuOpen(false)}
               type="button"

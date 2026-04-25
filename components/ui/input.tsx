@@ -21,11 +21,11 @@ const Input = ({
   const inputEl = (
     <BaseInput
       className={cn(
-        "flex h-9 w-full min-w-0 px-3 py-1 text-sm outline-none ring-1",
-        "bg-neutral-100 text-neutral-800 ring-neutral-300 selection:bg-primary selection:text-white placeholder:text-neutral-400/70 dark:bg-neutral-900 dark:text-neutral-100 dark:ring-neutral-800 dark:placeholder:text-neutral-500",
+        "flex h-10 w-full min-w-0 border border-border bg-background px-3 py-1 text-sm outline-none",
+        "text-foreground selection:bg-primary selection:text-white placeholder:text-muted-foreground/80 dark:bg-background",
         "transition-[color,box-shadow,ring-color]",
-        "focus-visible:ring-neutral-500 dark:focus-visible:ring-neutral-700",
-        "supports-[corner-shape:squircle]:corner-squircle rounded-[14px] supports-[corner-shape:squircle]:rounded-[24px]",
+        "focus-visible:border-foreground focus-visible:shadow-[0_0_0_3px_rgb(17_17_17_/_0.08)] dark:focus-visible:shadow-[0_0_0_3px_rgb(246_243_236_/_0.08)]",
+        "rounded-none",
         leadingIcon && "pl-10",
         trailingIcon && "pr-12",
         className

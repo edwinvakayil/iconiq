@@ -9,7 +9,7 @@ export function GET() {
 
 > Beautifully crafted motion-powered icons and components
 
-${SITE.NAME} is an open-source (MIT License) collection of smooth motion-powered icons and components for React projects.
+${SITE.NAME} is an open-source collection of smooth motion-powered icons and components for React projects.
 
 ## Overview
 
@@ -52,9 +52,9 @@ export function MyComponent() {
 - Svelte: https://www.movingicons.dev/ by @jis3r
 - Vue: https://imfenghuang.github.io/icons/ by @imfenghuang
 
-## License
+## Open Source
 
-MIT License - free for personal and commercial use.
+Free for personal and commercial use.
 
 ## Contributing
 

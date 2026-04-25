@@ -110,7 +110,7 @@ export function CodeBlock({
       className={cn(
         embedded
           ? "my-0 overflow-hidden rounded-none border-0 bg-transparent dark:bg-transparent"
-          : "my-8 overflow-hidden rounded-[14px] border border-neutral-200/50 bg-white dark:border-neutral-800/60 dark:bg-neutral-950",
+          : "my-8 overflow-hidden border border-border/85 bg-muted/28",
         className
       )}
     >
@@ -118,26 +118,25 @@ export function CodeBlock({
         className={cn(
           "flex items-center justify-between gap-2",
           embedded
-            ? "border-0 bg-transparent px-0 pt-0 pb-2 dark:bg-transparent"
-            : "border-neutral-200/40 border-b bg-white px-4 pt-2.5 pb-2 dark:border-neutral-800/50 dark:bg-neutral-950"
+            ? "border-0 bg-transparent px-0 pt-0 pb-3 dark:bg-transparent"
+            : "border-border border-b bg-transparent px-4 pt-3 pb-2"
         )}
       >
         <span
           className={cn(
-            "inline-flex items-center gap-1.5 font-medium text-xs",
-            "text-gray-800 dark:text-neutral-300"
+            "inline-flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.18em]",
+            "text-muted-foreground"
           )}
         >
-          <CodeIcon className="shrink-0 text-gray-800 dark:text-neutral-300" />
+          <CodeIcon className="shrink-0 text-muted-foreground" />
           {language}
         </span>
         <motion.button
           aria-label="Copy code"
           className={cn(
-            "inline-flex size-7 items-center justify-center rounded-md border-0 bg-transparent p-0",
-            "text-gray-800 transition-colors duration-150 hover:bg-neutral-100 hover:text-gray-900",
-            "dark:text-neutral-300 dark:hover:bg-neutral-800/80 dark:hover:text-white",
-            copied && "text-gray-800 dark:text-neutral-300"
+            "inline-flex size-8 items-center justify-center rounded-none border border-transparent bg-transparent p-0",
+            "text-muted-foreground transition-colors duration-150 hover:border-border hover:bg-background hover:text-foreground",
+            copied && "text-muted-foreground"
           )}
           onClick={handleCopy}
           transition={{ type: "spring", stiffness: 400, damping: 20 }}
@@ -173,10 +172,10 @@ export function CodeBlock({
       </div>
       <pre
         className={cn(
-          "m-0 overflow-x-auto font-mono text-gray-800 text-sm leading-[1.65] dark:text-neutral-200",
+          "m-0 overflow-x-auto font-mono text-foreground text-sm leading-[1.75]",
           embedded
             ? "bg-transparent px-0 pt-1 pb-0 dark:bg-transparent"
-            : "bg-white px-5 pt-4 pb-5 dark:bg-neutral-950"
+            : "bg-transparent px-5 pt-4 pb-5"
         )}
       >
         <code className="bg-transparent p-0 font-inherit text-inherit">

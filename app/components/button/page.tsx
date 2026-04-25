@@ -1,19 +1,16 @@
 "use client";
 
-import { ChevronDown, ChevronRight } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import {
   AnimatePresence,
   motion,
   useReducedMotion,
   type Variants,
 } from "motion/react";
-import Link from "next/link";
 import { type ReactNode, useEffect, useRef, useState } from "react";
 
-import { CodeBlock } from "@/components/code-block";
-import { CodeBlockInstall } from "@/components/code-block-install";
-import { ComponentActions } from "@/components/component-actions";
-import { RegistryInstallBlock } from "@/components/registry-install-block";
+import { buttonApiDetails } from "@/components/docs/component-api";
+import { ComponentDocsPage } from "@/components/docs/page-shell";
 import { cn } from "@/lib/utils";
 import { Button } from "@/registry/button";
 
@@ -202,66 +199,9 @@ export function SaveBar() {
   );
 }`;
 
-type DetailRow = {
-  id: string;
-  title: string;
-  content: string;
-  registryPath?: string;
-};
+const componentDetailsItems = buttonApiDetails;
 
-const componentDetailsItems: DetailRow[] = [
-  {
-    id: "variant",
-    title: "variant",
-    content:
-      "CVA-driven styles: default, destructive, outline, secondary, ghost, link — same vocabulary as typical shadcn buttons, tuned for motion and theme tokens.",
-  },
-  {
-    id: "size",
-    title: "size",
-    content:
-      "sm, md (default), lg, or custom (empty padding/height classes so you can size entirely with className).",
-  },
-  {
-    id: "props",
-    title: "Native button props",
-    content:
-      "Spreads onto motion.button: type, disabled, onClick, aria-*, data-*, etc. Ref forwarded for focus management or form libraries.",
-  },
-  {
-    id: "buttonVariants",
-    title: "buttonVariants",
-    content:
-      "Exported CVA config — compose the same classes on links or divs if you need a non-button affordance with matching visuals.",
-  },
-  {
-    id: "framer-motion",
-    title: "framer-motion",
-    content:
-      "motion.button drives the control; pointer ripples expand from the press point and fade out. Respects reduced motion (no ripple).",
-  },
-  {
-    id: "cva",
-    title: "class-variance-authority",
-    content:
-      "Variant and size maps merge with the base layout/ring/disabled classes. Install is listed as a registry peer dependency.",
-  },
-  {
-    id: "a11y",
-    title: "Accessibility",
-    content:
-      'focus-visible:ring-2 ring-ring matches the rest of the kit. Defaults to type="button" so it does not submit forms; pass type="submit" when it should.',
-  },
-  {
-    id: "registry",
-    title: "shadcn registry",
-    content:
-      "Add with the CLI; framer-motion and class-variance-authority are declared so they install alongside the component file.",
-    registryPath: "button.json",
-  },
-];
-
-function SectionLabel({
+function _SectionLabel({
   children,
   accent,
 }: {
@@ -289,14 +229,14 @@ function SectionLabel({
 const bentoShell =
   "flex flex-col rounded-2xl border border-neutral-200/80 bg-white px-3 py-4 sm:px-5 sm:py-5 md:p-6 dark:border-neutral-800 dark:bg-neutral-950";
 
-const bentoContainer = {
+const _bentoContainer = {
   hidden: {},
   visible: {
     transition: { delayChildren: 0.06, staggerChildren: 0.07 },
   },
 };
 
-const bentoItem = {
+const _bentoItem = {
   hidden: { opacity: 0, y: 22, scale: 0.98 },
   visible: {
     opacity: 1,
@@ -306,17 +246,17 @@ const bentoItem = {
   },
 };
 
-const bentoContainerStatic = {
+const _bentoContainerStatic = {
   hidden: {},
   visible: { transition: { delayChildren: 0, staggerChildren: 0 } },
 };
 
-const bentoItemStatic = {
+const _bentoItemStatic = {
   hidden: { opacity: 1, scale: 1, y: 0 },
   visible: { opacity: 1, scale: 1, y: 0 },
 };
 
-function BentoMotion({
+function _BentoMotion({
   children,
   className,
   variants,
@@ -337,255 +277,98 @@ export default function ButtonPage() {
     useState<PreviewVariant>("default");
   const [previewSize, setPreviewSize] = useState<PreviewSize>("md");
   const prefersReducedMotion = useReducedMotion();
-  const containerVariants = prefersReducedMotion
-    ? bentoContainerStatic
-    : bentoContainer;
-  const itemVariants = prefersReducedMotion ? bentoItemStatic : bentoItem;
 
   return (
-    <main className="min-w-0 flex-1">
-      <div className="mx-auto w-full max-w-screen-2xl px-4 py-10 sm:px-6 sm:py-12 lg:px-10">
-        <motion.nav
-          animate={{ opacity: 1, y: 0 }}
-          aria-label="Breadcrumb"
-          className="mb-8"
-          initial={prefersReducedMotion ? false : { opacity: 0, y: -6 }}
-          transition={
-            prefersReducedMotion
-              ? { duration: 0 }
-              : { type: "spring", stiffness: 380, damping: 35 }
-          }
-        >
-          <ol className="flex flex-wrap items-center gap-1.5 font-sans text-neutral-400 text-xs dark:text-neutral-500">
-            <li>
-              <Link
-                className="transition-colors hover:text-neutral-800 dark:hover:text-neutral-200"
-                href="/"
-              >
-                Docs
-              </Link>
-            </li>
-            <li aria-hidden="true">
-              <ChevronRight className="size-3 opacity-60" />
-            </li>
-            <li>
-              <Link
-                className="transition-colors hover:text-neutral-800 dark:hover:text-neutral-200"
-                href="/components/button"
-              >
-                Components
-              </Link>
-            </li>
-            <li aria-hidden="true">
-              <ChevronRight className="size-3 opacity-60" />
-            </li>
-            <li
-              aria-current="page"
-              className="text-neutral-700 dark:text-neutral-300"
+    <ComponentDocsPage
+      breadcrumbs={[
+        { label: "Docs", href: "/" },
+        { label: "Components" },
+        { label: "Button" },
+      ]}
+      componentName="button"
+      description="CVA variants with spring hover and tap feedback. Forwards refs and standard button attributes while staying aligned with the rest of the system."
+      details={componentDetailsItems}
+      preview={
+        <div className="space-y-8">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-8">
+            <PreviewSelectField
+              ariaLabel="Button variant"
+              id="animated-button-preview-variant"
+              label="Variant"
+              menuMaxHeightClass="max-h-32"
+              onValueChange={(v) => setPreviewVariant(v as PreviewVariant)}
+              options={PREVIEW_VARIANTS}
+              value={previewVariant}
+            />
+            <PreviewSelectField
+              ariaLabel="Button size"
+              id="animated-button-preview-size"
+              label="Size"
+              onValueChange={(v) => setPreviewSize(v as PreviewSize)}
+              options={PREVIEW_SIZES}
+              value={previewSize}
+            />
+          </div>
+
+          <div className="flex min-h-[280px] flex-col items-center justify-center gap-9 px-4 py-2">
+            <motion.div
+              animate={{ opacity: 1, y: 0 }}
+              initial={prefersReducedMotion ? false : { opacity: 0, y: 8 }}
+              key={previewVariant}
+              transition={
+                prefersReducedMotion
+                  ? { duration: 0 }
+                  : { type: "spring", stiffness: 340, damping: 30 }
+              }
             >
-              Button
-            </li>
-          </ol>
-        </motion.nav>
-
-        <motion.header
-          animate={{ opacity: 1, y: 0 }}
-          className="mb-12 max-w-2xl"
-          initial={prefersReducedMotion ? false : { opacity: 0, y: 10 }}
-          transition={
-            prefersReducedMotion
-              ? { duration: 0 }
-              : { type: "spring", stiffness: 340, damping: 34, delay: 0.05 }
-          }
-        >
-          <h1 className="font-sans font-semibold text-3xl text-neutral-900 tracking-tight sm:text-[2rem] dark:text-white">
-            Button
-          </h1>
-          <p className="mt-2 font-sans text-[15px] text-neutral-500 leading-relaxed dark:text-neutral-400">
-            CVA variants with spring hover and tap feedback. Forwards ref and
-            standard button attributes — aligned with your theme tokens.
-          </p>
-        </motion.header>
-
-        <motion.div
-          animate="visible"
-          className={cn(
-            "grid auto-rows-min grid-cols-1 gap-3 sm:gap-4",
-            "lg:grid-cols-12 lg:gap-x-5 lg:gap-y-5"
-          )}
-          initial="hidden"
-          variants={containerVariants}
-        >
-          <BentoMotion
-            className={cn(
-              "relative overflow-hidden lg:col-span-8 lg:row-span-2",
-              "rounded-3xl border-neutral-200/40 dark:border-neutral-700/30"
-            )}
-            variants={itemVariants}
-          >
-            <SectionLabel accent="01">Live preview</SectionLabel>
-            <div className="relative mt-1 flex min-h-0 flex-1 flex-col gap-8">
-              <div className="grid grid-cols-1 items-end gap-4 px-1 sm:grid-cols-2 sm:gap-8">
-                <PreviewSelectField
-                  ariaLabel="Button variant"
-                  id="animated-button-preview-variant"
-                  label="Variant"
-                  menuMaxHeightClass="max-h-32"
-                  onValueChange={(v) => setPreviewVariant(v as PreviewVariant)}
-                  options={PREVIEW_VARIANTS}
-                  value={previewVariant}
-                />
-                <PreviewSelectField
-                  ariaLabel="Button size"
-                  id="animated-button-preview-size"
-                  label="Size"
-                  onValueChange={(v) => setPreviewSize(v as PreviewSize)}
-                  options={PREVIEW_SIZES}
-                  value={previewSize}
-                />
-              </div>
-
-              <div className="flex min-h-[280px] flex-1 flex-col items-center justify-center gap-9 px-4 py-6">
-                <motion.div
-                  animate={{ opacity: 1, y: 0 }}
-                  initial={prefersReducedMotion ? false : { opacity: 0, y: 8 }}
-                  key={previewVariant}
-                  transition={
-                    prefersReducedMotion
-                      ? { duration: 0 }
-                      : { type: "spring", stiffness: 340, damping: 30 }
-                  }
-                >
-                  <blockquote className="mx-auto max-w-xl text-center">
-                    <p className="flex flex-wrap items-center justify-center gap-x-1.5 gap-y-3 text-balance font-medium font-sans text-lg text-neutral-800 leading-snug tracking-tight sm:gap-x-2 sm:text-xl dark:text-neutral-100">
-                      <span>Win the press,</span>
-                      <span className="font-normal text-neutral-500 dark:text-neutral-400">
-                        then
-                      </span>
-                      <span className="inline-flex translate-y-px align-middle">
-                        <Button size={previewSize} variant={previewVariant}>
-                          Continue
-                        </Button>
-                      </span>
-                      <span>the break</span>
-                      <span className="w-full basis-full font-normal text-[0.92em] text-neutral-500 dark:text-neutral-400">
-                        — that&apos;s the half in two beats.
-                      </span>
-                    </p>
-                  </blockquote>
-                </motion.div>
-                <p className="max-w-md text-center font-sans text-[13px] leading-relaxed">
-                  <span className="text-emerald-600 dark:text-emerald-400">
-                    Shape it above
+              <blockquote className="mx-auto max-w-xl text-center">
+                <p className="flex flex-wrap items-center justify-center gap-x-1.5 gap-y-3 text-balance font-medium text-lg text-neutral-800 leading-snug tracking-tight sm:gap-x-2 sm:text-xl dark:text-neutral-100">
+                  <span>Win the press,</span>
+                  <span className="font-normal text-neutral-500 dark:text-neutral-400">
+                    then
                   </span>
-                  <span className="text-neutral-400 dark:text-neutral-500">
-                    {" "}
-                    ·{" "}
+                  <span className="inline-flex translate-y-px align-middle">
+                    <Button size={previewSize} variant={previewVariant}>
+                      Continue
+                    </Button>
                   </span>
-                  <span
-                    className={cn(
-                      "transition-colors duration-300 ease-out",
-                      previewCaptionClassByVariant[previewVariant]
-                    )}
-                  >
-                    Press on purpose
-                  </span>
-                  <span className="text-neutral-400 dark:text-neutral-500">
-                    {" "}
-                    ·{" "}
-                  </span>
-                  <span className="text-violet-600 dark:text-violet-400">
-                    Ripple follows
+                  <span>the break</span>
+                  <span className="w-full basis-full font-normal text-[0.92em] text-neutral-500 dark:text-neutral-400">
+                    - that's the half in two beats.
                   </span>
                 </p>
-              </div>
-            </div>
-          </BentoMotion>
-
-          <BentoMotion
-            className="justify-between border-neutral-200/40 lg:col-span-4 lg:col-start-9 lg:row-start-1 dark:border-neutral-700/30"
-            variants={itemVariants}
-          >
-            <SectionLabel accent="02">Install</SectionLabel>
-            <div className="min-w-0 flex-1 [&>div]:mt-0">
-              <CodeBlockInstall componentName="button" />
-            </div>
-          </BentoMotion>
-
-          <BentoMotion
-            className="border-neutral-200/90 border-dashed lg:col-span-4 lg:col-start-9 lg:row-start-2 dark:border-neutral-700/80"
-            variants={itemVariants}
-          >
-            <SectionLabel accent="03">v0</SectionLabel>
-            <p className="mb-5 flex-1 font-sans text-neutral-500 text-sm leading-snug dark:text-neutral-400">
-              Ship the registry bundle to v0 and iterate on motion or layout
-              with prompts.
+              </blockquote>
+            </motion.div>
+            <p className="max-w-md text-center text-[13px] text-secondary leading-relaxed">
+              <span className="text-emerald-600 dark:text-emerald-400">
+                Shape it above
+              </span>
+              <span className="text-neutral-400 dark:text-neutral-500">
+                {" "}
+                ·{" "}
+              </span>
+              <span
+                className={cn(
+                  "transition-colors duration-300 ease-out",
+                  previewCaptionClassByVariant[previewVariant]
+                )}
+              >
+                Press on purpose
+              </span>
+              <span className="text-neutral-400 dark:text-neutral-500">
+                {" "}
+                ·{" "}
+              </span>
+              <span className="text-violet-600 dark:text-violet-400">
+                Ripple follows
+              </span>
             </p>
-            <ComponentActions name="button" />
-          </BentoMotion>
-
-          <BentoMotion
-            className="border-neutral-200/40 lg:col-span-12 lg:col-start-1 lg:row-start-3 dark:border-neutral-700/30"
-            variants={itemVariants}
-          >
-            <SectionLabel accent="04">Usage</SectionLabel>
-            <p className="mb-4 font-sans text-neutral-500 text-sm dark:text-neutral-400">
-              Minimal example — see tile{" "}
-              <span className="font-mono text-neutral-600 text-xs dark:text-neutral-300">
-                05
-              </span>{" "}
-              for{" "}
-              <code className="rounded bg-neutral-100 px-1 py-0.5 font-mono text-[11px] dark:bg-neutral-900">
-                variant
-              </code>
-              ,{" "}
-              <code className="rounded bg-neutral-100 px-1 py-0.5 font-mono text-[11px] dark:bg-neutral-900">
-                size
-              </code>
-              , and peer packages.
-            </p>
-            <CodeBlock code={usageCode} language="tsx" variant="embedded" />
-          </BentoMotion>
-
-          <BentoMotion
-            className="border-neutral-200/40 lg:col-span-12 lg:col-start-1 lg:row-start-4 dark:border-neutral-700/30"
-            variants={itemVariants}
-          >
-            <SectionLabel accent="05">Dependencies</SectionLabel>
-            <p className="mb-3 font-sans text-neutral-500 text-xs leading-snug dark:text-neutral-400">
-              Registry peers and API surface —{" "}
-              <code className="rounded bg-neutral-100 px-1 py-0.5 font-mono text-[10px] dark:bg-neutral-900">
-                Button
-              </code>{" "}
-              is a forwardRef{" "}
-              <code className="rounded bg-neutral-100 px-1 py-0.5 font-mono text-[10px] dark:bg-neutral-900">
-                motion.button
-              </code>
-              .
-            </p>
-            <div className="divide-y divide-neutral-100 dark:divide-neutral-800/60">
-              {componentDetailsItems.map((row) => (
-                <div
-                  className="grid grid-cols-1 gap-1 py-3.5 sm:grid-cols-[180px_1fr] sm:gap-8 sm:py-4"
-                  key={row.id}
-                >
-                  <p className="pt-0.5 font-medium text-neutral-800 text-xs dark:text-neutral-200">
-                    {row.title}
-                  </p>
-                  <div>
-                    <p className="font-sans text-[13px] text-neutral-500 leading-relaxed dark:text-neutral-400">
-                      {row.content}
-                    </p>
-                    {row.registryPath ? (
-                      <RegistryInstallBlock registryPath={row.registryPath} />
-                    ) : null}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </BentoMotion>
-        </motion.div>
-      </div>
-    </main>
+          </div>
+        </div>
+      }
+      title="Button"
+      usageCode={usageCode}
+      usageDescription="Use the default button first, then branch into variant, size, Motion behavior, and peer dependencies through the API panel."
+    />
   );
 }

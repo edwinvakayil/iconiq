@@ -18,7 +18,7 @@ function AccordionItem({
 }: React.ComponentProps<typeof AccordionPrimitive.Item>) {
   return (
     <AccordionPrimitive.Item
-      className={cn("border-b last:border-b-0", className)}
+      className={cn("border-border border-b last:border-b-0", className)}
       data-slot="accordion-item"
       {...props}
     />
@@ -34,14 +34,15 @@ function AccordionTrigger({
     <AccordionPrimitive.Header className="flex">
       <AccordionPrimitive.Trigger
         className={cn(
-          "flex flex-1 items-start justify-between gap-4 rounded-md py-4 text-left font-medium text-sm outline-none transition-all hover:underline focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 [&[data-state=open]>svg]:rotate-180",
+          "group flex flex-1 items-start justify-between gap-4 rounded-none py-4 text-left font-medium text-sm outline-none transition-colors disabled:pointer-events-none disabled:opacity-50 [&[data-state=open]>svg]:rotate-180",
+          "focus-visible:ring-2 focus-visible:ring-foreground/10",
           className
         )}
         data-slot="accordion-trigger"
         {...props}
       >
         {children}
-        <ChevronDownIcon className="pointer-events-none size-4 shrink-0 translate-y-0.5 text-muted-foreground transition-transform duration-200" />
+        <ChevronDownIcon className="pointer-events-none size-4 shrink-0 translate-y-0.5 text-muted-foreground transition-transform duration-200 group-hover:text-foreground" />
       </AccordionPrimitive.Trigger>
     </AccordionPrimitive.Header>
   );

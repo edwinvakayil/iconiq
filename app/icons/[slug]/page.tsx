@@ -1,9 +1,8 @@
-import { ArrowLeftIcon } from "lucide-react";
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { CliBlock } from "@/components/cli-block";
+import { DocsPageShell, DocsSection } from "@/components/docs/page-shell";
 import { LINK, SITE } from "@/constants";
 import { ICON_LIST } from "@/icons";
 import { kebabToPascalCase } from "@/lib/kebab-to-pascal";
@@ -84,7 +83,6 @@ const IconJsonLd = ({ icon }: { icon: (typeof ICON_LIST)[number] }) => {
     description: `Animated ${icon.name} icon component for React`,
     codeRepository: LINK.GITHUB,
     programmingLanguage: ["TypeScript", "React"],
-    license: LINK.LICENSE,
     isPartOf: {
       "@type": "SoftwareSourceCode",
       name: SITE.NAME,
@@ -123,53 +121,60 @@ const IconPage = async ({ params }: Props) => {
       />
       <IconJsonLd icon={icon} />
 
-      <section className="mx-auto mt-12 flex w-full max-w-[1292px] flex-col items-start px-4 min-[880px]:my-[60px]">
-        <Link
-          className="mb-8 flex items-center gap-2 font-sans text-secondary text-sm transition-[color] duration-100 hover:text-primary focus-visible:outline-1 focus-visible:outline-primary focus-visible:outline-offset-2"
-          href="/"
+      <DocsPageShell
+        breadcrumbs={[
+          { label: "Docs", href: "/" },
+          { label: "Icons", href: "/icons" },
+          { label: pascalName },
+        ]}
+        description={`Animated ${icon.name.replace(/-/g, " ")} icon for React. Install it directly into your codebase, then explore adjacent glyphs that share the same visual vocabulary.`}
+        eyebrow="Animated Icon"
+        meta={[
+          { label: "Install", value: `@iconiq/${slug}` },
+          { label: "Keywords", value: `${icon.keywords.length} terms` },
+          { label: "Format", value: "React source file" },
+        ]}
+        title={pascalName}
+      >
+        <DocsSection
+          className="lg:col-span-7"
+          description="A larger preview surface with motion intact, so you can inspect the icon before copying the install command."
+          index="01"
+          title="Preview"
         >
-          <ArrowLeftIcon className="size-4" />
-          Back to all icons
-        </Link>
-
-        <div className="flex w-full flex-col gap-6 min-[880px]:flex-row min-[880px]:items-center">
           <IconCard icon={icon} />
+        </DocsSection>
 
-          <div className="flex h-full flex-col gap-1">
-            <h1 className="font-sans text-[28px] min-[640px]:text-[36px]">
-              {pascalName}
-            </h1>
-            <p className="font-mono text-secondary text-sm">
-              Animated {icon.name.replace(/-/g, " ")} icon for React
-            </p>
-            <CliBlock
-              className="mt-7 hidden px-0 min-[880px]:flex"
-              staticIconName={slug}
-            />
+        <DocsSection
+          className="lg:col-span-5"
+          description="Copy the install command directly, then scan the keywords that power search and discovery."
+          index="02"
+          title="Install"
+        >
+          <div className="space-y-6">
+            <CliBlock className="mt-0 px-0" staticIconName={slug} />
+            <div className="flex flex-wrap gap-2">
+              {icon.keywords.map((keyword, index) => (
+                <span
+                  className="border border-border border-dashed px-3 py-2 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.18em]"
+                  key={`${keyword}-${index}`}
+                >
+                  {keyword}
+                </span>
+              ))}
+            </div>
           </div>
-        </div>
+        </DocsSection>
 
-        <CliBlock
-          className="mt-8 flex px-0 min-[880px]:hidden"
-          staticIconName={slug}
-        />
-
-        <div className="mt-12">
-          <h2 className="mb-3 font-sans text-xl">Keywords</h2>
-          <div className="flex flex-wrap gap-2">
-            {icon.keywords.map((keyword, index) => (
-              <span
-                className="supports-[corner-shape:squircle]:corner-squircle rounded-[12px] bg-neutral-200 px-3 py-1 font-mono text-secondary text-sm supports-[corner-shape:squircle]:rounded-[20px] dark:bg-[#262626]"
-                key={`${keyword}-${index}`}
-              >
-                {keyword}
-              </span>
-            ))}
-          </div>
-        </div>
-
-        <SimilarIcons currentIcon={icon} />
-      </section>
+        <DocsSection
+          className="lg:col-span-12"
+          description="Explore related icons that share keywords with the current glyph."
+          index="03"
+          title="Similar Icons"
+        >
+          <SimilarIcons currentIcon={icon} />
+        </DocsSection>
+      </DocsPageShell>
     </>
   );
 };

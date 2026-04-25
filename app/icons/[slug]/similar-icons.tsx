@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useMemo, useRef } from "react";
 import type { Icon } from "@/actions/get-icons";
 
-import { Card, CardTitle } from "@/components/card";
+import { Separator } from "@/components/ui/separator";
 import { ICON_LIST } from "@/icons";
 
 type Props = {
@@ -31,12 +31,11 @@ const SimilarIconItem = ({
 
   return (
     <Link
-      className="focus-visible:outline-1 focus-visible:outline-primary focus-visible:outline-offset-2"
+      className="block border border-border/80 bg-background p-4 focus-visible:outline-1 focus-visible:outline-primary focus-visible:outline-offset-2"
       href={`/icons/${icon.name}`}
     >
-      <Card
-        animationRef={animationRef}
-        className="pb-[50px]"
+      <div
+        className="flex min-h-[132px] flex-col justify-between gap-6"
         onMouseEnter={() => animationRef.current?.startAnimation()}
         onMouseLeave={() => animationRef.current?.stopAnimation()}
       >
@@ -44,8 +43,13 @@ const SimilarIconItem = ({
           className="flex items-center justify-center [&>svg]:size-10 [&>svg]:text-neutral-800 dark:[&>svg]:text-neutral-100"
           ref={animationRef}
         />
-        <CardTitle>{icon.name}</CardTitle>
-      </Card>
+        <div className="space-y-3">
+          <Separator />
+          <p className="font-medium text-[15px] text-foreground tracking-[-0.03em]">
+            {icon.name}
+          </p>
+        </div>
+      </div>
     </Link>
   );
 };
@@ -74,8 +78,8 @@ const SimilarIcons = ({ currentIcon }: Props) => {
 
   return (
     <div className="mt-12 w-full">
-      <h2 className="mb-4 font-sans text-xl">Similar Icons</h2>
-      <div className="grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))] gap-[3px]">
+      <h2 className="mb-4 text-xl tracking-[-0.03em]">Similar Icons</h2>
+      <div className="grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))] gap-4">
         {similarIcons.map((icon) => (
           <SimilarIconItem
             Icon={ICON_MAP.get(icon.name) ?? undefined}

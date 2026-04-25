@@ -1,274 +1,147 @@
-"use client";
-
-import { ArrowRight } from "lucide-react";
-import { motion } from "motion/react";
 import Link from "next/link";
 
-import { buttonVariants } from "@/components/ui/button";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+import { getIcons } from "@/actions/get-icons";
+import { DocsSection } from "@/components/docs/page-shell";
+import { Separator } from "@/components/ui/separator";
+import { SITE_SECTIONS } from "@/lib/site-nav";
 
-const stats = [
-  { id: 1, name: "Animated Icons", count: "350+" },
-  { id: 2, name: "Copy-paste", count: "Ready" },
-];
+const componentsCount =
+  SITE_SECTIONS.find((section) => section.label === "Components")?.children
+    .length ?? 0;
 
 export function HomeHero() {
+  const iconCount = getIcons().length;
+
   return (
-    <section className="flex min-h-[calc(100vh-3.5rem)] flex-col justify-center bg-background py-8 md:py-16 xl:py-24">
-      <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
-        <div className="flex max-w-5xl flex-col gap-6">
-          <motion.div
-            animate={{ opacity: 1, y: 0 }}
-            className="hidden w-fit items-center rounded-full ring-1 ring-neutral-300 sm:flex dark:ring-neutral-700"
-            initial={{ opacity: 0, y: 20 }}
-            transition={{ duration: 0.5 }}
-          >
-            <div className="flex py-1 ps-1.5">
-              <div className="flex rounded-full bg-emerald-500 px-2 py-0.5 font-medium text-white text-xs">
-                Free
-              </div>
-            </div>
-            {stats.map((item, index) => (
-              <div className="flex items-center" key={item.id}>
-                <div className="py-1 ps-2.5 pe-3">
-                  <p className="font-sans text-neutral-900 text-sm dark:text-white">
-                    {item.count} {item.name}
-                  </p>
+    <section className="bg-background py-10 sm:py-12 lg:py-16">
+      <div className="mx-auto flex w-full max-w-[1480px] flex-col gap-10 px-4 sm:px-6 lg:px-10">
+        <div className="space-y-8 pt-8">
+          <Separator />
+          <div className="grid gap-8 lg:grid-cols-12 lg:gap-10">
+            <div className="space-y-5 lg:col-span-4">
+              <p className="font-mono text-[11px] text-muted-foreground uppercase tracking-[0.32em]">
+                Motion-first UI library
+              </p>
+              <Separator />
+              <dl className="space-y-3">
+                <div className="space-y-1">
+                  <dt className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">
+                    Icons
+                  </dt>
+                  <dd className="text-[15px] text-foreground">
+                    {iconCount}+ ready
+                  </dd>
                 </div>
-                {index < stats.length - 1 && (
-                  <span
-                    aria-hidden
-                    className="h-4 w-px bg-neutral-300 dark:bg-neutral-600"
-                  />
-                )}
-              </div>
-            ))}
-          </motion.div>
+                <div className="space-y-1">
+                  <dt className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">
+                    Components
+                  </dt>
+                  <dd className="text-[15px] text-foreground">
+                    {componentsCount} registry pages
+                  </dd>
+                </div>
+                <div className="space-y-1">
+                  <dt className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">
+                    Format
+                  </dt>
+                  <dd className="text-[15px] text-foreground">
+                    Copy-paste React source
+                  </dd>
+                </div>
+              </dl>
+            </div>
 
-          <motion.h1
-            animate={{ opacity: 1, y: 0 }}
-            className="relative font-sans font-semibold text-3xl text-neutral-900 tracking-tight sm:text-5xl lg:pe-2.5 lg:text-6xl dark:text-white"
-            initial={{ opacity: 0, y: 20 }}
-            transition={{ duration: 0.5, delay: 0.25 }}
-          >
-            Motion-powered{" "}
-            <span className="hero-brush-underline">
-              <span className="relative z-[1]">icons and components</span>
-            </span>{" "}
-            for modern interfaces.
-          </motion.h1>
-
-          <motion.p
-            animate={{ opacity: 1, y: 0 }}
-            className="max-w-[90%] font-sans text-neutral-600 text-sm sm:text-lg lg:max-w-[66%] dark:text-neutral-400"
-            initial={{ opacity: 0, y: 20 }}
-            transition={{ duration: 0.5, delay: 0.5 }}
-          >
-            Beautiful{" "}
-            <span className="font-medium text-neutral-900 dark:text-white">
-              motion-powered icons
-            </span>{" "}
-            and{" "}
-            <span className="font-medium text-neutral-900 dark:text-white">
-              UI components
-            </span>{" "}
-            inspired by Lucide — crafted for modern interfaces with clean design
-            and smooth animations.
-          </motion.p>
-
-          <motion.div
-            animate={{ opacity: 1, y: 0 }}
-            className="flex flex-wrap items-center gap-4 sm:gap-8"
-            initial={{ opacity: 0, y: 20 }}
-            transition={{ duration: 0.5, delay: 0.75 }}
-          >
-            <Link
-              className={buttonVariants({
-                size: "lg",
-                className:
-                  "inline-flex h-auto rounded-lg border-0 px-6 py-3 font-medium text-white dark:bg-white dark:text-neutral-900",
-              })}
-              href="/introduction"
-            >
-              Get started
-              <ArrowRight className="size-5" />
-            </Link>
-            <div className="flex flex-col items-start gap-2 text-neutral-900 md:flex-row md:items-center dark:text-white">
-              <span className="whitespace-nowrap font-sans text-neutral-500 text-sm dark:text-neutral-400">
-                Built with
-              </span>
-              <div className="flex flex-wrap items-center justify-start gap-1.5 md:justify-center">
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger
-                      aria-label="React"
-                      className="cursor-default rounded-full bg-primary/5 p-2 transition-colors hover:bg-primary/10"
-                    >
-                      <svg
-                        aria-hidden
-                        height="20"
-                        viewBox="0 0 24 24"
-                        width="20"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <g fill="currentColor">
-                          <path d="M21.718 12c0-1.429-1.339-2.681-3.467-3.5c.029-.18.077-.37.1-.545c.217-2.058-.273-3.543-1.379-4.182c-1.235-.714-2.983-.186-4.751 1.239C10.45 3.589 8.7 3.061 7.468 3.773c-1.107.639-1.6 2.124-1.379 4.182c.018.175.067.365.095.545c-2.127.819-3.466 2.071-3.466 3.5s1.339 2.681 3.466 3.5c-.028.18-.077.37-.095.545c-.218 2.058.272 3.543 1.379 4.182c.376.213.803.322 1.235.316a6 6 0 0 0 3.514-1.56a6 6 0 0 0 3.515 1.56a2.44 2.44 0 0 0 1.236-.316c1.106-.639 1.6-2.124 1.379-4.182c-.019-.175-.067-.365-.1-.545c2.132-.819 3.471-2.071 3.471-3.5m-6.01-7.548a1.5 1.5 0 0 1 .76.187c.733.424 1.055 1.593.884 3.212c-.012.106-.043.222-.058.33q-1.263-.365-2.57-.523a16 16 0 0 0-1.747-1.972a4.9 4.9 0 0 1 2.731-1.234m-7.917 8.781c.172.34.335.68.529 1.017s.395.656.6.969a14 14 0 0 1-1.607-.376a14 14 0 0 1 .478-1.61m-.479-4.076a14 14 0 0 1 1.607-.376q-.308.468-.6.969c-.195.335-.357.677-.529 1.017q-.286-.79-.478-1.61M8.3 12a19 19 0 0 1 .888-1.75q.496-.852 1.076-1.65c.619-.061 1.27-.1 1.954-.1q1.025.001 1.952.1a20 20 0 0 1 1.079 1.654q.488.851.887 1.746a19 19 0 0 1-1.953 3.403a19.2 19.2 0 0 1-3.931 0a20 20 0 0 1-1.066-1.653A19 19 0 0 1 8.3 12m7.816 2.25c.2-.337.358-.677.53-1.017q.286.791.478 1.611a15 15 0 0 1-1.607.376c.202-.314.404-.635.597-.97zm.53-3.483c-.172-.34-.335-.68-.53-1.017a20 20 0 0 0-.6-.97q.814.142 1.606.376a14 14 0 0 1-.478 1.611zM12.217 6.34q.6.563 1.13 1.193q-.555-.031-1.129-.033c-.574-.002-.76.013-1.131.033q.53-.63 1.13-1.193m-4.249-1.7a1.5 1.5 0 0 1 .76-.187a4.9 4.9 0 0 1 2.729 1.233A16 16 0 0 0 9.71 7.658q-1.306.158-2.569.524c-.015-.109-.047-.225-.058-.331c-.171-1.619.151-2.787.885-3.211M3.718 12c0-.9.974-1.83 2.645-2.506c.218.857.504 1.695.856 2.506c-.352.811-.638 1.65-.856 2.506C4.692 13.83 3.718 12.9 3.718 12m4.25 7.361c-.734-.423-1.056-1.593-.885-3.212c.011-.106.043-.222.058-.331q1.262.365 2.564.524a16.4 16.4 0 0 0 1.757 1.982c-1.421 1.109-2.714 1.488-3.494 1.037m3.11-2.895q.56.033 1.14.034q.58-.001 1.139-.034a14 14 0 0 1-1.14 1.215a14 14 0 0 1-1.139-1.215m5.39 2.895c-.782.451-2.075.072-3.5-1.038a16 16 0 0 0 1.757-1.981a16.4 16.4 0 0 0 2.565-.523c.015.108.046.224.058.33c.175 1.619-.148 2.789-.88 3.212m1.6-4.854A16.6 16.6 0 0 0 17.216 12q.529-1.22.856-2.507c1.671.677 2.646 1.607 2.646 2.507s-.975 1.83-2.646 2.507z" />
-                          <path d="M12.215 13.773a1.792 1.792 0 1 0-1.786-1.8v.006a1.787 1.787 0 0 0 1.786 1.794" />
-                        </g>
-                      </svg>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>React</p>
-                    </TooltipContent>
-                  </Tooltip>
-                  <Tooltip>
-                    <TooltipTrigger
-                      aria-label="Next.js"
-                      className="cursor-default rounded-full bg-primary/5 p-2 transition-colors hover:bg-primary/10"
-                    >
-                      <svg
-                        aria-hidden
-                        height="20"
-                        viewBox="0 0 128 128"
-                        width="20"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M64 0A64 64 0 0 0 0 64a64 64 0 0 0 64 64a64 64 0 0 0 35.508-10.838L47.014 49.34v40.238H38.4V38.4h10.768l57.125 73.584A64 64 0 0 0 128 64A64 64 0 0 0 64 0m17.777 38.4h8.534v48.776L81.777 75.97Zm24.18 73.92l-.111.096z"
-                          fill="currentColor"
-                        />
-                      </svg>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>Next.js</p>
-                    </TooltipContent>
-                  </Tooltip>
-                  <Tooltip>
-                    <TooltipTrigger
-                      aria-label="Tailwind CSS"
-                      className="cursor-default rounded-full bg-primary/5 p-2 transition-colors hover:bg-primary/10"
-                    >
-                      <svg
-                        aria-hidden
-                        height="20"
-                        viewBox="0 0 512 512"
-                        width="20"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M128 204.667C145.062 136.227 187.738 102 256 102c102.4 0 115.2 77 166.4 89.833c34.138 8.56 64-4.273 89.6-38.5C494.938 221.773 452.262 256 384 256c-102.4 0-115.2-77-166.4-89.833c-34.138-8.56-64 4.273-89.6 38.5m-128 154C17.062 290.227 59.738 256 128 256c102.4 0 115.2 77 166.4 89.833c34.138 8.56 64-4.273 89.6-38.5C366.938 375.773 324.262 410 256 410c-102.4 0-115.2-77-166.4-89.833c-34.138-8.56-64 4.273-89.6 38.5"
-                          fill="currentColor"
-                        />
-                      </svg>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>Tailwind CSS</p>
-                    </TooltipContent>
-                  </Tooltip>
-                  <Tooltip>
-                    <TooltipTrigger
-                      aria-label="Motion"
-                      className="cursor-default rounded-full bg-primary/5 p-2 transition-colors hover:bg-primary/10"
-                    >
-                      <svg
-                        aria-hidden
-                        height="20"
-                        viewBox="0 0 128 128"
-                        width="20"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M48.379 39.997L23.063 88.003H0L19.77 50.52c3.064-5.814 10.708-10.523 17.078-10.523ZM104.937 52c0-6.631 5.162-12.002 11.531-12.002S128 45.368 128 52c0 6.629-5.162 12-11.532 12c-6.369 0-11.531-5.37-11.531-12.001M52.703 39.997h23.063L50.45 88.003H27.387Zm27.238 0h23.063L83.241 77.48c-3.065 5.814-10.715 10.523-17.084 10.523H54.625Z"
-                          fill="currentColor"
-                        />
-                      </svg>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>Motion</p>
-                    </TooltipContent>
-                  </Tooltip>
-                  <Tooltip>
-                    <TooltipTrigger
-                      aria-label="Framer Motion"
-                      className="cursor-default rounded-full bg-primary/5 p-2 transition-colors hover:bg-primary/10"
-                    >
-                      <svg
-                        aria-hidden
-                        height="20"
-                        viewBox="0 0 100 100"
-                        width="20"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M0 100V0l50 50 50-50v100L75 75l-25 25-25-25z"
-                          fill="currentColor"
-                        />
-                      </svg>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>Framer Motion</p>
-                    </TooltipContent>
-                  </Tooltip>
-                  <Tooltip>
-                    <TooltipTrigger
-                      aria-label="GSAP"
-                      className="cursor-default rounded-full bg-primary/5 p-2 transition-colors hover:bg-primary/10"
-                    >
-                      <svg
-                        aria-hidden
-                        height="20"
-                        viewBox="0 0 128 128"
-                        width="20"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M64 0C28.7 0 0 28.7 0 64s28.7 64 64 64 64-28.7 64-64S99.3 0 64 0zm0 116c-28.7 0-52-23.3-52-52S35.3 12 64 12s52 23.3 52 52-23.3 52-52 52z"
-                          fill="currentColor"
-                        />
-                        <path
-                          d="M64 20c-24.3 0-44 19.7-44 44s19.7 44 44 44 44-19.7 44-44S88.3 20 64 20zm0 76c-17.7 0-32-14.3-32-32S46.3 32 64 32s32 14.3 32 32-14.3 32-32 32z"
-                          fill="currentColor"
-                        />
-                      </svg>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>GSAP</p>
-                    </TooltipContent>
-                  </Tooltip>
-                  <Tooltip>
-                    <TooltipTrigger
-                      aria-label="Shadcn"
-                      className="cursor-default rounded-full bg-primary/5 p-2 transition-colors hover:bg-primary/10"
-                    >
-                      <svg
-                        aria-hidden
-                        height="20"
-                        viewBox="0 0 32 32"
-                        width="20"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="m27.76 16.56l-11.2 11.2m8.96-23.52L4.24 25.52"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeLinecap="round"
-                          strokeWidth="4.48"
-                        />
-                      </svg>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>Shadcn</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
+            <div className="space-y-6 lg:col-span-8">
+              <h1 className="max-w-5xl text-4xl text-foreground tracking-[-0.08em] sm:text-5xl lg:text-[4.6rem]">
+                A sharper way to ship animated icons and UI primitives.
+              </h1>
+              <p className="max-w-3xl text-[16px] text-secondary leading-7 sm:text-[18px] sm:leading-8">
+                Iconiq packages motion-aware icons and reusable interface
+                components into a cleaner registry workflow. White-first
+                surfaces, quiet details, and components that feel designed
+                rather than generated.
+              </p>
+              <div className="flex flex-wrap gap-3 pt-2">
+                <Link
+                  className="border border-foreground bg-foreground px-5 py-3 font-mono text-[10px] text-background uppercase tracking-[0.18em] transition-colors hover:bg-foreground/90"
+                  href="/introduction"
+                >
+                  Read the intro
+                </Link>
+                <Link
+                  className="border border-border/85 bg-muted/20 px-5 py-3 font-mono text-[10px] text-foreground uppercase tracking-[0.18em] transition-colors hover:bg-muted/45"
+                  href="/components/motion-accordion"
+                >
+                  Browse components
+                </Link>
               </div>
             </div>
-          </motion.div>
+          </div>
+        </div>
+
+        <div className="grid gap-5 lg:grid-cols-12">
+          <DocsSection
+            className="lg:col-span-8"
+            description="Iconiq is built around animated icons, editable registry files, and docs that help teams install faster without giving up source ownership."
+            index="01"
+            title="Why Teams Pick Iconiq"
+          >
+            <div className="grid gap-4 md:grid-cols-2">
+              {[
+                "Animated icons are designed to sit naturally beside Lucide-style product UI instead of feeling like a separate visual system.",
+                "Registry components install as real source files, so your team can edit motion, spacing, and styling without waiting on a package release.",
+                "Searchable icon keywords and focused component pages make it easier to find the right primitive quickly.",
+                "Docs combine live previews, install commands, and proper API details so implementation decisions happen in one place.",
+              ].map((note) => (
+                <div
+                  className="border border-border/80 bg-muted/[0.18] px-4 py-4 text-[14px] text-secondary leading-6"
+                  key={note}
+                >
+                  {note}
+                </div>
+              ))}
+            </div>
+          </DocsSection>
+
+          <DocsSection
+            className="lg:col-span-4"
+            description="Jump straight into the parts of the library you need."
+            index="02"
+            title="Start Here"
+          >
+            <div className="space-y-3">
+              {[
+                {
+                  href: "/installation",
+                  label: "Installation",
+                  note: "shadcn registry flow",
+                },
+                {
+                  href: "/icons/button-svg",
+                  label: "Button + Icon",
+                  note: "compose live snippets",
+                },
+                {
+                  href: "/components/button",
+                  label: "Component docs",
+                  note: "full previews and API details",
+                },
+              ].map((item) => (
+                <Link
+                  className="block border border-border/80 bg-muted/[0.14] px-4 py-4 transition-colors hover:bg-muted/45"
+                  href={item.href}
+                  key={item.href}
+                >
+                  <p className="font-medium text-[15px] text-foreground tracking-[-0.03em]">
+                    {item.label}
+                  </p>
+                  <p className="mt-1 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">
+                    {item.note}
+                  </p>
+                </Link>
+              ))}
+            </div>
+          </DocsSection>
         </div>
       </div>
     </section>

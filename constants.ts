@@ -8,9 +8,9 @@ const SITE = {
     TWITTER: "@edwinvakayil",
   },
   DESCRIPTION: {
-    LONG: "Iconiq is a free open-source library of 350+ beautifully crafted motion-powered icons and components. Built with Motion and based on Lucide icons. Copy-paste ready, MIT licensed, fully customizable SVG icons with smooth animations.",
+    LONG: "Iconiq is a free open-source library of 350+ beautifully crafted motion-powered icons and components. Built with Motion and based on Lucide icons. Copy-paste ready, fully customizable SVG icons with smooth animations.",
     SHORT:
-      "Iconiq is a free motion-powered icons and components library with 350+ smooth icons based on Lucide. MIT licensed and copy-paste ready.",
+      "Iconiq is a free motion-powered icons and components library with 350+ smooth icons based on Lucide. Open-source and copy-paste ready.",
   },
   KEYWORDS: [
     "motion-powered icons",
@@ -27,7 +27,7 @@ const SITE = {
     "framer motion icons",
     "animated react components",
     "free icons",
-    "MIT license icons",
+    "open source react icons",
     "copy paste icons",
     "tailwind icons",
     "nextjs icons",

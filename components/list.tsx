@@ -1,10 +1,11 @@
 "use client";
 
 import Fuse from "fuse.js";
+import Link from "next/link";
 import { useDeferredValue, useMemo, useRef, useState } from "react";
 import type { Icon } from "@/actions/get-icons";
 
-import { Card, CardActions, CardTitle } from "@/components/card";
+import { Separator } from "@/components/ui/separator";
 import { ICON_LIST } from "@/icons";
 import { SearchInput } from "./search-input";
 
@@ -31,22 +32,36 @@ const IconItem = ({
   }
 
   return (
-    <Card
-      animationRef={animationRef}
-      className="[contain-intrinsic-size:auto_200px] [content-visibility:auto]"
+    <Link
+      className="group block border border-border/80 bg-background p-4 transition-colors hover:bg-muted/45"
+      href={`/icons/${icon.name}`}
       key={icon.name}
       onMouseEnter={() => animationRef.current?.startAnimation()}
       onMouseLeave={() => animationRef.current?.stopAnimation()}
     >
-      <div className="flex items-center justify-start">
-        <Icon
-          className="flex items-center justify-center [&>svg]:size-10 [&>svg]:text-neutral-900 [&>svg]:dark:text-white"
-          ref={animationRef}
-        />
+      <div className="flex min-h-[132px] flex-col justify-between gap-6 [contain-intrinsic-size:auto_180px] [content-visibility:auto]">
+        <div className="flex items-center justify-between gap-3">
+          <Icon
+            className="flex items-center justify-center [&>svg]:size-10 [&>svg]:text-neutral-900 [&>svg]:dark:text-white"
+            ref={animationRef}
+          />
+          <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">
+            icon
+          </span>
+        </div>
+        <div className="space-y-3">
+          <Separator />
+          <div className="space-y-1">
+            <p className="font-medium text-[15px] text-foreground tracking-[-0.03em]">
+              {icon.name}
+            </p>
+            <p className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">
+              Open detail
+            </p>
+          </div>
+        </div>
       </div>
-      <CardTitle>{icon.name}</CardTitle>
-      <CardActions {...icon} />
-    </Card>
+    </Link>
   );
 };
 
@@ -78,10 +93,10 @@ const IconsList = ({ icons }: Props) => {
   const totalCount = icons.length;
 
   return (
-    <section className="mb-20 w-full space-y-4">
+    <section className="mb-20 w-full space-y-5">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div className="space-y-1">
-          <h2 className="font-sans text-secondary text-xs uppercase tracking-[0.18em]">
+          <h2 className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">
             Icon library
           </h2>
           <p className="font-mono text-secondary text-xs">
@@ -94,9 +109,10 @@ const IconsList = ({ icons }: Props) => {
           setSearchValue={setSearchValue}
         />
       </div>
-      <div className="mt-2 grid grid-cols-[repeat(auto-fill,minmax(220px,1fr))] gap-4">
+      <Separator />
+      <div className="grid grid-cols-[repeat(auto-fill,minmax(220px,1fr))] gap-4">
         {filteredIcons.length === 0 && (
-          <div className="col-span-full pt-10 text-center text-neutral-500 text-sm dark:text-neutral-400">
+          <div className="col-span-full border border-border/80 bg-muted/[0.12] px-4 py-12 text-center text-neutral-500 text-sm dark:text-neutral-400">
             No icons found
           </div>
         )}

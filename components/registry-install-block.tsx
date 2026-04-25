@@ -46,14 +46,14 @@ export function RegistryInstallBlock({
   return (
     <div className="mt-3 w-full min-w-0">
       {/* Package manager pill switcher */}
-      <div className="mb-2 flex flex-wrap gap-1.5">
+      <div className="mb-3 flex flex-wrap gap-1.5">
         {Object.values(PACKAGE_MANAGER).map((pm) => (
           <button
             className={cn(
-              "rounded-full px-2.5 py-0.5 font-medium font-mono text-[10px] uppercase tracking-wider transition-colors duration-150",
+              "border px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.18em] transition-colors duration-150",
               packageName === pm
-                ? "bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900"
-                : "bg-neutral-100 text-neutral-500 hover:bg-neutral-200 hover:text-neutral-700 dark:bg-neutral-800 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-200"
+                ? "border-foreground bg-foreground text-background"
+                : "border-border bg-transparent text-muted-foreground hover:text-foreground"
             )}
             key={pm}
             onClick={() => setPackageName(pm)}
@@ -65,23 +65,19 @@ export function RegistryInstallBlock({
       </div>
 
       {/* Command display */}
-      <div className="flex items-center gap-2 rounded-xl border border-neutral-200/80 bg-neutral-50 px-3.5 py-2.5 dark:border-neutral-700/50 dark:bg-neutral-900/60">
+      <div className="flex items-center gap-2 border border-border/85 bg-muted/28 px-3.5 py-2.5">
         <div className="min-w-0 flex-1 overflow-x-auto">
           <span className="sr-only">{getCommand(packageName)}</span>
           <p
             aria-hidden="true"
             className="whitespace-nowrap font-mono text-[12px] leading-none"
           >
-            <span className="text-neutral-400 dark:text-neutral-500">
+            <span className="text-muted-foreground">
               {getPackageManagerPrefix(packageName)}
             </span>{" "}
-            <span className="text-neutral-600 dark:text-neutral-300">
-              shadcn@latest add
-            </span>{" "}
-            <span className="text-neutral-400 dark:text-neutral-500">
-              {SITE.URL}/r/
-            </span>
-            <span className="font-semibold text-neutral-900 dark:text-white">
+            <span className="text-secondary">shadcn@latest add</span>{" "}
+            <span className="text-muted-foreground">{SITE.URL}/r/</span>
+            <span className="font-semibold text-foreground">
               {registryPath}
             </span>
           </p>
@@ -89,7 +85,7 @@ export function RegistryInstallBlock({
         <button
           aria-disabled={status !== "idle"}
           aria-label="Copy to clipboard"
-          className="shrink-0 rounded-lg p-1.5 transition-colors duration-150 hover:bg-neutral-200/70 dark:hover:bg-neutral-700/60"
+          className="shrink-0 border border-transparent p-1.5 transition-colors duration-150 hover:border-border hover:bg-background"
           onClick={handleCopy}
           tabIndex={0}
           type="button"
@@ -97,7 +93,7 @@ export function RegistryInstallBlock({
           <IconState status={status}>
             <CopyIcon
               aria-hidden="true"
-              className="size-3.5 text-neutral-400 dark:text-neutral-500"
+              className="size-3.5 text-muted-foreground"
             />
           </IconState>
         </button>

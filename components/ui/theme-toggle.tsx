@@ -3,10 +3,15 @@
 import { useHotkey } from "@tanstack/react-hotkeys";
 import { MoonIcon, SunIcon } from "lucide-react";
 import { useTheme } from "next-themes";
+import { cn } from "@/lib/utils";
 
 type Theme = "light" | "dark" | "system";
 
-const ThemeToggle = () => {
+type ThemeToggleProps = {
+  className?: string;
+};
+
+const ThemeToggle = ({ className }: ThemeToggleProps) => {
   const { setTheme, theme: currentTheme, resolvedTheme } = useTheme();
 
   const isDark = resolvedTheme === "dark";
@@ -26,7 +31,10 @@ const ThemeToggle = () => {
     <button
       aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
       aria-pressed={isDark}
-      className="relative flex size-9 cursor-pointer items-center justify-center rounded-md text-neutral-600 transition-colors hover:bg-neutral-100 hover:text-neutral-900 focus-visible:outline-1 focus-visible:outline-primary dark:text-neutral-400 dark:hover:bg-white/10 dark:hover:text-white"
+      className={cn(
+        "relative flex size-9 cursor-pointer items-center justify-center rounded-full text-neutral-600 transition-colors hover:bg-neutral-100 hover:text-neutral-900 focus-visible:outline-1 focus-visible:outline-primary dark:text-neutral-400 dark:hover:bg-white/10 dark:hover:text-white",
+        className
+      )}
       onClick={() => handleChangeTheme(nextTheme)}
       suppressHydrationWarning
       tabIndex={0}
