@@ -266,10 +266,10 @@ export function combobox({
             <AnimatePresence>
               {open && (
                 <motion.div
-                  animate={{ opacity: 1, y: 6, scale: 1 }}
+                  animate={{ opacity: 1, scale: 1 }}
                   className="z-[9999] mt-1 overflow-hidden rounded-lg border border-neutral-200 bg-white text-neutral-900 shadow-lg dark:border-neutral-700 dark:bg-neutral-950 dark:text-neutral-100"
-                  exit={{ opacity: 0, y: -4, scale: 0.97 }}
-                  initial={{ opacity: 0, y: -6, scale: 0.97 }}
+                  exit={{ opacity: 0, scale: 0.97 }}
+                  initial={{ opacity: 0, scale: 0.97 }}
                   key="popover"
                   role="presentation"
                   style={{
