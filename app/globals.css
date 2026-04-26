@@ -178,9 +178,9 @@
     color: white;
   }
 
-.dark ::selection {
-  color: #111111;
-}
+  .dark ::selection {
+    color: #111111;
+  }
 
   .root {
     position: relative;

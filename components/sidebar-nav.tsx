@@ -179,7 +179,7 @@ export function SidebarNav() {
                             >
                               {isActive && (
                                 <motion.span
-                                  className="absolute top-1/2 left-0 h-4 w-0.5 -translate-y-1/2 rounded-full bg-[#16d75d] dark:bg-[#16a34a]"
+                                  className="absolute top-1/2 left-0 h-4 w-0.5 -translate-y-1/2 rounded-full bg-[#000000] dark:bg-[#ffffff]"
                                   layoutId="sidebar-active"
                                   transition={{
                                     type: "spring",

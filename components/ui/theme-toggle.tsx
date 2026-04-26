@@ -1,31 +1,48 @@
 "use client";
 
-import { useHotkey } from "@tanstack/react-hotkeys";
 import { MoonIcon, SunIcon } from "lucide-react";
 import { useTheme } from "next-themes";
+import { useCallback, useEffect } from "react";
 import { cn } from "@/lib/utils";
-
-type Theme = "light" | "dark" | "system";
 
 type ThemeToggleProps = {
   className?: string;
 };
 
 const ThemeToggle = ({ className }: ThemeToggleProps) => {
-  const { setTheme, theme: currentTheme, resolvedTheme } = useTheme();
+  const { setTheme, resolvedTheme } = useTheme();
 
   const isDark = resolvedTheme === "dark";
   const nextTheme = isDark ? "light" : "dark";
 
-  const handleChangeTheme = (theme: Theme) => {
-    if (theme === currentTheme) return;
+  const handleChangeTheme = useCallback(() => {
+    setTheme(nextTheme);
+  }, [nextTheme, setTheme]);
 
-    setTheme(theme);
-  };
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      const target = event.target;
+      const isEditableTarget =
+        target instanceof HTMLInputElement ||
+        target instanceof HTMLTextAreaElement ||
+        target instanceof HTMLSelectElement ||
+        (target instanceof HTMLElement && target.isContentEditable);
 
-  useHotkey("Mod+U", () => {
-    handleChangeTheme(nextTheme);
-  });
+      if (isEditableTarget) return;
+      if (event.metaKey || event.ctrlKey || event.altKey || event.shiftKey)
+        return;
+      if (event.repeat) return;
+      if (event.key.toLowerCase() !== "d") return;
+
+      handleChangeTheme();
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [handleChangeTheme]);
 
   return (
     <button
@@ -35,7 +52,7 @@ const ThemeToggle = ({ className }: ThemeToggleProps) => {
         "relative flex size-9 cursor-pointer items-center justify-center rounded-full text-neutral-600 transition-colors hover:bg-neutral-100 hover:text-neutral-900 focus-visible:outline-1 focus-visible:outline-primary dark:text-neutral-400 dark:hover:bg-white/10 dark:hover:text-white",
         className
       )}
-      onClick={() => handleChangeTheme(nextTheme)}
+      onClick={handleChangeTheme}
       suppressHydrationWarning
       tabIndex={0}
       type="button"
