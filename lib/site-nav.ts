@@ -22,6 +22,7 @@ export const SITE_SECTIONS = [
       { label: "Collapsible", href: "/components/collapsible" },
       { label: "Combobox", href: "/components/combobox" },
       { label: "Context menu", href: "/components/context-menu" },
+      { label: "Drawer", href: "/components/drawer" },
       { label: "Dialog", href: "/components/dialog" },
       { label: "Hover card", href: "/components/hover-card" },
       { label: "Input", href: "/components/input" },

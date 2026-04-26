@@ -177,6 +177,21 @@
       ]
     },
     {
+      "name": "drawer",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": ["framer-motion", "lucide-react"],
+      "devDependencies": [],
+      "title": "Drawer",
+      "description": "Controlled overlay drawer with side-based slide motion, staggered content reveal, and a built-in close header.",
+      "files": [
+        {
+          "path": "drawer.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "hover-card",
       "type": "registry:ui",
       "registryDependencies": [],

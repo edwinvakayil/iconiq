@@ -153,6 +153,38 @@ const COMPONENT_EXAMPLE: Record<string, string> = {
     "    </div>\n" +
     "  )\n" +
     "}\n",
+  drawer:
+    '"use client";\n\n' +
+    `import { useState } from "react"\n` +
+    `import { Drawer } from "@/components/ui/drawer"\n\n` +
+    "export default function Page() {\n" +
+    "  const [open, setOpen] = useState(false)\n\n" +
+    "  return (\n" +
+    '    <div className="flex min-h-svh items-center justify-center p-8">\n' +
+    "      <>\n" +
+    "        <button\n" +
+    '          className="inline-flex items-center justify-center rounded-lg border border-border px-4 py-2 text-sm font-medium text-foreground"\n' +
+    "          onClick={() => setOpen(true)}\n" +
+    '          type="button"\n' +
+    "        >\n" +
+    "          Open drawer\n" +
+    "        </button>\n" +
+    "        <Drawer\n" +
+    '          description="Review the latest changes before publishing the next update."\n' +
+    "          onClose={() => setOpen(false)}\n" +
+    "          open={open}\n" +
+    '          title="Workspace details"\n' +
+    "        >\n" +
+    '          <div className="space-y-3">\n' +
+    '            <p className="text-sm text-muted-foreground">\n' +
+    "              This drawer keeps the interaction focused without leaving the current page.\n" +
+    "            </p>\n" +
+    "          </div>\n" +
+    "        </Drawer>\n" +
+    "      </>\n" +
+    "    </div>\n" +
+    "  )\n" +
+    "}\n",
   radiogroup:
     '"use client";\n\n' +
     `import RadioGroup from "@/components/ui/radiogroup"\n` +

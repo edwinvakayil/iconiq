@@ -702,6 +702,86 @@ const contextMenuApiDetails: DetailItem[] = [
   registryItem("context-menu.json", ["framer-motion"]),
 ];
 
+const drawerApiDetails: DetailItem[] = [
+  {
+    id: "drawer",
+    title: "Drawer",
+    summary:
+      "Single exported overlay drawer controlled entirely from parent state, with side-based panel motion and built-in body scroll locking.",
+    fields: [
+      field({
+        name: "open",
+        type: "boolean",
+        required: true,
+        description:
+          "Controls whether the drawer and overlay render at all. The component is fully controlled and does not keep its own open state.",
+      }),
+      field({
+        name: "onClose",
+        type: "() => void",
+        required: true,
+        description:
+          "Called when the overlay is clicked or when Escape is pressed while the drawer is open.",
+      }),
+      field({
+        name: "side",
+        type: '"left" | "right" | "top" | "bottom"',
+        defaultValue: '"right"',
+        description:
+          "Chooses the panel edge, slide direction, and the matching border placement from the internal panelVariants map.",
+      }),
+      field({
+        name: "title",
+        type: "string",
+        description:
+          "Primary heading rendered in the header row. When omitted, the heading node still renders but stays empty.",
+      }),
+      field({
+        name: "description",
+        type: "string",
+        description:
+          "Secondary helper line rendered under the title when present.",
+      }),
+      field({
+        name: "children",
+        type: "ReactNode",
+        description:
+          "Content rendered inside the scrolling body area below the header.",
+      }),
+    ],
+    notes: [
+      "This component does not forward arbitrary DOM props or refs to the overlay or panel. The public API is limited to the controlled props above.",
+      "While open, the component sets document.body.style.overflow to hidden and restores it during cleanup.",
+      "There is no focus trap, portal primitive, or aria dialog wiring here, so this version is closer to a visual application drawer than a full modal accessibility primitive.",
+    ],
+  },
+  {
+    id: "drawer-motion-layout",
+    title: "Motion, layout, and close behavior",
+    summary:
+      "The drawer uses a spring-driven panel plus staggered header and body children, with a softer duration fallback when reduced motion is enabled.",
+    fields: [
+      field({
+        name: "overlay",
+        type: "built-in",
+        description:
+          "A fixed full-screen overlay is always rendered behind the panel and closes the drawer on click.",
+      }),
+      field({
+        name: "close button",
+        type: "built-in",
+        description:
+          "The header always includes a close button with the Lucide X icon wired to onClose.",
+      }),
+    ],
+    notes: [
+      "Top and bottom drawers cap their height at 80vh, while left and right drawers cap their width at max-w-md and otherwise fill the viewport edge-to-edge.",
+      "A decorative top shimmer is always rendered inside the panel. Remove or restyle it locally if you want a flatter surface.",
+    ],
+  },
+  registryItem("drawer.json", ["framer-motion", "lucide-react"]),
+];
+
 const collapsibleApiDetails: DetailItem[] = [
   {
     id: "collapsible-root",
@@ -1693,6 +1773,7 @@ export {
   comboboxApiDetails,
   contextMenuApiDetails,
   collapsibleApiDetails,
+  drawerApiDetails,
   dialogApiDetails,
   hoverCardApiDetails,
   popoverApiDetails,

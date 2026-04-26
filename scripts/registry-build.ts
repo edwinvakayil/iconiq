@@ -34,6 +34,12 @@ const REGISTRY_UI_META: Record<
       "Native-feeling context menu with fixed-position viewport-aware placement, per-item icons and shortcuts, and spring entrance motion.",
     dependencies: ["framer-motion"],
   },
+  drawer: {
+    title: "Drawer",
+    description:
+      "Controlled overlay drawer with side-based slide motion, staggered content reveal, and a built-in close header.",
+    dependencies: ["framer-motion", "lucide-react"],
+  },
   "motion-accordion": {
     title: "Accordion",
     description:
