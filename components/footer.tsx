@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { Logo } from "@/components/logo";
 import { Separator } from "@/components/ui/separator";
 import { LINK, SITE } from "@/constants";
 
@@ -28,10 +27,12 @@ const Footer = () => {
       <div className="mx-auto w-full max-w-[1480px] px-4 py-8 sm:px-6 sm:py-9 lg:px-10">
         <div className="grid gap-8 lg:grid-cols-[minmax(0,1.35fr)_minmax(220px,0.75fr)_minmax(220px,0.75fr)] lg:gap-10">
           <div className="space-y-4">
-            <Logo
-              className="gap-3 text-[18px] tracking-[-0.03em]"
-              iconSize={18}
-            />
+            <Link
+              className="inline-flex font-semibold text-[18px] text-foreground tracking-[-0.03em]"
+              href="/"
+            >
+              {SITE.LOGO}
+            </Link>
             <p className="max-w-md text-[15px] text-secondary leading-6">
               Motion-powered, registry-ready components for teams that want
               source-first UI instead of locked packages.

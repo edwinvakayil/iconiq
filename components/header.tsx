@@ -13,9 +13,8 @@ import {
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Logo } from "@/components/logo";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
-import { LINK } from "@/constants";
+import { LINK, SITE } from "@/constants";
 import { BASE_LINKS, SITE_SECTIONS } from "@/lib/site-nav";
 
 const componentsSection = SITE_SECTIONS.find((s) => s.label === "Components");
@@ -212,7 +211,12 @@ export function Header() {
         }
       >
         <div className="mx-auto flex h-[var(--header-height-mobile)] items-center justify-between px-4 sm:px-6 lg:hidden">
-          <Logo />
+          <Link
+            className="font-semibold text-[18px] text-foreground tracking-[-0.03em]"
+            href="/"
+          >
+            {SITE.LOGO}
+          </Link>
 
           <div className="flex items-center gap-2">
             <ThemeToggle />
@@ -260,10 +264,12 @@ export function Header() {
 
         <div className="mx-auto hidden h-[var(--header-height-desktop)] items-center justify-between gap-8 px-6 lg:flex xl:px-10 2xl:px-12">
           <div className="flex min-w-0 items-center">
-            <Logo
-              className="shrink-0 gap-3 text-[17px] tracking-[-0.03em]"
-              iconSize={18}
-            />
+            <Link
+              className="shrink-0 font-semibold text-[17px] text-foreground tracking-[-0.03em]"
+              href="/"
+            >
+              {SITE.LOGO}
+            </Link>
           </div>
 
           <div className="flex items-center justify-end">
