@@ -50,7 +50,7 @@ export function HomeHero() {
 
             <div className="space-y-6 lg:col-span-8">
               <h1 className="max-w-5xl text-4xl text-foreground tracking-[-0.08em] sm:text-5xl lg:text-[4.6rem]">
-                A more disciplined way to build polished React interfaces.
+                A sharper way to build polished React interfaces.
               </h1>
               <p className="max-w-3xl text-[16px] text-secondary leading-7 sm:text-[18px] sm:leading-8">
                 Iconiq offers a focused library of motion-aware components for
