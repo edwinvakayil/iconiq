@@ -24,6 +24,7 @@ export const SITE_SECTIONS = [
       { label: "Context menu", href: "/components/context-menu" },
       { label: "Drawer", href: "/components/drawer" },
       { label: "Dialog", href: "/components/dialog" },
+      { label: "File upload", href: "/components/file-upload" },
       { label: "Hover card", href: "/components/hover-card" },
       { label: "Input", href: "/components/input" },
       { label: "Popover", href: "/components/popover" },

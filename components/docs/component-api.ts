@@ -782,6 +782,108 @@ const drawerApiDetails: DetailItem[] = [
   registryItem("drawer.json", ["framer-motion", "lucide-react"]),
 ];
 
+const fileUploadApiDetails: DetailItem[] = [
+  {
+    id: "file-upload",
+    title: "FileUpload",
+    summary:
+      "Drag-and-drop uploader with an internal queue, hidden file input, keyboard-triggerable drop zone, and callback hooks for parent integrations.",
+    fields: [
+      field({
+        name: "accept",
+        type: "string",
+        description:
+          "Optional accept string passed to the hidden file input and also enforced for dropped files, including MIME types like image/* and extensions like .pdf.",
+      }),
+      field({
+        name: "multiple",
+        type: "boolean",
+        defaultValue: "true",
+        description:
+          "Allows selecting or dropping multiple files. When set to false, the next selection replaces the existing queue.",
+      }),
+      field({
+        name: "maxFiles",
+        type: "number",
+        description:
+          "Caps the queue length. New files are prepended, and anything beyond the limit is trimmed from the end.",
+      }),
+      field({
+        name: "disabled",
+        type: "boolean",
+        defaultValue: "false",
+        description:
+          "Disables click, drag, keyboard activation, and the hidden file input without changing the component structure.",
+      }),
+      field({
+        name: "name",
+        type: "string",
+        description:
+          "Passes a form field name through to the hidden file input for form integrations.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description:
+          "Adds classes to the outer wrapper without changing the component internals.",
+      }),
+      field({
+        name: "onFilesChange",
+        type: "(files: File[]) => void",
+        description:
+          "Called when files are added or removed from the queue. It does not fire on every progress tick.",
+      }),
+      field({
+        name: "onFileRemove",
+        type: "(file: File, nextFiles: File[]) => void",
+        description:
+          "Called after a queued file is removed. The second argument contains the remaining files in queue order.",
+      }),
+      field({
+        name: "onUploadComplete",
+        type: "(files: File[]) => void",
+        description:
+          "Called once the current queue reaches 100% completion for every item.",
+      }),
+    ],
+    notes: [
+      "The drop zone is keyboard accessible and opens the hidden file input on Enter or Space.",
+      "Both drag-and-drop and click-to-browse flow through the same queue logic, so accept filtering and max file limits stay consistent.",
+    ],
+  },
+  {
+    id: "file-upload-behavior",
+    title: "Built-in behavior",
+    summary:
+      "The component still owns its progress visuals and preview lifecycle, even when you attach callbacks from parent code.",
+    fields: [
+      field({
+        name: "progress state",
+        type: "built-in",
+        description:
+          "Each added file starts in an uploading state and advances through the built-in simulated progress loop until it reaches done.",
+      }),
+      field({
+        name: "image previews",
+        type: "built-in",
+        description:
+          "Image files receive object URL previews and render as thumbnails; non-image files fall back to a file icon surface.",
+      }),
+      field({
+        name: "remove action",
+        type: "built-in",
+        description:
+          "Each queued file can be removed individually from the trailing action button, with preview URLs revoked immediately.",
+      }),
+    ],
+    notes: [
+      "Preview object URLs are cleaned up on remove and during component unmount.",
+      "Each queue item id is built from the file name, file size, and a random suffix to reduce collisions between repeated uploads.",
+    ],
+  },
+  registryItem("file-upload.json", ["framer-motion", "lucide-react"]),
+];
+
 const collapsibleApiDetails: DetailItem[] = [
   {
     id: "collapsible-root",
@@ -1775,6 +1877,7 @@ export {
   collapsibleApiDetails,
   drawerApiDetails,
   dialogApiDetails,
+  fileUploadApiDetails,
   hoverCardApiDetails,
   popoverApiDetails,
   inputApiDetails,

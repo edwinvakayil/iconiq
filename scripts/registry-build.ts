@@ -40,6 +40,12 @@ const REGISTRY_UI_META: Record<
       "Controlled overlay drawer with side-based slide motion, staggered content reveal, and a built-in close header.",
     dependencies: ["framer-motion", "lucide-react"],
   },
+  "file-upload": {
+    title: "File Upload",
+    description:
+      "Drag-and-drop file uploader with click-to-browse fallback, queued file rows, image previews, built-in progress states, and optional change callbacks.",
+    dependencies: ["framer-motion", "lucide-react"],
+  },
   "motion-accordion": {
     title: "Accordion",
     description:

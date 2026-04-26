@@ -185,6 +185,16 @@ const COMPONENT_EXAMPLE: Record<string, string> = {
     "    </div>\n" +
     "  )\n" +
     "}\n",
+  "file-upload":
+    '"use client";\n\n' +
+    `import { FileUpload } from "@/components/ui/file-upload"\n\n` +
+    "export default function Page() {\n" +
+    "  return (\n" +
+    '    <div className="mx-auto flex min-h-svh w-full max-w-3xl items-center justify-center p-8">\n' +
+    "      <FileUpload />\n" +
+    "    </div>\n" +
+    "  )\n" +
+    "}\n",
   radiogroup:
     '"use client";\n\n' +
     `import RadioGroup from "@/components/ui/radiogroup"\n` +
