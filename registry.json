@@ -207,6 +207,21 @@
       ]
     },
     {
+      "name": "popover",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": ["@radix-ui/react-popover", "framer-motion"],
+      "devDependencies": [],
+      "title": "Popover",
+      "description": "Controlled popover built on Radix with portal-based positioning, optional anchor support, and a spring-driven content panel.",
+      "files": [
+        {
+          "path": "popover.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "radiogroup",
       "type": "registry:ui",
       "registryDependencies": [],

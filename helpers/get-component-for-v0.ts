@@ -340,6 +340,42 @@ const COMPONENT_EXAMPLE: Record<string, string> = {
     "    </div>\n" +
     "  )\n" +
     "}\n",
+  popover:
+    '"use client";\n\n' +
+    `import { useState } from "react"\n` +
+    "import {\n" +
+    "  Popover,\n" +
+    "  PopoverAnchor,\n" +
+    "  PopoverContent,\n" +
+    "  PopoverTrigger,\n" +
+    `} from "@/components/ui/popover"\n\n` +
+    "export default function Page() {\n" +
+    "  const [open, setOpen] = useState(false)\n\n" +
+    "  return (\n" +
+    '    <div className="flex min-h-svh items-center justify-center p-8">\n' +
+    "      <Popover onOpenChange={setOpen} open={open}>\n" +
+    "        <PopoverAnchor asChild>\n" +
+    '          <div className="inline-flex items-center gap-3">\n' +
+    '            <span className="text-sm text-muted-foreground">Project notes</span>\n' +
+    "            <PopoverTrigger asChild>\n" +
+    '              <button className="rounded-md border px-3 py-2 text-sm" type="button">\n' +
+    "                Open popover\n" +
+    "              </button>\n" +
+    "            </PopoverTrigger>\n" +
+    "          </div>\n" +
+    "        </PopoverAnchor>\n" +
+    '        <PopoverContent className="w-80" open={open}>\n' +
+    '          <div className="space-y-2">\n' +
+    '            <p className="font-medium">Kickoff summary</p>\n' +
+    '            <p className="text-sm text-muted-foreground">\n' +
+    "              Align scope, confirm launch timing, and keep motion lightweight.\n" +
+    "            </p>\n" +
+    "          </div>\n" +
+    "        </PopoverContent>\n" +
+    "      </Popover>\n" +
+    "    </div>\n" +
+    "  )\n" +
+    "}\n",
   input:
     '"use client";\n\n' +
     `import { input as Input } from "@/components/ui/input"\n` +

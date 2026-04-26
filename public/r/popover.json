@@ -1,0 +1,17 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "popover",
+  "type": "registry:ui",
+  "registryDependencies": [],
+  "dependencies": ["@radix-ui/react-popover", "framer-motion"],
+  "devDependencies": [],
+  "files": [
+    {
+      "path": "popover.tsx",
+      "content": "\"use client\";\n\nimport * as PopoverPrimitive from \"@radix-ui/react-popover\";\nimport { AnimatePresence, motion } from \"framer-motion\";\nimport * as React from \"react\";\n\nimport { cn } from \"@/lib/utils\";\n\nconst Popover = PopoverPrimitive.Root;\nconst PopoverTrigger = PopoverPrimitive.Trigger;\nconst PopoverAnchor = PopoverPrimitive.Anchor;\n\ntype PopoverContentProps = React.ComponentPropsWithoutRef<\n  typeof PopoverPrimitive.Content\n> & {\n  open?: boolean;\n};\n\n/**\n * Internal content body — uses Radix's data-side to derive an origin-aware\n * transform so the popover appears to grow out of its trigger.\n */\nconst PopoverContentBody = React.forwardRef<\n  React.ElementRef<typeof PopoverPrimitive.Content>,\n  PopoverContentProps\n>(\n  (\n    { className, align = \"center\", sideOffset = 8, children, ...props },\n    ref\n  ) => {\n    return (\n      <PopoverPrimitive.Content\n        align={align}\n        asChild\n        ref={ref}\n        sideOffset={sideOffset}\n        {...props}\n      >\n        <motion.div\n          animate={{\n            opacity: 1,\n            scale: 1,\n            y: 0,\n            transition: {\n              type: \"spring\",\n              stiffness: 320,\n              damping: 26,\n              mass: 0.8,\n            },\n          }}\n          className={cn(\n            \"z-50 w-72 rounded-xl border border-border bg-white p-4 text-foreground shadow-lg outline-none dark:bg-black\",\n            className\n          )}\n          exit={{\n            opacity: 0,\n            scale: 0.96,\n            y: -4,\n            transition: { duration: 0.15, ease: \"easeIn\" },\n          }}\n          initial={{ opacity: 0, scale: 0.92, y: -6 }}\n          style={{\n            transformOrigin: \"var(--radix-popover-content-transform-origin)\",\n          }}\n        >\n          <motion.div\n            animate={{\n              opacity: 1,\n              y: 0,\n              transition: { delay: 0.08, duration: 0.25, ease: \"easeOut\" },\n            }}\n            exit={{ opacity: 0, transition: { duration: 0.1 } }}\n            initial={{ opacity: 0, y: 4 }}\n          >\n            {children}\n          </motion.div>\n        </motion.div>\n      </PopoverPrimitive.Content>\n    );\n  }\n);\nPopoverContentBody.displayName = \"PopoverContentBody\";\n\n/**\n * Wrap PopoverContent with AnimatePresence so exit animations play.\n * `open` must be passed in (controlled) for AnimatePresence to track mount/unmount.\n */\nconst PopoverContent = React.forwardRef<\n  React.ElementRef<typeof PopoverPrimitive.Content>,\n  PopoverContentProps\n>(({ open, ...props }, ref) => {\n  return (\n    <AnimatePresence>\n      {open ? (\n        <PopoverPrimitive.Portal forceMount>\n          <PopoverContentBody ref={ref} {...props} />\n        </PopoverPrimitive.Portal>\n      ) : null}\n    </AnimatePresence>\n  );\n});\nPopoverContent.displayName = \"PopoverContent\";\n\nexport { Popover, PopoverTrigger, PopoverContent, PopoverAnchor };\n",
+      "type": "registry:ui"
+    }
+  ],
+  "title": "Popover",
+  "description": "Controlled popover built on Radix with portal-based positioning, optional anchor support, and a spring-driven content panel."
+}

@@ -947,6 +947,116 @@ const hoverCardApiDetails: DetailItem[] = [
   registryItem("hover-card.json", ["@radix-ui/react-slot", "framer-motion"]),
 ];
 
+const popoverApiDetails: DetailItem[] = [
+  {
+    id: "popover-root",
+    title: "Popover",
+    summary:
+      "Standard shadcn-style export: `Popover` is `PopoverPrimitive.Root`, matching what the CLI installs into `components/ui/popover`.",
+    fields: [
+      field({
+        name: "open",
+        type: "boolean",
+        description:
+          "Controlled open state on the Radix root when you want React state to own visibility.",
+      }),
+      field({
+        name: "defaultOpen",
+        type: "boolean",
+        description:
+          "Uncontrolled initial state forwarded to the underlying Radix popover root.",
+      }),
+      field({
+        name: "onOpenChange",
+        type: "(open: boolean) => void",
+        description:
+          "Called whenever Radix requests a state change through the trigger, outside interaction, or escape handling.",
+      }),
+      field({
+        name: "children",
+        type: "ReactNode",
+        required: true,
+        description:
+          "Composition surface for the trigger, optional anchor, and content primitives.",
+      }),
+    ],
+    notes: [
+      "Any remaining root props continue to work because the export is the Radix primitive itself.",
+    ],
+  },
+  {
+    id: "popover-trigger",
+    title: "PopoverTrigger and PopoverAnchor",
+    summary:
+      "These exports are direct aliases of the matching Radix primitives and are used to open the popover or redefine its positioning anchor.",
+    fields: [
+      field({
+        name: "asChild",
+        type: "boolean",
+        description:
+          "Lets you render your own button, link, or wrapper element without adding an extra DOM node.",
+      }),
+      field({
+        name: "children",
+        type: "ReactNode",
+        required: true,
+        description:
+          "Interactive or layout content rendered by the trigger or anchor primitive.",
+      }),
+    ],
+    notes: [
+      "Because both exports come directly from Radix, they also accept the remaining primitive props for event handling and accessibility wiring.",
+    ],
+  },
+  {
+    id: "popover-content",
+    title: "PopoverContent",
+    summary:
+      "Animated content wrapper built on Radix Popover.Content and AnimatePresence.",
+    fields: [
+      field({
+        name: "open",
+        type: "boolean",
+        required: true,
+        description:
+          "Controls whether the animated portal branch renders at all. In practice this must mirror the root open state for entry and exit motion to run correctly.",
+      }),
+      field({
+        name: "children",
+        type: "ReactNode",
+        required: true,
+        description: "Content rendered inside the animated panel.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description:
+          "Merged onto the motion.div panel for local width, spacing, or surface overrides.",
+      }),
+      field({
+        name: "align",
+        type: '"start" | "center" | "end"',
+        defaultValue: "center",
+        description:
+          "Forwarded to Radix Popover.Content to control horizontal alignment relative to the trigger or anchor.",
+      }),
+      field({
+        name: "sideOffset",
+        type: "number",
+        defaultValue: "8",
+        description:
+          "Forwarded to Radix Popover.Content to control the gap between the anchor and the floating panel.",
+      }),
+    ],
+    notes: [
+      "Remaining Radix content props are forwarded through to PopoverPrimitive.Content, including side, collisionPadding, onEscapeKeyDown, and accessibility props.",
+      "The component always renders inside a Radix portal and uses the Radix transform-origin CSS variable so the motion scales from the resolved placement.",
+      "Entry and exit animation are owned internally, so initial, animate, exit, and transition are not part of the public prop surface.",
+    ],
+  },
+  registryItem("popover.json", ["@radix-ui/react-popover", "framer-motion"]),
+];
+
 const inputApiDetails: DetailItem[] = [
   {
     id: "input",
@@ -1489,6 +1599,7 @@ export {
   collapsibleApiDetails,
   dialogApiDetails,
   hoverCardApiDetails,
+  popoverApiDetails,
   inputApiDetails,
   motionAccordionApiDetails,
   radioGroupApiDetails,

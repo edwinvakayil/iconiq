@@ -24,6 +24,7 @@ export const SITE_SECTIONS = [
       { label: "Dialog", href: "/components/dialog" },
       { label: "Hover card", href: "/components/hover-card" },
       { label: "Input", href: "/components/input" },
+      { label: "Popover", href: "/components/popover" },
       { label: "Checkbox group", href: "/components/checkbox-group" },
       { label: "Radio group", href: "/components/radiogroup" },
       { label: "Select", href: "/components/select" },
