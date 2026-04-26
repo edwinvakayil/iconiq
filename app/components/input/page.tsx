@@ -366,7 +366,7 @@ export default function InputPage() {
       }
       title="Input"
       usageCode={usageCode}
-      usageDescription="Alias the lowercase export to `Input` in JSX, then use the API details to tune type, icons, container classes, and registry-file installs."
+      usageDescription="Alias the lowercase export to `Input` in JSX, then use the API details to tune type, helper affordances, and container classes."
     />
   );
 }

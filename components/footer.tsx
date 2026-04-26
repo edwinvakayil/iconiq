@@ -19,7 +19,6 @@ const productLinks = [
 const resourceLinks: readonly FooterLink[] = [
   { label: "GitHub", href: LINK.GITHUB },
   { label: "X", href: LINK.TWITTER },
-  { label: "Open Source", href: LINK.GITHUB },
   { label: "Sponsor", href: "/sponsorship", internal: true },
 ];
 

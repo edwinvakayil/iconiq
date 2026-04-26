@@ -8,31 +8,31 @@ import { SITE_SECTIONS } from "@/lib/site-nav";
 const principles = [
   {
     icon: Layers,
-    title: "Source-first delivery",
-    desc: "Every component installs as real project code, so teams can adjust motion, structure, and styling without waiting on a package release.",
+    title: "Editable source by default",
+    desc: "Each component is installed directly into your application, giving your team immediate control over structure, styling, and interaction behavior.",
   },
   {
     icon: LayoutGrid,
-    title: "Focused component set",
-    desc: "Iconiq stays intentionally narrow with reusable UI primitives that cover common product patterns instead of chasing endless surface area.",
+    title: "Curated component scope",
+    desc: "The library stays intentionally focused on high-utility primitives that support common product workflows without unnecessary surface area.",
   },
   {
     icon: Sparkles,
-    title: "Motion with intent",
-    desc: "Animation is there to clarify state changes, hierarchy, and interaction feedback rather than to decorate otherwise static UI.",
+    title: "Motion with a clear role",
+    desc: "Animation is used to communicate hierarchy, state, and transition feedback so the interface feels responsive without becoming decorative.",
   },
   {
     icon: Zap,
-    title: "Fast installation",
-    desc: "The shadcn-style workflow keeps adoption light: copy a command, pull a file into your app, and keep moving.",
+    title: "Practical adoption flow",
+    desc: "The registry workflow is designed for speed: install a component, review the source locally, and adapt it inside your own codebase.",
   },
 ];
 
 const stack = [
-  { label: "Motion", note: "interaction and state animation" },
-  { label: "TypeScript", note: "typed component APIs" },
-  { label: "shadcn registry", note: "source-first delivery" },
-  { label: "Tailwind CSS", note: "styling layer" },
+  { label: "Motion", note: "state and transition animation" },
+  { label: "TypeScript", note: "typed component contracts" },
+  { label: "shadcn registry", note: "source-based distribution" },
+  { label: "Tailwind CSS", note: "implementation styling layer" },
 ];
 
 const frameworks = ["Next.js", "Vite", "Remix", "Astro"];
@@ -41,10 +41,10 @@ export default function IntroductionPage() {
   const componentCount =
     SITE_SECTIONS.find((s) => s.label === "Components")?.children.length ?? 0;
   const stats = [
-    { value: String(componentCount), label: "Registry components" },
-    { value: String(frameworks.length), label: "Common app stacks" },
-    { value: "0", label: "Lock-in layers" },
-    { value: "shadcn", label: "CLI compatible" },
+    { value: String(componentCount), label: "Documented components" },
+    { value: String(frameworks.length), label: "Supported app stacks" },
+    { value: "0", label: "Package lock-in" },
+    { value: "shadcn", label: "Registry workflow" },
   ];
 
   return (
@@ -54,39 +54,41 @@ export default function IntroductionPage() {
         { label: "Getting Started" },
         { label: "Introduction" },
       ]}
-      description="Iconiq is an open-source library of motion-powered UI components for React. It is built to feel precise in production, not just attractive in screenshots."
+      description="Iconiq is an open-source React component library for teams that want implementation ownership, polished interaction patterns, and documentation built for real adoption."
       eyebrow="Getting Started"
       meta={[
-        { label: "Components", value: `${componentCount} registry pages` },
-        { label: "Workflow", value: "source first" },
-        { label: "Install", value: "shadcn compatible" },
+        { label: "Library", value: `${componentCount} documented entries` },
+        { label: "Delivery", value: "source based" },
+        { label: "Install", value: "registry compatible" },
       ]}
       title="Introduction"
     >
       <DocsSection
         className="lg:col-span-7"
-        description="Instead of hiding primitives behind a package boundary, Iconiq gives you React files that land directly in your codebase."
+        description="Instead of wrapping components behind a package boundary, Iconiq installs real React files that become part of your application."
         index="01"
-        title="What Iconiq Actually Is"
+        title="What Iconiq Provides"
       >
         <div className="space-y-4 text-[15px] text-secondary leading-7">
           <p>
-            Components are authored with Motion, respect reduced-motion
-            preferences, and are designed to feel calm in real product UIs.
+            Components are built with Motion, respect reduced-motion
+            preferences, and are tuned for product interfaces that need to feel
+            precise rather than overstyled.
           </p>
           <p>
-            The library favors ownership over abstraction: install once, keep
-            the source, and adapt each primitive to match your app without
-            waiting on an upstream release cycle.
+            The model favors ownership over abstraction. Once installed, the
+            source belongs to your team, making it easier to review, customize,
+            and evolve each primitive without depending on upstream release
+            cycles.
           </p>
         </div>
       </DocsSection>
 
       <DocsSection
         className="lg:col-span-5"
-        description="A quick read on what ships today."
+        description="A concise summary of the current library and delivery model."
         index="02"
-        title="At A Glance"
+        title="Overview"
       >
         <div className="grid grid-cols-2 gap-4">
           {stats.map(({ value, label }) => (
@@ -107,9 +109,9 @@ export default function IntroductionPage() {
 
       <DocsSection
         className="lg:col-span-12"
-        description="The system stays intentionally narrow so the library is easier to reason about."
+        description="The library is shaped by a small set of practical decisions that keep it easier to evaluate, adopt, and maintain."
         index="03"
-        title="Principles"
+        title="Design Principles"
       >
         <div className="grid gap-4 md:grid-cols-2">
           {principles.map(({ icon: Icon, title, desc }) => (
@@ -133,9 +135,9 @@ export default function IntroductionPage() {
 
       <DocsSection
         className="lg:col-span-12"
-        description="Iconiq is built for the common modern React stacks rather than a narrow framework niche."
+        description="The components are intended for modern React environments and fit naturally into teams already using common frontend tooling."
         index="04"
-        title="Stack"
+        title="Technology Fit"
       >
         <div className="flex flex-wrap gap-3">
           {[

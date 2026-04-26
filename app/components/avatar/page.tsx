@@ -141,7 +141,7 @@ export default function AvatarPage() {
       componentName="avatar"
       description="Compact circular avatar with motion on enter, hover, and tap. Shows an image or fallback text at a fixed 42 x 42 size."
       details={componentDetailsItems}
-      detailsDescription="Expand each row for prop behavior, peer dependencies, and direct registry-file install helpers."
+      detailsDescription="Expand each row for prop behavior, motion behavior, and the implementation details that affect usage."
       preview={
         <div className="flex min-h-[320px] items-center justify-center">
           <AvatarPreview />

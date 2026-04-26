@@ -178,6 +178,10 @@
     color: white;
   }
 
+.dark ::selection {
+  color: #111111;
+}
+
   .root {
     position: relative;
     isolation: isolate;

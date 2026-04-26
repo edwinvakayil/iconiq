@@ -212,7 +212,7 @@ export default function CollapsiblePage() {
       }
       title="Collapsible"
       usageCode={usageCode}
-      usageDescription="Import the three composable parts and wire them together. The API details below cover state hooks, Radix data attributes, and registry installs."
+      usageDescription="Import the three composable parts and wire them together. The API details below cover root state, trigger composition, and content behavior."
     />
   );
 }

@@ -116,7 +116,7 @@ export default function BreadcrumbsPage() {
       componentName="breadcrumbs"
       description="Spring separators, hover lift, and a shimmer on the current segment. Built with Motion and tuned to the theme tokens that drive the rest of the library."
       details={componentDetailsItems}
-      detailsDescription="Each item expands into the full segment contract, Motion behavior, and the related registry-file install when one applies."
+      detailsDescription="Each item expands into the segment contract, current-state behavior, and the motion details that affect usage."
       preview={
         <div className="flex min-h-[280px] flex-col items-center justify-center gap-6">
           <Breadcrumbs items={demoItems} />

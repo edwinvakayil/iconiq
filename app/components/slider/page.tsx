@@ -159,7 +159,7 @@ export default function SliderPage() {
       }
       title="Slider"
       usageCode={usageCode}
-      usageDescription="Use the compact example below as the baseline, then open the API details for value arrays, controlled usage, and direct registry installs."
+      usageDescription="Use the compact example below as the baseline, then open the API details for value handling, limits, and interaction behavior."
     />
   );
 }

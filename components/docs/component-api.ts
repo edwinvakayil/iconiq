@@ -95,7 +95,7 @@ const alertApiDetails: DetailItem[] = [
 const avatarApiDetails: DetailItem[] = [
   {
     id: "avatar",
-    title: "avatar",
+    title: "Avatar",
     summary:
       'The registry exports a lowercase function named "avatar". Most consuming code aliases it to "Avatar" at import time.',
     fields: [
@@ -396,14 +396,9 @@ const buttonApiDetails: DetailItem[] = [
         description:
           "Native disabled state. It also prevents ripple creation because the pointer-down handler exits early.",
       }),
-      field({
-        name: "...buttonProps",
-        type: "ButtonHTMLAttributes<HTMLButtonElement> except animation and drag event props that conflict with motion.button typings",
-        description:
-          "Standard button attributes such as onClick, aria-*, name, form, and data-* are forwarded onto motion.button.",
-      }),
     ],
     notes: [
+      "Standard button attributes such as onClick, aria-*, name, form, and data-* are forwarded to the underlying motion.button.",
       "The local pointer-down handler always calls your onPointerDown first, then decides whether to spawn a ripple.",
       "Reduced-motion users still get the button component, but the ripple effect is skipped.",
     ],
@@ -534,7 +529,7 @@ const comboboxApiDetails: DetailItem[] = [
   },
   {
     id: "combobox",
-    title: "combobox",
+    title: "Combobox",
     summary:
       'The registry exports a lowercase function named "combobox". It owns open state, search query, and active row internally, while the selected value stays parent-driven.',
     fields: [
@@ -601,12 +596,12 @@ const comboboxApiDetails: DetailItem[] = [
     id: "combobox-filtering",
     title: "Filtering, keyboard, and layout behavior",
     summary:
-      "The dropdown stays attached to the field instead of portaling out, and it supports a stronger keyboard model than the simpler select component.",
+      "The dropdown is portaled to document.body, positioned from the field bounds, and supports a stronger keyboard model than the simpler select component.",
     notes: [
       "Filtering is a case-insensitive substring match across label, value, and description.",
       "ArrowUp, ArrowDown, Home, End, Enter, Escape, and Tab are all handled directly on the input to drive the internal activeIndex and open state.",
       "The clear button uses tabIndex={-1}, so it is pointer-accessible but not keyboard reachable in this version.",
-      "Because the list is absolutely positioned under the root instead of portaled to document.body, overflow-hidden ancestors can clip it.",
+      "Because the list is rendered in a portal with fixed positioning, overflow-hidden ancestors do not clip it. Placement is recalculated from the trigger rect while it is open.",
     ],
   },
   registryItem("combobox.json", ["framer-motion", "lucide-react"]),
@@ -637,13 +632,15 @@ const collapsibleApiDetails: DetailItem[] = [
           "Called whenever the trigger toggles the root. It runs for both controlled and uncontrolled usage.",
       }),
       field({
-        name: "...rootProps",
-        type: "ComponentProps<typeof CollapsiblePrimitive.Root>",
+        name: "children",
+        type: "ReactNode",
+        required: true,
         description:
-          "Any remaining Radix root props are forwarded unchanged to the primitive root.",
+          "Composition surface for the trigger and content primitives rendered inside the root.",
       }),
     ],
     notes: [
+      "Other Radix root props continue to work because the wrapper forwards the remaining root props to CollapsiblePrimitive.Root.",
       "The root stores the resolved open state in React context so CollapsibleContent can animate without reading Radix data attributes.",
     ],
   },
@@ -653,13 +650,26 @@ const collapsibleApiDetails: DetailItem[] = [
     summary: "Thin wrapper around Radix CollapsibleTrigger.",
     fields: [
       field({
-        name: "...triggerProps",
-        type: "ComponentProps<typeof CollapsiblePrimitive.CollapsibleTrigger>",
+        name: "children",
+        type: "ReactNode",
+        required: true,
+        description: "Interactive content rendered inside the trigger surface.",
+      }),
+      field({
+        name: "asChild",
+        type: "boolean",
         description:
-          "All trigger props are forwarded directly to the Radix trigger, including asChild, disabled, and event handlers.",
+          "Lets you supply your own trigger element while preserving the Radix trigger behavior.",
+      }),
+      field({
+        name: "disabled",
+        type: "boolean",
+        description:
+          "Disables trigger interaction through the underlying Radix primitive.",
       }),
     ],
     notes: [
+      "Any remaining trigger props and event handlers are forwarded directly to CollapsiblePrimitive.CollapsibleTrigger.",
       'The wrapper only adds data-slot="collapsible-trigger" so callers can target it in CSS.',
     ],
   },
@@ -719,14 +729,16 @@ const dialogApiDetails: DetailItem[] = [
           "Called whenever Radix requests a state change through triggers, overlay clicks, or escape key handling.",
       }),
       field({
-        name: "...rootProps",
-        type: "ComponentPropsWithoutRef<typeof DialogPrimitive.Root>",
+        name: "children",
+        type: "ReactNode",
+        required: true,
         description:
-          "All other Radix root props continue to work because the root export is the primitive itself.",
+          "Composition surface for the trigger, content, and any related dialog helpers.",
       }),
     ],
     notes: [
-      "Because these exports are direct aliases, their accessibility and focus-trap behavior comes from Radix rather than additional wrapper logic here.",
+      "Any remaining Dialog.Root props continue to work because the root export is the Radix primitive itself.",
+      "Accessibility and focus-trap behavior come from Radix rather than additional wrapper logic here.",
     ],
   },
   {
@@ -748,26 +760,85 @@ const dialogApiDetails: DetailItem[] = [
           "Merged onto the inner motion panel rather than the full-screen DialogPrimitive.Content wrapper.",
       }),
       field({
-        name: "...contentProps",
-        type: "ComponentPropsWithoutRef<typeof DialogPrimitive.Content>",
+        name: "children",
+        type: "ReactNode",
+        required: true,
         description:
-          "Forwarded to the Radix content primitive, including event callbacks and accessibility props.",
+          "Content rendered inside the animated panel. Each direct child is wrapped in its own motion.div for staggered entry.",
       }),
     ],
     notes: [
+      "Accessibility props and Radix callbacks such as onEscapeKeyDown, onPointerDownOutside, aria-describedby, and aria-labelledby are forwarded to DialogPrimitive.Content.",
       "DialogContent always renders its own close button in the top-right corner using DialogPrimitive.Close and the Lucide X icon.",
-      "Children are wrapped one by one in motion.div elements so the header, body, and footer can stagger on entry.",
+    ],
+  },
+  {
+    id: "dialog-trigger-close",
+    title: "DialogTrigger and DialogClose",
+    summary:
+      "These exports are direct Radix aliases used to open or close the dialog from any custom element.",
+    fields: [
+      field({
+        name: "asChild",
+        type: "boolean",
+        description:
+          "Lets you turn a custom button or link into the trigger or close control without adding an extra wrapper element.",
+      }),
+      field({
+        name: "children",
+        type: "ReactNode",
+        required: true,
+        description:
+          "Interactive content rendered by the trigger or close primitive.",
+      }),
+    ],
+    notes: [
+      "Because both exports come directly from Radix, they also accept the remaining primitive props for event handling and accessibility wiring.",
     ],
   },
   {
     id: "dialog-layout-helpers",
-    title: "DialogHeader, DialogFooter, DialogTitle, DialogDescription",
+    title: "DialogHeader and DialogFooter",
     summary:
-      "These helpers provide the layout structure used in the examples while keeping primitive semantics where relevant.",
-    notes: [
-      "DialogHeader and DialogFooter accept normal div HTML attributes and primarily contribute layout classes.",
-      "DialogTitle and DialogDescription forward refs to the corresponding Radix primitives and only merge additional className values.",
+      "Layout helpers used to structure dialog content without changing dialog behavior.",
+    fields: [
+      field({
+        name: "children",
+        type: "ReactNode",
+        required: true,
+        description: "Content rendered inside the helper container.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description:
+          "Merged onto the helper wrapper so spacing and alignment can be adjusted per dialog.",
+      }),
     ],
+    notes: [
+      "Both helpers accept the normal div HTML attribute surface in addition to className and children.",
+    ],
+  },
+  {
+    id: "dialog-text-helpers",
+    title: "DialogTitle and DialogDescription",
+    summary:
+      "Semantic text helpers that forward to the matching Radix title and description primitives.",
+    fields: [
+      field({
+        name: "children",
+        type: "ReactNode",
+        required: true,
+        description:
+          "Text or inline markup rendered inside the title or description primitive.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description: "Merged with the default title or description styles.",
+      }),
+    ],
+    notes: ["Both helpers forward refs to the underlying Radix primitives."],
   },
   registryItem("dialog.json", [
     "@radix-ui/react-dialog",
@@ -810,6 +881,24 @@ const inputApiDetails: DetailItem[] = [
           "Native input type used by the underlying input element. Password, email, search, and number each trigger additional local behavior.",
       }),
       field({
+        name: "placeholder",
+        type: "string",
+        description:
+          "Forwarded to the native input so empty fields can show guidance copy before any text is entered.",
+      }),
+      field({
+        name: "disabled",
+        type: "boolean",
+        description:
+          "Disables the native input and also turns off interactive affordances such as the password toggle and search clear button.",
+      }),
+      field({
+        name: "readOnly",
+        type: "boolean",
+        description:
+          "Leaves the field focusable but disables local editing affordances and prevents value changes through the built-in helper actions.",
+      }),
+      field({
         name: "id",
         type: "string",
         description:
@@ -823,23 +912,7 @@ const inputApiDetails: DetailItem[] = [
       }),
     ],
     notes: [
-      "disabled and readOnly are forwarded to the native input and also collapse the interactive affordances such as the password toggle and search clear button.",
-    ],
-  },
-  {
-    id: "input-native-props",
-    title: "Native input props",
-    summary:
-      "InputProps extends the native input attribute set with two deliberate changes: value is narrowed to string and onChange is remapped to a string callback.",
-    fields: [
-      field({
-        name: "...nativeProps",
-        type: 'Omit<InputHTMLAttributes<HTMLInputElement>, "onChange" | "value">',
-        description:
-          "Placeholder, autoComplete, name, min, max, step, inputMode, onBlur, onFocus, and the rest of the standard input props are forwarded to the actual input element.",
-      }),
-    ],
-    notes: [
+      "Standard input attributes such as name, autoComplete, min, max, step, inputMode, onBlur, and onFocus are forwarded to the native input element.",
       "Your onBlur and onFocus callbacks still run after the component updates its internal focused and validation state.",
       "The visible character animation is driven by an overlay display, but editing still happens through a real native input element.",
     ],
@@ -1031,7 +1104,7 @@ const selectApiDetails: DetailItem[] = [
   },
   {
     id: "select",
-    title: "select",
+    title: "Select",
     summary:
       'The registry exports a lowercase function named "select". It manages open state internally but expects the selected value to come from the parent.',
     fields: [
@@ -1189,7 +1262,7 @@ const spinnerApiDetails: DetailItem[] = [
 const switchApiDetails: DetailItem[] = [
   {
     id: "switch",
-    title: "switch",
+    title: "Switch",
     summary:
       'The registry export is lowercase "switch" and is usually aliased to "Switch" when imported. Checked state is expected to come from the parent.',
     fields: [
@@ -1247,7 +1320,7 @@ const switchApiDetails: DetailItem[] = [
 const tooltipApiDetails: DetailItem[] = [
   {
     id: "tooltip",
-    title: "tooltip",
+    title: "Tooltip",
     summary:
       'The registry exports a lowercase function named "tooltip". It owns its own open state and toggles in response to hover and focus events.',
     fields: [

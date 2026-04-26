@@ -149,7 +149,7 @@ export default function SelectPage() {
       }
       title="Select"
       usageCode={usageCode}
-      usageDescription="Alias the lowercase export to `Select` in your app, then use the details below to tune options, icons, placeholders, and registry installs."
+      usageDescription="Alias the lowercase export to `Select` in your app, then use the details below to tune options, icons, placeholders, and selection behavior."
     />
   );
 }

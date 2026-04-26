@@ -368,7 +368,7 @@ export default function ButtonPage() {
       }
       title="Button"
       usageCode={usageCode}
-      usageDescription="Use the default button first, then branch into variant, size, Motion behavior, and peer dependencies through the API panel."
+      usageDescription="Use the default button first, then branch into variant, size, disabled state, and interaction behavior through the API panel."
     />
   );
 }

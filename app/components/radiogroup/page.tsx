@@ -151,7 +151,7 @@ export default function RadioGroupPage() {
       }
       title="Radio Group"
       usageCode={usageCode}
-      usageDescription="Import the default export and control it from state. The API details below cover the option contract, descriptions, and registry URL helpers."
+      usageDescription="Import the default export and control it from state. The API details below cover the option contract, controlled state, and accessibility notes."
     />
   );
 }

@@ -147,7 +147,7 @@ export default function AccordionPage() {
       }
       title="Accordion"
       usageCode={usageCode}
-      usageDescription="Use the default item array pattern below, then expand into item structure, classes, and registry installs in the API panel."
+      usageDescription="Use the default item array pattern below, then expand into item structure, content expectations, and layout behavior in the API panel."
     />
   );
 }

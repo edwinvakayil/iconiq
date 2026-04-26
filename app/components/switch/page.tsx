@@ -132,7 +132,7 @@ export default function SwitchPage() {
       preview={<SwitchPreview />}
       title="Switch"
       usageCode={usageCode}
-      usageDescription="The switch is easiest to read in a controlled flow. Start with the snippet below, then expand into state handling and registry-file installs in the API panel."
+      usageDescription="The switch is easiest to read in a controlled flow. Start with the snippet below, then expand into state handling, sizes, and motion behavior in the API panel."
     />
   );
 }

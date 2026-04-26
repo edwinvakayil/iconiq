@@ -5,7 +5,6 @@ import type { ReactNode } from "react";
 import { CodeBlock } from "@/components/code-block";
 import { CodeBlockInstall } from "@/components/code-block-install";
 import { ComponentActions } from "@/components/component-actions";
-import { RegistryInstallBlock } from "@/components/registry-install-block";
 import {
   Accordion,
   AccordionContent,
@@ -211,68 +210,40 @@ function DetailMetaValue({ value }: { value: ReactNode }) {
 function DetailFields({ fields }: { fields: DetailField[] }) {
   return (
     <div className="space-y-3">
-      <p className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">
-        Documented Props
-      </p>
-      <div className="space-y-3">
-        {fields.map((field) => (
-          <div
-            className="grid gap-4 border border-border/70 bg-muted/[0.22] px-4 py-4 lg:grid-cols-[220px_minmax(0,1fr)] dark:bg-muted/[0.3]"
-            key={String(field.name)}
-          >
-            <div className="space-y-3">
-              <div className="flex flex-wrap items-center gap-2">
-                <span className="font-medium text-[15px] text-foreground tracking-[-0.02em]">
-                  {field.name}
-                </span>
-                <span className="rounded-full border border-border/80 border-dashed bg-background px-2 py-0.5 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.14em] dark:bg-background/70">
-                  {field.required ? "Required" : "Optional"}
-                </span>
-              </div>
-              <dl className="space-y-2">
-                {field.type ? (
-                  <div className="space-y-1">
-                    <dt className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.16em]">
-                      Type
-                    </dt>
-                    <dd>
-                      <DetailMetaValue value={field.type} />
-                    </dd>
-                  </div>
-                ) : null}
-                {field.defaultValue !== undefined ? (
-                  <div className="space-y-1">
-                    <dt className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.16em]">
-                      Default
-                    </dt>
-                    <dd>
-                      <DetailMetaValue value={field.defaultValue} />
-                    </dd>
-                  </div>
-                ) : null}
-              </dl>
-            </div>
-            <div className="text-[14px] text-secondary leading-6">
-              {field.description}
-            </div>
+      {fields.map((field) => (
+        <div
+          className="space-y-3 border border-border/70 bg-muted/[0.22] px-4 py-4 dark:bg-muted/[0.3]"
+          key={String(field.name)}
+        >
+          <div className="flex flex-wrap items-center gap-2.5">
+            <span className="font-medium text-[15px] text-foreground tracking-[-0.02em]">
+              {field.name}
+            </span>
+            {field.type ? <DetailMetaValue value={field.type} /> : null}
+            {field.required ? (
+              <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.16em]">
+                Required
+              </span>
+            ) : null}
+            {field.defaultValue !== undefined ? (
+              <span className="inline-flex items-center gap-2 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.16em]">
+                <span>Default</span>
+                <DetailMetaValue value={field.defaultValue} />
+              </span>
+            ) : null}
           </div>
-        ))}
-      </div>
+          <div className="text-[14px] text-secondary leading-6">
+            {field.description}
+          </div>
+        </div>
+      ))}
     </div>
   );
 }
 
 function getDetailDescriptor(item: DetailItem) {
   if (item.fields?.length) {
-    return `${item.fields.length} documented ${item.fields.length === 1 ? "prop" : "props"}`;
-  }
-
-  if (item.notes?.length) {
-    return `${item.notes.length} implementation ${item.notes.length === 1 ? "note" : "notes"}`;
-  }
-
-  if (item.registryPath) {
-    return "Registry bundle";
+    return `${item.fields.length} ${item.fields.length === 1 ? "prop" : "props"}`;
   }
 
   return "Expand detail";
@@ -330,21 +301,6 @@ function DetailBody({ item }: { item: DetailItem }) {
   );
 }
 
-function DetailRegistryRail({ registryPath }: { registryPath?: string }) {
-  if (!registryPath) {
-    return null;
-  }
-
-  return (
-    <div className="space-y-3">
-      <p className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">
-        Registry URL
-      </p>
-      <RegistryInstallBlock registryPath={registryPath} />
-    </div>
-  );
-}
-
 function DetailAccordionItemRow({ item }: { item: DetailItem }) {
   const descriptor = getDetailDescriptor(item);
 
@@ -359,19 +315,18 @@ function DetailAccordionItemRow({ item }: { item: DetailItem }) {
         </div>
       </AccordionTrigger>
       <AccordionContent className="pb-5">
-        <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_320px] lg:gap-8">
-          <DetailBody item={item} />
-          <DetailRegistryRail registryPath={item.registryPath} />
-        </div>
+        <DetailBody item={item} />
       </AccordionContent>
     </AccordionItem>
   );
 }
 
 function DetailAccordion({ details }: { details: DetailItem[] }) {
+  const documentedDetails = details.filter((item) => item.fields?.length);
+
   return (
     <Accordion className="w-full" collapsible type="single">
-      {details.map((item) => (
+      {documentedDetails.map((item) => (
         <DetailAccordionItemRow item={item} key={item.id} />
       ))}
     </Accordion>
@@ -509,7 +464,7 @@ function ComponentDocsPage({
         className="lg:col-span-12"
         description={
           detailsDescription ??
-          "Each item below expands into implementation notes, API behavior, and any direct registry file install needed for related assets."
+          "Each item below covers the documented props and the behavior that matters during implementation."
         }
         index="04"
         title="API Details"

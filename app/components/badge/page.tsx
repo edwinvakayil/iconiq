@@ -120,11 +120,11 @@ export default function BadgePage() {
       componentName="badge"
       description="Inline label with a looping shimmer wave and spring entrance. Theme-aware by default, fully customizable with color overrides."
       details={componentDetailsItems}
-      detailsDescription="Props, peer packages, and registry install helpers are grouped into expandable rows instead of a dense table."
+      detailsDescription="Props and visual behavior are grouped into expandable rows instead of a dense table."
       preview={<BadgePreview />}
       title="Badge"
       usageCode={usageCode}
-      usageDescription="Default export. Start with the compact example below, then branch into custom color overrides or registry URL installs from the API panel."
+      usageDescription="Default export. Start with the compact example below, then branch into content, color overrides, and class-based styling through the API panel."
     />
   );
 }

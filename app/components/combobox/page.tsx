@@ -96,7 +96,7 @@ export default function ComboboxPage() {
       previewDescription="Type to filter the list, move with the arrow keys, and press Enter to commit a selection."
       title="Combobox"
       usageCode={usageCode}
-      usageDescription="Alias the lowercase export to `Combobox` in your app, then use the API details below to tune filtering, clearing, disabled state, and registry installs."
+      usageDescription="Alias the lowercase export to `Combobox` in your app, then use the API details below to tune filtering, clearing, disabled state, and keyboard behavior."
     />
   );
 }

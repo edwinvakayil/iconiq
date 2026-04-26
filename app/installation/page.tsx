@@ -15,24 +15,31 @@ function hrefToSlug(href: string) {
 const steps = [
   {
     icon: Terminal,
-    title: "Run the shadcn command",
-    desc: "Use npx, pnpm dlx, yarn dlx, or bunx with shadcn@latest add @iconiq/<name> to pull a single component into your project.",
+    title: "Run the registry command",
+    desc: "Use the shadcn CLI with your preferred package runner to install a single component directly into the application you are working on.",
   },
   {
     icon: GitBranch,
-    title: "Component lands in your project",
-    desc: "The CLI writes the .tsx file directly into your codebase. No locked package boundary, no separate runtime wrapper, just source you can edit.",
+    title: "Review the generated source",
+    desc: "The component is written into your codebase as local source, making it straightforward to inspect, adapt, and maintain with the rest of your product UI.",
   },
   {
     icon: PackageCheck,
-    title: "Dependencies stay explicit",
-    desc: "If a component needs Motion or another peer dependency, the registry metadata keeps that requirement visible instead of hiding it.",
+    title: "Keep requirements explicit",
+    desc: "If a component depends on Motion or other supporting packages, the registry keeps those requirements visible instead of hiding them behind a bundled abstraction.",
   },
 ];
 
 export default function InstallationPage() {
   const components =
     SITE_SECTIONS.find((s) => s.label === "Components")?.children ?? [];
+  const featuredComponents = components.filter(({ href }) =>
+    [
+      "/components/button",
+      "/components/motion-accordion",
+      "/components/combobox",
+    ].includes(href)
+  );
 
   return (
     <DocsPageShell
@@ -41,30 +48,30 @@ export default function InstallationPage() {
         { label: "Getting Started" },
         { label: "Installation" },
       ]}
-      description="Add any Iconiq component with the shadcn CLI. The install flow stays source-first, so the files land directly in your project instead of hiding behind a package boundary."
+      description="Install any Iconiq component through the shadcn registry workflow. The process keeps delivery source-based, so implementation files land directly in your project."
       eyebrow="Getting Started"
       meta={[
-        { label: "Components", value: `${components.length} registry entries` },
-        { label: "Method", value: "shadcn add @iconiq/<name>" },
-        { label: "Format", value: "copy-paste source files" },
+        { label: "Catalog", value: `${components.length} documented entries` },
+        { label: "Command", value: "shadcn add @iconiq/<name>" },
+        { label: "Output", value: "project-owned source files" },
       ]}
       title="Installation"
     >
       <DocsSection
         className="lg:col-span-5"
-        description="The install flow is intentionally short."
+        description="The setup flow is intentionally concise so teams can move from evaluation to implementation with minimal overhead."
         index="01"
-        title="How It Works"
+        title="How Installation Works"
       >
         <ol className="space-y-4">
-          {steps.map(({ icon: Icon, title, desc }, i) => (
+          {steps.map(({ icon: Icon, title, desc }) => (
             <li className="flex gap-3" key={title}>
-              <span className="flex size-8 items-center justify-center border border-border/80 bg-muted/[0.16]">
+              <span className="flex size-8 items-center justify-center">
                 <Icon className="size-4 text-foreground" />
               </span>
               <div>
                 <p className="font-medium text-[15px] text-foreground">
-                  {i + 1}. {title}
+                  {title}
                 </p>
                 <p className="mt-1 text-[14px] text-secondary leading-6">
                   {desc}
@@ -77,21 +84,21 @@ export default function InstallationPage() {
 
       <DocsSection
         className="lg:col-span-7"
-        description="Start with a common primitive, then swap the slug to any other component in the registry."
+        description="Start with a representative component, then replace the slug with any other entry in the registry."
         index="02"
-        title="Install A Component"
+        title="Install A Single Component"
       >
         <CodeBlockInstall componentName="button" />
       </DocsSection>
 
       <DocsSection
         className="lg:col-span-7"
-        description="Every documented component follows the same registry pattern."
+        description="A small sample of the registry is shown here. The full component library follows the same installation pattern."
         index="03"
-        title="Available Registry Entries"
+        title="Registry Catalog"
       >
         <div className="grid gap-3">
-          {components.map(({ label, href }) => {
+          {featuredComponents.map(({ label, href }) => {
             const slug = hrefToSlug(href);
             return (
               <div
@@ -110,19 +117,27 @@ export default function InstallationPage() {
                   className="font-mono text-[10px] text-foreground uppercase tracking-[0.18em]"
                   href={href}
                 >
-                  Open page
+                  View docs
                 </Link>
               </div>
             );
           })}
         </div>
+        <div className="pt-4">
+          <Link
+            className="inline-flex border border-border/85 bg-muted/[0.14] px-4 py-3 font-mono text-[10px] text-foreground uppercase tracking-[0.18em] transition-colors hover:bg-muted/45"
+            href="/components/button"
+          >
+            View components
+          </Link>
+        </div>
       </DocsSection>
 
       <DocsSection
         className="lg:col-span-5"
-        description="Registry URLs are handy when you want to pin a direct source file instead of a scoped name."
+        description="A direct registry URL is useful when your team wants to reference the component source file explicitly rather than rely on the scoped package name."
         index="04"
-        title="Direct URL Install"
+        title="Install From A Direct Registry URL"
       >
         <RegistryInstallBlock registryPath="button.json" />
       </DocsSection>

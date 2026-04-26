@@ -150,7 +150,7 @@ export default function CheckboxGroupPage() {
       }
       title="Checkbox Group"
       usageCode={usageCode}
-      usageDescription="Use the controlled example below as the default pattern, then open the API details for options, descriptions, and registry-file helpers."
+      usageDescription="Use the controlled example below as the default pattern, then open the API details for option shape, selection flow, and accessibility notes."
     />
   );
 }

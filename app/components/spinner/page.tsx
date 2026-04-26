@@ -141,7 +141,7 @@ export default function SpinnerPage() {
       preview={<SpinnerPreview />}
       title="Spinner"
       usageCode={usageCode}
-      usageDescription="Default export. Start with the compact snippet below, then expand into sizing, variants, and direct registry installs through the API details."
+      usageDescription="Default export. Start with the compact snippet below, then expand into sizing, variants, and accessibility behavior through the API details."
     />
   );
 }
