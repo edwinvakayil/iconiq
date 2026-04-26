@@ -283,6 +283,102 @@ const calendarApiDetails: DetailItem[] = [
   registryItem("calendar.json", ["framer-motion", "lucide-react", "date-fns"]),
 ];
 
+const carouselApiDetails: DetailItem[] = [
+  {
+    id: "carousel",
+    title: "Carousel",
+    summary:
+      "Single exported testimonial carousel with internal pagination state, swipe gestures, animated slide transitions, and built-in arrow and dot controls.",
+    fields: [
+      field({
+        name: "testimonials",
+        type: "Testimonial[]",
+        description:
+          "Optional testimonial list shown by the carousel. When omitted, the component falls back to the sample items declared in the source file.",
+      }),
+    ],
+    notes: [
+      "The component does not expose a controlled index, change callback, or autoplay API. Navigation state is fully internal.",
+      "Because the public surface only accepts testimonials, layout width, labels, and control styling require a local wrapper or a source edit if you want to change them.",
+    ],
+  },
+  {
+    id: "carousel-testimonial",
+    title: "Testimonial item",
+    summary:
+      "Each item passed into the testimonials array follows a small typed shape used for the quote, author, and avatar row.",
+    fields: [
+      field({
+        name: "quote",
+        type: "string",
+        required: true,
+        description:
+          "Main testimonial copy rendered in the large italic text block inside the active slide.",
+      }),
+      field({
+        name: "name",
+        type: "string",
+        required: true,
+        description:
+          "Author name shown in the lower identity row beside the avatar or initials fallback.",
+      }),
+      field({
+        name: "handle",
+        type: "string",
+        required: true,
+        description:
+          "Secondary identity label rendered below the name, usually a short username or role marker.",
+      }),
+      field({
+        name: "avatar",
+        type: "string",
+        description:
+          "Optional avatar image source. When omitted, the component shows the initials fallback chip instead.",
+      }),
+      field({
+        name: "initials",
+        type: "string",
+        description:
+          "Optional fallback text rendered when no avatar string is provided. Leave it empty when you want the author row to render without any leading media.",
+      }),
+    ],
+    notes: [
+      "The active slide clamps the quote to three lines, so longer testimonials should still be edited to read cleanly inside the fixed-height card.",
+    ],
+  },
+  {
+    id: "carousel-interaction",
+    title: "Interaction and layout behavior",
+    summary:
+      "The component couples motion and navigation into one fixed layout, so consumers get a ready-made interaction shell rather than a headless slider primitive.",
+    fields: [
+      field({
+        name: "swipe threshold",
+        type: "built-in",
+        description:
+          "Dragging left or right past 80px changes slides. Smaller drags snap back to the current item.",
+      }),
+      field({
+        name: "pagination dots",
+        type: "built-in",
+        description:
+          "Each testimonial maps to a dot button. The active dot stretches wider and clicking any dot jumps to that index.",
+      }),
+      field({
+        name: "arrow controls",
+        type: "built-in",
+        description:
+          "Previous and next buttons wrap around the array length instead of stopping at the edges.",
+      }),
+    ],
+    notes: [
+      "The root width is capped at max-w-md and the slide stage uses a fixed 230px height, so very different aspect ratios require a source edit.",
+      "Slide direction is used by AnimatePresence to decide whether the next card enters from the left or right.",
+    ],
+  },
+  registryItem("carousels.json", ["framer-motion", "lucide-react"]),
+];
+
 const breadcrumbsApiDetails: DetailItem[] = [
   {
     id: "breadcrumb-item",
@@ -1869,6 +1965,7 @@ export {
   avatarApiDetails,
   badgeApiDetails,
   calendarApiDetails,
+  carouselApiDetails,
   breadcrumbsApiDetails,
   buttonApiDetails,
   checkboxGroupApiDetails,

@@ -91,6 +91,21 @@ const COMPONENT_EXAMPLE: Record<string, string> = {
     "    </div>\n" +
     "  )\n" +
     "}\n",
+  carousels:
+    '"use client";\n\n' +
+    `import { Carousel, type Testimonial } from "@/components/ui/carousels"\n\n` +
+    "const testimonials: Testimonial[] = [\n" +
+    '  { quote: "The registry dropped into our workflow immediately.", name: "Mira", handle: "@mira", initials: "MI" },\n' +
+    '  { quote: "We customized the source and shipped the same week.", name: "Andre", handle: "@andre", initials: "AN" },\n' +
+    '  { quote: "The motion feels polished without getting in the way.", name: "Leah", handle: "@leah", initials: "LE" },\n' +
+    "]\n\n" +
+    "export default function Page() {\n" +
+    "  return (\n" +
+    '    <div className="mx-auto flex min-h-svh w-full max-w-4xl items-center justify-center p-8">\n' +
+    "      <Carousel testimonials={testimonials} />\n" +
+    "    </div>\n" +
+    "  )\n" +
+    "}\n",
   "checkbox-group":
     '"use client";\n\n' +
     `import { CheckboxGroup } from "@/components/ui/checkbox-group"\n` +

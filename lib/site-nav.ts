@@ -19,6 +19,7 @@ export const SITE_SECTIONS = [
       { label: "Breadcrumbs", href: "/components/breadcrumbs" },
       { label: "Button", href: "/components/button" },
       { label: "Calendar", href: "/components/calendar" },
+      { label: "Carousel", href: "/components/carousels" },
       { label: "Collapsible", href: "/components/collapsible" },
       { label: "Combobox", href: "/components/combobox" },
       { label: "Context menu", href: "/components/context-menu" },
