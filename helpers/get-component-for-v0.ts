@@ -312,6 +312,34 @@ const COMPONENT_EXAMPLE: Record<string, string> = {
     "    </div>\n" +
     "  )\n" +
     "}\n",
+  "hover-card":
+    '"use client";\n\n' +
+    "import {\n" +
+    "  HoverCard,\n" +
+    "  HoverCardContent,\n" +
+    "  HoverCardTrigger,\n" +
+    `} from "@/components/ui/hover-card"\n\n` +
+    "export default function Page() {\n" +
+    "  return (\n" +
+    '    <div className="flex min-h-svh items-center justify-center p-8">\n' +
+    "      <HoverCard openDelay={120}>\n" +
+    "        <HoverCardTrigger asChild>\n" +
+    '          <button className="rounded-md border px-3 py-2 text-sm" type="button">\n' +
+    "            View profile\n" +
+    "          </button>\n" +
+    "        </HoverCardTrigger>\n" +
+    '        <HoverCardContent className="w-80">\n' +
+    '          <div className="space-y-2">\n' +
+    '            <p className="font-medium">Lina Warren</p>\n' +
+    '            <p className="text-sm text-muted-foreground">\n' +
+    "              Product designer working on onboarding and motion systems.\n" +
+    "            </p>\n" +
+    "          </div>\n" +
+    "        </HoverCardContent>\n" +
+    "      </HoverCard>\n" +
+    "    </div>\n" +
+    "  )\n" +
+    "}\n",
   input:
     '"use client";\n\n' +
     `import { input as Input } from "@/components/ui/input"\n` +

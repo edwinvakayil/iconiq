@@ -26,6 +26,7 @@
     "@radix-ui/react-collapsible": "^1.1.12",
     "@radix-ui/react-dialog": "^1.1.15",
     "@radix-ui/react-radio-group": "^1.2.3",
+    "@radix-ui/react-slot": "^1.2.3",
     "@radix-ui/react-slider": "^1.2.2",
     "@tanstack/react-hotkeys": "^0.9.1",
     "@toolwind/corner-shape": "0.0.8-3",

@@ -80,6 +80,12 @@ const REGISTRY_UI_META: Record<
       "Modal dialog on Radix Dialog with Framer Motion overlay and content springs, staggered children, and an animated close control. Pass the same open boolean to DialogContent as the Dialog root for AnimatePresence.",
     dependencies: ["@radix-ui/react-dialog", "framer-motion", "lucide-react"],
   },
+  "hover-card": {
+    title: "Hover Card",
+    description:
+      "Inline hover card with delayed open and close timing, Slot-based custom triggers, and a spring-driven content panel.",
+    dependencies: ["@radix-ui/react-slot", "framer-motion"],
+  },
   tooltip: {
     title: "Tooltip",
     description:

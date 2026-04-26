@@ -847,6 +847,106 @@ const dialogApiDetails: DetailItem[] = [
   ]),
 ];
 
+const hoverCardApiDetails: DetailItem[] = [
+  {
+    id: "hover-card",
+    title: "HoverCard",
+    summary:
+      "Stateful wrapper that opens and closes a local callout from pointer and focus events with configurable delays.",
+    fields: [
+      field({
+        name: "children",
+        type: "ReactNode",
+        required: true,
+        description:
+          "Composition surface for the trigger and content primitives rendered inside the hover card root.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description:
+          "Merged onto the root span that anchors the trigger and positioned content.",
+      }),
+      field({
+        name: "openDelay",
+        type: "number",
+        defaultValue: "80",
+        description:
+          "Delay in milliseconds before the card opens after pointer or focus entry.",
+      }),
+      field({
+        name: "closeDelay",
+        type: "number",
+        defaultValue: "120",
+        description:
+          "Delay in milliseconds before the card closes after pointer or focus leaves the root.",
+      }),
+    ],
+    notes: [
+      "Open state is internal only. This implementation does not expose a controlled open prop or state-change callback.",
+      "The root renders a relative inline-block span and attaches the hover and focus handlers there, so the content stays anchored to that local wrapper.",
+      "Pending timers are cleared before every new open or close request and again during unmount cleanup.",
+    ],
+  },
+  {
+    id: "hover-card-trigger",
+    title: "HoverCardTrigger",
+    summary:
+      "Trigger surface that renders a button by default or forwards behavior into a custom child through Radix Slot.",
+    fields: [
+      field({
+        name: "children",
+        type: "ReactNode",
+        required: true,
+        description:
+          "Interactive content rendered by the trigger or by the child passed through asChild.",
+      }),
+      field({
+        name: "asChild",
+        type: "boolean",
+        description:
+          "Lets you supply your own trigger element while keeping the hover-card trigger behavior and class merging.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description:
+          "Merged onto the rendered trigger element for local layout or visual styling.",
+      }),
+    ],
+    notes: [
+      "When asChild is false, the component renders a plain button element. Pass type='button' yourself if you place it inside a form.",
+      "Standard button props such as disabled, onClick, aria-*, and data-* are forwarded to the rendered trigger element.",
+    ],
+  },
+  {
+    id: "hover-card-content",
+    title: "HoverCardContent",
+    summary:
+      "Animated content panel that appears below the trigger with a spring entrance and blur fade.",
+    fields: [
+      field({
+        name: "children",
+        type: "ReactNode",
+        required: true,
+        description: "Content rendered inside the hover card panel.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description:
+          "Merged onto the motion.div panel so width, spacing, or surface styles can be adjusted.",
+      }),
+    ],
+    notes: [
+      "Additional motion.div props such as style, role, onClick, aria-*, and data-* are forwarded, but initial, animate, exit, and transition are reserved by the component.",
+      "The panel is absolutely positioned relative to the root wrapper rather than portaled to document.body, so overflow-hidden ancestors can clip it.",
+      "By default the content is centered below the trigger with mt-3 spacing and a fixed w-72 width.",
+    ],
+  },
+  registryItem("hover-card.json", ["@radix-ui/react-slot", "framer-motion"]),
+];
+
 const inputApiDetails: DetailItem[] = [
   {
     id: "input",
@@ -1388,6 +1488,7 @@ export {
   comboboxApiDetails,
   collapsibleApiDetails,
   dialogApiDetails,
+  hoverCardApiDetails,
   inputApiDetails,
   motionAccordionApiDetails,
   radioGroupApiDetails,
