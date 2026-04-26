@@ -1,4 +1,4 @@
-import { ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import Link from "next/link";
 import type { ReactNode } from "react";
 
@@ -12,6 +12,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Separator } from "@/components/ui/separator";
+import { SITE_SECTIONS } from "@/lib/site-nav";
 import { cn } from "@/lib/utils";
 
 type BreadcrumbItem = {
@@ -92,27 +93,86 @@ function DocsHero({
   eyebrow,
   title,
   description,
+  actions,
 }: {
   eyebrow: string;
   title: string;
   description: ReactNode;
   meta?: HeroMetaItem[];
+  actions?: ReactNode;
 }) {
   return (
     <section className="space-y-8 pt-8">
       <Separator />
-      <div className="max-w-4xl space-y-4">
-        <p className="font-mono text-[11px] text-muted-foreground uppercase tracking-[0.32em]">
-          {eyebrow}
-        </p>
-        <h1 className="text-4xl text-foreground tracking-[-0.08em] sm:text-5xl lg:text-[3.6rem]">
-          {title}
-        </h1>
-        <p className="max-w-3xl text-[15px] text-secondary leading-7 sm:text-[17px] sm:leading-8">
-          {description}
-        </p>
+      <div className="flex flex-col gap-8 lg:flex-row lg:items-start lg:justify-between">
+        <div className="max-w-4xl space-y-4">
+          <p className="font-mono text-[11px] text-muted-foreground uppercase tracking-[0.32em]">
+            {eyebrow}
+          </p>
+          <h1 className="text-4xl text-foreground tracking-[-0.08em] sm:text-5xl lg:text-[3.6rem]">
+            {title}
+          </h1>
+          <p className="max-w-3xl text-[15px] text-secondary leading-7 sm:text-[17px] sm:leading-8">
+            {description}
+          </p>
+        </div>
+        {actions ? (
+          <div className="flex shrink-0 items-center gap-2 self-start lg:pt-10">
+            {actions}
+          </div>
+        ) : null}
       </div>
     </section>
+  );
+}
+
+const COMPONENT_NAV_ITEMS = SITE_SECTIONS.flatMap(
+  (section) => section.children
+);
+
+function ComponentPager({ componentName }: { componentName: string }) {
+  const currentHref = `/components/${componentName}`;
+  const currentIndex = COMPONENT_NAV_ITEMS.findIndex(
+    (item) => item.href === currentHref
+  );
+
+  if (currentIndex === -1) {
+    return null;
+  }
+
+  const previousItem =
+    currentIndex > 0 ? COMPONENT_NAV_ITEMS[currentIndex - 1] : null;
+  const nextItem =
+    currentIndex < COMPONENT_NAV_ITEMS.length - 1
+      ? COMPONENT_NAV_ITEMS[currentIndex + 1]
+      : null;
+
+  const baseButtonClassName =
+    "inline-flex size-11 items-center justify-center text-muted-foreground transition-colors hover:bg-muted/35 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2";
+
+  return (
+    <>
+      {previousItem ? (
+        <Link
+          aria-label={`Go to ${previousItem.label}`}
+          className={baseButtonClassName}
+          href={previousItem.href}
+          title={previousItem.label}
+        >
+          <ChevronLeft className="size-4" />
+        </Link>
+      ) : null}
+      {nextItem ? (
+        <Link
+          aria-label={`Go to ${nextItem.label}`}
+          className={baseButtonClassName}
+          href={nextItem.href}
+          title={nextItem.label}
+        >
+          <ChevronRight className="size-4" />
+        </Link>
+      ) : null}
+    </>
   );
 }
 
@@ -159,6 +219,7 @@ function DocsPageShell({
   title,
   description,
   meta,
+  heroActions,
   children,
   className,
 }: {
@@ -167,6 +228,7 @@ function DocsPageShell({
   title: string;
   description: ReactNode;
   meta?: HeroMetaItem[];
+  heroActions?: ReactNode;
   children: ReactNode;
   className?: string;
 }) {
@@ -180,6 +242,7 @@ function DocsPageShell({
       >
         <DocsBreadcrumbs items={breadcrumbs} />
         <DocsHero
+          actions={heroActions}
           description={description}
           eyebrow={eyebrow}
           meta={meta}
@@ -373,6 +436,7 @@ function ComponentDocsPage({
       breadcrumbs={breadcrumbs}
       description={description}
       eyebrow={eyebrow}
+      heroActions={<ComponentPager componentName={componentName} />}
       meta={
         meta ?? [
           { label: "Package", value: `@iconiq/${componentName}` },

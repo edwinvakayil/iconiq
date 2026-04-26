@@ -143,6 +143,21 @@
       ]
     },
     {
+      "name": "context-menu",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": ["framer-motion"],
+      "devDependencies": [],
+      "title": "Context Menu",
+      "description": "Native-feeling context menu with fixed-position viewport-aware placement, per-item icons and shortcuts, and spring entrance motion.",
+      "files": [
+        {
+          "path": "context-menu.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "dialog",
       "type": "registry:ui",
       "registryDependencies": [],

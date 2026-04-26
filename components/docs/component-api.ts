@@ -607,6 +607,101 @@ const comboboxApiDetails: DetailItem[] = [
   registryItem("combobox.json", ["framer-motion", "lucide-react"]),
 ];
 
+const contextMenuApiDetails: DetailItem[] = [
+  {
+    id: "context-menu",
+    title: "ContextMenu",
+    summary:
+      "Stateful wrapper that listens for the native contextmenu event on a local surface and renders a fixed-position floating menu.",
+    fields: [
+      field({
+        name: "items",
+        type: "ContextMenuItem[]",
+        required: true,
+        description:
+          "Ordered list of menu rows. Each item defines its own label, optional icon and shortcut, click handler, and row state.",
+      }),
+      field({
+        name: "children",
+        type: "ReactNode",
+        required: true,
+        description:
+          "Content wrapped by the local context-click target. The component always renders a div around this content and attaches the right-click handler there.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description:
+          "Merged onto the wrapper div that receives the native context menu event.",
+      }),
+      field({
+        name: "menuClassName",
+        type: "string",
+        description:
+          "Merged onto the floating motion.div for local surface styling overrides. The component still applies an inline width of 232px.",
+      }),
+    ],
+    notes: [
+      "Open state is fully internal. This implementation does not expose controlled open props, state callbacks, or an imperative API.",
+      "The menu opens only from the native contextmenu event, then flips horizontally or vertically when the estimated panel would overflow the viewport.",
+      "Closing is handled internally on outside mousedown, scroll, resize, and Escape. ArrowUp and ArrowDown move the highlighted row in local state, but DOM focus does not move into the menu.",
+    ],
+  },
+  {
+    id: "context-menu-item",
+    title: "ContextMenuItem",
+    summary:
+      "Data shape used by the items prop to define each row in the menu.",
+    fields: [
+      field({
+        name: "label",
+        type: "string",
+        required: true,
+        description: "Primary row copy rendered as the main action label.",
+      }),
+      field({
+        name: "icon",
+        type: "ReactNode",
+        description:
+          "Optional leading visual rendered inside the fixed 16px icon slot.",
+      }),
+      field({
+        name: "shortcut",
+        type: "string",
+        description:
+          "Optional trailing helper text, typically a keyboard hint such as R or Cmd+D.",
+      }),
+      field({
+        name: "onSelect",
+        type: "() => void",
+        description:
+          "Called when the row is activated with a click or Enter on the currently highlighted item.",
+      }),
+      field({
+        name: "destructive",
+        type: "boolean",
+        description:
+          "Switches the row into the destructive color treatment and changes the active highlight tint.",
+      }),
+      field({
+        name: "disabled",
+        type: "boolean",
+        description: "Dims the row and blocks pointer and Enter selection.",
+      }),
+      field({
+        name: "separatorAfter",
+        type: "boolean",
+        description:
+          "Inserts a thin divider after the row unless it is already the last rendered item.",
+      }),
+    ],
+    notes: [
+      "Keyboard navigation skips disabled rows in both directions. If every row is disabled, the highlighted index stays unchanged.",
+    ],
+  },
+  registryItem("context-menu.json", ["framer-motion"]),
+];
+
 const collapsibleApiDetails: DetailItem[] = [
   {
     id: "collapsible-root",
@@ -1596,6 +1691,7 @@ export {
   buttonApiDetails,
   checkboxGroupApiDetails,
   comboboxApiDetails,
+  contextMenuApiDetails,
   collapsibleApiDetails,
   dialogApiDetails,
   hoverCardApiDetails,

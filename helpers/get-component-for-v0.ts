@@ -131,6 +131,28 @@ const COMPONENT_EXAMPLE: Record<string, string> = {
     "    </div>\n" +
     "  )\n" +
     "}\n",
+  "context-menu":
+    '"use client";\n\n' +
+    `import { Copy, PencilLine, Share2, Trash2 } from "lucide-react"\n` +
+    `import { ContextMenu, type ContextMenuItem } from "@/components/ui/context-menu"\n\n` +
+    "const items: ContextMenuItem[] = [\n" +
+    '  { label: "Rename", icon: <PencilLine className="size-3.5" />, shortcut: "R" },\n' +
+    '  { label: "Duplicate", icon: <Copy className="size-3.5" />, shortcut: "Cmd+D", separatorAfter: true },\n' +
+    '  { label: "Share", icon: <Share2 className="size-3.5" />, shortcut: "S" },\n' +
+    '  { label: "Delete", icon: <Trash2 className="size-3.5" />, shortcut: "Del", destructive: true },\n' +
+    "]\n\n" +
+    "export default function Page() {\n" +
+    "  return (\n" +
+    '    <div className="mx-auto flex min-h-svh w-full max-w-2xl items-center justify-center p-8">\n' +
+    '      <ContextMenu className="w-full" items={items}>\n' +
+    '        <div className="w-full rounded-2xl border border-border px-6 py-16 text-center">\n' +
+    '          <p className="font-medium text-foreground">Right-click this surface</p>\n' +
+    '          <p className="mt-2 text-sm text-muted-foreground">Use the menu for local file actions.</p>\n' +
+    "        </div>\n" +
+    "      </ContextMenu>\n" +
+    "    </div>\n" +
+    "  )\n" +
+    "}\n",
   radiogroup:
     '"use client";\n\n' +
     `import RadioGroup from "@/components/ui/radiogroup"\n` +

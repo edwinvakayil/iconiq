@@ -28,6 +28,12 @@ const REGISTRY_UI_META: Record<
       "Searchable single-select input with inline filtering, arrow-key navigation, animated dropdown motion, and an optional clear action.",
     dependencies: ["framer-motion", "lucide-react"],
   },
+  "context-menu": {
+    title: "Context Menu",
+    description:
+      "Native-feeling context menu with fixed-position viewport-aware placement, per-item icons and shortcuts, and spring entrance motion.",
+    dependencies: ["framer-motion"],
+  },
   "motion-accordion": {
     title: "Accordion",
     description:
