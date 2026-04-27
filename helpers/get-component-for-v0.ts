@@ -509,6 +509,36 @@ const COMPONENT_EXAMPLE: Record<string, string> = {
     "    </div>\n" +
     "  )\n" +
     "}\n",
+  tabs:
+    '"use client";\n\n' +
+    "import {\n" +
+    "  Tabs,\n" +
+    "  TabsContent,\n" +
+    "  TabsList,\n" +
+    "  TabsTrigger,\n" +
+    `} from "@/components/ui/tabs"\n\n` +
+    "export default function Page() {\n" +
+    "  return (\n" +
+    '    <div className="mx-auto flex min-h-svh w-full max-w-3xl items-center justify-center p-8">\n' +
+    '      <Tabs className="w-full" defaultValue="overview">\n' +
+    "        <TabsList>\n" +
+    '          <TabsTrigger value="overview">Overview</TabsTrigger>\n' +
+    '          <TabsTrigger value="activity">Activity</TabsTrigger>\n' +
+    '          <TabsTrigger value="files">Files</TabsTrigger>\n' +
+    "        </TabsList>\n" +
+    '        <TabsContent value="overview">\n' +
+    '          <p className="text-sm text-muted-foreground">A concise summary for the current workspace.</p>\n' +
+    "        </TabsContent>\n" +
+    '        <TabsContent value="activity">\n' +
+    '          <p className="text-sm text-muted-foreground">Recent updates, comments, and handoff notes.</p>\n' +
+    "        </TabsContent>\n" +
+    '        <TabsContent value="files">\n' +
+    '          <p className="text-sm text-muted-foreground">Attached assets and supporting documents.</p>\n' +
+    "        </TabsContent>\n" +
+    "      </Tabs>\n" +
+    "    </div>\n" +
+    "  )\n" +
+    "}\n",
   tooltip:
     '"use client";\n\n' +
     `import { tooltip as Tooltip } from "@/components/ui/tooltip"\n\n` +

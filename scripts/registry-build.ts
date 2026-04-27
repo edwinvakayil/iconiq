@@ -158,6 +158,12 @@ const REGISTRY_UI_META: Record<
       "Animated toggle with spring thumb travel and smooth track color crossfade. Native button with role=switch, forwards ref. Framer Motion.",
     dependencies: ["framer-motion"],
   },
+  tabs: {
+    title: "Tabs",
+    description:
+      "Animated tabs with measured active and hover underlines, plus a blurred content transition between panels.",
+    dependencies: ["framer-motion"],
+  },
   spinner: {
     title: "Spinner",
     description:

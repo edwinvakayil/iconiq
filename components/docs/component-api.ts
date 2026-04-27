@@ -2122,6 +2122,141 @@ const switchApiDetails: DetailItem[] = [
   registryItem("switch.json", ["framer-motion"]),
 ];
 
+const tabsApiDetails: DetailItem[] = [
+  {
+    id: "tabs",
+    title: "Tabs",
+    summary:
+      "Root provider that manages the active value, hover state, trigger measurements, and the shared animated panel transition.",
+    fields: [
+      field({
+        name: "children",
+        type: "ReactNode",
+        required: true,
+        description:
+          "Compose TabsList, TabsTrigger, and TabsContent inside the root, following the same structure people expect from shadcn tabs.",
+      }),
+      field({
+        name: "defaultValue",
+        type: "string",
+        description:
+          "Initial active tab value for uncontrolled usage. When omitted, the first TabsContent value becomes active.",
+      }),
+      field({
+        name: "value",
+        type: "string",
+        description: "Controlled active tab value.",
+      }),
+      field({
+        name: "onValueChange",
+        type: "(value: string) => void",
+        description:
+          "Called when a trigger changes the active tab through click or keyboard navigation.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description:
+          "Merged onto the root wrapper around the tab rail and the animated content area.",
+      }),
+    ],
+    notes: [
+      "Underline positions are still measured from the live trigger layout, so the indicators follow the actual tab widths instead of fixed columns.",
+      "The root renders the active panel through a single AnimatePresence block, which preserves the existing blur-and-slide motion while exposing a composable API.",
+    ],
+  },
+  {
+    id: "tabs-list",
+    title: "TabsList",
+    summary:
+      "Measured trigger rail that renders the active underline and hover ghost underline without changing the visual design of the original component.",
+    fields: [
+      field({
+        name: "children",
+        type: "ReactNode",
+        description: "Usually a row of TabsTrigger elements.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description: "Merged onto the inline-flex rail around the triggers.",
+      }),
+    ],
+    notes: [
+      "The list sets role='tablist' and clears the hover underline when the pointer leaves the rail.",
+    ],
+  },
+  {
+    id: "tabs-trigger",
+    title: "TabsTrigger",
+    summary:
+      "Native button trigger that drives the active tab, hover state, keyboard navigation, and underline measurements.",
+    fields: [
+      field({
+        name: "value",
+        type: "string",
+        required: true,
+        description:
+          "Unique tab identifier used for active state, focus movement, and content matching.",
+      }),
+      field({
+        name: "children",
+        type: "ReactNode",
+        required: true,
+        description: "Label content rendered inside the trigger button.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description:
+          "Merged onto the trigger button if you need local spacing or typography overrides.",
+      }),
+      field({
+        name: "disabled",
+        type: "boolean",
+        description:
+          "Prevents the trigger from receiving focus or changing the active tab.",
+      }),
+    ],
+    notes: [
+      "Arrow keys, Home, and End move between enabled triggers and also activate the next tab so the panel transition stays in sync with focus.",
+      "Trigger color treatment is unchanged from the original component: active tabs are strongest, hover/focus tabs are mid-tone, and inactive tabs stay quieter.",
+    ],
+  },
+  {
+    id: "tabs-content",
+    title: "TabsContent",
+    summary:
+      "Declarative content marker for a single tab panel. The root reads these nodes and renders the active one through the shared animated content shell.",
+    fields: [
+      field({
+        name: "value",
+        type: "string",
+        required: true,
+        description: "Matches the corresponding TabsTrigger value.",
+      }),
+      field({
+        name: "children",
+        type: "ReactNode",
+        required: true,
+        description: "Panel body shown when the content value is active.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description:
+          "Merged onto the animated panel wrapper for the active content only.",
+      }),
+    ],
+    notes: [
+      "TabsContent itself does not render in place. It acts as a declarative child so the root can preserve a single shared animated panel area below the list.",
+      "Place TabsContent as direct or nested children of Tabs; the root collects them recursively before picking the active panel.",
+      "Standard div attributes such as data-*, aria-*, id, style, and event handlers are forwarded to the rendered active panel.",
+    ],
+  },
+  registryItem("tabs.json", ["framer-motion"]),
+];
+
 const tooltipApiDetails: DetailItem[] = [
   {
     id: "tooltip",
@@ -2207,5 +2342,6 @@ export {
   sliderApiDetails,
   spinnerApiDetails,
   switchApiDetails,
+  tabsApiDetails,
   tooltipApiDetails,
 };
