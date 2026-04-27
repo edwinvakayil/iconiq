@@ -207,6 +207,21 @@
       ]
     },
     {
+      "name": "dropdown",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": ["framer-motion", "lucide-react"],
+      "devDependencies": [],
+      "title": "Dropdown",
+      "description": "Animated dropdown with a selectable value mode and an action-menu mode, plus chevron rotation and spring-driven menu entry.",
+      "files": [
+        {
+          "path": "dropdown.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "file-upload",
       "type": "registry:ui",
       "registryDependencies": [],

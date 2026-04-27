@@ -878,6 +878,228 @@ const drawerApiDetails: DetailItem[] = [
   registryItem("drawer.json", ["framer-motion", "lucide-react"]),
 ];
 
+const dropdownApiDetails: DetailItem[] = [
+  {
+    id: "dropdown",
+    title: "Dropdown",
+    summary:
+      "Root provider that coordinates open state, selected value state, and the shared behavior used by the trigger, content, and item primitives.",
+    fields: [
+      field({
+        name: "children",
+        type: "ReactNode",
+        required: true,
+        description:
+          "Compose DropdownTrigger, DropdownContent, DropdownItem, and optional helpers like DropdownValue or DropdownSeparator inside the root.",
+      }),
+      field({
+        name: "value",
+        type: "string",
+        description:
+          "Controlled selected value for the select variant. Action mode usually leaves this unset.",
+      }),
+      field({
+        name: "defaultValue",
+        type: "string",
+        description: "Initial selected value for uncontrolled select usage.",
+      }),
+      field({
+        name: "onValueChange",
+        type: "(value: string | undefined) => void",
+        description: "Called when a select item updates the current value.",
+      }),
+      field({
+        name: "open",
+        type: "boolean",
+        description: "Controlled open state for the menu surface.",
+      }),
+      field({
+        name: "defaultOpen",
+        type: "boolean",
+        defaultValue: "false",
+        description: "Initial open state for uncontrolled usage.",
+      }),
+      field({
+        name: "onOpenChange",
+        type: "(open: boolean) => void",
+        description:
+          "Called whenever the trigger, outside click handling, or Escape key changes the open state.",
+      }),
+      field({
+        name: "variant",
+        type: '"select" | "action"',
+        defaultValue: "select",
+        description:
+          "Use select when items should commit a persistent value with a checkmark, or action when items should behave like immediate commands.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description:
+          "Merged onto the outer relative wrapper around the trigger and content.",
+      }),
+    ],
+    notes: [
+      "The menu stays local to the trigger wrapper and is absolutely positioned under it instead of being portaled to document.body.",
+      "Escape and outside clicks close the menu. This version does not ship a full roving-focus keyboard model like Radix dropdown-menu.",
+    ],
+  },
+  {
+    id: "dropdown-trigger",
+    title: "DropdownTrigger",
+    summary:
+      "Interactive trigger button that opens and closes the menu. It works with plain children, DropdownValue, or custom trigger content like an avatar.",
+    fields: [
+      field({
+        name: "children",
+        type: "ReactNode",
+        description:
+          "Trigger content. In select mode this usually includes DropdownValue, while action menus can pass custom content such as an avatar or label row.",
+      }),
+      field({
+        name: "showChevron",
+        type: "boolean",
+        defaultValue: "true",
+        description:
+          "Hides the default chevron when you want a cleaner custom trigger, such as an avatar-only action menu.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description: "Merged onto the trigger button shell.",
+      }),
+      field({
+        name: "disabled",
+        type: "boolean",
+        description: "Prevents opening and dims the trigger styling.",
+      }),
+    ],
+    notes: [
+      "The trigger is always rendered as a button in this version, so custom trigger visuals should be passed as children and styled with className.",
+    ],
+  },
+  {
+    id: "dropdown-value",
+    title: "DropdownValue",
+    summary:
+      "Small helper for select mode that reads the current value from context and prints the matching item label or a placeholder.",
+    fields: [
+      field({
+        name: "placeholder",
+        type: "string",
+        defaultValue: '"Select an option"',
+        description:
+          "Text shown when no matching selected value is currently registered.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description: "Merged onto the rendered span inside the trigger.",
+      }),
+    ],
+    notes: [
+      "DropdownValue is only useful in select mode. Action menus usually provide their own trigger content instead.",
+    ],
+  },
+  {
+    id: "dropdown-content",
+    title: "DropdownContent",
+    summary:
+      "Animated menu surface that positions itself under the trigger and renders the item list for either variant.",
+    fields: [
+      field({
+        name: "children",
+        type: "ReactNode",
+        required: true,
+        description:
+          "Usually DropdownItem children, with optional DropdownSeparator nodes between groups.",
+      }),
+      field({
+        name: "align",
+        type: '"start" | "center" | "end"',
+        defaultValue: "start",
+        description: "Horizontal alignment relative to the trigger wrapper.",
+      }),
+      field({
+        name: "sideOffset",
+        type: "number",
+        defaultValue: "8",
+        description:
+          "Vertical gap between the trigger and the dropdown surface.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description:
+          "Merged onto the dropdown surface, which is useful for setting a custom width or changing shadows in docs/examples.",
+      }),
+    ],
+    notes: [
+      "The content stays mounted only while the menu is open, and its spring animation is handled internally.",
+    ],
+  },
+  {
+    id: "dropdown-item",
+    title: "DropdownItem",
+    summary:
+      "Single interactive row used by both variants. In select mode it can register a value, and in action mode it acts like a plain command item.",
+    fields: [
+      field({
+        name: "children",
+        type: "ReactNode",
+        required: true,
+        description:
+          "Row content. You can place icons inline before the label for action menus or richer item layouts.",
+      }),
+      field({
+        name: "value",
+        type: "string",
+        description:
+          "Selection key for select mode. When it matches the root value, the item renders the checkmark state.",
+      }),
+      field({
+        name: "textValue",
+        type: "string",
+        description:
+          "Optional explicit label used by DropdownValue when your item children are not plain text.",
+      }),
+      field({
+        name: "onClick",
+        type: "(event: MouseEvent<HTMLButtonElement>) => void",
+        description:
+          "Runs before the item closes the menu. Action menus typically use this for immediate commands like profile or logout.",
+      }),
+      field({
+        name: "disabled",
+        type: "boolean",
+        description: "Prevents interaction and dims the row.",
+      }),
+    ],
+    notes: [
+      "Select items do not render a filled selected background in this version; only the trailing checkmark indicates the chosen value.",
+      "If you omit value in select mode, the item behaves like a plain closing action and will not update the current value.",
+    ],
+  },
+  {
+    id: "dropdown-separator",
+    title: "DropdownSeparator",
+    summary:
+      "Simple divider for grouping related items inside the content surface.",
+    fields: [
+      field({
+        name: "className",
+        type: "string",
+        description:
+          "Merged onto the divider element when you want to adjust spacing or tone locally.",
+      }),
+    ],
+    notes: [
+      "The base separator uses the shared border token and a small vertical margin between item groups.",
+    ],
+  },
+  registryItem("dropdown.json", ["framer-motion", "lucide-react"]),
+];
+
 const fileUploadApiDetails: DetailItem[] = [
   {
     id: "file-upload",
@@ -1974,6 +2196,7 @@ export {
   collapsibleApiDetails,
   drawerApiDetails,
   dialogApiDetails,
+  dropdownApiDetails,
   fileUploadApiDetails,
   hoverCardApiDetails,
   popoverApiDetails,

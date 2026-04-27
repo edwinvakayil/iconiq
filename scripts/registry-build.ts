@@ -40,6 +40,12 @@ const REGISTRY_UI_META: Record<
       "Controlled overlay drawer with side-based slide motion, staggered content reveal, and a built-in close header.",
     dependencies: ["framer-motion", "lucide-react"],
   },
+  dropdown: {
+    title: "Dropdown",
+    description:
+      "Animated dropdown with a selectable value mode and an action-menu mode, plus chevron rotation and spring-driven menu entry.",
+    dependencies: ["framer-motion", "lucide-react"],
+  },
   "file-upload": {
     title: "File Upload",
     description:

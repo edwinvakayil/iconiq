@@ -200,6 +200,33 @@ const COMPONENT_EXAMPLE: Record<string, string> = {
     "    </div>\n" +
     "  )\n" +
     "}\n",
+  dropdown:
+    '"use client";\n\n' +
+    "import {\n" +
+    "  Dropdown,\n" +
+    "  DropdownContent,\n" +
+    "  DropdownItem,\n" +
+    "  DropdownTrigger,\n" +
+    "  DropdownValue,\n" +
+    `} from "@/components/ui/dropdown"\n` +
+    `import { useState } from "react"\n\n` +
+    "export default function Page() {\n" +
+    '  const [value, setValue] = useState<string | undefined>("design")\n' +
+    "  return (\n" +
+    '    <div className="flex min-h-svh items-center justify-center p-8">\n' +
+    '      <Dropdown className="w-56" onValueChange={setValue} value={value}>\n' +
+    "        <DropdownTrigger>\n" +
+    '          <DropdownValue placeholder="Choose a team" />\n' +
+    "        </DropdownTrigger>\n" +
+    '        <DropdownContent className="w-full">\n' +
+    '          <DropdownItem value="design">Design</DropdownItem>\n' +
+    '          <DropdownItem value="product">Product</DropdownItem>\n' +
+    '          <DropdownItem value="engineering">Engineering</DropdownItem>\n' +
+    "        </DropdownContent>\n" +
+    "      </Dropdown>\n" +
+    "    </div>\n" +
+    "  )\n" +
+    "}\n",
   "file-upload":
     '"use client";\n\n' +
     `import { FileUpload } from "@/components/ui/file-upload"\n\n` +
