@@ -100,10 +100,13 @@ function getContentMotion(reduceMotion: boolean) {
 }
 
 type DropdownContextValue = {
+  activeItemId: string | null;
   containerRef: React.RefObject<HTMLDivElement | null>;
+  hoverLayoutId: string;
   labels: Record<string, string>;
   open: boolean;
   reduceMotion: boolean;
+  setActiveItemId: (id: string | null) => void;
   setFocusStrategy: (strategy: "first" | "last" | "selected") => void;
   setOpen: (open: boolean) => void;
   setValue: (value: string | undefined) => void;
@@ -242,6 +245,7 @@ export function Dropdown({
   value: valueProp,
   variant = "select",
 }: DropdownProps) {
+  const hoverLayoutId = React.useId();
   const containerRef = React.useRef<HTMLDivElement>(null);
   const triggerRef = React.useRef<HTMLButtonElement>(null);
   const reduceMotion = useReducedMotion() ?? false;
@@ -253,6 +257,7 @@ export function Dropdown({
     onChange: onOpenChange,
     prop: openProp,
   });
+  const [activeItemId, setActiveItemId] = React.useState<string | null>(null);
   const [value, setValue] = useControllableState<string | undefined>({
     defaultProp: defaultValue,
     onChange: onValueChange,
@@ -348,6 +353,14 @@ export function Dropdown({
   );
 
   React.useEffect(() => {
+    if (open) {
+      return;
+    }
+
+    setActiveItemId(null);
+  }, [open]);
+
+  React.useEffect(() => {
     if (!open) {
       return;
     }
@@ -430,10 +443,13 @@ export function Dropdown({
 
   const contextValue = React.useMemo(
     () => ({
+      activeItemId,
       containerRef,
+      hoverLayoutId,
       labels,
       open,
       reduceMotion,
+      setActiveItemId,
       setFocusStrategy: (strategy: "first" | "last" | "selected") => {
         focusStrategyRef.current = strategy;
       },
@@ -443,7 +459,17 @@ export function Dropdown({
       value,
       variant,
     }),
-    [labels, open, reduceMotion, setOpen, setValue, value, variant]
+    [
+      activeItemId,
+      hoverLayoutId,
+      labels,
+      open,
+      reduceMotion,
+      setOpen,
+      setValue,
+      value,
+      variant,
+    ]
   );
 
   return (
@@ -497,7 +523,7 @@ export const DropdownTrigger = React.forwardRef<
         aria-expanded={open}
         aria-haspopup={variant === "action" ? "menu" : "listbox"}
         className={cn(
-          "flex w-full items-center justify-between gap-2 rounded-xl border border-border bg-card px-4 py-3 text-left font-medium text-card-foreground text-sm shadow-sm transition-colors",
+          "flex w-full items-center justify-between gap-2 rounded-xl border border-border bg-white px-4 py-3 text-left font-medium text-card-foreground text-sm shadow-sm transition-colors dark:bg-black",
           "hover:border-ring/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring",
           open && "border-ring/60",
           disabled && "cursor-not-allowed opacity-60",
@@ -615,7 +641,7 @@ export const DropdownContent = React.forwardRef<
         <motion.div
           animate={contentMotion.animate}
           className={cn(
-            "absolute z-50 min-w-[12rem] overflow-hidden rounded-xl border border-border bg-popover p-1 shadow-lg",
+            "absolute z-[100] min-w-[12rem] overflow-hidden rounded-xl border border-border bg-white p-1 shadow-lg dark:bg-black",
             getContentAlignmentClasses(align),
             className
           )}
@@ -657,21 +683,25 @@ export const DropdownItem = React.forwardRef<
   DropdownItemProps
 >(({ children, className, disabled, onClick, value, ...props }, ref) => {
   const {
+    activeItemId,
+    hoverLayoutId,
     reduceMotion,
+    setActiveItemId,
     setOpen,
     setValue,
     value: currentValue,
     variant,
   } = useDropdownContext("DropdownItem");
+  const itemId = React.useId();
+  const isActive = activeItemId === itemId && !disabled;
   const isSelected =
     variant === "select" && value !== undefined && currentValue === value;
 
   return (
     <button
       className={cn(
-        "group relative flex w-full items-center justify-between gap-3 rounded-lg px-3 py-2 text-left text-popover-foreground text-sm transition-[background-color,color,transform] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)]",
-        "hover:bg-accent hover:text-accent-foreground",
-        "focus-visible:bg-accent focus-visible:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/20",
+        "group relative flex w-full items-center justify-between gap-3 rounded-lg px-3 py-2 text-left text-popover-foreground text-sm transition-[color,transform] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)]",
+        "hover:text-accent-foreground focus-visible:text-accent-foreground focus-visible:outline-none",
         disabled && "pointer-events-none opacity-50",
         className
       )}
@@ -691,13 +721,26 @@ export const DropdownItem = React.forwardRef<
 
         setOpen(false);
       }}
+      onFocus={() => setActiveItemId(itemId)}
+      onMouseEnter={() => setActiveItemId(itemId)}
       ref={ref}
       role={variant === "action" ? "menuitem" : "option"}
       type="button"
       {...props}
     >
+      {isActive ? (
+        <motion.div
+          className="absolute inset-0 rounded-lg bg-accent"
+          layoutId={hoverLayoutId}
+          transition={{
+            type: "spring",
+            stiffness: 600,
+            damping: 38,
+          }}
+        />
+      ) : null}
       <motion.span
-        className="flex min-w-0 flex-1 items-center gap-2 truncate transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-x-[1.5px] group-focus-visible:translate-x-[1.5px]"
+        className="relative z-10 flex min-w-0 flex-1 items-center gap-2 truncate transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-x-[1.5px] group-focus-visible:translate-x-[1.5px]"
         transition={
           reduceMotion
             ? undefined
@@ -709,7 +752,7 @@ export const DropdownItem = React.forwardRef<
       {isSelected ? (
         <motion.span
           animate={{ opacity: 1, scale: 1, y: 0 }}
-          className="shrink-0 text-primary"
+          className="relative z-10 shrink-0 text-primary"
           initial={{ opacity: 0, scale: 0.78, y: 1 }}
           transition={
             reduceMotion

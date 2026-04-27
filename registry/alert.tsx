@@ -181,7 +181,7 @@ const Alert = ({
 
           {/* Icon */}
           <motion.div
-            className="mt-px shrink-0 text-foreground/40 [&_svg]:h-[18px] [&_svg]:w-[18px]"
+            className="mt-px shrink-0 text-black dark:text-white [&_svg]:h-[18px] [&_svg]:w-[18px]"
             variants={iconVariants}
           >
             {icon}
@@ -210,8 +210,6 @@ const Alert = ({
               onClick={handleDismiss}
               type="button"
               variants={childVariants}
-              whileHover={{ scale: 1.15, rotate: 90 }}
-              whileTap={{ scale: 0.82 }}
             >
               <svg fill="none" height="14" viewBox="0 0 14 14" width="14">
                 <path
