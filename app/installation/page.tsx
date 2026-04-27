@@ -1,12 +1,26 @@
-"use client";
-
 import { GitBranch, PackageCheck, Terminal } from "lucide-react";
+import type { Metadata } from "next";
 import Link from "next/link";
 
 import { CodeBlockInstall } from "@/components/code-block-install";
 import { DocsPageShell, DocsSection } from "@/components/docs/page-shell";
 import { RegistryInstallBlock } from "@/components/registry-install-block";
+import { SITE } from "@/constants";
 import { SITE_SECTIONS } from "@/lib/site-nav";
+import { createMetadata } from "@/seo/metadata";
+
+export const metadata: Metadata = createMetadata({
+  title: `Installation | ${SITE.NAME}`,
+  description:
+    "Install Iconiq components with the shadcn registry workflow, keep the generated files in your project, and adopt source-first React UI components without package lock-in.",
+  canonical: "/installation",
+  ogTitle: `Install ${SITE.NAME} Components`,
+  keywords: [
+    "install shadcn registry components",
+    "source first react components",
+    "iconiq installation guide",
+  ],
+});
 
 function hrefToSlug(href: string) {
   return href.split("/").pop() ?? href;

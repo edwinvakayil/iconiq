@@ -85,7 +85,9 @@ export default function OgImage() {
               />
             </div>
           </div>
-          <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+          <div
+            style={{ display: "flex", flexDirection: "column", gap: "10px" }}
+          >
             <span
               style={{
                 fontSize: "64px",

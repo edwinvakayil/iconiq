@@ -1,9 +1,23 @@
-"use client";
-
 import { Layers, LayoutGrid, Sparkles, Zap } from "lucide-react";
+import type { Metadata } from "next";
 
 import { DocsPageShell, DocsSection } from "@/components/docs/page-shell";
+import { SITE } from "@/constants";
 import { SITE_SECTIONS } from "@/lib/site-nav";
+import { createMetadata } from "@/seo/metadata";
+
+export const metadata: Metadata = createMetadata({
+  title: `Introduction | ${SITE.NAME}`,
+  description:
+    "Learn what Iconiq is, how the source-first registry workflow works, and why the library is designed for teams that want editable React component source.",
+  canonical: "/introduction",
+  ogTitle: `Introduction to ${SITE.NAME}`,
+  keywords: [
+    "react component library introduction",
+    "source first ui workflow",
+    "editable component source",
+  ],
+});
 
 const principles = [
   {

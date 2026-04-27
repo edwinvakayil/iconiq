@@ -2,17 +2,18 @@ const SITE = {
   NAME: "Iconiq",
   LOGO: "iconiq.",
   URL: "https://iconiqui.com",
-  OG_IMAGE: "/og.png",
+  OG_IMAGE: "/opengraph-image",
   AUTHOR: {
     NAME: "Edwin Vakayil",
     TWITTER: "@edwinvakayil",
   },
   DESCRIPTION: {
-    LONG: "Iconiq is an open-source library of motion-powered React components with a source-first registry workflow. Copy-paste ready, customizable, and designed for modern product interfaces.",
+    LONG: "Iconiq is an open-source React component library with a source-first shadcn registry workflow. Browse polished UI primitives, install them as editable source, and adapt them directly inside modern product interfaces.",
     SHORT:
-      "Iconiq is a motion-powered component library for React with a source-first registry workflow. Open-source and copy-paste ready.",
+      "Open-source React components with a source-first shadcn registry workflow and editable product-ready UI primitives.",
   },
   KEYWORDS: [
+    "open source react component library",
     "motion-powered components",
     "react components",
     "component library",
@@ -23,8 +24,10 @@ const SITE = {
     "tailwind components",
     "nextjs components",
     "shadcn registry",
+    "shadcn component library",
     "source first ui",
     "motion ui library",
+    "editable react components",
   ],
 } as const;
 

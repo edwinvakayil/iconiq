@@ -14,6 +14,7 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { SITE_SECTIONS } from "@/lib/site-nav";
 import { cn } from "@/lib/utils";
+import { BreadcrumbJsonLdClient } from "@/seo/breadcrumb-json-ld-client";
 
 type BreadcrumbItem = {
   label: string;
@@ -234,6 +235,7 @@ function DocsPageShell({
 }) {
   return (
     <main className="min-w-0 flex-1">
+      <BreadcrumbJsonLdClient items={breadcrumbs} />
       <div
         className={cn(
           "mx-auto w-full max-w-[1480px] px-4 py-10 sm:px-6 sm:py-12 lg:px-10",

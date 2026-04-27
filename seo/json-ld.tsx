@@ -13,13 +13,11 @@ const WebsiteJsonLd = () => {
     url: SITE.URL,
     description: SITE.DESCRIPTION.LONG,
     inLanguage: "en-US",
-    potentialAction: {
-      "@type": "SearchAction",
-      target: {
-        "@type": "EntryPoint",
-        urlTemplate: `${SITE.URL}?search={search_term_string}`,
-      },
-      "query-input": "required name=search_term_string",
+    image: `${SITE.URL}${SITE.OG_IMAGE}`,
+    publisher: {
+      "@type": "Organization",
+      name: SITE.NAME,
+      url: SITE.URL,
     },
   };
 
@@ -41,7 +39,8 @@ const SoftwareSourceCodeJsonLd = () => {
     url: SITE.URL,
     codeRepository: LINK.GITHUB,
     programmingLanguage: ["TypeScript", "React", "JavaScript"],
-    runtimePlatform: "Node.js",
+    runtimePlatform: "Web browser",
+    codeSampleType: "UI component library",
     author: {
       "@type": "Person",
       name: SITE.AUTHOR.NAME,
@@ -60,7 +59,6 @@ const SoftwareSourceCodeJsonLd = () => {
       availability: "https://schema.org/InStock",
     },
     isAccessibleForFree: true,
-    dateModified: new Date().toISOString().split("T")[0],
     numberOfItems: componentCount,
   };
 
@@ -79,7 +77,7 @@ const OrganizationJsonLd = () => {
     "@type": "Organization",
     name: SITE.NAME,
     url: SITE.URL,
-    logo: `${SITE.URL}${SITE.OG_IMAGE}`,
+    logo: `${SITE.URL}/favicon.ico`,
     sameAs: [LINK.GITHUB, LINK.TWITTER],
     founder: {
       "@type": "Person",
@@ -110,6 +108,31 @@ const BreadcrumbJsonLd = ({
       position: index + 1,
       name: item.name,
       item: item.url,
+    })),
+  };
+
+  return (
+    <script
+      // biome-ignore lint/security/noDangerouslySetInnerHtml: JSON-LD script payload
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      type="application/ld+json"
+    />
+  );
+};
+
+const ComponentItemListJsonLd = () => {
+  const items = SITE_SECTIONS.flatMap((section) => section.children);
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: `${SITE.NAME} components`,
+    itemListOrder: "https://schema.org/ItemListOrderAscending",
+    numberOfItems: items.length,
+    itemListElement: items.map((item, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      name: item.label,
+      url: `${SITE.URL}${item.href}`,
     })),
   };
 
@@ -177,6 +200,7 @@ const JsonLdScripts = () => {
 
 export {
   BreadcrumbJsonLd,
+  ComponentItemListJsonLd,
   FAQJsonLd,
   JsonLdScripts,
   OrganizationJsonLd,
