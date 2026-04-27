@@ -372,6 +372,21 @@
       ]
     },
     {
+      "name": "table",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": ["framer-motion", "lucide-react"],
+      "devDependencies": [],
+      "title": "Table",
+      "description": "Composable table primitives with grid-aligned rows, optional animated sort buttons, and layout-preserving row transitions.",
+      "files": [
+        {
+          "path": "table.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "tabs",
       "type": "registry:ui",
       "registryDependencies": [],

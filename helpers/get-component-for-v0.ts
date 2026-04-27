@@ -539,6 +539,48 @@ const COMPONENT_EXAMPLE: Record<string, string> = {
     "    </div>\n" +
     "  )\n" +
     "}\n",
+  table:
+    '"use client";\n\n' +
+    "import {\n" +
+    "  Table,\n" +
+    "  TableBody,\n" +
+    "  TableCaption,\n" +
+    "  TableCell,\n" +
+    "  TableHead,\n" +
+    "  TableHeader,\n" +
+    "  TableRow,\n" +
+    `} from "@/components/ui/table"\n\n` +
+    "const rows = [\n" +
+    '  { id: "1", name: "Ada Lovelace", role: "Engineer", status: "Active", amount: "$4,200" },\n' +
+    '  { id: "2", name: "Grace Hopper", role: "Architect", status: "Pending", amount: "$3,100" },\n' +
+    "]\n\n" +
+    "export default function Page() {\n" +
+    "  return (\n" +
+    '    <div className="mx-auto flex min-h-svh w-full max-w-6xl items-center justify-center p-8">\n' +
+    "      <Table>\n" +
+    "        <TableHeader>\n" +
+    '          <TableRow variant="header">\n' +
+    "            <TableHead>Name</TableHead>\n" +
+    "            <TableHead>Role</TableHead>\n" +
+    "            <TableHead>Status</TableHead>\n" +
+    '            <TableHead align="right">Amount</TableHead>\n' +
+    "          </TableRow>\n" +
+    "        </TableHeader>\n" +
+    "        <TableBody>\n" +
+    "          {rows.map((row, index) => (\n" +
+    "            <TableRow index={index} key={row.id}>\n" +
+    '              <TableCell className="font-medium text-foreground">{row.name}</TableCell>\n' +
+    '              <TableCell className="text-muted-foreground">{row.role}</TableCell>\n' +
+    "              <TableCell>{row.status}</TableCell>\n" +
+    '              <TableCell align="right" className="tabular-nums text-foreground">{row.amount}</TableCell>\n' +
+    "            </TableRow>\n" +
+    "          ))}\n" +
+    "        </TableBody>\n" +
+    "        <TableCaption>2 revenue entries</TableCaption>\n" +
+    "      </Table>\n" +
+    "    </div>\n" +
+    "  )\n" +
+    "}\n",
   tooltip:
     '"use client";\n\n' +
     `import { Tooltip } from "@/components/ui/tooltip"\n\n` +

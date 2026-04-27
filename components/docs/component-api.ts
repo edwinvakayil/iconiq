@@ -2257,6 +2257,285 @@ const tabsApiDetails: DetailItem[] = [
   registryItem("tabs.json", ["framer-motion"]),
 ];
 
+const tableApiDetails: DetailItem[] = [
+  {
+    id: "table",
+    title: "Table",
+    summary:
+      "Root provider for the animated table primitives. It sets the shared column template so header and body rows stay aligned.",
+    fields: [
+      field({
+        name: "children",
+        type: "ReactNode",
+        required: true,
+        description:
+          "Compose TableHeader, TableBody, TableRow, TableHead, TableCell, and optional helper primitives inside the root.",
+      }),
+      field({
+        name: "columns",
+        type: "string",
+        defaultValue:
+          '"minmax(0,1.4fr) minmax(0,1fr) minmax(0,1fr) minmax(0,1fr)"',
+        description:
+          "Shared grid-template-columns value applied to every header and body row so custom layouts stay aligned.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description:
+          "Merged onto the root wrapper when you need to adjust width, spacing, or placement.",
+      }),
+    ],
+    notes: [
+      "The canonical JSX export is `Table`, and the lowercase `table` alias still ships for backward compatibility.",
+      "The file also exports `TABLE_DEFAULT_COLUMNS`, `TableAlign`, `TableRowVariant`, and `TableSortDirection` for stronger TypeScript reuse in app code.",
+      "The registry component no longer owns demo data, search state, or add/remove actions. Those behaviors are expected to live in app code.",
+      "Semantic roles default to a div-based table structure (`table`, `rowgroup`, `row`, `columnheader`, and `cell`) so the installed primitive is more accessible without changing the visual layout.",
+    ],
+  },
+  {
+    id: "table-toolbar",
+    title: "TableToolbar",
+    summary:
+      "Optional layout helper for the control row above the table, matching the original spacing and alignment treatment.",
+    fields: [
+      field({
+        name: "children",
+        type: "ReactNode",
+        required: true,
+        description:
+          "Usually a search field, actions, filters, or bulk controls placed above the table.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description: "Merged onto the toolbar wrapper.",
+      }),
+    ],
+  },
+  {
+    id: "table-header",
+    title: "TableHeader",
+    summary:
+      "Top shell for the header area. It preserves the original top border before the first row.",
+    fields: [
+      field({
+        name: "children",
+        type: "ReactNode",
+        required: true,
+        description: "Usually one header TableRow.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description: "Merged onto the header wrapper.",
+      }),
+    ],
+  },
+  {
+    id: "table-body",
+    title: "TableBody",
+    summary:
+      "Body wrapper that adds LayoutGroup and AnimatePresence so row insertions, removals, and reordering stay animated.",
+    fields: [
+      field({
+        name: "children",
+        type: "ReactNode",
+        required: true,
+        description:
+          "One or more TableRow elements, plus optional TableEmpty when no rows are visible.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description: "Merged onto the body wrapper.",
+      }),
+    ],
+    notes: [
+      "Exit animations for removed rows only run when body rows are rendered as direct children of TableBody.",
+    ],
+  },
+  {
+    id: "table-row",
+    title: "TableRow",
+    summary:
+      "Motion-enabled row primitive used for both header and body layouts.",
+    fields: [
+      field({
+        name: "variant",
+        type: '"header" | "body"',
+        defaultValue: "body",
+        description:
+          "Header rows skip mount and exit motion, while body rows use the original spring-based row transitions.",
+      }),
+      field({
+        name: "index",
+        type: "number",
+        defaultValue: "0",
+        description:
+          "Optional row index used to apply a subtle stagger to body row entry motion.",
+      }),
+      field({
+        name: "hoverable",
+        type: "boolean",
+        description:
+          "When true, body rows keep the original muted hover wash. Defaults to false for header rows and true for body rows.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description:
+          "Merged onto the row shell for spacing or color overrides.",
+      }),
+      field({
+        name: "Motion div props",
+        type: "ComponentPropsWithoutRef<typeof motion.div>",
+        description:
+          "Additional motion.div props such as layout, transition, whileHover, and exit can still be passed directly.",
+      }),
+    ],
+    notes: [
+      "Every row reads the shared columns string from Table and applies it as grid-template-columns.",
+      'Rows expose `data-slot="table-row"`, plus `data-variant` and `data-hoverable`, which makes local styling overrides easier after installation.',
+    ],
+  },
+  {
+    id: "table-head",
+    title: "TableHead",
+    summary:
+      "Header cell wrapper for labels, sort buttons, and right-aligned controls.",
+    fields: [
+      field({
+        name: "align",
+        type: '"left" | "right"',
+        defaultValue: "left",
+        description:
+          "Controls left or right alignment for the header cell content.",
+      }),
+      field({
+        name: "children",
+        type: "ReactNode",
+        required: true,
+        description:
+          "Header label or a custom control such as TableSortButton.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description: "Merged onto the header cell wrapper.",
+      }),
+    ],
+  },
+  {
+    id: "table-cell",
+    title: "TableCell",
+    summary:
+      "Body cell wrapper for row content, status pills, numeric values, and row actions.",
+    fields: [
+      field({
+        name: "align",
+        type: '"left" | "right"',
+        defaultValue: "left",
+        description: "Controls left or right alignment for the cell content.",
+      }),
+      field({
+        name: "children",
+        type: "ReactNode",
+        required: true,
+        description: "Rendered cell content.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description: "Merged onto the cell wrapper.",
+      }),
+    ],
+  },
+  {
+    id: "table-caption",
+    title: "TableCaption",
+    summary:
+      "Low-emphasis caption line below the table, matching the original entry count styling.",
+    fields: [
+      field({
+        name: "children",
+        type: "ReactNode",
+        required: true,
+        description: "Caption copy, summary text, or count information.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description: "Merged onto the caption paragraph.",
+      }),
+    ],
+  },
+  {
+    id: "table-empty",
+    title: "TableEmpty",
+    summary:
+      "Animated empty-state block for zero-result or no-data states inside TableBody.",
+    fields: [
+      field({
+        name: "children",
+        type: "ReactNode",
+        required: true,
+        description: "Empty-state copy or a richer no-data message.",
+      }),
+      field({
+        name: "Motion div props",
+        type: "ComponentPropsWithoutRef<typeof motion.div>",
+        description:
+          "You can still override animate, initial, transition, or className when customizing the empty state.",
+      }),
+    ],
+  },
+  {
+    id: "table-sort-button",
+    title: "TableSortButton",
+    summary:
+      "Optional header helper that preserves the original label-plus-chevron treatment and direction animation.",
+    fields: [
+      field({
+        name: "active",
+        type: "boolean",
+        defaultValue: "false",
+        description:
+          "Strengthens the icon opacity and enables the active sort direction treatment.",
+      }),
+      field({
+        name: "direction",
+        type: '"asc" | "desc"',
+        defaultValue: "asc",
+        description:
+          "Rotates the chevron when the current active sort direction is descending.",
+      }),
+      field({
+        name: "align",
+        type: '"left" | "right"',
+        defaultValue: "left",
+        description:
+          "Keeps the sort button aligned with the header cell it lives in.",
+      }),
+      field({
+        name: "children",
+        type: "ReactNode",
+        required: true,
+        description: "Visible sort label.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description: "Merged onto the button wrapper.",
+      }),
+    ],
+    notes: [
+      "The helper defaults to type='button', so it stays safe inside forms.",
+    ],
+  },
+  registryItem("table.json", ["framer-motion", "lucide-react"]),
+];
+
 const tooltipApiDetails: DetailItem[] = [
   {
     id: "tooltip",
@@ -2342,6 +2621,7 @@ export {
   sliderApiDetails,
   spinnerApiDetails,
   switchApiDetails,
+  tableApiDetails,
   tabsApiDetails,
   tooltipApiDetails,
 };

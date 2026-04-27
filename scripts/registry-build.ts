@@ -164,6 +164,12 @@ const REGISTRY_UI_META: Record<
       "Animated tabs with measured active and hover underlines, plus a blurred content transition between panels.",
     dependencies: ["framer-motion"],
   },
+  table: {
+    title: "Table",
+    description:
+      "Composable table primitives with grid-aligned rows, optional animated sort buttons, and layout-preserving row transitions.",
+    dependencies: ["framer-motion", "lucide-react"],
+  },
   spinner: {
     title: "Spinner",
     description:
