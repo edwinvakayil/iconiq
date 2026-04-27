@@ -7,35 +7,6 @@ export const alt = `${SITE.NAME} — Motion-Powered React Components`;
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
-// Palette drawn directly from the codebase's CSS variables
-// --primary: #000000  --secondary: #3f3f47  --muted-foreground: #737373
-// --border: #ebebeb   --sidebar-accent: #f4f4f4  green accent: #2ae46e
-const MOSAIC: { bg: string }[] = [
-  { bg: "#000000" },
-  { bg: "#2ae46e" },
-  { bg: "#ebebeb" },
-  { bg: "#3f3f47" },
-  { bg: "#f4f4f4" },
-
-  { bg: "#f4f4f4" },
-  { bg: "#737373" },
-  { bg: "#000000" },
-  { bg: "#ebebeb" },
-  { bg: "#2ae46e" },
-
-  { bg: "#2ae46e" },
-  { bg: "#ebebeb" },
-  { bg: "#3f3f47" },
-  { bg: "#f4f4f4" },
-  { bg: "#737373" },
-
-  { bg: "#3f3f47" },
-  { bg: "#f4f4f4" },
-  { bg: "#2ae46e" },
-  { bg: "#000000" },
-  { bg: "#ebebeb" },
-];
-
 export default function OgImage() {
   return new ImageResponse(
     <div
@@ -43,46 +14,31 @@ export default function OgImage() {
         width: "1200px",
         height: "630px",
         display: "flex",
-        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "center",
         fontFamily: "sans-serif",
-        background: "#ffffff",
+        background: "#0a0a0a",
         boxSizing: "border-box",
         overflow: "hidden",
+        position: "relative",
       }}
     >
-      {/* ── LEFT: content ── */}
       <div
         style={{
           display: "flex",
           flexDirection: "column",
+          width: "1040px",
+          height: "500px",
+          border: "1px solid #1f1f1f",
+          borderRadius: "28px",
+          background: "linear-gradient(160deg, #111111 0%, #0c0c0c 100%)",
+          padding: "52px",
           justifyContent: "space-between",
-          width: "760px",
-          boxSizing: "border-box",
+          boxShadow: "0 30px 80px rgba(0, 0, 0, 0.45)",
           position: "relative",
         }}
       >
-        {/* Green top accent bar */}
-        <div
-          style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            width: "760px",
-            height: "4px",
-            background: "#2ae46e",
-          }}
-        />
-
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "space-between",
-            height: "100%",
-            padding: "52px 64px 52px 64px",
-          }}
-        >
-          {/* Logo + URL row */}
+        <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
           <div
             style={{
               display: "flex",
@@ -90,208 +46,142 @@ export default function OgImage() {
               justifyContent: "space-between",
             }}
           >
-            <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-              <svg
-                fill="none"
-                height={30}
-                viewBox="0 0 48 48"
-                width={30}
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <rect fill="#000" height="18" rx="3" width="18" x="4" y="4" />
-                <rect
-                  fill="#000"
-                  height="18"
-                  opacity="0.5"
-                  rx="3"
-                  width="18"
-                  x="26"
-                  y="4"
-                />
-                <rect
-                  fill="#000"
-                  height="18"
-                  opacity="0.75"
-                  rx="3"
-                  width="40"
-                  x="4"
-                  y="26"
-                />
-              </svg>
-              <span
-                style={{
-                  fontSize: "20px",
-                  fontWeight: 700,
-                  color: "#000000",
-                  letterSpacing: "-0.5px",
-                }}
-              >
-                iconiq.
-              </span>
-            </div>
-            <span
+            <div
               style={{
-                fontSize: "13px",
-                color: "#a3a3a3",
-                fontWeight: 400,
-                letterSpacing: "0.2px",
+                display: "flex",
+                fontSize: "20px",
+                color: "#f5f5f5",
+                fontWeight: 700,
+                letterSpacing: "-0.4px",
               }}
             >
-              iconiqui.com
-            </span>
-          </div>
-
-          {/* Headline + subtitle */}
-          <div style={{ display: "flex", flexDirection: "column", gap: "0px" }}>
-            {/* "Free & Open-Source" eyebrow label */}
+              iconiq.
+            </div>
             <div
               style={{
                 display: "flex",
                 alignItems: "center",
-                gap: "8px",
-                marginBottom: "20px",
+                gap: "10px",
               }}
             >
-              <div
-                style={{
-                  width: "8px",
-                  height: "8px",
-                  borderRadius: "999px",
-                  background: "#2ae46e",
-                }}
-              />
               <span
                 style={{
-                  fontSize: "14px",
-                  fontWeight: 600,
-                  color: "#3f3f47",
-                  letterSpacing: "0.5px",
-                  textTransform: "uppercase",
+                  fontSize: "13px",
+                  color: "#8f8f8f",
+                  fontWeight: 500,
+                  letterSpacing: "0.15px",
                 }}
               >
-                Free &amp; Open-Source Component Library
+                iconiqui.com/registry
               </span>
+              <span
+                style={{
+                  width: "9px",
+                  height: "9px",
+                  borderRadius: "999px",
+                  background: "#2ae46e",
+                  boxShadow: "0 0 14px #2ae46e80",
+                }}
+              />
             </div>
-
+          </div>
+          <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
             <span
               style={{
-                fontSize: "60px",
+                fontSize: "64px",
                 fontWeight: 800,
-                color: "#000000",
-                lineHeight: "1.05",
-                letterSpacing: "-2.5px",
+                color: "#f8f8f8",
+                lineHeight: "1.02",
+                letterSpacing: "-2.4px",
               }}
             >
-              Motion-Powered
+              Minimal UI.
             </span>
             <span
               style={{
-                fontSize: "60px",
+                fontSize: "64px",
                 fontWeight: 800,
-                color: "#000000",
-                lineHeight: "1.05",
-                letterSpacing: "-2.5px",
+                color: "#f8f8f8",
+                lineHeight: "1.02",
+                letterSpacing: "-2.4px",
               }}
             >
-              React Components
+              Modern Motion.
             </span>
             <span
               style={{
-                marginTop: "20px",
+                marginTop: "14px",
                 fontSize: "18px",
-                color: "#737373",
-                lineHeight: "1.65",
-                maxWidth: "540px",
+                color: "#9c9c9c",
+                lineHeight: "1.5",
+                maxWidth: "760px",
               }}
             >
-              Motion-powered UI components with source-first installation.
-              Open-source, editable, and ready to land directly in your
-              codebase.
+              Open-source React components with polished motion and source-first
+              installation.
             </span>
           </div>
+        </div>
 
-          {/* Badges + byline */}
+        <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
           <div
-            style={{ display: "flex", flexDirection: "column", gap: "14px" }}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              alignSelf: "flex-start",
+              border: "1px solid #2c2c2c",
+              borderRadius: "12px",
+              padding: "11px 16px",
+              fontSize: "15px",
+              fontWeight: 500,
+              color: "#e9e9e9",
+              background: "#101010",
+            }}
           >
-            <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
-              {[
-                "Open Source",
-                "Source First",
-                "React Components",
-                "Copy-Paste Ready",
-              ].map((b) => (
-                <div
-                  key={b}
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "6px",
-                    padding: "5px 14px",
-                    background: "#ffffff",
-                    border: "1px solid #ebebeb",
-                    borderRadius: "999px",
-                    fontSize: "13px",
-                    fontWeight: 500,
-                    color: "#3f3f47",
-                  }}
-                >
-                  <div
-                    style={{
-                      width: "5px",
-                      height: "5px",
-                      borderRadius: "999px",
-                      background: "#2ae46e",
-                    }}
-                  />
-                  {b}
-                </div>
-              ))}
-            </div>
-            <span
-              style={{ fontSize: "13px", color: "#a3a3a3", fontWeight: 400 }}
-            >
-              Built by edwinvakayil
+            npx shadcn@latest add @iconiq/accordion
+          </div>
+
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "8px",
+              fontSize: "14px",
+              color: "#8d8d8d",
+              letterSpacing: "0.1px",
+            }}
+          >
+            <span style={{ color: "#6f6f6f" }}>Architected by</span>
+            <span style={{ color: "#f2f2f2", fontWeight: 600 }}>
+              @edwinvakayil
             </span>
           </div>
         </div>
       </div>
 
-      {/* ── RIGHT: mosaic panel ── */}
       <div
         style={{
-          width: "440px",
-          height: "630px",
-          background: "#fafafa",
-          borderLeft: "1px solid #ebebeb",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          flexShrink: 0,
+          position: "absolute",
+          left: "-120px",
+          top: "-120px",
+          width: "360px",
+          height: "360px",
+          borderRadius: "999px",
+          background: "radial-gradient(circle, #2ae46e25 0%, transparent 70%)",
         }}
-      >
-        {/* 5 × 4 mosaic */}
-        <div
-          style={{
-            display: "flex",
-            flexWrap: "wrap",
-            gap: "12px",
-            width: "308px",
-          }}
-        >
-          {MOSAIC.map((sq, i) => (
-            <div
-              key={i}
-              style={{
-                width: "52px",
-                height: "52px",
-                borderRadius: "10px",
-                background: sq.bg,
-              }}
-            />
-          ))}
-        </div>
-      </div>
+      />
+      <div
+        style={{
+          position: "absolute",
+          right: "-110px",
+          bottom: "-120px",
+          width: "340px",
+          height: "340px",
+          borderRadius: "999px",
+          background: "radial-gradient(circle, #ffffff14 0%, transparent 70%)",
+          display: "flex",
+        }}
+      />
     </div>,
     { ...size }
   );
