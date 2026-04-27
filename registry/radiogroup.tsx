@@ -4,20 +4,20 @@ import { AnimatePresence, motion } from "framer-motion";
 import * as React from "react";
 import { cn } from "@/lib/utils";
 
-interface RadioOption {
+export interface RadioOption {
   value: string;
   label: string;
   description?: string;
 }
 
-interface RadioGroupProps {
+export interface RadioGroupProps {
   options: RadioOption[];
   value?: string;
   onChange?: (value: string) => void;
   className?: string;
 }
 
-const RadioGroup: React.FC<RadioGroupProps> = ({
+export const RadioGroup: React.FC<RadioGroupProps> = ({
   options,
   value,
   onChange,

@@ -92,7 +92,7 @@ const iconVariants: Variants = {
   },
 };
 
-const Alert = ({
+export const Alert = ({
   icon,
   title,
   message,

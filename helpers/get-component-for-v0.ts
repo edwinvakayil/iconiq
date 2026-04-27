@@ -22,7 +22,7 @@ const COMPONENT_EXAMPLE: Record<string, string> = {
     "}\n",
   avatar:
     '"use client";\n\n' +
-    `import { avatar as Avatar } from "@/components/ui/avatar"\n\n` +
+    `import { Avatar } from "@/components/ui/avatar"\n\n` +
     "export default function Page() {\n" +
     "  return (\n" +
     '    <div className="flex min-h-svh items-center justify-center p-8">\n' +
@@ -124,7 +124,7 @@ const COMPONENT_EXAMPLE: Record<string, string> = {
     "}\n",
   combobox:
     '"use client";\n\n' +
-    `import { combobox as Combobox, type ComboboxOption } from "@/components/ui/combobox"\n` +
+    `import { Combobox, type ComboboxOption } from "@/components/ui/combobox"\n` +
     `import { useState } from "react"\n\n` +
     "const options: ComboboxOption[] = [\n" +
     '  { value: "scout", label: "Scout pass", description: "First scan before the sprint" },\n' +
@@ -265,7 +265,7 @@ const COMPONENT_EXAMPLE: Record<string, string> = {
     "}\n",
   select:
     '"use client";\n\n' +
-    `import { select as Select } from "@/components/ui/select"\n` +
+    `import { Select } from "@/components/ui/select"\n` +
     `import { useState } from "react"\n\n` +
     "const options = [\n" +
     '  { value: "a", label: "Option A" },\n' +
@@ -484,7 +484,7 @@ const COMPONENT_EXAMPLE: Record<string, string> = {
     "}\n",
   input:
     '"use client";\n\n' +
-    `import { input as Input } from "@/components/ui/input"\n` +
+    `import { Input } from "@/components/ui/input"\n` +
     `import { useState } from "react"\n\n` +
     "export default function Page() {\n" +
     '  const [text, setText] = useState("Hello")\n' +
@@ -496,7 +496,7 @@ const COMPONENT_EXAMPLE: Record<string, string> = {
     "}\n",
   switch:
     '"use client";\n\n' +
-    `import { switch as Switch } from "@/components/ui/switch"\n` +
+    `import { Switch } from "@/components/ui/switch"\n` +
     `import { useState } from "react"\n\n` +
     "export default function Page() {\n" +
     "  const [on, setOn] = useState(false)\n" +
@@ -541,7 +541,7 @@ const COMPONENT_EXAMPLE: Record<string, string> = {
     "}\n",
   tooltip:
     '"use client";\n\n' +
-    `import { tooltip as Tooltip } from "@/components/ui/tooltip"\n\n` +
+    `import { Tooltip } from "@/components/ui/tooltip"\n\n` +
     "export default function Page() {\n" +
     "  return (\n" +
     '    <div className="flex min-h-svh items-center justify-center p-8">\n' +

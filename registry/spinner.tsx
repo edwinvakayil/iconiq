@@ -7,12 +7,12 @@ const MotionOutput = motion.create("output");
 
 type SpinnerVariant = "ring" | "dots";
 
-interface SpinnerProps {
+export interface SpinnerProps {
   variant?: SpinnerVariant;
   className?: string;
 }
 
-const Spinner = ({ variant = "ring", className }: SpinnerProps) => {
+export function Spinner({ variant = "ring", className }: SpinnerProps) {
   if (variant === "dots") {
     return (
       <output
@@ -56,6 +56,6 @@ const Spinner = ({ variant = "ring", className }: SpinnerProps) => {
       }}
     />
   );
-};
+}
 
 export default Spinner;

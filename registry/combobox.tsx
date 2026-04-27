@@ -11,7 +11,7 @@ export type ComboboxOption = {
   description?: string;
 };
 
-interface comboboxProps {
+export interface ComboboxProps {
   options: ComboboxOption[];
   value?: string;
   onChange?: (value: string) => void;
@@ -22,7 +22,7 @@ interface comboboxProps {
   clearable?: boolean;
 }
 
-export function combobox({
+export function Combobox({
   options,
   value,
   onChange,
@@ -31,7 +31,7 @@ export function combobox({
   className,
   disabled = false,
   clearable = true,
-}: comboboxProps) {
+}: ComboboxProps) {
   const [mounted, setMounted] = React.useState(false);
   const [open, setOpen] = React.useState(false);
   const [query, setQuery] = React.useState("");
@@ -387,3 +387,5 @@ export function combobox({
     </div>
   );
 }
+
+export { Combobox as combobox };

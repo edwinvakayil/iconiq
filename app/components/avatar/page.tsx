@@ -7,14 +7,14 @@ import type { ReactNode } from "react";
 import { avatarApiDetails } from "@/components/docs/component-api";
 import { ComponentDocsPage } from "@/components/docs/page-shell";
 import { cn } from "@/lib/utils";
-import { avatar as Avatar } from "@/registry/avatar";
+import { Avatar } from "@/registry/avatar";
 
 const DEMO_IMAGE_SRC = "https://avatars.githubusercontent.com/u/180170746?v=4";
 
 const PREVIEW_ACCOUNT_HREF =
   "https://avatars.githubusercontent.com/u/180170746?v=4";
 
-const usageCode = `import { avatar as Avatar } from "@/components/ui/avatar";
+const usageCode = `import { Avatar } from "@/components/ui/avatar";
 
 export function ProfileChip() {
   return (
@@ -149,7 +149,7 @@ export default function AvatarPage() {
       }
       title="Avatar"
       usageCode={usageCode}
-      usageDescription="Alias `avatar` to `Avatar` in JSX so the component reads naturally inside forms, menus, or team lists."
+      usageDescription="Use the canonical `Avatar` export, then layer it into menus, profile chips, and team lists as needed."
     />
   );
 }

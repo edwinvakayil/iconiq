@@ -20,7 +20,7 @@ const WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 const SPRING_EASE: [number, number, number, number] = [0.34, 1.56, 0.64, 1];
 const SMOOTH_EASE: [number, number, number, number] = [0.4, 0, 0.2, 1];
 
-type CalendarProps = {
+export interface CalendarProps {
   selected?: Date;
   defaultSelected?: Date;
   onSelect?: (date: Date) => void;
@@ -28,7 +28,7 @@ type CalendarProps = {
   defaultMonth?: Date;
   onMonthChange?: (month: Date) => void;
   disabled?: (date: Date) => boolean;
-};
+}
 
 type CalendarPalette = {
   cardBackground: string;

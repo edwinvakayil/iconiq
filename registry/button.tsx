@@ -63,7 +63,7 @@ type ButtonHTMLAttributesForMotion = Omit<
   | "onDrop"
 >;
 
-type ButtonProps = ButtonHTMLAttributesForMotion &
+export type ButtonProps = ButtonHTMLAttributesForMotion &
   VariantProps<typeof buttonVariants> & {
     children?: ReactNode;
   };

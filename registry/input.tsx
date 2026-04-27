@@ -270,7 +270,7 @@ export interface InputProps
   onChange?: (value: string) => void;
 }
 
-export function input({
+export function Input({
   label = "Type here",
   className,
   disabled,
@@ -412,4 +412,4 @@ export function input({
   );
 }
 
-export { input as Input };
+export { Input as input };

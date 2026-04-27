@@ -6,9 +6,9 @@ import type { ReactNode } from "react";
 import { tooltipApiDetails } from "@/components/docs/component-api";
 import { ComponentDocsPage } from "@/components/docs/page-shell";
 import { cn } from "@/lib/utils";
-import { tooltip as Tooltip } from "@/registry/tooltip";
+import { Tooltip } from "@/registry/tooltip";
 
-const usageCode = `import { tooltip as Tooltip } from "@/components/ui/tooltip";
+const usageCode = `import { Tooltip } from "@/components/ui/tooltip";
 
 export function HelpLabel() {
   return (
@@ -165,7 +165,7 @@ export default function TooltipPage() {
       preview={<TooltipPreview />}
       title="Tooltip"
       usageCode={usageCode}
-      usageDescription="Alias the lowercase export to `Tooltip` in JSX so the component reads cleanly inside icon buttons, controls, and command surfaces."
+      usageDescription="Use the canonical `Tooltip` export so the component drops cleanly into icon buttons, controls, and command surfaces."
     />
   );
 }

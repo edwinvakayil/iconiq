@@ -18,7 +18,7 @@ import {
 import { inputApiDetails } from "@/components/docs/component-api";
 import { ComponentDocsPage } from "@/components/docs/page-shell";
 import { cn } from "@/lib/utils";
-import { input as Input } from "@/registry/input";
+import { Input } from "@/registry/input";
 
 const PREVIEW_INPUT_TYPES = [
   { value: "text", label: "text" },
@@ -173,7 +173,7 @@ function PreviewSelectField({
   );
 }
 
-const usageCode = `import { input as Input } from "@/components/ui/input";
+const usageCode = `import { Input } from "@/components/ui/input";
 import { useState } from "react";
 
 export function NamedField() {
@@ -366,7 +366,7 @@ export default function InputPage() {
       }
       title="Input"
       usageCode={usageCode}
-      usageDescription="Alias the lowercase export to `Input` in JSX, then use the API details to tune type, helper affordances, and container classes."
+      usageDescription="Use the canonical `Input` export, then use the API details to tune type, helper affordances, and container classes."
     />
   );
 }

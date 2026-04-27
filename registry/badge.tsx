@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import type { ReactNode } from "react";
 
-interface BadgeProps {
+export interface BadgeProps {
   children: ReactNode;
   className?: string;
   bgColor?: string;
@@ -11,13 +11,13 @@ interface BadgeProps {
   waveColor?: string;
 }
 
-const Badge = ({
+export function Badge({
   children,
   className = "",
   bgColor,
   textColor,
   waveColor,
-}: BadgeProps) => {
+}: BadgeProps) {
   return (
     <motion.span
       animate={{ opacity: 1, scale: 1 }}
@@ -45,6 +45,6 @@ const Badge = ({
       <span className="relative z-10">{children}</span>
     </motion.span>
   );
-};
+}
 
 export default Badge;

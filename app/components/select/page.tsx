@@ -7,7 +7,7 @@ import { type ReactNode, useState } from "react";
 import { selectApiDetails } from "@/components/docs/component-api";
 import { ComponentDocsPage } from "@/components/docs/page-shell";
 import { cn } from "@/lib/utils";
-import { select as Select } from "@/registry/select";
+import { Select } from "@/registry/select";
 
 const demoOptions = [
   {
@@ -28,7 +28,7 @@ const demoOptions = [
 ];
 
 const usageCode = `import { Orbit, Sparkles, Telescope } from "lucide-react";
-import { select as Select } from "@/components/ui/select";
+import { Select } from "@/components/ui/select";
 
 const options = [
   { value: "scout", label: "Scout pass", icon: <Sparkles className="size-4" /> },
@@ -149,7 +149,7 @@ export default function SelectPage() {
       }
       title="Select"
       usageCode={usageCode}
-      usageDescription="Alias the lowercase export to `Select` in your app, then use the details below to tune options, icons, placeholders, and selection behavior."
+      usageDescription="Use the canonical `Select` export, then tune options, icons, placeholders, and selection behavior from the API details below."
     />
   );
 }

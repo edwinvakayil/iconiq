@@ -97,13 +97,13 @@ const avatarApiDetails: DetailItem[] = [
     id: "avatar",
     title: "Avatar",
     summary:
-      'The registry exports a lowercase function named "avatar". Most consuming code aliases it to "Avatar" at import time.',
+      "Compact motion avatar with a canonical Avatar export, optional image source, and fallback text for empty states.",
     fields: [
       field({
         name: "src",
         type: "string",
         description:
-          "Image URL passed into next/image. When present, the image fills the 42x42 circular mask with a blur-and-clip reveal animation.",
+          "Image URL rendered into a framework-agnostic img element. When present, the image fills the 42x42 circular mask with a blur-and-clip reveal animation.",
       }),
       field({
         name: "fallback",
@@ -130,18 +130,12 @@ const avatarApiDetails: DetailItem[] = [
     summary:
       "Motion behavior changes slightly when reduced motion is enabled, but the same two rendering paths stay intact.",
     notes: [
-      'next/image always receives a fixed alt value of "Avatar" plus width and height of 42, so this version is best suited to decorative or generic avatars.',
+      'The image path always uses a fixed alt value of "Avatar" plus width and height of 42, so this version is best suited to decorative or generic avatars.',
       "Hover adds a soft lift and pulse ring, while tap slightly compresses the root when reduced motion is not requested.",
       "Without src, the fallback text springs in over the primary-colored background instead of showing an empty frame.",
     ],
   },
-  registryItem(
-    "avatar.json",
-    ["framer-motion"],
-    [
-      "This component also relies on next/image because the image branch is built with the Next.js Image component.",
-    ]
-  ),
+  registryItem("avatar.json", ["framer-motion"]),
 ];
 
 const badgeApiDetails: DetailItem[] = [
@@ -627,7 +621,7 @@ const comboboxApiDetails: DetailItem[] = [
     id: "combobox",
     title: "Combobox",
     summary:
-      'The registry exports a lowercase function named "combobox". It owns open state, search query, and active row internally, while the selected value stays parent-driven.',
+      "Searchable single-select field that owns open state, search query, and active row internally, while the selected value stays parent-driven.",
     fields: [
       field({
         name: "options",
@@ -1657,7 +1651,7 @@ const inputApiDetails: DetailItem[] = [
     id: "input",
     title: "Input",
     summary:
-      'The registry exports a lowercase function named "input". Most consumers alias it to "Input" when importing.',
+      "Animated text input with a canonical Input export, always-visible label, and built-in helper behaviors for password, search, and email states.",
     fields: [
       field({
         name: "label",
@@ -1911,7 +1905,7 @@ const selectApiDetails: DetailItem[] = [
     id: "select",
     title: "Select",
     summary:
-      'The registry exports a lowercase function named "select". It manages open state internally but expects the selected value to come from the parent.',
+      "Animated single-select dropdown that manages open state internally but expects the selected value to come from the parent.",
     fields: [
       field({
         name: "options",
@@ -1938,10 +1932,16 @@ const selectApiDetails: DetailItem[] = [
         description:
           "Fallback trigger text shown when no option matches the current value.",
       }),
+      field({
+        name: "className",
+        type: "string",
+        description:
+          "Merged onto the outer wrapper so width and placement can be adjusted without editing the component source.",
+      }),
     ],
     notes: [
       "This implementation is effectively controlled for selection. If you call onChange without updating value, the visible selection and checkmark do not move.",
-      "The public API does not expose className, disabled, or native form props.",
+      "The public API still does not expose disabled or native form props.",
     ],
   },
   {
@@ -2069,7 +2069,7 @@ const switchApiDetails: DetailItem[] = [
     id: "switch",
     title: "Switch",
     summary:
-      'The registry export is lowercase "switch" and is usually aliased to "Switch" when imported. Checked state is expected to come from the parent.',
+      "Animated switch with a canonical Switch export. Checked state is expected to come from the parent.",
     fields: [
       field({
         name: "checked",
@@ -2262,7 +2262,7 @@ const tooltipApiDetails: DetailItem[] = [
     id: "tooltip",
     title: "Tooltip",
     summary:
-      'The registry exports a lowercase function named "tooltip". It owns its own open state and toggles in response to hover and focus events.',
+      "Animated tooltip with a canonical Tooltip export. It owns its own open state and toggles in response to hover and focus events.",
     fields: [
       field({
         name: "children",

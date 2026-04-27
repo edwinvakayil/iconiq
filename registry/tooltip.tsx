@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 
 type Side = "top" | "bottom" | "left" | "right";
 
-interface tooltipProps {
+export interface TooltipProps {
   children: React.ReactNode;
   content: React.ReactNode;
   side?: Side;
@@ -35,13 +35,13 @@ const arrowStyles: Record<Side, string> = {
   right: "-left-1 top-1/2 -translate-y-1/2",
 };
 
-export function tooltip({
+export function Tooltip({
   children,
   content,
   side = "top",
   delay = 0.15,
   className,
-}: tooltipProps) {
+}: TooltipProps) {
   const [open, setOpen] = React.useState(false);
   const timeoutRef = React.useRef<ReturnType<typeof setTimeout>>(undefined);
 
@@ -128,3 +128,5 @@ export function tooltip({
     </div>
   );
 }
+
+export { Tooltip as tooltip };

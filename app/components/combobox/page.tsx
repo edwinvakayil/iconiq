@@ -4,7 +4,7 @@ import { useState } from "react";
 
 import { comboboxApiDetails } from "@/components/docs/component-api";
 import { ComponentDocsPage } from "@/components/docs/page-shell";
-import { combobox as Combobox, type ComboboxOption } from "@/registry/combobox";
+import { Combobox, type ComboboxOption } from "@/registry/combobox";
 
 const demoOptions: ComboboxOption[] = [
   {
@@ -29,7 +29,7 @@ const demoOptions: ComboboxOption[] = [
   },
 ];
 
-const usageCode = `import { combobox as Combobox, type ComboboxOption } from "@/components/ui/combobox";
+const usageCode = `import { Combobox, type ComboboxOption } from "@/components/ui/combobox";
 import { useState } from "react";
 
 const options: ComboboxOption[] = [
@@ -96,7 +96,7 @@ export default function ComboboxPage() {
       previewDescription="Type to filter the list, move with the arrow keys, and press Enter to commit a selection."
       title="Combobox"
       usageCode={usageCode}
-      usageDescription="Alias the lowercase export to `Combobox` in your app, then use the API details below to tune filtering, clearing, disabled state, and keyboard behavior."
+      usageDescription="Use the canonical `Combobox` export, then tune filtering, clearing, disabled state, and keyboard behavior from the API details below."
     />
   );
 }

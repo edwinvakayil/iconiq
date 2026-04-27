@@ -1,14 +1,13 @@
 "use client";
 
 import { motion, useReducedMotion } from "framer-motion";
-import Image from "next/image";
 
 import { cn } from "@/lib/utils";
 
-/** Matches root box (h-[42px] w-[42px]) for next/image and CLS. */
+/** Matches root box (h-[42px] w-[42px]) for the image element and CLS. */
 const AVATAR_IMG_SIZE = 42;
 
-interface avatarProps {
+export interface AvatarProps {
   src?: string;
   fallback?: string;
   className?: string;
@@ -18,7 +17,7 @@ interface avatarProps {
 const enterEase = [0.16, 1, 0.3, 1] as [number, number, number, number];
 const smoothEase = [0.22, 1, 0.36, 1] as [number, number, number, number];
 
-export function avatar({ src, fallback = "?", className }: avatarProps) {
+export function Avatar({ src, fallback = "?", className }: AvatarProps) {
   const reduceMotion = useReducedMotion();
 
   const rootTransition = reduceMotion
@@ -124,11 +123,12 @@ export function avatar({ src, fallback = "?", className }: avatarProps) {
           }
           transition={imageTransition}
         >
-          <Image
+          {/* biome-ignore lint/performance/noImgElement: registry component stays framework-agnostic for shadcn consumers outside Next.js. */}
+          <img
             alt="Avatar"
             className="object-cover"
             height={AVATAR_IMG_SIZE}
-            sizes={`${AVATAR_IMG_SIZE}px`}
+            loading="lazy"
             src={src}
             width={AVATAR_IMG_SIZE}
           />
@@ -161,4 +161,6 @@ export function avatar({ src, fallback = "?", className }: avatarProps) {
   );
 }
 
-avatar.displayName = "avatar";
+Avatar.displayName = "Avatar";
+
+export { Avatar as avatar };

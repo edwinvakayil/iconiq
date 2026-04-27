@@ -13,17 +13,20 @@ import {
 } from "react";
 import { createPortal } from "react-dom";
 
-interface Option {
+import { cn } from "@/lib/utils";
+
+export interface SelectOption {
   value: string;
   label: string;
   icon?: ReactNode;
 }
 
-interface selectProps {
-  options: Option[];
+export interface SelectProps {
+  options: SelectOption[];
   value?: string;
   onChange?: (value: string) => void;
   placeholder?: string;
+  className?: string;
 }
 
 const itemVariants = {
@@ -54,12 +57,13 @@ const itemVariants = {
   }),
 };
 
-export function select({
+export function Select({
   options,
   value,
   onChange,
   placeholder = "Select an option…",
-}: selectProps) {
+  className,
+}: SelectProps) {
   const [open, setOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [menuStyle, setMenuStyle] = useState<CSSProperties>({});
@@ -117,7 +121,7 @@ export function select({
   }, [open]);
 
   return (
-    <div className="relative w-72">
+    <div className={cn("relative w-72", className)}>
       {/* Trigger */}
       <motion.button
         className="flex w-full items-center justify-between gap-2 rounded-xl border border-border bg-card px-4 py-3 font-medium text-foreground text-sm transition-colors hover:bg-accent focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
@@ -211,3 +215,5 @@ export function select({
     </div>
   );
 }
+
+export { Select as select };

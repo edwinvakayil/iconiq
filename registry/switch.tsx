@@ -28,7 +28,7 @@ const SWITCH_LAYOUT = {
   { root: string; thumb: string; travel: number }
 >;
 
-interface switchProps {
+export interface SwitchProps {
   checked?: boolean;
   onCheckedChange?: (checked: boolean) => void;
   disabled?: boolean;
@@ -40,7 +40,7 @@ interface switchProps {
 /** Track tint: smooth deceleration so the color “settles” after the thumb. */
 const trackEase = [0.17, 1, 0.25, 1] as [number, number, number, number];
 
-const Switch = React.forwardRef<HTMLButtonElement, switchProps>(
+const Switch = React.forwardRef<HTMLButtonElement, SwitchProps>(
   (
     {
       checked = false,
@@ -113,6 +113,6 @@ const Switch = React.forwardRef<HTMLButtonElement, switchProps>(
   }
 );
 
-Switch.displayName = "switch";
+Switch.displayName = "Switch";
 
-export { Switch as switch };
+export { Switch, Switch as switch };

@@ -7,9 +7,9 @@ import { useState } from "react";
 import { switchApiDetails } from "@/components/docs/component-api";
 import { ComponentDocsPage } from "@/components/docs/page-shell";
 import { cn } from "@/lib/utils";
-import { switch as Switch } from "@/registry/switch";
+import { Switch } from "@/registry/switch";
 
-const usageCode = `import { switch as Switch } from "@/components/ui/switch";
+const usageCode = `import { Switch } from "@/components/ui/switch";
 import { useState } from "react";
 
 export function PressingToggle() {
