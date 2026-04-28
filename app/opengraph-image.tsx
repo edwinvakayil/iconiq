@@ -49,13 +49,31 @@ export default function OgImage() {
             <div
               style={{
                 display: "flex",
-                fontSize: "20px",
+                alignItems: "flex-end",
                 color: "#f5f5f5",
-                fontWeight: 700,
-                letterSpacing: "-0.4px",
+                lineHeight: 1,
               }}
             >
-              iconiq.
+              <span
+                style={{
+                  fontSize: "28px",
+                  fontWeight: 700,
+                  letterSpacing: "-2.4px",
+                }}
+              >
+                iconiq
+              </span>
+              <span
+                style={{
+                  marginLeft: "2px",
+                  fontSize: "28px",
+                  fontWeight: 700,
+                  color: "#7a7a7a",
+                  letterSpacing: "-2.4px",
+                }}
+              >
+                .
+              </span>
             </div>
             <div
               style={{

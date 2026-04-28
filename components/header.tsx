@@ -12,11 +12,11 @@ import {
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import { BrandLink } from "@/components/brand-wordmark";
 import { SiteSearch } from "@/components/site-search";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
-import { LINK, SITE } from "@/constants";
+import { LINK } from "@/constants";
 import { BASE_LINKS, SITE_SECTIONS } from "@/lib/site-nav";
-import { cn } from "@/lib/utils";
 
 const componentsSection = SITE_SECTIONS.find((s) => s.label === "Components");
 
@@ -146,38 +146,6 @@ function XLogoIcon({ className }: { className?: string }) {
   );
 }
 
-function BrandLink({ mobile = false }: { mobile?: boolean }) {
-  const label = SITE.LOGO.endsWith(".") ? SITE.LOGO.slice(0, -1) : SITE.LOGO;
-  const dot = SITE.LOGO.endsWith(".") ? "." : "";
-
-  return (
-    <Link
-      className="group inline-flex items-end text-foreground leading-none"
-      href="/"
-    >
-      <span
-        className={cn(
-          "font-semibold tracking-[-0.09em] transition-opacity group-hover:opacity-78",
-          mobile ? "text-[24px]" : "text-[21px]"
-        )}
-      >
-        {label}
-      </span>
-      {dot ? (
-        <span
-          aria-hidden
-          className={cn(
-            "ml-0.5 font-semibold text-neutral-400 transition-colors group-hover:text-foreground",
-            mobile ? "text-[24px]" : "text-[21px]"
-          )}
-        >
-          {dot}
-        </span>
-      ) : null}
-    </Link>
-  );
-}
-
 function formatStarCount(n: number): string {
   if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1)}M`;
   if (n >= 1000) return `${(n / 1000).toFixed(0)}k`;
@@ -244,7 +212,7 @@ export function Header() {
         }
       >
         <div className="mx-auto flex h-[var(--header-height-mobile)] items-center justify-between px-4 sm:px-6 lg:hidden">
-          <BrandLink mobile />
+          <BrandLink size="mobile" />
 
           <div className="flex items-center gap-2">
             <SiteSearch variant="mobile" />
@@ -293,7 +261,7 @@ export function Header() {
 
         <div className="mx-auto hidden h-[var(--header-height-desktop)] items-center justify-between gap-8 px-6 lg:flex xl:px-10 2xl:px-12">
           <div className="flex min-w-0 items-center">
-            <BrandLink />
+            <BrandLink size="desktop" />
           </div>
 
           <div className="flex items-center justify-end">
