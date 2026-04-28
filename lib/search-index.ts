@@ -1,0 +1,140 @@
+import { BASE_LINKS, SITE_SECTIONS } from "@/lib/site-nav";
+
+export type SearchItem = {
+  href: string;
+  keywords: string[];
+  label: string;
+  section: string;
+  summary: string;
+  type: "component" | "page";
+};
+
+const pageSummaries: Record<string, string> = {
+  "/": "Overview of the source-first React component library and its product-focused workflow.",
+  "/introduction":
+    "What Iconiq is, how the library works, and why teams adopt editable component source.",
+  "/installation":
+    "Installation steps for adding components through the shadcn registry workflow.",
+};
+
+const componentSummaries: Record<string, string> = {
+  "/components/alert":
+    "Dismissible alert banner with motion-aware entrance and close behavior.",
+  "/components/avatar":
+    "Animated avatar with image, fallback initials, and hover treatment.",
+  "/components/badge":
+    "Compact badge component with animated accent treatment.",
+  "/components/breadcrumbs":
+    "Breadcrumb navigation with smooth separators and current-page treatment.",
+  "/components/button":
+    "Button primitives with variants, sizes, and motion-aware interaction states.",
+  "/components/calendar":
+    "Compact animated calendar for date selection and month navigation.",
+  "/components/carousels":
+    "Testimonial carousel with swipeable motion and pagination controls.",
+  "/components/checkbox-group":
+    "Checkbox group for multiple selections with animated row states.",
+  "/components/collapsible":
+    "Collapsible primitive for expandable sections and progressive disclosure.",
+  "/components/combobox":
+    "Searchable combobox with inline filtering and keyboard navigation.",
+  "/components/context-menu":
+    "Context menu with right-click actions, shortcuts, and smooth hover behavior.",
+  "/components/dialog":
+    "Modal dialog surface with overlay, content animation, and close controls.",
+  "/components/drawer":
+    "Side or bottom drawer for layered workflows and compact task flows.",
+  "/components/dropdown":
+    "Dropdown primitives for select-style choices or immediate action menus.",
+  "/components/file-upload":
+    "File upload surface with drag and drop, previews, and queued item states.",
+  "/components/hover-card":
+    "Hover card for richer inline profile or detail previews.",
+  "/components/input":
+    "Input field with polished states for text, password, email, and search.",
+  "/components/motion-accordion":
+    "Accordion component with spring-driven expansion and structured content sections.",
+  "/components/popover":
+    "Popover surface for compact floating content and contextual details.",
+  "/components/radiogroup":
+    "Radio group for single-choice options with animated selection treatment.",
+  "/components/select": "Animated select control for single-choice selections.",
+  "/components/slider":
+    "Slider control for range selection with motion-aware thumb and track states.",
+  "/components/spinner":
+    "Loading spinner for pending states and background actions.",
+  "/components/switch":
+    "Switch toggle for boolean settings and inline preference controls.",
+  "/components/table":
+    "Composable table primitives with aligned rows, sort helpers, and empty states.",
+  "/components/tabs":
+    "Tabs primitives with measured indicators and animated panel transitions.",
+  "/components/tooltip":
+    "Tooltip component for compact hover or focus explanations.",
+};
+
+const TOKEN_SPLIT_REGEX = /[\s/-]+/;
+
+function tokenize(value: string) {
+  return value.toLowerCase().split(TOKEN_SPLIT_REGEX).filter(Boolean);
+}
+
+function createKeywords(...values: string[]) {
+  return Array.from(
+    new Set(
+      values.flatMap((value) => {
+        const normalized = value.toLowerCase();
+        return [normalized, ...tokenize(normalized)];
+      })
+    )
+  );
+}
+
+const pageItems: SearchItem[] = BASE_LINKS.map((item) => ({
+  href: item.href,
+  keywords: createKeywords(
+    item.label,
+    item.href,
+    "overview",
+    "getting started"
+  ),
+  label: item.label,
+  section: "Getting Started",
+  summary:
+    pageSummaries[item.href] ??
+    "Documentation page in the Iconiq getting started section.",
+  type: "page",
+}));
+
+const componentItems: SearchItem[] = SITE_SECTIONS.flatMap((section) =>
+  section.children.map((item) => {
+    const slug = item.href.split("/").pop() ?? item.href;
+    const labelKeywords = [item.label, slug, section.label];
+
+    if (slug === "motion-accordion") {
+      labelKeywords.push("accordion");
+    }
+    if (slug === "radiogroup") {
+      labelKeywords.push("radio group");
+    }
+    if (slug === "carousels") {
+      labelKeywords.push("carousel");
+    }
+    if (slug === "file-upload") {
+      labelKeywords.push("upload");
+    }
+
+    return {
+      href: item.href,
+      keywords: createKeywords(...labelKeywords),
+      label: item.label,
+      section: section.label,
+      summary:
+        componentSummaries[item.href] ??
+        "Component documentation with preview, installation, usage, and API details.",
+      type: "component" as const,
+    };
+  })
+);
+
+export const SEARCH_ITEMS: SearchItem[] = [...pageItems, ...componentItems];

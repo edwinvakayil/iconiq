@@ -7,12 +7,12 @@ import {
   Github,
   LayoutGrid,
   Menu,
-  Search,
   X,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import { SiteSearch } from "@/components/site-search";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { LINK, SITE } from "@/constants";
 import { BASE_LINKS, SITE_SECTIONS } from "@/lib/site-nav";
@@ -219,6 +219,7 @@ export function Header() {
           </Link>
 
           <div className="flex items-center gap-2">
+            <SiteSearch variant="mobile" />
             <ThemeToggle />
 
             <span className="hidden h-5 w-px bg-neutral-200 sm:block dark:bg-neutral-700" />
@@ -274,6 +275,7 @@ export function Header() {
 
           <div className="flex items-center justify-end">
             <div className="flex items-center gap-2">
+              <SiteSearch />
               <ThemeToggle className={desktopIconActionClass} />
               <a
                 className={desktopIconActionClass}
@@ -329,14 +331,6 @@ export function Header() {
               initial="closed"
               variants={mobileNavVariants.panel}
             >
-              {/* Mobile search */}
-              <div className="border-border border-b p-3">
-                <div className="flex items-center gap-2 rounded-lg border border-border bg-background px-3 py-2 text-[13px] text-muted-foreground">
-                  <Search className="h-3.5 w-3.5 shrink-0" />
-                  <span>Search docs...</span>
-                </div>
-              </div>
-
               {/* Navigation sections */}
               <nav className="p-2">
                 {mobileNavSections.map((section, sectionIndex) => {
