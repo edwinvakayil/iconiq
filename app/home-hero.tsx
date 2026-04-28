@@ -62,9 +62,9 @@ export function HomeHero() {
               <div className="flex flex-wrap gap-3 pt-2">
                 <Link
                   className="border border-foreground bg-foreground px-5 py-3 font-mono text-[10px] text-background uppercase tracking-[0.18em] transition-colors hover:bg-foreground/90"
-                  href="/introduction"
+                  href="/installation"
                 >
-                  Review overview
+                  Installation
                 </Link>
                 <Link
                   className="border border-border/85 bg-muted/20 px-5 py-3 font-mono text-[10px] text-foreground uppercase tracking-[0.18em] transition-colors hover:bg-muted/45"
