@@ -17,56 +17,42 @@ export interface AccordionProps {
   className?: string;
 }
 
-function chunkText(text: string, chunkSize = 3) {
-  const words = text.split(" ");
-  const chunks: string[] = [];
-
-  for (let index = 0; index < words.length; index += chunkSize) {
-    chunks.push(words.slice(index, index + chunkSize).join(" "));
-  }
-
-  return chunks;
-}
-
 const contentShellTransition: Transition = {
   height: {
     type: "spring",
-    stiffness: 170,
-    damping: 24,
-    mass: 0.82,
+    stiffness: 138,
+    damping: 27,
+    mass: 0.98,
   },
-  opacity: { duration: 0.22, ease: [0.22, 1, 0.36, 1] },
+  opacity: { duration: 0.26, ease: [0.18, 1, 0.32, 1] },
 };
 
 const contentMaskTransition: Transition = {
-  duration: 0.28,
-  ease: [0.22, 1, 0.36, 1],
+  duration: 0.38,
+  ease: [0.16, 1, 0.3, 1],
 };
 
 const contentCopyTransition: Transition = {
   y: {
     type: "spring",
-    stiffness: 210,
-    damping: 26,
-    mass: 0.88,
+    stiffness: 146,
+    damping: 23,
+    mass: 0.98,
+  },
+  scale: {
+    duration: 0.32,
+    ease: [0.18, 1, 0.32, 1],
   },
   opacity: {
-    duration: 0.2,
-    ease: [0.22, 1, 0.36, 1],
-    delay: 0.04,
+    duration: 0.22,
+    ease: [0.18, 1, 0.32, 1],
+    delay: 0.05,
   },
   filter: {
-    duration: 0.24,
-    ease: [0.22, 1, 0.36, 1],
-    delay: 0.04,
+    duration: 0.28,
+    ease: [0.18, 1, 0.32, 1],
+    delay: 0.05,
   },
-};
-
-const contentChunkTransition = {
-  type: "spring" as const,
-  stiffness: 230,
-  damping: 24,
-  mass: 0.86,
 };
 
 export function Accordion({ items, className }: AccordionProps) {
@@ -81,7 +67,6 @@ export function Accordion({ items, className }: AccordionProps) {
         const isOpen = openId === item.id;
         const contentId = `accordion-content-${item.id}`;
         const triggerId = `accordion-trigger-${item.id}`;
-        const contentChunks = chunkText(item.content);
 
         return (
           <motion.div
@@ -107,7 +92,7 @@ export function Accordion({ items, className }: AccordionProps) {
               type="button"
             >
               <motion.span
-                animate={{ x: isOpen ? 6 : 0 }}
+                animate={{ x: 0 }}
                 className="pr-4 font-medium text-[15px] text-foreground leading-6 tracking-[-0.02em] sm:text-base"
                 transition={{ type: "spring", stiffness: 300, damping: 28 }}
               >
@@ -152,42 +137,44 @@ export function Accordion({ items, className }: AccordionProps) {
                 >
                   <div className="px-1 pr-12 pb-5">
                     <motion.div
-                      animate={{ clipPath: "inset(0% 0% 0% 0%)" }}
+                      animate={{
+                        clipPath: "inset(0% 0% 0% 0%)",
+                        opacity: 1,
+                      }}
                       className="overflow-hidden"
-                      exit={{ clipPath: "inset(0% 0% 100% 0%)" }}
-                      initial={{ clipPath: "inset(0% 0% 100% 0%)" }}
+                      exit={{
+                        clipPath: "inset(0% 100% 0% 0%)",
+                        opacity: 0.68,
+                      }}
+                      initial={{
+                        clipPath: "inset(0% 100% 0% 0%)",
+                        opacity: 0.68,
+                      }}
                       transition={contentMaskTransition}
                     >
                       <motion.p
-                        animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                        className="text-muted-foreground text-sm leading-relaxed will-change-transform"
-                        exit={{ opacity: 0, y: -6, filter: "blur(4px)" }}
-                        initial={{ opacity: 0, y: 16, filter: "blur(10px)" }}
-                        transition={{
-                          ...contentCopyTransition,
-                          opacity: {
-                            duration: 0.18,
-                            ease: [0.22, 1, 0.36, 1],
-                            delay: 0.03,
-                          },
+                        animate={{
+                          opacity: 1,
+                          y: 0,
+                          scale: 1,
+                          filter: "blur(0px)",
                         }}
+                        className="text-muted-foreground text-sm leading-relaxed will-change-transform"
+                        exit={{
+                          opacity: 0,
+                          y: -2,
+                          scale: 0.996,
+                          filter: "blur(1.5px)",
+                        }}
+                        initial={{
+                          opacity: 0,
+                          y: 7,
+                          scale: 0.998,
+                          filter: "blur(3px)",
+                        }}
+                        transition={contentCopyTransition}
                       >
-                        {contentChunks.map((chunk, chunkIndex) => (
-                          <motion.span
-                            animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                            className="inline-block"
-                            exit={{ opacity: 0, y: -4, filter: "blur(3px)" }}
-                            initial={{ opacity: 0, y: 12, filter: "blur(7px)" }}
-                            key={`${item.id}-chunk-${chunkIndex}`}
-                            transition={{
-                              ...contentChunkTransition,
-                              delay: 0.035 + chunkIndex * 0.038,
-                            }}
-                          >
-                            {chunk}
-                            {chunkIndex < contentChunks.length - 1 ? " " : ""}
-                          </motion.span>
-                        ))}
+                        {item.content}
                       </motion.p>
                     </motion.div>
                   </div>

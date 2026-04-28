@@ -1756,7 +1756,7 @@ const motionAccordionApiDetails: DetailItem[] = [
         type: "string",
         required: true,
         description:
-          "Body copy shown inside the open panel with a masked fade-and-slide reveal plus softly staggered text chunks.",
+          "Body copy shown inside the open panel with a horizontal masked wipe and a soft lift into place.",
       }),
     ],
   },
@@ -1791,7 +1791,7 @@ const motionAccordionApiDetails: DetailItem[] = [
       "The accordion uses native buttons and animated height transitions rather than a headless primitive.",
     notes: [
       "Each trigger button sets aria-expanded and aria-controls, and each open panel receives a matching id.",
-      "The content body reveals through a clipped slide-and-fade motion, then resolves in softly staggered text chunks.",
+      "The content body reveals through a horizontal clipped wipe while the paragraph settles upward with a soft blur fade.",
       "Keyboard support is limited to standard button tab and click semantics; there is no arrow-key roving between items.",
     ],
   },
