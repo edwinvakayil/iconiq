@@ -357,7 +357,7 @@ export function SiteSearch({ variant = "desktop" }: SiteSearchProps) {
                   aria-autocomplete="list"
                   aria-controls={listboxId}
                   aria-expanded={isOpen}
-                  className="w-full bg-transparent text-[15px] text-foreground outline-none placeholder:text-neutral-400 dark:placeholder:text-neutral-500"
+                  className="w-full bg-transparent text-base text-foreground outline-none placeholder:text-neutral-400 lg:text-[15px] dark:placeholder:text-neutral-500"
                   id={inputId}
                   onChange={(event) => {
                     setActiveIndex(0);
