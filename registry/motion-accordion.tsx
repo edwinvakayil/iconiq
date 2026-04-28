@@ -1,11 +1,6 @@
 "use client";
 
-import {
-  AnimatePresence,
-  motion,
-  type Transition,
-  type Variants,
-} from "framer-motion";
+import { AnimatePresence, motion, type Transition } from "framer-motion";
 import { Plus } from "lucide-react";
 import { useState } from "react";
 
@@ -22,6 +17,17 @@ export interface AccordionProps {
   className?: string;
 }
 
+function chunkText(text: string, chunkSize = 3) {
+  const words = text.split(" ");
+  const chunks: string[] = [];
+
+  for (let index = 0; index < words.length; index += chunkSize) {
+    chunks.push(words.slice(index, index + chunkSize).join(" "));
+  }
+
+  return chunks;
+}
+
 const contentShellTransition: Transition = {
   height: {
     type: "spring",
@@ -32,49 +38,35 @@ const contentShellTransition: Transition = {
   opacity: { duration: 0.22, ease: [0.22, 1, 0.36, 1] },
 };
 
-const contentTextVariants: Variants = {
-  closed: {
-    opacity: 0,
-    y: -6,
-    filter: "blur(6px)",
-    transition: {
-      duration: 0.16,
-      ease: [0.4, 0, 0.2, 1],
-      staggerChildren: 0.008,
-      staggerDirection: -1,
-    },
+const contentMaskTransition: Transition = {
+  duration: 0.28,
+  ease: [0.22, 1, 0.36, 1],
+};
+
+const contentCopyTransition: Transition = {
+  y: {
+    type: "spring",
+    stiffness: 210,
+    damping: 26,
+    mass: 0.88,
   },
-  open: {
-    opacity: 1,
-    y: 0,
-    filter: "blur(0px)",
-    transition: {
-      delay: 0.04,
-      duration: 0.28,
-      ease: [0.22, 1, 0.36, 1],
-      delayChildren: 0.015,
-      staggerChildren: 0.014,
-    },
+  opacity: {
+    duration: 0.2,
+    ease: [0.22, 1, 0.36, 1],
+    delay: 0.04,
+  },
+  filter: {
+    duration: 0.24,
+    ease: [0.22, 1, 0.36, 1],
+    delay: 0.04,
   },
 };
 
-const contentWordVariants: Variants = {
-  closed: {
-    opacity: 0,
-    y: 10,
-    filter: "blur(6px)",
-  },
-  open: {
-    opacity: 1,
-    y: 0,
-    filter: "blur(0px)",
-    transition: {
-      type: "spring",
-      stiffness: 250,
-      damping: 22,
-      mass: 0.8,
-    },
-  },
+const contentChunkTransition = {
+  type: "spring" as const,
+  stiffness: 230,
+  damping: 24,
+  mass: 0.86,
 };
 
 export function Accordion({ items, className }: AccordionProps) {
@@ -89,6 +81,7 @@ export function Accordion({ items, className }: AccordionProps) {
         const isOpen = openId === item.id;
         const contentId = `accordion-content-${item.id}`;
         const triggerId = `accordion-trigger-${item.id}`;
+        const contentChunks = chunkText(item.content);
 
         return (
           <motion.div
@@ -158,22 +151,45 @@ export function Accordion({ items, className }: AccordionProps) {
                   transition={contentShellTransition}
                 >
                   <div className="px-1 pr-12 pb-5">
-                    <motion.p
-                      animate="open"
-                      className="flex flex-wrap gap-x-[0.3em] text-muted-foreground text-sm leading-relaxed will-change-transform"
-                      exit="closed"
-                      initial="closed"
-                      variants={contentTextVariants}
+                    <motion.div
+                      animate={{ clipPath: "inset(0% 0% 0% 0%)" }}
+                      className="overflow-hidden"
+                      exit={{ clipPath: "inset(0% 0% 100% 0%)" }}
+                      initial={{ clipPath: "inset(0% 0% 100% 0%)" }}
+                      transition={contentMaskTransition}
                     >
-                      {item.content.split(" ").map((word, i) => (
-                        <motion.span
-                          key={`${item.id}-${i}-${word}`}
-                          variants={contentWordVariants}
-                        >
-                          {word}
-                        </motion.span>
-                      ))}
-                    </motion.p>
+                      <motion.p
+                        animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                        className="text-muted-foreground text-sm leading-relaxed will-change-transform"
+                        exit={{ opacity: 0, y: -6, filter: "blur(4px)" }}
+                        initial={{ opacity: 0, y: 16, filter: "blur(10px)" }}
+                        transition={{
+                          ...contentCopyTransition,
+                          opacity: {
+                            duration: 0.18,
+                            ease: [0.22, 1, 0.36, 1],
+                            delay: 0.03,
+                          },
+                        }}
+                      >
+                        {contentChunks.map((chunk, chunkIndex) => (
+                          <motion.span
+                            animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                            className="inline-block"
+                            exit={{ opacity: 0, y: -4, filter: "blur(3px)" }}
+                            initial={{ opacity: 0, y: 12, filter: "blur(7px)" }}
+                            key={`${item.id}-chunk-${chunkIndex}`}
+                            transition={{
+                              ...contentChunkTransition,
+                              delay: 0.035 + chunkIndex * 0.038,
+                            }}
+                          >
+                            {chunk}
+                            {chunkIndex < contentChunks.length - 1 ? " " : ""}
+                          </motion.span>
+                        ))}
+                      </motion.p>
+                    </motion.div>
                   </div>
                 </motion.div>
               )}
