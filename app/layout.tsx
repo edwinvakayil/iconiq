@@ -10,6 +10,7 @@ import { Analytics } from "@/components/analytics";
 import { ConditionalFooter } from "@/components/conditional-footer";
 import { DocsSidebar } from "@/components/docs-sidebar";
 import { Header } from "@/components/header";
+import { PageTitleSync } from "@/components/page-title-sync";
 import { StarPromptCard } from "@/components/star-prompt-card";
 import { PackageNameProvider } from "@/providers/package-name";
 import { ThemeProvider } from "@/providers/theme";
@@ -55,6 +56,7 @@ export default function RootLayout({
       </head>
       <body className={`${geist.className} relative bg-background antialiased`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          <PageTitleSync />
           <div className="root">
             <PackageNameProvider>
               <Header />
