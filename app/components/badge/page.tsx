@@ -29,8 +29,30 @@ function BadgePreview() {
   return (
     <div className="flex min-h-[260px] flex-1 flex-col items-center justify-center px-4 py-8">
       <p className="max-w-lg text-center font-medium font-sans text-lg text-neutral-800 leading-relaxed sm:text-xl dark:text-neutral-100">
-        Mark the beat — a <Badge>New</Badge> tag for launches,{" "}
-        <Badge>Beta</Badge> when you&apos;re still tuning, <Badge>Live</Badge>{" "}
+        Mark the beat — a{" "}
+        <Badge
+          bgColor="#14532d"
+          textColor="#f0fdf4"
+          waveColor="rgba(255,255,255,0.16)"
+        >
+          New
+        </Badge>{" "}
+        tag for launches,{" "}
+        <Badge
+          bgColor="#312e81"
+          textColor="#eef2ff"
+          waveColor="rgba(255,255,255,0.16)"
+        >
+          Beta
+        </Badge>{" "}
+        when you&apos;re still tuning,{" "}
+        <Badge
+          bgColor="#581c87"
+          textColor="#faf5ff"
+          waveColor="rgba(255,255,255,0.16)"
+        >
+          Live
+        </Badge>{" "}
         once it&apos;s out the door.
       </p>
     </div>
