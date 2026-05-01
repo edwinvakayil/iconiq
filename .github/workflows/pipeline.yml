@@ -16,6 +16,7 @@ run-name: >-
   release:
     types:
       - published
+      - released
   workflow_dispatch: {}
 # Cancelling an in-progress run aborts HTTP uploads (Vercel CLI → AbortError / "Upload aborted").
 # Do not cancel on main or on pull_request so production and preview deploys can finish (incl. tarball upload).
@@ -53,7 +54,7 @@ jobs:
       CI: 'true'
     if: >-
       (github.event_name == 'push' && (github.ref_name == 'main')) || (github.event_name == 'pull_request' &&
-      (github.base_ref == 'main')) || (github.event_name == 'release' && github.event.action == 'published')
+      (github.base_ref == 'main')) || github.event_name == 'release'
   ci_build:
     name: >-
       ${{
@@ -99,7 +100,7 @@ jobs:
       NODE_ENV: production
     if: >-
       (github.event_name == 'push' && (github.ref_name == 'main')) || (github.event_name == 'pull_request' &&
-      (github.base_ref == 'main')) || (github.event_name == 'release' && github.event.action == 'published')
+      (github.base_ref == 'main')) || github.event_name == 'release'
   deploy_deploy:
     name: 🚀 Deploy → Vercel (Production)
     if: >-
