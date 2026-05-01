@@ -16,7 +16,6 @@ run-name: >-
   release:
     types:
       - published
-      - released
   workflow_dispatch: {}
 # Cancelling an in-progress run aborts HTTP uploads (Vercel CLI → AbortError / "Upload aborted").
 # Do not cancel on main or on pull_request so production and preview deploys can finish (incl. tarball upload).
@@ -54,7 +53,7 @@ jobs:
       CI: 'true'
     if: >-
       (github.event_name == 'push' && (github.ref_name == 'main')) || (github.event_name == 'pull_request' &&
-      (github.base_ref == 'main')) || github.event_name == 'release'
+      (github.base_ref == 'main')) || github.event_name == 'release' || github.event_name == 'workflow_dispatch'
   ci_build:
     name: >-
       ${{
@@ -100,14 +99,15 @@ jobs:
       NODE_ENV: production
     if: >-
       (github.event_name == 'push' && (github.ref_name == 'main')) || (github.event_name == 'pull_request' &&
-      (github.base_ref == 'main')) || github.event_name == 'release'
+      (github.base_ref == 'main')) || github.event_name == 'release' || github.event_name == 'workflow_dispatch'
   deploy_deploy:
     name: 🚀 Deploy → Vercel (Production)
     if: >-
-      ((github.event_name == 'push' && (github.ref_name == 'main')) || (github.event_name == 'pull_request' &&
-      (github.base_ref == 'main')) || github.event_name == 'workflow_dispatch') && (github.event_name == 'push' ||
-      github.event_name == 'workflow_dispatch')
+      (github.event_name == 'push' && github.ref_name == 'main') || github.event_name == 'workflow_dispatch' ||
+      github.event_name == 'release'
     runs-on: ubuntu-latest
+    needs:
+      - ci_build
     environment: production
     steps:
       - name: Checkout code
