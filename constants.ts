@@ -34,9 +34,7 @@ const SITE = {
 const LINK = {
   TWITTER: "https://x.com/edwinvakayil",
   GITHUB: "https://github.com/edwinvakayil/iconiq",
-  LUCIDE: "https://lucide.dev",
   MOTION: "https://motion.dev",
-  LICENSE: "https://github.com/edwinvakayil/iconiq/blob/main/LICENSE",
   BUYMEACOFFEE: "https://buymeacoffee.com/edwinvakayil",
 } as const;
 

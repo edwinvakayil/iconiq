@@ -1,4 +1,14 @@
 DATE: 2 May 2026
+VERSION: v1.0.2
+TITLE: UI Bugs and Improvements
+SUMMARY: A stabilising release: tighter polish, fewer edge-case glitches, and a more consistent feel across the site.
+UPDATED:
+- Navigation, docs shell, and shared UI patterns refined for clearer hierarchy and steadier layouts on small and large screens.
+- Light and dark surfaces tuned for more predictable contrast and readability.
+FIXED:
+- Miscellaneous UI and interaction issues surfaced after launch, including spacing, alignment, and minor visual regressions.
+---
+DATE: 2 May 2026
 VERSION: v1.0.1
 TITLE: Changelog page and release history
 SUMMARY: A dedicated place to read what is new in each release, with clear dates and version labels.

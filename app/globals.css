@@ -27,8 +27,8 @@
 :root {
   --announcement-height-mobile: 0rem;
   --announcement-height-desktop: 3.25rem;
-  --header-height-mobile: 3.25rem;
-  --header-height-desktop: 4.5rem;
+  --header-height-mobile: 3rem;
+  --header-height-desktop: 3.5rem;
   --nav-stack-height-mobile: calc(
     var(--announcement-height-mobile) +
     var(--header-height-mobile)
@@ -249,19 +249,5 @@ html[data-banner-hidden="true"] {
     @apply font-sans text-xs uppercase;
     @apply border border-border bg-muted text-muted-foreground dark:bg-neutral-900 dark:text-neutral-300;
     @apply cursor-pointer transition-transform duration-100 active:scale-95;
-  }
-
-  @keyframes hero-name-fade-in {
-    from {
-      opacity: 0;
-    }
-    to {
-      opacity: 1;
-    }
-  }
-
-  .hero-name-char {
-    animation: hero-name-fade-in 0.5s ease forwards;
-    margin-right: 0.01em;
   }
 }

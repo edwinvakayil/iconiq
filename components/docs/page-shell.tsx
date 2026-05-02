@@ -151,8 +151,7 @@ function DocsHero({
   actions?: ReactNode;
 }) {
   return (
-    <section className="space-y-8 pt-4">
-      <Separator />
+    <section className="space-y-6 pt-2">
       <div className="flex flex-col gap-8 lg:flex-row lg:items-start lg:justify-between">
         <div className="max-w-4xl space-y-4">
           {eyebrow ? (
@@ -242,7 +241,7 @@ function DocsSection({
   return (
     <section
       className={cn(
-        "relative overflow-hidden border border-border/80 bg-background px-5 py-5 shadow-[0_1px_0_rgba(17,17,17,0.03)] sm:px-7 sm:py-6 dark:shadow-none",
+        "relative overflow-hidden border border-border/80 bg-background px-5 pt-5 pb-4 sm:px-7 sm:pt-6 sm:pb-5",
         className
       )}
     >
@@ -573,7 +572,13 @@ function ComponentDocsPage({
         index="03"
         title="Usage"
       >
-        <CodeBlock code={usageCode} language="tsx" variant="embedded" />
+        <CodeBlock
+          code={usageCode}
+          heightClassName="h-[420px]"
+          language="tsx"
+          scrollable
+          variant="embedded"
+        />
       </DocsSection>
 
       <DocsSection

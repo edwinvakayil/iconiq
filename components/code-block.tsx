@@ -76,6 +76,8 @@ interface CodeBlockProps {
   className?: string;
   /** Flush style for bento / docs tiles (no frame, minimal padding) */
   variant?: "default" | "embedded";
+  scrollable?: boolean;
+  heightClassName?: string;
 }
 
 export function CodeBlock({
@@ -84,6 +86,8 @@ export function CodeBlock({
   language = "text",
   className,
   variant = "default",
+  scrollable = false,
+  heightClassName,
 }: CodeBlockProps) {
   const content =
     typeof code === "string"
@@ -106,16 +110,23 @@ export function CodeBlock({
   const embedded = variant === "embedded";
   const shellClassName = embedded
     ? "my-0 overflow-hidden rounded-md border border-border/70 bg-muted/[0.08] dark:bg-muted/[0.12]"
-    : "my-8 overflow-hidden rounded-lg border border-border/80 bg-background";
+    : "my-8 overflow-hidden rounded-md border border-border/80 bg-muted/[0.08]";
   const headerClassName = embedded
-    ? "border-border/70 border-b bg-transparent px-4 py-3 dark:bg-transparent"
-    : "border-border/75 border-b bg-muted/[0.16] px-4 py-3 sm:px-5";
+    ? "border-border/70 border-b bg-transparent px-4 py-2.5 dark:bg-transparent"
+    : "border-border/75 border-b bg-background/65 px-4 py-2.5 sm:px-5";
   const contentClassName = embedded
     ? "bg-transparent px-4 py-4 dark:bg-transparent"
-    : "bg-transparent px-4 py-4 sm:px-5 sm:py-5";
+    : "bg-transparent px-4 py-4 sm:px-5";
 
   return (
-    <div className={cn(shellClassName, className)}>
+    <div
+      className={cn(
+        shellClassName,
+        scrollable && "flex flex-col",
+        scrollable && heightClassName,
+        className
+      )}
+    >
       <div
         className={cn(
           "flex items-center justify-between gap-2",
@@ -172,7 +183,8 @@ export function CodeBlock({
       </div>
       <pre
         className={cn(
-          "m-0 overflow-x-auto font-mono text-[13px] text-foreground leading-7 sm:text-sm",
+          "m-0 font-mono text-[13px] text-foreground leading-7 sm:text-sm",
+          scrollable ? "min-h-0 flex-1 overflow-auto" : "overflow-x-auto",
           contentClassName
         )}
       >

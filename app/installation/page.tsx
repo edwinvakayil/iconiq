@@ -5,7 +5,6 @@ import Link from "next/link";
 import { CodeBlockInstall } from "@/components/code-block-install";
 import { DocsPageShell, DocsSection } from "@/components/docs/page-shell";
 import { RegistryInstallBlock } from "@/components/registry-install-block";
-import { Separator } from "@/components/ui/separator";
 import { SITE } from "@/constants";
 import { SITE_SECTIONS } from "@/lib/site-nav";
 import { createMetadata } from "@/seo/metadata";
@@ -84,9 +83,8 @@ export default function InstallationPage() {
         description="Start with a single component, confirm the generated files, and then repeat the same flow across the rest of the registry."
         title="Install with the registry"
       >
-        <div className="space-y-5">
-          <CodeBlockInstall className="max-w-[680px]" componentName="button" />
-          <Separator />
+        <div className="space-y-4">
+          <CodeBlockInstall className="max-w-[620px]" componentName="button" />
           <div className="grid gap-3 md:grid-cols-3">
             {installNotes.map(({ icon: Icon, title, description }) => (
               <div
@@ -155,12 +153,11 @@ export default function InstallationPage() {
         description="Use the direct file path when you want to reference the registry JSON explicitly."
         title="Install from a registry URL"
       >
-        <div className="space-y-5">
+        <div className="space-y-4">
           <RegistryInstallBlock
-            className="max-w-[680px]"
+            className="max-w-[620px]"
             registryPath="button.json"
           />
-          <Separator />
           <ul className="space-y-2 text-[14px] text-secondary leading-6">
             {directUrlNotes.map((note) => (
               <li className="flex gap-2.5" key={note}>

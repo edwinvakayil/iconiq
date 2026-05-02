@@ -129,9 +129,9 @@ const mobileNavVariants = {
 
 const GITHUB_REPO_API = "https://api.github.com/repos/edwinvakayil/iconiq";
 const desktopIconActionClass =
-  "flex size-9 items-center justify-center rounded-lg text-neutral-950 transition-colors hover:text-neutral-600 focus-visible:outline-1 focus-visible:outline-primary dark:text-white dark:hover:text-neutral-300";
+  "flex size-8 items-center justify-center rounded-md text-neutral-950 transition-colors hover:text-neutral-600 focus-visible:outline-1 focus-visible:outline-primary dark:text-white dark:hover:text-neutral-300";
 const desktopGithubBadgeClass =
-  "inline-flex h-11 items-center gap-2.5 rounded-2xl bg-muted/72 px-4 text-neutral-950 transition-colors hover:bg-muted dark:bg-white/[0.06] dark:text-white dark:hover:bg-white/[0.1]";
+  "inline-flex h-9 items-center gap-2 rounded-xl bg-muted/72 px-3.5 text-neutral-950 transition-colors hover:bg-muted dark:bg-white/[0.06] dark:text-white dark:hover:bg-white/[0.1]";
 
 function XLogoIcon({ className }: { className?: string }) {
   return (
@@ -203,7 +203,7 @@ export function Header() {
     <>
       <motion.header
         animate={{ opacity: 1, y: 0 }}
-        className="sticky top-[var(--announcement-height-mobile)] z-[150] w-full border-neutral-200/80 border-b bg-white/[0.92] backdrop-blur-xl lg:top-[var(--announcement-height-desktop)] dark:border-neutral-800/80 dark:bg-neutral-950/[0.88]"
+        className="sticky top-[var(--announcement-height-mobile)] z-[150] w-full border-neutral-200/40 border-b-[0.5px] bg-background lg:top-[var(--announcement-height-desktop)] dark:border-neutral-700/30"
         initial={prefersReducedMotion ? false : { opacity: 0, y: -10 }}
         transition={
           prefersReducedMotion
@@ -216,12 +216,12 @@ export function Header() {
 
           <div className="flex items-center gap-2">
             <SiteSearch variant="mobile" />
-            <ThemeToggle />
+            <ThemeToggle className="size-8 rounded-md" />
 
             <span className="hidden h-5 w-px bg-neutral-200 sm:block dark:bg-neutral-700" />
 
             <a
-              className="hidden items-center gap-2 rounded-xl bg-muted/60 px-3 py-1.5 text-neutral-600 text-sm hover:bg-muted hover:text-neutral-900 sm:flex dark:bg-white/[0.04] dark:text-neutral-300 dark:hover:bg-white/[0.08] dark:hover:text-white"
+              className="hidden items-center gap-2 rounded-lg bg-muted/60 px-3 py-1.25 text-neutral-600 text-sm hover:bg-muted hover:text-neutral-900 sm:flex dark:bg-white/[0.04] dark:text-neutral-300 dark:hover:bg-white/[0.08] dark:hover:text-white"
               href={LINK.GITHUB}
               rel="noopener noreferrer"
               target="_blank"
@@ -236,7 +236,7 @@ export function Header() {
             <span className="hidden h-5 w-px bg-neutral-200 sm:block dark:bg-neutral-700" />
 
             <a
-              className="hidden size-9 items-center justify-center rounded-md text-neutral-500 hover:bg-neutral-100 hover:text-neutral-900 sm:flex dark:hover:bg-white/10 dark:hover:text-white"
+              className="hidden size-8 items-center justify-center rounded-md text-neutral-500 hover:bg-neutral-100 hover:text-neutral-900 sm:flex dark:hover:bg-white/10 dark:hover:text-white"
               href={LINK.TWITTER}
               rel="noopener noreferrer"
               target="_blank"
@@ -246,7 +246,7 @@ export function Header() {
 
             <button
               aria-expanded={mobileMenuOpen}
-              className="flex size-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-muted hover:text-foreground sm:hidden"
+              className="flex size-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground sm:hidden"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               type="button"
             >
@@ -259,7 +259,7 @@ export function Header() {
           </div>
         </div>
 
-        <div className="mx-auto hidden h-[var(--header-height-desktop)] items-center justify-between gap-8 px-6 lg:flex xl:px-10 2xl:px-12">
+        <div className="mx-auto hidden h-[var(--header-height-desktop)] items-center justify-between gap-6 px-6 lg:flex xl:px-8 2xl:px-10">
           <div className="flex min-w-0 items-center">
             <BrandLink size="desktop" />
           </div>

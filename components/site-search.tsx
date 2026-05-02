@@ -18,9 +18,9 @@ import { SEARCH_ITEMS, type SearchItem } from "@/lib/search-index";
 import { cn } from "@/lib/utils";
 
 const desktopSearchButtonClass =
-  "hidden h-9 w-[236px] items-center justify-between gap-3 rounded-lg border border-neutral-200/80 bg-white/95 px-3 text-left text-neutral-950 transition-colors hover:border-neutral-300 hover:bg-neutral-50 focus-visible:outline-1 focus-visible:outline-primary dark:border-neutral-800 dark:bg-neutral-950 dark:text-white dark:hover:border-neutral-700 dark:hover:bg-neutral-900 lg:inline-flex xl:w-[248px]";
+  "hidden h-8 w-[216px] items-center justify-between gap-2.5 rounded-md border border-neutral-200/80 bg-white/95 px-2.5 text-left text-neutral-950 transition-colors hover:border-neutral-300 hover:bg-neutral-50 focus-visible:outline-1 focus-visible:outline-primary dark:border-neutral-800 dark:bg-neutral-950 dark:text-white dark:hover:border-neutral-700 dark:hover:bg-neutral-900 lg:inline-flex xl:w-[228px]";
 const mobileSearchButtonClass =
-  "flex size-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-muted hover:text-foreground dark:hover:bg-white/10 dark:hover:text-white lg:hidden";
+  "flex size-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground dark:hover:bg-white/10 dark:hover:text-white lg:hidden";
 const mobileMenuSearchButtonClass =
   "flex w-full items-center gap-2 rounded-lg border border-border bg-background px-3 py-2 text-left text-[13px] text-muted-foreground transition-colors hover:bg-muted/40 hover:text-foreground";
 
@@ -272,9 +272,9 @@ export function SiteSearch({ variant = "desktop" }: SiteSearchProps) {
           onClick={() => setIsOpen(true)}
           type="button"
         >
-          <div className="flex min-w-0 items-center gap-3">
+          <div className="flex min-w-0 items-center gap-2.5">
             <Search className="size-4 shrink-0 text-neutral-400 dark:text-neutral-500" />
-            <p className="truncate text-[14px] text-neutral-400 tracking-[-0.02em] dark:text-neutral-500">
+            <p className="truncate text-[13px] text-neutral-400 tracking-[-0.02em] dark:text-neutral-500">
               Search docs or components
             </p>
           </div>

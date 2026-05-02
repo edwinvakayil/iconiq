@@ -28,8 +28,8 @@ export function AnnouncementBanner() {
       <div className="mx-auto flex h-[var(--announcement-height-mobile)] w-full items-center justify-between gap-3 px-4 sm:px-6 lg:h-[var(--announcement-height-desktop)] lg:px-10">
         <div className="flex min-w-0 items-center gap-3">
           <p className="truncate text-[13px] text-white/92 tracking-[-0.02em] sm:text-[14px] dark:text-neutral-950/88">
-            <span className="font-semibold">New:</span> Major updates across
-            components, docs, and installation.
+            <span className="font-semibold">New:</span> Track the latest
+            features, bug fixes, and improvements on Iconiq.
           </p>
           <Link
             className="hidden shrink-0 items-center gap-1.5 rounded-lg bg-white px-3 py-1.5 font-medium text-[12px] text-neutral-950 transition-colors hover:bg-white/90 sm:inline-flex dark:bg-neutral-950 dark:text-white dark:hover:bg-neutral-900"

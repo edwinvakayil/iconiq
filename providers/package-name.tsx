@@ -11,12 +11,9 @@ type PackageNameContextType = {
   setPackageName: (packageName: PackageManager) => void;
 };
 
-const PackageNameContext = createContext<PackageNameContextType>({
-  packageName: PACKAGE_MANAGER.NPM,
-  setPackageName: (_packageName: PackageManager) => {
-    return;
-  },
-});
+const PackageNameContext = createContext<PackageNameContextType | undefined>(
+  undefined
+);
 
 const PackageNameProvider = ({ children }: { children: React.ReactNode }) => {
   const [packageName, setPackageName] = useState<PackageManager>(
