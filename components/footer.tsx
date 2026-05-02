@@ -12,6 +12,7 @@ type FooterLink = {
 const productLinks = [
   { label: "Introduction", href: "/introduction" },
   { label: "Installation", href: "/installation" },
+  { label: "Changelog", href: "/changelog" },
   { label: "Components", href: "/components/button" },
   { label: "Sponsorship", href: "/sponsorship" },
 ] as const;
@@ -30,8 +31,8 @@ const Footer = () => {
           <div className="space-y-4">
             <BrandLink size="footer" />
             <p className="max-w-md text-[15px] text-secondary leading-6">
-              Motion-powered, registry-ready components for teams that want
-              source-first UI instead of locked packages.
+              Motion-powered, registry-ready components for teams that want more
+              control over their UI.
             </p>
             <div className="flex flex-wrap items-center gap-x-4 gap-y-2 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.18em]">
               <span>React</span>

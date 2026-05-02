@@ -6,7 +6,7 @@ import { createMetadata } from "@/seo/metadata";
 export const metadata: Metadata = createMetadata({
   title: "Components",
   description:
-    "Browse Iconiq component documentation with live previews, installation steps, usage examples, and API details for source-first React UI primitives.",
+    "Browse Iconiq component documentation with live previews, installation steps, usage examples, and API details for editable React UI primitives.",
   keywords: [
     "component documentation",
     "react ui primitives",

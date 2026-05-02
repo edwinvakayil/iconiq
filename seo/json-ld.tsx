@@ -149,7 +149,7 @@ const FAQJsonLd = () => {
   const faqs = [
     {
       question: "What is Iconiq?",
-      answer: `${SITE.NAME} is an open-source library of motion-powered React components with a source-first registry workflow.`,
+      answer: `${SITE.NAME} is an open-source library of motion-powered React components built around the shadcn registry workflow.`,
     },
     {
       question: "How do I install an Iconiq component?",

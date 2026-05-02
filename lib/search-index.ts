@@ -10,11 +10,13 @@ export type SearchItem = {
 };
 
 const pageSummaries: Record<string, string> = {
-  "/": "Overview of the source-first React component library and its product-focused workflow.",
+  "/": "Overview of the React component library, registry workflow, and implementation model.",
   "/introduction":
-    "What Iconiq is, how the library works, and why teams adopt editable component source.",
+    "What Iconiq is, how the library works, and why teams adopt editable component files.",
   "/installation":
     "Installation steps for adding components through the shadcn registry workflow.",
+  "/changelog":
+    "A file-driven changelog page that renders local release notes as a timeline.",
 };
 
 const componentSummaries: Record<string, string> = {

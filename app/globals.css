@@ -25,8 +25,18 @@
 }
 
 :root {
-  --header-height-mobile: 3.5rem;
-  --header-height-desktop: 4.75rem;
+  --announcement-height-mobile: 0rem;
+  --announcement-height-desktop: 3.25rem;
+  --header-height-mobile: 3.25rem;
+  --header-height-desktop: 4.5rem;
+  --nav-stack-height-mobile: calc(
+    var(--announcement-height-mobile) +
+    var(--header-height-mobile)
+  );
+  --nav-stack-height-desktop: calc(
+    var(--announcement-height-desktop) +
+    var(--header-height-desktop)
+  );
   --background: #ffffff;
   --foreground: #111111;
   --primary: #111111;
@@ -44,6 +54,11 @@
   --separator-dash: rgb(227 231 236 / 1);
 
   --radius: 0.4rem;
+}
+
+html[data-banner-hidden="true"] {
+  --announcement-height-mobile: 0rem;
+  --announcement-height-desktop: 0rem;
 }
 
 .dark {
@@ -85,6 +100,22 @@
 }
 .dark .hero-brush-underline::after {
   background: #16a34a;
+}
+
+@keyframes status-blink {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.28;
+    transform: scale(0.82);
+  }
+}
+
+.status-blink {
+  animation: status-blink 1.9s ease-in-out infinite;
 }
 
 /* Ensure main content text is visible in dark mode (overrides Tailwind text-neutral-* inside main) */

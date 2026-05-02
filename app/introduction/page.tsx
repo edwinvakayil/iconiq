@@ -9,26 +9,26 @@ import { createMetadata } from "@/seo/metadata";
 export const metadata: Metadata = createMetadata({
   title: `Introduction | ${SITE.NAME}`,
   description:
-    "Learn what Iconiq is, how the source-first registry workflow works, and why the library is designed for teams that want editable React component source.",
+    "Learn what Iconiq is, how the registry workflow works, and why the library is designed for teams that want editable React component files.",
   canonical: "/introduction",
   ogTitle: `Introduction to ${SITE.NAME}`,
   keywords: [
     "react component library introduction",
-    "source first ui workflow",
-    "editable component source",
+    "registry ui workflow",
+    "editable component files",
   ],
 });
 
 const principles = [
   {
     icon: Layers,
-    title: "Editable source by default",
+    title: "Editable components by default",
     desc: "Each component is installed directly into your application, giving your team immediate control over structure, styling, and interaction behavior.",
   },
   {
     icon: LayoutGrid,
     title: "Curated component scope",
-    desc: "The library stays intentionally focused on high-utility primitives that support common product workflows without unnecessary surface area.",
+    desc: "The library stays intentionally focused on high-utility primitives that support common interface workflows without unnecessary surface area.",
   },
   {
     icon: Sparkles,
@@ -42,22 +42,13 @@ const principles = [
   },
 ];
 
-const stack = [
-  { label: "Motion", note: "state and transition animation" },
-  { label: "TypeScript", note: "typed component contracts" },
-  { label: "shadcn registry", note: "source-based distribution" },
-  { label: "Tailwind CSS", note: "implementation styling layer" },
-];
-
-const frameworks = ["Next.js", "Vite", "Remix", "Astro"];
-
 export default function IntroductionPage() {
   const componentCount =
     SITE_SECTIONS.find((s) => s.label === "Components")?.children.length ?? 0;
   const stats = [
     { value: String(componentCount), label: "Documented components" },
-    { value: String(frameworks.length), label: "Supported app stacks" },
-    { value: "0", label: "Package lock-in" },
+    { value: "React", label: "Framework target" },
+    { value: "Direct", label: "Ownership model" },
     { value: "shadcn", label: "Registry workflow" },
   ];
 
@@ -69,10 +60,10 @@ export default function IntroductionPage() {
         { label: "Introduction" },
       ]}
       description="Iconiq is an open-source React component library for teams that want implementation ownership, polished interaction patterns, and documentation built for real adoption."
-      eyebrow="Getting Started"
+      eyebrow=""
       meta={[
         { label: "Library", value: `${componentCount} documented entries` },
-        { label: "Delivery", value: "source based" },
+        { label: "Delivery", value: "local files" },
         { label: "Install", value: "registry compatible" },
       ]}
       title="Introduction"
@@ -86,14 +77,14 @@ export default function IntroductionPage() {
         <div className="space-y-4 text-[15px] text-secondary leading-7">
           <p>
             Components are built with Motion, respect reduced-motion
-            preferences, and are tuned for product interfaces that need to feel
-            precise rather than overstyled.
+            preferences, and are tuned for interfaces that need to feel precise
+            rather than overstyled.
           </p>
           <p>
             The model favors ownership over abstraction. Once installed, the
-            source belongs to your team, making it easier to review, customize,
-            and evolve each primitive without depending on upstream release
-            cycles.
+            component files live in your codebase, making it easier to review,
+            customize, and evolve each primitive without depending on upstream
+            release cycles.
           </p>
         </div>
       </DocsSection>
@@ -143,27 +134,6 @@ export default function IntroductionPage() {
               </div>
               <p className="text-[14px] text-secondary leading-6">{desc}</p>
             </div>
-          ))}
-        </div>
-      </DocsSection>
-
-      <DocsSection
-        className="lg:col-span-12"
-        description="The components are intended for modern React environments and fit naturally into teams already using common frontend tooling."
-        index="04"
-        title="Technology Fit"
-      >
-        <div className="flex flex-wrap gap-3">
-          {[
-            ...stack.map((item) => `${item.label} - ${item.note}`),
-            ...frameworks,
-          ].map((item) => (
-            <span
-              className="border border-border/80 bg-muted/[0.16] px-3 py-2 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.18em]"
-              key={item}
-            >
-              {item}
-            </span>
           ))}
         </div>
       </DocsSection>

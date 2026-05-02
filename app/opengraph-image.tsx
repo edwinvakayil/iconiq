@@ -137,7 +137,7 @@ export default function OgImage() {
                 maxWidth: "760px",
               }}
             >
-              Open-source React components with polished motion and source-first
+              Open-source React components with polished motion and editable
               installation.
             </span>
           </div>

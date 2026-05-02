@@ -19,7 +19,8 @@ function getTocForPath(pathname: string): TocEntry[] {
 
   if (pathname === "/") return [BASE_LINKS[0]];
   if (pathname === "/introduction") return base.slice(0, 2);
-  if (pathname === "/installation") return base;
+  if (pathname === "/installation") return base.slice(0, 3);
+  if (pathname === "/changelog") return base;
 
   const toc: TocEntry[] = [...base];
 
@@ -207,7 +208,7 @@ export function OnThisPage() {
           : { type: "spring", stiffness: 300, damping: 32, delay: 0.06 }
       }
     >
-      <nav className="sticky top-[var(--header-height-desktop)] z-10 max-h-[calc(100vh-var(--header-height-desktop))] overflow-y-auto py-6 pr-6 pl-4">
+      <nav className="sticky top-[var(--nav-stack-height-desktop)] z-10 max-h-[calc(100vh-var(--nav-stack-height-desktop))] overflow-y-auto py-6 pr-6 pl-4">
         <h2 className="mb-3 font-sans font-semibold text-[11px] text-neutral-500 uppercase tracking-wider dark:text-neutral-400">
           On this page
         </h2>

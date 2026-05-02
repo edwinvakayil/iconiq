@@ -1,0 +1,17 @@
+DATE: 2 May 2026
+VERSION: v1.0.1
+TITLE: Changelog page and release history
+SUMMARY: A dedicated place to read what is new in each release, with clear dates and version labels.
+ADDED:
+- A changelog page you can open from the site navigation to see release notes in one place.
+- Entries grouped by change type (for example Added, Updated, Fixed) so updates are easy to scan.
+- Each release shows the date, version, summary, and bullet list of what changed.
+---
+DATE: 1 May 2026
+VERSION: v1.0.0
+TITLE: Iconiq — launch release
+SUMMARY: Iconiq launches with motion-aware React components delivered through shadcn-style installs.
+ADDED:
+- Registry launch with 20+ UI components ready to install into your codebase.
+- Component set: Alert, Avatar, Badge, Breadcrumbs, Button, Calendar, Carousels, Checkbox Group, Collapsible, Combobox, Context Menu, Dialog, Drawer, Dropdown, File Upload, Hover Card, Input, Motion Accordion, Popover, Radio Group, Select, Slider, Spinner, Switch, Table, Tabs, and Tooltip.
+---

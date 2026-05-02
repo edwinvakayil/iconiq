@@ -129,9 +129,9 @@ const mobileNavVariants = {
 
 const GITHUB_REPO_API = "https://api.github.com/repos/edwinvakayil/iconiq";
 const desktopIconActionClass =
-  "flex size-10 items-center justify-center rounded-xl text-neutral-950 transition-colors hover:text-neutral-600 focus-visible:outline-1 focus-visible:outline-primary dark:text-white dark:hover:text-neutral-300";
+  "flex size-9 items-center justify-center rounded-lg text-neutral-950 transition-colors hover:text-neutral-600 focus-visible:outline-1 focus-visible:outline-primary dark:text-white dark:hover:text-neutral-300";
 const desktopGithubBadgeClass =
-  "inline-flex h-12 items-center gap-3 rounded-[18px] bg-muted/72 px-5 text-neutral-950 transition-colors hover:bg-muted dark:bg-white/[0.06] dark:text-white dark:hover:bg-white/[0.1]";
+  "inline-flex h-11 items-center gap-2.5 rounded-2xl bg-muted/72 px-4 text-neutral-950 transition-colors hover:bg-muted dark:bg-white/[0.06] dark:text-white dark:hover:bg-white/[0.1]";
 
 function XLogoIcon({ className }: { className?: string }) {
   return (
@@ -203,7 +203,7 @@ export function Header() {
     <>
       <motion.header
         animate={{ opacity: 1, y: 0 }}
-        className="sticky top-0 z-[150] w-full border-neutral-200/80 border-b bg-white/[0.92] backdrop-blur-xl dark:border-neutral-800/80 dark:bg-neutral-950/[0.88]"
+        className="sticky top-[var(--announcement-height-mobile)] z-[150] w-full border-neutral-200/80 border-b bg-white/[0.92] backdrop-blur-xl lg:top-[var(--announcement-height-desktop)] dark:border-neutral-800/80 dark:bg-neutral-950/[0.88]"
         initial={prefersReducedMotion ? false : { opacity: 0, y: -10 }}
         transition={
           prefersReducedMotion
@@ -298,7 +298,7 @@ export function Header() {
         {mobileMenuOpen && (
           <motion.div
             animate="open"
-            className="fixed inset-x-0 top-[var(--header-height-mobile)] z-[200] sm:hidden"
+            className="fixed inset-x-0 top-[var(--nav-stack-height-mobile)] z-[200] sm:hidden"
             exit="closed"
             initial="closed"
             key="mobile-nav"
@@ -308,7 +308,7 @@ export function Header() {
             <motion.button
               animate="open"
               aria-hidden={!mobileMenuOpen}
-              className="fixed inset-0 top-[var(--header-height-mobile)] bg-background/60 backdrop-blur-sm"
+              className="fixed inset-0 top-[var(--nav-stack-height-mobile)] bg-background/60 backdrop-blur-sm"
               initial="closed"
               onClick={() => setMobileMenuOpen(false)}
               type="button"

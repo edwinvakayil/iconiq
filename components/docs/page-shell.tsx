@@ -54,10 +54,58 @@ function DocsBreadcrumbs({
   const visibleItems = items.filter(
     (item) => item.label.toLowerCase() !== "docs"
   );
+  const usesEditorialBreadcrumb =
+    visibleItems.length >= 2 &&
+    ["components", "getting started"].includes(
+      visibleItems[0]?.label.toLowerCase() ?? ""
+    );
+
+  if (visibleItems.length === 0) {
+    return null;
+  }
+
+  if (usesEditorialBreadcrumb) {
+    return (
+      <nav aria-label="Breadcrumb" className={cn("mb-4", className)}>
+        <ol className="flex flex-wrap items-center gap-2.5 text-[13px] tracking-[-0.01em]">
+          {visibleItems.map((item, index) => {
+            const isLast = index === visibleItems.length - 1;
+
+            return (
+              <li
+                className="inline-flex items-center gap-2.5"
+                key={`${item.label}-${index}`}
+              >
+                {item.href && !isLast ? (
+                  <Link
+                    className="text-secondary transition-colors hover:text-foreground"
+                    href={item.href}
+                  >
+                    {item.label}
+                  </Link>
+                ) : isLast ? (
+                  <span className="font-medium text-foreground">
+                    {item.label}
+                  </span>
+                ) : (
+                  <span className="text-secondary">{item.label}</span>
+                )}
+                {isLast ? null : (
+                  <span aria-hidden="true" className="text-muted-foreground/50">
+                    /
+                  </span>
+                )}
+              </li>
+            );
+          })}
+        </ol>
+      </nav>
+    );
+  }
 
   return (
-    <nav aria-label="Breadcrumb" className={cn("mb-8", className)}>
-      <ol className="flex flex-wrap items-center gap-2 font-mono text-[11px] text-muted-foreground tracking-[0.16em]">
+    <nav aria-label="Breadcrumb" className={cn("mb-4", className)}>
+      <ol className="flex flex-wrap items-center gap-2 font-mono text-[13px] text-muted-foreground tracking-[0.12em]">
         {visibleItems.map((item, index) => {
           const isLast = index === visibleItems.length - 1;
           return (
@@ -103,13 +151,15 @@ function DocsHero({
   actions?: ReactNode;
 }) {
   return (
-    <section className="space-y-8 pt-8">
+    <section className="space-y-8 pt-4">
       <Separator />
       <div className="flex flex-col gap-8 lg:flex-row lg:items-start lg:justify-between">
         <div className="max-w-4xl space-y-4">
-          <p className="font-mono text-[11px] text-muted-foreground uppercase tracking-[0.32em]">
-            {eyebrow}
-          </p>
+          {eyebrow ? (
+            <p className="font-mono text-[11px] text-muted-foreground uppercase tracking-[0.32em]">
+              {eyebrow}
+            </p>
+          ) : null}
           <h1 className="text-4xl text-foreground tracking-[-0.08em] sm:text-5xl lg:text-[3.6rem]">
             {title}
           </h1>
@@ -400,7 +450,7 @@ function DetailAccordion({ details }: { details: DetailItem[] }) {
 
 function ComponentDocsPage({
   breadcrumbs,
-  eyebrow = "Registry Component",
+  eyebrow = "",
   title,
   description,
   componentName,

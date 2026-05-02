@@ -1,6 +1,6 @@
 # Iconiq
 
-Motion-powered React component library with a source-first registry workflow.
+Motion-powered React component library built around the shadcn registry workflow.
 
 ![Iconiq — Motion-Powered React Components](./public/og.png)
 
@@ -18,7 +18,7 @@ pnpm dlx shadcn@latest add https://iconiqui.com/r/button.json
 
 ## What ships here
 
-- Source-first React components for modern product UI
+- Editable React components for modern interfaces
 - Motion-powered interactions and state transitions
 - shadcn-compatible registry delivery
 - White-first docs with live previews and API details

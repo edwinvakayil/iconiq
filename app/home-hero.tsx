@@ -17,7 +17,7 @@ export function HomeHero() {
           <div className="grid gap-8 lg:grid-cols-12 lg:gap-10">
             <div className="space-y-5 lg:col-span-4">
               <p className="font-mono text-[11px] text-muted-foreground uppercase tracking-[0.32em]">
-                Component registry for product teams
+                React UI components
               </p>
               <Separator />
               <dl className="space-y-3">
@@ -42,7 +42,7 @@ export function HomeHero() {
                     Ownership
                   </dt>
                   <dd className="text-[15px] text-foreground">
-                    Source files in your app
+                    Local component files
                   </dd>
                 </div>
               </dl>
@@ -52,25 +52,18 @@ export function HomeHero() {
               <h1 className="max-w-5xl text-4xl text-foreground tracking-[-0.08em] sm:text-5xl lg:text-[4.6rem]">
                 A sharper way to build polished React interfaces.
               </h1>
-              <p className="max-w-3xl text-[16px] text-secondary leading-7 sm:text-[18px] sm:leading-8">
-                Iconiq offers a focused library of motion-aware components for
-                teams that value clarity, implementation control, and
-                production-grade execution. Review each component in context,
-                install it as source, and adapt it directly within your own
-                system.
+              <p className="max-w-3xl text-[16px] text-secondary leading-7 sm:text-[17px] sm:leading-8">
+                Iconiq is a focused library of motion-aware components for teams
+                that value clarity, implementation control, and reliable
+                execution. Review each component in context, install the files
+                directly into your codebase, and adapt them to your own system.
               </p>
               <div className="flex flex-wrap gap-3 pt-2">
                 <Link
                   className="border border-foreground bg-foreground px-5 py-3 font-mono text-[10px] text-background uppercase tracking-[0.18em] transition-colors hover:bg-foreground/90"
-                  href="/installation"
+                  href="/components/alert"
                 >
-                  Installation
-                </Link>
-                <Link
-                  className="border border-border/85 bg-muted/20 px-5 py-3 font-mono text-[10px] text-foreground uppercase tracking-[0.18em] transition-colors hover:bg-muted/45"
-                  href="/components/motion-accordion"
-                >
-                  Open library
+                  Browse components
                 </Link>
               </div>
             </div>
@@ -80,7 +73,7 @@ export function HomeHero() {
         <div className="grid gap-5 lg:grid-cols-12">
           <DocsSection
             className="lg:col-span-8"
-            description="The library is structured for teams that need to evaluate components quickly, adopt them confidently, and maintain full control after installation."
+            description="The library is structured to help teams evaluate components quickly, adopt them confidently, and maintain full control after installation."
             index="01"
             title="What Sets Iconiq Apart"
           >
@@ -89,7 +82,7 @@ export function HomeHero() {
                 "Components are delivered as editable source files, making customization, review, and long-term maintenance far more practical.",
                 "Documentation combines previews, installation steps, and implementation notes so teams can assess behavior before adopting it.",
                 "Motion is applied with restraint to support state changes and interaction clarity rather than visual excess.",
-                "The registry workflow keeps adoption lightweight while preserving the engineering ownership expected in mature product teams.",
+                "The registry workflow keeps adoption lightweight while preserving full engineering ownership.",
               ].map((note) => (
                 <div
                   className="border border-border/80 bg-muted/[0.18] px-4 py-4 text-[14px] text-secondary leading-6"
@@ -112,7 +105,7 @@ export function HomeHero() {
                 {
                   href: "/installation",
                   label: "Installation guide",
-                  note: "Understand the source-first registry workflow",
+                  note: "Understand the registry workflow and installation model",
                 },
                 {
                   href: "/components/button",

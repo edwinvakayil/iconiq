@@ -8,9 +8,9 @@ const SITE = {
     TWITTER: "@edwinvakayil",
   },
   DESCRIPTION: {
-    LONG: "Iconiq is an open-source React component library with a source-first shadcn registry workflow. Browse polished UI primitives, install them as editable source, and adapt them directly inside modern product interfaces.",
+    LONG: "Iconiq is an open-source React component library built around the shadcn registry workflow. Browse polished UI primitives, install them as local files, and adapt them directly inside modern interfaces.",
     SHORT:
-      "Open-source React components with a source-first shadcn registry workflow and editable product-ready UI primitives.",
+      "Open-source React components delivered through the shadcn registry with editable, polished UI primitives.",
   },
   KEYWORDS: [
     "open source react component library",
@@ -25,7 +25,7 @@ const SITE = {
     "nextjs components",
     "shadcn registry",
     "shadcn component library",
-    "source first ui",
+    "editable ui library",
     "motion ui library",
     "editable react components",
   ],

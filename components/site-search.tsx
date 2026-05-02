@@ -313,7 +313,7 @@ export function SiteSearch({ variant = "desktop" }: SiteSearchProps) {
       <DialogPrimitive.Root onOpenChange={setIsOpen} open={isOpen}>
         <DialogPrimitive.Portal>
           <DialogPrimitive.Overlay className="fixed inset-0 z-[220] bg-white/55 backdrop-blur-sm dark:bg-black/45" />
-          <DialogPrimitive.Content className="fixed inset-x-3 top-[calc(var(--header-height-mobile)+0.75rem)] bottom-3 z-[221] flex flex-col overflow-hidden rounded-xl border border-neutral-200/80 bg-white shadow-[0_28px_90px_rgba(10,10,10,0.12)] outline-none sm:inset-x-4 sm:bottom-4 lg:top-22 lg:right-auto lg:bottom-auto lg:left-1/2 lg:w-[min(700px,calc(100vw-2rem))] lg:-translate-x-1/2 dark:border-neutral-800 dark:bg-neutral-950">
+          <DialogPrimitive.Content className="fixed inset-x-3 top-[calc(var(--nav-stack-height-mobile)+0.75rem)] bottom-3 z-[221] flex flex-col overflow-hidden rounded-xl border border-neutral-200/80 bg-white shadow-[0_28px_90px_rgba(10,10,10,0.12)] outline-none sm:inset-x-4 sm:bottom-4 lg:top-[calc(var(--nav-stack-height-desktop)+1rem)] lg:right-auto lg:bottom-auto lg:left-1/2 lg:w-[min(700px,calc(100vw-2rem))] lg:-translate-x-1/2 dark:border-neutral-800 dark:bg-neutral-950">
             <DialogPrimitive.Title className="sr-only">
               Search documentation
             </DialogPrimitive.Title>

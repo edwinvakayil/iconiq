@@ -8,7 +8,7 @@ export function GET() {
 
   const content = `# ${SITE.NAME}
 
-> Motion-powered React components with a source-first registry workflow
+> Motion-powered React components delivered through the shadcn registry
 
 ${SITE.NAME} is an open-source collection of motion-aware UI components for React projects.
 
