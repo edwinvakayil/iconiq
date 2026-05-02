@@ -13,8 +13,10 @@ import { usePackageNameContext } from "@/providers/package-name";
 
 export function RegistryInstallBlock({
   registryPath,
+  className,
 }: {
   registryPath: string;
+  className?: string;
 }) {
   const [status, setStatus] = useState<ActionStatus>("idle");
   const [, startTransition] = useTransition();
@@ -44,16 +46,15 @@ export function RegistryInstallBlock({
   };
 
   return (
-    <div className="mt-3 w-full min-w-0">
-      {/* Package manager pill switcher */}
+    <div className={cn("mt-0 w-full min-w-0", className)}>
       <div className="mb-3 flex flex-wrap gap-1.5">
         {Object.values(PACKAGE_MANAGER).map((pm) => (
           <button
             className={cn(
-              "border px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.18em] transition-colors duration-150",
+              "rounded-md border border-border/75 bg-background px-2.5 py-1.5 font-mono text-[10px] uppercase tracking-[0.18em] transition-colors duration-150",
               packageName === pm
                 ? "border-foreground bg-foreground text-background"
-                : "border-border bg-transparent text-muted-foreground hover:text-foreground"
+                : "text-muted-foreground hover:bg-muted/30 hover:text-foreground"
             )}
             key={pm}
             onClick={() => setPackageName(pm)}
@@ -64,18 +65,17 @@ export function RegistryInstallBlock({
         ))}
       </div>
 
-      {/* Command display */}
-      <div className="flex items-center gap-2 border border-border/85 bg-muted/28 px-3.5 py-2.5">
-        <div className="min-w-0 flex-1 overflow-x-auto">
+      <div className="flex min-w-0 items-stretch overflow-hidden rounded-lg border border-border/80 bg-background">
+        <div className="min-w-0 flex-1 overflow-x-auto px-4 py-3 sm:px-5">
           <span className="sr-only">{getCommand(packageName)}</span>
           <p
             aria-hidden="true"
-            className="whitespace-nowrap font-mono text-[12px] leading-none"
+            className="whitespace-nowrap font-mono text-[13px] leading-none tracking-[-0.04em] sm:text-[14px]"
           >
             <span className="text-muted-foreground">
               {getPackageManagerPrefix(packageName)}
             </span>{" "}
-            <span className="text-secondary">shadcn@latest add</span>{" "}
+            <span className="text-foreground">shadcn@latest add</span>{" "}
             <span className="text-muted-foreground">{SITE.URL}/r/</span>
             <span className="font-semibold text-foreground">
               {registryPath}
@@ -85,7 +85,7 @@ export function RegistryInstallBlock({
         <button
           aria-disabled={status !== "idle"}
           aria-label="Copy to clipboard"
-          className="shrink-0 border border-transparent p-1.5 transition-colors duration-150 hover:border-border hover:bg-background"
+          className="inline-flex shrink-0 items-center justify-center border-border/80 border-l px-3.5 text-muted-foreground transition-colors duration-150 hover:bg-muted/25 hover:text-foreground sm:px-4"
           onClick={handleCopy}
           tabIndex={0}
           type="button"

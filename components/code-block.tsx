@@ -104,22 +104,22 @@ export function CodeBlock({
   };
 
   const embedded = variant === "embedded";
+  const shellClassName = embedded
+    ? "my-0 overflow-hidden rounded-md border border-border/70 bg-muted/[0.08] dark:bg-muted/[0.12]"
+    : "my-8 overflow-hidden rounded-lg border border-border/80 bg-background";
+  const headerClassName = embedded
+    ? "border-border/70 border-b bg-transparent px-4 py-3 dark:bg-transparent"
+    : "border-border/75 border-b bg-muted/[0.16] px-4 py-3 sm:px-5";
+  const contentClassName = embedded
+    ? "bg-transparent px-4 py-4 dark:bg-transparent"
+    : "bg-transparent px-4 py-4 sm:px-5 sm:py-5";
 
   return (
-    <div
-      className={cn(
-        embedded
-          ? "my-0 overflow-hidden rounded-none border-0 bg-transparent dark:bg-transparent"
-          : "my-8 overflow-hidden border border-border/85 bg-muted/28",
-        className
-      )}
-    >
+    <div className={cn(shellClassName, className)}>
       <div
         className={cn(
           "flex items-center justify-between gap-2",
-          embedded
-            ? "border-0 bg-transparent px-0 pt-0 pb-3 dark:bg-transparent"
-            : "border-border border-b bg-transparent px-4 pt-3 pb-2"
+          headerClassName
         )}
       >
         <span
@@ -134,8 +134,8 @@ export function CodeBlock({
         <motion.button
           aria-label="Copy code"
           className={cn(
-            "inline-flex size-8 items-center justify-center rounded-none border border-transparent bg-transparent p-0",
-            "text-muted-foreground transition-colors duration-150 hover:border-border hover:bg-background hover:text-foreground",
+            "inline-flex size-8 items-center justify-center rounded-md border border-transparent bg-transparent p-0",
+            "text-muted-foreground transition-colors duration-150 hover:bg-muted/25 hover:text-foreground dark:hover:bg-white/[0.06]",
             copied && "text-muted-foreground"
           )}
           onClick={handleCopy}
@@ -172,10 +172,8 @@ export function CodeBlock({
       </div>
       <pre
         className={cn(
-          "m-0 overflow-x-auto font-mono text-foreground text-sm leading-[1.75]",
-          embedded
-            ? "bg-transparent px-0 pt-1 pb-0 dark:bg-transparent"
-            : "bg-transparent px-5 pt-4 pb-5"
+          "m-0 overflow-x-auto font-mono text-[13px] text-foreground leading-7 sm:text-sm",
+          contentClassName
         )}
       >
         <code className="bg-transparent p-0 font-inherit text-inherit">

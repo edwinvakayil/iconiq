@@ -85,7 +85,7 @@ export default function InstallationPage() {
         title="Install with the registry"
       >
         <div className="space-y-5">
-          <CodeBlockInstall componentName="button" />
+          <CodeBlockInstall className="max-w-[680px]" componentName="button" />
           <Separator />
           <div className="grid gap-3 md:grid-cols-3">
             {installNotes.map(({ icon: Icon, title, description }) => (
@@ -156,7 +156,10 @@ export default function InstallationPage() {
         title="Install from a registry URL"
       >
         <div className="space-y-5">
-          <RegistryInstallBlock registryPath="button.json" />
+          <RegistryInstallBlock
+            className="max-w-[680px]"
+            registryPath="button.json"
+          />
           <Separator />
           <ul className="space-y-2 text-[14px] text-secondary leading-6">
             {directUrlNotes.map((note) => (
