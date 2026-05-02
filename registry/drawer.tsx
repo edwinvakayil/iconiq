@@ -11,6 +11,7 @@ const EASE = [0.22, 1, 0.36, 1] as const;
 
 import { X } from "lucide-react";
 import { type ReactNode, useEffect } from "react";
+import { createPortal } from "react-dom";
 
 export type DrawerSide = "left" | "right" | "top" | "bottom";
 type PanelMotion = { x?: string | number; y?: string | number };
@@ -111,7 +112,7 @@ export function Drawer({
     ? { duration: 0.2 }
     : { type: "spring", stiffness: 260, damping: 32, mass: 0.8 };
 
-  return (
+  const drawerContent = (
     <AnimatePresence>
       {open && (
         <div className="fixed inset-0 z-[2147483647]">
@@ -187,4 +188,10 @@ export function Drawer({
       )}
     </AnimatePresence>
   );
+
+  if (typeof document === "undefined") {
+    return drawerContent;
+  }
+
+  return createPortal(drawerContent, document.body);
 }
