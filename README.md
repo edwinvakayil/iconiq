@@ -4,8 +4,6 @@ Open-source React components delivered through the shadcn registry workflow.
 
 Iconiq is a component library and documentation site for teams that want polished UI, motion-aware interactions, and installable source components that can be adapted directly in their own projects.
 
-![Iconiq preview](./public/og.png)
-
 ## Overview
 
 - React 19 components with Tailwind CSS v4 styling
