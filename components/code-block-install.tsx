@@ -53,9 +53,11 @@ export function CodeBlockInstall({
       >
         <span className="text-muted-foreground">
           {getPackageManagerPrefix(packageName)}
-        </span>{" "}
-        <span className="text-foreground">shadcn@latest add @iconiq/</span>
-        <span className="text-foreground">{componentName}</span>
+        </span>
+        <span className="text-foreground">shadcn@latest add</span>
+        <span className="text-foreground">
+          @iconiq/<span>{componentName}</span>
+        </span>
       </CommandBar>
     </div>
   );

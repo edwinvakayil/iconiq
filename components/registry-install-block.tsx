@@ -59,10 +59,12 @@ export function RegistryInstallBlock({
       >
         <span className="text-muted-foreground">
           {getPackageManagerPrefix(packageName)}
-        </span>{" "}
-        <span className="text-foreground">shadcn@latest add</span>{" "}
-        <span className="text-muted-foreground">{SITE.URL}/r/</span>
-        <span className="font-semibold text-foreground">{registryPath}</span>
+        </span>
+        <span className="text-foreground">shadcn@latest add</span>
+        <span className="text-muted-foreground">
+          {SITE.URL}/r/
+          <span className="font-semibold text-foreground">{registryPath}</span>
+        </span>
       </CommandBar>
     </div>
   );

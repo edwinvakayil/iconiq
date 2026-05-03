@@ -121,6 +121,7 @@ export function CodeBlock({
   return (
     <div
       className={cn(
+        "w-full min-w-0 max-w-full",
         shellClassName,
         scrollable && "flex flex-col",
         scrollable && heightClassName,
@@ -185,7 +186,7 @@ export function CodeBlock({
       ) : null}
       <pre
         className={cn(
-          "m-0 font-mono text-[13px] text-foreground leading-7 sm:text-[13.5px]",
+          "m-0 w-full max-w-full font-mono text-[13px] text-foreground leading-7 sm:text-[13.5px]",
           scrollable
             ? "min-h-0 flex-1 overflow-auto overscroll-contain"
             : "overflow-x-auto",
@@ -193,7 +194,7 @@ export function CodeBlock({
           contentClassName
         )}
       >
-        <code className="relative block min-w-max bg-transparent p-0 font-inherit text-inherit">
+        <code className="relative inline-block min-w-full bg-transparent p-0 align-top font-inherit text-inherit">
           <span
             aria-hidden="true"
             className={cn(

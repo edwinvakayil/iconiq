@@ -233,7 +233,7 @@ function DocsSection({
   children: ReactNode;
 }) {
   return (
-    <section className={cn("relative px-0 py-0", className)}>
+    <section className={cn("relative min-w-0 px-0 py-0", className)}>
       <div className="space-y-5">
         <Separator />
         <div className="space-y-2">
@@ -276,7 +276,7 @@ function DocsPageShell({
       <BreadcrumbJsonLdClient items={breadcrumbs} />
       <div
         className={cn(
-          "mx-auto w-full max-w-[1480px] px-4 py-10 sm:px-6 sm:py-12 lg:px-10",
+          "mx-auto w-full min-w-0 max-w-[1480px] px-4 py-10 sm:px-6 sm:py-12 lg:px-10",
           className
         )}
       >
@@ -288,7 +288,9 @@ function DocsPageShell({
           meta={meta}
           title={title}
         />
-        <div className="mt-10 grid gap-5 lg:grid-cols-12">{children}</div>
+        <div className="mt-10 grid min-w-0 gap-5 lg:grid-cols-12">
+          {children}
+        </div>
       </div>
     </main>
   );
@@ -491,7 +493,7 @@ function ComponentDocsPage({
       title={title}
     >
       <DocsSection
-        className={cn("lg:col-span-8", previewClassName)}
+        className={cn("min-w-0 lg:col-span-8", previewClassName)}
         description={
           previewDescription ??
           "Preview the component in a quiet layout with room to inspect motion, spacing, and state changes."
@@ -505,7 +507,7 @@ function ComponentDocsPage({
       </DocsSection>
 
       <DocsSection
-        className="lg:col-span-4"
+        className="min-w-0 lg:col-span-4"
         description={
           installDescription ??
           "Install the component directly into your codebase, then branch into v0 if you want to iterate on variations."
@@ -557,7 +559,7 @@ function ComponentDocsPage({
       </DocsSection>
 
       <DocsSection
-        className="lg:col-span-12"
+        className="min-w-0 lg:col-span-12"
         description={
           usageDescription ??
           "Drop the component into a local surface exactly as shown, then adjust props and class names to fit your app."
@@ -575,7 +577,7 @@ function ComponentDocsPage({
       </DocsSection>
 
       <DocsSection
-        className="lg:col-span-12"
+        className="min-w-0 lg:col-span-12"
         description={
           detailsDescription ??
           "Each item below covers the documented props and the behavior that matters during implementation."
