@@ -1,9 +1,9 @@
 "use client";
 
 import * as DialogPrimitive from "@radix-ui/react-dialog";
-import { motion } from "framer-motion";
 import Fuse from "fuse.js";
 import { Command, CornerDownLeft, Search, X } from "lucide-react";
+import { motion } from "motion/react";
 import { usePathname, useRouter } from "next/navigation";
 import {
   type KeyboardEvent as ReactKeyboardEvent,

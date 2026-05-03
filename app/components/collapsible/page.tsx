@@ -23,7 +23,7 @@ import {
 } from "@/components/ui/collapsible";
 
 // CollapsibleContent animates height + opacity automatically via
-// Framer Motion spring physics. No extra setup needed.
+// Motion spring physics. No extra setup needed.
 export function BillingCard() {
   const [open, setOpen] = useState(true);
 

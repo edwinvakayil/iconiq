@@ -11,8 +11,8 @@ import {
   startOfWeek,
   subMonths,
 } from "date-fns";
-import { AnimatePresence, motion } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useId, useMemo, useState } from "react";
 
 const WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];

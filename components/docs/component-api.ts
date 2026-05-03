@@ -89,7 +89,7 @@ const alertApiDetails: DetailItem[] = [
       "When position is set, the component waits until after mount before calling createPortal to avoid touching document during server render.",
     ],
   },
-  registryItem("alert.json", ["framer-motion"]),
+  registryItem("alert.json", ["motion"]),
 ];
 
 const avatarApiDetails: DetailItem[] = [
@@ -135,7 +135,7 @@ const avatarApiDetails: DetailItem[] = [
       "Without src, the fallback text springs in over the primary-colored background instead of showing an empty frame.",
     ],
   },
-  registryItem("avatar.json", ["framer-motion"]),
+  registryItem("avatar.json", ["motion"]),
 ];
 
 const badgeApiDetails: DetailItem[] = [
@@ -193,7 +193,7 @@ const badgeApiDetails: DetailItem[] = [
       "The shimmer travels from left to right over 2 seconds, waits 1.5 seconds, then repeats indefinitely.",
     ],
   },
-  registryItem("badge.json", ["framer-motion"]),
+  registryItem("badge.json", ["motion"]),
 ];
 
 const calendarApiDetails: DetailItem[] = [
@@ -274,7 +274,7 @@ const calendarApiDetails: DetailItem[] = [
       "This is still not a full calendar input primitive: there is no keyboard date navigation, no ARIA grid semantics, and no range or multi-select mode.",
     ],
   },
-  registryItem("calendar.json", ["framer-motion", "lucide-react", "date-fns"]),
+  registryItem("calendar.json", ["motion", "lucide-react", "date-fns"]),
 ];
 
 const carouselApiDetails: DetailItem[] = [
@@ -370,7 +370,7 @@ const carouselApiDetails: DetailItem[] = [
       "Slide direction is used by AnimatePresence to decide whether the next card enters from the left or right.",
     ],
   },
-  registryItem("carousels.json", ["framer-motion", "lucide-react"]),
+  registryItem("carousels.json", ["motion", "lucide-react"]),
 ];
 
 const breadcrumbsApiDetails: DetailItem[] = [
@@ -430,14 +430,14 @@ const breadcrumbsApiDetails: DetailItem[] = [
     id: "breadcrumbs-a11y",
     title: "Accessibility and motion",
     summary:
-      "The component keeps semantic breadcrumb structure while layering Framer Motion on top.",
+      "The component keeps semantic breadcrumb structure while layering Motion on top.",
     notes: [
       'The root nav uses aria-label="breadcrumb" and wraps items in an ordered list.',
       "AnimatePresence runs in popLayout mode so reordering or changing the trail keeps the transitions coherent.",
       "This implementation does not add aria-current to the final item, so add that yourself if you need stricter breadcrumb semantics.",
     ],
   },
-  registryItem("breadcrumbs.json", ["framer-motion", "lucide-react"]),
+  registryItem("breadcrumbs.json", ["motion", "lucide-react"]),
 ];
 
 const buttonApiDetails: DetailItem[] = [
@@ -503,7 +503,7 @@ const buttonApiDetails: DetailItem[] = [
       "Because buttonVariants is a plain CVA export, you can compose it independently from the Button component when you do not want a motion.button element.",
     ],
   },
-  registryItem("button.json", ["framer-motion", "class-variance-authority"]),
+  registryItem("button.json", ["motion", "class-variance-authority"]),
 ];
 
 const checkboxGroupApiDetails: DetailItem[] = [
@@ -585,7 +585,7 @@ const checkboxGroupApiDetails: DetailItem[] = [
       "There is no role='group', role='checkbox', or aria-checked wiring in this version, so accessibility-sensitive forms should add hidden inputs or extend the component.",
     ],
   },
-  registryItem("checkbox-group.json", ["framer-motion", "lucide-react"]),
+  registryItem("checkbox-group.json", ["motion", "lucide-react"]),
 ];
 
 const comboboxApiDetails: DetailItem[] = [
@@ -694,7 +694,7 @@ const comboboxApiDetails: DetailItem[] = [
       "Because the list is rendered in a portal with fixed positioning, overflow-hidden ancestors do not clip it. Placement is recalculated from the trigger rect while it is open.",
     ],
   },
-  registryItem("combobox.json", ["framer-motion", "lucide-react"]),
+  registryItem("combobox.json", ["motion", "lucide-react"]),
 ];
 
 const contextMenuApiDetails: DetailItem[] = [
@@ -789,7 +789,7 @@ const contextMenuApiDetails: DetailItem[] = [
       "Keyboard navigation skips disabled rows in both directions. If every row is disabled, the highlighted index stays unchanged.",
     ],
   },
-  registryItem("context-menu.json", ["framer-motion"]),
+  registryItem("context-menu.json", ["motion"]),
 ];
 
 const drawerApiDetails: DetailItem[] = [
@@ -869,7 +869,7 @@ const drawerApiDetails: DetailItem[] = [
       "A decorative top shimmer is always rendered inside the panel. Remove or restyle it locally if you want a flatter surface.",
     ],
   },
-  registryItem("drawer.json", ["framer-motion", "lucide-react"]),
+  registryItem("drawer.json", ["motion", "lucide-react"]),
 ];
 
 const dropdownApiDetails: DetailItem[] = [
@@ -1091,7 +1091,7 @@ const dropdownApiDetails: DetailItem[] = [
       "The base separator uses the shared border token and a small vertical margin between item groups.",
     ],
   },
-  registryItem("dropdown.json", ["framer-motion", "lucide-react"]),
+  registryItem("dropdown.json", ["motion", "lucide-react"]),
 ];
 
 const fileUploadApiDetails: DetailItem[] = [
@@ -1193,7 +1193,7 @@ const fileUploadApiDetails: DetailItem[] = [
       "Each queue item id is built from the file name, file size, and a random suffix to reduce collisions between repeated uploads.",
     ],
   },
-  registryItem("file-upload.json", ["framer-motion", "lucide-react"]),
+  registryItem("file-upload.json", ["motion", "lucide-react"]),
 ];
 
 const collapsibleApiDetails: DetailItem[] = [
@@ -1286,10 +1286,7 @@ const collapsibleApiDetails: DetailItem[] = [
       "Height is animated on an outer wrapper and clip-path is animated on an inner wrapper, producing the open and close effect without relying on CSS keyframes.",
     ],
   },
-  registryItem("collapsible.json", [
-    "@radix-ui/react-collapsible",
-    "framer-motion",
-  ]),
+  registryItem("collapsible.json", ["@radix-ui/react-collapsible", "motion"]),
 ];
 
 const dialogApiDetails: DetailItem[] = [
@@ -1431,7 +1428,7 @@ const dialogApiDetails: DetailItem[] = [
   },
   registryItem("dialog.json", [
     "@radix-ui/react-dialog",
-    "framer-motion",
+    "motion",
     "lucide-react",
   ]),
 ];
@@ -1533,7 +1530,7 @@ const hoverCardApiDetails: DetailItem[] = [
       "By default the content is centered below the trigger with mt-3 spacing and a fixed w-72 width.",
     ],
   },
-  registryItem("hover-card.json", ["@radix-ui/react-slot", "framer-motion"]),
+  registryItem("hover-card.json", ["@radix-ui/react-slot", "motion"]),
 ];
 
 const popoverApiDetails: DetailItem[] = [
@@ -1643,7 +1640,7 @@ const popoverApiDetails: DetailItem[] = [
       "Entry and exit animation are owned internally, so initial, animate, exit, and transition are not part of the public prop surface.",
     ],
   },
-  registryItem("popover.json", ["@radix-ui/react-popover", "framer-motion"]),
+  registryItem("popover.json", ["@radix-ui/react-popover", "motion"]),
 ];
 
 const inputApiDetails: DetailItem[] = [
@@ -1728,7 +1725,7 @@ const inputApiDetails: DetailItem[] = [
       "Number, password, and search inputs opt out of overflow clipping so their trailing affordances can sit outside the text flow cleanly.",
     ],
   },
-  registryItem("input.json", ["framer-motion"]),
+  registryItem("input.json", ["motion"]),
 ];
 
 const motionAccordionApiDetails: DetailItem[] = [
@@ -1795,7 +1792,7 @@ const motionAccordionApiDetails: DetailItem[] = [
       "Keyboard support is limited to standard button tab and click semantics; there is no arrow-key roving between items.",
     ],
   },
-  registryItem("motion-accordion.json", ["framer-motion", "lucide-react"]),
+  registryItem("motion-accordion.json", ["motion", "lucide-react"]),
 ];
 
 const radioGroupApiDetails: DetailItem[] = [
@@ -1864,13 +1861,13 @@ const radioGroupApiDetails: DetailItem[] = [
     id: "radio-motion-a11y",
     title: "Motion and accessibility",
     summary:
-      "The component layers Framer Motion over custom radio semantics rather than using native input[type=radio].",
+      "The component layers Motion over custom radio semantics rather than using native input[type=radio].",
     notes: [
       "The active background uses a fixed layoutId of radio-active-bg. Multiple RadioGroup instances on the same screen can therefore share cross-layout animation unless you fork the implementation.",
       "The root sets role='radiogroup' and each row sets role='radio' plus aria-checked, but there is no arrow-key navigation or roving tabindex behavior.",
     ],
   },
-  registryItem("radiogroup.json", ["framer-motion"]),
+  registryItem("radiogroup.json", ["motion"]),
 ];
 
 const selectApiDetails: DetailItem[] = [
@@ -1955,7 +1952,7 @@ const selectApiDetails: DetailItem[] = [
       "Clicking outside the trigger and menu closes the dropdown. There is no keyboard list navigation or highlighted-option state in this version.",
     ],
   },
-  registryItem("select.json", ["framer-motion", "lucide-react"]),
+  registryItem("select.json", ["motion", "lucide-react"]),
 ];
 
 const sliderApiDetails: DetailItem[] = [
@@ -2031,7 +2028,7 @@ const sliderApiDetails: DetailItem[] = [
       "This version does not expose keyboard controls, role='slider', or aria-valuenow, so accessible form-heavy experiences should wrap or extend it.",
     ],
   },
-  registryItem("slider.json", ["framer-motion"]),
+  registryItem("slider.json", ["motion"]),
 ];
 
 const spinnerApiDetails: DetailItem[] = [
@@ -2061,7 +2058,7 @@ const spinnerApiDetails: DetailItem[] = [
       "No additional DOM props are forwarded beyond className, so wrap the component if you need extra data attributes or inline event handlers.",
     ],
   },
-  registryItem("spinner.json", ["framer-motion"]),
+  registryItem("spinner.json", ["motion"]),
 ];
 
 const switchApiDetails: DetailItem[] = [
@@ -2119,7 +2116,7 @@ const switchApiDetails: DetailItem[] = [
       "The button carries role='switch' and aria-checked, plus focus-visible ring styles for keyboard users.",
     ],
   },
-  registryItem("switch.json", ["framer-motion"]),
+  registryItem("switch.json", ["motion"]),
 ];
 
 const tabsApiDetails: DetailItem[] = [
@@ -2254,7 +2251,7 @@ const tabsApiDetails: DetailItem[] = [
       "Standard div attributes such as data-*, aria-*, id, style, and event handlers are forwarded to the rendered active panel.",
     ],
   },
-  registryItem("tabs.json", ["framer-motion"]),
+  registryItem("tabs.json", ["motion"]),
 ];
 
 const tableApiDetails: DetailItem[] = [
@@ -2533,7 +2530,7 @@ const tableApiDetails: DetailItem[] = [
       "The helper defaults to type='button', so it stays safe inside forms.",
     ],
   },
-  registryItem("table.json", ["framer-motion", "lucide-react"]),
+  registryItem("table.json", ["motion", "lucide-react"]),
 ];
 
 const tooltipApiDetails: DetailItem[] = [
@@ -2593,7 +2590,7 @@ const tooltipApiDetails: DetailItem[] = [
       "The arrow is a rotated square whose placement changes with the side prop.",
     ],
   },
-  registryItem("tooltip.json", ["framer-motion"]),
+  registryItem("tooltip.json", ["motion"]),
 ];
 
 export {

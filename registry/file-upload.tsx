@@ -1,13 +1,6 @@
 "use client";
 
 import {
-  AnimatePresence,
-  motion,
-  useMotionValue,
-  useSpring,
-  useTransform,
-} from "framer-motion";
-import {
   ArrowUpRight,
   Check,
   FileText,
@@ -17,6 +10,13 @@ import {
   Video,
   X,
 } from "lucide-react";
+import {
+  AnimatePresence,
+  motion,
+  useMotionValue,
+  useSpring,
+  useTransform,
+} from "motion/react";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 export type FileUploadStatus = "uploading" | "done";

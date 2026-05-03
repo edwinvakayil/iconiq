@@ -1,6 +1,6 @@
 "use client";
 import { Slot } from "@radix-ui/react-slot";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion } from "motion/react";
 import * as React from "react";
 import { cn } from "@/lib/utils";
 

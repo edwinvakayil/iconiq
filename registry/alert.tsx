@@ -1,6 +1,6 @@
 "use client";
 
-import { AnimatePresence, motion, type Variants } from "framer-motion";
+import { AnimatePresence, motion, type Variants } from "motion/react";
 import { type ReactNode, useCallback, useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 
@@ -228,7 +228,7 @@ export const Alert = ({
 
   /**
    * When a position is given, portal the alert to document.body so it
-   * escapes any ancestor CSS transform (Framer Motion scale/y), which
+   * escapes any ancestor CSS transform (Motion scale/y), which
    * would otherwise make `position: fixed` relative to the transformed
    * element instead of the viewport.
    */

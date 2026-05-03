@@ -1,7 +1,7 @@
 "use client";
 
-import { AnimatePresence, motion, type Transition } from "framer-motion";
 import { Plus } from "lucide-react";
+import { AnimatePresence, motion, type Transition } from "motion/react";
 import { useState } from "react";
 
 import { cn } from "@/lib/utils";

@@ -1,7 +1,7 @@
 "use client";
 
-import { AnimatePresence, motion } from "framer-motion";
 import { Check, ChevronDown } from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
 import {
   type CSSProperties,
   type ReactNode,
@@ -98,13 +98,31 @@ export function Select({
   useLayoutEffect(() => {
     if (!open) return;
     updateMenuPosition();
-    let rafId = 0;
-    const tick = () => {
-      updateMenuPosition();
-      rafId = requestAnimationFrame(tick);
+  }, [open, updateMenuPosition]);
+
+  useEffect(() => {
+    if (!open) return;
+
+    const handleLayoutChange = () => updateMenuPosition();
+    window.addEventListener("resize", handleLayoutChange);
+    window.addEventListener("scroll", handleLayoutChange, true);
+
+    const trigger = triggerRef.current;
+    if (!(trigger && typeof ResizeObserver !== "undefined")) {
+      return () => {
+        window.removeEventListener("resize", handleLayoutChange);
+        window.removeEventListener("scroll", handleLayoutChange, true);
+      };
+    }
+
+    const observer = new ResizeObserver(handleLayoutChange);
+    observer.observe(trigger);
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", handleLayoutChange);
+      window.removeEventListener("scroll", handleLayoutChange, true);
     };
-    rafId = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(rafId);
   }, [open, updateMenuPosition]);
 
   useEffect(() => {

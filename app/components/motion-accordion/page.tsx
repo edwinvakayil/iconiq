@@ -13,7 +13,7 @@ const demoItems: AccordionItem[] = [
     id: "1",
     title: "What makes this accordion special?",
     content:
-      "It uses spring-based physics animations powered by Framer Motion, creating fluid and natural feeling transitions that respond organically to user interaction.",
+      "It uses spring-based physics animations powered by Motion, creating fluid and natural feeling transitions that respond organically to user interaction.",
   },
   {
     id: "2",
@@ -42,7 +42,7 @@ const items = [
     id: "1",
     title: "What makes this accordion special?",
     content:
-      "It uses spring-based physics animations powered by Framer Motion for natural transitions.",
+      "It uses spring-based physics animations powered by Motion for natural transitions.",
   },
   {
     id: "2",

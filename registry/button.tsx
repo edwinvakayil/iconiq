@@ -1,7 +1,7 @@
 "use client";
 
 import { cva, type VariantProps } from "class-variance-authority";
-import { motion, useReducedMotion } from "framer-motion";
+import { motion, useReducedMotion } from "motion/react";
 import {
   type ButtonHTMLAttributes,
   forwardRef,
@@ -46,7 +46,7 @@ type Ripple = { id: string; x: number; y: number; size: number };
 
 /**
  * Prop names that exist on both DOM `button` and `motion.button` but with incompatible types
- * (Framer Motion uses them for gestures / layout animation, not DOM events).
+ * (Motion uses them for gestures / layout animation, not DOM events).
  */
 type ButtonHTMLAttributesForMotion = Omit<
   ButtonHTMLAttributes<HTMLButtonElement>,

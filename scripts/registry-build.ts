@@ -19,168 +19,164 @@ const REGISTRY_UI_META: Record<
   badge: {
     title: "Badge",
     description:
-      "Animated badge with a looping shimmer wave. Spring entrance, optional bg/text/wave color overrides. Framer Motion.",
-    dependencies: ["framer-motion"],
+      "Animated badge with a looping shimmer wave. Spring entrance, optional bg/text/wave color overrides. Motion.",
+    dependencies: ["motion"],
   },
   combobox: {
     title: "Combobox",
     description:
       "Searchable single-select input with inline filtering, arrow-key navigation, animated dropdown motion, and an optional clear action.",
-    dependencies: ["framer-motion", "lucide-react"],
+    dependencies: ["motion", "lucide-react"],
   },
   "context-menu": {
     title: "Context Menu",
     description:
       "Native-feeling context menu with fixed-position viewport-aware placement, per-item icons and shortcuts, and spring entrance motion.",
-    dependencies: ["framer-motion"],
+    dependencies: ["motion"],
   },
   drawer: {
     title: "Drawer",
     description:
       "Controlled overlay drawer with side-based slide motion, staggered content reveal, and a built-in close header.",
-    dependencies: ["framer-motion", "lucide-react"],
+    dependencies: ["motion", "lucide-react"],
   },
   dropdown: {
     title: "Dropdown",
     description:
       "Animated dropdown with a selectable value mode and an action-menu mode, plus chevron rotation and spring-driven menu entry.",
-    dependencies: ["framer-motion", "lucide-react"],
+    dependencies: ["motion", "lucide-react"],
   },
   "file-upload": {
     title: "File Upload",
     description:
       "Drag-and-drop file uploader with click-to-browse fallback, queued file rows, image previews, built-in progress states, and optional change callbacks.",
-    dependencies: ["framer-motion", "lucide-react"],
+    dependencies: ["motion", "lucide-react"],
   },
   "motion-accordion": {
     title: "Accordion",
     description:
-      "Single-select accordion with spring height, staggered text, and rotating plus control. Built with Framer Motion.",
-    dependencies: ["framer-motion", "lucide-react"],
+      "Single-select accordion with spring height, staggered text, and rotating plus control. Built with Motion.",
+    dependencies: ["motion", "lucide-react"],
   },
   alert: {
     title: "Alert",
     description:
-      "Dismissible banner with user-provided leading icon, spring enter/exit, blur, and optional fixed viewport positions. Framer Motion.",
-    dependencies: ["framer-motion"],
+      "Dismissible banner with user-provided leading icon, spring enter/exit, blur, and optional fixed viewport positions. Motion.",
+    dependencies: ["motion"],
   },
   breadcrumbs: {
     title: "Breadcrumbs",
     description:
-      "Breadcrumb trail with spring separators, hover lift, and a subtle shimmer on the current page. Built with Framer Motion.",
-    dependencies: ["framer-motion", "lucide-react"],
+      "Breadcrumb trail with spring separators, hover lift, and a subtle shimmer on the current page. Built with Motion.",
+    dependencies: ["motion", "lucide-react"],
   },
   button: {
     title: "Button",
     description:
-      'Primary action control with CVA variants, pointer ripples via Framer Motion, and default type="button". Forwards ref and native button props.',
-    dependencies: ["framer-motion", "class-variance-authority"],
+      'Primary action control with CVA variants, pointer ripples via Motion, and default type="button". Forwards ref and native button props.',
+    dependencies: ["motion", "class-variance-authority"],
   },
   calendar: {
     title: "Calendar",
     description:
       "Compact monthly calendar with animated month transitions, selectable days, and date-fns-powered grid generation.",
-    dependencies: ["framer-motion", "lucide-react", "date-fns"],
+    dependencies: ["motion", "lucide-react", "date-fns"],
   },
   carousels: {
     title: "Carousel",
     description:
       "Swipeable testimonial carousel with spring-driven slide transitions, compact pagination dots, and previous/next arrow controls.",
-    dependencies: ["framer-motion", "lucide-react"],
+    dependencies: ["motion", "lucide-react"],
   },
   "checkbox-group": {
     title: "Checkbox group",
     description:
-      "Multi-select option list with bordered empty state and a primary tick only when checked, plus hover/tap motion on each row. Framer Motion + Lucide.",
-    dependencies: ["framer-motion", "lucide-react"],
+      "Multi-select option list with bordered empty state and a primary tick only when checked, plus hover/tap motion on each row. Motion + Lucide.",
+    dependencies: ["motion", "lucide-react"],
   },
   collapsible: {
     title: "Collapsible",
     description:
       "Accessible collapsible primitive built on Radix UI. Exports Collapsible, CollapsibleTrigger, and CollapsibleContent for building expandable sections, FAQs, and disclosure patterns.",
-    dependencies: [
-      "@radix-ui/react-collapsible",
-      "framer-motion",
-      "lucide-react",
-    ],
+    dependencies: ["@radix-ui/react-collapsible", "motion", "lucide-react"],
   },
   dialog: {
     title: "Dialog",
     description:
-      "Modal dialog on Radix Dialog with Framer Motion overlay and content springs, staggered children, and an animated close control. Pass the same open boolean to DialogContent as the Dialog root for AnimatePresence.",
-    dependencies: ["@radix-ui/react-dialog", "framer-motion", "lucide-react"],
+      "Modal dialog on Radix Dialog with Motion overlay and content springs, staggered children, and an animated close control. Pass the same open boolean to DialogContent as the Dialog root for AnimatePresence.",
+    dependencies: ["@radix-ui/react-dialog", "motion", "lucide-react"],
   },
   "hover-card": {
     title: "Hover Card",
     description:
       "Inline hover card with delayed open and close timing, Slot-based custom triggers, and a spring-driven content panel.",
-    dependencies: ["@radix-ui/react-slot", "framer-motion"],
+    dependencies: ["@radix-ui/react-slot", "motion"],
   },
   popover: {
     title: "Popover",
     description:
       "Controlled popover built on Radix with portal-based positioning, optional anchor support, and a spring-driven content panel.",
-    dependencies: ["@radix-ui/react-popover", "framer-motion"],
+    dependencies: ["@radix-ui/react-popover", "motion"],
   },
   tooltip: {
     title: "Tooltip",
     description:
-      "Animated hover/focus tooltip with spring entrance, blur fade, directional offset, and optional delay and side placement. Built with Framer Motion.",
-    dependencies: ["framer-motion"],
+      "Animated hover/focus tooltip with spring entrance, blur fade, directional offset, and optional delay and side placement. Built with Motion.",
+    dependencies: ["motion"],
   },
   select: {
     title: "Select",
     description:
-      "Animated single-select dropdown with staggered options, chevron rotation, scaleY panel, row hover slide, and check mark on the active item. Framer Motion + Lucide.",
-    dependencies: ["framer-motion", "lucide-react"],
+      "Animated single-select dropdown with staggered options, chevron rotation, scaleY panel, row hover slide, and check mark on the active item. Motion + Lucide.",
+    dependencies: ["motion", "lucide-react"],
   },
   slider: {
     title: "Slider",
     description:
-      "Range control with spring-animated track and thumb, full-width pointer drag, and optional label and live value. Framer Motion.",
-    dependencies: ["framer-motion"],
+      "Range control with spring-animated track and thumb, full-width pointer drag, and optional label and live value. Motion.",
+    dependencies: ["motion"],
   },
   input: {
     title: "Input",
     description:
-      "Standard rounded text field with an always-visible label, focus ring motion, and per-character spring animation on the visible text overlay. Framer Motion.",
-    dependencies: ["framer-motion"],
+      "Standard rounded text field with an always-visible label, focus ring motion, and per-character spring animation on the visible text overlay. Motion.",
+    dependencies: ["motion"],
   },
   radiogroup: {
     title: "Radio group",
     description:
-      "Single-select option list with shared layoutId highlight, spring ring/dot on the control, staggered row entrance, and optional descriptions. Framer Motion only — native button radios with role=radiogroup.",
-    dependencies: ["framer-motion"],
+      "Single-select option list with shared layoutId highlight, spring ring/dot on the control, staggered row entrance, and optional descriptions. Motion only — native button radios with role=radiogroup.",
+    dependencies: ["motion"],
   },
   switch: {
     title: "Switch",
     description:
-      "Animated toggle with spring thumb travel and smooth track color crossfade. Native button with role=switch, forwards ref. Framer Motion.",
-    dependencies: ["framer-motion"],
+      "Animated toggle with spring thumb travel and smooth track color crossfade. Native button with role=switch, forwards ref. Motion.",
+    dependencies: ["motion"],
   },
   tabs: {
     title: "Tabs",
     description:
       "Animated tabs with measured active and hover underlines, plus a blurred content transition between panels.",
-    dependencies: ["framer-motion"],
+    dependencies: ["motion"],
   },
   table: {
     title: "Table",
     description:
       "Composable table primitives with grid-aligned rows, optional animated sort buttons, and layout-preserving row transitions.",
-    dependencies: ["framer-motion", "lucide-react"],
+    dependencies: ["motion", "lucide-react"],
   },
   spinner: {
     title: "Spinner",
     description:
-      "Loading indicator with an animated ring or bouncing dots. Framer Motion; uses primary and muted theme tokens.",
-    dependencies: ["framer-motion"],
+      "Loading indicator with an animated ring or bouncing dots. Motion; uses primary and muted theme tokens.",
+    dependencies: ["motion"],
   },
   avatar: {
     title: "Avatar",
     description:
-      "Circular avatar with spring entrance, image fade-in, fallback initials, hover glow and pulse ring. Fixed 42×42. Framer Motion.",
-    dependencies: ["framer-motion"],
+      "Circular avatar with spring entrance, image fade-in, fallback initials, hover glow and pulse ring. Fixed 42×42. Motion.",
+    dependencies: ["motion"],
   },
 };
 

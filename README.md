@@ -7,7 +7,7 @@ Iconiq is a component library and documentation site for teams that want polishe
 ## Overview
 
 - React 19 components with Tailwind CSS v4 styling
-- Motion-driven interactions powered by Framer Motion
+- Motion-driven interactions powered by Motion
 - Registry distribution compatible with the shadcn CLI
 - Documentation site with live previews, usage examples, and API details
 - 27 registry components maintained in this repository
@@ -128,7 +128,7 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) for the current contribution flow.
 - Next.js App Router
 - React 19
 - Tailwind CSS v4
-- Framer Motion
+- Motion
 - Radix UI primitives
 - Lucide icons
 

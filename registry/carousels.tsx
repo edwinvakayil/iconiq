@@ -1,6 +1,6 @@
 "use client";
-import { AnimatePresence, motion, type PanInfo } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { AnimatePresence, motion, type PanInfo } from "motion/react";
 import { useState } from "react";
 
 export type Testimonial = {

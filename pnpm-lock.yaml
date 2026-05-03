@@ -47,9 +47,6 @@ importers:
       date-fns:
         specifier: ^4.1.0
         version: 4.1.0
-      framer-motion:
-        specifier: ^12.38.0
-        version: 12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
       fuse.js:
         specifier: ^7.3.0
         version: 7.3.0
