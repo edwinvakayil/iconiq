@@ -1,6 +1,7 @@
 "use client";
 import { AnimatePresence, motion } from "framer-motion";
 import * as React from "react";
+import { createPortal } from "react-dom";
 import { cn } from "@/lib/utils";
 
 export type ContextMenuItem = {
@@ -32,11 +33,16 @@ export function ContextMenu({
   menuClassName,
 }: ContextMenuProps) {
   const [open, setOpen] = React.useState(false);
+  const [mounted, setMounted] = React.useState(false);
   const [pos, setPos] = React.useState<Position>({ x: 0, y: 0 });
   const [origin, setOrigin] = React.useState<
     "top-left" | "top-right" | "bottom-left" | "bottom-right"
   >("top-left");
   const [activeIndex, setActiveIndex] = React.useState<number | null>(null);
+
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const openAt = React.useCallback(
     (clientX: number, clientY: number) => {
@@ -128,62 +134,65 @@ export function ContextMenu({
     "bottom-right": "bottom right",
   }[origin];
 
+  const menu = (
+    <AnimatePresence>
+      {open && mounted ? (
+        <motion.div
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          aria-orientation="vertical"
+          className={cn(
+            "rounded-xl border border-border/60 bg-white p-1.5 text-popover-foreground shadow-2xl dark:border-neutral-800 dark:bg-black",
+            menuClassName
+          )}
+          exit={{ opacity: 0, scale: 0.96, y: -2 }}
+          initial={{ opacity: 0, scale: 0.94, y: -4 }}
+          onContextMenu={(e) => e.preventDefault()}
+          onMouseDown={(e) => e.stopPropagation()}
+          role="menu"
+          style={{
+            position: "fixed",
+            top: pos.y,
+            left: pos.x,
+            width: MENU_WIDTH,
+            transformOrigin,
+            zIndex: 50,
+          }}
+          transition={{
+            type: "spring",
+            stiffness: 480,
+            damping: 34,
+            mass: 0.6,
+          }}
+        >
+          {items.map((item, i) => (
+            <React.Fragment key={`${item.label}-${i}`}>
+              <MenuItem
+                active={activeIndex === i}
+                index={i}
+                item={item}
+                onClick={() => {
+                  if (item.disabled) return;
+                  item.onSelect?.();
+                  setOpen(false);
+                }}
+                onHover={() => setActiveIndex(i)}
+              />
+              {item.separatorAfter && i < items.length - 1 && (
+                <div className="my-1 h-px bg-border/60" />
+              )}
+            </React.Fragment>
+          ))}
+        </motion.div>
+      ) : null}
+    </AnimatePresence>
+  );
+
   return (
     <>
       <div className={className} onContextMenu={handleContextMenu}>
         {children}
       </div>
-
-      <AnimatePresence>
-        {open && (
-          <motion.div
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            aria-orientation="vertical"
-            className={cn(
-              "rounded-xl border border-border/60 bg-white p-1.5 text-popover-foreground shadow-2xl dark:border-neutral-800 dark:bg-black",
-              menuClassName
-            )}
-            exit={{ opacity: 0, scale: 0.96, y: -2 }}
-            initial={{ opacity: 0, scale: 0.94, y: -4 }}
-            onContextMenu={(e) => e.preventDefault()}
-            onMouseDown={(e) => e.stopPropagation()}
-            role="menu"
-            style={{
-              position: "fixed",
-              top: pos.y,
-              left: pos.x,
-              width: MENU_WIDTH,
-              transformOrigin,
-              zIndex: 50,
-            }}
-            transition={{
-              type: "spring",
-              stiffness: 480,
-              damping: 34,
-              mass: 0.6,
-            }}
-          >
-            {items.map((item, i) => (
-              <React.Fragment key={`${item.label}-${i}`}>
-                <MenuItem
-                  active={activeIndex === i}
-                  index={i}
-                  item={item}
-                  onClick={() => {
-                    if (item.disabled) return;
-                    item.onSelect?.();
-                    setOpen(false);
-                  }}
-                  onHover={() => setActiveIndex(i)}
-                />
-                {item.separatorAfter && i < items.length - 1 && (
-                  <div className="my-1 h-px bg-border/60" />
-                )}
-              </React.Fragment>
-            ))}
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {mounted ? createPortal(menu, document.body) : null}
     </>
   );
 }
