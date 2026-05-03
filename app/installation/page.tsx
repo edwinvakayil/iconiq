@@ -88,7 +88,7 @@ export default function InstallationPage() {
           <div className="grid gap-3 md:grid-cols-3">
             {installNotes.map(({ icon: Icon, title, description }) => (
               <div
-                className="space-y-2 border border-border/75 bg-muted/[0.1] px-4 py-4"
+                className="space-y-2 border-border/70 border-t pt-4 first:border-t-0 first:pt-0"
                 key={title}
               >
                 <Icon className="size-4 text-foreground" />
@@ -117,7 +117,7 @@ export default function InstallationPage() {
 
             return (
               <div
-                className="flex items-center justify-between gap-4 border border-border/75 bg-background px-4 py-3.5"
+                className="flex items-center justify-between gap-4 border-border/70 border-t py-3.5 first:border-t-0"
                 key={href}
               >
                 <div className="min-w-0 space-y-1">
@@ -140,7 +140,7 @@ export default function InstallationPage() {
         </div>
         <div className="pt-4">
           <Link
-            className="inline-flex items-center border border-border/75 bg-muted/[0.12] px-4 py-2.5 font-mono text-[11px] text-foreground tracking-[0.08em] transition-colors hover:bg-muted/40"
+            className="inline-flex items-center font-mono text-[11px] text-foreground tracking-[0.08em] transition-colors hover:text-secondary"
             href="/components/button"
           >
             View components

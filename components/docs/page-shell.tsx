@@ -5,12 +5,6 @@ import type { ReactNode } from "react";
 import { CodeBlock } from "@/components/code-block";
 import { CodeBlockInstall } from "@/components/code-block-install";
 import { ComponentActions } from "@/components/component-actions";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
 import { Separator } from "@/components/ui/separator";
 import { SITE_SECTIONS } from "@/lib/site-nav";
 import { cn } from "@/lib/utils";
@@ -239,13 +233,9 @@ function DocsSection({
   children: ReactNode;
 }) {
   return (
-    <section
-      className={cn(
-        "relative overflow-hidden border border-border/80 bg-background px-5 pt-5 pb-4 sm:px-7 sm:pt-6 sm:pb-5",
-        className
-      )}
-    >
+    <section className={cn("relative px-0 py-0", className)}>
       <div className="space-y-5">
+        <Separator />
         <div className="space-y-2">
           <h2 className="text-foreground text-xl tracking-[-0.04em] sm:text-2xl">
             {title}
@@ -256,7 +246,6 @@ function DocsSection({
             </p>
           ) : null}
         </div>
-        <Separator />
         <div>{children}</div>
       </div>
     </section>
@@ -326,25 +315,29 @@ function DetailFields({ fields }: { fields: DetailField[] }) {
     <div className="space-y-3">
       {fields.map((field) => (
         <div
-          className="space-y-3 border border-border/70 bg-muted/[0.22] px-4 py-4 dark:bg-muted/[0.3]"
+          className="grid gap-3 border-border/70 border-t pt-4 first:border-t-0 first:pt-0 md:grid-cols-[minmax(0,260px)_minmax(0,1fr)] md:gap-6"
           key={String(field.name)}
         >
-          <div className="flex flex-wrap items-center gap-2.5">
-            <span className="font-medium text-[15px] text-foreground tracking-[-0.02em]">
-              {field.name}
-            </span>
-            {field.type ? <DetailMetaValue value={field.type} /> : null}
-            {field.required ? (
-              <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.16em]">
-                Required
+          <div className="space-y-2">
+            <div className="flex flex-wrap items-center gap-2.5">
+              <span className="font-medium text-[15px] text-foreground tracking-[-0.02em]">
+                {field.name}
               </span>
-            ) : null}
-            {field.defaultValue !== undefined ? (
-              <span className="inline-flex items-center gap-2 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.16em]">
-                <span>Default</span>
-                <DetailMetaValue value={field.defaultValue} />
-              </span>
-            ) : null}
+              {field.type ? <DetailMetaValue value={field.type} /> : null}
+            </div>
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
+              {field.required ? (
+                <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.16em]">
+                  Required
+                </span>
+              ) : null}
+              {field.defaultValue !== undefined ? (
+                <span className="inline-flex items-center gap-2 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.16em]">
+                  <span>Default</span>
+                  <DetailMetaValue value={field.defaultValue} />
+                </span>
+              ) : null}
+            </div>
           </div>
           <div className="text-[14px] text-secondary leading-6">
             {field.description}
@@ -378,7 +371,7 @@ function DetailNotes({
       <div className="space-y-3">
         {notes.map((note, index) => (
           <div
-            className="border-border/80 border-l bg-muted/[0.14] px-4 py-3 text-[14px] text-secondary leading-6 dark:bg-muted/[0.22]"
+            className="border-border/80 border-l pl-4 text-[14px] text-secondary leading-6"
             key={`${itemId}-note-${index}`}
           >
             {note}
@@ -415,35 +408,35 @@ function DetailBody({ item }: { item: DetailItem }) {
   );
 }
 
-function DetailAccordionItemRow({ item }: { item: DetailItem }) {
+function DetailSectionRow({ item }: { item: DetailItem }) {
   const descriptor = getDetailDescriptor(item);
 
   return (
-    <AccordionItem className="border-border/85" key={item.id} value={item.id}>
-      <AccordionTrigger className="py-5 text-base text-foreground hover:no-underline">
-        <div className="grid w-full gap-2 text-left lg:grid-cols-[220px_minmax(0,1fr)] lg:items-start lg:gap-6">
-          <span className="font-medium tracking-[-0.03em]">{item.title}</span>
-          <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">
-            {descriptor}
-          </span>
-        </div>
-      </AccordionTrigger>
-      <AccordionContent className="pb-5">
+    <article className="grid gap-5 border-border/80 border-t pt-6 first:border-t-0 first:pt-0 lg:grid-cols-[220px_minmax(0,1fr)] lg:gap-8">
+      <div className="space-y-2">
+        <h3 className="font-medium text-[18px] text-foreground tracking-[-0.03em]">
+          {item.title}
+        </h3>
+        <p className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">
+          {descriptor}
+        </p>
+      </div>
+      <div className="pb-1">
         <DetailBody item={item} />
-      </AccordionContent>
-    </AccordionItem>
+      </div>
+    </article>
   );
 }
 
-function DetailAccordion({ details }: { details: DetailItem[] }) {
+function DetailLedger({ details }: { details: DetailItem[] }) {
   const documentedDetails = details.filter((item) => item.fields?.length);
 
   return (
-    <Accordion className="w-full" collapsible type="single">
+    <div className="space-y-6">
       {documentedDetails.map((item) => (
-        <DetailAccordionItemRow item={item} key={item.id} />
+        <DetailSectionRow item={item} key={item.id} />
       ))}
-    </Accordion>
+    </div>
   );
 }
 
@@ -590,7 +583,7 @@ function ComponentDocsPage({
         index="04"
         title="API Details"
       >
-        <DetailAccordion details={details} />
+        <DetailLedger details={details} />
       </DocsSection>
     </DocsPageShell>
   );
@@ -602,6 +595,6 @@ export {
   DocsPageShell,
   DocsSection,
   ComponentDocsPage,
-  DetailAccordion,
+  DetailLedger,
 };
 export type { BreadcrumbItem, DetailField, DetailItem, HeroMetaItem };

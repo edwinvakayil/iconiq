@@ -118,6 +118,70 @@ html[data-banner-hidden="true"] {
   animation: status-blink 1.9s ease-in-out infinite;
 }
 
+@keyframes iconiq-accordion-down {
+  from {
+    height: 0;
+  }
+  to {
+    height: var(--radix-accordion-content-height);
+  }
+}
+
+@keyframes iconiq-accordion-up {
+  from {
+    height: var(--radix-accordion-content-height);
+  }
+  to {
+    height: 0;
+  }
+}
+
+.iconiq-accordion-content {
+  overflow: hidden;
+}
+
+.iconiq-accordion-content[data-state="open"] {
+  animation: iconiq-accordion-down 380ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.iconiq-accordion-content[data-state="closed"] {
+  animation: iconiq-accordion-up 260ms cubic-bezier(0.32, 0, 0.67, 0);
+}
+
+.iconiq-accordion-content > div {
+  transform-origin: top;
+  transition:
+    opacity 320ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 380ms cubic-bezier(0.22, 1, 0.36, 1),
+    filter 320ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.iconiq-accordion-content[data-state="open"] > div {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  filter: blur(0);
+}
+
+.iconiq-accordion-content[data-state="closed"] > div {
+  opacity: 0;
+  transform: translateY(-8px) scale(0.985);
+  filter: blur(4px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .iconiq-accordion-content[data-state="open"],
+  .iconiq-accordion-content[data-state="closed"] {
+    animation: none;
+  }
+
+  .iconiq-accordion-content > div {
+    transition: none;
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+}
+
 /* Ensure main content text is visible in dark mode (overrides Tailwind text-neutral-* inside main) */
 .dark main .text-neutral-500 {
   color: rgb(163 163 163);

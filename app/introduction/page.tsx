@@ -98,7 +98,7 @@ export default function IntroductionPage() {
         <div className="grid grid-cols-2 gap-4">
           {stats.map(({ value, label }) => (
             <div
-              className="border border-border/80 bg-muted/[0.16] px-4 py-4"
+              className="border-border/70 border-t pt-3 first:border-t-0 first:pt-0"
               key={label}
             >
               <p className="text-2xl text-foreground tracking-[-0.05em]">
@@ -121,11 +121,11 @@ export default function IntroductionPage() {
         <div className="grid gap-4 md:grid-cols-2">
           {principles.map(({ icon: Icon, title, desc }) => (
             <div
-              className="border border-border/80 bg-muted/[0.16] px-4 py-4"
+              className="border-border/70 border-t pt-4 first:border-t-0 first:pt-0"
               key={title}
             >
               <div className="mb-4 flex items-center gap-3">
-                <span className="flex size-10 items-center justify-center border border-border/80 bg-background">
+                <span className="flex size-10 items-center justify-center rounded-md bg-muted/[0.18]">
                   <Icon className="size-4 text-foreground" />
                 </span>
                 <h3 className="text-[17px] text-foreground tracking-[-0.03em]">

@@ -108,14 +108,15 @@ export function CodeBlock({
   };
 
   const embedded = variant === "embedded";
+  const showUtilityRow = !embedded;
   const shellClassName = embedded
-    ? "my-0 overflow-hidden rounded-md border border-border/70 bg-muted/[0.08] dark:bg-muted/[0.12]"
+    ? "my-0 bg-transparent"
     : "my-8 overflow-hidden rounded-md border border-border/80 bg-muted/[0.08]";
   const headerClassName = embedded
-    ? "border-border/70 border-b bg-transparent px-4 py-2.5 dark:bg-transparent"
+    ? "bg-transparent px-0 py-0 dark:bg-transparent"
     : "border-border/75 border-b bg-background/65 px-4 py-2.5 sm:px-5";
   const contentClassName = embedded
-    ? "bg-transparent px-4 py-4 dark:bg-transparent"
+    ? "border-border/70 border-l pl-4 pr-1 py-0 dark:bg-transparent"
     : "bg-transparent px-4 py-4 sm:px-5";
 
   return (
@@ -127,64 +128,67 @@ export function CodeBlock({
         className
       )}
     >
-      <div
-        className={cn(
-          "flex items-center justify-between gap-2",
-          headerClassName
-        )}
-      >
-        <span
+      {showUtilityRow ? (
+        <div
           className={cn(
-            "inline-flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.18em]",
-            "text-muted-foreground"
+            "flex items-center justify-between gap-2",
+            headerClassName
           )}
         >
-          <CodeIcon className="shrink-0 text-muted-foreground" />
-          {language}
-        </span>
-        <motion.button
-          aria-label="Copy code"
-          className={cn(
-            "inline-flex size-8 items-center justify-center rounded-md border border-transparent bg-transparent p-0",
-            "text-muted-foreground transition-colors duration-150 hover:bg-muted/25 hover:text-foreground dark:hover:bg-white/[0.06]",
-            copied && "text-muted-foreground"
-          )}
-          onClick={handleCopy}
-          transition={{ type: "spring", stiffness: 400, damping: 20 }}
-          type="button"
-          whileTap={{ scale: 0.88 }}
-        >
-          <AnimatePresence mode="wait">
-            {copied ? (
-              <motion.span
-                animate={{ scale: 1, opacity: 1 }}
-                className="inline-flex"
-                exit={{ scale: 0.6, opacity: 0 }}
-                initial={{ scale: 0.6, opacity: 0 }}
-                key="check"
-                transition={{ duration: 0.12, ease: "easeOut" }}
-              >
-                <CheckIcon className="text-green-600 dark:text-green-400" />
-              </motion.span>
-            ) : (
-              <motion.span
-                animate={{ scale: 1, opacity: 1 }}
-                className="inline-flex"
-                exit={{ scale: 0.6, opacity: 0 }}
-                initial={{ scale: 0.6, opacity: 0 }}
-                key="copy"
-                transition={{ duration: 0.12, ease: "easeOut" }}
-              >
-                <CopyIcon />
-              </motion.span>
+          <span
+            className={cn(
+              "inline-flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.18em]",
+              "text-muted-foreground"
             )}
-          </AnimatePresence>
-        </motion.button>
-      </div>
+          >
+            <CodeIcon className="shrink-0 text-muted-foreground" />
+            {language}
+          </span>
+          <motion.button
+            aria-label="Copy code"
+            className={cn(
+              "inline-flex size-8 items-center justify-center rounded-md border border-transparent bg-transparent p-0",
+              "text-muted-foreground transition-colors duration-150 hover:bg-muted/20 hover:text-foreground dark:hover:bg-white/[0.05]",
+              copied && "text-muted-foreground"
+            )}
+            onClick={handleCopy}
+            transition={{ type: "spring", stiffness: 400, damping: 20 }}
+            type="button"
+            whileTap={{ scale: 0.88 }}
+          >
+            <AnimatePresence mode="wait">
+              {copied ? (
+                <motion.span
+                  animate={{ scale: 1, opacity: 1 }}
+                  className="inline-flex"
+                  exit={{ scale: 0.6, opacity: 0 }}
+                  initial={{ scale: 0.6, opacity: 0 }}
+                  key="check"
+                  transition={{ duration: 0.12, ease: "easeOut" }}
+                >
+                  <CheckIcon className="text-green-600 dark:text-green-400" />
+                </motion.span>
+              ) : (
+                <motion.span
+                  animate={{ scale: 1, opacity: 1 }}
+                  className="inline-flex"
+                  exit={{ scale: 0.6, opacity: 0 }}
+                  initial={{ scale: 0.6, opacity: 0 }}
+                  key="copy"
+                  transition={{ duration: 0.12, ease: "easeOut" }}
+                >
+                  <CopyIcon />
+                </motion.span>
+              )}
+            </AnimatePresence>
+          </motion.button>
+        </div>
+      ) : null}
       <pre
         className={cn(
           "m-0 font-mono text-[13px] text-foreground leading-7 sm:text-sm",
           scrollable ? "min-h-0 flex-1 overflow-auto" : "overflow-x-auto",
+          embedded && "[scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
           contentClassName
         )}
       >

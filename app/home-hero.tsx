@@ -85,7 +85,7 @@ export function HomeHero() {
                 "The registry workflow keeps adoption lightweight while preserving full engineering ownership.",
               ].map((note) => (
                 <div
-                  className="border border-border/80 bg-muted/[0.18] px-4 py-4 text-[14px] text-secondary leading-6"
+                  className="border-border/70 border-t pt-4 text-[14px] text-secondary leading-6 first:border-t-0 first:pt-0"
                   key={note}
                 >
                   {note}
@@ -119,7 +119,7 @@ export function HomeHero() {
                 },
               ].map((item) => (
                 <Link
-                  className="block border border-border/80 bg-muted/[0.14] px-4 py-4 transition-colors hover:bg-muted/45"
+                  className="block border-border/70 border-t py-4 transition-colors first:border-t-0 hover:text-foreground"
                   href={item.href}
                   key={item.href}
                 >
