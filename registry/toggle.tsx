@@ -38,22 +38,31 @@ const Toggle = React.forwardRef<
 
   const handlePressedChange = (pressed: boolean) => {
     buttonControls.start({
-      scale: [1, 0.85, 1.12, 0.97, 1],
-      transition: { duration: 0.6, ease: [0.34, 1.56, 0.64, 1] },
+      scale: [1, 0.96, 1.03, 1],
+      y: [0, -1, 0],
+      transition: {
+        duration: 0.42,
+        ease: [0.22, 1, 0.36, 1],
+      },
     });
 
-    rippleControls.set({ scale: 0, opacity: 0.4 });
+    rippleControls.set({ scale: 0.2, opacity: 0.18 });
     rippleControls.start({
-      scale: 4,
+      scale: 3.1,
       opacity: 0,
-      transition: { duration: 0.6, ease: "easeOut" },
+      transition: { duration: 0.45, ease: [0.16, 1, 0.3, 1] },
     });
 
     iconControls.start({
-      scale: pressed ? [1, 0.3, 1.5, 1] : [1, 1.4, 0.8, 1],
-      rotate: pressed ? [0, -25, 20, 0] : [0, 20, -10, 0],
-      y: pressed ? [0, 6, -8, 0] : [0, -6, 4, 0],
-      transition: { type: "spring", stiffness: 260, damping: 11, mass: 0.8 },
+      scale: pressed ? [1, 0.92, 1.08, 1] : [1, 1.05, 0.96, 1],
+      rotate: pressed ? [0, -8, 5, 0] : [0, 6, -4, 0],
+      y: pressed ? [0, 1.5, -1, 0] : [0, -1, 0.5, 0],
+      transition: {
+        type: "spring",
+        stiffness: 240,
+        damping: 18,
+        mass: 0.85,
+      },
     });
 
     onPressedChange?.(pressed);
@@ -70,10 +79,11 @@ const Toggle = React.forwardRef<
         animate={buttonControls}
         className={cn(toggleVariants({ variant, size, className }))}
         whileHover={{
-          y: -2,
-          transition: { type: "spring", stiffness: 400, damping: 15 },
+          scale: 1.01,
+          y: -1,
+          transition: { type: "spring", stiffness: 340, damping: 24 },
         }}
-        whileTap={{ scale: 0.92 }}
+        whileTap={{ scale: 0.97, y: 0 }}
       >
         <motion.span
           animate={rippleControls}
