@@ -37,9 +37,9 @@ const COMPONENT_EXAMPLE: Record<string, string> = {
     "    </div>\n" +
     "  )\n" +
     "}\n",
-  "motion-accordion":
+  accordion:
     '"use client";\n\n' +
-    `import { Accordion } from "@/components/ui/motion-accordion"\n\n` +
+    `import { Accordion } from "@/components/ui/accordion"\n\n` +
     "const items = [\n" +
     '  { id: "1", title: "First question", content: "Answer for the first item." },\n' +
     '  { id: "2", title: "Second question", content: "Answer for the second item." },\n' +
@@ -78,6 +78,37 @@ const COMPONENT_EXAMPLE: Record<string, string> = {
     '      <Button variant="secondary" size="sm">\n' +
     "        Small\n" +
     "      </Button>\n" +
+    "    </div>\n" +
+    "  )\n" +
+    "}\n",
+  "button-group":
+    '"use client";\n\n' +
+    `import { Bell, Grid2x2, List, Table2 } from "lucide-react"\n` +
+    "import {\n" +
+    "  ButtonGroupItems,\n" +
+    "  IconButton,\n" +
+    `} from "@/components/ui/button-group"\n\n` +
+    "export default function Page() {\n" +
+    "  return (\n" +
+    '    <div className="mx-auto flex min-h-svh w-full max-w-2xl flex-col items-center justify-center gap-8 p-8">\n' +
+    "      <ButtonGroupItems>\n" +
+    '        <button type="button">\n' +
+    '          <List className="size-4" />\n' +
+    "          List\n" +
+    "        </button>\n" +
+    '        <button type="button">\n' +
+    '          <Grid2x2 className="size-4" />\n' +
+    "          Board\n" +
+    "        </button>\n" +
+    '        <button type="button">\n' +
+    '          <Table2 className="size-4" />\n' +
+    "          Table\n" +
+    "        </button>\n" +
+    "      </ButtonGroupItems>\n" +
+    "\n" +
+    '      <IconButton aria-label="Notifications" type="button">\n' +
+    '        <Bell className="size-4" />\n' +
+    "      </IconButton>\n" +
     "    </div>\n" +
     "  )\n" +
     "}\n",
@@ -494,6 +525,47 @@ const COMPONENT_EXAMPLE: Record<string, string> = {
     "    </div>\n" +
     "  )\n" +
     "}\n",
+  "input-group":
+    '"use client";\n\n' +
+    `import { Eye, EyeOff, LockKeyhole, Mail, User2 } from "lucide-react"\n` +
+    `import { useState } from "react"\n` +
+    `import { InputGroup, Inputgroups } from "@/components/ui/input-group"\n\n` +
+    "export default function Page() {\n" +
+    '  const [name, setName] = useState("")\n' +
+    '  const [email, setEmail] = useState("")\n' +
+    "  const [showPassword, setShowPassword] = useState(false)\n\n" +
+    "  const emailError =\n" +
+    '    email.length > 0 && !email.includes("@")\n' +
+    '      ? "Enter a valid email address."\n' +
+    "      : undefined\n\n" +
+    "  return (\n" +
+    '    <div className="mx-auto flex min-h-svh w-full max-w-xl items-center justify-center p-8">\n' +
+    "      <InputGroup>\n" +
+    "        <Inputgroups\n" +
+    '          label="Full name"\n' +
+    "          onChange={(event) => setName(event.target.value)}\n" +
+    '          prefixIcon={<User2 aria-hidden className="size-5" />}\n' +
+    "          value={name}\n" +
+    "        />\n" +
+    "        <Inputgroups\n" +
+    "          error={emailError}\n" +
+    '          label="Work email"\n' +
+    "          onChange={(event) => setEmail(event.target.value)}\n" +
+    '          prefixIcon={<Mail aria-hidden className="size-5" />}\n' +
+    '          type="email"\n' +
+    "          value={email}\n" +
+    "        />\n" +
+    "        <Inputgroups\n" +
+    '          label="Password"\n' +
+    '          prefixIcon={<LockKeyhole aria-hidden className="size-5" />}\n' +
+    '          suffixIcon={showPassword ? <EyeOff aria-hidden className="size-5" /> : <Eye aria-hidden className="size-5" />}\n' +
+    "          onSuffixClick={() => setShowPassword((current) => !current)}\n" +
+    '          type={showPassword ? "text" : "password"}\n' +
+    "        />\n" +
+    "      </InputGroup>\n" +
+    "    </div>\n" +
+    "  )\n" +
+    "}\n",
   switch:
     '"use client";\n\n' +
     `import { Switch } from "@/components/ui/switch"\n` +
@@ -578,6 +650,30 @@ const COMPONENT_EXAMPLE: Record<string, string> = {
     "        </TableBody>\n" +
     "        <TableCaption>2 revenue entries</TableCaption>\n" +
     "      </Table>\n" +
+    "    </div>\n" +
+    "  )\n" +
+    "}\n",
+  toggle:
+    '"use client";\n\n' +
+    `import { Bold, Italic, Underline } from "lucide-react"\n` +
+    `import { useState } from "react"\n` +
+    `import { Toggle } from "@/components/ui/toggle"\n\n` +
+    "export default function Page() {\n" +
+    "  const [bold, setBold] = useState(false)\n" +
+    "  return (\n" +
+    '    <div className="mx-auto flex min-h-svh w-full max-w-xl items-center justify-center p-8">\n' +
+    '      <div className="flex items-center gap-2">\n' +
+    '        <Toggle aria-label="Toggle bold" onPressedChange={setBold} pressed={bold}>\n' +
+    '          <Bold className="size-4" />\n' +
+    "          Bold\n" +
+    "        </Toggle>\n" +
+    '        <Toggle aria-label="Toggle italic" variant="outline">\n' +
+    '          <Italic className="size-4" />\n' +
+    "        </Toggle>\n" +
+    '        <Toggle aria-label="Toggle underline" variant="outline">\n' +
+    '          <Underline className="size-4" />\n' +
+    "        </Toggle>\n" +
+    "      </div>\n" +
     "    </div>\n" +
     "  )\n" +
     "}\n",

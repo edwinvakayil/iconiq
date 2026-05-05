@@ -170,7 +170,7 @@ export function Carousel({
         <div className="flex gap-2">
           <button
             aria-label="Previous"
-            className="flex h-9 w-9 items-center justify-center rounded-full border border-border bg-background transition-colors hover:bg-accent"
+            className="flex h-9 w-9 items-center justify-center rounded-full transition-colors hover:bg-accent"
             onClick={() => paginate(-1)}
             type="button"
           >
@@ -178,7 +178,7 @@ export function Carousel({
           </button>
           <button
             aria-label="Next"
-            className="flex h-9 w-9 items-center justify-center rounded-full border border-border bg-background transition-colors hover:bg-accent"
+            className="flex h-9 w-9 items-center justify-center rounded-full transition-colors hover:bg-accent"
             onClick={() => paginate(1)}
             type="button"
           >

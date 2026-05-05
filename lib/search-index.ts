@@ -30,6 +30,8 @@ const componentSummaries: Record<string, string> = {
     "Breadcrumb navigation with smooth separators and current-page treatment.",
   "/components/button":
     "Button primitives with variants, sizes, and motion-aware interaction states.",
+  "/components/button-group":
+    "Grouped action buttons, segmented button rows, and a string-based segmented control with motion-driven selection.",
   "/components/calendar":
     "Compact animated calendar for date selection and month navigation.",
   "/components/carousels":
@@ -54,7 +56,9 @@ const componentSummaries: Record<string, string> = {
     "Hover card for richer inline profile or detail previews.",
   "/components/input":
     "Input field with polished states for text, password, email, and search.",
-  "/components/motion-accordion":
+  "/components/input-group":
+    "Floating-label input group with prefix and suffix slots, inline errors, and stacked form-field layouts.",
+  "/components/accordion":
     "Accordion component with spring-driven expansion and structured content sections.",
   "/components/popover":
     "Popover surface for compact floating content and contextual details.",
@@ -71,6 +75,8 @@ const componentSummaries: Record<string, string> = {
     "Composable table primitives with aligned rows, sort helpers, and empty states.",
   "/components/tabs":
     "Tabs primitives with measured indicators and animated panel transitions.",
+  "/components/toggle":
+    "Pressed-state toggle built on Radix with ripple, icon motion, and text or icon-only formats.",
   "/components/tooltip":
     "Tooltip component for compact hover or focus explanations.",
 };
@@ -113,9 +119,6 @@ const componentItems: SearchItem[] = SITE_SECTIONS.flatMap((section) =>
     const slug = item.href.split("/").pop() ?? item.href;
     const labelKeywords = [item.label, slug, section.label];
 
-    if (slug === "motion-accordion") {
-      labelKeywords.push("accordion");
-    }
     if (slug === "radiogroup") {
       labelKeywords.push("radio group");
     }

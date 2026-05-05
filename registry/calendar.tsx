@@ -42,6 +42,7 @@ type CalendarPalette = {
   navForeground: string;
   navHoverBackground: string;
   dayHoverBackground: string;
+  dayHoverShadow: string;
   selectedGradient: string;
   selectedForeground: string;
   todayDot: string;
@@ -89,6 +90,8 @@ export const Calendar = ({
         navForeground: "#f5f5f5",
         navHoverBackground: "rgba(255, 255, 255, 0.14)",
         dayHoverBackground: "#1a1a1a",
+        dayHoverShadow:
+          "0 16px 28px -20px rgba(255, 255, 255, 0.22), inset 0 0 0 1px rgba(255, 255, 255, 0.08)",
         selectedGradient: "linear-gradient(135deg, #f5f5f5, #a3a3a3)",
         selectedForeground: "#000000",
         todayDot: "#f5f5f5",
@@ -106,6 +109,8 @@ export const Calendar = ({
         navForeground: "#0a0a0a",
         navHoverBackground: "rgba(20, 20, 20, 0.1)",
         dayHoverBackground: "#f4f4f5",
+        dayHoverShadow:
+          "0 18px 30px -22px rgba(15, 23, 42, 0.24), inset 0 0 0 1px rgba(10, 10, 10, 0.05)",
         selectedGradient: "linear-gradient(135deg, #141414, #4a4a4a)",
         selectedForeground: "#ffffff",
         todayDot: "#0a0a0a",
@@ -415,12 +420,14 @@ const DayCell = ({
         ease: SPRING_EASE,
       }}
       whileHover={{
-        scale: isInteractive ? 1.1 : 1,
+        scale: isInteractive ? 1.04 : 1,
+        y: isInteractive ? -1.5 : 0,
         backgroundColor: isInteractive
           ? palette.dayHoverBackground
           : "transparent",
+        boxShadow: isInteractive ? palette.dayHoverShadow : "none",
       }}
-      whileTap={{ scale: isInteractive ? 0.92 : 1 }}
+      whileTap={{ scale: isInteractive ? 0.96 : 1, y: isInteractive ? 0 : 0 }}
     >
       {isSelected && inMonth && (
         <motion.div

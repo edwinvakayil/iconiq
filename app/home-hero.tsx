@@ -61,7 +61,7 @@ export function HomeHero() {
               <div className="flex flex-wrap gap-3 pt-2">
                 <Link
                   className="border border-foreground bg-foreground px-5 py-3 font-mono text-[10px] text-background uppercase tracking-[0.18em] transition-colors hover:bg-foreground/90"
-                  href="/components/alert"
+                  href="/components/accordion"
                 >
                   Browse components
                 </Link>
@@ -113,7 +113,7 @@ export function HomeHero() {
                   note: "See previews, usage examples, and API reference together",
                 },
                 {
-                  href: "/components/motion-accordion",
+                  href: "/components/accordion",
                   label: "Reference component",
                   note: "Review a representative interaction pattern in detail",
                 },

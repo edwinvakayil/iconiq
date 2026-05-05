@@ -57,7 +57,7 @@ export default function InstallationPage() {
   const featuredComponents = components.filter(({ href }) =>
     [
       "/components/button",
-      "/components/motion-accordion",
+      "/components/accordion",
       "/components/combobox",
     ].includes(href)
   );

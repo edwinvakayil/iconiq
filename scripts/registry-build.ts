@@ -52,7 +52,7 @@ const REGISTRY_UI_META: Record<
       "Drag-and-drop file uploader with click-to-browse fallback, queued file rows, image previews, built-in progress states, and optional change callbacks.",
     dependencies: ["motion", "lucide-react"],
   },
-  "motion-accordion": {
+  accordion: {
     title: "Accordion",
     description:
       "Single-select accordion with spring height, staggered text, and rotating plus control. Built with Motion.",
@@ -75,6 +75,12 @@ const REGISTRY_UI_META: Record<
     description:
       'Primary action control with CVA variants, pointer ripples via Motion, and default type="button". Forwards ref and native button props.',
     dependencies: ["motion", "class-variance-authority"],
+  },
+  "button-group": {
+    title: "Button Group",
+    description:
+      "Grouped action buttons, segmented button rows, and a selectable segmented control with spring-driven hover and active motion.",
+    dependencies: ["motion"],
   },
   calendar: {
     title: "Calendar",
@@ -142,6 +148,12 @@ const REGISTRY_UI_META: Record<
       "Standard rounded text field with an always-visible label, focus ring motion, and per-character spring animation on the visible text overlay. Motion.",
     dependencies: ["motion"],
   },
+  "input-group": {
+    title: "Input Group",
+    description:
+      "Floating-label input field with optional prefix and suffix slots, inline error copy, and a matching vertical stack wrapper for grouped forms.",
+    dependencies: ["motion"],
+  },
   radiogroup: {
     title: "Radio group",
     description:
@@ -159,6 +171,16 @@ const REGISTRY_UI_META: Record<
     description:
       "Animated tabs with measured active and hover underlines, plus a blurred content transition between panels.",
     dependencies: ["motion"],
+  },
+  toggle: {
+    title: "Toggle",
+    description:
+      "Pressed-state toggle built on Radix with button squash, icon motion, center ripple, and shadcn-style size and outline variants.",
+    dependencies: [
+      "@radix-ui/react-toggle",
+      "class-variance-authority",
+      "motion",
+    ],
   },
   table: {
     title: "Table",

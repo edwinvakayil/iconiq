@@ -206,7 +206,7 @@ export default function CollapsiblePage() {
       description="Accessible expand and collapse primitive built on Radix UI. Exports three composable parts for FAQs, disclosure sections, and nested navigation."
       details={componentDetailsItems}
       preview={
-        <div className="flex min-h-[320px] w-full items-start justify-center py-4">
+        <div className="flex min-h-[320px] w-full max-w-[28rem] items-start justify-center py-4">
           <BillingCardDemo />
         </div>
       }

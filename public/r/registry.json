@@ -4,6 +4,21 @@
   "homepage": "https://iconiqui.com",
   "items": [
     {
+      "name": "accordion",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": ["motion", "lucide-react"],
+      "devDependencies": [],
+      "title": "Accordion",
+      "description": "Single-select accordion with spring height, staggered text, and rotating plus control. Built with Motion.",
+      "files": [
+        {
+          "path": "accordion.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "alert",
       "type": "registry:ui",
       "registryDependencies": [],
@@ -59,6 +74,21 @@
       "files": [
         {
           "path": "breadcrumbs.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "button-group",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": ["motion"],
+      "devDependencies": [],
+      "title": "Button Group",
+      "description": "Grouped action buttons, segmented button rows, and a selectable segmented control with spring-driven hover and active motion.",
+      "files": [
+        {
+          "path": "button-group.tsx",
           "type": "registry:ui"
         }
       ]
@@ -244,6 +274,21 @@
       ]
     },
     {
+      "name": "input-group",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": ["motion"],
+      "devDependencies": [],
+      "title": "Input Group",
+      "description": "Floating-label input field with optional prefix and suffix slots, inline error copy, and a matching vertical stack wrapper for grouped forms.",
+      "files": [
+        {
+          "path": "input-group.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "input",
       "type": "registry:ui",
       "registryDependencies": [],
@@ -254,21 +299,6 @@
       "files": [
         {
           "path": "input.tsx",
-          "type": "registry:ui"
-        }
-      ]
-    },
-    {
-      "name": "motion-accordion",
-      "type": "registry:ui",
-      "registryDependencies": [],
-      "dependencies": ["motion", "lucide-react"],
-      "devDependencies": [],
-      "title": "Accordion",
-      "description": "Single-select accordion with spring height, staggered text, and rotating plus control. Built with Motion.",
-      "files": [
-        {
-          "path": "motion-accordion.tsx",
           "type": "registry:ui"
         }
       ]
@@ -389,6 +419,25 @@
       "files": [
         {
           "path": "tabs.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "toggle",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": [
+        "@radix-ui/react-toggle",
+        "class-variance-authority",
+        "motion"
+      ],
+      "devDependencies": [],
+      "title": "Toggle",
+      "description": "Pressed-state toggle built on Radix with button squash, icon motion, center ripple, and shadcn-style size and outline variants.",
+      "files": [
+        {
+          "path": "toggle.tsx",
           "type": "registry:ui"
         }
       ]

@@ -3,10 +3,10 @@
 import { motion, type Variants } from "motion/react";
 import type { ReactNode } from "react";
 
-import { motionAccordionApiDetails } from "@/components/docs/component-api";
+import { accordionApiDetails } from "@/components/docs/component-api";
 import { ComponentDocsPage } from "@/components/docs/page-shell";
 import { cn } from "@/lib/utils";
-import { Accordion, type AccordionItem } from "@/registry/motion-accordion";
+import { Accordion, type AccordionItem } from "@/registry/accordion";
 
 const demoItems: AccordionItem[] = [
   {
@@ -35,7 +35,7 @@ const demoItems: AccordionItem[] = [
   },
 ];
 
-const usageCode = `import { Accordion } from "@/components/ui/motion-accordion";
+const usageCode = `import { Accordion } from "@/components/ui/accordion";
 
 const items = [
   {
@@ -56,7 +56,7 @@ export function Faq() {
   return <Accordion items={items} />;
 }`;
 
-const componentDetailsItems = motionAccordionApiDetails;
+const componentDetailsItems = accordionApiDetails;
 
 function _SectionLabel({
   children,
@@ -137,7 +137,7 @@ export default function AccordionPage() {
         { label: "Components" },
         { label: "Accordion" },
       ]}
-      componentName="motion-accordion"
+      componentName="accordion"
       description="Animated accordion with composable items, spring reveal, and theme-aware disclosure chrome. Designed for FAQs, settings, and structured help content."
       details={componentDetailsItems}
       preview={

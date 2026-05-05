@@ -1,3 +1,15 @@
+DATE: 6 May 2026
+VERSION: v1.0.3
+TITLE: UI Bugs and Improvements
+SUMMARY: A stabilising release: tighter polish, fewer edge-case glitches, and a more consistent feel across the site.
+ADDED:
+- New components: Input Group, Button Group, and Toggle.
+UPDATED:
+- Calendar component hover states refined for clearer feedback.
+- Documentation, component API reference, and site search updated for the expanded registry.
+FIXED:
+- UI bugs addressed and interaction polish applied across the site.
+---
 DATE: 2 May 2026
 VERSION: v1.0.2
 TITLE: UI Bugs and Improvements

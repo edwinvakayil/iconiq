@@ -506,6 +506,153 @@ const buttonApiDetails: DetailItem[] = [
   registryItem("button.json", ["motion", "class-variance-authority"]),
 ];
 
+const buttonGroupApiDetails: DetailItem[] = [
+  {
+    id: "button-group-button",
+    title: "Button",
+    summary:
+      "Standalone motion button with a light upward entrance, hover scale, and a small label nudge inside the content span.",
+    fields: [
+      field({
+        name: "children",
+        type: "ReactNode",
+        required: true,
+        description:
+          "Button content rendered inside an animated inline span so the label can shift slightly on hover.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description:
+          "Merged onto the root button. Use it for local width, spacing, or surface overrides.",
+      }),
+    ],
+    notes: [
+      "Most standard button props such as type, disabled, onClick, name, value, aria-*, and data-* are forwarded to the underlying motion button.",
+      "The public prop surface intentionally leaves out the native drag and CSS animation callback props because they conflict with Motion's own handler names.",
+    ],
+  },
+  {
+    id: "button-group-icon-button",
+    title: "IconButton",
+    summary:
+      "Compact icon-only version of the same button surface, with a stronger hover scale and a rotating inner icon span.",
+    fields: [
+      field({
+        name: "children",
+        type: "ReactNode",
+        required: true,
+        description:
+          "Icon content rendered inside the motion span. SVG children inherit the built-in 1rem sizing utility.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description:
+          "Merged onto the icon button root for size or surface overrides.",
+      }),
+    ],
+  },
+  {
+    id: "button-group-layout",
+    title: "ButtonGroup",
+    summary:
+      "Simple flex wrapper for arranging several button surfaces in one row with shared staggered entrance motion.",
+    fields: [
+      field({
+        name: "children",
+        type: "ReactNode",
+        required: true,
+        description:
+          "Buttons, icon buttons, or any other inline controls you want to keep in the same row.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description:
+          "Merged onto the outer motion div. The base layout already applies a horizontal flex row with a small gap.",
+      }),
+    ],
+  },
+  {
+    id: "button-group-items",
+    title: "ButtonGroupItems",
+    summary:
+      "Segmented button shell that turns each valid child element into an internal motion button with shared borders and equal visual rhythm.",
+    fields: [
+      field({
+        name: "children",
+        type: "ReactNode",
+        required: true,
+        description:
+          "Pass plain button-like elements as children. Their props and children are hoisted into the internal motion buttons rendered by the group.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description:
+          "Merged onto the outer segmented wrapper for width or surface overrides.",
+      }),
+    ],
+    notes: [
+      "Only valid React elements are rendered. Non-element children are ignored.",
+      "The child node itself is not preserved; ButtonGroupItems reads each child's props and children, then renders a fresh motion button for that slot.",
+    ],
+  },
+  {
+    id: "segmented-control",
+    title: "SegmentedControl",
+    summary:
+      "String-based segmented selector with internal state support, hover wash, and a spring-driven selected indicator.",
+    fields: [
+      field({
+        name: "options",
+        type: "string[]",
+        required: true,
+        description:
+          "Ordered list of visible segments. The first option becomes the uncontrolled initial selection when value is not provided.",
+      }),
+      field({
+        name: "value",
+        type: "string",
+        description:
+          "Controlled selected option. When provided, the internal state syncs to this prop through an effect.",
+      }),
+      field({
+        name: "onChange",
+        type: "(value: string) => void",
+        description:
+          "Called with the selected option whenever a segment is pressed.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description:
+          "Merged onto the segmented wrapper for width, alignment, or spacing overrides.",
+      }),
+      field({
+        name: "layoutId",
+        type: "string",
+        defaultValue: '"segmented-indicator"',
+        description:
+          "Motion layout id used by the selected indicator. Override it when you render multiple segmented controls on the same page and want isolated indicator motion.",
+      }),
+    ],
+  },
+  {
+    id: "button-group-motion",
+    title: "Motion and interaction",
+    summary:
+      "Each export shares the same spring-heavy motion language, but the interaction style changes slightly by surface.",
+    notes: [
+      "Button and IconButton both animate in on mount, scale on hover and tap, and apply a muted background shift during hover.",
+      "ButtonGroup only handles layout and entrance motion; the interactive behavior still comes from the child buttons inside it.",
+      "SegmentedControl animates each option into place individually, then uses a shared layout indicator for the active segment and a lighter hover wash for inactive segments.",
+    ],
+  },
+  registryItem("button-group.json", ["motion"]),
+];
+
 const checkboxGroupApiDetails: DetailItem[] = [
   {
     id: "checkbox-option",
@@ -1728,7 +1875,102 @@ const inputApiDetails: DetailItem[] = [
   registryItem("input.json", ["motion"]),
 ];
 
-const motionAccordionApiDetails: DetailItem[] = [
+const inputGroupApiDetails: DetailItem[] = [
+  {
+    id: "inputgroups",
+    title: "Inputgroups",
+    summary:
+      "Floating-label input field with optional prefix and suffix slots, a center-out focus rule, and inline error messaging driven entirely by props.",
+    fields: [
+      field({
+        name: "label",
+        type: "string",
+        required: true,
+        description:
+          "Field label rendered inside the shell until the input becomes focused or contains a value, then animated upward into its floating position.",
+      }),
+      field({
+        name: "error",
+        type: "string",
+        description:
+          "Optional validation message rendered below the field. Passing a value also switches the label and underline to the destructive palette.",
+      }),
+      field({
+        name: "prefixIcon",
+        type: "ReactNode",
+        description:
+          "Leading visual placed before the input area. The slot is best suited to compact icons and inherits the same focus-aware color shift as the suffix.",
+      }),
+      field({
+        name: "suffixIcon",
+        type: "ReactNode",
+        description:
+          "Optional trailing visual rendered inside a button, which makes it useful for actions such as show-password toggles or clear controls.",
+      }),
+      field({
+        name: "onSuffixClick",
+        type: "() => void",
+        description:
+          "Called when the suffix button is pressed. It only matters when suffixIcon is also present.",
+      }),
+      field({
+        name: "id",
+        type: "string",
+        description:
+          "Optional input id. When omitted, the component creates one with useId and links the animated label automatically.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description:
+          "Applied to the native input element itself, not the outer shell. Use it for text sizing, placeholder, or input-level spacing overrides.",
+      }),
+    ],
+    notes: [
+      "Standard native input props such as name, type, value, defaultValue, placeholder, autoComplete, disabled, onFocus, onBlur, and onChange are forwarded directly to the underlying input element.",
+      "The outer field shell uses a mouse-down focus handoff, so clicking the label area or prefix icon focuses the input without stealing focus from the suffix button.",
+      "Value presence is tracked from the real input value, which keeps the floating label aligned for both controlled and uncontrolled usage.",
+    ],
+  },
+  {
+    id: "input-group",
+    title: "InputGroup",
+    summary:
+      "Lightweight vertical wrapper for stacking multiple Inputgroups fields with consistent spacing.",
+    fields: [
+      field({
+        name: "children",
+        type: "ReactNode",
+        required: true,
+        description:
+          "One or more Inputgroups fields, or any other custom content you want to keep in the same vertical flow.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description:
+          "Merged onto the wrapper div. The base layout already uses a full-width flex column with a 1.5rem gap.",
+      }),
+    ],
+    notes: [
+      "All remaining div props are forwarded to the wrapper, so data attributes and layout helpers can be attached at the group level.",
+    ],
+  },
+  {
+    id: "input-group-motion",
+    title: "Motion and behavior",
+    summary:
+      "The component keeps its motion treatment quiet and focused on form affordances rather than full-panel animation.",
+    notes: [
+      "The label, prefix slot, and suffix slot all use spring transitions, so they respond to focus without introducing layout shift.",
+      "The bottom accent line grows from the center outward only while the field is focused, then collapses away on blur.",
+      "Error copy mounts and exits through AnimatePresence, which keeps the spacing stable while still giving feedback a small fade-and-rise transition.",
+    ],
+  },
+  registryItem("input-group.json", ["motion"]),
+];
+
+const accordionApiDetails: DetailItem[] = [
   {
     id: "accordion-item",
     title: "AccordionItem",
@@ -1792,7 +2034,7 @@ const motionAccordionApiDetails: DetailItem[] = [
       "Keyboard support is limited to standard button tab and click semantics; there is no arrow-key roving between items.",
     ],
   },
-  registryItem("motion-accordion.json", ["motion", "lucide-react"]),
+  registryItem("accordion.json", ["motion", "lucide-react"]),
 ];
 
 const radioGroupApiDetails: DetailItem[] = [
@@ -2533,6 +2775,87 @@ const tableApiDetails: DetailItem[] = [
   registryItem("table.json", ["motion", "lucide-react"]),
 ];
 
+const toggleApiDetails: DetailItem[] = [
+  {
+    id: "toggle",
+    title: "Toggle",
+    summary:
+      "Single pressed-state toggle built on Radix Toggle, with Motion-driven button, icon, and ripple feedback layered over shadcn-style size and variant classes.",
+    fields: [
+      field({
+        name: "children",
+        type: "ReactNode",
+        required: true,
+        description:
+          "Visible button content rendered inside the animated inner span. This can be plain text, icons, or both.",
+      }),
+      field({
+        name: "variant",
+        type: '"default" | "outline"',
+        defaultValue: "default",
+        description:
+          "Visual treatment from the internal CVA config. Outline adds the input border and shadow-sm treatment.",
+      }),
+      field({
+        name: "size",
+        type: '"default" | "sm" | "lg"',
+        defaultValue: "default",
+        description:
+          "Height and horizontal padding preset applied through the shared toggleVariants helper.",
+      }),
+      field({
+        name: "pressed",
+        type: "boolean",
+        description:
+          "Controlled pressed state from Radix Toggle.Root. Use this when the parent should own the on/off state.",
+      }),
+      field({
+        name: "defaultPressed",
+        type: "boolean",
+        description: "Initial pressed state for uncontrolled usage.",
+      }),
+      field({
+        name: "onPressedChange",
+        type: "(pressed: boolean) => void",
+        description:
+          "Called after the component kicks off its local motion sequence, with the next pressed value from Radix.",
+      }),
+      field({
+        name: "disabled",
+        type: "boolean",
+        description:
+          "Disables the toggle and prevents the hover, tap, and pressed-state interaction flow.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description:
+          "Merged onto the rendered motion button for local spacing or surface overrides.",
+      }),
+    ],
+    notes: [
+      "Additional Radix toggle button props such as aria-label, name, value, and type are forwarded through the underlying Toggle.Root surface.",
+      "The component renders Radix Root with asChild internally, then supplies its own motion.button as the child node.",
+    ],
+  },
+  {
+    id: "toggle-motion",
+    title: "Motion and state behavior",
+    summary:
+      "Every pressed change triggers a button squash, a center ripple, and a separate icon animation sequence.",
+    notes: [
+      "The outer button uses useAnimationControls so the pressed sequence can run immediately whenever Radix reports a state change.",
+      "The icon motion differs between on and off transitions, so enabling and disabling the toggle do not feel identical.",
+      "Hover always applies a slight upward lift and tap applies an extra scale-down, independent of whether the toggle is currently pressed.",
+    ],
+  },
+  registryItem("toggle.json", [
+    "@radix-ui/react-toggle",
+    "class-variance-authority",
+    "motion",
+  ]),
+];
+
 const tooltipApiDetails: DetailItem[] = [
   {
     id: "tooltip",
@@ -2601,6 +2924,7 @@ export {
   carouselApiDetails,
   breadcrumbsApiDetails,
   buttonApiDetails,
+  buttonGroupApiDetails,
   checkboxGroupApiDetails,
   comboboxApiDetails,
   contextMenuApiDetails,
@@ -2612,7 +2936,8 @@ export {
   hoverCardApiDetails,
   popoverApiDetails,
   inputApiDetails,
-  motionAccordionApiDetails,
+  inputGroupApiDetails,
+  accordionApiDetails,
   radioGroupApiDetails,
   selectApiDetails,
   sliderApiDetails,
@@ -2620,5 +2945,6 @@ export {
   switchApiDetails,
   tableApiDetails,
   tabsApiDetails,
+  toggleApiDetails,
   tooltipApiDetails,
 };
