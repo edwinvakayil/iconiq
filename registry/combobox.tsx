@@ -36,6 +36,7 @@ export function Combobox({
   const [open, setOpen] = React.useState(false);
   const [query, setQuery] = React.useState("");
   const [activeIndex, setActiveIndex] = React.useState(0);
+  const [isSmallScreen, setIsSmallScreen] = React.useState(false);
   const [menuStyle, setMenuStyle] = React.useState<React.CSSProperties>({
     top: 0,
     left: 0,
@@ -88,6 +89,18 @@ export function Combobox({
     setMounted(true);
   }, []);
 
+  React.useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const mediaQuery = window.matchMedia("(max-width: 640px)");
+    const updateViewportMode = () => setIsSmallScreen(mediaQuery.matches);
+
+    updateViewportMode();
+    mediaQuery.addEventListener("change", updateViewportMode);
+
+    return () => mediaQuery.removeEventListener("change", updateViewportMode);
+  }, []);
+
   const updateMenuPosition = React.useCallback(() => {
     const container = containerRef.current;
     if (!container) return;
@@ -101,6 +114,7 @@ export function Combobox({
 
   React.useEffect(() => {
     if (!open) return;
+    if (isSmallScreen) return;
     updateMenuPosition();
     const onScrollOrResize = () => updateMenuPosition();
     window.addEventListener("resize", onScrollOrResize);
@@ -109,7 +123,7 @@ export function Combobox({
       window.removeEventListener("resize", onScrollOrResize);
       window.removeEventListener("scroll", onScrollOrResize, true);
     };
-  }, [open, updateMenuPosition]);
+  }, [open, updateMenuPosition, isSmallScreen]);
 
   React.useEffect(() => {
     if (!open) return;
@@ -185,11 +199,132 @@ export function Combobox({
   // What's shown in the input: live query while open, otherwise selected label
   const displayValue = open ? query : (selected?.label ?? "");
 
+  const menuContent = (
+    <AnimatePresence>
+      {open && (
+        <motion.div
+          animate={{ opacity: 1, scale: 1 }}
+          className="z-[9999] overflow-hidden rounded-lg border border-neutral-200 bg-white text-neutral-900 shadow-lg dark:border-neutral-700 dark:bg-neutral-950 dark:text-neutral-100"
+          exit={{ opacity: 0, scale: 0.97 }}
+          initial={{ opacity: 0, scale: 0.97 }}
+          key="popover"
+          role="presentation"
+          style={
+            isSmallScreen
+              ? undefined
+              : {
+                  position: "fixed",
+                  ...menuStyle,
+                  transformOrigin: "top center",
+                }
+          }
+          transition={{
+            type: "spring",
+            stiffness: 380,
+            damping: 28,
+            mass: 0.6,
+          }}
+        >
+          <div
+            className="max-h-64 overflow-y-auto p-1"
+            id={listboxId}
+            ref={listRef}
+            role="listbox"
+          >
+            {filtered.length === 0 ? (
+              <motion.div
+                animate={{ opacity: 1 }}
+                className="px-3 py-6 text-center text-muted-foreground text-sm"
+                initial={{ opacity: 0 }}
+              >
+                {emptyMessage}
+              </motion.div>
+            ) : (
+              filtered.map((opt, index) => {
+                const isSelected = opt.value === value;
+                const isActive = index === activeIndex;
+                return (
+                  <motion.div
+                    animate={{ opacity: 1, x: 0 }}
+                    aria-selected={isSelected}
+                    className={cn(
+                      "relative flex cursor-pointer select-none items-start gap-2 rounded-md px-2.5 py-2 text-sm transition-colors",
+                      isActive
+                        ? "bg-accent text-accent-foreground"
+                        : "text-foreground"
+                    )}
+                    data-index={index}
+                    id={`${listboxId}-opt-${opt.value}`}
+                    initial={{ opacity: 0, x: -6 }}
+                    key={opt.value}
+                    onClick={() => select(opt)}
+                    onMouseDown={(e) => {
+                      e.preventDefault();
+                    }}
+                    onMouseEnter={() => setActiveIndex(index)}
+                    role="option"
+                    transition={{
+                      delay: Math.min(index * 0.018, 0.18),
+                      type: "spring",
+                      stiffness: 400,
+                      damping: 28,
+                    }}
+                  >
+                    {isActive && (
+                      <motion.div
+                        className="absolute inset-0 -z-10 rounded-md bg-accent"
+                        layoutId="combobox-active"
+                        transition={{
+                          type: "spring",
+                          stiffness: 500,
+                          damping: 35,
+                        }}
+                      />
+                    )}
+                    <span className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center">
+                      <AnimatePresence>
+                        {isSelected && (
+                          <motion.span
+                            animate={{ scale: 1, rotate: 0 }}
+                            className="text-primary"
+                            exit={{ scale: 0, rotate: 90 }}
+                            initial={{ scale: 0, rotate: -90 }}
+                            transition={{
+                              type: "spring",
+                              stiffness: 500,
+                              damping: 22,
+                            }}
+                          >
+                            <Check className="h-4 w-4" strokeWidth={3} />
+                          </motion.span>
+                        )}
+                      </AnimatePresence>
+                    </span>
+                    <span className="flex flex-col">
+                      <span className="font-medium leading-tight">
+                        {opt.label}
+                      </span>
+                      {opt.description && (
+                        <span className="text-muted-foreground text-xs">
+                          {opt.description}
+                        </span>
+                      )}
+                    </span>
+                  </motion.div>
+                );
+              })
+            )}
+          </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+
   return (
     <div className={cn("relative w-full", className)} ref={containerRef}>
       <div
         className={cn(
-          "group flex h-11 w-full items-center gap-2 rounded-lg border border-input bg-background px-3.5 text-sm shadow-sm transition-all",
+          "group flex h-11 w-full items-center gap-2 rounded-lg border border-input bg-background px-3.5 text-base shadow-sm transition-all sm:text-sm",
           "hover:border-ring/40 hover:shadow",
           "focus-within:border-ring focus-within:ring-2 focus-within:ring-ring/30",
           disabled && "cursor-not-allowed opacity-50",
@@ -219,7 +354,7 @@ export function Combobox({
           aria-autocomplete="list"
           aria-controls={listboxId}
           aria-expanded={open}
-          className="h-full w-full flex-1 bg-transparent text-foreground placeholder:text-muted-foreground focus:outline-none disabled:cursor-not-allowed"
+          className="h-full w-full flex-1 bg-transparent text-[16px] text-foreground placeholder:text-muted-foreground focus:outline-none disabled:cursor-not-allowed sm:text-sm"
           disabled={disabled}
           onChange={(e) => {
             if (!open) setOpen(true);
@@ -261,129 +396,13 @@ export function Combobox({
         </motion.span>
       </div>
 
-      {mounted
-        ? createPortal(
-            <AnimatePresence>
-              {open && (
-                <motion.div
-                  animate={{ opacity: 1, scale: 1 }}
-                  className="z-[9999] mt-1 overflow-hidden rounded-lg border border-neutral-200 bg-white text-neutral-900 shadow-lg dark:border-neutral-700 dark:bg-neutral-950 dark:text-neutral-100"
-                  exit={{ opacity: 0, scale: 0.97 }}
-                  initial={{ opacity: 0, scale: 0.97 }}
-                  key="popover"
-                  role="presentation"
-                  style={{
-                    position: "fixed",
-                    ...menuStyle,
-                    transformOrigin: "top center",
-                  }}
-                  transition={{
-                    type: "spring",
-                    stiffness: 380,
-                    damping: 28,
-                    mass: 0.6,
-                  }}
-                >
-                  <div
-                    className="max-h-64 overflow-y-auto p-1"
-                    id={listboxId}
-                    ref={listRef}
-                    role="listbox"
-                  >
-                    {filtered.length === 0 ? (
-                      <motion.div
-                        animate={{ opacity: 1 }}
-                        className="px-3 py-6 text-center text-muted-foreground text-sm"
-                        initial={{ opacity: 0 }}
-                      >
-                        {emptyMessage}
-                      </motion.div>
-                    ) : (
-                      filtered.map((opt, index) => {
-                        const isSelected = opt.value === value;
-                        const isActive = index === activeIndex;
-                        return (
-                          <motion.div
-                            animate={{ opacity: 1, x: 0 }}
-                            aria-selected={isSelected}
-                            className={cn(
-                              "relative flex cursor-pointer select-none items-start gap-2 rounded-md px-2.5 py-2 text-sm transition-colors",
-                              isActive
-                                ? "bg-accent text-accent-foreground"
-                                : "text-foreground"
-                            )}
-                            data-index={index}
-                            id={`${listboxId}-opt-${opt.value}`}
-                            initial={{ opacity: 0, x: -6 }}
-                            key={opt.value}
-                            onClick={() => select(opt)}
-                            onMouseDown={(e) => {
-                              // prevent input blur before click fires
-                              e.preventDefault();
-                            }}
-                            onMouseEnter={() => setActiveIndex(index)}
-                            role="option"
-                            transition={{
-                              delay: Math.min(index * 0.018, 0.18),
-                              type: "spring",
-                              stiffness: 400,
-                              damping: 28,
-                            }}
-                          >
-                            {isActive && (
-                              <motion.div
-                                className="absolute inset-0 -z-10 rounded-md bg-accent"
-                                layoutId="combobox-active"
-                                transition={{
-                                  type: "spring",
-                                  stiffness: 500,
-                                  damping: 35,
-                                }}
-                              />
-                            )}
-                            <span className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center">
-                              <AnimatePresence>
-                                {isSelected && (
-                                  <motion.span
-                                    animate={{ scale: 1, rotate: 0 }}
-                                    className="text-primary"
-                                    exit={{ scale: 0, rotate: 90 }}
-                                    initial={{ scale: 0, rotate: -90 }}
-                                    transition={{
-                                      type: "spring",
-                                      stiffness: 500,
-                                      damping: 22,
-                                    }}
-                                  >
-                                    <Check
-                                      className="h-4 w-4"
-                                      strokeWidth={3}
-                                    />
-                                  </motion.span>
-                                )}
-                              </AnimatePresence>
-                            </span>
-                            <span className="flex flex-col">
-                              <span className="font-medium leading-tight">
-                                {opt.label}
-                              </span>
-                              {opt.description && (
-                                <span className="text-muted-foreground text-xs">
-                                  {opt.description}
-                                </span>
-                              )}
-                            </span>
-                          </motion.div>
-                        );
-                      })
-                    )}
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>,
-            document.body
-          )
-        : null}
+      {isSmallScreen ? (
+        <div className="absolute inset-x-0 top-full z-[9999] mt-1">
+          {menuContent}
+        </div>
+      ) : mounted ? (
+        createPortal(menuContent, document.body)
+      ) : null}
     </div>
   );
 }
