@@ -1,6 +1,5 @@
 "use client";
 
-import { Plus } from "lucide-react";
 import { AnimatePresence, motion, type Transition } from "motion/react";
 import { useState } from "react";
 
@@ -99,15 +98,25 @@ export function Accordion({ items, className }: AccordionProps) {
                 {item.title}
               </motion.span>
               <motion.div
-                animate={{
-                  rotate: isOpen ? 45 : 0,
-                  opacity: isOpen ? 1 : 0.72,
-                }}
+                animate={{ opacity: isOpen ? 1 : 0.72 }}
                 aria-hidden
                 className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center text-foreground"
                 transition={{ type: "spring", stiffness: 360, damping: 24 }}
               >
-                <Plus className="h-4 w-4" />
+                <span className="relative flex h-3 w-3 items-center justify-center">
+                  <span className="absolute h-px w-3 rounded-full bg-current" />
+                  <motion.span
+                    animate={{
+                      opacity: isOpen ? 0 : 1,
+                      scaleY: isOpen ? 0 : 1,
+                    }}
+                    className="absolute h-3 w-px origin-center rounded-full bg-current"
+                    transition={{
+                      duration: 0.18,
+                      ease: [0.22, 1, 0.36, 1],
+                    }}
+                  />
+                </span>
               </motion.div>
             </button>
 
