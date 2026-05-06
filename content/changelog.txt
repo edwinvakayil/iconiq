@@ -1,3 +1,16 @@
+DATE: 7 May 2026
+VERSION: v1.0.4
+TITLE: GEO and AI discovery rollout
+SUMMARY: Adds a full Generative Engine Optimization layer across the product, with AI-readable discovery routes, richer metadata, and structured component indexing.
+ADDED:
+- New AI discovery endpoints: /llms.txt, /llms-full.txt, and /ai-index.json.
+- A machine-readable component catalog generated from the existing docs and API reference data.
+UPDATED:
+- Site metadata, JSON-LD, sitemap, and robots coverage improved for AI crawlers and answer engines.
+- Component documentation pages now expose stronger structured data for individual component understanding.
+FIXED:
+- Discovery signals are now more consistent across the site instead of being split between isolated SEO surfaces.
+---
 DATE: 6 May 2026
 VERSION: v1.0.3
 TITLE: New components and site polish

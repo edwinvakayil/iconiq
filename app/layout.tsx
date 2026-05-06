@@ -13,6 +13,7 @@ import { DocsSidebar } from "@/components/docs-sidebar";
 import { Header } from "@/components/header";
 import { PageTitleSync } from "@/components/page-title-sync";
 import { StarPromptCard } from "@/components/star-prompt-card";
+import { SITE } from "@/constants";
 import { PackageNameProvider } from "@/providers/package-name";
 import { ThemeProvider } from "@/providers/theme";
 import { JsonLdScripts } from "@/seo/json-ld";
@@ -53,6 +54,24 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <head>
+        <link
+          href="/llms.txt"
+          rel="alternate"
+          title={`${SITE.NAME} LLM overview`}
+          type="text/plain"
+        />
+        <link
+          href="/llms-full.txt"
+          rel="alternate"
+          title={`${SITE.NAME} full LLM index`}
+          type="text/plain"
+        />
+        <link
+          href="/ai-index.json"
+          rel="alternate"
+          title={`${SITE.NAME} AI index`}
+          type="application/json"
+        />
         <JsonLdScripts />
       </head>
       <body className={`${geist.className} relative bg-background antialiased`}>

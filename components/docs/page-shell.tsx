@@ -9,6 +9,7 @@ import { Separator } from "@/components/ui/separator";
 import { SITE_SECTIONS } from "@/lib/site-nav";
 import { cn } from "@/lib/utils";
 import { BreadcrumbJsonLdClient } from "@/seo/breadcrumb-json-ld-client";
+import { ComponentDocJsonLd } from "@/seo/json-ld";
 
 type BreadcrumbItem = {
   label: string;
@@ -478,116 +479,124 @@ function ComponentDocsPage({
   previewClassName?: string;
 }) {
   return (
-    <DocsPageShell
-      breadcrumbs={breadcrumbs}
-      description={description}
-      eyebrow={eyebrow}
-      heroActions={<ComponentPager componentName={componentName} />}
-      meta={
-        meta ?? [
-          { label: "Package", value: `@iconiq/${componentName}` },
-          { label: "Format", value: "Copy-paste registry file" },
-          { label: "Theme", value: "White-first and dark ready" },
-        ]
-      }
-      title={title}
-    >
-      <DocsSection
-        className={cn("min-w-0 lg:col-span-8", previewClassName)}
-        description={
-          previewDescription ??
-          "Preview the component in a quiet layout with room to inspect motion, spacing, and state changes."
+    <>
+      <ComponentDocJsonLd
+        componentName={componentName}
+        description={description}
+        details={details}
+        title={title}
+      />
+      <DocsPageShell
+        breadcrumbs={breadcrumbs}
+        description={description}
+        eyebrow={eyebrow}
+        heroActions={<ComponentPager componentName={componentName} />}
+        meta={
+          meta ?? [
+            { label: "Package", value: `@iconiq/${componentName}` },
+            { label: "Format", value: "Copy-paste registry file" },
+            { label: "Theme", value: "White-first and dark ready" },
+          ]
         }
-        index="01"
-        title="Live Playground"
+        title={title}
       >
-        <div className="flex min-h-[320px] w-full items-center justify-center">
-          {preview}
-        </div>
-      </DocsSection>
+        <DocsSection
+          className={cn("min-w-0 lg:col-span-8", previewClassName)}
+          description={
+            previewDescription ??
+            "Preview the component in a quiet layout with room to inspect motion, spacing, and state changes."
+          }
+          index="01"
+          title="Live Playground"
+        >
+          <div className="flex min-h-[320px] w-full items-center justify-center">
+            {preview}
+          </div>
+        </DocsSection>
 
-      <DocsSection
-        className="min-w-0 lg:col-span-4"
-        description={
-          installDescription ??
-          "Install the component directly into your codebase, then branch into v0 if you want to iterate on variations."
-        }
-        index="02"
-        title="Install And Iterate"
-      >
-        <div className="space-y-6">
-          <div className="space-y-3">
-            <p className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">
-              Install
-            </p>
-            <div className="[&>div]:mt-0">
-              <CodeBlockInstall componentName={componentName} />
-            </div>
-          </div>
-          <Separator />
-          <div className="space-y-3">
-            <p className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">
-              Build with v0
-            </p>
-            <p className="text-[14px] text-secondary leading-6">
-              {actionDescription ??
-                "Send the registry bundle into v0 when you want to explore new colorways, copy, or layout directions quickly."}
-            </p>
-            <ComponentActions name={componentName} />
-          </div>
-          {railNotes?.length ? (
-            <>
-              <Separator />
-              <div className="space-y-3">
-                <p className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">
-                  Notes
-                </p>
-                <ul className="space-y-3">
-                  {railNotes.map((note) => (
-                    <li
-                      className="relative pl-4 text-[14px] text-secondary leading-6 before:absolute before:top-[0.72rem] before:left-0 before:size-1 before:-translate-y-1/2 before:rounded-full before:bg-foreground/70 before:content-['']"
-                      key={note}
-                    >
-                      {note}
-                    </li>
-                  ))}
-                </ul>
+        <DocsSection
+          className="min-w-0 lg:col-span-4"
+          description={
+            installDescription ??
+            "Install the component directly into your codebase, then branch into v0 if you want to iterate on variations."
+          }
+          index="02"
+          title="Install And Iterate"
+        >
+          <div className="space-y-6">
+            <div className="space-y-3">
+              <p className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">
+                Install
+              </p>
+              <div className="[&>div]:mt-0">
+                <CodeBlockInstall componentName={componentName} />
               </div>
-            </>
-          ) : null}
-        </div>
-      </DocsSection>
+            </div>
+            <Separator />
+            <div className="space-y-3">
+              <p className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">
+                Build with v0
+              </p>
+              <p className="text-[14px] text-secondary leading-6">
+                {actionDescription ??
+                  "Send the registry bundle into v0 when you want to explore new colorways, copy, or layout directions quickly."}
+              </p>
+              <ComponentActions name={componentName} />
+            </div>
+            {railNotes?.length ? (
+              <>
+                <Separator />
+                <div className="space-y-3">
+                  <p className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">
+                    Notes
+                  </p>
+                  <ul className="space-y-3">
+                    {railNotes.map((note) => (
+                      <li
+                        className="relative pl-4 text-[14px] text-secondary leading-6 before:absolute before:top-[0.72rem] before:left-0 before:size-1 before:-translate-y-1/2 before:rounded-full before:bg-foreground/70 before:content-['']"
+                        key={note}
+                      >
+                        {note}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </>
+            ) : null}
+          </div>
+        </DocsSection>
 
-      <DocsSection
-        className="min-w-0 lg:col-span-12"
-        description={
-          usageDescription ??
-          "Drop the component into a local surface exactly as shown, then adjust props and class names to fit your app."
-        }
-        index="03"
-        title="Usage"
-      >
-        <CodeBlock
-          code={usageCode}
-          heightClassName="h-[420px]"
-          language="tsx"
-          scrollable
-          variant="embedded"
-        />
-      </DocsSection>
+        <DocsSection
+          className="min-w-0 lg:col-span-12"
+          description={
+            usageDescription ??
+            "Drop the component into a local surface exactly as shown, then adjust props and class names to fit your app."
+          }
+          index="03"
+          title="Usage"
+        >
+          <CodeBlock
+            code={usageCode}
+            heightClassName="h-[420px]"
+            language="tsx"
+            scrollable
+            variant="embedded"
+          />
+        </DocsSection>
 
-      <DocsSection
-        className="min-w-0 lg:col-span-12"
-        description={
-          detailsDescription ??
-          "Each item below covers the documented props and the behavior that matters during implementation."
-        }
-        index="04"
-        title="API Details"
-      >
-        <DetailLedger details={details} />
-      </DocsSection>
-    </DocsPageShell>
+        <DocsSection
+          className="min-w-0 lg:col-span-12"
+          description={
+            detailsDescription ??
+            "Each item below covers the documented props and the behavior that matters during implementation."
+          }
+          index="04"
+          title="API Details"
+        >
+          <DetailLedger details={details} />
+        </DocsSection>
+      </DocsPageShell>
+    </>
   );
 }
 

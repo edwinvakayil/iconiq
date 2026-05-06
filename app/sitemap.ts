@@ -33,6 +33,21 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "monthly" as const,
       priority: 0.5,
     },
+    {
+      path: "/llms.txt",
+      changeFrequency: "weekly" as const,
+      priority: 0.6,
+    },
+    {
+      path: "/llms-full.txt",
+      changeFrequency: "weekly" as const,
+      priority: 0.6,
+    },
+    {
+      path: "/ai-index.json",
+      changeFrequency: "weekly" as const,
+      priority: 0.5,
+    },
   ];
 
   return docsPages.map(({ path, changeFrequency, priority }) => ({

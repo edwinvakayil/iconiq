@@ -1,62 +1,51 @@
 import { LINK, SITE } from "@/constants";
-import { SITE_SECTIONS } from "@/lib/site-nav";
+import {
+  AI_DISCOVERY_LINKS,
+  COMPONENT_CATALOG,
+  GUIDE_CATALOG,
+} from "@/lib/geo";
 
 export function GET() {
-  const componentNames = SITE_SECTIONS.flatMap((section) =>
-    section.children.map((item) => item.label)
-  ).join(", ");
+  const guideLines = GUIDE_CATALOG.map(
+    (guide) => `- ${guide.title}: ${guide.summary}\n  ${guide.url}`
+  ).join("\n");
+
+  const componentLines = COMPONENT_CATALOG.map(
+    (component) =>
+      `- ${component.name}: ${component.summary}\n  Docs: ${component.url}\n  Install: ${component.installCommand}`
+  ).join("\n");
 
   const content = `# ${SITE.NAME}
 
-> Motion-powered React components delivered through the shadcn registry
+> ${SITE.DESCRIPTION.SHORT}
 
-${SITE.NAME} is an open-source collection of motion-aware UI components for React projects.
+${SITE.NAME} is a React component library delivered through the shadcn registry workflow. The site includes component docs, live playgrounds, installation instructions, and a local changelog.
 
-## Overview
+## Canonical
 
 - Website: ${SITE.URL}
 - GitHub: ${LINK.GITHUB}
-- Author: ${SITE.AUTHOR.TWITTER} (${LINK.TWITTER})
+- Author: ${SITE.AUTHOR.NAME}
 
-## Tech Stack
+## AI Discovery
 
-- React components with TypeScript
-- Animations powered by Motion (${LINK.MOTION})
-- Registry delivery aligned with shadcn/ui conventions
+- LLM overview: ${AI_DISCOVERY_LINKS.llmsOverview}
+- Full LLM index: ${AI_DISCOVERY_LINKS.llmsFull}
+- Machine-readable catalog: ${AI_DISCOVERY_LINKS.indexJson}
 
-## Installation
+## Quick Install
 
 \`\`\`bash
 npx shadcn@latest add @iconiq/button
 \`\`\`
 
-You can also install from a direct registry URL:
+## Core Guides
 
-\`\`\`bash
-npx shadcn@latest add ${SITE.URL}/r/button.json
-\`\`\`
+${guideLines}
 
-## Available Components (${SITE_SECTIONS.flatMap((section) => section.children).length} total)
+## Components (${COMPONENT_CATALOG.length})
 
-${componentNames}
-
-## Usage
-
-\`\`\`tsx
-import { Button } from "@/registry/button";
-
-export function Demo() {
-  return <Button>Launch</Button>;
-}
-\`\`\`
-
-## Open Source
-
-Free for personal and commercial use.
-
-## Contributing
-
-Contributions welcome! See CONTRIBUTING.md for guidelines.
+${componentLines}
 `;
 
   return new Response(content, {

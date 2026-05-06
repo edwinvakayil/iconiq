@@ -1,4 +1,8 @@
+import type { ReactNode } from "react";
+import type { DetailItem } from "@/components/docs/page-shell";
 import { LINK, SITE } from "@/constants";
+import { AI_DISCOVERY_LINKS, COMPONENT_CATALOG } from "@/lib/geo";
+import { compactWhitespace, nodeToText } from "@/lib/node-to-text";
 import { SITE_SECTIONS } from "@/lib/site-nav";
 
 const componentCount = SITE_SECTIONS.flatMap(
@@ -187,6 +191,124 @@ const FAQJsonLd = () => {
   );
 };
 
+const AiCatalogJsonLd = () => {
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Dataset",
+    name: `${SITE.NAME} AI discovery index`,
+    description:
+      "Machine-readable catalog of Iconiq guides, component documentation, install commands, and API summaries.",
+    url: AI_DISCOVERY_LINKS.indexJson,
+    creator: {
+      "@type": "Person",
+      name: SITE.AUTHOR.NAME,
+      url: LINK.TWITTER,
+    },
+    isAccessibleForFree: true,
+    distribution: [
+      {
+        "@type": "DataDownload",
+        encodingFormat: "application/json",
+        contentUrl: AI_DISCOVERY_LINKS.indexJson,
+      },
+      {
+        "@type": "DataDownload",
+        encodingFormat: "text/plain",
+        contentUrl: AI_DISCOVERY_LINKS.llmsOverview,
+      },
+      {
+        "@type": "DataDownload",
+        encodingFormat: "text/plain",
+        contentUrl: AI_DISCOVERY_LINKS.llmsFull,
+      },
+    ],
+    variableMeasured: [
+      "component slug",
+      "component name",
+      "docs route",
+      "install command",
+      "registry path",
+      "api summaries",
+    ],
+    size: COMPONENT_CATALOG.length,
+  };
+
+  return (
+    <script
+      // biome-ignore lint/security/noDangerouslySetInnerHtml: JSON-LD script payload
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      type="application/ld+json"
+    />
+  );
+};
+
+const ComponentDocJsonLd = ({
+  componentName,
+  description,
+  details,
+  title,
+}: {
+  componentName: string;
+  description: ReactNode;
+  details: DetailItem[];
+  title: string;
+}) => {
+  const primarySections = details.filter((item) => item.id !== "registry");
+  const registryPath =
+    details.find((item) => item.registryPath)?.registryPath ??
+    `${componentName}.json`;
+  const componentDescription = compactWhitespace(nodeToText(description));
+  const componentSummary = compactWhitespace(
+    nodeToText(primarySections[0]?.summary ?? primarySections[0]?.content ?? "")
+  );
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    headline: `${title} component`,
+    name: `${title} component`,
+    description: componentDescription,
+    abstract: componentSummary || componentDescription,
+    url: `${SITE.URL}/components/${componentName}`,
+    mainEntityOfPage: `${SITE.URL}/components/${componentName}`,
+    about: {
+      "@type": "SoftwareSourceCode",
+      name: title,
+      description: componentSummary || componentDescription,
+      codeRepository: LINK.GITHUB,
+      programmingLanguage: ["TypeScript", "React"],
+      runtimePlatform: "Web browser",
+      url: `${SITE.URL}/r/${registryPath}`,
+    },
+    isPartOf: {
+      "@type": "CollectionPage",
+      name: `${SITE.NAME} component documentation`,
+      url: `${SITE.URL}/components/${componentName}`,
+    },
+    hasPart: primarySections.map((section) => ({
+      "@type": "WebPageElement",
+      name: compactWhitespace(nodeToText(section.title)),
+      description: compactWhitespace(
+        nodeToText(section.summary ?? section.content ?? "")
+      ),
+    })),
+    keywords: [
+      `${title} React component`,
+      `@iconiq/${componentName}`,
+      "shadcn registry",
+      "component documentation",
+    ],
+  };
+
+  return (
+    <script
+      // biome-ignore lint/security/noDangerouslySetInnerHtml: JSON-LD script payload
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      type="application/ld+json"
+    />
+  );
+};
+
 const JsonLdScripts = () => {
   return (
     <>
@@ -194,12 +316,15 @@ const JsonLdScripts = () => {
       <SoftwareSourceCodeJsonLd />
       <OrganizationJsonLd />
       <FAQJsonLd />
+      <AiCatalogJsonLd />
     </>
   );
 };
 
 export {
+  AiCatalogJsonLd,
   BreadcrumbJsonLd,
+  ComponentDocJsonLd,
   ComponentItemListJsonLd,
   FAQJsonLd,
   JsonLdScripts,

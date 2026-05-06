@@ -2,6 +2,12 @@ import type { Metadata } from "next";
 
 import { LINK, SITE } from "@/constants";
 
+const aiDiscoveryMeta = {
+  "ai:index": `${SITE.URL}/ai-index.json`,
+  "ai:llms": `${SITE.URL}/llms.txt`,
+  "ai:llms-full": `${SITE.URL}/llms-full.txt`,
+} as const;
+
 type CreateMetadataOptions = {
   title?: string;
   description?: string;
@@ -78,6 +84,7 @@ const createMetadata = (options: CreateMetadataOptions = {}): Metadata => {
       site: SITE.AUTHOR.TWITTER,
       images: [SITE.OG_IMAGE],
     },
+    other: aiDiscoveryMeta,
     robots: noIndex
       ? {
           index: false,
@@ -147,6 +154,7 @@ const baseMetadata: Metadata = {
   creator: SITE.AUTHOR.NAME,
   publisher: SITE.AUTHOR.NAME,
   referrer: "origin-when-cross-origin",
+  other: aiDiscoveryMeta,
   robots: {
     index: true,
     follow: true,
