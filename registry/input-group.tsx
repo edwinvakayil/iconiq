@@ -12,6 +12,10 @@ interface InputgroupsProps extends React.ComponentProps<"input"> {
   onSuffixClick?: () => void;
 }
 
+function hasFieldValue(value: React.ComponentProps<"input">["value"]) {
+  return value !== undefined && value !== null && String(value).length > 0;
+}
+
 function Inputgroups({
   className,
   label,
@@ -24,7 +28,7 @@ function Inputgroups({
 }: InputgroupsProps) {
   const [isFocused, setIsFocused] = React.useState(false);
   const [hasValue, setHasValue] = React.useState(
-    Boolean(props.value || props.defaultValue)
+    () => hasFieldValue(props.value) || hasFieldValue(props.defaultValue)
   );
   const generatedId = React.useId();
   const inputId = id ?? generatedId;
@@ -33,10 +37,13 @@ function Inputgroups({
   const isActive = isFocused || hasValue;
 
   React.useEffect(() => {
-    if (inputRef.current?.value) {
-      setHasValue(true);
-    }
-  }, []);
+    const currentValue = inputRef.current?.value;
+    setHasValue(
+      hasFieldValue(props.value) ||
+        hasFieldValue(currentValue) ||
+        hasFieldValue(props.defaultValue)
+    );
+  }, [props.value, props.defaultValue]);
 
   const handleContainerMouseDown = (
     event: React.MouseEvent<HTMLDivElement>
@@ -113,10 +120,11 @@ function Inputgroups({
             id={inputId}
             onBlur={(e) => {
               setIsFocused(false);
+              setHasValue(hasFieldValue(e.target.value));
               props.onBlur?.(e);
             }}
             onChange={(e) => {
-              setHasValue(e.target.value.length > 0);
+              setHasValue(hasFieldValue(e.target.value));
               props.onChange?.(e);
             }}
             onFocus={(e) => {

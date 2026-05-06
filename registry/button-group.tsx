@@ -1,10 +1,12 @@
 "use client";
 
-import { motion } from "motion/react";
+import { motion, useReducedMotion } from "motion/react";
 import * as React from "react";
 import { cn } from "@/lib/utils";
 
 const MotionButton = motion.button;
+
+type Ripple = { id: string; x: number; y: number; size: number };
 
 type MotionSafeButtonProps = Omit<
   React.ButtonHTMLAttributes<HTMLButtonElement>,
@@ -20,40 +22,118 @@ interface ButtonProps extends MotionSafeButtonProps {
   children: React.ReactNode;
 }
 
+interface RippleButtonProps extends MotionSafeButtonProps {
+  children: React.ReactNode;
+  className?: string;
+  contentClassName?: string;
+}
+
+const RippleButton = React.forwardRef<HTMLButtonElement, RippleButtonProps>(
+  (
+    {
+      className,
+      children,
+      contentClassName,
+      disabled,
+      onPointerDown,
+      ...props
+    },
+    ref
+  ) => {
+    const [ripples, setRipples] = React.useState<Ripple[]>([]);
+    const prefersReducedMotion = useReducedMotion();
+
+    const handlePointerDown = (e: React.PointerEvent<HTMLButtonElement>) => {
+      onPointerDown?.(e);
+
+      if (disabled || e.button !== 0 || prefersReducedMotion) {
+        return;
+      }
+
+      const rect = e.currentTarget.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const size =
+        2 *
+        Math.max(
+          Math.hypot(x, y),
+          Math.hypot(rect.width - x, y),
+          Math.hypot(x, rect.height - y),
+          Math.hypot(rect.width - x, rect.height - y)
+        );
+      const id =
+        typeof crypto !== "undefined" && crypto.randomUUID
+          ? crypto.randomUUID()
+          : `${Date.now()}-${Math.random()}`;
+
+      setRipples((current) => [...current, { id, x, y, size }]);
+    };
+
+    return (
+      <MotionButton
+        className={cn("relative overflow-hidden", className)}
+        disabled={disabled}
+        onPointerDown={handlePointerDown}
+        ref={ref}
+        {...props}
+      >
+        <span
+          aria-hidden
+          className="pointer-events-none absolute inset-0 z-0 overflow-hidden rounded-[inherit]"
+        >
+          {ripples.map((ripple) => (
+            <motion.span
+              animate={{ opacity: 0, scale: 1 }}
+              className="pointer-events-none absolute -translate-x-1/2 -translate-y-1/2 rounded-full bg-current"
+              initial={{ opacity: 0.16, scale: 0 }}
+              key={ripple.id}
+              onAnimationComplete={() => {
+                setRipples((current) =>
+                  current.filter((item) => item.id !== ripple.id)
+                );
+              }}
+              style={{
+                height: ripple.size,
+                left: ripple.x,
+                top: ripple.y,
+                width: ripple.size,
+              }}
+              transition={{
+                duration: 0.55,
+                ease: [0.22, 1, 0.36, 1],
+              }}
+            />
+          ))}
+        </span>
+        <span
+          className={cn(
+            "relative z-10 inline-flex items-center gap-2",
+            contentClassName
+          )}
+        >
+          {children}
+        </span>
+      </MotionButton>
+    );
+  }
+);
+RippleButton.displayName = "RippleButton";
+
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, children, ...props }, ref) => {
     return (
-      <MotionButton
-        animate={{ opacity: 1, y: 0 }}
+      <RippleButton
         className={cn(
-          "inline-flex h-9 items-center justify-center gap-2 rounded-lg border border-border bg-background px-4 font-medium text-foreground text-sm",
+          "inline-flex h-9 items-center justify-center gap-2 rounded-lg border border-border bg-background px-4 font-medium text-foreground text-sm transition-colors",
           "outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
           "disabled:pointer-events-none disabled:opacity-50",
           className
         )}
-        initial={{ opacity: 0, y: 8 }}
         ref={ref}
-        transition={{
-          type: "spring",
-          stiffness: 500,
-          damping: 30,
-          mass: 0.8,
-        }}
-        whileHover={{
-          scale: 1.02,
-          backgroundColor: "var(--muted)",
-        }}
-        whileTap={{ scale: 0.95 }}
         {...props}
       >
-        <motion.span
-          className="inline-flex items-center gap-2"
-          transition={{ type: "spring", stiffness: 400, damping: 25 }}
-          whileHover={{ x: 2 }}
-        >
-          {children}
-        </motion.span>
-      </MotionButton>
+        {children}
+      </RippleButton>
     );
   }
 );
@@ -66,44 +146,19 @@ interface IconButtonProps extends MotionSafeButtonProps {
 const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
   ({ className, children, ...props }, ref) => {
     return (
-      <MotionButton
-        animate={{ opacity: 1, scale: 1, y: 0 }}
+      <RippleButton
         className={cn(
-          "inline-flex size-9 items-center justify-center rounded-lg border border-border bg-background text-foreground",
+          "inline-flex size-9 items-center justify-center rounded-lg border border-border bg-background text-foreground transition-colors",
           "outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
           "disabled:pointer-events-none disabled:opacity-50",
           "[&_svg]:size-4 [&_svg]:shrink-0",
           className
         )}
-        initial={{ opacity: 0, scale: 0.92, y: 6 }}
         ref={ref}
-        transition={{
-          type: "spring",
-          stiffness: 420,
-          damping: 28,
-          mass: 0.72,
-        }}
-        whileHover={{
-          scale: 1.035,
-          y: -1,
-          backgroundColor: "var(--muted)",
-        }}
-        whileTap={{ scale: 0.96, y: 0 }}
         {...props}
       >
-        <motion.span
-          transition={{
-            type: "spring",
-            stiffness: 380,
-            damping: 24,
-            mass: 0.65,
-          }}
-          whileHover={{ rotate: -10, y: -0.75 }}
-          whileTap={{ rotate: -4, scale: 0.96, y: 0 }}
-        >
-          {children}
-        </motion.span>
-      </MotionButton>
+        {children}
+      </RippleButton>
     );
   }
 );
@@ -116,20 +171,7 @@ interface ButtonGroupProps {
 
 function ButtonGroup({ children, className }: ButtonGroupProps) {
   return (
-    <motion.div
-      animate={{ opacity: 1, y: 0 }}
-      className={cn("flex items-center gap-2", className)}
-      initial={{ opacity: 0, y: 12 }}
-      role="group"
-      transition={{
-        type: "spring",
-        stiffness: 400,
-        damping: 30,
-        staggerChildren: 0.05,
-      }}
-    >
-      {children}
-    </motion.div>
+    <div className={cn("flex items-center gap-2", className)}>{children}</div>
   );
 }
 
@@ -140,94 +182,44 @@ interface ButtonGroupItemsProps {
 
 function ButtonGroupItems({ children, className }: ButtonGroupItemsProps) {
   const childArray = React.Children.toArray(children);
-  const [hoveredIndex, setHoveredIndex] = React.useState<number | null>(null);
-  const [focusedIndex, setFocusedIndex] = React.useState<number | null>(null);
-  const activeIndex = hoveredIndex ?? focusedIndex;
 
   return (
-    <motion.div
-      animate={{ opacity: 1, scale: 1, y: 0 }}
+    <div
       className={cn(
         "relative inline-flex items-center rounded-lg border border-border bg-background",
         className
       )}
-      initial={{ opacity: 0, scale: 0.985, y: 8 }}
-      role="group"
-      transition={{
-        type: "spring",
-        stiffness: 360,
-        damping: 32,
-        mass: 0.85,
-      }}
     >
       {childArray.map((child, index) => {
         if (!React.isValidElement<MotionSafeButtonProps>(child)) return null;
 
         const isFirst = index === 0;
         const isLast = index === childArray.length - 1;
+        const {
+          children: childChildren,
+          className: childClassName,
+          ...childProps
+        } = child.props;
 
         return (
-          <MotionButton
+          <RippleButton
             className={cn(
-              "relative inline-flex h-9 items-center justify-center px-4 font-medium text-foreground text-sm",
+              "relative inline-flex h-9 items-center justify-center px-4 font-medium text-foreground text-sm transition-colors",
               "outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset",
               "disabled:pointer-events-none disabled:opacity-50",
               isFirst && "rounded-l-[7px]",
               isLast && "rounded-r-[7px]",
-              !isLast && "border-border border-r"
+              !isLast && "border-border border-r",
+              childClassName
             )}
             key={index}
-            onBlur={() =>
-              setFocusedIndex((current) => (current === index ? null : current))
-            }
-            onFocus={() => setFocusedIndex(index)}
-            onHoverEnd={() =>
-              setHoveredIndex((current) => (current === index ? null : current))
-            }
-            onHoverStart={() => setHoveredIndex(index)}
-            transition={{
-              type: "spring",
-              stiffness: 360,
-              damping: 28,
-              mass: 0.9,
-            }}
-            whileTap={{ scale: 0.985, y: 0.25 }}
-            {...(child.props as MotionSafeButtonProps)}
+            {...childProps}
           >
-            {activeIndex === index ? (
-              <motion.span
-                className="absolute inset-[2px] rounded-[7px]"
-                initial={false}
-                layoutId="button-group-hover"
-                transition={{
-                  type: "spring",
-                  stiffness: 380,
-                  damping: 32,
-                  mass: 0.82,
-                }}
-              />
-            ) : null}
-            <motion.span
-              animate={{
-                opacity: activeIndex === index ? 1 : 0.88,
-                scale: activeIndex === index ? 1.01 : 1,
-                x: activeIndex === index ? 1.5 : 0,
-                y: activeIndex === index ? -0.35 : 0,
-              }}
-              className="relative z-10 inline-flex items-center gap-2"
-              transition={{
-                type: "spring",
-                stiffness: 320,
-                damping: 24,
-                mass: 0.85,
-              }}
-            >
-              {child.props.children}
-            </motion.span>
-          </MotionButton>
+            {childChildren}
+          </RippleButton>
         );
       })}
-    </motion.div>
+    </div>
   );
 }
 
