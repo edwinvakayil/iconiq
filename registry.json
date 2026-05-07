@@ -304,6 +304,21 @@
       ]
     },
     {
+      "name": "pagination",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": ["motion"],
+      "devDependencies": [],
+      "title": "Pagination",
+      "description": "Animated pagination control with previous and next actions, compressed ellipsis handling, and a sliding active underline.",
+      "files": [
+        {
+          "path": "pagination.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "popover",
       "type": "registry:ui",
       "registryDependencies": [],

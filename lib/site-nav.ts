@@ -32,6 +32,7 @@ export const SITE_SECTIONS = [
       { label: "Hover card", href: "/components/hover-card" },
       { label: "Input", href: "/components/input" },
       { label: "Input group", href: "/components/input-group" },
+      { label: "Pagination", href: "/components/pagination" },
       { label: "Popover", href: "/components/popover" },
       { label: "Checkbox group", href: "/components/checkbox-group" },
       { label: "Radio group", href: "/components/radiogroup" },

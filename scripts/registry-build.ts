@@ -154,6 +154,12 @@ const REGISTRY_UI_META: Record<
       "Floating-label input field with optional prefix and suffix slots, inline error copy, and a matching vertical stack wrapper for grouped forms.",
     dependencies: ["motion"],
   },
+  pagination: {
+    title: "Pagination",
+    description:
+      "Animated pagination control with previous and next actions, compressed ellipsis handling, and a sliding active underline.",
+    dependencies: ["motion"],
+  },
   radiogroup: {
     title: "Radio group",
     description:

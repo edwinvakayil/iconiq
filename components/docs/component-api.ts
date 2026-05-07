@@ -1970,6 +1970,90 @@ const inputGroupApiDetails: DetailItem[] = [
   registryItem("input-group.json", ["motion"]),
 ];
 
+const paginationApiDetails: DetailItem[] = [
+  {
+    id: "pagination",
+    title: "Pagination",
+    summary:
+      "Pagination root that can either render the full paginator from total, page, and onChange props or act as the parent wrapper for the composed shadcn-style pieces.",
+    fields: [
+      field({
+        name: "total",
+        type: "number",
+        description:
+          "Total number of pages available. When you use the built-in wrapper mode, the component renders the first page, last page, current page, and one sibling on either side, collapsing the rest into ellipsis markers.",
+      }),
+      field({
+        name: "page",
+        type: "number",
+        description:
+          "Controlled current page. When omitted, the root manages its own page state internally starting from page 1.",
+      }),
+      field({
+        name: "onChange",
+        type: "(page: number) => void",
+        description:
+          "Called whenever a valid next page is chosen from the numbered buttons or the previous and next controls. The composed primitives also use this through context when you do not provide custom button handlers.",
+      }),
+      field({
+        name: "children",
+        type: "ReactNode",
+        description:
+          "Optional composed pagination structure. When omitted, the root renders the full paginator automatically using total, page, and onChange.",
+      }),
+    ],
+    notes: [
+      "This keeps the same UI and motion treatment as the original single-component paginator, but now also exposes shadcn-style building blocks.",
+      "Out-of-range page changes are ignored, so previous is inert on page 1 and next is inert on the final page.",
+    ],
+  },
+  {
+    id: "pagination-content",
+    title: "PaginationContent and PaginationItem",
+    summary:
+      "The composed content wrapper keeps previous and next controls on the edges while the page links stay centered inside the same fixed-width rail.",
+    fields: [
+      field({
+        name: "children",
+        type: "ReactNode",
+        required: true,
+        description:
+          "Render PaginationPrevious, PaginationNext, PaginationLink, and PaginationEllipsis inside PaginationContent. Numeric and ellipsis entries can be wrapped with PaginationItem.",
+      }),
+    ],
+    notes: [
+      "PaginationContent preserves the same centered 280px page rail from the current design instead of switching to a looser layout.",
+      "PaginationItem uses layout-aware motion so page entries keep the same fluid shifting behavior when the visible range changes.",
+    ],
+  },
+  {
+    id: "pagination-links",
+    title:
+      "PaginationLink, PaginationPrevious, PaginationNext, and PaginationEllipsis",
+    summary:
+      "These primitives expose the numbered buttons and edge controls individually while keeping the existing visual behavior intact.",
+    fields: [
+      field({
+        name: "isActive",
+        type: "boolean",
+        description:
+          "Marks the current page on PaginationLink and keeps the underline anchored under the active number.",
+      }),
+      field({
+        name: "text",
+        type: "string",
+        description:
+          "Optional label override for PaginationPrevious and PaginationNext. They default to Prev and Next.",
+      }),
+    ],
+    notes: [
+      "Previous and next keep the same hover arrow nudge and current label treatment from the approved design.",
+      "Ellipsis markers remain static separators and are not interactive.",
+    ],
+  },
+  registryItem("pagination.json", ["motion"]),
+];
+
 const accordionApiDetails: DetailItem[] = [
   {
     id: "accordion-item",
@@ -2937,6 +3021,7 @@ export {
   popoverApiDetails,
   inputApiDetails,
   inputGroupApiDetails,
+  paginationApiDetails,
   accordionApiDetails,
   radioGroupApiDetails,
   selectApiDetails,

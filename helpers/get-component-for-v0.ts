@@ -566,6 +566,65 @@ const COMPONENT_EXAMPLE: Record<string, string> = {
     "    </div>\n" +
     "  )\n" +
     "}\n",
+  pagination:
+    '"use client";\n\n' +
+    `import { useState } from "react"\n` +
+    "import {\n" +
+    "  Pagination,\n" +
+    "  PaginationContent,\n" +
+    "  PaginationEllipsis,\n" +
+    "  PaginationItem,\n" +
+    "  PaginationLink,\n" +
+    "  PaginationNext,\n" +
+    "  PaginationPrevious,\n" +
+    `} from "@/components/ui/pagination"\n\n` +
+    "function getVisiblePages(page: number, total: number) {\n" +
+    '  const pages: (number | "…")[] = []\n\n' +
+    "  for (let index = 1; index <= total; index++) {\n" +
+    "    if (\n" +
+    "      index === 1 ||\n" +
+    "      index === total ||\n" +
+    "      (index >= page - 1 && index <= page + 1)\n" +
+    "    ) {\n" +
+    "      pages.push(index)\n" +
+    '    } else if (pages.at(-1) !== "…") {\n' +
+    '      pages.push("…")\n' +
+    "    }\n" +
+    "  }\n\n" +
+    "  return pages\n" +
+    "}\n\n" +
+    "export default function Page() {\n" +
+    "  const [page, setPage] = useState(4)\n\n" +
+    "  const pages = getVisiblePages(page, 12)\n\n" +
+    "  return (\n" +
+    '    <div className="flex min-h-svh items-center justify-center p-8">\n' +
+    "      <Pagination onChange={setPage} page={page} total={12}>\n" +
+    "        <PaginationContent>\n" +
+    "          <PaginationPrevious />\n" +
+    "          {pages.map((item, index) =>\n" +
+    '            item === "…" ? (\n' +
+    "              <PaginationItem key={`ellipsis-$" +
+    "{index}`}>\n" +
+    "                <PaginationEllipsis />\n" +
+    "              </PaginationItem>\n" +
+    "            ) : (\n" +
+    "              <PaginationItem key={item}>\n" +
+    "                <PaginationLink\n" +
+    '                  className="tabular-nums"\n' +
+    "                  isActive={item === page}\n" +
+    "                  onClick={() => setPage(item)}\n" +
+    "                >\n" +
+    '                  {String(item).padStart(2, "0")}\n' +
+    "                </PaginationLink>\n" +
+    "              </PaginationItem>\n" +
+    "            )\n" +
+    "          )}\n" +
+    "          <PaginationNext />\n" +
+    "        </PaginationContent>\n" +
+    "      </Pagination>\n" +
+    "    </div>\n" +
+    "  )\n" +
+    "}\n",
   switch:
     '"use client";\n\n' +
     `import { Switch } from "@/components/ui/switch"\n` +
