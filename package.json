@@ -9,6 +9,7 @@
     "url": "https://github.com/edwinvakayil/iconiq"
   },
   "homepage": "https://iconiqui.com",
+  "packageManager": "pnpm@10.30.3",
   "scripts": {
     "dev": "next dev",
     "prebuild": "node scripts/download-fonts.js",
@@ -59,5 +60,11 @@
     "typescript": "^5.9.3",
     "ultracite": "7.2.0",
     "vercel": "^53.1.1"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild",
+      "sharp"
+    ]
   }
 }
