@@ -32,7 +32,6 @@ export function PackageManagerSwitcher({
   const [hoveredValue, setHoveredValue] = React.useState<
     (typeof PACKAGE_MANAGER)[keyof typeof PACKAGE_MANAGER] | null
   >(null);
-  const [hoverRect, setHoverRect] = React.useState({ left: 0, width: 0 });
 
   const measure = React.useCallback(
     (
@@ -70,16 +69,8 @@ export function PackageManagerSwitcher({
   }, [measure, value]);
 
   React.useLayoutEffect(() => {
-    const rect = measure(hoveredValue);
-    if (rect) {
-      setHoverRect(rect);
-    }
-  }, [hoveredValue, measure]);
-
-  React.useLayoutEffect(() => {
     const updateRects = () => {
       setActiveRect(measure(value) ?? { left: 0, width: 0 });
-      setHoverRect(measure(hoveredValue) ?? { left: 0, width: 0 });
     };
 
     updateRects();
@@ -94,9 +85,7 @@ export function PackageManagerSwitcher({
     observer.observe(rail);
 
     return () => observer.disconnect();
-  }, [hoveredValue, measure, value]);
-
-  const showHover = hoveredValue !== null && hoveredValue !== value;
+  }, [measure, value]);
 
   return (
     <div className={cn("mb-3", className)}>
@@ -141,27 +130,6 @@ export function PackageManagerSwitcher({
             stiffness: 360,
             damping: 34,
             mass: 0.7,
-          }}
-        />
-        <motion.div
-          animate={{
-            left: hoverRect.left,
-            opacity: showHover ? 1 : 0,
-            width: hoverRect.width,
-          }}
-          aria-hidden="true"
-          className="pointer-events-none absolute -bottom-px h-[1.5px]"
-          initial={false}
-          style={{
-            background:
-              "color-mix(in oklab, var(--color-foreground) 25%, transparent)",
-          }}
-          transition={{
-            type: "spring",
-            stiffness: 500,
-            damping: 40,
-            mass: 0.5,
-            opacity: { duration: 0.2 },
           }}
         />
       </div>

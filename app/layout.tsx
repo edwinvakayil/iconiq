@@ -84,7 +84,7 @@ export default function RootLayout({
               <div className="root-content">
                 <div className="flex min-h-0 min-w-0 flex-1">
                   <DocsSidebar />
-                  <div className="min-h-0 min-w-0 flex-1 bg-background">
+                  <div className="flex min-h-0 min-w-0 flex-1 flex-col bg-background">
                     <NuqsAdapter>
                       {children}
                       <Toaster
@@ -110,10 +110,10 @@ export default function RootLayout({
                         }}
                       />
                     </NuqsAdapter>
+                    <ConditionalFooter />
                     <Analytics />
                   </div>
                 </div>
-                <ConditionalFooter />
               </div>
               <StarPromptCard />
             </PackageNameProvider>

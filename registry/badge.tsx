@@ -21,7 +21,7 @@ export function Badge({
   return (
     <motion.span
       animate={{ opacity: 1, scale: 1 }}
-      className={`relative inline-flex items-center overflow-hidden rounded-full border border-border px-3 py-1 font-medium text-xs ${bgColor ? "" : "bg-neutral-900 dark:bg-white"} ${textColor ? "" : "text-white dark:text-neutral-900"} ${className}`}
+      className={`relative inline-flex items-center overflow-hidden rounded-full border border-transparent px-3 py-1 font-medium text-xs ${bgColor ? "" : "bg-neutral-900 dark:bg-white"} ${textColor ? "" : "text-white dark:text-neutral-900"} ${className}`}
       initial={{ opacity: 0, scale: 0.95 }}
       style={{
         ...(bgColor ? { backgroundColor: bgColor } : {}),

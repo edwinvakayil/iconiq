@@ -31,25 +31,25 @@ function BadgePreview() {
       <p className="max-w-lg text-center font-medium font-sans text-lg text-neutral-800 leading-relaxed sm:text-xl dark:text-neutral-100">
         Mark the beat — a{" "}
         <Badge
-          bgColor="#14532d"
-          textColor="#f0fdf4"
-          waveColor="rgba(255,255,255,0.16)"
+          bgColor="#ccfbf1"
+          textColor="#115e59"
+          waveColor="rgba(255,255,255,0.52)"
         >
           New
         </Badge>{" "}
         tag for launches,{" "}
         <Badge
-          bgColor="#312e81"
-          textColor="#eef2ff"
-          waveColor="rgba(255,255,255,0.16)"
+          bgColor="#ffedd5"
+          textColor="#9a3412"
+          waveColor="rgba(255,255,255,0.52)"
         >
           Beta
         </Badge>{" "}
         when you&apos;re still tuning,{" "}
         <Badge
-          bgColor="#581c87"
-          textColor="#faf5ff"
-          waveColor="rgba(255,255,255,0.16)"
+          bgColor="#fce7f3"
+          textColor="#9d174d"
+          waveColor="rgba(255,255,255,0.52)"
         >
           Live
         </Badge>{" "}

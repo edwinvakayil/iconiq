@@ -230,10 +230,9 @@ export interface TabsListProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 export const TabsList = React.forwardRef<HTMLDivElement, TabsListProps>(
   ({ children, className, onMouseLeave, ...props }, ref) => {
-    const { hoveredValue, listRef, setHoveredValue, triggerRefs, value } =
+    const { listRef, setHoveredValue, triggerRefs, value } =
       useTabsContext("TabsList");
     const [activeRect, setActiveRect] = React.useState({ left: 0, width: 0 });
-    const [hoverRect, setHoverRect] = React.useState({ left: 0, width: 0 });
 
     const measure = React.useCallback(
       (tabValue: string | null) => {
@@ -267,16 +266,8 @@ export const TabsList = React.forwardRef<HTMLDivElement, TabsListProps>(
     }, [measure, value]);
 
     React.useLayoutEffect(() => {
-      const rect = measure(hoveredValue);
-      if (rect) {
-        setHoverRect(rect);
-      }
-    }, [hoveredValue, measure]);
-
-    React.useLayoutEffect(() => {
       const updateRects = () => {
         setActiveRect(measure(value ?? null) ?? { left: 0, width: 0 });
-        setHoverRect(measure(hoveredValue) ?? { left: 0, width: 0 });
       };
 
       updateRects();
@@ -291,9 +282,7 @@ export const TabsList = React.forwardRef<HTMLDivElement, TabsListProps>(
       observer.observe(container);
 
       return () => observer.disconnect();
-    }, [hoveredValue, listRef, measure, value]);
-
-    const showHover = hoveredValue !== null && hoveredValue !== value;
+    }, [listRef, measure, value]);
 
     return (
       <div
@@ -325,27 +314,6 @@ export const TabsList = React.forwardRef<HTMLDivElement, TabsListProps>(
             damping: 34,
             mass: 0.7,
             stiffness: 360,
-            type: "spring",
-          }}
-        />
-        <motion.div
-          animate={{
-            left: hoverRect.left,
-            opacity: showHover ? 1 : 0,
-            width: hoverRect.width,
-          }}
-          aria-hidden
-          className="pointer-events-none absolute -bottom-px h-[1.5px]"
-          initial={false}
-          style={{
-            background:
-              "color-mix(in oklab, var(--color-foreground) 25%, transparent)",
-          }}
-          transition={{
-            damping: 40,
-            mass: 0.5,
-            opacity: { duration: 0.2 },
-            stiffness: 500,
             type: "spring",
           }}
         />

@@ -4,6 +4,7 @@ import {
   BookOpen,
   ChevronRight,
   Github,
+  HeartHandshake,
   LayoutGrid,
   Menu,
   X,
@@ -221,6 +222,23 @@ export function Header() {
             <span className="hidden h-5 w-px bg-neutral-200 sm:block dark:bg-neutral-700" />
 
             <a
+              className="hidden size-8 items-center justify-center rounded-md text-neutral-500 hover:bg-neutral-100 hover:text-neutral-900 sm:flex dark:hover:bg-white/10 dark:hover:text-white"
+              href={LINK.TWITTER}
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              <XLogoIcon className="size-5" />
+            </a>
+
+            <Link
+              aria-label="Sponsor Iconiq"
+              className="hidden size-8 items-center justify-center rounded-md text-neutral-500 hover:bg-neutral-100 hover:text-neutral-900 sm:flex dark:hover:bg-white/10 dark:hover:text-white"
+              href="/sponsorship"
+            >
+              <HeartHandshake className="size-5" />
+            </Link>
+
+            <a
               className="hidden items-center gap-2 rounded-lg bg-muted/60 px-3 py-1.25 text-neutral-600 text-sm hover:bg-muted hover:text-neutral-900 sm:flex dark:bg-white/[0.04] dark:text-neutral-300 dark:hover:bg-white/[0.08] dark:hover:text-white"
               href={LINK.GITHUB}
               rel="noopener noreferrer"
@@ -231,17 +249,6 @@ export function Header() {
               <span className="font-mono text-[11px] text-neutral-400 dark:text-neutral-500">
                 {starCount !== null ? formatStarCount(starCount) : "—"}
               </span>
-            </a>
-
-            <span className="hidden h-5 w-px bg-neutral-200 sm:block dark:bg-neutral-700" />
-
-            <a
-              className="hidden size-8 items-center justify-center rounded-md text-neutral-500 hover:bg-neutral-100 hover:text-neutral-900 sm:flex dark:hover:bg-white/10 dark:hover:text-white"
-              href={LINK.TWITTER}
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-              <XLogoIcon className="size-5" />
             </a>
 
             <button
@@ -276,6 +283,13 @@ export function Header() {
               >
                 <XLogoIcon className="size-[18px]" />
               </a>
+              <Link
+                aria-label="Sponsor Iconiq"
+                className={desktopIconActionClass}
+                href="/sponsorship"
+              >
+                <HeartHandshake className="size-[18px]" />
+              </Link>
               <a
                 aria-label="GitHub stars"
                 className={desktopGithubBadgeClass}
@@ -392,6 +406,14 @@ export function Header() {
 
               {/* Bottom link */}
               <div className="border-neutral-200 border-t p-3 dark:border-neutral-800/50">
+                <Link
+                  className="mb-2 flex w-full items-center justify-center gap-2 rounded-lg border border-border px-3 py-2 font-medium text-[13px] text-muted-foreground transition-colors hover:text-foreground"
+                  href="/sponsorship"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  <HeartHandshake className="size-4" />
+                  Sponsor
+                </Link>
                 <a
                   className="flex w-full items-center justify-center gap-2 rounded-lg border border-border px-3 py-2 font-medium text-[13px] text-muted-foreground transition-colors hover:text-foreground"
                   href={LINK.GITHUB}
