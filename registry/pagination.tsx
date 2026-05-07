@@ -118,7 +118,7 @@ export function Pagination({
     >
       <nav
         aria-label="Pagination"
-        className={cn("inline-flex", className)}
+        className={cn("inline-flex max-w-full", className)}
         {...props}
       >
         {renderedChildren}
@@ -175,14 +175,17 @@ export const PaginationContent = React.forwardRef<
 
   return (
     <ul
-      className={cn("inline-flex items-center gap-6 text-sm", className)}
+      className={cn(
+        "inline-flex max-w-full items-center gap-3 text-sm sm:gap-6",
+        className
+      )}
       ref={ref}
       {...props}
     >
       {previousItem}
 
-      <li className="list-none">
-        <div className="relative flex w-[280px] items-center justify-center gap-1">
+      <li className="min-w-0 list-none">
+        <div className="relative flex w-[clamp(11rem,62vw,17.5rem)] items-center justify-center gap-0.5 sm:gap-1">
           <AnimatePresence initial={false} mode="popLayout">
             {pageItems}
           </AnimatePresence>
@@ -226,7 +229,7 @@ export const PaginationLink = React.forwardRef<
     <motion.button
       animate={{ opacity: 1, y: 0 }}
       className={cn(
-        "relative flex h-10 w-8 items-center justify-center",
+        "relative flex h-8 w-7 items-center justify-center sm:h-10 sm:w-8",
         className
       )}
       exit={{ opacity: 0, y: -6 }}
@@ -247,7 +250,7 @@ export const PaginationLink = React.forwardRef<
       </motion.span>
       {isActive && (
         <motion.span
-          className="absolute bottom-1 left-1/2 h-px w-4 -translate-x-1/2 bg-foreground"
+          className="absolute bottom-1 left-1/2 h-px w-3 -translate-x-1/2 bg-foreground sm:w-4"
           layoutId={underlineLayoutId}
           transition={spring}
         />
@@ -274,7 +277,7 @@ export const PaginationPrevious = React.forwardRef<
     <button
       aria-label="Previous"
       className={cn(
-        "group flex items-center gap-2 text-muted-foreground transition-colors hover:text-foreground disabled:pointer-events-none disabled:opacity-20",
+        "group flex shrink-0 items-center gap-1.5 text-muted-foreground transition-colors hover:text-foreground disabled:pointer-events-none disabled:opacity-20 sm:gap-2",
         className
       )}
       disabled={isDisabled}
@@ -297,7 +300,9 @@ export const PaginationPrevious = React.forwardRef<
       >
         <ArrowLeft className="h-3.5 w-3.5 stroke-[1.8]" />
       </motion.span>
-      <span className="text-[11px] uppercase tracking-[0.2em]">{text}</span>
+      <span className="hidden text-[11px] uppercase tracking-[0.2em] sm:inline">
+        {text}
+      </span>
     </button>
   );
 });
@@ -320,7 +325,7 @@ export const PaginationNext = React.forwardRef<
     <button
       aria-label="Next"
       className={cn(
-        "group flex items-center gap-2 text-muted-foreground transition-colors hover:text-foreground disabled:pointer-events-none disabled:opacity-20",
+        "group flex shrink-0 items-center gap-1.5 text-muted-foreground transition-colors hover:text-foreground disabled:pointer-events-none disabled:opacity-20 sm:gap-2",
         className
       )}
       disabled={isDisabled}
@@ -338,7 +343,9 @@ export const PaginationNext = React.forwardRef<
       type="button"
       {...props}
     >
-      <span className="text-[11px] uppercase tracking-[0.2em]">{text}</span>
+      <span className="hidden text-[11px] uppercase tracking-[0.2em] sm:inline">
+        {text}
+      </span>
       <motion.span
         aria-hidden
         className="inline-flex"
@@ -360,7 +367,7 @@ export const PaginationEllipsis = React.forwardRef<
   <motion.span
     animate={{ opacity: 0.4 }}
     className={cn(
-      "flex h-10 w-5 items-center justify-center text-muted-foreground",
+      "flex h-8 w-4 items-center justify-center text-muted-foreground sm:h-10 sm:w-5",
       className
     )}
     exit={{ opacity: 0 }}
