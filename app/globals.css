@@ -27,7 +27,7 @@
 :root {
   --announcement-height-mobile: 0rem;
   --announcement-height-desktop: 3.25rem;
-  --header-height-mobile: 3rem;
+  --header-height-mobile: 3.5rem;
   --header-height-desktop: 3.5rem;
   --nav-stack-height-mobile: calc(
     var(--announcement-height-mobile) +
@@ -292,7 +292,14 @@ html[data-banner-hidden="true"] {
     flex-direction: column;
     min-height: 0;
     min-width: 0;
+    padding-top: var(--header-height-mobile);
     background-color: var(--background);
+  }
+
+  @media (min-width: 1024px) {
+    .root-content {
+      padding-top: var(--header-height-desktop);
+    }
   }
 
   ::-webkit-scrollbar {

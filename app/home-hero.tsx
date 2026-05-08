@@ -1,139 +1,66 @@
+import { ArrowRight, Sparkles } from "lucide-react";
 import Link from "next/link";
 
-import { DocsSection } from "@/components/docs/page-shell";
-import { Separator } from "@/components/ui/separator";
-import { SITE_SECTIONS } from "@/lib/site-nav";
-
-const componentCount =
-  SITE_SECTIONS.find((section) => section.label === "Components")?.children
-    .length ?? 0;
+import { PageStagger, PageStaggerItem } from "@/components/page-reveal";
+import { SITE } from "@/constants";
 
 export function HomeHero() {
   return (
-    <section className="bg-background py-10 sm:py-12 lg:py-16">
-      <div className="mx-auto flex w-full max-w-[1480px] flex-col gap-10 px-4 sm:px-6 lg:px-10">
-        <div className="space-y-8 pt-8">
-          <Separator />
-          <div className="grid gap-8 lg:grid-cols-12 lg:gap-10">
-            <div className="space-y-5 lg:col-span-4">
-              <p className="font-mono text-[11px] text-muted-foreground uppercase tracking-[0.32em]">
-                React UI components
-              </p>
-              <Separator />
-              <dl className="space-y-3">
-                <div className="space-y-1">
-                  <dt className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">
-                    Library
-                  </dt>
-                  <dd className="text-[15px] text-foreground">
-                    {componentCount} documented primitives
-                  </dd>
-                </div>
-                <div className="space-y-1">
-                  <dt className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">
-                    Delivery
-                  </dt>
-                  <dd className="text-[15px] text-foreground">
-                    shadcn registry install
-                  </dd>
-                </div>
-                <div className="space-y-1">
-                  <dt className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">
-                    Ownership
-                  </dt>
-                  <dd className="text-[15px] text-foreground">
-                    Local component files
-                  </dd>
-                </div>
-              </dl>
+    <section className="bg-background pt-12 pb-18 sm:pt-16 sm:pb-24">
+      <div className="mx-auto w-full max-w-[1280px] px-4 sm:px-6 lg:px-8">
+        <PageStagger
+          className="mx-auto max-w-[1120px] text-left sm:text-center"
+          delayChildren={0.04}
+        >
+          <PageStaggerItem>
+            <div className="flex justify-start sm:justify-center">
+              <span className="inline-flex items-center gap-2 rounded-full border border-border/80 bg-background px-4 py-1.5 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.18em]">
+                <Sparkles className="size-3.5" />
+                Open-source React registry
+              </span>
             </div>
+          </PageStaggerItem>
 
-            <div className="space-y-6 lg:col-span-8">
-              <h1 className="max-w-5xl text-4xl text-foreground tracking-[-0.08em] sm:text-5xl lg:text-[4.6rem]">
-                A sharper way to build polished React interfaces.
-              </h1>
-              <p className="max-w-3xl text-[16px] text-secondary leading-7 sm:text-[17px] sm:leading-8">
-                Iconiq is a focused library of motion-aware components for teams
-                that value clarity, implementation control, and reliable
-                execution. Review each component in context, install the files
-                directly into your codebase, and adapt them to your own system.
-              </p>
-              <div className="flex flex-wrap gap-3 pt-2">
-                <Link
-                  className="border border-foreground bg-foreground px-5 py-3 font-mono text-[10px] text-background uppercase tracking-[0.18em] transition-colors hover:bg-foreground/90"
-                  href="/components/accordion"
-                >
-                  Browse components
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
+          <PageStaggerItem>
+            <h1 className="mt-6 max-w-[13ch] font-medium text-[2.52rem] text-foreground leading-[1.02] tracking-[-0.08em] sm:mx-auto sm:max-w-[24ch] sm:text-[4.35rem] sm:leading-[0.98] lg:text-[5.2rem]">
+              <span className="block sm:whitespace-nowrap">
+                Build UI that{" "}
+                <span className="text-sky-500 dark:text-sky-400">
+                  stands out.
+                </span>
+              </span>
+              <span className="block sm:whitespace-nowrap">
+                Without giving up the source.
+              </span>
+            </h1>
+          </PageStaggerItem>
 
-        <div className="grid gap-5 lg:grid-cols-12">
-          <DocsSection
-            className="lg:col-span-8"
-            description="The library is structured to help teams evaluate components quickly, adopt them confidently, and maintain full control after installation."
-            index="01"
-            title="What Sets Iconiq Apart"
-          >
-            <div className="grid gap-4 md:grid-cols-2">
-              {[
-                "Components are delivered as editable source files, making customization, review, and long-term maintenance far more practical.",
-                "Documentation combines previews, installation steps, and implementation notes so teams can assess behavior before adopting it.",
-                "Motion is applied with restraint to support state changes and interaction clarity rather than visual excess.",
-                "The registry workflow keeps adoption lightweight while preserving full engineering ownership.",
-              ].map((note) => (
-                <div
-                  className="border-border/70 border-t pt-4 text-[14px] text-secondary leading-6 first:border-t-0 first:pt-0"
-                  key={note}
-                >
-                  {note}
-                </div>
-              ))}
-            </div>
-          </DocsSection>
+          <PageStaggerItem>
+            <p className="mt-5 max-w-[640px] text-[15px] text-secondary leading-6 sm:mx-auto sm:mt-6 sm:max-w-[760px] sm:text-[18px] sm:leading-8">
+              {SITE.NAME} gives product teams production-ready, fluid
+              motion-powered React components they can install into the app,
+              study in context, and adapt without fighting a black-box library.
+            </p>
+          </PageStaggerItem>
 
-          <DocsSection
-            className="lg:col-span-4"
-            description="Use these entry points to review the system, understand the install flow, and inspect representative component patterns."
-            index="02"
-            title="Suggested Starting Points"
-          >
-            <div className="space-y-3">
-              {[
-                {
-                  href: "/installation",
-                  label: "Installation guide",
-                  note: "Understand the registry workflow and installation model",
-                },
-                {
-                  href: "/components/button",
-                  label: "Documentation",
-                  note: "See previews, usage examples, and API reference together",
-                },
-                {
-                  href: "/components/accordion",
-                  label: "Reference component",
-                  note: "Review a representative interaction pattern in detail",
-                },
-              ].map((item) => (
-                <Link
-                  className="block border-border/70 border-t py-4 transition-colors first:border-t-0 hover:text-foreground"
-                  href={item.href}
-                  key={item.href}
-                >
-                  <p className="font-medium text-[15px] text-foreground tracking-[-0.03em]">
-                    {item.label}
-                  </p>
-                  <p className="mt-1.5 text-[13px] text-secondary leading-5 tracking-[-0.01em]">
-                    {item.note}
-                  </p>
-                </Link>
-              ))}
+          <PageStaggerItem>
+            <div className="mt-8 flex flex-wrap justify-start gap-3 sm:justify-center">
+              <Link
+                className="inline-flex h-11 items-center gap-2 rounded-full bg-foreground px-5 font-medium text-background text-sm transition-colors hover:bg-foreground/92"
+                href="/components"
+              >
+                Browse components
+                <ArrowRight className="size-4" />
+              </Link>
+              <Link
+                className="inline-flex h-11 items-center rounded-full border border-border/80 bg-background px-5 font-medium text-foreground text-sm transition-colors hover:bg-muted/[0.22]"
+                href="/installation"
+              >
+                View installation
+              </Link>
             </div>
-          </DocsSection>
-        </div>
+          </PageStaggerItem>
+        </PageStagger>
       </div>
     </section>
   );

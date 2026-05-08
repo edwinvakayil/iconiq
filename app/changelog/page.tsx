@@ -1,9 +1,17 @@
-import { CheckCheck, Wrench } from "lucide-react";
+import { CirclePlus, RefreshCcw, Wrench } from "lucide-react";
 import type { Metadata } from "next";
+import Link from "next/link";
 
-import { DocsPageShell } from "@/components/docs/page-shell";
-import { SITE } from "@/constants";
+import { DocsPageRail } from "@/components/docs/component-page-rail";
+import { DocsBreadcrumbs } from "@/components/docs/page-shell";
+import {
+  PageReveal,
+  PageStagger,
+  PageStaggerItem,
+} from "@/components/page-reveal";
+import { LINK, SITE } from "@/constants";
 import { type ChangelogEntry, getChangelogEntries } from "@/lib/changelog";
+import { BreadcrumbJsonLdClient } from "@/seo/breadcrumb-json-ld-client";
 import { createMetadata } from "@/seo/metadata";
 
 export const metadata: Metadata = createMetadata({
@@ -19,6 +27,16 @@ export const metadata: Metadata = createMetadata({
   ],
 });
 
+const breadcrumbs = [
+  { label: "Docs", href: "/" },
+  { label: "Getting Started" },
+  { label: "Changelog" },
+];
+
+function getEntryId(version: string) {
+  return version.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+}
+
 function getGroupBadgeClass(label: string) {
   const normalized = label.toLowerCase();
 
@@ -31,7 +49,7 @@ function getGroupBadgeClass(label: string) {
   }
 
   if (normalized === "fixed") {
-    return "bg-rose-50 text-rose-700 dark:bg-rose-500/10 dark:text-rose-300";
+    return "bg-amber-50 text-amber-700 dark:bg-amber-500/10 dark:text-amber-300";
   }
 
   return "bg-muted/[0.2] text-foreground";
@@ -41,18 +59,18 @@ function getGroupIcon(label: string) {
   const normalized = label.toLowerCase();
 
   if (normalized === "added") {
-    return CheckCheck;
+    return CirclePlus;
   }
 
   if (normalized === "updated") {
-    return CheckCheck;
+    return RefreshCcw;
   }
 
   if (normalized === "fixed") {
     return Wrench;
   }
 
-  return CheckCheck;
+  return CirclePlus;
 }
 
 function ChangelogGroupSection({
@@ -65,10 +83,10 @@ function ChangelogGroupSection({
   const Icon = getGroupIcon(label);
 
   return (
-    <section className="space-y-4 border-border/80 border-t pt-5 first:border-t-0 first:pt-0">
+    <section className="space-y-3">
       <div className="flex items-center gap-3">
         <span
-          className={`inline-flex items-center gap-2 rounded-full px-3 py-1 font-medium text-[13px] tracking-[-0.02em] ${getGroupBadgeClass(
+          className={`inline-flex items-center gap-2 rounded-md px-2.5 py-1 font-medium text-[13px] tracking-[-0.02em] ${getGroupBadgeClass(
             label
           )}`}
         >
@@ -76,7 +94,7 @@ function ChangelogGroupSection({
           {label}
         </span>
       </div>
-      <ul className="space-y-2.5 pl-5 text-[15px] text-foreground leading-7 marker:text-muted-foreground">
+      <ul className="list-disc space-y-2 pl-5 text-[15px] text-foreground leading-7 marker:text-muted-foreground">
         {items.map((item) => (
           <li key={item}>{item}</li>
         ))}
@@ -85,92 +103,156 @@ function ChangelogGroupSection({
   );
 }
 
-function ChangelogTimelineItem({
-  entry,
-  index,
-}: {
-  entry: ChangelogEntry;
-  index: number;
-}) {
+function ChangelogEntrySection({ entry }: { entry: ChangelogEntry }) {
   return (
-    <article className="grid gap-5 md:grid-cols-[minmax(0,220px)_34px_minmax(0,1fr)] md:gap-7">
-      <div className="space-y-1.5 pt-0.5 text-left md:text-right">
-        <p className="font-medium text-[15px] text-foreground">{entry.date}</p>
-        <p className="font-mono text-[12px] text-muted-foreground tracking-[0.08em]">
-          {entry.version}
-        </p>
+    <section
+      className="relative scroll-mt-28 space-y-6 pl-8 sm:pl-10"
+      id={getEntryId(entry.version)}
+    >
+      <div className="absolute top-1 left-2 flex size-4 -translate-x-1/2 items-center justify-center rounded-full bg-background ring-1 ring-border/80">
+        <span className="size-2 rounded-full bg-foreground/85" />
       </div>
+      <span
+        aria-hidden="true"
+        className="absolute top-[0.55rem] left-4 h-px w-4 bg-border/70 sm:w-6"
+      />
 
-      <div className="relative hidden justify-center md:flex">
-        <span className="absolute inset-y-0 left-1/2 w-px -translate-x-1/2 border-border/80 border-l border-dashed" />
-        <span
-          className="status-blink relative mt-1 size-3 rounded-full bg-foreground ring-4 ring-background dark:ring-neutral-950"
-          style={{ animationDelay: `${index * 180}ms` }}
-        />
-      </div>
+      <div className="space-y-4">
+        <div className="flex flex-wrap items-center gap-3">
+          <span className="inline-flex rounded-md bg-muted/55 px-2.5 py-1 font-mono text-[12px] text-foreground tracking-[0.04em]">
+            {entry.version}
+          </span>
+          <p className="font-mono text-[12px] text-muted-foreground tracking-[0.08em]">
+            {entry.date}
+          </p>
+        </div>
 
-      <div className="space-y-6">
-        <div className="border border-border/80 bg-background px-5 py-5 shadow-[0_1px_0_rgba(17,17,17,0.03)] sm:px-6 sm:py-6 dark:shadow-none">
-          <div className="space-y-5">
-            <div className="space-y-3">
-              <h2 className="text-[1.9rem] text-foreground tracking-[-0.06em] sm:text-[2.1rem]">
-                {entry.title}
-              </h2>
-              {entry.summary ? (
-                <p className="max-w-3xl text-[15px] text-secondary leading-7">
-                  {entry.summary}
-                </p>
-              ) : null}
-            </div>
-
-            {entry.groups.length > 0 ? (
-              <div className="space-y-5">
-                {entry.groups.map((group) => (
-                  <ChangelogGroupSection
-                    items={group.items}
-                    key={`${entry.version}-${group.label}`}
-                    label={group.label}
-                  />
-                ))}
-              </div>
-            ) : entry.changes ? (
-              <div className="whitespace-pre-wrap text-[15px] text-foreground leading-7">
-                {entry.changes}
-              </div>
-            ) : null}
-          </div>
+        <div className="space-y-3">
+          <h2 className="text-2xl text-foreground tracking-tight sm:text-[2rem]">
+            {entry.title}
+          </h2>
+          {entry.summary ? (
+            <p className="max-w-3xl text-[15px] text-secondary leading-7">
+              {entry.summary}
+            </p>
+          ) : null}
         </div>
       </div>
-    </article>
+
+      {entry.groups.length > 0 ? (
+        <div className="space-y-6">
+          {entry.groups.map((group) => (
+            <ChangelogGroupSection
+              items={group.items}
+              key={`${entry.version}-${group.label}`}
+              label={group.label}
+            />
+          ))}
+        </div>
+      ) : entry.changes ? (
+        <div className="whitespace-pre-wrap text-[15px] text-foreground leading-7">
+          {entry.changes}
+        </div>
+      ) : null}
+    </section>
   );
 }
 
 export default async function ChangelogPage() {
   const entries = await getChangelogEntries();
   const latestEntry = entries[0];
+  const sections = entries.map((entry) => ({
+    id: getEntryId(entry.version),
+    label: entry.version,
+  }));
 
   return (
-    <DocsPageShell
-      breadcrumbs={[]}
-      description="See what's new added, changed, fixed, improved or updated."
-      eyebrow=""
-      meta={[
-        { label: "Latest", value: latestEntry?.version || "Unavailable" },
-        { label: "Entries", value: String(entries.length) },
-      ]}
-      title="Changelog"
-    >
-      <div className="lg:col-span-12">
-        <div className="space-y-10">
-          {entries.map((entry, index) => (
-            <ChangelogTimelineItem
-              entry={entry}
-              index={index}
-              key={`${entry.version}-${entry.date}`}
-            />
-          ))}
+    <main className="min-w-0 flex-1">
+      <div className="mx-auto w-full min-w-0 max-w-[1600px] px-4 py-8 sm:px-6 sm:py-10 lg:px-10">
+        <BreadcrumbJsonLdClient items={breadcrumbs} />
+        <div className="xl:grid xl:grid-cols-[minmax(0,1fr)_248px] xl:gap-4">
+          <div className="min-w-0">
+            <article className="min-w-0 max-w-4xl">
+              <PageStagger delayChildren={0.04}>
+                <PageStaggerItem>
+                  <header className="space-y-3">
+                    <DocsBreadcrumbs items={breadcrumbs} />
+
+                    <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+                      <div className="max-w-3xl space-y-2">
+                        <h1 className="scroll-m-20 font-semibold text-3xl text-foreground tracking-tighter">
+                          Changelog
+                        </h1>
+                        <p className="max-w-3xl text-base text-muted-foreground">
+                          A running log of {SITE.NAME} updates, including new
+                          components, documentation improvements, interface
+                          polish, and fixes across the registry and site.
+                        </p>
+                      </div>
+                    </div>
+                  </header>
+                </PageStaggerItem>
+              </PageStagger>
+
+              <div className="mt-10 space-y-10 text-[15px] text-secondary leading-7">
+                <PageReveal inView>
+                  <p>
+                    Each entry captures what changed in the product and docs,
+                    keeping the release history easy to scan without turning it
+                    into a dense issue log.
+                  </p>
+                </PageReveal>
+
+                {latestEntry ? (
+                  <PageReveal inView>
+                    <p className="text-foreground">
+                      Latest release:{" "}
+                      <span className="font-medium">{latestEntry.version}</span>{" "}
+                      on {latestEntry.date}.
+                    </p>
+                  </PageReveal>
+                ) : null}
+
+                <PageReveal inView>
+                  <div className="relative">
+                    <div className="absolute top-3 bottom-3 left-2 w-px -translate-x-1/2 bg-border/70" />
+                    <div className="space-y-10">
+                      {entries.map((entry) => (
+                        <ChangelogEntrySection
+                          entry={entry}
+                          key={`${entry.version}-${entry.date}`}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                </PageReveal>
+              </div>
+
+              <PageReveal className="mt-12" inView>
+                <nav className="flex items-center justify-between border-border/80 border-t pt-12">
+                  <Link
+                    className="group flex max-w-40 flex-col gap-1 text-muted-foreground text-sm transition-colors hover:text-foreground"
+                    href="/installation"
+                  >
+                    <span className="text-muted-foreground/75 transition-colors group-hover:text-muted-foreground">
+                      Previous
+                    </span>
+                    <span className="truncate font-medium text-foreground">
+                      Installation
+                    </span>
+                  </Link>
+                  <div />
+                </nav>
+              </PageReveal>
+            </article>
+          </div>
+
+          <DocsPageRail
+            editHref={`${LINK.GITHUB}/edit/main/content/changelog.txt`}
+            sections={sections}
+          />
         </div>
       </div>
-    </DocsPageShell>
+    </main>
   );
 }

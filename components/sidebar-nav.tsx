@@ -1,219 +1,96 @@
 "use client";
 
-import { BookOpen, ChevronRight, LayoutGrid } from "lucide-react";
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import { motion, useReducedMotion } from "motion/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
-import { SITE_SECTIONS } from "@/lib/site-nav";
+
+import { BASE_LINKS, SITE_SECTIONS } from "@/lib/site-nav";
 import { cn } from "@/lib/utils";
 
-const easeOutExpo = [0.32, 0.72, 0, 1] as const;
-
-const sidebarVariants = {
-  section: {
-    open: {
-      opacity: 1,
-      height: "auto",
-      transition: {
-        height: { duration: 0.28, ease: easeOutExpo },
-        opacity: { duration: 0.2 },
-      },
-    },
-    closed: {
-      opacity: 0,
-      height: 0,
-      transition: {
-        height: { duration: 0.22, ease: easeOutExpo },
-        opacity: { duration: 0.14 },
-      },
-    },
-  },
-  item: {
-    closed: { opacity: 0, x: -6 },
-    open: (i: number) => ({
-      opacity: 1,
-      x: 0,
-      transition: {
-        delay: 0.04 + i * 0.028,
-        duration: 0.24,
-        ease: easeOutExpo,
-      },
-    }),
-    exit: { opacity: 0, x: -4, transition: { duration: 0.12 } },
-  },
-  chevron: {
-    closed: { rotate: 0 },
-    open: {
-      rotate: 90,
-      transition: { type: "spring" as const, stiffness: 300, damping: 28 },
-    },
-  },
-};
-
-interface SidebarItem {
+type SidebarItem = {
   label: string;
   href: string;
-  badge?: string;
-}
+};
 
-interface SidebarSection {
+type SidebarSection = {
   title: string;
-  icon: React.ElementType;
   items: SidebarItem[];
-}
+};
 
 const sections: SidebarSection[] = [
   {
     title: "Getting Started",
-    icon: BookOpen,
-    items: [
-      { label: "Introduction", href: "/introduction" },
-      { label: "Installation", href: "/installation" },
-    ],
+    items: BASE_LINKS.filter(
+      (item) => item.href !== "/" && item.href !== "/changelog"
+    ).map((item) => ({
+      label: item.label,
+      href: item.href,
+    })),
   },
   ...SITE_SECTIONS.map((section) => ({
     title: section.label,
-    icon: LayoutGrid,
-    items: section.children.map((c) => ({ label: c.label, href: c.href })),
+    items: section.children.map((item) => ({
+      label: item.label,
+      href: item.href,
+    })),
   })),
 ];
 
 export function SidebarNav() {
   const pathname = usePathname();
   const prefersReducedMotion = useReducedMotion();
-  const [expanded, setExpanded] = useState<string[]>([
-    "Getting Started",
-    "Components",
-  ]);
-
-  const toggleSection = (title: string) => {
-    setExpanded((prev) =>
-      prev.includes(title) ? prev.filter((t) => t !== title) : [...prev, title]
-    );
-  };
 
   return (
     <motion.aside
       animate={{ opacity: 1, x: 0 }}
-      aria-label="Main navigation"
-      className="hidden w-[260px] shrink-0 border-neutral-200/40 border-r-[0.5px] bg-background md:block dark:border-neutral-700/30"
+      aria-label="Documentation navigation"
+      className="hidden w-64 shrink-0 bg-background md:block"
       initial={prefersReducedMotion ? false : { opacity: 0, x: -12 }}
       transition={
         prefersReducedMotion
           ? { duration: 0 }
-          : { type: "spring", stiffness: 300, damping: 32, delay: 0.04 }
+          : { type: "spring", stiffness: 320, damping: 34, delay: 0.04 }
       }
     >
-      <nav className="sticky top-[var(--nav-stack-height-mobile)] h-[calc(100vh-var(--nav-stack-height-mobile))] overflow-y-auto py-5 pr-4 pl-3 lg:top-[var(--nav-stack-height-desktop)] lg:h-[calc(100vh-var(--nav-stack-height-desktop))]">
-        {sections.map((section) => {
-          const isExpanded = expanded.includes(section.title);
-          const Icon = section.icon;
-          return (
-            <motion.div className="mb-1" initial={false} key={section.title}>
-              <motion.button
-                className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 font-medium text-foreground text-sm transition-colors hover:bg-muted"
-                onClick={() => toggleSection(section.title)}
-                transition={{ type: "spring", stiffness: 400, damping: 30 }}
-                type="button"
-                whileHover={{ scale: 1.01 }}
-                whileTap={{ scale: 0.99 }}
-              >
-                <motion.span
-                  className="flex shrink-0 text-muted-foreground"
-                  transition={{ type: "spring", stiffness: 400, damping: 25 }}
-                  whileHover={{ scale: 1.08 }}
-                >
-                  <Icon className="h-4 w-4" />
-                </motion.span>
-                <span className="flex-1 text-left">{section.title}</span>
-                <motion.span
-                  animate={isExpanded ? "open" : "closed"}
-                  className="inline-flex text-muted-foreground"
-                  initial={false}
-                  variants={sidebarVariants.chevron}
-                >
-                  <ChevronRight className="h-3.5 w-3.5" />
-                </motion.span>
-              </motion.button>
-              <AnimatePresence initial={false}>
-                {isExpanded && (
-                  <motion.ul
-                    animate="open"
-                    className="mt-1 mb-3 ml-[18px] overflow-hidden border-neutral-200/40 border-l-[0.5px] pl-3 dark:border-neutral-700/30"
-                    exit="closed"
-                    initial="closed"
-                    variants={sidebarVariants.section}
-                  >
-                    {section.items.map((item, index) => {
-                      const isActive = pathname === item.href;
-                      return (
-                        <motion.li
-                          custom={index}
-                          exit="exit"
-                          key={item.label}
-                          variants={sidebarVariants.item}
-                        >
-                          <motion.div
-                            className="rounded-md"
-                            transition={{
-                              type: "spring",
-                              stiffness: 400,
-                              damping: 30,
-                            }}
-                            whileHover={{
-                              backgroundColor: isActive
-                                ? undefined
-                                : "var(--muted)",
-                            }}
-                            whileTap={{ scale: 0.99 }}
-                          >
-                            <Link
-                              className={cn(
-                                "relative flex w-full items-center gap-2 rounded-md px-3 py-1.5 text-sm transition-colors",
-                                isActive
-                                  ? "bg-sidebar-accent font-medium text-sidebar-accent-foreground"
-                                  : "text-muted-foreground hover:text-foreground"
-                              )}
-                              href={item.href}
-                            >
-                              {isActive && (
-                                <motion.span
-                                  className="absolute top-1/2 left-0 h-4 w-0.5 -translate-y-1/2 rounded-full bg-[#000000] dark:bg-[#ffffff]"
-                                  layoutId="sidebar-active"
-                                  transition={{
-                                    type: "spring",
-                                    stiffness: 380,
-                                    damping: 30,
-                                  }}
-                                />
-                              )}
-                              <span className="flex-1 text-left">
-                                {item.label}
-                              </span>
-                              {item.badge && (
-                                <span
-                                  className={cn(
-                                    "rounded-full px-1.5 py-0.5 font-bold text-[9px] uppercase tracking-wider",
-                                    item.badge === "New"
-                                      ? "bg-primary/10 text-primary"
-                                      : "bg-accent/20 text-accent-foreground"
-                                  )}
-                                >
-                                  {item.badge}
-                                </span>
-                              )}
-                            </Link>
-                          </motion.div>
-                        </motion.li>
-                      );
-                    })}
-                  </motion.ul>
-                )}
-              </AnimatePresence>
-            </motion.div>
-          );
-        })}
+      <nav className="sticky top-[var(--nav-stack-height-mobile)] h-[calc(100vh-var(--nav-stack-height-mobile))] lg:top-[var(--nav-stack-height-desktop)] lg:h-[calc(100vh-var(--nav-stack-height-desktop))]">
+        <div
+          className="flex max-h-full flex-col overflow-y-auto"
+          style={{
+            maskImage:
+              "linear-gradient(to bottom, transparent 0, rgba(0,0,0,0.2) 1rem, black 2rem, black calc(100% - 2rem), rgba(0,0,0,0.2) calc(100% - 1rem), transparent 100%)",
+          }}
+        >
+          <div className="h-4 shrink-0" />
+          {sections.map((section) => (
+            <section className="p-2" key={section.title}>
+              <h2 className="flex h-8 shrink-0 items-center px-2 font-medium text-foreground/70 text-xs">
+                {section.title}
+              </h2>
+              <ul className="flex flex-col gap-1">
+                {section.items.map((item) => {
+                  const isActive = pathname === item.href;
+
+                  return (
+                    <li className="group/menu-item relative" key={item.href}>
+                      <Link
+                        className={cn(
+                          "flex h-8 w-full items-center gap-2 overflow-hidden rounded-md p-2 text-left font-[450] text-foreground text-sm outline-none transition-all [&>span:last-child]:truncate",
+                          isActive
+                            ? "underline decoration-[1.5px] underline-offset-4"
+                            : "hover:bg-muted hover:text-foreground"
+                        )}
+                        href={item.href}
+                      >
+                        {item.label}
+                      </Link>
+                    </li>
+                  );
+                })}
+              </ul>
+            </section>
+          ))}
+          <div className="h-4 shrink-0" />
+        </div>
       </nav>
     </motion.aside>
   );

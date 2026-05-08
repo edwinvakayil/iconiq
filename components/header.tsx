@@ -1,151 +1,46 @@
 "use client";
 
-import {
-  BookOpen,
-  ChevronRight,
-  Github,
-  HeartHandshake,
-  LayoutGrid,
-  Menu,
-  X,
-} from "lucide-react";
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
-import Link from "next/link";
+import { Github } from "lucide-react";
+import Link, { type LinkProps } from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+
 import { BrandLink } from "@/components/brand-wordmark";
 import { SiteSearch } from "@/components/site-search";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { LINK } from "@/constants";
 import { BASE_LINKS, SITE_SECTIONS } from "@/lib/site-nav";
+import { cn } from "@/lib/utils";
+import { Popover, PopoverContent, PopoverTrigger } from "@/registry/popover";
 
-const componentsSection = SITE_SECTIONS.find((s) => s.label === "Components");
+type HeaderLink = {
+  label: string;
+  href: string;
+};
 
-const mobileNavSections = [
-  {
-    title: "Getting Started",
-    icon: BookOpen,
-    items: BASE_LINKS.map((item) => ({ label: item.label, href: item.href })),
-  },
-  ...(componentsSection
-    ? [
-        {
-          title: componentsSection.label,
-          icon: LayoutGrid,
-          items: componentsSection.children.map((item) => ({
-            label: item.label,
-            href: item.href,
-          })),
-        },
-      ]
-    : []),
-];
-
-const easeOutExpo = [0.32, 0.72, 0, 1] as const;
-
-const mobileNavVariants = {
-  container: {
-    open: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.3,
-        ease: easeOutExpo,
-        when: "beforeChildren",
-      },
-    },
-    closed: {
-      opacity: 0,
-      y: -8,
-      transition: {
-        duration: 0.25,
-        ease: easeOutExpo,
-        when: "afterChildren",
-      },
-    },
-  },
-  backdrop: {
-    open: { opacity: 1, transition: { duration: 0.2 } },
-    closed: { opacity: 0, transition: { duration: 0.2 } },
-  },
-  panel: {
-    open: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        type: "spring" as const,
-        stiffness: 400,
-        damping: 30,
-        mass: 0.8,
-      },
-    },
-    closed: {
-      opacity: 0,
-      y: -12,
-      transition: {
-        duration: 0.2,
-        ease: easeOutExpo,
-      },
-    },
-  },
-  section: {
-    open: (i: number) => ({
-      opacity: 1,
-      y: 0,
-      transition: { delay: 0.04 + i * 0.03, duration: 0.28, ease: easeOutExpo },
-    }),
-    closed: { opacity: 0, y: -4 },
-  },
-  expandContent: {
-    open: {
-      height: "auto",
-      opacity: 1,
-      transition: {
-        height: { duration: 0.28, ease: easeOutExpo },
-        opacity: { duration: 0.2 },
-      },
-    },
-    closed: {
-      height: 0,
-      opacity: 0,
-      transition: {
-        height: { duration: 0.22, ease: easeOutExpo },
-        opacity: { duration: 0.14 },
-      },
-    },
-  },
-  expandItem: {
-    open: (i: number) => ({
-      opacity: 1,
-      x: 0,
-      transition: {
-        delay: 0.05 + i * 0.025,
-        duration: 0.22,
-        ease: easeOutExpo,
-      },
-    }),
-    closed: { opacity: 0, x: -6 },
-  },
+type HeaderSection = {
+  title: string;
+  items: HeaderLink[];
 };
 
 const GITHUB_REPO_API = "https://api.github.com/repos/edwinvakayil/iconiq";
-const desktopIconActionClass =
-  "flex size-8 items-center justify-center rounded-md text-neutral-950 transition-colors hover:text-neutral-600 focus-visible:outline-1 focus-visible:outline-primary dark:text-white dark:hover:text-neutral-300";
-const desktopGithubBadgeClass =
-  "inline-flex h-9 items-center gap-2 rounded-xl bg-muted/72 px-3.5 text-neutral-950 transition-colors hover:bg-muted dark:bg-white/[0.06] dark:text-white dark:hover:bg-white/[0.1]";
 
-function XLogoIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      aria-hidden
-      className={className}
-      fill="currentColor"
-      viewBox="0 0 24 24"
-    >
-      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-    </svg>
-  );
-}
+const mobileNavSections: HeaderSection[] = [
+  {
+    title: "Getting Started",
+    items: BASE_LINKS.filter((item) => item.href !== "/").map((item) => ({
+      label: item.label,
+      href: item.href,
+    })),
+  },
+  ...SITE_SECTIONS.map((section) => ({
+    title: section.label,
+    items: section.children.map((item) => ({
+      label: item.label,
+      href: item.href,
+    })),
+  })),
+];
 
 function formatStarCount(n: number): string {
   if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1)}M`;
@@ -153,21 +48,140 @@ function formatStarCount(n: number): string {
   return n.toLocaleString();
 }
 
-export function Header() {
-  const pathname = usePathname();
-  const prefersReducedMotion = useReducedMotion();
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [expandedMobile, setExpandedMobile] = useState<string[]>([
-    "Getting Started",
-    ...(componentsSection ? [componentsSection.label] : []),
-  ]);
-  const [starCount, setStarCount] = useState<number | null>(null);
+function GitHubStarsLink({ starCount }: { starCount: number | null }) {
+  return (
+    <a
+      className="inline-flex h-8 items-center gap-2 rounded-md bg-transparent px-3 font-medium text-sm shadow-none transition-colors hover:bg-accent hover:text-accent-foreground dark:hover:bg-input/20"
+      href={LINK.GITHUB}
+      rel="noopener noreferrer"
+      target="_blank"
+    >
+      <Github className="size-4" />
+      <span className="tabular-nums">
+        {starCount !== null ? formatStarCount(starCount) : "—"}
+      </span>
+      <span className="sr-only">Open GitHub</span>
+    </a>
+  );
+}
 
-  const toggleMobileSection = (title: string) => {
-    setExpandedMobile((prev) =>
-      prev.includes(title) ? prev.filter((t) => t !== title) : [...prev, title]
-    );
-  };
+function BrandHeaderLink() {
+  return (
+    <>
+      <BrandLink className="md:hidden" size="mobile" />
+      <BrandLink className="hidden md:inline-flex" size="desktop" />
+    </>
+  );
+}
+
+function MobileNavLink({
+  href,
+  onOpenChange,
+  className,
+  children,
+  ...props
+}: LinkProps & {
+  onOpenChange?: (open: boolean) => void;
+  children: React.ReactNode;
+  className?: string;
+}) {
+  const pathname = usePathname();
+  const isActive = pathname === href;
+
+  return (
+    <Link
+      className={cn(
+        "font-medium text-2xl transition-colors",
+        isActive ? "text-primary" : "text-foreground",
+        className
+      )}
+      href={href}
+      onClick={() => onOpenChange?.(false)}
+      {...props}
+    >
+      {children}
+    </Link>
+  );
+}
+
+function MobileNav({ className }: { className?: string }) {
+  const pathname = usePathname();
+  const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    if (!pathname) {
+      return;
+    }
+
+    setOpen(false);
+  }, [pathname]);
+
+  return (
+    <Popover onOpenChange={setOpen} open={open}>
+      <PopoverTrigger asChild>
+        <button
+          className={cn(
+            "h-8 touch-manipulation items-center justify-start gap-2.5 p-0 hover:bg-transparent focus-visible:bg-transparent focus-visible:ring-0 active:bg-transparent dark:hover:bg-transparent",
+            className
+          )}
+          type="button"
+        >
+          <div className="relative flex h-8 w-4 items-center justify-center">
+            <div className="relative size-4">
+              <span
+                className={cn(
+                  "absolute left-0 block h-0.5 w-4 bg-foreground transition-all duration-100",
+                  open ? "top-[0.45rem] -rotate-45" : "top-1"
+                )}
+              />
+              <span
+                className={cn(
+                  "absolute left-0 block h-0.5 w-4 bg-foreground transition-all duration-100",
+                  open ? "top-[0.45rem] rotate-45" : "top-2.5"
+                )}
+              />
+            </div>
+            <span className="sr-only">Toggle Menu</span>
+          </div>
+        </button>
+      </PopoverTrigger>
+      <PopoverContent
+        align="start"
+        alignOffset={-16}
+        className="h-[var(--radix-popover-content-available-height)] w-[var(--radix-popover-content-available-width)] overflow-y-auto rounded-none border-none bg-background/90 p-0 shadow-none backdrop-blur"
+        open={open}
+        side="bottom"
+        sideOffset={14}
+      >
+        <div className="flex flex-col gap-12 px-4 py-6">
+          <div className="flex flex-col gap-8">
+            {mobileNavSections.map((section) => (
+              <div className="flex flex-col gap-4" key={section.title}>
+                <div className="font-medium text-muted-foreground text-sm">
+                  {section.title}
+                </div>
+                <div className="flex flex-col gap-3">
+                  {section.items.map((item) => (
+                    <MobileNavLink
+                      href={item.href}
+                      key={`${section.title}-${item.href}`}
+                      onOpenChange={setOpen}
+                    >
+                      {item.label}
+                    </MobileNavLink>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </PopoverContent>
+    </Popover>
+  );
+}
+
+export function Header() {
+  const [starCount, setStarCount] = useState<number | null>(null);
 
   useEffect(() => {
     fetch(GITHUB_REPO_API, {
@@ -182,252 +196,22 @@ export function Header() {
       .catch(() => undefined);
   }, []);
 
-  useEffect(() => {
-    if (!pathname) return;
-    setMobileMenuOpen(false);
-  }, [pathname]);
-
-  /* Prevent body scroll when menu open */
-  useEffect(() => {
-    if (mobileMenuOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
-
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [mobileMenuOpen]);
-
   return (
-    <>
-      <motion.header
-        animate={{ opacity: 1, y: 0 }}
-        className="sticky top-[var(--announcement-height-mobile)] z-[150] w-full border-neutral-200/40 border-b-[0.5px] bg-background lg:top-[var(--announcement-height-desktop)] dark:border-neutral-700/30"
-        initial={prefersReducedMotion ? false : { opacity: 0, y: -10 }}
-        transition={
-          prefersReducedMotion
-            ? { duration: 0 }
-            : { type: "spring", stiffness: 320, damping: 34, mass: 0.9 }
-        }
-      >
-        <div className="mx-auto flex h-[var(--header-height-mobile)] items-center justify-between px-4 sm:px-6 lg:hidden">
-          <BrandLink size="mobile" />
-
-          <div className="flex items-center gap-2">
-            <SiteSearch variant="mobile" />
-            <ThemeToggle className="size-8 rounded-md" />
-
-            <span className="hidden h-5 w-px bg-neutral-200 sm:block dark:bg-neutral-700" />
-
-            <a
-              className="hidden size-8 items-center justify-center rounded-md text-neutral-500 hover:bg-neutral-100 hover:text-neutral-900 sm:flex dark:hover:bg-white/10 dark:hover:text-white"
-              href={LINK.TWITTER}
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-              <XLogoIcon className="size-5" />
-            </a>
-
-            <Link
-              aria-label="Sponsor Iconiq"
-              className="hidden size-8 items-center justify-center rounded-md text-neutral-500 hover:bg-neutral-100 hover:text-neutral-900 sm:flex dark:hover:bg-white/10 dark:hover:text-white"
-              href="/sponsorship"
-            >
-              <HeartHandshake className="size-5" />
-            </Link>
-
-            <a
-              className="hidden items-center gap-2 rounded-lg bg-muted/60 px-3 py-1.25 text-neutral-600 text-sm hover:bg-muted hover:text-neutral-900 sm:flex dark:bg-white/[0.04] dark:text-neutral-300 dark:hover:bg-white/[0.08] dark:hover:text-white"
-              href={LINK.GITHUB}
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-              <Github className="size-4" />
-              <span className="font-medium">GitHub</span>
-              <span className="font-mono text-[11px] text-neutral-400 dark:text-neutral-500">
-                {starCount !== null ? formatStarCount(starCount) : "—"}
-              </span>
-            </a>
-
-            <button
-              aria-expanded={mobileMenuOpen}
-              className="flex size-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground sm:hidden"
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              type="button"
-            >
-              {mobileMenuOpen ? (
-                <X className="size-5" />
-              ) : (
-                <Menu className="size-5" />
-              )}
-            </button>
+    <header className="fixed top-[var(--announcement-height-mobile)] right-0 left-0 z-[150] w-full border-border border-b bg-background lg:top-[var(--announcement-height-desktop)] lg:border-border/55">
+      <div className="flex h-14 w-full items-center justify-between gap-4 px-4">
+        <div className="flex items-center">
+          <div className="flex items-center gap-3">
+            <MobileNav className="md:hidden" />
+            <BrandHeaderLink />
           </div>
         </div>
 
-        <div className="mx-auto hidden h-[var(--header-height-desktop)] items-center justify-between gap-6 px-6 lg:flex xl:px-8 2xl:px-10">
-          <div className="flex min-w-0 items-center">
-            <BrandLink size="desktop" />
-          </div>
-
-          <div className="flex items-center justify-end">
-            <div className="flex items-center gap-2">
-              <SiteSearch />
-              <ThemeToggle className={desktopIconActionClass} />
-              <a
-                className={desktopIconActionClass}
-                href={LINK.TWITTER}
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                <XLogoIcon className="size-[18px]" />
-              </a>
-              <Link
-                aria-label="Sponsor Iconiq"
-                className={desktopIconActionClass}
-                href="/sponsorship"
-              >
-                <HeartHandshake className="size-[18px]" />
-              </Link>
-              <a
-                aria-label="GitHub stars"
-                className={desktopGithubBadgeClass}
-                href={LINK.GITHUB}
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                <Github className="size-5" />
-                <span className="font-semibold text-[14px] tracking-[-0.03em]">
-                  {starCount !== null ? formatStarCount(starCount) : "—"}
-                </span>
-              </a>
-            </div>
-          </div>
+        <div className="flex items-center gap-2 lg:gap-3">
+          <SiteSearch variant="desktop" />
+          <GitHubStarsLink starCount={starCount} />
+          <ThemeToggle className="size-8 rounded-md text-neutral-950 hover:bg-accent hover:text-foreground dark:text-white dark:hover:bg-input/20 dark:hover:text-white" />
         </div>
-      </motion.header>
-
-      {/* Mobile slide-down menu */}
-      <AnimatePresence>
-        {mobileMenuOpen && (
-          <motion.div
-            animate="open"
-            className="fixed inset-x-0 top-[var(--nav-stack-height-mobile)] z-[200] sm:hidden"
-            exit="closed"
-            initial="closed"
-            key="mobile-nav"
-            variants={mobileNavVariants.container}
-          >
-            {/* Backdrop */}
-            <motion.button
-              animate="open"
-              aria-hidden={!mobileMenuOpen}
-              className="fixed inset-0 top-[var(--nav-stack-height-mobile)] bg-background/60 backdrop-blur-sm"
-              initial="closed"
-              onClick={() => setMobileMenuOpen(false)}
-              type="button"
-              variants={mobileNavVariants.backdrop}
-            />
-
-            {/* Panel */}
-            <motion.div
-              animate="open"
-              className="relative z-[201] mx-3 mt-2 max-h-[70vh] overflow-y-auto rounded-xl border border-border bg-card shadow-2xl shadow-primary/5"
-              initial="closed"
-              variants={mobileNavVariants.panel}
-            >
-              {/* Navigation sections */}
-              <nav className="p-2">
-                {mobileNavSections.map((section, sectionIndex) => {
-                  const isExpanded = expandedMobile.includes(section.title);
-                  const Icon = section.icon;
-                  return (
-                    <motion.div
-                      animate="open"
-                      className="mb-0.5"
-                      custom={sectionIndex}
-                      initial="closed"
-                      key={section.title}
-                      variants={mobileNavVariants.section}
-                    >
-                      <motion.button
-                        className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2.5 font-medium text-[13px] text-foreground transition-colors hover:bg-muted active:bg-muted"
-                        onClick={() => toggleMobileSection(section.title)}
-                        type="button"
-                        whileTap={{ scale: 0.98 }}
-                      >
-                        <Icon className="h-4 w-4 shrink-0 text-muted-foreground" />
-                        <span className="flex-1 text-left">
-                          {section.title}
-                        </span>
-                        <motion.span
-                          animate={{ rotate: isExpanded ? 90 : 0 }}
-                          className="inline-flex"
-                          transition={{
-                            type: "spring",
-                            stiffness: 400,
-                            damping: 28,
-                          }}
-                        >
-                          <ChevronRight className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
-                        </motion.span>
-                      </motion.button>
-                      <AnimatePresence initial={false}>
-                        {isExpanded && (
-                          <motion.ul
-                            animate="open"
-                            className="mt-0.5 mb-2 ml-[18px] overflow-hidden border-neutral-200 border-l pl-2 dark:border-neutral-800/50"
-                            exit="closed"
-                            initial="closed"
-                            variants={mobileNavVariants.expandContent}
-                          >
-                            {section.items.map((item, itemIndex) => (
-                              <motion.li
-                                custom={itemIndex}
-                                key={`${section.title}-${item.href}`}
-                                variants={mobileNavVariants.expandItem}
-                              >
-                                <Link
-                                  className="flex w-full items-center rounded-md px-3 py-2 text-[13px] text-muted-foreground transition-colors hover:bg-muted hover:text-foreground active:bg-muted"
-                                  href={item.href}
-                                  onClick={() => setMobileMenuOpen(false)}
-                                >
-                                  {item.label}
-                                </Link>
-                              </motion.li>
-                            ))}
-                          </motion.ul>
-                        )}
-                      </AnimatePresence>
-                    </motion.div>
-                  );
-                })}
-              </nav>
-
-              {/* Bottom link */}
-              <div className="border-neutral-200 border-t p-3 dark:border-neutral-800/50">
-                <Link
-                  className="mb-2 flex w-full items-center justify-center gap-2 rounded-lg border border-border px-3 py-2 font-medium text-[13px] text-muted-foreground transition-colors hover:text-foreground"
-                  href="/sponsorship"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  <HeartHandshake className="size-4" />
-                  Sponsor
-                </Link>
-                <a
-                  className="flex w-full items-center justify-center gap-2 rounded-lg border border-border px-3 py-2 font-medium text-[13px] text-muted-foreground transition-colors hover:text-foreground"
-                  href={LINK.GITHUB}
-                  onClick={() => setMobileMenuOpen(false)}
-                  rel="noopener noreferrer"
-                  target="_blank"
-                >
-                  GitHub
-                </a>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </>
+      </div>
+    </header>
   );
 }

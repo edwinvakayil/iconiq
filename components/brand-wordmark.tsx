@@ -101,4 +101,4 @@ function BrandLink({ className, size, variant = "wordmark" }: BrandLinkProps) {
   );
 }
 
-export { BrandLink, BrandWordmark };
+export { BrandLink, BrandMark, BrandWordmark };
