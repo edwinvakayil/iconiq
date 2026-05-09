@@ -38,9 +38,12 @@ export function DialogPreview() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button size="sm" variant="outline">
+        <button
+          className="inline-flex items-center justify-center rounded-lg bg-neutral-900 px-5 py-3 font-medium text-[13px] text-white shadow-[0_1px_0_0_rgba(255,255,255,0.08)_inset,0_4px_18px_rgba(0,0,0,0.16)] transition-[transform,box-shadow,background-color] hover:-translate-y-0.5 hover:bg-neutral-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400/30 focus-visible:ring-offset-2 dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-neutral-200"
+          type="button"
+        >
           Open dialog
-        </Button>
+        </button>
       </DialogTrigger>
       <DialogContent
         className="max-w-md border-neutral-200 dark:border-neutral-800"
@@ -150,9 +153,12 @@ function DialogPreview() {
     <div className="flex min-h-[280px] items-center justify-center px-4 py-10 text-center sm:min-h-[320px]">
       <Dialog onOpenChange={setOpen} open={open}>
         <DialogTrigger asChild>
-          <Button size="sm" variant="outline">
+          <button
+            className="inline-flex items-center justify-center rounded-lg bg-neutral-900 px-5 py-3 font-medium text-[13px] text-white shadow-[0_1px_0_0_rgba(255,255,255,0.08)_inset,0_4px_18px_rgba(0,0,0,0.16)] transition-[transform,box-shadow,background-color] hover:-translate-y-0.5 hover:bg-neutral-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400/30 focus-visible:ring-offset-2 dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-neutral-200"
+            type="button"
+          >
             Open dialog
-          </Button>
+          </button>
         </DialogTrigger>
         <DialogContent
           className="max-w-md border-neutral-200 dark:border-neutral-800"
