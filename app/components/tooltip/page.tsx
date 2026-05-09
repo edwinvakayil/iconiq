@@ -11,7 +11,7 @@ import { Tooltip } from "@/registry/tooltip";
 const usageCode = `import { Tooltip } from "@/components/ui/tooltip";
 
 const triggerClass =
-  "rounded-sm px-0.5 font-semibold underline decoration-dotted underline-offset-[5px] transition-colors";
+  "rounded-lg px-0.5 font-semibold underline decoration-dotted underline-offset-[5px] transition-colors";
 
 export function TooltipPreview() {
   return (
@@ -84,7 +84,7 @@ function _SectionLabel({
 }
 
 const bentoShell =
-  "flex flex-col rounded-2xl border border-neutral-200/80 bg-white px-3 py-4 sm:px-5 sm:py-5 md:p-6 dark:border-neutral-800 dark:bg-neutral-950";
+  "flex flex-col rounded-lg border border-neutral-200/80 bg-white px-3 py-4 sm:px-5 sm:py-5 md:p-6 dark:border-neutral-800 dark:bg-neutral-950";
 
 const _bentoContainer = {
   hidden: {},
@@ -131,7 +131,7 @@ function _BentoMotion({
 
 function TooltipPreview() {
   const triggerClass =
-    "rounded-sm px-0.5 font-semibold underline decoration-dotted underline-offset-[5px] transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-500/60";
+    "rounded-lg px-0.5 font-semibold underline decoration-dotted underline-offset-[5px] transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-500/60";
 
   return (
     <div className="flex min-h-[260px] flex-1 flex-col items-center justify-center gap-8 px-4 py-8">

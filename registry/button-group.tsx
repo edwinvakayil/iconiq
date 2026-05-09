@@ -257,7 +257,7 @@ function SegmentedControl({
     <motion.div
       animate={{ opacity: 1, y: 0 }}
       className={cn(
-        "inline-flex h-11 items-center gap-1 rounded-xl border border-border bg-background p-1.5",
+        "inline-flex h-11 items-center gap-1 rounded-lg border border-border bg-background p-1.5",
         className
       )}
       initial={{ opacity: 0, y: 8 }}

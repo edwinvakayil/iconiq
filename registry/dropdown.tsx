@@ -523,7 +523,7 @@ export const DropdownTrigger = React.forwardRef<
         aria-expanded={open}
         aria-haspopup={variant === "action" ? "menu" : "listbox"}
         className={cn(
-          "flex w-full items-center justify-between gap-2 rounded-xl border border-border bg-white px-4 py-3 text-left font-medium text-card-foreground text-sm shadow-sm transition-colors dark:bg-black",
+          "flex w-full items-center justify-between gap-2 rounded-lg border border-border bg-white px-4 py-3 text-left font-medium text-card-foreground text-sm shadow-sm transition-colors dark:bg-black",
           "hover:border-ring/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring",
           open && "border-ring/60",
           disabled && "cursor-not-allowed opacity-60",
@@ -641,7 +641,7 @@ export const DropdownContent = React.forwardRef<
         <motion.div
           animate={contentMotion.animate}
           className={cn(
-            "absolute z-[100] min-w-[12rem] overflow-hidden rounded-xl border border-border bg-white p-1 shadow-lg dark:bg-black",
+            "absolute z-[100] min-w-[12rem] overflow-hidden rounded-lg border border-border bg-white p-1 shadow-lg dark:bg-black",
             getContentAlignmentClasses(align),
             className
           )}

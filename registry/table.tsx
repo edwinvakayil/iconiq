@@ -151,7 +151,7 @@ const TableRow = React.forwardRef<HTMLDivElement, TableRowProps>(
           "grid items-center",
           isHeader
             ? "border-border border-b px-2 py-3 text-muted-foreground text-xs uppercase tracking-wider"
-            : "group rounded-sm border-border border-b px-2 py-4 text-sm",
+            : "group rounded-lg border-border border-b px-2 py-4 text-sm",
           className
         )}
         data-hoverable={(hoverable ?? !isHeader) ? "true" : "false"}

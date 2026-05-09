@@ -42,7 +42,7 @@ export const RadioGroup: React.FC<RadioGroupProps> = ({
           <motion.button
             animate={{ opacity: 1, y: 0 }}
             aria-checked={isSelected}
-            className="relative flex cursor-pointer items-center gap-3.5 rounded-xl px-4 py-3.5 text-left outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            className="relative flex cursor-pointer items-center gap-3.5 rounded-lg px-4 py-3.5 text-left outline-none focus-visible:ring-2 focus-visible:ring-ring"
             initial={{ opacity: 0, y: 8 }}
             key={option.value}
             onClick={() => handleSelect(option.value)}
@@ -55,7 +55,7 @@ export const RadioGroup: React.FC<RadioGroupProps> = ({
             {/* Sliding background */}
             {isSelected && (
               <motion.div
-                className="absolute inset-0 rounded-xl bg-foreground/[0.04]"
+                className="absolute inset-0 rounded-lg bg-foreground/[0.04]"
                 layoutId="radio-active-bg"
                 transition={{
                   type: "spring",

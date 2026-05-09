@@ -21,7 +21,7 @@ export function AlertPreview() {
   return (
     <div className="relative flex min-h-[300px] items-center justify-center">
       <button
-        className="inline-flex items-center rounded-xl bg-neutral-900 px-6 py-3 text-[13px] font-medium text-white dark:bg-neutral-100 dark:text-neutral-900"
+        className="inline-flex items-center rounded-lg bg-neutral-900 px-6 py-3 text-[13px] font-medium text-white dark:bg-neutral-100 dark:text-neutral-900"
         onClick={() => setPreviewKey((current) => current + 1)}
         type="button"
       >
@@ -69,7 +69,7 @@ function _SectionLabel({
 }
 
 const bentoShell =
-  "flex flex-col rounded-2xl border border-neutral-200/80 bg-white px-3 py-4 sm:px-5 sm:py-5 md:p-6 dark:border-neutral-800 dark:bg-neutral-950";
+  "flex flex-col rounded-lg border border-neutral-200/80 bg-white px-3 py-4 sm:px-5 sm:py-5 md:p-6 dark:border-neutral-800 dark:bg-neutral-950";
 
 const _bentoContainer = {
   hidden: {},
@@ -132,7 +132,7 @@ export default function AlertPage() {
         <div className="relative z-10 flex min-h-[300px] flex-col items-center justify-center pb-2">
           <motion.button
             className={cn(
-              "group relative isolate flex items-center gap-2.5 overflow-hidden rounded-xl px-6 py-3",
+              "group relative isolate flex items-center gap-2.5 overflow-hidden rounded-lg px-6 py-3",
               "bg-neutral-900 font-medium text-[13px] text-white",
               "shadow-[0_1px_0_0_rgba(255,255,255,0.08)_inset,0_2px_10px_0_rgba(0,0,0,0.18)]",
               "dark:bg-neutral-100 dark:text-neutral-900",

@@ -60,7 +60,7 @@ export function Breadcrumbs({ items, className }: BreadcrumbsProps) {
                 )}
                 <motion.a
                   className={cn(
-                    "relative inline-flex items-center gap-1.5 rounded-md px-2.5 py-1.5 font-medium text-sm transition-colors",
+                    "relative inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 font-medium text-sm transition-colors",
                     isLast
                       ? "cursor-default text-foreground"
                       : "text-muted-foreground hover:text-foreground"
@@ -73,7 +73,7 @@ export function Breadcrumbs({ items, className }: BreadcrumbsProps) {
                   {/* Hover background glow */}
                   {!isLast && (
                     <motion.span
-                      className="absolute inset-0 rounded-md bg-accent"
+                      className="absolute inset-0 rounded-lg bg-accent"
                       initial={{ opacity: 0 }}
                       style={{ zIndex: -1 }}
                       transition={{ duration: 0.2 }}
@@ -83,7 +83,7 @@ export function Breadcrumbs({ items, className }: BreadcrumbsProps) {
                   {/* Shimmer on active item */}
                   {isLast && (
                     <motion.span
-                      className="absolute inset-0 overflow-hidden rounded-md"
+                      className="absolute inset-0 overflow-hidden rounded-lg"
                       style={{ zIndex: -1 }}
                     >
                       <motion.span

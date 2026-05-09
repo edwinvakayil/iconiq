@@ -307,7 +307,7 @@ export function FileUpload({
         }}
         aria-disabled={disabled}
         className={[
-          "relative overflow-hidden rounded-2xl border border-border bg-paper px-5 py-4",
+          "relative overflow-hidden rounded-lg border border-border bg-paper px-5 py-4",
           disabled ? "cursor-not-allowed opacity-60" : "cursor-pointer",
         ].join(" ")}
         onClick={handleBrowse}
@@ -434,7 +434,7 @@ export function FileUpload({
             return (
               <motion.li
                 animate={{ opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }}
-                className="group relative flex items-center gap-4 overflow-hidden rounded-2xl border border-border bg-card p-3 pr-4"
+                className="group relative flex items-center gap-4 overflow-hidden rounded-lg border border-border bg-card p-3 pr-4"
                 exit={{ opacity: 0, x: 60, scale: 0.92, filter: "blur(4px)" }}
                 initial={{
                   opacity: 0,
@@ -468,7 +468,7 @@ export function FileUpload({
                 <div className="relative z-10 flex h-12 w-12 shrink-0 items-center justify-center">
                   {f.preview ? (
                     <motion.div
-                      className="h-12 w-12 overflow-hidden rounded-xl border border-border"
+                      className="h-12 w-12 overflow-hidden rounded-lg border border-border"
                       layoutId={`thumb-${f.id}`}
                     >
                       {/* biome-ignore lint/performance/noImgElement: registry component stays framework-agnostic for non-Next consumers. */}

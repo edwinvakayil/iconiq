@@ -81,7 +81,7 @@ export const Calendar = ({
     ? {
         cardBackground: "linear-gradient(135deg, #000000 0%, #0f0f0f 100%)",
         cardBorder: "1px solid rgba(255, 255, 255, 0.12)",
-        cardShadow: "0 20px 60px -15px rgba(0, 0, 0, 0.75)",
+        cardShadow: "0 16px 46px -16px rgba(0, 0, 0, 0.62)",
         textPrimary: "#f5f5f5",
         textMuted: "#a3a3a3",
         textDim: "rgba(255, 255, 255, 0.35)",
@@ -91,7 +91,7 @@ export const Calendar = ({
         navHoverBackground: "rgba(255, 255, 255, 0.14)",
         dayHoverBackground: "#1a1a1a",
         dayHoverShadow:
-          "0 16px 28px -20px rgba(255, 255, 255, 0.22), inset 0 0 0 1px rgba(255, 255, 255, 0.08)",
+          "0 12px 22px -18px rgba(255, 255, 255, 0.18), inset 0 0 0 1px rgba(255, 255, 255, 0.08)",
         selectedGradient: "linear-gradient(135deg, #f5f5f5, #a3a3a3)",
         selectedForeground: "#000000",
         todayDot: "#f5f5f5",
@@ -100,7 +100,7 @@ export const Calendar = ({
     : {
         cardBackground: "linear-gradient(135deg, #ffffff 0%, #f4f4f5 100%)",
         cardBorder: "1px solid rgba(0, 0, 0, 0.08)",
-        cardShadow: "0 20px 60px -15px rgba(0, 0, 0, 0.2)",
+        cardShadow: "0 16px 44px -18px rgba(0, 0, 0, 0.14)",
         textPrimary: "#0a0a0a",
         textMuted: "#737373",
         textDim: "rgba(0, 0, 0, 0.25)",
@@ -110,7 +110,7 @@ export const Calendar = ({
         navHoverBackground: "rgba(20, 20, 20, 0.1)",
         dayHoverBackground: "#f4f4f5",
         dayHoverShadow:
-          "0 18px 30px -22px rgba(15, 23, 42, 0.24), inset 0 0 0 1px rgba(10, 10, 10, 0.05)",
+          "0 12px 22px -18px rgba(15, 23, 42, 0.16), inset 0 0 0 1px rgba(10, 10, 10, 0.05)",
         selectedGradient: "linear-gradient(135deg, #141414, #4a4a4a)",
         selectedForeground: "#ffffff",
         todayDot: "#0a0a0a",
@@ -437,7 +437,7 @@ const DayCell = ({
             inset: 0,
             borderRadius: 8,
             background: palette.selectedGradient,
-            boxShadow: "0 10px 40px -10px rgba(0, 0, 0, 0.45)",
+            boxShadow: "0 8px 28px -12px rgba(0, 0, 0, 0.34)",
           }}
           transition={{
             type: "spring",

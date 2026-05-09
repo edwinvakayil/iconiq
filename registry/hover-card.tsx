@@ -107,7 +107,7 @@ const HoverCardContent = React.forwardRef<
         <motion.div
           animate={{ opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }}
           className={cn(
-            "absolute top-full left-1/2 z-50 mt-3 w-72 -translate-x-1/2 rounded-xl border border-border bg-white p-4 text-foreground shadow-2xl outline-none dark:bg-black",
+            "absolute top-full left-1/2 z-50 mt-3 w-72 -translate-x-1/2 rounded-lg border border-border bg-white p-4 text-foreground shadow-2xl outline-none dark:bg-black",
             className
           )}
           exit={{ opacity: 0, y: 8, scale: 0.97, filter: "blur(6px)" }}

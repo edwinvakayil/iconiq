@@ -145,7 +145,7 @@ export function ContextMenu({
           animate={{ opacity: 1, scale: 1, y: 0 }}
           aria-orientation="vertical"
           className={cn(
-            "rounded-xl border border-border/60 bg-white p-1.5 text-popover-foreground shadow-2xl dark:border-neutral-800 dark:bg-black",
+            "rounded-lg border border-border/60 bg-white p-1.5 text-popover-foreground shadow-2xl dark:border-neutral-800 dark:bg-black",
             menuClassName
           )}
           exit={{ opacity: 0, scale: 0.96, y: -2 }}

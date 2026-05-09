@@ -246,7 +246,7 @@ export function Combobox({
                     animate={{ opacity: 1, y: 0 }}
                     aria-selected={isSelected}
                     className={cn(
-                      "relative flex cursor-pointer select-none items-start gap-2 rounded-md px-2.5 py-2 text-sm transition-colors",
+                      "relative flex cursor-pointer select-none items-start gap-2 rounded-lg px-2.5 py-2 text-sm transition-colors",
                       isActive
                         ? "bg-accent text-accent-foreground"
                         : "text-foreground"
@@ -268,7 +268,7 @@ export function Combobox({
                   >
                     {isActive && (
                       <motion.div
-                        className="absolute inset-0 -z-10 rounded-md bg-accent"
+                        className="absolute inset-0 -z-10 rounded-lg bg-accent"
                         layoutId="combobox-active"
                         transition={{
                           type: "spring",
@@ -369,7 +369,7 @@ export function Combobox({
         {clearable && selected && !disabled && (
           <button
             aria-label="Clear selection"
-            className="rounded-sm p-0.5 text-muted-foreground opacity-70 hover:bg-muted hover:opacity-100"
+            className="rounded-lg p-0.5 text-muted-foreground opacity-70 hover:bg-muted hover:opacity-100"
             onClick={(e) => {
               e.stopPropagation();
               onChange?.("");

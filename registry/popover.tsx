@@ -49,7 +49,7 @@ const PopoverContentBody = React.forwardRef<
             },
           }}
           className={cn(
-            "z-50 w-72 rounded-xl border border-border bg-white p-4 text-foreground shadow-lg outline-none dark:bg-black",
+            "z-50 w-72 rounded-lg border border-border bg-white p-4 text-foreground shadow-lg outline-none dark:bg-black",
             className
           )}
           exit={{

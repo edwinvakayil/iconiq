@@ -163,7 +163,7 @@ export function Slider({
               mass: 0.7,
             }}
           >
-            <div className="relative h-5 w-5 rounded-full border-2 border-foreground bg-background shadow-sm" />
+            <div className="relative h-4 w-4 rounded-full border-[1.5px] border-foreground bg-background shadow-sm" />
           </motion.div>
         </div>
       </div>

@@ -142,7 +142,7 @@ export function Select({
     <div className={cn("relative w-72", className)}>
       {/* Trigger */}
       <motion.button
-        className="flex w-full items-center justify-between gap-2 rounded-xl border border-border bg-card px-4 py-3 font-medium text-foreground text-sm transition-colors hover:bg-accent focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        className="flex w-full items-center justify-between gap-2 rounded-lg border border-border bg-card px-4 py-3 font-medium text-foreground text-sm transition-colors hover:bg-accent focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
         onClick={() => setOpen((v) => !v)}
         ref={triggerRef}
         type="button"
@@ -167,7 +167,7 @@ export function Select({
               {open ? (
                 <motion.div
                   animate={{ opacity: 1, y: 0, scaleY: 1 }}
-                  className="z-300 overflow-hidden rounded-xl border border-border bg-card shadow-lg"
+                  className="z-300 overflow-hidden rounded-lg border border-border bg-card shadow-lg"
                   exit={{ opacity: 0, y: -4, scaleY: 0.92 }}
                   initial={{ opacity: 0, y: -4, scaleY: 0.92 }}
                   key="select-dropdown"

@@ -149,7 +149,7 @@ export const Alert = ({
         <motion.div
           animate="visible"
           className={cn(
-            "relative flex items-start gap-3 overflow-hidden rounded-xl border border-foreground/8 bg-card px-3.5 shadow-[0_2px_14px_0_rgba(0,0,0,0.07)]",
+            "relative flex items-start gap-3 overflow-hidden rounded-lg border border-foreground/8 bg-card px-3.5 shadow-[0_2px_14px_0_rgba(0,0,0,0.07)]",
             position
               ? // Fixed: let left+right inset determine width (no w-full).
                 // On mobile inset-x-4 stretches across viewport minus margins.

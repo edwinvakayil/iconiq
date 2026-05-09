@@ -88,7 +88,7 @@ const DialogContent = React.forwardRef<
           <motion.div
             animate="visible"
             className={cn(
-              "relative flex w-[min(100%,32rem)] max-w-lg flex-col gap-4 overflow-y-auto rounded-xl border bg-background p-6 shadow-2xl dark:bg-neutral-900",
+              "relative flex w-[min(100%,32rem)] max-w-lg flex-col gap-4 overflow-y-auto rounded-lg border bg-background p-6 shadow-2xl dark:bg-neutral-900",
               "max-h-[min(90svh,calc(100svh-env(safe-area-inset-top,0px)-env(safe-area-inset-bottom,0px)-2rem))]",
               className
             )}
@@ -99,7 +99,7 @@ const DialogContent = React.forwardRef<
             {React.Children.map(children, (child) => (
               <motion.div variants={childVariants}>{child}</motion.div>
             ))}
-            <DialogPrimitive.Close className="absolute top-4 right-4 rounded-full p-1.5 text-foreground opacity-70 transition-colors hover:bg-muted hover:opacity-100 focus:outline-none disabled:pointer-events-none">
+            <DialogPrimitive.Close className="absolute top-4 right-4 rounded-lg p-1.5 text-foreground opacity-70 transition-colors hover:bg-muted hover:opacity-100 focus:outline-none disabled:pointer-events-none">
               <X className="h-4 w-4" />
               <span className="sr-only">Close</span>
             </DialogPrimitive.Close>
