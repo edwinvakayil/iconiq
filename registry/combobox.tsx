@@ -203,10 +203,10 @@ export function Combobox({
     <AnimatePresence>
       {open && (
         <motion.div
-          animate={{ opacity: 1, scale: 1 }}
+          animate={{ opacity: 1, y: 0 }}
           className="z-[9999] overflow-hidden rounded-lg border border-neutral-200 bg-white text-neutral-900 shadow-lg dark:border-neutral-700 dark:bg-neutral-950 dark:text-neutral-100"
-          exit={{ opacity: 0, scale: 0.97 }}
-          initial={{ opacity: 0, scale: 0.97 }}
+          exit={{ opacity: 0, y: -4 }}
+          initial={{ opacity: 0, y: -6 }}
           key="popover"
           role="presentation"
           style={
@@ -219,10 +219,8 @@ export function Combobox({
                 }
           }
           transition={{
-            type: "spring",
-            stiffness: 380,
-            damping: 28,
-            mass: 0.6,
+            duration: 0.16,
+            ease: [0.22, 1, 0.36, 1],
           }}
         >
           <div
@@ -245,7 +243,7 @@ export function Combobox({
                 const isActive = index === activeIndex;
                 return (
                   <motion.div
-                    animate={{ opacity: 1, x: 0 }}
+                    animate={{ opacity: 1, y: 0 }}
                     aria-selected={isSelected}
                     className={cn(
                       "relative flex cursor-pointer select-none items-start gap-2 rounded-md px-2.5 py-2 text-sm transition-colors",
@@ -255,7 +253,7 @@ export function Combobox({
                     )}
                     data-index={index}
                     id={`${listboxId}-opt-${opt.value}`}
-                    initial={{ opacity: 0, x: -6 }}
+                    initial={{ opacity: 0, y: 2 }}
                     key={opt.value}
                     onClick={() => select(opt)}
                     onMouseDown={(e) => {
@@ -264,10 +262,8 @@ export function Combobox({
                     onMouseEnter={() => setActiveIndex(index)}
                     role="option"
                     transition={{
-                      delay: Math.min(index * 0.018, 0.18),
-                      type: "spring",
-                      stiffness: 400,
-                      damping: 28,
+                      duration: 0.12,
+                      ease: "easeOut",
                     }}
                   >
                     {isActive && (

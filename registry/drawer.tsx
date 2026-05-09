@@ -165,12 +165,12 @@ export function Drawer({
               </div>
               <motion.button
                 aria-label="Close drawer"
-                className="inline-flex size-9 shrink-0 items-center justify-center rounded-full bg-neutral-100/80 text-muted-foreground transition-colors duration-200 hover:bg-neutral-200/80 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 dark:bg-neutral-900 dark:hover:bg-neutral-800"
+                className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-muted-foreground transition-colors duration-200 hover:bg-muted/70 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                 onClick={onClose}
                 type="button"
                 variants={itemFade}
               >
-                <X className="size-4" />
+                <X className="size-[15px]" />
               </motion.button>
             </motion.header>
 

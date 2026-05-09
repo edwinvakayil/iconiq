@@ -39,6 +39,10 @@ export function ContextMenu({
     "top-left" | "top-right" | "bottom-left" | "bottom-right"
   >("top-left");
   const [activeIndex, setActiveIndex] = React.useState<number | null>(null);
+  const separatorCount = React.useMemo(
+    () => items.filter((item) => item.separatorAfter).length,
+    [items]
+  );
 
   React.useEffect(() => {
     setMounted(true);
@@ -48,7 +52,7 @@ export function ContextMenu({
     (clientX: number, clientY: number) => {
       const vw = window.innerWidth;
       const vh = window.innerHeight;
-      const estHeight = items.length * ITEM_HEIGHT + 16;
+      const estHeight = items.length * ITEM_HEIGHT + separatorCount * 9 + 12;
 
       const overflowRight = clientX + MENU_WIDTH + 8 > vw;
       const overflowBottom = clientY + estHeight + 8 > vh;
@@ -63,7 +67,7 @@ export function ContextMenu({
       setActiveIndex(null);
       setOpen(true);
     },
-    [items.length]
+    [items.length, separatorCount]
   );
 
   const getEnabledIndex = React.useCallback(
@@ -175,6 +179,7 @@ export function ContextMenu({
                   item.onSelect?.();
                   setOpen(false);
                 }}
+                onFocus={() => setActiveIndex(i)}
                 onHover={() => setActiveIndex(i)}
               />
               {item.separatorAfter && i < items.length - 1 && (
@@ -201,12 +206,14 @@ function MenuItem({
   item,
   index,
   active,
+  onFocus,
   onHover,
   onClick,
 }: {
   item: ContextMenuItem;
   index: number;
   active: boolean;
+  onFocus: () => void;
   onHover: () => void;
   onClick: () => void;
 }) {
@@ -216,12 +223,16 @@ function MenuItem({
       className={cn(
         "relative flex w-full cursor-pointer items-center gap-2.5 rounded-lg px-2.5 py-2 text-left font-medium text-sm outline-none transition-colors",
         "disabled:cursor-not-allowed disabled:opacity-40",
-        item.destructive ? "text-destructive" : "text-foreground/85"
+        item.destructive
+          ? "text-destructive hover:bg-accent/70"
+          : "text-foreground/85 hover:bg-accent/70"
       )}
       disabled={item.disabled}
       initial={{ opacity: 0, x: -4 }}
       onClick={onClick}
+      onFocus={onFocus}
       onMouseEnter={onHover}
+      onPointerMove={onHover}
       role="menuitem"
       transition={{
         delay: 0.02 * index,
@@ -232,10 +243,7 @@ function MenuItem({
     >
       {active && !item.disabled && (
         <motion.div
-          className={cn(
-            "absolute inset-0 rounded-lg",
-            item.destructive ? "bg-destructive/10" : "bg-accent"
-          )}
+          className={cn("absolute inset-0 rounded-lg", "bg-accent")}
           layoutId="context-menu-active"
           transition={{ type: "spring", stiffness: 600, damping: 38 }}
         />
