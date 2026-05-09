@@ -89,7 +89,7 @@ export function Carousel({
         <AnimatePresence custom={direction} initial={false} mode="wait">
           <motion.article
             animate="center"
-            className="absolute inset-0 flex cursor-grab select-none flex-col rounded-lg border border-border bg-card p-6 text-card-foreground active:cursor-grabbing"
+            className="absolute inset-0 flex cursor-grab select-none flex-col rounded-lg border border-border bg-card p-5 text-card-foreground active:cursor-grabbing"
             custom={direction}
             drag="x"
             dragConstraints={{ left: 0, right: 0 }}
@@ -106,7 +106,7 @@ export function Carousel({
             variants={variants}
           >
             <p
-              className="overflow-hidden text-base text-foreground/90 italic leading-relaxed"
+              className="h-[4.875rem] overflow-hidden text-base text-foreground/90 italic leading-relaxed"
               style={{
                 display: "-webkit-box",
                 WebkitLineClamp: 3,

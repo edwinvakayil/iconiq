@@ -9,7 +9,7 @@ const usageCode = `import { Carousel, type Testimonial } from "@/components/ui/c
 const testimonials: Testimonial[] = [
   {
     quote:
-      "Go confidently in the direction of your dreams. Live the life you have imagined.",
+      "If one advances confidently in the direction of his dreams, and endeavors to live the life which he has imagined, he will meet with a success unexpected in common hours.",
     avatar: "/assets/av1.png",
     name: "Henry David Thoreau",
     handle: "@hdthoreau",
@@ -40,7 +40,7 @@ export function CarouselPreview() {
 const previewTestimonials: Testimonial[] = [
   {
     quote:
-      "Go confidently in the direction of your dreams. Live the life you have imagined.",
+      "If one advances confidently in the direction of his dreams, and endeavors to live the life which he has imagined, he will meet with a success unexpected in common hours.",
     avatar: "/assets/av1.png",
     name: "Henry David Thoreau",
     handle: "@hdthoreau",
