@@ -272,6 +272,10 @@ html[data-banner-hidden="true"] {
       ), linear-gradient(var(--background), var(--background));
   }
 
+  button:not(:disabled) {
+    cursor: pointer;
+  }
+
   ::selection {
     background-color: var(--selection-bg);
     color: var(--selection-fg);

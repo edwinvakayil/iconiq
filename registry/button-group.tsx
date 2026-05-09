@@ -71,7 +71,7 @@ const RippleButton = React.forwardRef<HTMLButtonElement, RippleButtonProps>(
 
     return (
       <MotionButton
-        className={cn("relative overflow-hidden", className)}
+        className={cn("relative cursor-pointer overflow-hidden", className)}
         disabled={disabled}
         onPointerDown={handlePointerDown}
         ref={ref}
@@ -272,7 +272,7 @@ function SegmentedControl({
         <motion.button
           animate={{ opacity: 1, x: 0 }}
           className={cn(
-            "relative z-10 inline-flex h-8 items-center justify-center whitespace-nowrap rounded-lg px-4 font-medium text-sm transition-colors",
+            "relative z-10 inline-flex h-8 cursor-pointer items-center justify-center whitespace-nowrap rounded-lg px-4 font-medium text-sm transition-colors",
             "outline-none focus-visible:ring-2 focus-visible:ring-ring",
             selected === option
               ? "text-foreground"
