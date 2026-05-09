@@ -81,6 +81,8 @@ const componentSummaries: Record<string, string> = {
     "Tooltip component for compact hover or focus explanations.",
   "/texts/dia-text":
     "Animated text reveal with a sweeping gradient band, repeat controls, and optional fixed-width rotation.",
+  "/texts/shimmer-text":
+    "Animated shimmer text with a moving highlight band, adjustable speed, and spread-based emphasis.",
 };
 
 const TOKEN_SPLIT_REGEX = /[\s/-]+/;
@@ -132,6 +134,9 @@ const componentItems: SearchItem[] = SITE_SECTIONS.flatMap((section) =>
     }
     if (slug === "dia-text") {
       labelKeywords.push("text", "text reveal", "animated text");
+    }
+    if (slug === "shimmer-text") {
+      labelKeywords.push("text", "shimmer", "text shimmer", "animated text");
     }
     if (slug === "skeleton") {
       labelKeywords.push("loading", "placeholder", "shimmer");

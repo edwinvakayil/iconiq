@@ -47,7 +47,10 @@ export const SITE_SECTIONS = [
   },
   {
     label: "Texts",
-    children: [{ label: "Dia Text", href: "/texts/dia-text" }],
+    children: [
+      { label: "Dia Text", href: "/texts/dia-text" },
+      { label: "Shimmer Text", href: "/texts/shimmer-text" },
+    ],
   },
 ] as const;
 

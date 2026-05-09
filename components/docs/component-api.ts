@@ -2924,6 +2924,67 @@ const diaTextApiDetails: DetailItem[] = [
   registryItem("dia-text.json", ["motion"]),
 ];
 
+const shimmerTextApiDetails: DetailItem[] = [
+  {
+    id: "shimmer-text",
+    title: "TextShimmer",
+    summary:
+      "Animated text treatment that moves a highlight band across one string of copy while keeping the base text readable in both light and dark themes.",
+    fields: [
+      field({
+        name: "children",
+        type: "string",
+        required: true,
+        description:
+          "The text content to shimmer. The component expects a string because it derives the highlight spread from the child length.",
+      }),
+      field({
+        name: "as",
+        type: "React.ElementType",
+        defaultValue: '"p"',
+        description:
+          "Changes which HTML element gets rendered while preserving the same shimmer animation behavior.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description:
+          "Merged onto the motion element for local typography, spacing, or color-variable overrides.",
+      }),
+      field({
+        name: "duration",
+        type: "number",
+        defaultValue: "2",
+        description:
+          "Duration in seconds for one full shimmer sweep from right to left.",
+      }),
+      field({
+        name: "spread",
+        type: "number",
+        defaultValue: "2",
+        description:
+          "Multiplier used to size the highlight band based on the current text length.",
+      }),
+    ],
+    notes: [
+      "The component memoizes the computed spread width so it only recalculates when the string content or spread value changes.",
+      "Base and highlight colors come from internal CSS custom properties, which can still be overridden through className if you want a different shimmer tone.",
+    ],
+  },
+  {
+    id: "shimmer-text-motion",
+    title: "Motion and styling behavior",
+    summary:
+      "The shimmer is driven by a looping background-position animation rather than per-character transforms, so the text stays stable while the highlight moves across it.",
+    notes: [
+      "The moving band is composed from layered gradients: one animated highlight layer plus one static base-color layer.",
+      "Dark mode swaps the base and highlight color variables automatically, so the same component remains legible without extra props.",
+      "Because the component uses Motion's repeat loop with linear easing, the shimmer reads as continuous rather than pulsing in place.",
+    ],
+  },
+  registryItem("shimmer-text.json", ["motion"]),
+];
+
 const tooltipApiDetails: DetailItem[] = [
   {
     id: "tooltip",
@@ -3007,6 +3068,7 @@ export {
   paginationApiDetails,
   accordionApiDetails,
   radioGroupApiDetails,
+  shimmerTextApiDetails,
   skeletonApiDetails,
   selectApiDetails,
   sliderApiDetails,

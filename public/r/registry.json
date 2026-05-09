@@ -349,6 +349,21 @@
       ]
     },
     {
+      "name": "shimmer-text",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": ["motion"],
+      "devDependencies": [],
+      "title": "Shimmer Text",
+      "description": "Animated shimmer text with a sweeping highlight band, adjustable spread, and configurable loop speed for emphasis-heavy copy.",
+      "files": [
+        {
+          "path": "shimmer-text.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "skeleton",
       "type": "registry:ui",
       "registryDependencies": [],

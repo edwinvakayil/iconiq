@@ -40,6 +40,12 @@ const REGISTRY_UI_META: Record<
       "Animated inline text reveal with a sweeping gradient band, repeat controls, and optional fixed-width rotation for motion-driven typography.",
     dependencies: ["motion"],
   },
+  "shimmer-text": {
+    title: "Shimmer Text",
+    description:
+      "Animated shimmer text with a sweeping highlight band, adjustable spread, and configurable loop speed for emphasis-heavy copy.",
+    dependencies: ["motion"],
+  },
   drawer: {
     title: "Drawer",
     description:
