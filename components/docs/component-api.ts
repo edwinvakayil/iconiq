@@ -2209,6 +2209,56 @@ const spinnerApiDetails: DetailItem[] = [
   registryItem("spinner.json", ["motion"]),
 ];
 
+const skeletonApiDetails: DetailItem[] = [
+  {
+    id: "skeleton",
+    title: "ShimmerSkeleton",
+    summary:
+      "Lightweight loading placeholder that renders a muted block with an optional shimmer pass layered above it.",
+    fields: [
+      field({
+        name: "rounded",
+        type: '"none" | "sm" | "md" | "lg" | "full"',
+        defaultValue: "md",
+        description:
+          "Chooses the corner radius utility applied to the placeholder surface.",
+      }),
+      field({
+        name: "animate",
+        type: "boolean",
+        defaultValue: "true",
+        description:
+          "Controls whether the shimmer overlay is rendered. Set it to false when you want a static loading block.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description:
+          "Merged onto the root div so you can control width, height, spacing, colors, and any extra local styling.",
+      }),
+      field({
+        name: "HTML div props",
+        type: "HTMLAttributes<HTMLDivElement>",
+        description:
+          "Standard div attributes such as style, data-*, aria-*, id, and event handlers are forwarded to the root element.",
+      }),
+    ],
+    notes: [
+      "The component always renders role='status' and aria-label='Loading' on the root placeholder.",
+      "The shimmer uses a local keyframes definition and a gradient overlay span, so there are no runtime dependencies beyond React.",
+      "Use rounded='full' for avatar placeholders and the default rounded='md' or rounded='lg' for cards and text blocks.",
+    ],
+  },
+  {
+    id: "skeleton-registry",
+    title: "Registry bundle",
+    summary:
+      "Install the exact registry entry shown on the right when you want the component file with no additional runtime dependencies.",
+    notes: ["No runtime dependencies."],
+    registryPath: "skeleton.json",
+  },
+];
+
 const tabsApiDetails: DetailItem[] = [
   {
     id: "tabs",
@@ -2957,6 +3007,7 @@ export {
   paginationApiDetails,
   accordionApiDetails,
   radioGroupApiDetails,
+  skeletonApiDetails,
   selectApiDetails,
   sliderApiDetails,
   spinnerApiDetails,

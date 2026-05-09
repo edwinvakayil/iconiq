@@ -349,6 +349,21 @@
       ]
     },
     {
+      "name": "skeleton",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": [],
+      "devDependencies": [],
+      "title": "Skeleton",
+      "description": "Shimmer loading placeholder with configurable radius, optional animation, and zero runtime dependencies.",
+      "files": [
+        {
+          "path": "skeleton.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "slider",
       "type": "registry:ui",
       "registryDependencies": [],

@@ -136,6 +136,11 @@ const REGISTRY_UI_META: Record<
       "Animated single-select dropdown with staggered options, chevron rotation, scaleY panel, row hover slide, and check mark on the active item. Motion + Lucide.",
     dependencies: ["motion", "lucide-react"],
   },
+  skeleton: {
+    title: "Skeleton",
+    description:
+      "Shimmer loading placeholder with configurable radius, optional animation, and zero runtime dependencies.",
+  },
   slider: {
     title: "Slider",
     description:

@@ -63,6 +63,8 @@ const componentSummaries: Record<string, string> = {
   "/components/radiogroup":
     "Radio group for single-choice options with animated selection treatment.",
   "/components/select": "Animated select control for single-choice selections.",
+  "/components/skeleton":
+    "Shimmer skeleton placeholder for loading states, lines, avatars, and content blocks.",
   "/components/slider":
     "Slider control for range selection with motion-aware thumb and track states.",
   "/components/spinner":
@@ -130,6 +132,9 @@ const componentItems: SearchItem[] = SITE_SECTIONS.flatMap((section) =>
     }
     if (slug === "dia-text") {
       labelKeywords.push("text", "text reveal", "animated text");
+    }
+    if (slug === "skeleton") {
+      labelKeywords.push("loading", "placeholder", "shimmer");
     }
 
     return {
