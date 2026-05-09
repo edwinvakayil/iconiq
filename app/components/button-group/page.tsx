@@ -38,8 +38,8 @@ export function ViewControls() {
 
 function ButtonGroupPreview() {
   return (
-    <div className="flex w-full max-w-2xl flex-col items-center gap-8 px-2">
-      <div className="space-y-3 text-center">
+    <div className="flex w-full max-w-2xl flex-wrap items-center justify-center gap-3 px-2">
+      <div className="text-center">
         <ButtonGroupItems>
           <button type="button">
             <List className="size-4" />
@@ -54,20 +54,12 @@ function ButtonGroupPreview() {
             Table
           </button>
         </ButtonGroupItems>
-        <p className="text-[13px] text-secondary leading-6">
-          The segmented row keeps the same bordered shell while the hover
-          surface glides smoothly between items.
-        </p>
       </div>
 
-      <div className="space-y-3 text-center">
+      <div className="text-center">
         <IconButton aria-label="Notifications" type="button">
           <Bell className="size-4" />
         </IconButton>
-        <p className="text-[13px] text-secondary leading-6">
-          The icon button now uses a softer lift and calmer icon settle on hover
-          instead of the sharper bounce.
-        </p>
       </div>
     </div>
   );

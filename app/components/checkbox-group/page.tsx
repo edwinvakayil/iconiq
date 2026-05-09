@@ -135,17 +135,13 @@ export default function CheckboxGroupPage() {
       description="Multi-select rows with a bordered empty box when off and a lone animated tick when on. Motion keeps the state change tactile without overloading dense forms."
       details={componentDetailsItems}
       preview={
-        <div className="flex min-h-[320px] flex-col items-center justify-center gap-6">
+        <div className="flex min-h-[320px] items-center justify-center">
           <CheckboxGroup
             className="max-w-md"
             onChange={setSelected}
             options={demoOptions}
             value={selected}
           />
-          <p className="max-w-md text-center text-[14px] text-secondary leading-6">
-            Multiple selections should stay calm and legible. This version
-            favors clean spacing and clear motion over noisy form chrome.
-          </p>
         </div>
       }
       title="Checkbox Group"

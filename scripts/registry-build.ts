@@ -100,12 +100,6 @@ const REGISTRY_UI_META: Record<
       "Multi-select option list with bordered empty state and a primary tick only when checked, plus hover/tap motion on each row. Motion + Lucide.",
     dependencies: ["motion", "lucide-react"],
   },
-  collapsible: {
-    title: "Collapsible",
-    description:
-      "Accessible collapsible primitive built on Radix UI. Exports Collapsible, CollapsibleTrigger, and CollapsibleContent for building expandable sections, FAQs, and disclosure patterns.",
-    dependencies: ["@radix-ui/react-collapsible", "motion", "lucide-react"],
-  },
   dialog: {
     title: "Dialog",
     description:
@@ -142,12 +136,6 @@ const REGISTRY_UI_META: Record<
       "Range control with spring-animated track and thumb, full-width pointer drag, and optional label and live value. Motion.",
     dependencies: ["motion"],
   },
-  input: {
-    title: "Input",
-    description:
-      "Standard rounded text field with an always-visible label, focus ring motion, and per-character spring animation on the visible text overlay. Motion.",
-    dependencies: ["motion"],
-  },
   "input-group": {
     title: "Input Group",
     description:
@@ -164,12 +152,6 @@ const REGISTRY_UI_META: Record<
     title: "Radio group",
     description:
       "Single-select option list with shared layoutId highlight, spring ring/dot on the control, staggered row entrance, and optional descriptions. Motion only — native button radios with role=radiogroup.",
-    dependencies: ["motion"],
-  },
-  switch: {
-    title: "Switch",
-    description:
-      "Animated toggle with spring thumb travel and smooth track color crossfade. Native button with role=switch, forwards ref. Motion.",
     dependencies: ["motion"],
   },
   tabs: {

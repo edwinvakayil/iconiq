@@ -60,14 +60,10 @@ const previewTestimonials: Testimonial[] = [
 
 function CarouselPreview() {
   return (
-    <div className="flex min-h-[320px] w-full flex-col items-center justify-center gap-6 px-4 py-10">
+    <div className="flex min-h-[320px] w-full items-center justify-center px-4 py-10">
       <div className="w-full max-w-[21.5rem]">
         <Carousel testimonials={previewTestimonials} />
       </div>
-      <p className="max-w-[23.5rem] text-center text-[13px] text-secondary leading-6">
-        Drag across the panel or use the controls to inspect the spring
-        transition, pagination state, and swipe threshold behavior.
-      </p>
     </div>
   );
 }

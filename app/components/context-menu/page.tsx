@@ -63,7 +63,7 @@ export function AssetContextMenu() {
 }`;
 
 function ContextMenuPreview() {
-  const [lastAction, setLastAction] = useState("Waiting for a selection");
+  const [, setLastAction] = useState("Waiting for a selection");
 
   const items: ContextMenuItem[] = [
     {
@@ -95,8 +95,8 @@ function ContextMenuPreview() {
   ];
 
   return (
-    <div className="flex min-h-[280px] w-full flex-col items-center justify-center gap-6 px-4 py-10">
-      <div className="w-full max-w-2xl space-y-4">
+    <div className="flex min-h-[280px] w-full items-center justify-center px-4 py-10">
+      <div className="w-full max-w-2xl">
         <ContextMenu className="w-full" items={items}>
           <div className="w-full border border-border/80 px-6 py-16 text-center">
             <p className="font-medium text-[15px] text-foreground tracking-[-0.02em]">
@@ -108,9 +108,6 @@ function ContextMenuPreview() {
             </p>
           </div>
         </ContextMenu>
-        <p className="text-center text-[13px] text-secondary leading-6">
-          Last action: <span className="text-foreground">{lastAction}</span>
-        </p>
       </div>
     </div>
   );

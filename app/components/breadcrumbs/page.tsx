@@ -118,12 +118,8 @@ export default function BreadcrumbsPage() {
       details={componentDetailsItems}
       detailsDescription="Each item expands into the segment contract, current-state behavior, and the motion details that affect usage."
       preview={
-        <div className="flex min-h-[280px] flex-col items-center justify-center gap-6">
+        <div className="flex min-h-[280px] items-center justify-center">
           <Breadcrumbs items={demoItems} />
-          <p className="max-w-md text-center text-[14px] text-secondary leading-6">
-            A navigation trail should feel precise, not ornamental. This preview
-            keeps the motion readable and the current step obvious.
-          </p>
         </div>
       }
       title="Breadcrumbs"

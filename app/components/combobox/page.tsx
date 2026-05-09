@@ -55,10 +55,9 @@ export function RoutePicker() {
 
 function ComboboxPreview() {
   const [value, setValue] = useState("transit");
-  const selected = demoOptions.find((option) => option.value === value);
 
   return (
-    <div className="flex w-full max-w-xl flex-col gap-5">
+    <div className="w-full max-w-xl">
       <Combobox
         className="w-full"
         emptyMessage="No route matches that query."
@@ -67,16 +66,6 @@ function ComboboxPreview() {
         placeholder="Pick a route..."
         value={value}
       />
-      <div className="border border-border/80 bg-muted/[0.14] px-4 py-3">
-        <p className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">
-          Current selection
-        </p>
-        <p className="mt-1.5 text-[14px] text-secondary leading-6">
-          {selected
-            ? `${selected.label} - ${selected.description}`
-            : "No route selected yet. Try typing, navigating with arrow keys, or clearing the current value."}
-        </p>
-      </div>
     </div>
   );
 }

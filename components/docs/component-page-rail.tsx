@@ -1,6 +1,6 @@
 "use client";
 
-import { Github, HeartHandshake, PencilLine } from "lucide-react";
+import { HeartHandshake, PencilLine } from "lucide-react";
 import { motion, useReducedMotion } from "motion/react";
 import Link from "next/link";
 import type { ReactNode } from "react";
@@ -85,12 +85,6 @@ function buildDefaultRailActions() {
       href: LINK.TWITTER,
       icon: <XLogoIcon className="size-3.5" />,
       label: "Follow @edwinvakayil",
-    },
-    {
-      external: true,
-      href: LINK.GITHUB,
-      icon: <Github className="size-3.5" />,
-      label: "Star on GitHub",
     },
     {
       href: "/sponsorship",

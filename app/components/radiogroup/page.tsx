@@ -136,17 +136,13 @@ export default function RadioGroupPage() {
       description="Single-select list with a sliding highlight, spring radio control, and optional descriptions. Built to stay sharp in pricing tables, settings, and onboarding flows."
       details={componentDetailsItems}
       preview={
-        <div className="flex min-h-[320px] flex-col items-center justify-center gap-6">
+        <div className="flex min-h-[320px] items-center justify-center">
           <RadioGroup
             className="max-w-md"
             onChange={setValue}
             options={demoOptions}
             value={value}
           />
-          <p className="max-w-md text-center text-[14px] text-secondary leading-6">
-            One choice per group, with enough motion to confirm the change and
-            enough restraint to stay usable in dense settings.
-          </p>
         </div>
       }
       title="Radio Group"

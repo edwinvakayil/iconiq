@@ -139,21 +139,7 @@ function DialogPreview() {
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="flex min-h-[280px] flex-col items-center justify-center gap-8 px-4 py-10 text-center sm:min-h-[320px]">
-      <p className="max-w-md font-sans text-[13px] leading-relaxed">
-        <span className="text-emerald-600 dark:text-emerald-400">
-          Lock attention on one decision
-        </span>
-        <span className="text-neutral-400 dark:text-neutral-500"> · </span>
-        <span className="text-sky-600 dark:text-sky-400">
-          Spring in and out of view
-        </span>
-        <span className="text-neutral-400 dark:text-neutral-500"> · </span>
-        <span className="text-violet-600 dark:text-violet-400">
-          Dismiss without losing place
-        </span>
-      </p>
-
+    <div className="flex min-h-[280px] items-center justify-center px-4 py-10 text-center sm:min-h-[320px]">
       <Dialog onOpenChange={setOpen} open={open}>
         <DialogTrigger asChild>
           <Button size="sm" variant="outline">

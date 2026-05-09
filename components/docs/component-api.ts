@@ -1343,99 +1343,6 @@ const fileUploadApiDetails: DetailItem[] = [
   registryItem("file-upload.json", ["motion", "lucide-react"]),
 ];
 
-const collapsibleApiDetails: DetailItem[] = [
-  {
-    id: "collapsible-root",
-    title: "Collapsible",
-    summary:
-      "Root wrapper around Radix Collapsible.Root with a small internal context used by the custom content animation.",
-    fields: [
-      field({
-        name: "open",
-        type: "boolean",
-        description:
-          "Controlled open state. When provided, the component follows this prop instead of its own internal state.",
-      }),
-      field({
-        name: "defaultOpen",
-        type: "boolean",
-        description: "Initial open value for uncontrolled usage.",
-      }),
-      field({
-        name: "onOpenChange",
-        type: "(open: boolean) => void",
-        description:
-          "Called whenever the trigger toggles the root. It runs for both controlled and uncontrolled usage.",
-      }),
-      field({
-        name: "children",
-        type: "ReactNode",
-        required: true,
-        description:
-          "Composition surface for the trigger and content primitives rendered inside the root.",
-      }),
-    ],
-    notes: [
-      "Other Radix root props continue to work because the wrapper forwards the remaining root props to CollapsiblePrimitive.Root.",
-      "The root stores the resolved open state in React context so CollapsibleContent can animate without reading Radix data attributes.",
-    ],
-  },
-  {
-    id: "collapsible-trigger",
-    title: "CollapsibleTrigger",
-    summary: "Thin wrapper around Radix CollapsibleTrigger.",
-    fields: [
-      field({
-        name: "children",
-        type: "ReactNode",
-        required: true,
-        description: "Interactive content rendered inside the trigger surface.",
-      }),
-      field({
-        name: "asChild",
-        type: "boolean",
-        description:
-          "Lets you supply your own trigger element while preserving the Radix trigger behavior.",
-      }),
-      field({
-        name: "disabled",
-        type: "boolean",
-        description:
-          "Disables trigger interaction through the underlying Radix primitive.",
-      }),
-    ],
-    notes: [
-      "Any remaining trigger props and event handlers are forwarded directly to CollapsiblePrimitive.CollapsibleTrigger.",
-      'The wrapper only adds data-slot="collapsible-trigger" so callers can target it in CSS.',
-    ],
-  },
-  {
-    id: "collapsible-content",
-    title: "CollapsibleContent",
-    summary:
-      "Custom motion-driven content area that intentionally exposes a smaller API than the Radix primitive.",
-    fields: [
-      field({
-        name: "children",
-        type: "ReactNode",
-        required: true,
-        description: "Rendered inside the animated content wrapper.",
-      }),
-      field({
-        name: "className",
-        type: "string",
-        description:
-          "Applied to the inner motion.div that reveals the content.",
-      }),
-    ],
-    notes: [
-      "This component does not forward arbitrary CollapsiblePrimitive.Content props such as forceMount, asChild, or custom ids.",
-      "Height is animated on an outer wrapper and clip-path is animated on an inner wrapper, producing the open and close effect without relying on CSS keyframes.",
-    ],
-  },
-  registryItem("collapsible.json", ["@radix-ui/react-collapsible", "motion"]),
-];
-
 const dialogApiDetails: DetailItem[] = [
   {
     id: "dialog-root",
@@ -1788,91 +1695,6 @@ const popoverApiDetails: DetailItem[] = [
     ],
   },
   registryItem("popover.json", ["@radix-ui/react-popover", "motion"]),
-];
-
-const inputApiDetails: DetailItem[] = [
-  {
-    id: "input",
-    title: "Input",
-    summary:
-      "Animated text input with a canonical Input export, always-visible label, and built-in helper behaviors for password, search, and email states.",
-    fields: [
-      field({
-        name: "label",
-        type: "string",
-        defaultValue: "Type here",
-        description:
-          "Always-visible label rendered above the field and linked to the input via htmlFor.",
-      }),
-      field({
-        name: "value",
-        type: "string",
-        description:
-          "Controlled string value. When omitted, the component uses local state starting from an empty string.",
-      }),
-      field({
-        name: "onChange",
-        type: "(value: string) => void",
-        description:
-          "Receives the next string value rather than the original change event.",
-      }),
-      field({
-        name: "type",
-        type: "HTMLInputTypeAttribute",
-        defaultValue: "text",
-        description:
-          "Native input type used by the underlying input element. Password, email, search, and number each trigger additional local behavior.",
-      }),
-      field({
-        name: "placeholder",
-        type: "string",
-        description:
-          "Forwarded to the native input so empty fields can show guidance copy before any text is entered.",
-      }),
-      field({
-        name: "disabled",
-        type: "boolean",
-        description:
-          "Disables the native input and also turns off interactive affordances such as the password toggle and search clear button.",
-      }),
-      field({
-        name: "readOnly",
-        type: "boolean",
-        description:
-          "Leaves the field focusable but disables local editing affordances and prevents value changes through the built-in helper actions.",
-      }),
-      field({
-        name: "id",
-        type: "string",
-        description:
-          "Optional input id. If you leave it out, the component creates one with useId.",
-      }),
-      field({
-        name: "className",
-        type: "string",
-        description:
-          "Applied to the outer wrapper that contains both the label and the animated input shell.",
-      }),
-    ],
-    notes: [
-      "Standard input attributes such as name, autoComplete, min, max, step, inputMode, onBlur, and onFocus are forwarded to the native input element.",
-      "Your onBlur and onFocus callbacks still run after the component updates its internal focused and validation state.",
-      "The visible character animation is driven by an overlay display, but editing still happens through a real native input element.",
-    ],
-  },
-  {
-    id: "input-type-specific",
-    title: "Type-specific behavior",
-    summary:
-      "Several input types ship with extra runtime behavior beyond what the browser gives you for free.",
-    notes: [
-      "Password inputs add a local show-or-hide toggle that flips the input type between password and text.",
-      "Search inputs render a clear button whenever the field is interactive and the current value is non-empty.",
-      "Email inputs apply a built-in pattern, title, and aria-invalid flag. The destructive border only appears after blur when the field is non-empty and fails the regex.",
-      "Number, password, and search inputs opt out of overflow clipping so their trailing affordances can sit outside the text flow cleanly.",
-    ],
-  },
-  registryItem("input.json", ["motion"]),
 ];
 
 const inputGroupApiDetails: DetailItem[] = [
@@ -2385,64 +2207,6 @@ const spinnerApiDetails: DetailItem[] = [
     ],
   },
   registryItem("spinner.json", ["motion"]),
-];
-
-const switchApiDetails: DetailItem[] = [
-  {
-    id: "switch",
-    title: "Switch",
-    summary:
-      "Animated switch with a canonical Switch export. Checked state is expected to come from the parent.",
-    fields: [
-      field({
-        name: "checked",
-        type: "boolean",
-        defaultValue: "false",
-        description:
-          "Current switch state shown by the thumb position and track color.",
-      }),
-      field({
-        name: "onCheckedChange",
-        type: "(checked: boolean) => void",
-        description: "Called with the next boolean when the button is clicked.",
-      }),
-      field({
-        name: "disabled",
-        type: "boolean",
-        defaultValue: "false",
-        description: "Disables the native button and dims the control.",
-      }),
-      field({
-        name: "className",
-        type: "string",
-        description:
-          "Merged onto the root button for placement and sizing overrides.",
-      }),
-      field({
-        name: "size",
-        type: '"sm" | "md" | "lg"',
-        defaultValue: "md",
-        description:
-          "Selects the track dimensions, thumb size, and travel distance from the internal SWITCH_LAYOUT map.",
-      }),
-    ],
-    notes: [
-      "This implementation does not keep its own checked state. If you do not update checked in response to onCheckedChange, the visual state stays where it was.",
-      "A forwarded ref points at the native button element.",
-    ],
-  },
-  {
-    id: "switch-size-motion",
-    title: "Size and motion behavior",
-    summary:
-      "The switch uses separate transitions for the track and the thumb so the two parts settle at slightly different tempos.",
-    notes: [
-      "sm uses a 42x22 track with 20px of thumb travel, md uses 52x30 with 22px travel, and lg uses 64x36 with 28px travel.",
-      "Reduced-motion mode switches the thumb to a short tween and shortens the track color transition.",
-      "The button carries role='switch' and aria-checked, plus focus-visible ring styles for keyboard users.",
-    ],
-  },
-  registryItem("switch.json", ["motion"]),
 ];
 
 const tabsApiDetails: DetailItem[] = [
@@ -3012,14 +2776,12 @@ export {
   checkboxGroupApiDetails,
   comboboxApiDetails,
   contextMenuApiDetails,
-  collapsibleApiDetails,
   drawerApiDetails,
   dialogApiDetails,
   dropdownApiDetails,
   fileUploadApiDetails,
   hoverCardApiDetails,
   popoverApiDetails,
-  inputApiDetails,
   inputGroupApiDetails,
   paginationApiDetails,
   accordionApiDetails,
@@ -3027,7 +2789,6 @@ export {
   selectApiDetails,
   sliderApiDetails,
   spinnerApiDetails,
-  switchApiDetails,
   tableApiDetails,
   tabsApiDetails,
   toggleApiDetails,

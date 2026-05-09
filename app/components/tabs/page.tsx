@@ -62,7 +62,7 @@ export function WorkspaceTabs() {
 function TabsPreview() {
   return (
     <div className="flex min-h-[320px] w-full items-center justify-center px-4 py-10">
-      <div className="w-full max-w-2xl space-y-6">
+      <div className="w-full max-w-2xl">
         <Tabs className="w-full" defaultValue="overview">
           <TabsList>
             <TabsTrigger value="overview">Overview</TabsTrigger>
@@ -83,11 +83,6 @@ function TabsPreview() {
             </TabsContent>
           ))}
         </Tabs>
-
-        <p className="max-w-xl text-[13px] text-secondary leading-6">
-          Move between the tabs to inspect the measured underline motion, hover
-          trail, and the blurred content transition between panels.
-        </p>
       </div>
     </div>
   );

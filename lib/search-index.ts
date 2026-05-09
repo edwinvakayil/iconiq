@@ -38,8 +38,6 @@ const componentSummaries: Record<string, string> = {
     "Testimonial carousel with swipeable motion and pagination controls.",
   "/components/checkbox-group":
     "Checkbox group for multiple selections with animated row states.",
-  "/components/collapsible":
-    "Collapsible primitive for expandable sections and progressive disclosure.",
   "/components/combobox":
     "Searchable combobox with inline filtering and keyboard navigation.",
   "/components/context-menu":
@@ -54,8 +52,6 @@ const componentSummaries: Record<string, string> = {
     "File upload surface with drag and drop, previews, and queued item states.",
   "/components/hover-card":
     "Hover card for richer inline profile or detail previews.",
-  "/components/input":
-    "Input field with polished states for text, password, email, and search.",
   "/components/input-group":
     "Floating-label input group with prefix and suffix slots, inline errors, and stacked form-field layouts.",
   "/components/pagination":
@@ -71,8 +67,6 @@ const componentSummaries: Record<string, string> = {
     "Slider control for range selection with motion-aware thumb and track states.",
   "/components/spinner":
     "Loading spinner for pending states and background actions.",
-  "/components/switch":
-    "Switch toggle for boolean settings and inline preference controls.",
   "/components/table":
     "Composable table primitives with aligned rows, sort helpers, and empty states.",
   "/components/tabs":

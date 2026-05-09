@@ -15,7 +15,7 @@ export function WorkspaceDrawer() {
   return (
     <>
       <button
-        className="inline-flex items-center justify-center rounded-lg border border-border px-4 py-2 text-sm font-medium text-foreground"
+        className="inline-flex items-center justify-center rounded-xl bg-neutral-900 px-4.5 py-2.5 text-sm font-medium text-white shadow-[0_1px_0_0_rgba(255,255,255,0.08)_inset,0_4px_18px_rgba(0,0,0,0.16)] transition-[transform,box-shadow,background-color] hover:-translate-y-0.5 hover:bg-neutral-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400/30 focus-visible:ring-offset-2 dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-neutral-200"
         onClick={() => setOpen(true)}
         type="button"
       >
@@ -55,18 +55,14 @@ function DrawerPreview() {
   }, []);
 
   return (
-    <div className="flex min-h-[280px] w-full flex-col items-center justify-center gap-6 px-4 py-10">
+    <div className="flex min-h-[280px] w-full items-center justify-center px-4 py-10">
       <button
-        className="inline-flex items-center justify-center border border-border/80 px-4 py-2.5 font-medium text-[14px] text-foreground transition-colors hover:bg-muted/35 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+        className="inline-flex items-center justify-center rounded-xl bg-neutral-900 px-5 py-3 font-medium text-[13px] text-white shadow-[0_1px_0_0_rgba(255,255,255,0.08)_inset,0_4px_18px_rgba(0,0,0,0.16)] transition-[transform,box-shadow,background-color] hover:-translate-y-0.5 hover:bg-neutral-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400/30 focus-visible:ring-offset-2 dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-neutral-200"
         onClick={() => setOpen(true)}
         type="button"
       >
         Open drawer
       </button>
-      <p className="max-w-sm text-center text-[13px] text-secondary leading-6">
-        Open the drawer to inspect the overlay blur, side-based slide motion,
-        and the staggered header and body reveal.
-      </p>
       <Drawer
         description="Review the latest changes before moving this update into sign-off."
         onClose={() => setOpen(false)}

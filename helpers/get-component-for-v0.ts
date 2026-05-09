@@ -310,74 +310,6 @@ const COMPONENT_EXAMPLE: Record<string, string> = {
     "    </div>\n" +
     "  )\n" +
     "}\n",
-  collapsible:
-    '"use client";\n\n' +
-    `import { ChevronsUpDown, Trophy } from "lucide-react"\n` +
-    `import { useState } from "react"\n` +
-    "import {\n" +
-    "  Collapsible,\n" +
-    "  CollapsibleContent,\n" +
-    "  CollapsibleTrigger,\n" +
-    `} from "@/components/ui/collapsible"\n\n` +
-    "const MATCH_DETAIL_ROWS: { label: string; value: string }[] = [\n" +
-    '  { label: "Midfield", value: "Press, recycle, stay compact." },\n' +
-    '  { label: "Last line", value: "One ball behind the line." },\n' +
-    '  { label: "Keyboard", value: "Tab in — same note." },\n' +
-    "]\n\n" +
-    "export default function Page() {\n" +
-    "  const [open, setOpen] = useState(true)\n\n" +
-    "  return (\n" +
-    '    <div className="flex min-h-svh items-center justify-center p-8">\n' +
-    '      <div className="w-full max-w-sm">\n' +
-    "        <Collapsible onOpenChange={setOpen} open={open}>\n" +
-    '          <div className="mb-3 flex items-center justify-between">\n' +
-    '            <div className="flex items-center gap-2.5">\n' +
-    '              <span className="flex size-7 items-center justify-center rounded-lg bg-neutral-900 dark:bg-white">\n' +
-    '                <Trophy className="size-3.5 text-white dark:text-neutral-900" />\n' +
-    "              </span>\n" +
-    '              <span className="font-semibold text-base text-neutral-900 dark:text-white">\n' +
-    "                Match sheet\n" +
-    "              </span>\n" +
-    "            </div>\n" +
-    '            <CollapsibleTrigger className="flex size-8 items-center justify-center text-neutral-400 transition-colors hover:text-neutral-700 dark:text-neutral-500 dark:hover:text-neutral-300">\n' +
-    '              <ChevronsUpDown className="size-4" />\n' +
-    "            </CollapsibleTrigger>\n" +
-    "          </div>\n\n" +
-    '          <div className="rounded-xl border border-neutral-200 px-4 py-3 dark:border-neutral-700">\n' +
-    '            <div className="flex items-center justify-between gap-2">\n' +
-    '              <span className="text-neutral-400 text-sm dark:text-neutral-500">\n' +
-    "                Phase\n" +
-    "              </span>\n" +
-    '              <div className="flex items-center gap-2">\n' +
-    '                <span className="text-right font-semibold text-neutral-900 text-sm dark:text-white">\n' +
-    "                  Build-up → Break\n" +
-    "                </span>\n" +
-    '                <span className="shrink-0 rounded-full bg-emerald-100 px-2 py-0.5 font-medium text-[10px] text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400">\n' +
-    "                  Live\n" +
-    "                </span>\n" +
-    "              </div>\n" +
-    "            </div>\n" +
-    "          </div>\n\n" +
-    '          <CollapsibleContent className="mt-2 flex flex-col gap-2">\n' +
-    "            {MATCH_DETAIL_ROWS.map((row) => (\n" +
-    "              <div\n" +
-    '                className="rounded-xl border border-neutral-200 px-4 py-3 dark:border-neutral-700"\n' +
-    "                key={row.label}\n" +
-    "              >\n" +
-    '                <p className="font-medium text-neutral-400 text-xs dark:text-neutral-500">\n' +
-    "                  {row.label}\n" +
-    "                </p>\n" +
-    '                <p className="mt-0.5 font-semibold text-neutral-900 text-sm dark:text-white">\n' +
-    "                  {row.value}\n" +
-    "                </p>\n" +
-    "              </div>\n" +
-    "            ))}\n" +
-    "          </CollapsibleContent>\n" +
-    "        </Collapsible>\n" +
-    "      </div>\n" +
-    "    </div>\n" +
-    "  )\n" +
-    "}\n",
   dialog:
     '"use client";\n\n' +
     "import {\n" +
@@ -513,18 +445,6 @@ const COMPONENT_EXAMPLE: Record<string, string> = {
     "    </div>\n" +
     "  )\n" +
     "}\n",
-  input:
-    '"use client";\n\n' +
-    `import { Input } from "@/components/ui/input"\n` +
-    `import { useState } from "react"\n\n` +
-    "export default function Page() {\n" +
-    '  const [text, setText] = useState("Hello")\n' +
-    "  return (\n" +
-    '    <div className="mx-auto flex min-h-svh w-full max-w-md flex-col justify-center p-8">\n' +
-    '      <Input label="Your name" value={text} onChange={setText} placeholder=" " />\n' +
-    "    </div>\n" +
-    "  )\n" +
-    "}\n",
   "input-group":
     '"use client";\n\n' +
     `import { Eye, EyeOff, LockKeyhole, Mail, User2 } from "lucide-react"\n` +
@@ -622,21 +542,6 @@ const COMPONENT_EXAMPLE: Record<string, string> = {
     "          <PaginationNext />\n" +
     "        </PaginationContent>\n" +
     "      </Pagination>\n" +
-    "    </div>\n" +
-    "  )\n" +
-    "}\n",
-  switch:
-    '"use client";\n\n' +
-    `import { Switch } from "@/components/ui/switch"\n` +
-    `import { useState } from "react"\n\n` +
-    "export default function Page() {\n" +
-    "  const [on, setOn] = useState(false)\n" +
-    "  return (\n" +
-    '    <div className="flex min-h-svh flex-col items-center justify-center gap-4 p-8">\n' +
-    '      <div className="flex items-center gap-3">\n' +
-    '        <span className="text-sm text-muted-foreground">High press</span>\n' +
-    '        <Switch size="md" checked={on} onCheckedChange={setOn} />\n' +
-    "      </div>\n" +
     "    </div>\n" +
     "  )\n" +
     "}\n",

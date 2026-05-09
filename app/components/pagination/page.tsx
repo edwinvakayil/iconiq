@@ -97,7 +97,7 @@ function PaginationPreview() {
   const [page, setPage] = useState(4);
 
   return (
-    <div className="flex w-full max-w-xl flex-col items-center gap-5 px-2 py-4">
+    <div className="flex w-full max-w-xl items-center justify-center px-2 py-4">
       <Pagination onChange={setPage} page={page} total={12}>
         <PaginationContent>
           <PaginationPrevious />
@@ -121,11 +121,6 @@ function PaginationPreview() {
           <PaginationNext />
         </PaginationContent>
       </Pagination>
-      <p className="text-center text-[13px] text-secondary leading-6">
-        Move between pages to inspect the centered rail, the animated underline,
-        and the way the ellipsis compresses the page range around the current
-        selection.
-      </p>
     </div>
   );
 }

@@ -1,30 +1,24 @@
 "use client";
 
-import { CheckCircle2, ChevronDown } from "lucide-react";
-import {
-  AnimatePresence,
-  motion,
-  useReducedMotion,
-  type Variants,
-} from "motion/react";
-import { type ReactNode, useEffect, useRef, useState } from "react";
-import { createPortal } from "react-dom";
+import { CheckCircle2 } from "lucide-react";
+import { motion, useReducedMotion, type Variants } from "motion/react";
+import { type ReactNode, useState } from "react";
 
 import { alertApiDetails } from "@/components/docs/component-api";
 import { ComponentDocsPage } from "@/components/docs/page-shell";
 import { cn } from "@/lib/utils";
-import Alert, { type AlertPosition } from "@/registry/alert";
+import Alert from "@/registry/alert";
 
 const usageCode = `import Alert from "@/components/ui/alert";
 import { CheckCircle2 } from "lucide-react";
 
-export function FullTimeNotice() {
+export function ChangesSavedNotice() {
   return (
     <Alert
       dismissible
       icon={<CheckCircle2 aria-hidden className="size-[18px]" />}
-      message="Three points in the bag — debrief in five minutes."
-      title="Full time"
+      message="Your latest updates are now live for the team."
+      title="Changes saved"
     />
   );
 }`;
@@ -102,164 +96,8 @@ function _BentoMotion({
   );
 }
 
-const dropdownTriggerClass = cn(
-  "flex h-10 w-full items-center justify-between gap-2 rounded-[14px] border border-neutral-200/70 bg-white px-3.5 font-sans text-neutral-900 text-sm outline-none transition-colors",
-  "supports-[corner-shape:squircle]:corner-squircle supports-[corner-shape:squircle]:rounded-[24px]",
-  "hover:border-neutral-300/80 hover:bg-neutral-50/60",
-  "focus-visible:border-neutral-400 focus-visible:ring-1 focus-visible:ring-neutral-400/35",
-  "dark:border-neutral-700/70 dark:bg-neutral-950 dark:text-neutral-100 dark:hover:border-neutral-600 dark:hover:bg-neutral-900/40",
-  "dark:focus-visible:border-neutral-500 dark:focus-visible:ring-neutral-500/30"
-);
-
-const ALERT_POSITIONS: { value: AlertPosition; label: string }[] = [
-  { value: "top-left", label: "Top left" },
-  { value: "top-center", label: "Top center" },
-  { value: "top-right", label: "Top right" },
-  { value: "bottom-left", label: "Bottom left" },
-  { value: "bottom-center", label: "Bottom center" },
-  { value: "bottom-right", label: "Bottom right" },
-];
-
-function PositionDropdown({
-  value,
-  onValueChange,
-}: {
-  value: AlertPosition;
-  onValueChange: (v: AlertPosition) => void;
-}) {
-  const [open, setOpen] = useState(false);
-  const [rect, setRect] = useState<DOMRect | null>(null);
-  const [mounted, setMounted] = useState(false);
-  const triggerRef = useRef<HTMLButtonElement>(null);
-  const reduceMotion = useReducedMotion();
-  const selected =
-    ALERT_POSITIONS.find((o) => o.value === value) ?? ALERT_POSITIONS[0];
-
-  useEffect(() => setMounted(true), []);
-
-  useEffect(() => {
-    if (!open) return;
-    // Capture trigger position for portal panel
-    setRect(triggerRef.current?.getBoundingClientRect() ?? null);
-
-    const onPointerDown = (e: PointerEvent) => {
-      if (
-        !triggerRef.current
-          ?.closest("[data-dropdown-root]")
-          ?.contains(e.target as Node)
-      )
-        setOpen(false);
-    };
-    const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setOpen(false);
-    };
-    const onScroll = () =>
-      setRect(triggerRef.current?.getBoundingClientRect() ?? null);
-    document.addEventListener("pointerdown", onPointerDown);
-    document.addEventListener("keydown", onKeyDown);
-    window.addEventListener("scroll", onScroll, true);
-    return () => {
-      document.removeEventListener("pointerdown", onPointerDown);
-      document.removeEventListener("keydown", onKeyDown);
-      window.removeEventListener("scroll", onScroll, true);
-    };
-  }, [open]);
-
-  const panel = rect && (
-    <AnimatePresence>
-      {open && (
-        <motion.ul
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          className="fixed z-[400] w-max min-w-[var(--trigger-w)] overflow-hidden rounded-[12px] border border-neutral-200/70 bg-white py-1 shadow-lg dark:border-neutral-700/70 dark:bg-neutral-950"
-          data-dropdown-panel
-          exit={
-            reduceMotion ? { opacity: 1 } : { opacity: 0, scale: 0.97, y: -4 }
-          }
-          initial={reduceMotion ? false : { opacity: 0, scale: 0.97, y: -6 }}
-          role="listbox"
-          style={{
-            top: rect.bottom + 6,
-            left: rect.left,
-            transformOrigin: "top left",
-            ["--trigger-w" as string]: `${rect.width}px`,
-          }}
-          transition={
-            reduceMotion
-              ? { duration: 0 }
-              : { type: "spring", stiffness: 420, damping: 30 }
-          }
-        >
-          {ALERT_POSITIONS.map((opt) => {
-            const isSelected = opt.value === value;
-            return (
-              <li className="px-0.5" key={opt.value} role="presentation">
-                <button
-                  aria-selected={isSelected}
-                  className={cn(
-                    "flex w-full min-w-0 whitespace-nowrap rounded-[8px] px-3 py-2 pr-3.5 text-left font-sans text-sm transition-colors",
-                    isSelected
-                      ? "bg-neutral-100 font-medium text-neutral-900 dark:bg-neutral-900 dark:text-neutral-50"
-                      : "text-neutral-700 hover:bg-neutral-50 dark:text-neutral-300 dark:hover:bg-neutral-900/70"
-                  )}
-                  onClick={() => {
-                    onValueChange(opt.value);
-                    setOpen(false);
-                  }}
-                  role="option"
-                  type="button"
-                >
-                  {opt.label}
-                </button>
-              </li>
-            );
-          })}
-        </motion.ul>
-      )}
-    </AnimatePresence>
-  );
-
-  return (
-    <div className="w-full min-w-0" data-dropdown-root>
-      <p
-        className="mb-2 font-medium text-[11px] text-neutral-500 uppercase tracking-wider dark:text-neutral-400"
-        id="position-label"
-      >
-        Position
-      </p>
-      <button
-        aria-expanded={open}
-        aria-haspopup="listbox"
-        aria-labelledby="position-label"
-        className={dropdownTriggerClass}
-        onClick={() => {
-          setRect(triggerRef.current?.getBoundingClientRect() ?? null);
-          setOpen((o) => !o);
-        }}
-        ref={triggerRef}
-        type="button"
-      >
-        <span className="min-w-0 truncate">{selected.label}</span>
-        <motion.span
-          animate={{ rotate: open ? 180 : 0 }}
-          className="inline-flex shrink-0 text-neutral-400 dark:text-neutral-500"
-          transition={
-            reduceMotion
-              ? { duration: 0 }
-              : { type: "spring", stiffness: 320, damping: 22 }
-          }
-        >
-          <ChevronDown aria-hidden className="size-4" />
-        </motion.span>
-      </button>
-      {mounted ? createPortal(panel, document.body) : null}
-    </div>
-  );
-}
-
 export default function AlertPage() {
   const prefersReducedMotion = useReducedMotion();
-  const [previewPosition, setPreviewPosition] =
-    useState<AlertPosition>("top-right");
   const [previewKey, setPreviewKey] = useState(0);
 
   return (
@@ -273,18 +111,7 @@ export default function AlertPage() {
       description="Dismissible banners with your own leading icon, spring motion, and optional fixed positions. Built for system feedback that feels clear instead of heavy."
       details={componentDetailsItems}
       preview={
-        <div className="relative z-10 flex min-h-[300px] flex-col items-center justify-center gap-5 pb-2">
-          <div className="w-full max-w-xs sm:max-w-[220px]">
-            <PositionDropdown
-              onValueChange={(next) => {
-                setPreviewPosition(next);
-                if (previewKey > 0) {
-                  setPreviewKey((k) => k + 1);
-                }
-              }}
-              value={previewPosition}
-            />
-          </div>
+        <div className="relative z-10 flex min-h-[300px] flex-col items-center justify-center pb-2">
           <motion.button
             className={cn(
               "group relative isolate flex items-center gap-2.5 overflow-hidden rounded-xl px-6 py-3",
@@ -327,19 +154,15 @@ export default function AlertPage() {
                 />
               </svg>
             </motion.span>
-            <span className="relative">Flash the board</span>
+            <span className="relative">Show alert</span>
           </motion.button>
-          <p className="max-w-md text-center text-[13px] text-secondary leading-relaxed">
-            Use the launcher above to preview the alert at different fixed
-            positions, then click again to replay the entry state.
-          </p>
           {previewKey > 0 ? (
             <Alert
               icon={<CheckCircle2 aria-hidden className="size-[18px]" />}
               key={previewKey}
-              message="Three points in the bag - debrief in five minutes."
-              position={previewPosition}
-              title="Full time"
+              message="Your latest updates are now live for the team."
+              position="top-right"
+              title="Changes saved"
             />
           ) : null}
         </div>

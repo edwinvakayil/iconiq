@@ -134,17 +134,13 @@ export default function SelectPage() {
       description="Animated single-select dropdown with staggered options, chevron rotation, and a check on the active row. Built to feel quick without becoming flashy."
       details={componentDetailsItems}
       preview={
-        <div className="flex min-h-[320px] flex-col items-center justify-center gap-6">
+        <div className="flex min-h-[320px] items-center justify-center">
           <Select
             onChange={(next) => setValue(next)}
             options={demoOptions}
             placeholder="Plot the trajectory..."
             value={value}
           />
-          <p className="max-w-md text-center text-[14px] text-secondary leading-6">
-            Open the dropdown, scan the options, commit a single choice. The
-            motion is there to help orientation, not compete for attention.
-          </p>
         </div>
       }
       title="Select"

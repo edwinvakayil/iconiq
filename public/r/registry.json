@@ -154,21 +154,6 @@
       ]
     },
     {
-      "name": "collapsible",
-      "type": "registry:ui",
-      "registryDependencies": [],
-      "dependencies": ["@radix-ui/react-collapsible", "motion", "lucide-react"],
-      "devDependencies": [],
-      "title": "Collapsible",
-      "description": "Accessible collapsible primitive built on Radix UI. Exports Collapsible, CollapsibleTrigger, and CollapsibleContent for building expandable sections, FAQs, and disclosure patterns.",
-      "files": [
-        {
-          "path": "collapsible.tsx",
-          "type": "registry:ui"
-        }
-      ]
-    },
-    {
       "name": "combobox",
       "type": "registry:ui",
       "registryDependencies": [],
@@ -289,21 +274,6 @@
       ]
     },
     {
-      "name": "input",
-      "type": "registry:ui",
-      "registryDependencies": [],
-      "dependencies": ["motion"],
-      "devDependencies": [],
-      "title": "Input",
-      "description": "Standard rounded text field with an always-visible label, focus ring motion, and per-character spring animation on the visible text overlay. Motion.",
-      "files": [
-        {
-          "path": "input.tsx",
-          "type": "registry:ui"
-        }
-      ]
-    },
-    {
       "name": "pagination",
       "type": "registry:ui",
       "registryDependencies": [],
@@ -389,21 +359,6 @@
       "files": [
         {
           "path": "spinner.tsx",
-          "type": "registry:ui"
-        }
-      ]
-    },
-    {
-      "name": "switch",
-      "type": "registry:ui",
-      "registryDependencies": [],
-      "dependencies": ["motion"],
-      "devDependencies": [],
-      "title": "Switch",
-      "description": "Animated toggle with spring thumb travel and smooth track color crossfade. Native button with role=switch, forwards ref. Motion.",
-      "files": [
-        {
-          "path": "switch.tsx",
           "type": "registry:ui"
         }
       ]

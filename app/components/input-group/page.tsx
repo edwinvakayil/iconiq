@@ -69,7 +69,7 @@ function InputGroupPreview() {
       : undefined;
 
   return (
-    <div className="w-full max-w-xl space-y-5 px-2">
+    <div className="w-full max-w-xl px-2">
       <InputGroup>
         <Inputgroups
           label="Full name"
@@ -99,11 +99,6 @@ function InputGroupPreview() {
           type={showPassword ? "text" : "password"}
         />
       </InputGroup>
-
-      <p className="text-[13px] text-secondary leading-6">
-        Try the password suffix action and enter an incomplete email to inspect
-        the floating label, inline error, and focus rule together.
-      </p>
     </div>
   );
 }
