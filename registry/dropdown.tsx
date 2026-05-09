@@ -48,53 +48,13 @@ function getInnerContentMotion(reduceMotion: boolean) {
 }
 
 function getContentMotion(reduceMotion: boolean) {
-  if (reduceMotion) {
-    return {
-      animate: { opacity: 1, y: 0 },
-      exit: { opacity: 0, y: -4 },
-      initial: { opacity: 0, y: -4 },
-      transition: { duration: 0.16, ease: "easeOut" as const },
-    };
-  }
-
   return {
-    animate: {
-      clipPath: "inset(0% 0% 0% 0% round 0.75rem)",
-      filter: "blur(0px)",
-      opacity: 1,
-      scale: 1,
-      y: 0,
-    },
-    exit: {
-      clipPath: "inset(0% 0% 10% 0% round 0.75rem)",
-      filter: "blur(8px)",
-      opacity: 0,
-      scale: 0.992,
-      y: -4,
-    },
-    initial: {
-      clipPath: "inset(0% 0% 12% 0% round 0.75rem)",
-      filter: "blur(10px)",
-      opacity: 0,
-      scale: 0.985,
-      y: -6,
-    },
+    animate: { opacity: 1, y: 0, scaleY: 1 },
+    exit: { opacity: 0, y: -4, scaleY: 0.92 },
+    initial: { opacity: 0, y: -4, scaleY: 0.92 },
     transition: {
-      clipPath: { duration: 0.22, ease: SOFT_EASE },
-      filter: { duration: 0.2, ease: SOFT_EASE },
-      opacity: { duration: 0.16, ease: SOFT_EASE },
-      scale: {
-        damping: 24,
-        mass: 0.76,
-        stiffness: 300,
-        type: "spring" as const,
-      },
-      y: {
-        damping: 26,
-        mass: 0.72,
-        stiffness: 340,
-        type: "spring" as const,
-      },
+      duration: reduceMotion ? 0.16 : 0.25,
+      ease: reduceMotion ? ("easeOut" as const) : SOFT_EASE,
     },
   };
 }
@@ -102,7 +62,6 @@ function getContentMotion(reduceMotion: boolean) {
 type DropdownContextValue = {
   activeItemId: string | null;
   containerRef: React.RefObject<HTMLDivElement | null>;
-  hoverLayoutId: string;
   labels: Record<string, string>;
   open: boolean;
   reduceMotion: boolean;
@@ -245,7 +204,6 @@ export function Dropdown({
   value: valueProp,
   variant = "select",
 }: DropdownProps) {
-  const hoverLayoutId = React.useId();
   const containerRef = React.useRef<HTMLDivElement>(null);
   const triggerRef = React.useRef<HTMLButtonElement>(null);
   const reduceMotion = useReducedMotion() ?? false;
@@ -445,7 +403,6 @@ export function Dropdown({
     () => ({
       activeItemId,
       containerRef,
-      hoverLayoutId,
       labels,
       open,
       reduceMotion,
@@ -461,7 +418,6 @@ export function Dropdown({
     }),
     [
       activeItemId,
-      hoverLayoutId,
       labels,
       open,
       reduceMotion,
@@ -523,9 +479,7 @@ export const DropdownTrigger = React.forwardRef<
         aria-expanded={open}
         aria-haspopup={variant === "action" ? "menu" : "listbox"}
         className={cn(
-          "flex w-full items-center justify-between gap-2 rounded-lg border border-border bg-white px-4 py-3 text-left font-medium text-card-foreground text-sm shadow-sm transition-colors dark:bg-black",
-          "hover:border-ring/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring",
-          open && "border-ring/60",
+          "flex w-full items-center justify-between gap-2 rounded-lg border border-border bg-card px-4 py-3 text-left font-medium text-foreground text-sm transition-colors hover:bg-accent focus:outline-none focus-visible:ring-2 focus-visible:ring-ring",
           disabled && "cursor-not-allowed opacity-60",
           className
         )}
@@ -641,7 +595,7 @@ export const DropdownContent = React.forwardRef<
         <motion.div
           animate={contentMotion.animate}
           className={cn(
-            "absolute z-[100] min-w-[12rem] overflow-hidden rounded-lg border border-border bg-white p-1 shadow-lg dark:bg-black",
+            "absolute z-[300] min-w-[12rem] overflow-hidden rounded-lg border border-border bg-card shadow-lg",
             getContentAlignmentClasses(align),
             className
           )}
@@ -652,13 +606,14 @@ export const DropdownContent = React.forwardRef<
           style={{
             top: `calc(100% + ${sideOffset}px)`,
             transformOrigin: getContentTransformOrigin(align),
-            willChange: "transform, opacity, filter, clip-path",
+            originY: 0,
           }}
           transition={contentMotion.transition}
           {...props}
         >
           <motion.div
             animate={innerContentMotion.animate}
+            className="p-1.5"
             exit={innerContentMotion.exit}
             initial={innerContentMotion.initial}
             transition={innerContentMotion.transition}
@@ -684,7 +639,6 @@ export const DropdownItem = React.forwardRef<
 >(({ children, className, disabled, onClick, value, ...props }, ref) => {
   const {
     activeItemId,
-    hoverLayoutId,
     reduceMotion,
     setActiveItemId,
     setOpen,
@@ -700,14 +654,17 @@ export const DropdownItem = React.forwardRef<
   return (
     <button
       className={cn(
-        "group relative flex w-full items-center justify-between gap-3 rounded-lg px-3 py-2 text-left text-popover-foreground text-sm transition-[color,transform] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)]",
-        "hover:text-accent-foreground focus-visible:text-accent-foreground focus-visible:outline-none",
+        "group relative flex w-full items-center justify-between gap-3 rounded-lg px-3 py-2.5 text-left text-foreground text-sm transition-colors",
+        "hover:bg-accent focus-visible:bg-accent focus-visible:text-accent-foreground focus-visible:outline-none",
+        isActive && "bg-accent text-accent-foreground",
         disabled && "pointer-events-none opacity-50",
         className
       )}
       data-dropdown-item=""
       data-state={isSelected ? "checked" : "unchecked"}
+      data-value={value}
       disabled={disabled}
+      onBlur={() => setActiveItemId(null)}
       onClick={(event) => {
         onClick?.(event);
 
@@ -723,24 +680,14 @@ export const DropdownItem = React.forwardRef<
       }}
       onFocus={() => setActiveItemId(itemId)}
       onMouseEnter={() => setActiveItemId(itemId)}
+      onMouseLeave={() => setActiveItemId(null)}
       ref={ref}
       role={variant === "action" ? "menuitem" : "option"}
       type="button"
       {...props}
     >
-      {isActive ? (
-        <motion.div
-          className="absolute inset-0 rounded-lg bg-accent"
-          layoutId={hoverLayoutId}
-          transition={{
-            type: "spring",
-            stiffness: 600,
-            damping: 38,
-          }}
-        />
-      ) : null}
       <motion.span
-        className="relative z-10 flex min-w-0 flex-1 items-center gap-2 truncate transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-x-[1.5px] group-focus-visible:translate-x-[1.5px]"
+        className="relative z-10 flex min-w-0 flex-1 items-center gap-2 truncate"
         transition={
           reduceMotion
             ? undefined

@@ -131,6 +131,7 @@ export default function DropdownPage() {
       description="Composable dropdown primitives with a selectable value flow for persistent choices and an action-menu flow for immediate commands."
       details={dropdownApiDetails}
       preview={<DropdownPreview />}
+      previewClassName="min-h-[22rem] overflow-visible"
       previewDescription="Use the first menu as a compact value picker, then open the avatar trigger to fire one-off actions like profile, settings, or logout."
       title="Dropdown"
       usageCode={usageCode}

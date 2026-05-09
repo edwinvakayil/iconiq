@@ -198,7 +198,6 @@ export function Select({
                           transition={{ duration: 0.15 }}
                           type="button"
                           variants={itemVariants}
-                          whileHover={{ x: 4 }}
                         >
                           {option.icon && (
                             <span className="text-muted-foreground">
