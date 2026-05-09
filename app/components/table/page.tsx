@@ -72,19 +72,22 @@ const statusStyles: Record<DemoRow["status"], string> = {
   Archived: "border border-border bg-transparent text-muted-foreground",
 };
 
-const usageCode = `import {
+const usageCode = `"use client";
+
+import { Search } from "lucide-react";
+import { useMemo, useState } from "react";
+import {
   Table,
   TableBody,
   TableCaption,
   TableCell,
+  TableEmpty,
   TableHead,
   TableHeader,
   TableRow,
   TableSortButton,
   TableToolbar,
 } from "@/components/ui/table";
-import { Search } from "lucide-react";
-import { useMemo, useState } from "react";
 
 type Row = {
   id: string;
@@ -98,10 +101,19 @@ type SortKey = keyof Pick<Row, "name" | "role" | "status" | "amount">;
 
 const rows: Row[] = [
   { id: "1", name: "Ada Lovelace", role: "Engineer", status: "Active", amount: 4200 },
-  { id: "2", name: "Grace Hopper", role: "Architect", status: "Pending", amount: 3100 },
+  { id: "2", name: "Alan Turing", role: "Researcher", status: "Active", amount: 5800 },
+  { id: "3", name: "Grace Hopper", role: "Architect", status: "Pending", amount: 3100 },
+  { id: "4", name: "Linus Torvalds", role: "Maintainer", status: "Archived", amount: 2750 },
+  { id: "5", name: "Margaret Hamilton", role: "Lead", status: "Active", amount: 6400 },
 ];
 
-export function RevenueTable() {
+const statusStyles: Record<Row["status"], string> = {
+  Active: "bg-foreground text-background",
+  Pending: "bg-muted text-foreground",
+  Archived: "border border-border bg-transparent text-muted-foreground",
+};
+
+export function TablePreview() {
   const [query, setQuery] = useState("");
   const [sort, setSort] = useState<{ key: SortKey; dir: "asc" | "desc" }>({
     key: "name",
@@ -185,22 +197,32 @@ export function RevenueTable() {
           </TableRow>
         </TableHeader>
 
-        <TableBody>
+        <TableBody className="min-h-[288px]">
           {visible.map((row, index) => (
             <TableRow index={index} key={row.id}>
               <TableCell className="font-medium text-foreground">
                 {row.name}
               </TableCell>
               <TableCell className="text-muted-foreground">{row.role}</TableCell>
-              <TableCell>{row.status}</TableCell>
+              <TableCell>
+                <span
+                  className={\`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium \${statusStyles[row.status]}\`}
+                >
+                  {row.status}
+                </span>
+              </TableCell>
               <TableCell align="right" className="tabular-nums text-foreground">
                 \${row.amount.toLocaleString()}
               </TableCell>
             </TableRow>
           ))}
+
+          {visible.length === 0 ? <TableEmpty>No results.</TableEmpty> : null}
         </TableBody>
 
-        <TableCaption>{visible.length} revenue entries</TableCaption>
+        <TableCaption>
+          {visible.length} of {rows.length} entries
+        </TableCaption>
       </Table>
     </div>
   );

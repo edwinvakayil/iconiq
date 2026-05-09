@@ -14,7 +14,9 @@ import {
   DropdownValue,
 } from "@/registry/dropdown";
 
-const usageCode = `import { LogOut, Settings, UserRound } from "lucide-react";
+const usageCode = `"use client";
+
+import { LogOut, Settings, UserRound } from "lucide-react";
 import { useState } from "react";
 import {
   Dropdown,
@@ -25,21 +27,17 @@ import {
   DropdownValue,
 } from "@/components/ui/dropdown";
 
-export function WorkspaceDropdowns() {
+export function DropdownPreview() {
   const [team, setTeam] = useState<string | undefined>("design");
-  const [lastAction, setLastAction] = useState("No action yet");
+  const [, setLastAction] = useState("No action yet");
 
   return (
-    <div className="flex w-full max-w-xl flex-col gap-4">
-      <Dropdown
-        className="w-[220px]"
-        onValueChange={setTeam}
-        value={team}
-      >
+    <div className="mx-auto grid w-fit justify-items-center gap-5 md:grid-cols-[220px_56px] md:items-center md:gap-6">
+      <Dropdown className="w-[220px]" onValueChange={setTeam} value={team}>
         <DropdownTrigger>
           <DropdownValue placeholder="Choose a team" />
         </DropdownTrigger>
-        <DropdownContent className="w-full shadow-none">
+        <DropdownContent className="w-full">
           <DropdownItem value="design">Design</DropdownItem>
           <DropdownItem value="product">Product</DropdownItem>
           <DropdownItem value="engineering">Engineering</DropdownItem>
@@ -73,9 +71,6 @@ export function WorkspaceDropdowns() {
           </DropdownItem>
         </DropdownContent>
       </Dropdown>
-      <p className="text-sm text-muted-foreground">
-        Last action: <span className="text-foreground">{lastAction}</span>
-      </p>
     </div>
   );
 }`;

@@ -2704,6 +2704,76 @@ const toggleApiDetails: DetailItem[] = [
   ]),
 ];
 
+const switchApiDetails: DetailItem[] = [
+  {
+    id: "switch",
+    title: "Switch",
+    summary:
+      "Binary on or off control built on Radix Switch, with a motion-driven thumb travel, foreground fill sweep, and optional inline label.",
+    fields: [
+      field({
+        name: "checked",
+        type: "boolean",
+        description:
+          "Controlled checked state. Pass this when the parent owns the current on or off value.",
+      }),
+      field({
+        name: "defaultChecked",
+        type: "boolean",
+        description:
+          "Initial checked state for uncontrolled usage. The component keeps its local animation state in sync with this mode too.",
+      }),
+      field({
+        name: "onCheckedChange",
+        type: "(checked: boolean) => void",
+        description:
+          "Called whenever the switch changes state, after the thumb and fill animation sequence starts.",
+      }),
+      field({
+        name: "disabled",
+        type: "boolean",
+        description:
+          "Disables pointer and keyboard interaction, and dims the switch and optional label together.",
+      }),
+      field({
+        name: "label",
+        type: "string",
+        description:
+          "Optional inline text rendered beside the switch. When omitted, the component returns only the switch control itself.",
+      }),
+      field({
+        name: "labelSide",
+        type: '"left" | "right"',
+        defaultValue: "right",
+        description:
+          "Controls which side of the switch the optional label text appears on.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description:
+          "Merged onto the Radix root element for local spacing or surface overrides.",
+      }),
+    ],
+    notes: [
+      "Additional Radix switch props such as aria-label, name, value, required, and form are forwarded to the root control.",
+      "If you provide label, the component wraps the control in a native label element so clicking the text also toggles the switch.",
+    ],
+  },
+  {
+    id: "switch-motion",
+    title: "Motion and interaction behavior",
+    summary:
+      "The switch uses separate motion values for thumb travel, thumb squash, and track fill opacity so the state change feels tactile without becoming noisy.",
+    notes: [
+      "Pointer press slightly flattens the thumb before release, then the thumb snaps back with a softer bounce after the state change.",
+      "The dark foreground fill fades in as the thumb travels right, rather than swapping track color instantly.",
+      "Controlled and uncontrolled usage both keep the thumb animation synchronized with the underlying Radix state.",
+    ],
+  },
+  registryItem("switch.json", ["@radix-ui/react-switch", "motion"]),
+];
+
 const tooltipApiDetails: DetailItem[] = [
   {
     id: "tooltip",
@@ -2789,6 +2859,7 @@ export {
   selectApiDetails,
   sliderApiDetails,
   spinnerApiDetails,
+  switchApiDetails,
   tableApiDetails,
   tabsApiDetails,
   toggleApiDetails,

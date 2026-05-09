@@ -19,16 +19,20 @@ const demoItems: BreadcrumbItem[] = [
   { label: "Breadcrumbs" },
 ];
 
-const usageCode = `import { Breadcrumbs } from "@/components/ui/breadcrumbs";
+const usageCode = `import { Breadcrumbs, type BreadcrumbItem } from "@/components/ui/breadcrumbs";
 import { Home } from "lucide-react";
 
-const items = [
-  { label: "Home", href: "/", icon: <Home className="size-3.5" /> },
-  { label: "Docs", href: "/docs" },
-  { label: "Current page" },
+const items: BreadcrumbItem[] = [
+  {
+    label: "Home",
+    href: "/",
+    icon: <Home className="size-3.5" />,
+  },
+  { label: "Components", href: "/components/breadcrumbs" },
+  { label: "Breadcrumbs" },
 ];
 
-export function PageHeader() {
+export function BreadcrumbsPreview() {
   return <Breadcrumbs items={items} />;
 }`;
 

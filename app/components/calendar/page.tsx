@@ -6,17 +6,20 @@ import { calendarApiDetails } from "@/components/docs/component-api";
 import { ComponentDocsPage } from "@/components/docs/page-shell";
 import { Calendar } from "@/registry/calendar";
 
-const usageCode = `import { Calendar } from "@/components/ui/calendar";
-import { useState } from "react";
+const usageCode = `"use client";
 
-export function DatePanel() {
+import { useState } from "react";
+import { Calendar } from "@/components/ui/calendar";
+
+export function CalendarPreview() {
   const [selected, setSelected] = useState<Date>(new Date());
 
   return (
     <Calendar
-      selected={selected}
-      onSelect={setSelected}
       defaultMonth={selected}
+      disabled={(date) => date < new Date("2020-01-01")}
+      onSelect={setSelected}
+      selected={selected}
     />
   );
 }`;

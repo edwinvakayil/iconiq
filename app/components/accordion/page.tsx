@@ -35,25 +35,37 @@ const demoItems: AccordionItem[] = [
   },
 ];
 
-const usageCode = `import { Accordion } from "@/components/ui/accordion";
+const usageCode = `import { Accordion, type AccordionItem } from "@/components/ui/accordion";
 
-const items = [
+const items: AccordionItem[] = [
   {
     id: "1",
     title: "What makes this accordion special?",
     content:
-      "It uses spring-based physics animations powered by Motion for natural transitions.",
+      "It uses spring-based physics animations powered by Motion, creating fluid and natural feeling transitions that respond organically to user interaction.",
   },
   {
     id: "2",
     title: "How does the animation work?",
     content:
-      "The icon, panel height, and text stagger are driven by separate spring transitions.",
+      "Each element — the icon rotation, content reveal, and background shift — animates independently with carefully tuned spring parameters for a layered, premium feel.",
+  },
+  {
+    id: "3",
+    title: "Can I customize the content?",
+    content:
+      "Absolutely. Pass any React node as content. The accordion gracefully handles variable-height content with automatic height animation.",
+  },
+  {
+    id: "4",
+    title: "Is it accessible?",
+    content:
+      "Yes. It uses semantic button elements, proper ARIA attributes, and supports full keyboard navigation out of the box.",
   },
 ];
 
-export function Faq() {
-  return <Accordion items={items} />;
+export function AccordionPreview() {
+  return <Accordion className="w-full max-w-none" items={items} />;
 }`;
 
 const componentDetailsItems = accordionApiDetails;

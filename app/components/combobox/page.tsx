@@ -29,16 +29,35 @@ const demoOptions: ComboboxOption[] = [
   },
 ];
 
-const usageCode = `import { Combobox, type ComboboxOption } from "@/components/ui/combobox";
+const usageCode = `"use client";
+
 import { useState } from "react";
+import { Combobox, type ComboboxOption } from "@/components/ui/combobox";
 
 const options: ComboboxOption[] = [
-  { value: "scout", label: "Scout pass", description: "First scan before the sprint opens up" },
-  { value: "transit", label: "Transit window", description: "Tighter route through the midfield line" },
-  { value: "deep", label: "Deep field", description: "Longer view with less traffic around it" },
+  {
+    value: "scout",
+    label: "Scout pass",
+    description: "First scan before the sprint opens up",
+  },
+  {
+    value: "transit",
+    label: "Transit window",
+    description: "Tighter route through the midfield line",
+  },
+  {
+    value: "deep",
+    label: "Deep field",
+    description: "Longer view with less traffic around it",
+  },
+  {
+    value: "late-run",
+    label: "Late run",
+    description: "Arrive second and attack the gap late",
+  },
 ];
 
-export function RoutePicker() {
+export function ComboboxPreview() {
   const [value, setValue] = useState("transit");
 
   return (

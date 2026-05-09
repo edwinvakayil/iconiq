@@ -7,12 +7,14 @@ import { contextMenuApiDetails } from "@/components/docs/component-api";
 import { ComponentDocsPage } from "@/components/docs/page-shell";
 import { ContextMenu, type ContextMenuItem } from "@/registry/context-menu";
 
-const usageCode = `import { Copy, PencilLine, Share2, Trash2 } from "lucide-react";
+const usageCode = `"use client";
+
+import { Copy, PencilLine, Share2, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { ContextMenu, type ContextMenuItem } from "@/components/ui/context-menu";
 
-export function AssetContextMenu() {
-  const [lastAction, setLastAction] = useState("Waiting for a selection");
+export function ContextMenuPreview() {
+  const [, setLastAction] = useState("Waiting for a selection");
 
   const items: ContextMenuItem[] = [
     {
@@ -44,21 +46,16 @@ export function AssetContextMenu() {
   ];
 
   return (
-    <div className="w-full max-w-2xl space-y-4">
-      <ContextMenu className="w-full" items={items}>
-        <div className="w-full rounded-2xl border border-border/80 px-6 py-16 text-center">
-          <p className="font-medium text-[15px] text-foreground">
-            Right-click this surface
-          </p>
-          <p className="mt-2 text-[14px] text-secondary leading-6">
-            Open the menu for file actions and quick status changes.
-          </p>
-        </div>
-      </ContextMenu>
-      <p className="text-center text-sm text-muted-foreground">
-        Last action: <span className="text-foreground">{lastAction}</span>
-      </p>
-    </div>
+    <ContextMenu className="w-full" items={items}>
+      <div className="w-full border border-border/80 px-6 py-16 text-center">
+        <p className="font-medium text-[15px] tracking-[-0.02em] text-foreground">
+          Right-click this workspace block
+        </p>
+        <p className="mt-2 text-[14px] leading-6 text-secondary">
+          Inspect spacing, shortcuts, separators, and the destructive row in the same menu.
+        </p>
+      </div>
+    </ContextMenu>
   );
 }`;
 

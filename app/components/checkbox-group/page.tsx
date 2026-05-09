@@ -30,22 +30,43 @@ const demoOptions: CheckboxGroupOption[] = [
   },
 ];
 
-const usageCode = `import { CheckboxGroup } from "@/components/ui/checkbox-group";
-import { useState } from "react";
+const usageCode = `"use client";
 
-const options = [
+import { useState } from "react";
+import {
+  CheckboxGroup,
+  type CheckboxGroupOption,
+} from "@/components/ui/checkbox-group";
+
+const options: CheckboxGroupOption[] = [
   {
     label: "High press",
     value: "press",
-    description: "Optional line under the title",
+    description: "Close the alley when they receive on the turn",
   },
-  { label: "Hold the half-spaces", value: "halfspaces" },
+  {
+    label: "Hold the half-spaces",
+    value: "halfspaces",
+    description: "Narrow tens, full-backs hold the width",
+  },
+  {
+    label: "Back-three rehearsal",
+    value: "backthree",
+    description: "Not on the teamsheet for Saturday",
+    disabled: true,
+  },
 ];
 
-export function MatchdayToggles() {
-  const [value, setValue] = useState<string[]>([]);
+export function CheckboxGroupPreview() {
+  const [value, setValue] = useState<string[]>(["press"]);
+
   return (
-    <CheckboxGroup onChange={setValue} options={options} value={value} />
+    <CheckboxGroup
+      className="max-w-md"
+      onChange={setValue}
+      options={options}
+      value={value}
+    />
   );
 }`;
 

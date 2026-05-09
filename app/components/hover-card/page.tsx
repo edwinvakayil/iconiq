@@ -14,26 +14,41 @@ const usageCode = `import {
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
 
-export function TeamHoverCard() {
+export function HoverCardPreview() {
   return (
-    <HoverCard openDelay={120}>
-      <HoverCardTrigger asChild>
-        <button
-          className="text-sm font-medium text-foreground underline-offset-4 decoration-transparent transition-[text-decoration-color] hover:underline hover:decoration-foreground focus-visible:underline focus-visible:decoration-foreground focus-visible:outline-none"
-          type="button"
-        >
-          View profile
-        </button>
-      </HoverCardTrigger>
-      <HoverCardContent className="w-80">
-        <div className="space-y-2">
-          <p className="font-medium">Edwin Vakayil</p>
-          <p className="text-sm text-muted-foreground">
-            @edwinvakayil · Design Engineer
-          </p>
-        </div>
-      </HoverCardContent>
-    </HoverCard>
+    <div className="flex flex-col items-center gap-5">
+      <HoverCard openDelay={100}>
+        <HoverCardTrigger asChild>
+          <button
+            className="inline-flex items-center text-[15px] font-medium tracking-[-0.02em] text-foreground decoration-transparent underline-offset-4 transition-[text-decoration-color] hover:underline hover:decoration-foreground focus-visible:underline focus-visible:decoration-foreground focus-visible:outline-none"
+            type="button"
+          >
+            View profile
+          </button>
+        </HoverCardTrigger>
+        <HoverCardContent className="w-[320px]">
+          <div className="space-y-3">
+            <div className="space-y-1">
+              <p className="text-[15px] font-medium text-foreground">
+                Edwin Vakayil
+              </p>
+              <p className="text-[13px] leading-5 text-secondary">
+                @edwinvakayil · Design Engineer
+              </p>
+            </div>
+            <p className="text-[14px] leading-6 text-secondary">
+              Leading onboarding, motion systems, and dense product surfaces
+              across the core workspace.
+            </p>
+          </div>
+        </HoverCardContent>
+      </HoverCard>
+
+      <p className="max-w-sm text-center text-[13px] leading-6 text-secondary">
+        Hover or focus the trigger to inspect the local positioning, open and
+        close delay, and spring entrance.
+      </p>
+    </div>
   );
 }`;
 

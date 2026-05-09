@@ -8,26 +8,32 @@ const usageCode = `import { Carousel, type Testimonial } from "@/components/ui/c
 
 const testimonials: Testimonial[] = [
   {
-    quote: "The registry dropped straight into our product workflow and gave the team a faster review loop.",
-    name: "Mira",
-    handle: "@mira",
-    initials: "MI",
+    quote:
+      "Go confidently in the direction of your dreams. Live the life you have imagined.",
+    avatar: "/assets/av1.png",
+    name: "Henry David Thoreau",
+    handle: "@hdthoreau",
+    initials: "HT",
   },
   {
-    quote: "We kept the source in our own codebase, adjusted the styling, and shipped without waiting on upstream changes.",
-    name: "Andre",
-    handle: "@andre",
-    initials: "AN",
+    quote:
+      "Far away there in the sunshine are my highest aspirations. I may not reach them, but I can look up.",
+    avatar: "/assets/av2.png",
+    name: "Louisa May Alcott",
+    handle: "@lmalcott",
+    initials: "LA",
   },
   {
-    quote: "The motion feels refined, and the interaction is simple enough to adapt to a range of product surfaces.",
-    name: "Leah",
-    handle: "@leah",
-    initials: "LE",
+    quote:
+      "Be not afraid of greatness: some are born great, some achieve greatness, and some have greatness thrust upon them.",
+    avatar: "/assets/av3.png",
+    name: "William Shakespeare",
+    handle: "@wshakespeare",
+    initials: "WS",
   },
 ];
 
-export function CustomerCarousel() {
+export function CarouselPreview() {
   return <Carousel testimonials={testimonials} />;
 }`;
 

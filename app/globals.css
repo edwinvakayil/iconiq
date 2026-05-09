@@ -52,6 +52,8 @@
   --sidebar-accent: #f5f7fa;
   --sidebar-accent-foreground: #111111;
   --separator-dash: rgb(227 231 236 / 1);
+  --selection-bg: #cfeeff;
+  --selection-fg: #0f172a;
 
   --radius: 0.4rem;
 }
@@ -78,6 +80,8 @@ html[data-banner-hidden="true"] {
   --sidebar-accent: #262626;
   --sidebar-accent-foreground: #fff;
   --separator-dash: rgb(92 91 84 / 1);
+  --selection-bg: #cfeeff;
+  --selection-fg: #0f172a;
 }
 
 /* Hero brush-stroke underline (highlighter style) */
@@ -269,12 +273,13 @@ html[data-banner-hidden="true"] {
   }
 
   ::selection {
-    background-color: var(--primary);
-    color: white;
+    background-color: var(--selection-bg);
+    color: var(--selection-fg);
   }
 
-  .dark ::selection {
-    color: #111111;
+  ::-moz-selection {
+    background-color: var(--selection-bg);
+    color: var(--selection-fg);
   }
 
   .root {

@@ -8,31 +8,37 @@ import { ComponentDocsPage } from "@/components/docs/page-shell";
 import { cn } from "@/lib/utils";
 import { Slider } from "@/registry/slider";
 
-const usageCode = `import { Slider } from "@/components/ui/slider";
+const usageCode = `"use client";
+
 import { useState } from "react";
+import { Slider } from "@/components/ui/slider";
 
-export function BrightnessRow() {
-  const [value, setValue] = useState(50);
-  return (
-    <Slider
-      label="Brightness"
-      value={value}
-      onChange={setValue}
-      min={0}
-      max={100}
-    />
-  );
-}
+export function SliderPreview() {
+  const [level, setLevel] = useState(42);
 
-export function ExposureUncontrolled() {
   return (
-    <Slider
-      defaultValue={30}
-      label="Exposure"
-      max={200}
-      min={0}
-      step={5}
-    />
+    <div className="flex flex-col items-center justify-center gap-6 px-2 py-7">
+      <div className="w-full max-w-[220px]">
+        <Slider label="Tide" onChange={setLevel} value={level} />
+      </div>
+
+      <p className="max-w-sm text-center text-[13px] leading-relaxed text-neutral-600 dark:text-neutral-300">
+        <span className="text-neutral-500 dark:text-neutral-400">
+          Nudge the line until it hums —
+        </span>{" "}
+        <span className="font-medium text-amber-600 dark:text-amber-400">
+          spring-settled
+        </span>
+        <span className="text-neutral-400 dark:text-neutral-500">,</span>{" "}
+        <span className="text-sky-600 dark:text-sky-400">
+          thumb and fill in quiet agreement
+        </span>
+        <span className="text-neutral-500 dark:text-neutral-400">
+          {" "}
+          — one gesture, no sharp edges.
+        </span>
+      </p>
+    </div>
   );
 }`;
 

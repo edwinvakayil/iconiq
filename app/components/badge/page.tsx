@@ -10,16 +10,35 @@ import Badge from "@/registry/badge";
 
 const usageCode = `import Badge from "@/components/ui/badge";
 
-export function NewFeatureTag() {
-  return <Badge>New feature</Badge>;
-}
-
-// With custom colors
-export function CustomBadge() {
+export function BadgePreview() {
   return (
-    <Badge bgColor="#18181b" textColor="#fafafa" waveColor="rgba(255,255,255,0.12)">
-      Custom
-    </Badge>
+    <p className="max-w-lg text-center text-lg font-medium leading-relaxed dark:text-neutral-100">
+      Mark the beat — a{" "}
+      <Badge
+        bgColor="#ccfbf1"
+        textColor="#115e59"
+        waveColor="rgba(255,255,255,0.52)"
+      >
+        New
+      </Badge>{" "}
+      tag for launches,{" "}
+      <Badge
+        bgColor="#ffedd5"
+        textColor="#9a3412"
+        waveColor="rgba(255,255,255,0.52)"
+      >
+        Beta
+      </Badge>{" "}
+      when you&apos;re still tuning,{" "}
+      <Badge
+        bgColor="#fce7f3"
+        textColor="#9d174d"
+        waveColor="rgba(255,255,255,0.52)"
+      >
+        Live
+      </Badge>{" "}
+      once it&apos;s out the door.
+    </p>
   );
 }`;
 

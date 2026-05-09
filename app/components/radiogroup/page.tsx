@@ -26,27 +26,39 @@ const demoOptions = [
   },
 ];
 
-const usageCode = `import RadioGroup from "@/components/ui/radiogroup";
+const usageCode = `"use client";
+
 import { useState } from "react";
+import RadioGroup from "@/components/ui/radiogroup";
 
 const options = [
   {
-    value: "monthly",
-    label: "Monthly",
-    description: "Cancel anytime",
+    value: "standard",
+    label: "Standard delivery",
+    description: "Tracked parcel in three to five business days.",
   },
   {
-    value: "yearly",
-    label: "Yearly",
-    description: "Two months free",
+    value: "express",
+    label: "Express",
+    description: "Handoff next business day where available.",
+  },
+  {
+    value: "pickup",
+    label: "Pickup point",
+    description: "Collect when convenient — no doorstep drop.",
   },
 ];
 
-export function BillingCycle() {
-  const [value, setValue] = useState("monthly");
+export function RadioGroupPreview() {
+  const [value, setValue] = useState("standard");
 
   return (
-    <RadioGroup onChange={setValue} options={options} value={value} />
+    <RadioGroup
+      className="max-w-md"
+      onChange={setValue}
+      options={options}
+      value={value}
+    />
   );
 }`;
 

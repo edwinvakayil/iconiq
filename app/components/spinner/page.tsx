@@ -10,12 +10,31 @@ import Spinner from "@/registry/spinner";
 
 const usageCode = `import Spinner from "@/components/ui/spinner";
 
-export function SavingIndicator() {
-  return <Spinner className="size-4" />;
-}
-
-export function InlineDots() {
-  return <Spinner variant="dots" className="size-5" />;
+export function SpinnerPreview() {
+  return (
+    <p className="flex max-w-xl flex-wrap items-center justify-center gap-x-1.5 gap-y-2.5 text-center text-[13px] leading-relaxed text-neutral-600 dark:text-neutral-300">
+      <span className="text-neutral-500 dark:text-neutral-400">
+        Every stall deserves a kinder signal —
+      </span>
+      <span aria-hidden className="inline-flex items-center">
+        <Spinner className="size-5 shrink-0" />
+      </span>
+      <span className="font-medium text-sky-600 dark:text-sky-400">
+        one tireless lap
+      </span>
+      <span className="text-neutral-400 dark:text-neutral-500">,</span>
+      <span>or</span>
+      <span aria-hidden className="inline-flex items-center">
+        <Spinner className="size-6 shrink-0" variant="dots" />
+      </span>
+      <span className="font-medium text-violet-600 dark:text-violet-400">
+        three staggered taps
+      </span>
+      <span className="text-neutral-500 dark:text-neutral-400">
+        — calm motion that still reads.
+      </span>
+    </p>
+  );
 }`;
 
 const componentDetailsItems = spinnerApiDetails;

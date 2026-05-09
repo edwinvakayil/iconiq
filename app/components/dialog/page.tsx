@@ -18,7 +18,9 @@ import {
   DialogTrigger,
 } from "@/registry/dialog";
 
-const usageCode = `import { useState } from "react";
+const usageCode = `"use client";
+
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -30,7 +32,7 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 
-export function ConfirmDialog() {
+export function DialogPreview() {
   const [open, setOpen] = useState(false);
 
   return (
@@ -40,11 +42,17 @@ export function ConfirmDialog() {
           Open dialog
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-md" open={open}>
+      <DialogContent
+        className="max-w-md border-neutral-200 dark:border-neutral-800"
+        open={open}
+      >
         <DialogHeader>
-          <DialogTitle>Save changes?</DialogTitle>
-          <DialogDescription>
-            Your updates will be synced to the workspace.
+          <DialogTitle className="text-balance text-neutral-950 dark:text-neutral-50">
+            Confirm publish
+          </DialogTitle>
+          <DialogDescription className="text-pretty text-sky-800 dark:text-sky-300">
+            This sends the draft live for everyone on the team. You can still
+            roll back from history afterward.
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>

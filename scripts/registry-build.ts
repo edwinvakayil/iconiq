@@ -182,6 +182,12 @@ const REGISTRY_UI_META: Record<
       "Loading indicator with an animated ring or bouncing dots. Motion; uses primary and muted theme tokens.",
     dependencies: ["motion"],
   },
+  switch: {
+    title: "Switch",
+    description:
+      "Animated Radix switch with spring thumb travel, pressure-like thumb squash, foreground track fill, and optional inline label.",
+    dependencies: ["@radix-ui/react-switch", "motion"],
+  },
   avatar: {
     title: "Avatar",
     description:

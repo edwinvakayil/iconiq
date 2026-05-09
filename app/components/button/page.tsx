@@ -10,12 +10,23 @@ import { Button } from "@/registry/button";
 
 const usageCode = `import { Button } from "@/components/ui/button";
 
-export function SaveBar() {
+export function ButtonPreview() {
   return (
-    <div className="flex gap-2">
-      <Button>Save</Button>
-      <Button variant="outline">Cancel</Button>
-    </div>
+    <blockquote className="mx-auto max-w-xl text-center">
+      <p className="flex flex-wrap items-center justify-center gap-x-1.5 gap-y-3 text-balance text-lg font-medium leading-snug tracking-tight dark:text-neutral-100">
+        <span>Win the press,</span>
+        <span className="font-normal text-neutral-500 dark:text-neutral-400">
+          then
+        </span>
+        <span className="inline-flex translate-y-px align-middle">
+          <Button>Continue</Button>
+        </span>
+        <span>the break</span>
+        <span className="basis-full w-full text-[0.92em] font-normal text-neutral-500 dark:text-neutral-400">
+          - that&apos;s the half in two beats.
+        </span>
+      </p>
+    </blockquote>
   );
 }`;
 

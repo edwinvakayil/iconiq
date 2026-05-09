@@ -6,11 +6,26 @@ import { drawerApiDetails } from "@/components/docs/component-api";
 import { ComponentDocsPage } from "@/components/docs/page-shell";
 import { Drawer } from "@/registry/drawer";
 
-const usageCode = `import { useState } from "react";
+const usageCode = `"use client";
+
+import { useEffect, useState } from "react";
 import { Drawer } from "@/components/ui/drawer";
 
-export function WorkspaceDrawer() {
+export function DrawerPreview() {
+  const [isMobile, setIsMobile] = useState(false);
   const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(max-width: 640px)");
+    const syncViewport = () => setIsMobile(mediaQuery.matches);
+
+    syncViewport();
+    mediaQuery.addEventListener("change", syncViewport);
+
+    return () => {
+      mediaQuery.removeEventListener("change", syncViewport);
+    };
+  }, []);
 
   return (
     <>
@@ -23,15 +38,32 @@ export function WorkspaceDrawer() {
       </button>
 
       <Drawer
-        description="Review the latest changes before pushing the next release live."
+        description="Review the latest changes before moving this update into sign-off."
         onClose={() => setOpen(false)}
         open={open}
+        side={isMobile ? "bottom" : "right"}
         title="Workspace details"
       >
-        <div className="space-y-3">
-          <p className="text-sm text-muted-foreground">
-            This drawer keeps surrounding context visible while you review a narrow task flow.
-          </p>
+        <div className="space-y-6">
+          <div className="space-y-2">
+            <p className="text-[15px] font-medium text-foreground">
+              Current rollout
+            </p>
+            <p className="text-[14px] leading-6 text-secondary">
+              Motion polish is ready, API notes are synced, and the release
+              handoff can move forward once final copy is approved.
+            </p>
+          </div>
+
+          <div className="space-y-3 border-t border-border/80 pt-4">
+            <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
+              Next
+            </p>
+            <p className="text-[14px] leading-6 text-secondary">
+              Close the drawer by pressing Escape, tapping the overlay, or using
+              the built-in close button.
+            </p>
+          </div>
         </div>
       </Drawer>
     </>

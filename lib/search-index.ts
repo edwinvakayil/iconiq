@@ -67,6 +67,8 @@ const componentSummaries: Record<string, string> = {
     "Slider control for range selection with motion-aware thumb and track states.",
   "/components/spinner":
     "Loading spinner for pending states and background actions.",
+  "/components/switch":
+    "Animated switch control for binary settings with thumb travel and track-fill motion.",
   "/components/table":
     "Composable table primitives with aligned rows, sort helpers, and empty states.",
   "/components/tabs":

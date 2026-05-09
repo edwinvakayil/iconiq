@@ -17,6 +17,53 @@ type SidebarSection = {
   items: SidebarItem[];
 };
 
+function SidebarActiveStroke({
+  prefersReducedMotion,
+}: {
+  prefersReducedMotion: boolean;
+}) {
+  return (
+    <motion.span
+      animate={{ opacity: 1, scaleX: 1, y: 0 }}
+      aria-hidden="true"
+      className="mt-1 block h-[2px] w-full origin-left rotate-[-1.35deg] rounded-[999px_140px_999px_85px/72%_36%_88%_52%] bg-sky-500/80 dark:bg-sky-400/90"
+      initial={
+        prefersReducedMotion ? false : { opacity: 0, scaleX: 0.82, y: 1 }
+      }
+      layoutId="sidebar-active-stroke"
+      transition={{
+        layout: prefersReducedMotion
+          ? { duration: 0 }
+          : {
+              type: "spring",
+              stiffness: 460,
+              damping: 34,
+              mass: 0.58,
+            },
+        opacity: {
+          duration: prefersReducedMotion ? 0 : 0.16,
+        },
+        scaleX: prefersReducedMotion
+          ? { duration: 0 }
+          : {
+              type: "spring",
+              stiffness: 420,
+              damping: 30,
+              mass: 0.48,
+            },
+        y: prefersReducedMotion
+          ? { duration: 0 }
+          : {
+              type: "spring",
+              stiffness: 380,
+              damping: 28,
+              mass: 0.44,
+            },
+      }}
+    />
+  );
+}
+
 const sections: SidebarSection[] = [
   {
     title: "Getting Started",
@@ -38,7 +85,7 @@ const sections: SidebarSection[] = [
 
 export function SidebarNav() {
   const pathname = usePathname();
-  const prefersReducedMotion = useReducedMotion();
+  const prefersReducedMotion = Boolean(useReducedMotion());
 
   return (
     <motion.aside
@@ -74,14 +121,23 @@ export function SidebarNav() {
                     <li className="group/menu-item relative" key={item.href}>
                       <Link
                         className={cn(
-                          "flex h-8 w-full items-center gap-2 overflow-hidden rounded-md p-2 text-left font-[450] text-foreground text-sm outline-none transition-all [&>span:last-child]:truncate",
+                          "flex h-8 w-full items-center gap-2 overflow-hidden rounded-md p-2 text-left font-[450] text-foreground text-sm outline-none transition-all",
                           isActive
-                            ? "underline decoration-[1.5px] underline-offset-4"
+                            ? "text-foreground"
                             : "hover:bg-muted hover:text-foreground"
                         )}
                         href={item.href}
                       >
-                        {item.label}
+                        <span className="inline-flex min-w-0 max-w-full flex-col items-start">
+                          <span className="truncate font-medium">
+                            {item.label}
+                          </span>
+                          {isActive ? (
+                            <SidebarActiveStroke
+                              prefersReducedMotion={prefersReducedMotion}
+                            />
+                          ) : null}
+                        </span>
                       </Link>
                     </li>
                   );

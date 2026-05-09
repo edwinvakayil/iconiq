@@ -10,13 +10,49 @@ import { Tooltip } from "@/registry/tooltip";
 
 const usageCode = `import { Tooltip } from "@/components/ui/tooltip";
 
-export function HelpLabel() {
+const triggerClass =
+  "rounded-sm px-0.5 font-semibold underline decoration-dotted underline-offset-[5px] transition-colors";
+
+export function TooltipPreview() {
   return (
-    <Tooltip content="Changes are saved automatically" side="top" delay={0.1}>
-      <button className="rounded-md border px-3 py-1.5 text-sm">
-        Autosave
-      </button>
-    </Tooltip>
+    <div className="flex min-h-[260px] flex-col items-center justify-center gap-8 px-4 py-8">
+      <blockquote className="max-w-lg text-center">
+        <p className="text-lg font-medium leading-relaxed tracking-tight dark:text-neutral-100">
+          Win the{" "}
+          <Tooltip content="Press, recycle, stay compact." delay={0.12} side="top">
+            <button
+              className={\`\${triggerClass} text-emerald-700 decoration-emerald-500/40 dark:text-emerald-400\`}
+              type="button"
+            >
+              midfield
+            </button>
+          </Tooltip>
+          , then{" "}
+          <Tooltip content="One ball behind the line." side="bottom">
+            <button
+              className={\`\${triggerClass} text-sky-700 decoration-sky-500/40 dark:text-sky-400\`}
+              type="button"
+            >
+              break the last line
+            </button>
+          </Tooltip>
+          — that&apos;s the half in two beats.
+        </p>
+      </blockquote>
+
+      <p className="max-w-sm text-center text-[13px] leading-relaxed text-neutral-500 dark:text-neutral-400">
+        Hover the calls or{" "}
+        <Tooltip content="Tab in — same note." side="right">
+          <button
+            className={\`\${triggerClass} text-neutral-700 decoration-neutral-400/70 dark:text-neutral-300\`}
+            type="button"
+          >
+            use the keyboard
+          </button>
+        </Tooltip>
+        .
+      </p>
+    </div>
   );
 }`;
 

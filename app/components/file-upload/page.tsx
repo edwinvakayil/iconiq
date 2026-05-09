@@ -4,29 +4,12 @@ import { fileUploadApiDetails } from "@/components/docs/component-api";
 import { ComponentDocsPage } from "@/components/docs/page-shell";
 import { FileUpload } from "@/registry/file-upload";
 
-const usageCode = `"use client";
+const usageCode = `import { FileUpload } from "@/components/ui/file-upload";
 
-import { useState } from "react";
-import { FileUpload } from "@/components/ui/file-upload";
-
-export function AssetUploader() {
-  const [queuedFiles, setQueuedFiles] = useState<File[]>([]);
-  const [readyFiles, setReadyFiles] = useState<File[]>([]);
-
+export function FileUploadPreview() {
   return (
-    <div className="w-full max-w-xl space-y-4">
-      <FileUpload
-        accept="image/*,.pdf"
-        maxFiles={4}
-        name="assets"
-        onFilesChange={setQueuedFiles}
-        onUploadComplete={setReadyFiles}
-      />
-
-      <div className="space-y-1 text-sm text-muted-foreground">
-        <p>{queuedFiles.length} file(s) in the queue</p>
-        <p>{readyFiles.length} file(s) ready to submit</p>
-      </div>
+    <div className="w-full">
+      <FileUpload />
     </div>
   );
 }`;

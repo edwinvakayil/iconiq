@@ -9,17 +9,35 @@ import { ComponentDocsPage } from "@/components/docs/page-shell";
 import { cn } from "@/lib/utils";
 import Alert from "@/registry/alert";
 
-const usageCode = `import Alert from "@/components/ui/alert";
-import { CheckCircle2 } from "lucide-react";
+const usageCode = `"use client";
 
-export function ChangesSavedNotice() {
+import { CheckCircle2 } from "lucide-react";
+import { useState } from "react";
+import Alert from "@/components/ui/alert";
+
+export function AlertPreview() {
+  const [previewKey, setPreviewKey] = useState(0);
+
   return (
-    <Alert
-      dismissible
-      icon={<CheckCircle2 aria-hidden className="size-[18px]" />}
-      message="Your latest updates are now live for the team."
-      title="Changes saved"
-    />
+    <div className="relative flex min-h-[300px] items-center justify-center">
+      <button
+        className="inline-flex items-center rounded-xl bg-neutral-900 px-6 py-3 text-[13px] font-medium text-white dark:bg-neutral-100 dark:text-neutral-900"
+        onClick={() => setPreviewKey((current) => current + 1)}
+        type="button"
+      >
+        Show alert
+      </button>
+
+      {previewKey > 0 ? (
+        <Alert
+          icon={<CheckCircle2 aria-hidden className="size-[18px]" />}
+          key={previewKey}
+          message="Your latest updates are now live for the team."
+          position="top-right"
+          title="Changes saved"
+        />
+      ) : null}
+    </div>
   );
 }`;
 

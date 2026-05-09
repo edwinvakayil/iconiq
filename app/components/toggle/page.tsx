@@ -13,23 +13,30 @@ import { Bookmark } from "lucide-react";
 import { useState } from "react";
 import { Toggle } from "@/components/ui/toggle";
 
-export function BookmarkToggle() {
+export function TogglePreview() {
   const [bookmarked, setBookmarked] = useState(false);
 
   return (
-    <Toggle
-      aria-label="Toggle bookmark"
-      className="gap-2 rounded-lg px-4 shadow-sm"
-      onPressedChange={setBookmarked}
-      pressed={bookmarked}
-      variant="outline"
-    >
-      <Bookmark
-        className="size-5"
-        fill={bookmarked ? "currentColor" : "none"}
-      />
-      Bookmark
-    </Toggle>
+    <div className="flex flex-col items-center gap-6 px-2 py-4">
+      <Toggle
+        aria-label="Toggle bookmark"
+        className="gap-2 rounded-lg px-4 shadow-sm"
+        onPressedChange={setBookmarked}
+        pressed={bookmarked}
+        variant="outline"
+      >
+        <Bookmark
+          className="size-5"
+          fill={bookmarked ? "currentColor" : "none"}
+        />
+        Bookmark
+      </Toggle>
+
+      <p className="max-w-xl text-center text-[13px] leading-6 text-secondary">
+        Toggle the bookmark to inspect the pressed-state motion, ripple burst,
+        and the filled icon treatment on the active state.
+      </p>
+    </div>
   );
 }`;
 

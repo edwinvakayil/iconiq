@@ -27,7 +27,10 @@ const demoOptions = [
   },
 ];
 
-const usageCode = `import { Orbit, Sparkles, Telescope } from "lucide-react";
+const usageCode = `"use client";
+
+import { Orbit, Sparkles, Telescope } from "lucide-react";
+import { useState } from "react";
 import { Select } from "@/components/ui/select";
 
 const options = [
@@ -36,13 +39,13 @@ const options = [
   { value: "deep", label: "Deep field", icon: <Telescope className="size-4" /> },
 ];
 
-export function MissionSelect() {
+export function SelectPreview() {
   const [value, setValue] = useState<string | undefined>("scout");
   return (
     <Select
       onChange={setValue}
       options={options}
-      placeholder="Plot the trajectory…"
+      placeholder="Plot the trajectory..."
       value={value}
     />
   );

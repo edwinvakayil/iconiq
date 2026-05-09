@@ -15,17 +15,30 @@ const PREVIEW_ACCOUNT_HREF =
   "https://avatars.githubusercontent.com/u/180170746?v=4";
 
 const usageCode = `import { Avatar } from "@/components/ui/avatar";
+import Link from "next/link";
 
-export function ProfileChip() {
+const imageSrc = "https://avatars.githubusercontent.com/u/180170746?v=4";
+
+export function AvatarPreview() {
   return (
-    <a
-      className="inline-flex rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-      href="https://avatars.githubusercontent.com/u/180170746?v=4"
-      rel="noopener noreferrer"
-      target="_blank"
-    >
-      <Avatar src="https://avatars.githubusercontent.com/u/180170746?v=4" />
-    </a>
+    <div className="flex flex-col items-center gap-6 px-2 py-4">
+      <Link
+        className="inline-flex rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+        href={imageSrc}
+        rel="noopener noreferrer"
+        target="_blank"
+      >
+        <Avatar src={imageSrc} />
+      </Link>
+
+      <p className="max-w-md text-center text-[13px] leading-relaxed">
+        <span className="text-emerald-600 dark:text-emerald-400">Spring in</span>
+        <span className="text-neutral-400 dark:text-neutral-500"> · </span>
+        <span className="text-sky-600 dark:text-sky-400">Hover lifts the ring</span>
+        <span className="text-neutral-400 dark:text-neutral-500"> · </span>
+        <span className="text-violet-600 dark:text-violet-400">Image fades to fit</span>
+      </p>
+    </div>
   );
 }`;
 

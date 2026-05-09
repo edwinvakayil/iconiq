@@ -37,6 +37,7 @@ export const SITE_SECTIONS = [
       { label: "Select", href: "/components/select" },
       { label: "Slider", href: "/components/slider" },
       { label: "Spinner", href: "/components/spinner" },
+      { label: "Switch", href: "/components/switch" },
       { label: "Table", href: "/components/table" },
       { label: "Tabs", href: "/components/tabs" },
       { label: "Toggle", href: "/components/toggle" },

@@ -29,7 +29,25 @@ const usageCode = `import {
   TabsTrigger,
 } from "@/components/ui/tabs";
 
-export function WorkspaceTabs() {
+const tabSections = [
+  {
+    body: "Keep the main summary visible while switching between planning, delivery, and support details without leaving the current surface.",
+    heading: "Product workspace",
+    value: "overview",
+  },
+  {
+    body: "Review the last design review, implementation notes, and timeline updates in a compact panel that still feels grounded.",
+    heading: "Recent handoff",
+    value: "activity",
+  },
+  {
+    body: "Attach decks, mockups, and implementation references while preserving a clear animated transition between each content block.",
+    heading: "Shared assets",
+    value: "files",
+  },
+] as const;
+
+export function TabsPreview() {
   return (
     <Tabs className="w-full" defaultValue="overview">
       <TabsList>
@@ -38,23 +56,18 @@ export function WorkspaceTabs() {
         <TabsTrigger value="files">Files</TabsTrigger>
       </TabsList>
 
-      <TabsContent value="overview">
-        <p className="text-sm text-muted-foreground">
-          A concise summary for the current workspace.
-        </p>
-      </TabsContent>
-
-      <TabsContent value="activity">
-        <p className="text-sm text-muted-foreground">
-          Recent updates, comments, and handoff notes.
-        </p>
-      </TabsContent>
-
-      <TabsContent value="files">
-        <p className="text-sm text-muted-foreground">
-          Attached assets and supporting documents.
-        </p>
-      </TabsContent>
+      {tabSections.map((section) => (
+        <TabsContent key={section.value} value={section.value}>
+          <div className="space-y-3">
+            <p className="text-[15px] font-medium tracking-[-0.02em] text-foreground">
+              {section.heading}
+            </p>
+            <p className="text-[14px] leading-6 text-secondary">
+              {section.body}
+            </p>
+          </div>
+        </TabsContent>
+      ))}
     </Tabs>
   );
 }`;

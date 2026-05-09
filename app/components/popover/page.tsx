@@ -7,7 +7,9 @@ import { popoverApiDetails } from "@/components/docs/component-api";
 import { ComponentDocsPage } from "@/components/docs/page-shell";
 import { Popover, PopoverContent, PopoverTrigger } from "@/registry/popover";
 
-const usageCode = `import { Bell, BellRing } from "lucide-react";
+const usageCode = `"use client";
+
+import { Bell, BellRing } from "lucide-react";
 import { useState } from "react";
 import {
   Popover,
@@ -15,35 +17,49 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 
-export function UpdatesPopover() {
+export function PopoverPreview() {
   const [open, setOpen] = useState(false);
 
   return (
-    <Popover onOpenChange={setOpen} open={open}>
-      <PopoverTrigger asChild>
-        <button
-          className="inline-flex size-10 items-center justify-center text-foreground transition-colors hover:text-neutral-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 dark:hover:text-neutral-300"
-          type="button"
-        >
-          <Bell className="size-4.5" />
-        </button>
-      </PopoverTrigger>
-      <PopoverContent className="w-80" open={open}>
-        <div className="space-y-3">
-          <div className="flex items-start gap-3">
-            <span className="mt-0.5 inline-flex size-9 items-center justify-center rounded-full bg-neutral-100 text-neutral-900 dark:bg-neutral-900 dark:text-neutral-100">
-              <BellRing className="size-4" />
-            </span>
-            <div className="space-y-1">
-              <p className="font-medium">Release reminder</p>
-              <p className="text-sm text-muted-foreground">
-                Design review starts in 20 minutes. Final pass on motion and copy is still open.
-              </p>
+    <div className="flex flex-col items-center gap-5">
+      <Popover onOpenChange={setOpen} open={open}>
+        <PopoverTrigger asChild>
+          <button
+            aria-label="Open popover"
+            className="inline-flex size-12 items-center justify-center text-foreground transition-colors hover:text-neutral-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 dark:hover:text-neutral-300"
+            type="button"
+          >
+            <Bell className="size-4.5" />
+          </button>
+        </PopoverTrigger>
+        <PopoverContent className="w-[320px]" open={open}>
+          <div className="space-y-3">
+            <div className="flex items-start gap-3">
+              <span className="mt-0.5 inline-flex size-9 items-center justify-center rounded-full bg-neutral-100 text-neutral-900 dark:bg-neutral-900 dark:text-neutral-100">
+                <BellRing className="size-4" />
+              </span>
+              <div className="space-y-1">
+                <p className="text-[15px] font-medium text-foreground">
+                  Release reminder
+                </p>
+                <p className="text-[13px] leading-5 text-secondary">
+                  Design review · 20 min
+                </p>
+              </div>
             </div>
+            <p className="text-[14px] leading-6 text-secondary">
+              Final pass on motion, copy, and interaction polish is still open
+              before the build moves to sign-off.
+            </p>
           </div>
-        </div>
-      </PopoverContent>
-    </Popover>
+        </PopoverContent>
+      </Popover>
+
+      <p className="max-w-sm text-center text-[13px] leading-6 text-secondary">
+        Open the popover to inspect the controlled open state, portal-based
+        panel, and origin-aware spring animation.
+      </p>
+    </div>
   );
 }`;
 

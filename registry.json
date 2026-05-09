@@ -364,6 +364,21 @@
       ]
     },
     {
+      "name": "switch",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": ["@radix-ui/react-switch", "motion"],
+      "devDependencies": [],
+      "title": "Switch",
+      "description": "Animated Radix switch with spring thumb travel, pressure-like thumb squash, foreground track fill, and optional inline label.",
+      "files": [
+        {
+          "path": "switch.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "table",
       "type": "registry:ui",
       "registryDependencies": [],

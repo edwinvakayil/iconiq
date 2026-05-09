@@ -6,14 +6,12 @@ import { buttonGroupApiDetails } from "@/components/docs/component-api";
 import { ComponentDocsPage } from "@/components/docs/page-shell";
 import { ButtonGroupItems, IconButton } from "@/registry/button-group";
 
-const usageCode = `"use client";
-
-import { Bell, Grid2x2, List, Table2 } from "lucide-react";
+const usageCode = `import { Bell, Grid2x2, List, Table2 } from "lucide-react";
 import { ButtonGroupItems, IconButton } from "@/components/ui/button-group";
 
-export function ViewControls() {
+export function ButtonGroupPreview() {
   return (
-    <div className="space-y-6">
+    <div className="flex w-full max-w-2xl flex-wrap items-center justify-center gap-3 px-2">
       <ButtonGroupItems>
         <button type="button">
           <List className="size-4" />
