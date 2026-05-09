@@ -184,6 +184,21 @@
       ]
     },
     {
+      "name": "dia-text",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": ["motion"],
+      "devDependencies": [],
+      "title": "Dia Text",
+      "description": "Animated inline text reveal with a sweeping gradient band, repeat controls, and optional fixed-width rotation for motion-driven typography.",
+      "files": [
+        {
+          "path": "dia-text.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "dialog",
       "type": "registry:ui",
       "registryDependencies": [],

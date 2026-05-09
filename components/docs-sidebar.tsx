@@ -4,7 +4,12 @@ import { usePathname } from "next/navigation";
 
 import { SidebarNav } from "@/components/sidebar-nav";
 
-const DOCS_PREFIXES = ["/introduction", "/installation", "/components"];
+const DOCS_PREFIXES = [
+  "/introduction",
+  "/installation",
+  "/components",
+  "/texts",
+];
 
 export function DocsSidebar() {
   const pathname = usePathname();

@@ -44,6 +44,10 @@ export const SITE_SECTIONS = [
       { label: "Tooltip", href: "/components/tooltip" },
     ],
   },
+  {
+    label: "Texts",
+    children: [{ label: "Dia Text", href: "/texts/dia-text" }],
+  },
 ] as const;
 
 /** Section headings (h2/h3) per page for "On this page" anchor links. */

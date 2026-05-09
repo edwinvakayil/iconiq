@@ -5,9 +5,11 @@ import { AI_DISCOVERY_LINKS, COMPONENT_CATALOG } from "@/lib/geo";
 import { compactWhitespace, nodeToText } from "@/lib/node-to-text";
 import { SITE_SECTIONS } from "@/lib/site-nav";
 
-const componentCount = SITE_SECTIONS.flatMap(
-  (section) => section.children
-).length;
+const COMPONENT_ITEMS =
+  SITE_SECTIONS.find((section) => section.label === "Components")?.children ??
+  [];
+
+const componentCount = COMPONENT_ITEMS.length;
 
 const WebsiteJsonLd = () => {
   const jsonLd = {
@@ -125,14 +127,13 @@ const BreadcrumbJsonLd = ({
 };
 
 const ComponentItemListJsonLd = () => {
-  const items = SITE_SECTIONS.flatMap((section) => section.children);
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "ItemList",
     name: `${SITE.NAME} components`,
     itemListOrder: "https://schema.org/ItemListOrderAscending",
-    numberOfItems: items.length,
-    itemListElement: items.map((item, index) => ({
+    numberOfItems: COMPONENT_ITEMS.length,
+    itemListElement: COMPONENT_ITEMS.map((item, index) => ({
       "@type": "ListItem",
       position: index + 1,
       name: item.label,

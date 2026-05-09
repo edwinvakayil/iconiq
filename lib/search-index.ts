@@ -77,6 +77,8 @@ const componentSummaries: Record<string, string> = {
     "Pressed-state toggle built on Radix with ripple, icon motion, and text or icon-only formats.",
   "/components/tooltip":
     "Tooltip component for compact hover or focus explanations.",
+  "/texts/dia-text":
+    "Animated text reveal with a sweeping gradient band, repeat controls, and optional fixed-width rotation.",
 };
 
 const TOKEN_SPLIT_REGEX = /[\s/-]+/;
@@ -125,6 +127,9 @@ const componentItems: SearchItem[] = SITE_SECTIONS.flatMap((section) =>
     }
     if (slug === "file-upload") {
       labelKeywords.push("upload");
+    }
+    if (slug === "dia-text") {
+      labelKeywords.push("text", "text reveal", "animated text");
     }
 
     return {

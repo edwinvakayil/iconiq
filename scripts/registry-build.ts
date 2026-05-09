@@ -34,6 +34,12 @@ const REGISTRY_UI_META: Record<
       "Native-feeling context menu with fixed-position viewport-aware placement, per-item icons and shortcuts, and spring entrance motion.",
     dependencies: ["motion"],
   },
+  "dia-text": {
+    title: "Dia Text",
+    description:
+      "Animated inline text reveal with a sweeping gradient band, repeat controls, and optional fixed-width rotation for motion-driven typography.",
+    dependencies: ["motion"],
+  },
   drawer: {
     title: "Drawer",
     description:

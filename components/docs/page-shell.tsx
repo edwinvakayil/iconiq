@@ -57,7 +57,7 @@ function DocsBreadcrumbs({
   const visibleItems = items;
   const usesEditorialBreadcrumb =
     visibleItems.length >= 2 &&
-    ["components", "getting started"].includes(
+    ["components", "getting started", "texts"].includes(
       visibleItems
         .find((item) => item.label.toLowerCase() !== "docs")
         ?.label.toLowerCase() ?? ""
@@ -208,9 +208,9 @@ function DocsHero({
   );
 }
 
-const COMPONENT_NAV_ITEMS = SITE_SECTIONS.flatMap(
-  (section) => section.children
-);
+const COMPONENT_NAV_ITEMS =
+  SITE_SECTIONS.find((section) => section.label === "Components")?.children ??
+  [];
 
 function getComponentNeighbors(componentName: string) {
   const currentHref = `/components/${componentName}`;

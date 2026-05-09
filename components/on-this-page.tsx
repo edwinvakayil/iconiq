@@ -24,11 +24,13 @@ function getTocForPath(pathname: string): TocEntry[] {
 
   const toc: TocEntry[] = [...base];
 
-  const componentsSection = SITE_SECTIONS.find((s) => s.label === "Components");
-  if (componentsSection?.children.some((child) => child.href === pathname)) {
+  const docsSection = SITE_SECTIONS.find((section) =>
+    section.children.some((child) => child.href === pathname)
+  );
+  if (docsSection) {
     toc.push({
-      label: componentsSection.label,
-      children: [...componentsSection.children],
+      label: docsSection.label,
+      children: [...docsSection.children],
     });
   }
   return toc;

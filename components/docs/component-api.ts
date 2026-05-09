@@ -2774,6 +2774,106 @@ const switchApiDetails: DetailItem[] = [
   registryItem("switch.json", ["@radix-ui/react-switch", "motion"]),
 ];
 
+const diaTextApiDetails: DetailItem[] = [
+  {
+    id: "dia-text",
+    title: "DiaTextReveal",
+    summary:
+      "Animated inline text reveal that sweeps a multicolor gradient band across one string or rotates through multiple strings while preserving the same baseline flow.",
+    fields: [
+      field({
+        name: "text",
+        type: "string | string[]",
+        required: true,
+        description:
+          "Single string to reveal, or an array of strings to cycle through. When you pass multiple entries, the component tracks an active index and can animate width between them.",
+      }),
+      field({
+        name: "colors",
+        type: "string[]",
+        description:
+          "Gradient stops used for the sweep band. If omitted, the component uses its built-in five-color palette.",
+      }),
+      field({
+        name: "textColor",
+        type: "string",
+        defaultValue: '"var(--foreground)"',
+        description:
+          "Base text color used before and after the animated color band passes across the text.",
+      }),
+      field({
+        name: "duration",
+        type: "number",
+        defaultValue: "1.5",
+        description:
+          "Duration of the sweep animation in seconds for each reveal cycle.",
+      }),
+      field({
+        name: "delay",
+        type: "number",
+        defaultValue: "0",
+        description: "Delay in seconds before the reveal animation begins.",
+      }),
+      field({
+        name: "repeat",
+        type: "boolean",
+        defaultValue: "false",
+        description:
+          "When true, the component keeps replaying the sweep and advances through the text array if multiple entries are provided.",
+      }),
+      field({
+        name: "repeatDelay",
+        type: "number",
+        defaultValue: "0.5",
+        description: "Pause in seconds between repeated reveal cycles.",
+      }),
+      field({
+        name: "triggerOnView",
+        type: "boolean",
+        defaultValue: "true",
+        description:
+          "Toggles viewport-based playback. When true, the reveal waits until the span enters view before it starts.",
+      }),
+      field({
+        name: "once",
+        type: "boolean",
+        defaultValue: "true",
+        description:
+          "Controls whether in-view playback should only happen once or be allowed to replay when the element re-enters view.",
+      }),
+      field({
+        name: "fixedWidth",
+        type: "boolean",
+        defaultValue: "false",
+        description:
+          "When rotating multiple text entries, fixes the rendered width to the widest measured string instead of animating width between each item.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description:
+          "Merged onto the rendered motion span for local typography or layout overrides.",
+      }),
+    ],
+    notes: [
+      "The component forwards the remaining Motion span props, so aria attributes, inline data attributes, and other span-level props can still be applied at the call site.",
+      "Children are not part of the public API surface here; the rendered content always comes from the text prop.",
+    ],
+  },
+  {
+    id: "dia-text-motion",
+    title: "Motion and width behavior",
+    summary:
+      "The reveal is driven by a motion value that builds a gradient band in real time, then optionally replays and rotates through measured text entries.",
+    notes: [
+      "Reduced-motion mode skips the sweep and settles immediately into the completed text state.",
+      "When multiple text values are provided, the component clones the span to measure each string and can animate the width between entries for a smoother swap.",
+      "If triggerOnView is enabled, playback is gated by the local viewport observer instead of always running on mount.",
+    ],
+  },
+  registryItem("dia-text.json", ["motion"]),
+];
+
 const tooltipApiDetails: DetailItem[] = [
   {
     id: "tooltip",
@@ -2847,6 +2947,7 @@ export {
   comboboxApiDetails,
   contextMenuApiDetails,
   drawerApiDetails,
+  diaTextApiDetails,
   dialogApiDetails,
   dropdownApiDetails,
   fileUploadApiDetails,

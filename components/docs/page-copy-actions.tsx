@@ -16,15 +16,21 @@ function getChatGptPrompt(pageUrl: string, title: string) {
 export function PageCopyActions({
   componentName,
   pageContent,
+  pageUrl,
   title,
 }: {
   componentName: string;
   pageContent: string;
+  pageUrl?: string;
   title: string;
 }) {
   const [copied, setCopied] = useState(false);
   const [open, setOpen] = useState(false);
-  const pageUrl = `${SITE.URL}/components/${componentName}`;
+  const resolvedPageUrl = pageUrl
+    ? pageUrl.startsWith("http")
+      ? pageUrl
+      : `${SITE.URL}${pageUrl}`
+    : `${SITE.URL}/components/${componentName}`;
   const registryUrl = `${SITE.URL}/r/${componentName}.json`;
 
   const menuItems = useMemo(
@@ -38,11 +44,14 @@ export function PageCopyActions({
         label: "Open in v0",
       },
       {
-        href: `https://chatgpt.com/?q=${getChatGptPrompt(pageUrl, title)}`,
+        href: `https://chatgpt.com/?q=${getChatGptPrompt(
+          resolvedPageUrl,
+          title
+        )}`,
         label: "Ask ChatGPT",
       },
     ],
-    [pageUrl, registryUrl, title]
+    [registryUrl, resolvedPageUrl, title]
   );
 
   const handleCopy = async () => {
