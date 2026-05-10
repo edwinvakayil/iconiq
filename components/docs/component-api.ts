@@ -2264,20 +2264,19 @@ const tabsApiDetails: DetailItem[] = [
     id: "tabs",
     title: "Tabs",
     summary:
-      "Root provider that manages the active value, hover state, trigger measurements, and the shared animated panel transition.",
+      "Root wrapper for a clean tab interface with controlled or uncontrolled value handling from Base UI.",
     fields: [
       field({
         name: "children",
         type: "ReactNode",
         required: true,
         description:
-          "Compose TabsList, TabsTrigger, and TabsContent inside the root, following the same structure people expect from shadcn tabs.",
+          "Compose TabsList, TabsTrigger, and TabsContent inside the root, following the familiar shadcn-style structure.",
       }),
       field({
         name: "defaultValue",
         type: "string",
-        description:
-          "Initial active tab value for uncontrolled usage. When omitted, the first TabsContent value becomes active.",
+        description: "Initial active tab value for uncontrolled usage.",
       }),
       field({
         name: "value",
@@ -2286,7 +2285,7 @@ const tabsApiDetails: DetailItem[] = [
       }),
       field({
         name: "onValueChange",
-        type: "(value: string) => void",
+        type: "(value: string, details: object) => void",
         description:
           "Called when a trigger changes the active tab through click or keyboard navigation.",
       }),
@@ -2294,19 +2293,19 @@ const tabsApiDetails: DetailItem[] = [
         name: "className",
         type: "string",
         description:
-          "Merged onto the root wrapper around the tab rail and the animated content area.",
+          "Merged onto the root wrapper around the list and content panels.",
       }),
     ],
     notes: [
-      "Underline positions are still measured from the live trigger layout, so the indicators follow the actual tab widths instead of fixed columns.",
-      "The root renders the active panel through a single AnimatePresence block, which preserves the existing blur-and-slide motion while exposing a composable API.",
+      "The implementation stays intentionally small: it relies on Base UI for selection state, keyboard behavior, and panel wiring.",
+      "Use local className overrides on TabsList or TabsTrigger when a specific screen needs a more opinionated visual treatment.",
     ],
   },
   {
     id: "tabs-list",
     title: "TabsList",
     summary:
-      "Measured trigger rail that renders the active underline and hover ghost underline without changing the visual design of the original component.",
+      "Inline trigger rail that provides the muted segmented background behind a set of tab triggers.",
     fields: [
       field({
         name: "children",
@@ -2320,21 +2319,21 @@ const tabsApiDetails: DetailItem[] = [
       }),
     ],
     notes: [
-      "The list sets role='tablist' and clears the hover underline when the pointer leaves the rail.",
+      "The default styles keep the list compact so it works well for docs toggles, install blocks, and simple settings surfaces.",
     ],
   },
   {
     id: "tabs-trigger",
     title: "TabsTrigger",
     summary:
-      "Native button trigger that drives the active tab, hover state, keyboard navigation, and underline measurements.",
+      "Interactive tab button with a clean active surface, quieter inactive state, and built-in accessibility wiring from Base UI.",
     fields: [
       field({
         name: "value",
         type: "string",
         required: true,
         description:
-          "Unique tab identifier used for active state, focus movement, and content matching.",
+          "Unique tab identifier used for active state and content matching.",
       }),
       field({
         name: "children",
@@ -2346,7 +2345,7 @@ const tabsApiDetails: DetailItem[] = [
         name: "className",
         type: "string",
         description:
-          "Merged onto the trigger button if you need local spacing or typography overrides.",
+          "Merged onto the trigger button for local spacing, typography, or active-state overrides.",
       }),
       field({
         name: "disabled",
@@ -2356,15 +2355,14 @@ const tabsApiDetails: DetailItem[] = [
       }),
     ],
     notes: [
-      "Arrow keys, Home, and End move between enabled triggers and also activate the next tab so the panel transition stays in sync with focus.",
-      "Trigger color treatment is unchanged from the original component: active tabs are strongest, hover/focus tabs are mid-tone, and inactive tabs stay quieter.",
+      "Active styling uses the presence of Base UI's data-active attribute rather than a custom indicator layer.",
+      "Focus, arrow-key navigation, and ARIA relationships come from the underlying tabs primitive.",
     ],
   },
   {
     id: "tabs-content",
     title: "TabsContent",
-    summary:
-      "Declarative content marker for a single tab panel. The root reads these nodes and renders the active one through the shared animated content shell.",
+    summary: "Single panel tied to a matching trigger value.",
     fields: [
       field({
         name: "value",
@@ -2381,17 +2379,15 @@ const tabsApiDetails: DetailItem[] = [
       field({
         name: "className",
         type: "string",
-        description:
-          "Merged onto the animated panel wrapper for the active content only.",
+        description: "Merged onto the rendered panel element.",
       }),
     ],
     notes: [
-      "TabsContent itself does not render in place. It acts as a declarative child so the root can preserve a single shared animated panel area below the list.",
-      "Place TabsContent as direct or nested children of Tabs; the root collects them recursively before picking the active panel.",
-      "Standard div attributes such as data-*, aria-*, id, style, and event handlers are forwarded to the rendered active panel.",
+      "Hidden panels are managed by the underlying tabs primitive, so you keep the usual DOM and accessibility behavior without extra wrapper logic.",
+      "Standard div attributes such as data-*, aria-*, id, style, and event handlers are forwarded to the panel element.",
     ],
   },
-  registryItem("tabs.json", ["motion"]),
+  registryItem("tabs.json", ["@base-ui/react"]),
 ];
 
 const tableApiDetails: DetailItem[] = [

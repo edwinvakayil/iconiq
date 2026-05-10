@@ -15,6 +15,8 @@ const pageSummaries: Record<string, string> = {
     "What Iconiq is, how the library works, and why teams adopt editable component files.",
   "/installation":
     "Installation steps for adding components through the shadcn registry workflow.",
+  "/mcp":
+    "MCP setup guide for connecting Iconiq to shadcn-compatible AI coding tools and registry installs.",
   "/changelog":
     "A file-driven changelog page that renders local release notes as a timeline.",
 };

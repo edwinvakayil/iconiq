@@ -6,6 +6,7 @@ export const BASE_LINKS = [
   { label: "Overview", href: "/" },
   { label: "Introduction", href: "/introduction" },
   { label: "Installation", href: "/installation" },
+  { label: "MCP", href: "/mcp" },
   { label: "Changelog", href: "/changelog" },
 ] as const;
 

@@ -60,12 +60,12 @@ export function InstallCommandTerminal({
             strokeWidth={2}
           />
           <TabsList
-            className="h-auto gap-0 border-0 bg-transparent p-0 pb-0"
+            className="h-auto gap-1 border-0 bg-transparent p-0"
             translate="no"
           >
             {PACKAGE_MANAGER_ORDER.map((packageManager) => (
               <TabsTrigger
-                className="h-auto rounded-sm border border-transparent px-2 py-1 font-mono text-xs normal-case tracking-normal aria-selected:border-border/80 aria-selected:bg-background aria-selected:text-foreground"
+                className="h-auto rounded-sm px-2 py-1 font-mono text-xs normal-case tracking-normal"
                 key={packageManager}
                 value={packageManager}
               >

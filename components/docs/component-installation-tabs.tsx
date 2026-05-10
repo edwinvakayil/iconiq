@@ -71,15 +71,15 @@ export function ComponentInstallationTabs({
 }) {
   return (
     <Tabs className="gap-0" defaultValue="cli">
-      <TabsList className="mb-3 gap-1 border-0 bg-transparent pb-0">
+      <TabsList className="mb-3 gap-1 border-0 bg-transparent p-0">
         <TabsTrigger
-          className="cursor-pointer rounded-md border-transparent px-2 text-center font-medium text-sm normal-case tracking-normal aria-selected:border-transparent data-[state=active]:bg-white data-[state=active]:shadow-[0_0_0_1px_rgba(0,0,0,.08),0_2px_2px_rgba(0,0,0,.04)] data-[state=active]:dark:bg-[#0B0B09]"
+          className="cursor-pointer px-2.5 py-1.5 text-center font-medium text-sm normal-case tracking-normal"
           value="cli"
         >
           CLI
         </TabsTrigger>
         <TabsTrigger
-          className="cursor-pointer rounded-md border-transparent px-2 text-center font-medium text-sm normal-case tracking-normal aria-selected:border-transparent data-[state=active]:bg-white data-[state=active]:shadow-[0_0_0_1px_rgba(0,0,0,.08),0_2px_2px_rgba(0,0,0,.04)] data-[state=active]:dark:bg-[#0B0B09]"
+          className="cursor-pointer px-2.5 py-1.5 text-center font-medium text-sm normal-case tracking-normal"
           value="manual"
         >
           Manual

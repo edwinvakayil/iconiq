@@ -174,8 +174,8 @@ const REGISTRY_UI_META: Record<
   tabs: {
     title: "Tabs",
     description:
-      "Animated tabs with measured active and hover underlines, plus a blurred content transition between panels.",
-    dependencies: ["motion"],
+      "Clean segmented tabs with active-state surfaces, keyboard navigation, and straightforward panel switching.",
+    dependencies: ["@base-ui/react"],
   },
   toggle: {
     title: "Toggle",

@@ -127,10 +127,10 @@ ${featuredComponents
                           <ChevronLeft className="size-4" />
                         </Link>
                         <Link
-                          aria-label="Go to Components"
+                          aria-label="Go to MCP"
                           className={pagerButtonClassName}
-                          href="/components"
-                          title="Components"
+                          href="/mcp"
+                          title="MCP"
                         >
                           <ChevronRight className="size-4" />
                         </Link>
@@ -278,13 +278,13 @@ ${featuredComponents
                   </Link>
                   <Link
                     className="group flex max-w-40 flex-col items-end gap-1 text-right text-muted-foreground text-sm transition-colors hover:text-foreground"
-                    href="/components"
+                    href="/mcp"
                   >
                     <span className="text-muted-foreground/75 transition-colors group-hover:text-muted-foreground">
                       Next
                     </span>
                     <span className="truncate font-medium text-foreground">
-                      Components
+                      MCP
                     </span>
                   </Link>
                 </nav>

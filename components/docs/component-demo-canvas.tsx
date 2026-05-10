@@ -39,15 +39,15 @@ export function ComponentDemoCanvas({
   return (
     <Tabs className="gap-0" defaultValue="preview">
       <div className="not-prose mb-4 flex items-center justify-between gap-3">
-        <TabsList className="gap-1 border-0 bg-transparent pb-0">
+        <TabsList className="gap-1 border-0 bg-transparent p-0">
           <TabsTrigger
-            className="cursor-pointer rounded-md border-transparent px-2 text-center font-medium text-sm normal-case tracking-normal aria-selected:border-transparent data-[state=active]:bg-white data-[state=active]:shadow-[0_0_0_1px_rgba(0,0,0,.08),0_2px_2px_rgba(0,0,0,.04)] data-[state=active]:dark:bg-[#0B0B09]"
+            className="cursor-pointer px-2.5 py-1.5 text-center font-medium text-sm normal-case tracking-normal"
             value="preview"
           >
             Preview
           </TabsTrigger>
           <TabsTrigger
-            className="cursor-pointer rounded-md border-transparent px-2 text-center font-medium text-sm normal-case tracking-normal aria-selected:border-transparent data-[state=active]:bg-white data-[state=active]:shadow-[0_0_0_1px_rgba(0,0,0,.08),0_2px_2px_rgba(0,0,0,.04)] data-[state=active]:dark:bg-[#0B0B09]"
+            className="cursor-pointer px-2.5 py-1.5 text-center font-medium text-sm normal-case tracking-normal"
             value="code"
           >
             Code

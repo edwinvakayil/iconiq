@@ -7,6 +7,7 @@ import { SidebarNav } from "@/components/sidebar-nav";
 const DOCS_PREFIXES = [
   "/introduction",
   "/installation",
+  "/mcp",
   "/components",
   "/texts",
 ];

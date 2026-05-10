@@ -110,13 +110,13 @@ export default function TabsPage() {
         { label: "Tabs" },
       ]}
       componentName="tabs"
-      description="Animated tabs with measured active and hover underlines, plus a blurred content transition for the active panel."
+      description="Clean segmented tabs with active-state surfaces and straightforward panel switching."
       details={tabsApiDetails}
       preview={<TabsPreview />}
-      previewDescription="Switch between the three views to test the underline tracking, hover state, and content transition timing."
+      previewDescription="Switch between the three views to see the cleaner Spell UI-style active state treatment."
       title="Tabs"
       usageCode={usageCode}
-      usageDescription="Use the shadcn-style root, list, trigger, and content primitives while keeping the same underline treatment and panel motion."
+      usageDescription="Use the root, list, trigger, and content primitives, then layer in local trigger styles when you want a stronger active state."
     />
   );
 }

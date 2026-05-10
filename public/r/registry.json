@@ -442,10 +442,10 @@
       "name": "tabs",
       "type": "registry:ui",
       "registryDependencies": [],
-      "dependencies": ["motion"],
+      "dependencies": ["@base-ui/react"],
       "devDependencies": [],
       "title": "Tabs",
-      "description": "Animated tabs with measured active and hover underlines, plus a blurred content transition between panels.",
+      "description": "Clean segmented tabs with active-state surfaces, keyboard navigation, and straightforward panel switching.",
       "files": [
         {
           "path": "tabs.tsx",

@@ -232,13 +232,13 @@ export default async function ChangelogPage() {
                 <nav className="flex items-center justify-between border-border/80 border-t pt-12">
                   <Link
                     className="group flex max-w-40 flex-col gap-1 text-muted-foreground text-sm transition-colors hover:text-foreground"
-                    href="/installation"
+                    href="/mcp"
                   >
                     <span className="text-muted-foreground/75 transition-colors group-hover:text-muted-foreground">
                       Previous
                     </span>
                     <span className="truncate font-medium text-foreground">
-                      Installation
+                      MCP
                     </span>
                   </Link>
                   <div />

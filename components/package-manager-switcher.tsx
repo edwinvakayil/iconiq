@@ -1,8 +1,5 @@
 "use client";
 
-import { motion } from "motion/react";
-import * as React from "react";
-
 import { PACKAGE_MANAGER } from "@/constants";
 import { cn } from "@/lib/utils";
 
@@ -19,119 +16,28 @@ export function PackageManagerSwitcher({
   onValueChange,
   className,
 }: PackageManagerSwitcherProps) {
-  const railRef = React.useRef<HTMLDivElement>(null);
-  const triggerRefs = React.useRef<
-    Partial<
-      Record<
-        (typeof PACKAGE_MANAGER)[keyof typeof PACKAGE_MANAGER],
-        HTMLButtonElement | null
-      >
-    >
-  >({});
-  const [activeRect, setActiveRect] = React.useState({ left: 0, width: 0 });
-  const [hoveredValue, setHoveredValue] = React.useState<
-    (typeof PACKAGE_MANAGER)[keyof typeof PACKAGE_MANAGER] | null
-  >(null);
-
-  const measure = React.useCallback(
-    (
-      packageManager:
-        | (typeof PACKAGE_MANAGER)[keyof typeof PACKAGE_MANAGER]
-        | null
-    ) => {
-      if (!packageManager) {
-        return null;
-      }
-
-      const trigger = triggerRefs.current[packageManager];
-      const rail = railRef.current;
-
-      if (!(trigger && rail)) {
-        return null;
-      }
-
-      const triggerRect = trigger.getBoundingClientRect();
-      const railRect = rail.getBoundingClientRect();
-
-      return {
-        left: triggerRect.left - railRect.left,
-        width: triggerRect.width,
-      };
-    },
-    []
-  );
-
-  React.useLayoutEffect(() => {
-    const rect = measure(value);
-    if (rect) {
-      setActiveRect(rect);
-    }
-  }, [measure, value]);
-
-  React.useLayoutEffect(() => {
-    const updateRects = () => {
-      setActiveRect(measure(value) ?? { left: 0, width: 0 });
-    };
-
-    updateRects();
-
-    const rail = railRef.current;
-    if (!(rail && typeof ResizeObserver !== "undefined")) {
-      window.addEventListener("resize", updateRects);
-      return () => window.removeEventListener("resize", updateRects);
-    }
-
-    const observer = new ResizeObserver(updateRects);
-    observer.observe(rail);
-
-    return () => observer.disconnect();
-  }, [measure, value]);
-
   return (
     <div className={cn("mb-3", className)}>
-      <div
-        className="relative inline-flex items-center border-border/55 border-b"
-        onMouseLeave={() => setHoveredValue(null)}
-        ref={railRef}
-      >
+      <div className="inline-flex items-center gap-1 rounded-lg bg-muted/60 p-1">
         {Object.values(PACKAGE_MANAGER).map((packageManager) => {
           const isActive = value === packageManager;
-          const isHover = hoveredValue === packageManager;
 
           return (
             <button
-              className="relative px-4 py-3 font-mono text-[10px] uppercase tracking-[0.24em] outline-none transition-colors duration-300 sm:px-5"
+              className={cn(
+                "inline-flex min-h-9 items-center justify-center rounded-md px-4 py-3 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.24em] outline-none transition-[background-color,color,box-shadow] duration-150 hover:text-foreground sm:px-5",
+                "focus-visible:ring-1 focus-visible:ring-foreground/15 dark:focus-visible:ring-foreground/20",
+                isActive &&
+                  "bg-background text-foreground shadow-[0_0_0_1px_rgba(15,23,42,0.08),0_2px_6px_rgba(15,23,42,0.08)] dark:bg-[#0B0B09] dark:shadow-[0_0_0_1px_rgba(255,255,255,0.08),0_8px_18px_rgba(0,0,0,0.18)]"
+              )}
               key={packageManager}
               onClick={() => onValueChange(packageManager)}
-              onFocus={() => setHoveredValue(packageManager)}
-              onMouseEnter={() => setHoveredValue(packageManager)}
-              ref={(node) => {
-                triggerRefs.current[packageManager] = node;
-              }}
-              style={{
-                color: isActive
-                  ? "var(--color-foreground)"
-                  : isHover
-                    ? "color-mix(in oklab, var(--color-foreground) 72%, transparent)"
-                    : "color-mix(in oklab, var(--color-foreground) 42%, transparent)",
-              }}
               type="button"
             >
-              <span className="relative z-10">{packageManager}</span>
+              {packageManager}
             </button>
           );
         })}
-        <motion.div
-          animate={{ left: activeRect.left, width: activeRect.width }}
-          aria-hidden="true"
-          className="pointer-events-none absolute -bottom-px h-[1.5px] bg-foreground"
-          transition={{
-            type: "spring",
-            stiffness: 360,
-            damping: 34,
-            mass: 0.7,
-          }}
-        />
       </div>
     </div>
   );

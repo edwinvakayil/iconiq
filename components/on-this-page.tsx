@@ -20,6 +20,7 @@ function getTocForPath(pathname: string): TocEntry[] {
   if (pathname === "/") return [BASE_LINKS[0]];
   if (pathname === "/introduction") return base.slice(0, 2);
   if (pathname === "/installation") return base.slice(0, 3);
+  if (pathname === "/mcp") return base.slice(0, 4);
   if (pathname === "/changelog") return base;
 
   const toc: TocEntry[] = [...base];
