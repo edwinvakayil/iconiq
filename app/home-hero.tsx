@@ -4,6 +4,7 @@ import { ArrowRight, FileText } from "lucide-react";
 import { motion, useReducedMotion } from "motion/react";
 import Link from "next/link";
 
+import { HomeFeaturedShowcase } from "@/components/home-featured-showcase";
 import { PageStagger, PageStaggerItem } from "@/components/page-reveal";
 
 function ReactLogo() {
@@ -288,8 +289,7 @@ export function HomeHero() {
 
             <PageStaggerItem>
               <p className="mt-5 max-w-[640px] text-[15px] text-secondary leading-6 sm:mx-auto sm:mt-6 sm:max-w-[760px] sm:text-[18px] sm:leading-8">
-                Animated, production-ready React components built to help you
-                ship faster, learn from real code, and make your UI stand out.
+                Copy, customize, and ship polished React components in minutes.
               </p>
             </PageStaggerItem>
 
@@ -310,6 +310,10 @@ export function HomeHero() {
                   <ArrowRight className="size-4" />
                 </Link>
               </div>
+            </PageStaggerItem>
+
+            <PageStaggerItem>
+              <HomeFeaturedShowcase />
             </PageStaggerItem>
           </PageStagger>
         </motion.div>

@@ -490,7 +490,7 @@ const NavButton = ({ children, isDark, onClick, ...rest }: NavButtonProps) => (
       alignItems: "center",
       justifyContent: "center",
       borderRadius: "50%",
-      backgroundColor: isDark ? "#171717" : "#f4f4f5",
+      backgroundColor: "transparent",
       color: isDark ? "#f5f5f5" : "#0a0a0a",
       border: "none",
       cursor: "pointer",

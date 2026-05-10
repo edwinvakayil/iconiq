@@ -13,6 +13,7 @@ import { DocsSidebar } from "@/components/docs-sidebar";
 import { Header } from "@/components/header";
 import { PageTitleSync } from "@/components/page-title-sync";
 import { PageTransition } from "@/components/page-transition";
+import { RouteScrollReset } from "@/components/route-scroll-reset";
 import { StarPromptCard } from "@/components/star-prompt-card";
 import { SITE } from "@/constants";
 import { PackageNameProvider } from "@/providers/package-name";
@@ -78,6 +79,7 @@ export default function RootLayout({
       <body className={`${geist.className} relative bg-background antialiased`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <PageTitleSync />
+          <RouteScrollReset />
           <div className="root">
             <PackageNameProvider>
               <AnnouncementBanner />
