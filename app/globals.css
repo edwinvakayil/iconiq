@@ -16,6 +16,7 @@
   --color-muted-foreground: var(--muted-foreground);
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
+  --color-accent-pro: var(--accent-pro);
   --color-sidebar-accent: var(--sidebar-accent);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
 
@@ -49,6 +50,7 @@
   --muted-foreground: #6d7480;
   --accent: #f3f5f8;
   --accent-foreground: #111111;
+  --accent-pro: #0ea5e9;
   --sidebar-accent: #f5f7fa;
   --sidebar-accent-foreground: #111111;
   --separator-dash: rgb(227 231 236 / 1);
@@ -77,6 +79,7 @@ html[data-banner-hidden="true"] {
   --muted-foreground: #9a958a;
   --accent: #1a1a18;
   --accent-foreground: #f6f3ec;
+  --accent-pro: #38bdf8;
   --sidebar-accent: #262626;
   --sidebar-accent-foreground: #fff;
   --separator-dash: rgb(92 91 84 / 1);
@@ -329,5 +332,96 @@ html[data-banner-hidden="true"] {
     @apply font-sans text-xs uppercase;
     @apply border border-border bg-muted text-muted-foreground dark:bg-neutral-900 dark:text-neutral-300;
     @apply cursor-pointer transition-transform duration-100 active:scale-95;
+  }
+}
+
+@layer utilities {
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+    width: 0;
+    height: 0;
+  }
+}
+
+.page-transition-shell {
+  min-height: 0;
+  width: 100%;
+  min-width: 0;
+}
+
+@supports (view-transition-name: none) {
+  ::view-transition-group(.page-blur-fade) {
+    animation-duration: 560ms;
+    animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  ::view-transition-image-pair(.page-blur-fade) {
+    isolation: auto;
+  }
+
+  ::view-transition-old(.page-blur-fade),
+  ::view-transition-new(.page-blur-fade) {
+    mix-blend-mode: normal;
+    transform-origin: center top;
+  }
+
+  ::view-transition-old(.page-blur-fade) {
+    animation-duration: 280ms;
+    animation-fill-mode: both;
+    animation-name: page-blur-fade-out;
+    animation-timing-function: cubic-bezier(0.32, 0, 0.67, 0);
+  }
+
+  ::view-transition-new(.page-blur-fade) {
+    animation-delay: 40ms;
+    animation-duration: 560ms;
+    animation-fill-mode: both;
+    animation-name: page-blur-fade-in;
+    animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  @keyframes page-blur-fade-out {
+    from {
+      opacity: 1;
+      filter: blur(0px);
+      transform: translateY(0) scale(1);
+    }
+
+    to {
+      opacity: 0;
+      filter: blur(10px);
+      transform: translateY(-4px) scale(1.008);
+    }
+  }
+
+  @keyframes page-blur-fade-in {
+    from {
+      opacity: 0;
+      filter: blur(18px);
+      transform: translateY(10px) scale(0.986);
+    }
+
+    55% {
+      opacity: 0.72;
+    }
+
+    to {
+      opacity: 1;
+      filter: blur(0px);
+      transform: translateY(0) scale(1);
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(.page-blur-fade),
+  ::view-transition-old(.page-blur-fade),
+  ::view-transition-new(.page-blur-fade) {
+    animation: none !important;
   }
 }

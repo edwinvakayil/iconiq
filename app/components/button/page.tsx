@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useReducedMotion, type Variants } from "motion/react";
+import { motion, type Variants } from "motion/react";
 import type { ReactNode } from "react";
 
 import { buttonApiDetails } from "@/components/docs/component-api";
@@ -104,8 +104,6 @@ function _BentoMotion({
 }
 
 export default function ButtonPage() {
-  const prefersReducedMotion = useReducedMotion();
-
   return (
     <ComponentDocsPage
       breadcrumbs={[
@@ -118,31 +116,21 @@ export default function ButtonPage() {
       details={componentDetailsItems}
       preview={
         <div className="flex min-h-[280px] items-center justify-center px-4 py-2">
-          <motion.div
-            animate={{ opacity: 1, y: 0 }}
-            initial={prefersReducedMotion ? false : { opacity: 0, y: 8 }}
-            transition={
-              prefersReducedMotion
-                ? { duration: 0 }
-                : { type: "spring", stiffness: 340, damping: 30 }
-            }
-          >
-            <blockquote className="mx-auto max-w-xl text-center">
-              <p className="flex flex-wrap items-center justify-center gap-x-1.5 gap-y-3 text-balance font-medium text-lg text-neutral-800 leading-snug tracking-tight sm:gap-x-2 sm:text-xl dark:text-neutral-100">
-                <span>Win the press,</span>
-                <span className="font-normal text-neutral-500 dark:text-neutral-400">
-                  then
-                </span>
-                <span className="inline-flex translate-y-px align-middle">
-                  <Button>Continue</Button>
-                </span>
-                <span>the break</span>
-                <span className="w-full basis-full font-normal text-[0.92em] text-neutral-500 dark:text-neutral-400">
-                  - that's the half in two beats.
-                </span>
-              </p>
-            </blockquote>
-          </motion.div>
+          <blockquote className="mx-auto max-w-xl text-center">
+            <p className="flex flex-wrap items-center justify-center gap-x-1.5 gap-y-3 text-balance font-medium text-lg text-neutral-800 leading-snug tracking-tight sm:gap-x-2 sm:text-xl dark:text-neutral-100">
+              <span>Win the press,</span>
+              <span className="font-normal text-neutral-500 dark:text-neutral-400">
+                then
+              </span>
+              <span className="inline-flex translate-y-px align-middle">
+                <Button>Continue</Button>
+              </span>
+              <span>the break</span>
+              <span className="w-full basis-full font-normal text-[0.92em] text-neutral-500 dark:text-neutral-400">
+                - that's the half in two beats.
+              </span>
+            </p>
+          </blockquote>
         </div>
       }
       title="Button"

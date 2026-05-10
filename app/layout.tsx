@@ -12,6 +12,7 @@ import { ConditionalFooter } from "@/components/conditional-footer";
 import { DocsSidebar } from "@/components/docs-sidebar";
 import { Header } from "@/components/header";
 import { PageTitleSync } from "@/components/page-title-sync";
+import { PageTransition } from "@/components/page-transition";
 import { StarPromptCard } from "@/components/star-prompt-card";
 import { SITE } from "@/constants";
 import { PackageNameProvider } from "@/providers/package-name";
@@ -86,7 +87,7 @@ export default function RootLayout({
                   <DocsSidebar />
                   <div className="flex min-h-0 min-w-0 flex-1 flex-col bg-background">
                     <NuqsAdapter>
-                      {children}
+                      <PageTransition>{children}</PageTransition>
                       <Toaster
                         icons={{
                           error: (

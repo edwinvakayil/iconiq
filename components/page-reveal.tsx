@@ -8,8 +8,8 @@ import { cn } from "@/lib/utils";
 const PAGE_MOTION_EASE = [0.22, 1, 0.36, 1] as const;
 const PAGE_REVEAL_INITIAL = {
   opacity: 0,
-  y: 18,
-  filter: "blur(10px)",
+  y: 10,
+  filter: "blur(6px)",
 };
 const PAGE_REVEAL_ANIMATE = {
   opacity: 1,
@@ -18,26 +18,26 @@ const PAGE_REVEAL_ANIMATE = {
 };
 const PAGE_REVEAL_VIEWPORT = {
   once: true,
-  amount: 0.16,
-  margin: "0px 0px -10% 0px",
+  amount: 0.18,
+  margin: "0px 0px -8% 0px",
 } as const;
 
 function getPageRevealTransition(delay = 0) {
   return {
     opacity: {
-      duration: 0.34,
+      duration: 0.26,
       ease: PAGE_MOTION_EASE,
       delay,
     },
     y: {
       type: "spring" as const,
-      stiffness: 220,
-      damping: 26,
-      mass: 0.92,
+      stiffness: 260,
+      damping: 30,
+      mass: 0.82,
       delay,
     },
     filter: {
-      duration: 0.44,
+      duration: 0.32,
       ease: PAGE_MOTION_EASE,
       delay,
     },

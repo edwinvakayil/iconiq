@@ -1,7 +1,6 @@
 "use client";
 
 import { HeartHandshake, PencilLine } from "lucide-react";
-import { motion, useReducedMotion } from "motion/react";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { useEffect, useState } from "react";
@@ -104,7 +103,6 @@ export function DocsPageRail({
   sections: RailSection[];
 }) {
   const [activeId, setActiveId] = useState<string>(sections[0]?.id ?? "");
-  const prefersReducedMotion = useReducedMotion();
 
   useEffect(() => {
     const elements = sections
@@ -144,19 +142,7 @@ export function DocsPageRail({
   }, [sections]);
 
   return (
-    <motion.aside
-      animate={prefersReducedMotion ? undefined : { opacity: 1, x: 0 }}
-      className="hidden xl:block xl:w-[248px]"
-      initial={prefersReducedMotion ? false : { opacity: 0, x: 14 }}
-      transition={
-        prefersReducedMotion
-          ? { duration: 0 }
-          : {
-              duration: 0.54,
-              ease: [0.22, 1, 0.36, 1],
-            }
-      }
-    >
+    <aside className="hidden xl:block xl:w-[248px]">
       <div className="sticky top-[calc(var(--nav-stack-height-desktop)+24px)] space-y-6 pl-8">
         <div className="space-y-3">
           <p className="flex h-6 items-center gap-1.5 bg-background text-[0.85rem] text-foreground [&_svg]:pointer-events-none [&_svg]:size-4">
@@ -201,7 +187,7 @@ export function DocsPageRail({
           ))}
         </div>
       </div>
-    </motion.aside>
+    </aside>
   );
 }
 
