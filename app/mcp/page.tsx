@@ -141,7 +141,7 @@ export default function McpPage() {
                         <Link
                           aria-label="Go to Components"
                           className={pagerButtonClassName}
-                          href="/components"
+                          href="/components/accordion"
                           title="Components"
                         >
                           <ChevronRight className="size-4" />
@@ -358,7 +358,7 @@ export default function McpPage() {
                   </Link>
                   <Link
                     className="group flex max-w-40 flex-col items-end gap-1 text-right text-muted-foreground text-sm transition-colors hover:text-foreground"
-                    href="/components"
+                    href="/components/accordion"
                   >
                     <span className="text-muted-foreground/75 transition-colors group-hover:text-muted-foreground">
                       Next
