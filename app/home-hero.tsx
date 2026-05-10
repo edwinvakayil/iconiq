@@ -5,7 +5,6 @@ import { motion, useReducedMotion } from "motion/react";
 import Link from "next/link";
 
 import { PageStagger, PageStaggerItem } from "@/components/page-reveal";
-import { SITE } from "@/constants";
 
 function ReactLogo() {
   return (
@@ -289,10 +288,8 @@ export function HomeHero() {
 
             <PageStaggerItem>
               <p className="mt-5 max-w-[640px] text-[15px] text-secondary leading-6 sm:mx-auto sm:mt-6 sm:max-w-[760px] sm:text-[18px] sm:leading-8">
-                {SITE.NAME} gives product teams production-ready, fluid
-                motion-powered React components they can install into the app,
-                study in context, and adapt without fighting a black-box
-                library.
+                Animated, production-ready React components built to help you
+                ship faster, learn from real code, and make your UI stand out.
               </p>
             </PageStaggerItem>
 
