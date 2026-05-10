@@ -197,7 +197,7 @@ export function Header() {
   }, []);
 
   return (
-    <header className="fixed top-[var(--announcement-height-mobile)] right-0 left-0 z-[150] w-full border-border border-b bg-background lg:top-[var(--announcement-height-desktop)] lg:border-border/55">
+    <header className="fixed top-[var(--announcement-height-mobile)] right-0 left-0 z-[150] w-full border-border/50 border-b bg-background lg:top-[var(--announcement-height-desktop)]">
       <div className="flex h-14 w-full items-center justify-between gap-4 px-4">
         <div className="flex items-center">
           <div className="flex items-center gap-3">

@@ -21,6 +21,8 @@ import { cn } from "@/lib/utils";
 const MotionChevron = motion.create(ChevronRight);
 
 const EFFECTS_KEY = "sidebar-001-effects";
+const SIDEBAR_BOTTOM_FADE_MASK =
+  "linear-gradient(to top, rgba(0, 0, 0, 1) 22%, rgba(0, 0, 0, 0.88) 44%, transparent 100%)";
 
 const EffectsContext = createContext<{ enabled: boolean; toggle: () => void }>({
   enabled: true,
@@ -424,14 +426,24 @@ export function Sidebar001Content({
   const containerRef = useContext(HoverContext).containerRef;
 
   return (
-    <div
-      className={cn("no-scrollbar flex-1 overflow-y-auto py-4", className)}
-      data-scroll-viewport
-    >
-      <div className="relative px-1" ref={containerRef}>
-        <HoverHighlight />
-        {children}
+    <div className="relative flex min-h-0 flex-1">
+      <div
+        className={cn("no-scrollbar flex-1 overflow-y-auto py-4", className)}
+        data-scroll-viewport
+      >
+        <div className="relative px-1 pb-24" ref={containerRef}>
+          <HoverHighlight />
+          {children}
+        </div>
       </div>
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-16 bg-gradient-to-t from-background via-background/75 to-transparent backdrop-blur-md"
+        style={{
+          WebkitMaskImage: SIDEBAR_BOTTOM_FADE_MASK,
+          maskImage: SIDEBAR_BOTTOM_FADE_MASK,
+        }}
+      />
     </div>
   );
 }
@@ -507,7 +519,7 @@ export function Sidebar001({
             onPointerMove={onPointerMove}
             onPointerUp={stopDragging}
           >
-            <div className="absolute top-0 right-0 h-full w-px bg-border/50 transition-colors duration-150 group-hover/handle:bg-border" />
+            <div className="absolute top-0 right-0 h-full w-px bg-border/30 transition-colors duration-150 group-hover/handle:bg-border" />
           </div>
         </aside>
       </HoverProvider>

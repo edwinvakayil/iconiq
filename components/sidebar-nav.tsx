@@ -44,7 +44,7 @@ export function SidebarNav() {
 
   return (
     <Sidebar001
-      className="sticky top-[var(--nav-stack-height-mobile)] hidden h-[calc(100vh-var(--nav-stack-height-mobile))] md:flex lg:top-[var(--nav-stack-height-desktop)] lg:h-[calc(100vh-var(--nav-stack-height-desktop))]"
+      className="sticky top-[var(--nav-stack-height-mobile)] hidden h-[calc(100vh-var(--nav-stack-height-mobile)-1.5rem)] md:flex lg:top-[var(--nav-stack-height-desktop)] lg:h-[calc(100vh-var(--nav-stack-height-desktop)-1.5rem)]"
       defaultWidth={256}
       maxWidth={360}
       minWidth={224}
