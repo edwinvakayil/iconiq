@@ -356,7 +356,7 @@ html[data-banner-hidden="true"] {
 
 @supports (view-transition-name: none) {
   ::view-transition-group(.page-blur-fade) {
-    animation-duration: 560ms;
+    animation-duration: 260ms;
     animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
   }
 
@@ -371,15 +371,15 @@ html[data-banner-hidden="true"] {
   }
 
   ::view-transition-old(.page-blur-fade) {
-    animation-duration: 280ms;
+    animation-duration: 160ms;
     animation-fill-mode: both;
     animation-name: page-blur-fade-out;
     animation-timing-function: cubic-bezier(0.32, 0, 0.67, 0);
   }
 
   ::view-transition-new(.page-blur-fade) {
-    animation-delay: 40ms;
-    animation-duration: 560ms;
+    animation-delay: 20ms;
+    animation-duration: 220ms;
     animation-fill-mode: both;
     animation-name: page-blur-fade-in;
     animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
@@ -388,22 +388,19 @@ html[data-banner-hidden="true"] {
   @keyframes page-blur-fade-out {
     from {
       opacity: 1;
-      filter: blur(0px);
       transform: translateY(0) scale(1);
     }
 
     to {
       opacity: 0;
-      filter: blur(10px);
-      transform: translateY(-4px) scale(1.008);
+      transform: translateY(-2px) scale(1);
     }
   }
 
   @keyframes page-blur-fade-in {
     from {
       opacity: 0;
-      filter: blur(18px);
-      transform: translateY(10px) scale(0.986);
+      transform: translateY(6px) scale(1);
     }
 
     55% {
@@ -412,7 +409,6 @@ html[data-banner-hidden="true"] {
 
     to {
       opacity: 1;
-      filter: blur(0px);
       transform: translateY(0) scale(1);
     }
   }

@@ -227,7 +227,6 @@ export function HomeHero() {
                   opacity: 1,
                   y: 0,
                   scale: 1,
-                  filter: "blur(0px)",
                 }
           }
           initial={
@@ -235,9 +234,8 @@ export function HomeHero() {
               ? false
               : {
                   opacity: 0,
-                  y: 20,
-                  scale: 0.972,
-                  filter: "blur(3px)",
+                  y: 12,
+                  scale: 0.986,
                 }
           }
           transition={
@@ -257,7 +255,6 @@ export function HomeHero() {
                     damping: 22,
                     mass: 1,
                   },
-                  filter: { duration: 0.34, ease: [0.22, 1, 0.36, 1] },
                 }
           }
         >

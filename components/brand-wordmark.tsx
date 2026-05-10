@@ -92,6 +92,7 @@ function BrandLink({ className, size, variant = "wordmark" }: BrandLinkProps) {
         className
       )}
       href="/"
+      prefetch
     >
       {variant === "mark" ? <span className="sr-only">{SITE.LOGO}</span> : null}
       <span className="transition-opacity group-hover:opacity-78">
