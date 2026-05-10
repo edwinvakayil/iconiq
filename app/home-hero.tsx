@@ -2,63 +2,10 @@
 
 import { ArrowRight, FileText } from "lucide-react";
 import { motion, useReducedMotion } from "motion/react";
-import dynamic from "next/dynamic";
 import Link from "next/link";
-import { startTransition, useEffect, useState } from "react";
 
+import { HomeFeaturedShowcase } from "@/components/home-featured-showcase";
 import { PageStagger, PageStaggerItem } from "@/components/page-reveal";
-
-const HomeFeaturedShowcase = dynamic(
-  () =>
-    import("@/components/home-featured-showcase").then(
-      (mod) => mod.HomeFeaturedShowcase
-    ),
-  { loading: () => <HomeFeaturedShowcasePlaceholder /> }
-);
-
-function HomeFeaturedShowcasePlaceholder() {
-  return (
-    <section
-      aria-hidden="true"
-      className="mt-24 grid gap-4 opacity-70 sm:mt-32 lg:grid-cols-12"
-    >
-      <div className="lg:col-span-6">
-        <div className="h-[220px] rounded-[30px] border border-border/60 bg-muted/25" />
-      </div>
-      <div className="lg:col-span-6">
-        <div className="h-[220px] rounded-[30px] border border-border/60 bg-muted/25" />
-      </div>
-      <div className="lg:col-span-12">
-        <div className="h-[320px] rounded-[30px] border border-border/60 bg-muted/20" />
-      </div>
-    </section>
-  );
-}
-
-function DeferredHomeFeaturedShowcase() {
-  const [showShowcase, setShowShowcase] = useState(false);
-
-  useEffect(() => {
-    const reveal = () => {
-      startTransition(() => setShowShowcase(true));
-    };
-
-    if (typeof window !== "undefined" && "requestIdleCallback" in window) {
-      const id = window.requestIdleCallback(reveal, { timeout: 300 });
-
-      return () => window.cancelIdleCallback(id);
-    }
-
-    const timeout = setTimeout(reveal, 120);
-    return () => clearTimeout(timeout);
-  }, []);
-
-  if (!showShowcase) {
-    return <HomeFeaturedShowcasePlaceholder />;
-  }
-
-  return <HomeFeaturedShowcase />;
-}
 
 function ReactLogo() {
   return (
@@ -362,7 +309,9 @@ export function HomeHero() {
               </div>
             </PageStaggerItem>
 
-            <DeferredHomeFeaturedShowcase />
+            <PageStaggerItem>
+              <HomeFeaturedShowcase />
+            </PageStaggerItem>
           </PageStagger>
         </motion.div>
       </div>
