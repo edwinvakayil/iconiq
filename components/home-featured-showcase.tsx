@@ -321,13 +321,7 @@ export function HomeFeaturedShowcase() {
 
               <ShowcaseCard href="/components/badge" title="Badge">
                 <div className="flex min-h-[150px] w-full items-center justify-center px-4">
-                  <Badge
-                    bgColor="#e0e7ff"
-                    textColor="#3730a3"
-                    waveColor="rgba(255,255,255,0.52)"
-                  >
-                    Early Access
-                  </Badge>
+                  <Badge color="indigo">Early Access</Badge>
                 </div>
               </ShowcaseCard>
 

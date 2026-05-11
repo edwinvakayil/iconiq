@@ -19,8 +19,8 @@ const REGISTRY_UI_META: Record<
   badge: {
     title: "Badge",
     description:
-      "Animated badge with a looping shimmer wave. Spring entrance, optional bg/text/wave color overrides. Motion.",
-    dependencies: ["motion"],
+      "Preset-color badge with an animated default fill, a quieter dot variant, and compact size controls. Motion + CVA.",
+    dependencies: ["motion", "class-variance-authority"],
   },
   combobox: {
     title: "Combobox",
@@ -67,7 +67,7 @@ const REGISTRY_UI_META: Record<
   accordion: {
     title: "Accordion",
     description:
-      "Single-select accordion with spring height, staggered text, and rotating plus control. Built with Motion.",
+      "Accordion with spring height, staggered text, default or editorial disclosure styles, and optional multi-open behavior. Built with Motion.",
     dependencies: ["motion", "lucide-react"],
   },
   alert: {

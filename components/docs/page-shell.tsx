@@ -47,6 +47,12 @@ type DetailItem = {
   registryPath?: string;
 };
 
+type ComponentDocsExtraSection = {
+  id: string;
+  title: string;
+  content: ReactNode;
+};
+
 function DocsBreadcrumbs({
   items,
   className,
@@ -625,6 +631,7 @@ function ComponentDocsPage({
   usageCode,
   usageDescription,
   details,
+  extraSections = [],
   previewClassName,
 }: {
   breadcrumbs: BreadcrumbItem[];
@@ -638,6 +645,7 @@ function ComponentDocsPage({
   usageCode: string;
   usageDescription?: ReactNode;
   details: DetailItem[];
+  extraSections?: ComponentDocsExtraSection[];
   detailsDescription?: ReactNode;
   installDescription?: ReactNode;
   actionDescription?: ReactNode;
@@ -655,6 +663,10 @@ function ComponentDocsPage({
 
   const sectionLinks = [
     { id: "installation", label: "Installation" },
+    ...extraSections.map((section) => ({
+      id: section.id,
+      label: section.title,
+    })),
     { id: "props", label: "Props" },
   ];
 
@@ -716,6 +728,16 @@ function ComponentDocsPage({
                     <ComponentInstallationTabs componentName={componentName} />
                   </div>
                 </ComponentSection>
+
+                {extraSections.map((section) => (
+                  <ComponentSection
+                    id={section.id}
+                    key={section.id}
+                    title={section.title}
+                  >
+                    {section.content}
+                  </ComponentSection>
+                ))}
 
                 <ComponentSection id="props" title="Props">
                   <DetailLedger details={details} />

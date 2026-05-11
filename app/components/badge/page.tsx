@@ -1,171 +1,96 @@
 "use client";
 
-import { motion, type Variants } from "motion/react";
-import type { ReactNode } from "react";
-
 import { badgeApiDetails } from "@/components/docs/component-api";
 import { ComponentDocsPage } from "@/components/docs/page-shell";
-import { cn } from "@/lib/utils";
-import Badge from "@/registry/badge";
+import { Badge } from "@/registry/badge";
 
-const usageCode = `import Badge from "@/components/ui/badge";
+const launchBadgeTone = {
+  className:
+    "[--badge-bg:#ccfbf1] [--badge-fg:#115e59] dark:[--badge-bg:#99f6e4] dark:[--badge-fg:#134e4a]",
+  style: {
+    backgroundColor: "var(--badge-bg)",
+    color: "var(--badge-fg)",
+  },
+} as const;
+
+const betaBadgeTone = {
+  className:
+    "[--badge-bg:#ffedd5] [--badge-fg:#9a3412] dark:[--badge-bg:#fed7aa] dark:[--badge-fg:#7c2d12]",
+  style: {
+    backgroundColor: "var(--badge-bg)",
+    color: "var(--badge-fg)",
+  },
+} as const;
+
+const shippingBadgeTone = {
+  className:
+    "[--badge-bg:#fce7f3] [--badge-fg:#9d174d] dark:[--badge-bg:#fbcfe8] dark:[--badge-fg:#831843]",
+  style: {
+    backgroundColor: "var(--badge-bg)",
+    color: "var(--badge-fg)",
+  },
+} as const;
+
+const usageCode = `import { Badge } from "@/components/ui/badge";
 
 export function BadgePreview() {
   return (
-    <p className="max-w-lg text-center text-lg font-medium leading-relaxed dark:text-neutral-100">
-      Mark the beat — a{" "}
-      <Badge
-        bgColor="#ccfbf1"
-        textColor="#115e59"
-        waveColor="rgba(255,255,255,0.52)"
-      >
-        New
+    <p className="max-w-2xl text-center text-lg font-medium leading-relaxed dark:text-neutral-100">
+      Mark the beat with a <Badge color="teal">Fresh Launch</Badge> tag for
+      releases, <Badge color="orange">Private Beta</Badge> while you're still
+      tuning, <Badge color="pink">Now Shipping</Badge> once it's out the door,
+      and a quieter{" "}
+      <Badge color="blue" variant="dot">
+        Status Monitoring
       </Badge>{" "}
-      tag for launches,{" "}
-      <Badge
-        bgColor="#ffedd5"
-        textColor="#9a3412"
-        waveColor="rgba(255,255,255,0.52)"
-      >
-        Beta
-      </Badge>{" "}
-      when you&apos;re still tuning,{" "}
-      <Badge
-        bgColor="#fce7f3"
-        textColor="#9d174d"
-        waveColor="rgba(255,255,255,0.52)"
-      >
-        Live
-      </Badge>{" "}
-      once it&apos;s out the door.
+      pulse when the release just needs a status check.
     </p>
   );
 }`;
 
-const componentDetailsItems = badgeApiDetails;
-
 function BadgePreview() {
   return (
-    <div className="flex min-h-[260px] flex-1 flex-col items-center justify-center px-4 py-8">
-      <p className="max-w-lg text-center font-medium font-sans text-lg text-neutral-800 leading-relaxed sm:text-xl dark:text-neutral-100">
-        Mark the beat — a{" "}
-        <Badge
-          bgColor="#ccfbf1"
-          textColor="#115e59"
-          waveColor="rgba(255,255,255,0.52)"
-        >
-          New
+    <div className="flex min-h-[260px] flex-1 items-center justify-center px-4 py-8">
+      <p className="max-w-2xl text-center font-medium font-sans text-lg text-neutral-800 leading-relaxed sm:text-xl dark:text-neutral-100">
+        Mark the beat with a{" "}
+        <Badge {...launchBadgeTone} color="teal">
+          Fresh Launch
         </Badge>{" "}
-        tag for launches,{" "}
-        <Badge
-          bgColor="#ffedd5"
-          textColor="#9a3412"
-          waveColor="rgba(255,255,255,0.52)"
-        >
-          Beta
+        tag for releases,{" "}
+        <Badge {...betaBadgeTone} color="orange">
+          Private Beta
         </Badge>{" "}
-        when you&apos;re still tuning,{" "}
-        <Badge
-          bgColor="#fce7f3"
-          textColor="#9d174d"
-          waveColor="rgba(255,255,255,0.52)"
-        >
-          Live
+        while you&apos;re still tuning,{" "}
+        <Badge {...shippingBadgeTone} color="pink">
+          Now Shipping
         </Badge>{" "}
-        once it&apos;s out the door.
+        once it&apos;s out the door, and a quieter{" "}
+        <Badge color="blue" variant="dot">
+          Status Monitoring
+        </Badge>{" "}
+        pulse when the release just needs a status check.
       </p>
     </div>
-  );
-}
-
-function _SectionLabel({
-  children,
-  accent,
-}: {
-  children: ReactNode;
-  accent?: string;
-}) {
-  return (
-    <div className="mb-4 flex items-center gap-2.5">
-      {accent ? (
-        <span
-          aria-hidden
-          className="font-mono text-[10px] text-neutral-300 tabular-nums dark:text-neutral-600"
-        >
-          {accent}
-        </span>
-      ) : null}
-      <p className="font-medium text-[10px] text-neutral-400 uppercase tracking-[0.18em] dark:text-neutral-500">
-        {children}
-      </p>
-      <span className="h-px min-w-6 flex-1 bg-linear-to-r from-neutral-200 to-transparent dark:from-neutral-700" />
-    </div>
-  );
-}
-
-const bentoShell =
-  "flex flex-col rounded-lg border border-neutral-200/80 bg-white px-3 py-4 sm:px-5 sm:py-5 md:p-6 dark:border-neutral-800 dark:bg-neutral-950";
-
-const _bentoContainer = {
-  hidden: {},
-  visible: {
-    transition: { delayChildren: 0.06, staggerChildren: 0.07 },
-  },
-};
-
-const _bentoItem = {
-  hidden: { opacity: 0, y: 22, scale: 0.98 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    scale: 1,
-    transition: { type: "spring", stiffness: 320, damping: 28 },
-  },
-};
-
-const _bentoContainerStatic = {
-  hidden: {},
-  visible: { transition: { delayChildren: 0, staggerChildren: 0 } },
-};
-
-const _bentoItemStatic = {
-  hidden: { opacity: 1, scale: 1, y: 0 },
-  visible: { opacity: 1, scale: 1, y: 0 },
-};
-
-function _BentoMotion({
-  children,
-  className,
-  variants,
-}: {
-  children: ReactNode;
-  className?: string;
-  variants: Variants;
-}) {
-  return (
-    <motion.div className={cn(bentoShell, className)} variants={variants}>
-      {children}
-    </motion.div>
   );
 }
 
 export default function BadgePage() {
   return (
     <ComponentDocsPage
-      actionDescription="Ship the registry bundle to v0 when you want to explore alternate palettes, timings, or status labels."
+      actionDescription="Ship the registry bundle to v0 when you want to tune the palette, add more badge modes, or adjust the shimmer pacing."
       breadcrumbs={[
         { label: "Docs", href: "/" },
         { label: "Components" },
         { label: "Badge" },
       ]}
       componentName="badge"
-      description="Inline label with a looping shimmer wave and spring entrance. Theme-aware by default, fully customizable with color overrides."
-      details={componentDetailsItems}
+      description="Preset-color badge with an animated default fill, a quieter dot variant, and compact size controls."
+      details={badgeApiDetails}
       detailsDescription="Props and visual behavior are grouped into expandable rows instead of a dense table."
       preview={<BadgePreview />}
       title="Badge"
       usageCode={usageCode}
-      usageDescription="Default export. Start with the compact example below, then branch into content, color overrides, and class-based styling through the API panel."
+      usageDescription='Start with the animated default badge, switch to `variant="dot"` for a quieter status label, then tune size, color, and shimmer through the API panel.'
     />
   );
 }

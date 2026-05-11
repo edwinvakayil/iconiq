@@ -143,57 +143,67 @@ const badgeApiDetails: DetailItem[] = [
     id: "badge",
     title: "Badge",
     summary:
-      "Default export for a compact label pill with a permanent shimmer pass layered behind the content.",
+      "Compact label pill with a shimmer-enabled default variant, a quieter dot variant, and preset color tokens.",
     fields: [
       field({
         name: "children",
         type: "ReactNode",
         required: true,
         description:
-          "Badge content rendered in the foreground layer so it always stays above the animated shimmer.",
+          "Badge content rendered above the optional shimmer layer so labels stay readable while the default variant animates.",
       }),
       field({
         name: "className",
         type: "string",
         defaultValue: '""',
         description:
-          "Appended directly to the root span. Useful for size, radius, spacing, or border overrides.",
+          "Appended directly to the root badge element. Useful for radius, spacing, or local border overrides.",
       }),
       field({
-        name: "bgColor",
-        type: "string",
+        name: "variant",
+        type: '"default" | "dot"',
+        defaultValue: '"default"',
         description:
-          "Inline backgroundColor override. If omitted, the component uses a dark neutral surface in light mode and a white surface in dark mode.",
+          "Chooses between the animated filled badge and the quieter outlined badge with a leading status dot.",
       }),
       field({
-        name: "textColor",
-        type: "string",
+        name: "size",
+        type: '"sm" | "md" | "lg"',
+        defaultValue: '"md"',
         description:
-          "Inline text color override. If omitted, the badge picks the inverse of its default background palette.",
+          "Controls height, horizontal padding, gap, and label size for denser or roomier badge treatments.",
+      }),
+      field({
+        name: "color",
+        type: "BadgeColor",
+        defaultValue: '"gray"',
+        description:
+          "Picks a preset palette token. The default variant turns it into a tinted fill, while the dot variant uses it for the status dot and border tint.",
       }),
       field({
         name: "waveColor",
         type: "string",
         description:
-          "Color used for the middle stop of the animated gradient sweep. Defaults to the local CSS variable declared on the shimmer layer.",
+          "Optional shimmer midpoint override for the default variant. When omitted, the sweep derives a subtle tone from the current text color.",
       }),
     ],
     notes: [
-      "The public API does not spread other span props, so data attributes or click handlers require a local wrapper or a component fork.",
-      "Color overrides are applied through inline styles, which means they take priority over the default Tailwind utility classes.",
+      "The component now spreads remaining span props, so ids, data attributes, and click handlers can be attached directly.",
+      "When reduced motion is enabled, the default variant skips the mount and shimmer animation and renders as a static badge.",
     ],
   },
   {
     id: "badge-visuals",
     title: "Visual behavior",
     summary:
-      "Badge uses a quick mount animation and a continuously repeating shimmer sweep.",
+      "The default variant keeps the original spring-in shimmer treatment, while the dot variant adds a subtle status pulse.",
     notes: [
-      "The root fades and scales from 0.95 to 1 on mount over 0.3 seconds.",
-      "The shimmer travels from left to right over 2 seconds, waits 1.5 seconds, then repeats indefinitely.",
+      "The default badge fades and scales from 0.95 to 1 on mount over 0.3 seconds.",
+      "Its shimmer travels from left to right over 2 seconds, waits 1.5 seconds, then repeats indefinitely.",
+      "The dot variant omits the shimmer layer, sizes its leading status dot to match the chosen badge size, and gives it a gentle repeating blink.",
     ],
   },
-  registryItem("badge.json", ["motion"]),
+  registryItem("badge.json", ["motion", "class-variance-authority"]),
 ];
 
 const calendarApiDetails: DetailItem[] = [
@@ -1909,7 +1919,7 @@ const accordionApiDetails: DetailItem[] = [
     id: "accordion",
     title: "Accordion",
     summary:
-      "Stateful accordion component with one internal openId value and no controlled API.",
+      "Stateful accordion component with internal open state and no controlled API.",
     fields: [
       field({
         name: "items",
@@ -1923,10 +1933,25 @@ const accordionApiDetails: DetailItem[] = [
         description:
           "Merged onto the max-w-2xl root wrapper so you can stretch or reposition the accordion in your layout.",
       }),
+      field({
+        name: "multiple",
+        type: "boolean",
+        defaultValue: "false",
+        description:
+          "Allows several rows to stay open at once. When omitted, opening one row closes the previously open row.",
+      }),
+      field({
+        name: "variant",
+        type: '"default" | "editorial"',
+        defaultValue: '"default"',
+        description:
+          "Switches between the plain divided list and the lighter editorial layout with numbered rows and chevron disclosure.",
+      }),
     ],
     notes: [
-      "Clicking an already open row closes it again because toggle compares against the current openId.",
-      "There is no prop for default open, controlled open, or multiple-open behavior in this implementation.",
+      "Clicking an already open row closes it again by removing that item id from the internal open-state list.",
+      "Single-open is the default behavior; pass multiple when you want a keep-open FAQ or settings list.",
+      "There is no prop for default open or controlled open behavior in this implementation.",
     ],
   },
   {
@@ -1936,6 +1961,7 @@ const accordionApiDetails: DetailItem[] = [
       "The accordion uses native buttons and animated height transitions rather than a headless primitive.",
     notes: [
       "Each trigger button sets aria-expanded and aria-controls, and each open panel receives a matching id.",
+      "The editorial variant uses the same open-state model, with chevron disclosure, numbered triggers, and an indented content rail.",
       "The content body reveals through a horizontal clipped wipe while the paragraph settles upward with a soft blur fade.",
       "Keyboard support is limited to standard button tab and click semantics; there is no arrow-key roving between items.",
     ],

@@ -10,7 +10,7 @@
       "dependencies": ["motion", "lucide-react"],
       "devDependencies": [],
       "title": "Accordion",
-      "description": "Single-select accordion with spring height, staggered text, and rotating plus control. Built with Motion.",
+      "description": "Accordion with spring height, staggered text, default or editorial disclosure styles, and optional multi-open behavior. Built with Motion.",
       "files": [
         {
           "path": "accordion.tsx",
@@ -52,10 +52,10 @@
       "name": "badge",
       "type": "registry:ui",
       "registryDependencies": [],
-      "dependencies": ["motion"],
+      "dependencies": ["motion", "class-variance-authority"],
       "devDependencies": [],
       "title": "Badge",
-      "description": "Animated badge with a looping shimmer wave. Spring entrance, optional bg/text/wave color overrides. Motion.",
+      "description": "Preset-color badge with an animated default fill, a quieter dot variant, and compact size controls. Motion + CVA.",
       "files": [
         {
           "path": "badge.tsx",
