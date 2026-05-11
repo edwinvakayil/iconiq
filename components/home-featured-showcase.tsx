@@ -2,7 +2,7 @@
 
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
-import { type ReactNode, useState } from "react";
+import { type ReactNode, startTransition, useEffect, useState } from "react";
 
 import { Accordion, type AccordionItem } from "@/registry/accordion";
 import { Badge } from "@/registry/badge";
@@ -122,6 +122,21 @@ export function HomeFeaturedShowcase() {
   const [selectedCheckboxes, setSelectedCheckboxes] = useState<string[]>([
     "motion",
   ]);
+  const [showExtendedShowcase, setShowExtendedShowcase] = useState(false);
+
+  useEffect(() => {
+    const reveal = () => {
+      startTransition(() => setShowExtendedShowcase(true));
+    };
+
+    if (typeof window !== "undefined" && "requestIdleCallback" in window) {
+      const id = window.requestIdleCallback(reveal, { timeout: 250 });
+      return () => window.cancelIdleCallback(id);
+    }
+
+    const timeout = setTimeout(reveal, 120);
+    return () => clearTimeout(timeout);
+  }, []);
 
   return (
     <section
@@ -208,200 +223,204 @@ export function HomeFeaturedShowcase() {
           </div>
         </ShowcaseCard>
 
-        <ShowcaseCard
-          className="lg:col-span-12"
-          href="/components/tabs"
-          title="Tabs"
-        >
-          <Tabs className="w-full max-w-[760px]" defaultValue="browse">
-            <TabsList className="mx-auto">
-              <TabsTrigger value="browse">Browse</TabsTrigger>
-              <TabsTrigger value="ship">Ship</TabsTrigger>
-              <TabsTrigger value="adapt">Adapt</TabsTrigger>
-            </TabsList>
-
-            <TabsContent
-              className="rounded-[22px] bg-background/85 p-5"
-              value="browse"
+        {showExtendedShowcase ? (
+          <>
+            <ShowcaseCard
+              className="lg:col-span-12"
+              href="/components/tabs"
+              title="Tabs"
             >
-              <div className="space-y-1 text-left">
-                <p className="font-medium text-[1rem] text-foreground tracking-[-0.03em]">
-                  Browse the interaction first
-                </p>
-                <p className="text-[13px] text-secondary leading-5">
-                  Open the live example, test the motion, and understand the
-                  behavior before you copy anything into your app.
-                </p>
-              </div>
-            </TabsContent>
+              <Tabs className="w-full max-w-[760px]" defaultValue="browse">
+                <TabsList className="mx-auto">
+                  <TabsTrigger value="browse">Browse</TabsTrigger>
+                  <TabsTrigger value="ship">Ship</TabsTrigger>
+                  <TabsTrigger value="adapt">Adapt</TabsTrigger>
+                </TabsList>
 
-            <TabsContent
-              className="rounded-[22px] bg-background/85 p-5"
-              value="ship"
-            >
-              <div className="space-y-1 text-left">
-                <p className="font-medium text-[1rem] text-foreground tracking-[-0.03em]">
-                  Ship from a stronger starting point
-                </p>
-                <p className="text-[13px] text-secondary leading-5">
-                  Install the component as source, review the structure, and
-                  move into production with less setup work.
-                </p>
-              </div>
-            </TabsContent>
-
-            <TabsContent
-              className="rounded-[22px] bg-background/85 p-5"
-              value="adapt"
-            >
-              <div className="space-y-1 text-left">
-                <p className="font-medium text-[1rem] text-foreground tracking-[-0.03em]">
-                  Adapt it to your product
-                </p>
-                <p className="text-[13px] text-secondary leading-5">
-                  Rename parts, tweak motion, and reshape the UI around your own
-                  workflow without fighting a black-box dependency.
-                </p>
-              </div>
-            </TabsContent>
-          </Tabs>
-        </ShowcaseCard>
-
-        <ShowcaseCard
-          className="lg:col-span-4"
-          href="/components/calendar"
-          title="Calendar"
-        >
-          <div className="flex w-full justify-center">
-            <Calendar
-              defaultMonth={new Date("2026-05-10")}
-              defaultSelected={new Date("2026-05-10")}
-            />
-          </div>
-        </ShowcaseCard>
-
-        <div className="grid gap-4 lg:col-span-8 lg:grid-cols-2">
-          <ShowcaseCard href="/components/tooltip" title="Tooltip">
-            <div className="flex min-h-[150px] w-full items-center justify-center px-4">
-              <p className="max-w-sm text-center font-sans text-[15px] text-foreground leading-relaxed">
-                Hover the{" "}
-                <Tooltip
-                  content="Helpful context, right where you need it."
-                  delay={0.12}
-                  side="top"
+                <TabsContent
+                  className="rounded-[22px] bg-background/85 p-5"
+                  value="browse"
                 >
-                  <button
-                    className="rounded-lg px-0.5 font-medium text-sky-700 underline decoration-sky-500/40 decoration-dotted underline-offset-[5px] transition-colors hover:text-sky-600 dark:text-sky-400 dark:hover:text-sky-300"
-                    type="button"
+                  <div className="space-y-1 text-left">
+                    <p className="font-medium text-[1rem] text-foreground tracking-[-0.03em]">
+                      Browse the interaction first
+                    </p>
+                    <p className="text-[13px] text-secondary leading-5">
+                      Open the live example, test the motion, and understand the
+                      behavior before you copy anything into your app.
+                    </p>
+                  </div>
+                </TabsContent>
+
+                <TabsContent
+                  className="rounded-[22px] bg-background/85 p-5"
+                  value="ship"
+                >
+                  <div className="space-y-1 text-left">
+                    <p className="font-medium text-[1rem] text-foreground tracking-[-0.03em]">
+                      Ship from a stronger starting point
+                    </p>
+                    <p className="text-[13px] text-secondary leading-5">
+                      Install the component as source, review the structure, and
+                      move into production with less setup work.
+                    </p>
+                  </div>
+                </TabsContent>
+
+                <TabsContent
+                  className="rounded-[22px] bg-background/85 p-5"
+                  value="adapt"
+                >
+                  <div className="space-y-1 text-left">
+                    <p className="font-medium text-[1rem] text-foreground tracking-[-0.03em]">
+                      Adapt it to your product
+                    </p>
+                    <p className="text-[13px] text-secondary leading-5">
+                      Rename parts, tweak motion, and reshape the UI around your
+                      own workflow without fighting a black-box dependency.
+                    </p>
+                  </div>
+                </TabsContent>
+              </Tabs>
+            </ShowcaseCard>
+
+            <ShowcaseCard
+              className="lg:col-span-4"
+              href="/components/calendar"
+              title="Calendar"
+            >
+              <div className="flex w-full justify-center">
+                <Calendar
+                  defaultMonth={new Date("2026-05-10")}
+                  defaultSelected={new Date("2026-05-10")}
+                />
+              </div>
+            </ShowcaseCard>
+
+            <div className="grid gap-4 lg:col-span-8 lg:grid-cols-2">
+              <ShowcaseCard href="/components/tooltip" title="Tooltip">
+                <div className="flex min-h-[150px] w-full items-center justify-center px-4">
+                  <p className="max-w-sm text-center font-sans text-[15px] text-foreground leading-relaxed">
+                    Hover the{" "}
+                    <Tooltip
+                      content="Helpful context, right where you need it."
+                      delay={0.12}
+                      side="top"
+                    >
+                      <button
+                        className="rounded-lg px-0.5 font-medium text-sky-700 underline decoration-sky-500/40 decoration-dotted underline-offset-[5px] transition-colors hover:text-sky-600 dark:text-sky-400 dark:hover:text-sky-300"
+                        type="button"
+                      >
+                        trigger
+                      </button>
+                    </Tooltip>{" "}
+                    to preview the floating label.
+                  </p>
+                </div>
+              </ShowcaseCard>
+
+              <ShowcaseCard href="/components/badge" title="Badge">
+                <div className="flex min-h-[150px] w-full items-center justify-center px-4">
+                  <Badge
+                    bgColor="#e0e7ff"
+                    textColor="#3730a3"
+                    waveColor="rgba(255,255,255,0.52)"
                   >
-                    trigger
-                  </button>
-                </Tooltip>{" "}
-                to preview the floating label.
-              </p>
-            </div>
-          </ShowcaseCard>
+                    Early Access
+                  </Badge>
+                </div>
+              </ShowcaseCard>
 
-          <ShowcaseCard href="/components/badge" title="Badge">
-            <div className="flex min-h-[150px] w-full items-center justify-center px-4">
-              <Badge
-                bgColor="#e0e7ff"
-                textColor="#3730a3"
-                waveColor="rgba(255,255,255,0.52)"
+              <ShowcaseCard
+                className="lg:col-span-2"
+                href="/components/button"
+                title="Button"
               >
-                Early Access
-              </Badge>
+                <div className="flex w-full max-w-[360px] flex-wrap items-center justify-center gap-2.5">
+                  <Button size="sm">Default</Button>
+                  <Button size="sm" variant="outline">
+                    Outline
+                  </Button>
+                  <Button size="sm" variant="secondary">
+                    Secondary
+                  </Button>
+                  <Button size="sm" variant="ghost">
+                    Ghost
+                  </Button>
+                </div>
+              </ShowcaseCard>
             </div>
-          </ShowcaseCard>
 
-          <ShowcaseCard
-            className="lg:col-span-2"
-            href="/components/button"
-            title="Button"
-          >
-            <div className="flex w-full max-w-[360px] flex-wrap items-center justify-center gap-2.5">
-              <Button size="sm">Default</Button>
-              <Button size="sm" variant="outline">
-                Outline
-              </Button>
-              <Button size="sm" variant="secondary">
-                Secondary
-              </Button>
-              <Button size="sm" variant="ghost">
-                Ghost
-              </Button>
-            </div>
-          </ShowcaseCard>
-        </div>
+            <ShowcaseCard
+              className="lg:col-span-6"
+              href="/components/switch"
+              title="Switch"
+            >
+              <div className="w-full max-w-[320px] space-y-4">
+                <div className="flex items-center justify-between gap-4">
+                  <p className="text-[14px] text-foreground tracking-[-0.02em]">
+                    Motion
+                  </p>
+                  <Switch defaultChecked />
+                </div>
+                <div className="flex items-center justify-between gap-4">
+                  <p className="text-[14px] text-foreground tracking-[-0.02em]">
+                    Previews
+                  </p>
+                  <Switch defaultChecked />
+                </div>
+                <div className="flex items-center justify-between gap-4">
+                  <p className="text-[14px] text-foreground tracking-[-0.02em]">
+                    Reduced UI
+                  </p>
+                  <Switch />
+                </div>
+              </div>
+            </ShowcaseCard>
 
-        <ShowcaseCard
-          className="lg:col-span-6"
-          href="/components/switch"
-          title="Switch"
-        >
-          <div className="w-full max-w-[320px] space-y-4">
-            <div className="flex items-center justify-between gap-4">
-              <p className="text-[14px] text-foreground tracking-[-0.02em]">
-                Motion
-              </p>
-              <Switch defaultChecked />
-            </div>
-            <div className="flex items-center justify-between gap-4">
-              <p className="text-[14px] text-foreground tracking-[-0.02em]">
-                Previews
-              </p>
-              <Switch defaultChecked />
-            </div>
-            <div className="flex items-center justify-between gap-4">
-              <p className="text-[14px] text-foreground tracking-[-0.02em]">
-                Reduced UI
-              </p>
-              <Switch />
-            </div>
-          </div>
-        </ShowcaseCard>
+            <ShowcaseCard
+              className="lg:col-span-6"
+              href="/components/slider"
+              title="Slider"
+            >
+              <div className="w-full max-w-[320px] space-y-4">
+                <Slider defaultValue={42} label="Volume" />
+                <Slider defaultValue={68} label="Brightness" />
+                <Slider defaultValue={55} label="Opacity" />
+              </div>
+            </ShowcaseCard>
 
-        <ShowcaseCard
-          className="lg:col-span-6"
-          href="/components/slider"
-          title="Slider"
-        >
-          <div className="w-full max-w-[320px] space-y-4">
-            <Slider defaultValue={42} label="Volume" />
-            <Slider defaultValue={68} label="Brightness" />
-            <Slider defaultValue={55} label="Opacity" />
-          </div>
-        </ShowcaseCard>
+            <ShowcaseCard
+              className="lg:col-span-6"
+              href="/components/radiogroup"
+              title="Radio Group"
+            >
+              <div className="w-full max-w-md">
+                <RadioGroup
+                  className="w-full"
+                  onChange={setSelectedRadio}
+                  options={homeRadioOptions}
+                  value={selectedRadio}
+                />
+              </div>
+            </ShowcaseCard>
 
-        <ShowcaseCard
-          className="lg:col-span-6"
-          href="/components/radiogroup"
-          title="Radio Group"
-        >
-          <div className="w-full max-w-md">
-            <RadioGroup
-              className="w-full"
-              onChange={setSelectedRadio}
-              options={homeRadioOptions}
-              value={selectedRadio}
-            />
-          </div>
-        </ShowcaseCard>
-
-        <ShowcaseCard
-          className="lg:col-span-6"
-          href="/components/checkbox-group"
-          title="Checkbox Group"
-        >
-          <div className="w-full max-w-md">
-            <CheckboxGroup
-              className="w-full"
-              onChange={setSelectedCheckboxes}
-              options={homeCheckboxOptions}
-              value={selectedCheckboxes}
-            />
-          </div>
-        </ShowcaseCard>
+            <ShowcaseCard
+              className="lg:col-span-6"
+              href="/components/checkbox-group"
+              title="Checkbox Group"
+            >
+              <div className="w-full max-w-md">
+                <CheckboxGroup
+                  className="w-full"
+                  onChange={setSelectedCheckboxes}
+                  options={homeCheckboxOptions}
+                  value={selectedCheckboxes}
+                />
+              </div>
+            </ShowcaseCard>
+          </>
+        ) : null}
       </div>
     </section>
   );
