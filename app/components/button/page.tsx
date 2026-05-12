@@ -1,5 +1,6 @@
 "use client";
 
+import { Star } from "lucide-react";
 import { motion, type Variants } from "motion/react";
 import type { ReactNode } from "react";
 
@@ -8,23 +9,44 @@ import { ComponentDocsPage } from "@/components/docs/page-shell";
 import { cn } from "@/lib/utils";
 import { Button } from "@/registry/button";
 
-const usageCode = `import { Button } from "@/components/ui/button";
+const usageCode = `import { Star } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export function ButtonPreview() {
   return (
-    <blockquote className="mx-auto max-w-xl text-center">
-      <p className="flex flex-wrap items-center justify-center gap-x-1.5 gap-y-3 text-balance text-lg font-medium leading-snug tracking-tight dark:text-neutral-100">
-        <span>Win the press,</span>
-        <span className="font-normal text-neutral-500 dark:text-neutral-400">
-          then
-        </span>
+    <blockquote className="mx-auto max-w-4xl text-center">
+      <p className="flex flex-wrap items-center justify-center gap-x-2 gap-y-3 text-balance text-lg font-medium leading-snug tracking-tight dark:text-neutral-100">
+        <span>Start with</span>
         <span className="inline-flex translate-y-px align-middle">
-          <Button>Continue</Button>
+          <Button icon={<Star />} iconPosition="end">
+            Continue
+          </Button>
         </span>
-        <span>the break</span>
-        <span className="basis-full w-full text-[0.92em] font-normal text-neutral-500 dark:text-neutral-400">
-          - that&apos;s the half in two beats.
+        <span>offer</span>
+        <span className="inline-flex translate-y-px align-middle">
+          <Button variant="outline">Preview</Button>
         </span>
+        <span>keep</span>
+        <span className="inline-flex translate-y-px align-middle">
+          <Button variant="secondary">Maybe later</Button>
+        </span>
+        <span>tuck in</span>
+        <span className="inline-flex translate-y-px align-middle">
+          <Button variant="ghost">Skip</Button>
+        </span>
+        <span>thread through</span>
+        <span className="inline-flex translate-y-px align-middle">
+          <Button variant="link">Learn more</Button>
+        </span>
+        <span>and save</span>
+        <span className="inline-flex translate-y-px align-middle">
+          <Button variant="destructive">Delete</Button>
+        </span>
+        <span>for the last resort.</span>
+      </p>
+      <p className="mt-4 text-balance font-normal text-[0.95rem] text-neutral-500 leading-7 dark:text-neutral-400">
+        One sentence, six interaction tones, and enough contrast to feel when a
+        button should lead, support, whisper, link away, or warn.
       </p>
     </blockquote>
   );
@@ -112,30 +134,50 @@ export default function ButtonPage() {
         { label: "Button" },
       ]}
       componentName="button"
-      description="CVA variants with spring hover and tap feedback. Forwards refs and standard button attributes while staying aligned with the rest of the system."
+      description="CVA variants with spring hover and press feedback, larger default hit targets, and optional intrinsic width animation for changing labels."
       details={componentDetailsItems}
       preview={
         <div className="flex min-h-[280px] items-center justify-center px-4 py-2">
-          <blockquote className="mx-auto max-w-xl text-center">
-            <p className="flex flex-wrap items-center justify-center gap-x-1.5 gap-y-3 text-balance font-medium text-lg text-neutral-800 leading-snug tracking-tight sm:gap-x-2 sm:text-xl dark:text-neutral-100">
-              <span>Win the press,</span>
-              <span className="font-normal text-neutral-500 dark:text-neutral-400">
-                then
-              </span>
+          <blockquote className="mx-auto max-w-4xl text-center">
+            <p className="flex flex-wrap items-center justify-center gap-x-2 gap-y-3 text-balance font-medium text-lg text-neutral-800 leading-snug tracking-tight sm:text-xl dark:text-neutral-100">
+              <span>Start with</span>
               <span className="inline-flex translate-y-px align-middle">
-                <Button>Continue</Button>
+                <Button icon={<Star />} iconPosition="end">
+                  Continue
+                </Button>
               </span>
-              <span>the break</span>
-              <span className="w-full basis-full font-normal text-[0.92em] text-neutral-500 dark:text-neutral-400">
-                - that's the half in two beats.
+              <span>offer</span>
+              <span className="inline-flex translate-y-px align-middle">
+                <Button variant="outline">Preview</Button>
               </span>
+              <span>keep</span>
+              <span className="inline-flex translate-y-px align-middle">
+                <Button variant="secondary">Maybe later</Button>
+              </span>
+              <span>tuck in</span>
+              <span className="inline-flex translate-y-px align-middle">
+                <Button variant="ghost">Skip</Button>
+              </span>
+              <span>thread through</span>
+              <span className="inline-flex translate-y-px align-middle">
+                <Button variant="link">Learn more</Button>
+              </span>
+              <span>and save</span>
+              <span className="inline-flex translate-y-px align-middle">
+                <Button variant="destructive">Delete</Button>
+              </span>
+              <span>for the last resort.</span>
+            </p>
+            <p className="mt-4 text-balance font-normal text-[0.95rem] text-neutral-500 leading-7 dark:text-neutral-400">
+              One sentence, six interaction tones, and enough contrast to feel
+              when a button should lead, support, whisper, link away, or warn.
             </p>
           </blockquote>
         </div>
       }
       title="Button"
       usageCode={usageCode}
-      usageDescription="Use the default button first, then branch into variant, size, disabled state, and interaction behavior through the API panel."
+      usageDescription="Start with the default button, then branch into variants, the unstyled escape hatch, optional size animation for changing labels, and the built-in interaction states through the API panel."
     />
   );
 }

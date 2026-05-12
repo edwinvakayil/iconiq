@@ -118,7 +118,7 @@ export default function BreadcrumbsPage() {
         { label: "Breadcrumbs" },
       ]}
       componentName="breadcrumbs"
-      description="Spring separators, hover lift, and a shimmer on the current segment. Built with Motion and tuned to the theme tokens that drive the rest of the library."
+      description="Breadcrumb trail with subtle easing, stronger focus states, and a calmer current-page treatment. Built with Motion and tuned to the theme tokens that drive the rest of the library."
       details={componentDetailsItems}
       detailsDescription="Each item expands into the segment contract, current-state behavior, and the motion details that affect usage."
       preview={

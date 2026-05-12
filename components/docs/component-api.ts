@@ -24,27 +24,33 @@ const alertApiDetails: DetailItem[] = [
     id: "alert",
     title: "Alert",
     summary:
-      "Default export for a single dismissible notice. It can render inline with surrounding content or portal to the viewport when you provide a position.",
+      "Default export for a single dismissible notice. It can render inline with surrounding content or behave like a toast when you set variant to toast or provide a position.",
     fields: [
       field({
         name: "icon",
         type: "ReactNode",
-        required: true,
         description:
-          "Leading visual passed straight into the icon slot. The wrapper applies fallback sizing to nested SVGs so Lucide icons land around 18px without extra setup.",
+          "Optional leading visual passed into the icon slot. The wrapper applies fallback sizing to nested SVGs so Lucide icons land around 18px without extra setup.",
       }),
       field({
         name: "title",
-        type: "string",
+        type: "ReactNode",
         required: true,
-        description: "Primary line rendered in the stronger label style.",
+        description:
+          "Primary line rendered in the stronger label style. Keeping it to short copy works best, but the slot also accepts small inline formatting when needed.",
       }),
       field({
         name: "message",
-        type: "string",
+        type: "ReactNode",
         required: true,
         description:
-          "Secondary copy rendered below the title with a lighter foreground tone.",
+          "Secondary copy rendered below the title. Strings still work, but you can also pass short fragments, links, or small grouped copy when a single sentence feels cramped.",
+      }),
+      field({
+        name: "action",
+        type: "ReactNode",
+        description:
+          "Optional action row rendered beneath the message, useful for a single follow-up button or link such as Undo or View details.",
       }),
       field({
         name: "dismissible",
@@ -54,10 +60,17 @@ const alertApiDetails: DetailItem[] = [
           "Controls whether the close button is rendered. Disabling it removes manual dismissal only; timeout still applies unless it is set to 0.",
       }),
       field({
+        name: "variant",
+        type: '"inline" | "toast"',
+        defaultValue: '"inline"',
+        description:
+          "Explicitly chooses layout behavior. Toasts portal to document.body and use fixed viewport positioning, while inline alerts stay in normal document flow.",
+      }),
+      field({
         name: "position",
         type: '"top-left" | "top-center" | "top-right" | "bottom-left" | "bottom-center" | "bottom-right"',
         description:
-          "When present, the component portals to document.body and uses fixed positioning classes. When omitted, the alert stays in normal flow and maxes out at max-w-sm.",
+          "Optional toast placement. Providing a position also upgrades the component to toast behavior, and omitted toast positions default to top-right.",
       }),
       field({
         name: "timeout",
@@ -70,12 +83,14 @@ const alertApiDetails: DetailItem[] = [
         name: "onDismiss",
         type: "() => void",
         description:
-          "Called after the component marks itself hidden, regardless of whether dismissal came from the close button or the timeout effect.",
+          "Called after the component finishes its exit transition, regardless of whether dismissal came from the close button or the timeout effect.",
       }),
     ],
     notes: [
       "Every positioned alert snaps to a full-width top placement on small screens, then switches to the requested corner at the sm breakpoint.",
+      "The root announces itself as a polite live region and keeps title and message linked with aria-labelledby and aria-describedby.",
       "The alert keeps its own visible state internally, so it is designed for fire-and-forget notifications rather than parent-controlled open state.",
+      "Hovering or focusing the alert pauses auto-dismiss, which gives people more time to read and makes the close target less stressful to hit.",
     ],
   },
   {
@@ -87,6 +102,7 @@ const alertApiDetails: DetailItem[] = [
       "Entry direction is derived from position: top placements slide down slightly, bottom placements rise upward, and inline alerts use a smaller upward offset.",
       "The timeout effect is cleared on cleanup, so unmounting or rerendering the alert does not leak timers.",
       "When position is set, the component waits until after mount before calling createPortal to avoid touching document during server render.",
+      "Dismissal callbacks wait until the exit transition completes, so parent cleanup does not cut off the visual exit early.",
     ],
   },
   registryItem("alert.json", ["motion"]),
@@ -401,7 +417,7 @@ const breadcrumbsApiDetails: DetailItem[] = [
         name: "href",
         type: "string",
         description:
-          "Link destination used by the rendered anchor. If it is omitted, the component falls back to '#'.",
+          "Link destination used for non-current breadcrumb items. If it is omitted, the segment renders as static text.",
       }),
       field({
         name: "icon",
@@ -415,14 +431,14 @@ const breadcrumbsApiDetails: DetailItem[] = [
     id: "breadcrumbs",
     title: "Breadcrumbs",
     summary:
-      "Animated breadcrumb trail that maps over the items array and styles the last entry as the current location.",
+      "Animated breadcrumb trail with subtle easing and a dedicated current-page treatment for the last entry.",
     fields: [
       field({
         name: "items",
         type: "BreadcrumbItem[]",
         required: true,
         description:
-          "Ordered list of segments. Earlier items receive hover and tap motion, while the last item gets the shimmer and pulsing dot treatment.",
+          "Ordered list of segments. Linked items receive subtle hover and tap feedback, while the last item is rendered as the current page.",
       }),
       field({
         name: "className",
@@ -432,8 +448,8 @@ const breadcrumbsApiDetails: DetailItem[] = [
       }),
     ],
     notes: [
-      "The last item still renders as a motion.a element, even if href is omitted. Its classes remove the interactive cursor but the fallback anchor target is still '#'.",
-      "Separators only render after the first item and use the built-in ChevronRight icon from lucide-react.",
+      "The final item renders as static text with aria-current='page', so the trail does not expose a fake link target for the current location.",
+      "Separators only render after the first item, are hidden from assistive tech, and use the built-in ChevronRight icon from lucide-react.",
     ],
   },
   {
@@ -444,7 +460,7 @@ const breadcrumbsApiDetails: DetailItem[] = [
     notes: [
       'The root nav uses aria-label="breadcrumb" and wraps items in an ordered list.',
       "AnimatePresence runs in popLayout mode so reordering or changing the trail keeps the transitions coherent.",
-      "This implementation does not add aria-current to the final item, so add that yourself if you need stricter breadcrumb semantics.",
+      "The final breadcrumb item is marked with aria-current='page' and rendered as non-interactive content.",
     ],
   },
   registryItem("breadcrumbs.json", ["motion", "lucide-react"]),
@@ -455,7 +471,7 @@ const buttonApiDetails: DetailItem[] = [
     id: "button",
     title: "Button",
     summary:
-      "Ref-forwarding button built on motion.button plus a CVA recipe for size and variant styling.",
+      "Ref-forwarding motion button with larger default hit targets, spring press feedback, optional intrinsic width animation, and CVA-powered variant styling.",
     fields: [
       field({
         name: "variant",
@@ -466,10 +482,24 @@ const buttonApiDetails: DetailItem[] = [
       }),
       field({
         name: "size",
-        type: '"sm" | "md" | "lg" | "custom"',
+        type: '"sm" | "md" | "lg" | "unstyled"',
         defaultValue: "md",
         description:
-          "Controls height and padding. The custom size leaves sizing classes empty so the caller can drive layout entirely through className.",
+          "Controls the inner padding and text size. sm and md now keep a 44px minimum hit target, lg lands slightly larger, and unstyled preserves the larger minimum target while leaving spacing to your own classes.",
+      }),
+      field({
+        name: "animateSize",
+        type: "boolean",
+        defaultValue: "false",
+        description:
+          "Animates the button width with a spring as its intrinsic content changes, which is useful for labels like Continue, Saving..., and Saved on the same control.",
+      }),
+      field({
+        name: "disableRipple",
+        type: "boolean",
+        defaultValue: "false",
+        description:
+          "Skips the pointer ripple when you want only the press-state feedback. Link buttons also skip the ripple by default to avoid a contained splash on text-only actions.",
       }),
       field({
         name: "type",
@@ -483,6 +513,19 @@ const buttonApiDetails: DetailItem[] = [
         type: "ReactNode",
         description:
           "Content rendered above the ripple layer inside a z-10 span.",
+      }),
+      field({
+        name: "icon",
+        type: "ReactNode",
+        description:
+          "Optional icon rendered inline with the label. Nested SVGs inherit the built-in 1rem sizing utility.",
+      }),
+      field({
+        name: "iconPosition",
+        type: '"start" | "end"',
+        defaultValue: '"start"',
+        description:
+          "Chooses whether the optional icon renders before or after the button text inside the same inline content row.",
       }),
       field({
         name: "className",
@@ -499,8 +542,11 @@ const buttonApiDetails: DetailItem[] = [
     ],
     notes: [
       "Standard button attributes such as onClick, aria-*, name, form, and data-* are forwarded to the underlying motion.button.",
-      "The local pointer-down handler always calls your onPointerDown first, then decides whether to spawn a ripple.",
-      "Reduced-motion users still get the button component, but the ripple effect is skipped.",
+      "The local pointer-down handler calls your onPointerDown first, then respects e.defaultPrevented before deciding whether to enter the pressed state or spawn a ripple.",
+      "Pointer, keyboard, and blur handlers keep the pressed state in sync so Space and Enter get the same immediate feedback as pointer input.",
+      "Reduced-motion users still get the larger target and visual state changes, but spring motion and ripples are skipped.",
+      "animateSize works best on intrinsically sized buttons rather than width-constrained layouts such as w-full.",
+      "When you render an icon-only button with icon and no visible text, add an aria-label so assistive tech still gets an accessible name.",
     ],
   },
   {
@@ -521,20 +567,41 @@ const buttonGroupApiDetails: DetailItem[] = [
     id: "button-group-button",
     title: "Button",
     summary:
-      "Standalone motion button with a light upward entrance, hover scale, and a small label nudge inside the content span.",
+      "Compact bordered action button with muted idle text, darker hover text, optional ripple feedback, and shadcn-style size controls.",
     fields: [
       field({
         name: "children",
         type: "ReactNode",
         required: true,
         description:
-          "Button content rendered inside an animated inline span so the label can shift slightly on hover.",
+          "Button content rendered inside an inline span so icon-and-label pairs keep consistent spacing across sizes.",
       }),
       field({
         name: "className",
         type: "string",
         description:
           "Merged onto the root button. Use it for local width, spacing, or surface overrides.",
+      }),
+      field({
+        name: "size",
+        type: '"sm" | "md" | "lg"',
+        defaultValue: '"md"',
+        description:
+          "Compacts or expands the control while keeping the same toolbar-style border and hover treatment.",
+      }),
+      field({
+        name: "disableRipple",
+        type: "boolean",
+        defaultValue: "false",
+        description:
+          "Turns off the click ripple while preserving the rest of the hover and focus styling.",
+      }),
+      field({
+        name: "showBorder",
+        type: "boolean",
+        defaultValue: "true",
+        description:
+          "Removes the outer border when set to false, which is useful for quieter toolbar-style actions.",
       }),
     ],
     notes: [
@@ -546,20 +613,40 @@ const buttonGroupApiDetails: DetailItem[] = [
     id: "button-group-icon-button",
     title: "IconButton",
     summary:
-      "Compact icon-only version of the same button surface, with a stronger hover scale and a rotating inner icon span.",
+      "Icon-only toolbar action that shares the same compact border, muted idle tone, and optional ripple behavior as Button.",
     fields: [
       field({
         name: "children",
         type: "ReactNode",
         required: true,
         description:
-          "Icon content rendered inside the motion span. SVG children inherit the built-in 1rem sizing utility.",
+          "Icon content rendered inside the inline content span. SVG children inherit the built-in size utilities for the active size variant.",
       }),
       field({
         name: "className",
         type: "string",
         description:
           "Merged onto the icon button root for size or surface overrides.",
+      }),
+      field({
+        name: "size",
+        type: '"sm" | "md" | "lg"',
+        defaultValue: '"md"',
+        description:
+          "Controls the square footprint of the icon button without changing its general look and feel.",
+      }),
+      field({
+        name: "disableRipple",
+        type: "boolean",
+        defaultValue: "false",
+        description: "Disables the click ripple for quieter toolbar actions.",
+      }),
+      field({
+        name: "showBorder",
+        type: "boolean",
+        defaultValue: "true",
+        description:
+          "Removes the outer border when set to false so the icon action can sit more quietly beside a borderless group.",
       }),
     ],
   },
@@ -588,7 +675,7 @@ const buttonGroupApiDetails: DetailItem[] = [
     id: "button-group-items",
     title: "ButtonGroupItems",
     summary:
-      "Segmented button shell that turns each valid child element into an internal motion button with shared borders and equal visual rhythm.",
+      "Segmented button shell that converts valid child elements into compact internal buttons with muted idle text and darker hover states.",
     fields: [
       field({
         name: "children",
@@ -603,17 +690,39 @@ const buttonGroupApiDetails: DetailItem[] = [
         description:
           "Merged onto the outer segmented wrapper for width or surface overrides.",
       }),
+      field({
+        name: "size",
+        type: '"sm" | "md" | "lg"',
+        defaultValue: '"md"',
+        description:
+          "Sets the shared height, padding, and typography of the grouped buttons.",
+      }),
+      field({
+        name: "showDividers",
+        type: "boolean",
+        defaultValue: "true",
+        description:
+          "Removes the internal separator lines and the outer wrapper border when set to false, then switches the group to a smoother shared hover surface.",
+      }),
+      field({
+        name: "disableRipple",
+        type: "boolean",
+        defaultValue: "false",
+        description:
+          "Turns off the ripple for every internal button rendered by the group.",
+      }),
     ],
     notes: [
       "Only valid React elements are rendered. Non-element children are ignored.",
       "The child node itself is not preserved; ButtonGroupItems reads each child's props and children, then renders a fresh motion button for that slot.",
+      "When showDividers is false, hover feedback moves as a shared spring layer between items instead of flashing independently on each button.",
     ],
   },
   {
     id: "segmented-control",
     title: "SegmentedControl",
     summary:
-      "String-based segmented selector with internal state support, hover wash, and a spring-driven selected indicator.",
+      "String-based segmented selector with compact sizing, keyboard support, muted idle labels, and a spring-driven selected indicator.",
     fields: [
       field({
         name: "options",
@@ -647,17 +756,28 @@ const buttonGroupApiDetails: DetailItem[] = [
         description:
           "Motion layout id used by the selected indicator. Override it when you render multiple segmented controls on the same page and want isolated indicator motion.",
       }),
+      field({
+        name: "size",
+        type: '"sm" | "md" | "lg"',
+        defaultValue: '"md"',
+        description:
+          "Controls the overall density of the segmented control shell and each segment inside it.",
+      }),
+    ],
+    notes: [
+      "The control uses radiogroup semantics with arrow-key, Home, and End navigation.",
+      "Reduced-motion users keep the same state changes without the spring transitions.",
     ],
   },
   {
     id: "button-group-motion",
     title: "Motion and interaction",
     summary:
-      "Each export shares the same spring-heavy motion language, but the interaction style changes slightly by surface.",
+      "Each export keeps the same tactile feel, but the default presentation is now much more compact and toolbar-like.",
     notes: [
-      "Button and IconButton both animate in on mount, scale on hover and tap, and apply a muted background shift during hover.",
-      "ButtonGroup only handles layout and entrance motion; the interactive behavior still comes from the child buttons inside it.",
-      "SegmentedControl animates each option into place individually, then uses a shared layout indicator for the active segment and a lighter hover wash for inactive segments.",
+      "Button, IconButton, and ButtonGroupItems all default to muted text that darkens on hover, which better matches compact shadcn-style controls.",
+      "Ripple feedback can now be turned off per surface, which is useful when you want a quieter desktop toolbar feel.",
+      "SegmentedControl keeps motion focused on selection changes rather than entrance effects, so the control feels faster and less oversized.",
     ],
   },
   registryItem("button-group.json", ["motion"]),

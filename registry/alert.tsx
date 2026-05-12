@@ -1,7 +1,15 @@
 "use client";
 
 import { AnimatePresence, motion, type Variants } from "motion/react";
-import { type ReactNode, useCallback, useEffect, useState } from "react";
+import {
+  type FocusEvent,
+  type ReactNode,
+  useCallback,
+  useEffect,
+  useId,
+  useRef,
+  useState,
+} from "react";
 import { createPortal } from "react-dom";
 
 import { cn } from "@/lib/utils";
@@ -14,17 +22,25 @@ export type AlertPosition =
   | "bottom-center"
   | "bottom-right";
 
+export type AlertVariant = "inline" | "toast";
+
 export interface AlertProps {
   /** Leading graphic (e.g. a Lucide icon). You control markup and sizing. */
-  icon: ReactNode;
-  title: string;
-  message: string;
+  icon?: ReactNode;
+  title: ReactNode;
+  message: ReactNode;
+  /** Optional action row rendered below the message. */
+  action?: ReactNode;
   dismissible?: boolean;
+  /** Explicitly choose inline flow or viewport toast behavior. */
+  variant?: AlertVariant;
   position?: AlertPosition;
   /** Auto-dismiss after this many milliseconds. Defaults to 10 000. Pass 0 to disable. */
   timeout?: number;
   onDismiss?: () => void;
 }
+
+const DEFAULT_TOAST_POSITION: AlertPosition = "top-right";
 
 /**
  * Mobile-first: every positioned alert sits at the top of the viewport,
@@ -96,27 +112,210 @@ export const Alert = ({
   icon,
   title,
   message,
+  action,
   dismissible = true,
+  variant,
   position,
   timeout = 10_000,
   onDismiss,
 }: AlertProps) => {
   const [visible, setVisible] = useState(true);
   const [mounted, setMounted] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
+  const [isFocusWithin, setIsFocusWithin] = useState(false);
+  const [isDocumentHidden, setIsDocumentHidden] = useState(false);
+
+  const titleId = useId();
+  const messageId = useId();
+  const progressRef = useRef<HTMLSpanElement | null>(null);
+  const progressAnimationRef = useRef<Animation | null>(null);
+  const timeoutIdRef = useRef<number | null>(null);
+  const remainingTimeRef = useRef(timeout);
+  const timerStartedAtRef = useRef<number | null>(null);
+  const dismissalRequestedRef = useRef(false);
+  const previousTimeoutRef = useRef(timeout);
+
+  const resolvedVariant: AlertVariant = position
+    ? "toast"
+    : (variant ?? "inline");
+  const resolvedPosition =
+    resolvedVariant === "toast"
+      ? (position ?? DEFAULT_TOAST_POSITION)
+      : undefined;
+
   useEffect(() => setMounted(true), []);
 
-  const handleDismiss = useCallback(() => {
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      setIsDocumentHidden(document.hidden);
+    };
+
+    handleVisibilityChange();
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
+  }, []);
+
+  const clearTimer = useCallback(() => {
+    if (timeoutIdRef.current !== null) {
+      window.clearTimeout(timeoutIdRef.current);
+      timeoutIdRef.current = null;
+    }
+
+    timerStartedAtRef.current = null;
+  }, []);
+
+  const requestDismiss = useCallback(() => {
+    if (dismissalRequestedRef.current) {
+      return;
+    }
+
+    dismissalRequestedRef.current = true;
+    clearTimer();
     setVisible(false);
+  }, [clearTimer]);
+
+  const pauseTimer = useCallback(() => {
+    if (timeoutIdRef.current === null || timerStartedAtRef.current === null) {
+      return;
+    }
+
+    const elapsed = Date.now() - timerStartedAtRef.current;
+    remainingTimeRef.current = Math.max(0, remainingTimeRef.current - elapsed);
+    clearTimer();
+  }, [clearTimer]);
+
+  const startTimer = useCallback(() => {
+    if (timeoutIdRef.current !== null || remainingTimeRef.current <= 0) {
+      return;
+    }
+
+    timerStartedAtRef.current = Date.now();
+    timeoutIdRef.current = window.setTimeout(() => {
+      clearTimer();
+      requestDismiss();
+    }, remainingTimeRef.current);
+  }, [clearTimer, requestDismiss]);
+
+  useEffect(() => {
+    if (previousTimeoutRef.current === timeout) {
+      return;
+    }
+
+    previousTimeoutRef.current = timeout;
+    clearTimer();
+    remainingTimeRef.current = timeout;
+
+    if (
+      visible &&
+      timeout > 0 &&
+      !(isHovered || isFocusWithin || isDocumentHidden)
+    ) {
+      startTimer();
+    }
+  }, [
+    clearTimer,
+    isDocumentHidden,
+    isFocusWithin,
+    isHovered,
+    startTimer,
+    timeout,
+    visible,
+  ]);
+
+  useEffect(() => {
+    if (!visible || timeout <= 0) {
+      clearTimer();
+      return;
+    }
+
+    if (isHovered || isFocusWithin || isDocumentHidden) {
+      pauseTimer();
+      return;
+    }
+
+    startTimer();
+  }, [
+    clearTimer,
+    isDocumentHidden,
+    isFocusWithin,
+    isHovered,
+    pauseTimer,
+    startTimer,
+    timeout,
+    visible,
+  ]);
+
+  useEffect(() => clearTimer, [clearTimer]);
+
+  useEffect(() => {
+    if (!visible || timeout <= 0) {
+      return;
+    }
+
+    const progressElement = progressRef.current;
+    if (!progressElement?.animate) {
+      return;
+    }
+
+    const animation = progressElement.animate(
+      [{ transform: "scaleX(1)" }, { transform: "scaleX(0)" }],
+      {
+        duration: timeout,
+        easing: "linear",
+        fill: "forwards",
+      }
+    );
+
+    progressAnimationRef.current = animation;
+
+    return () => {
+      animation.cancel();
+
+      if (progressAnimationRef.current === animation) {
+        progressAnimationRef.current = null;
+      }
+    };
+  }, [timeout, visible]);
+
+  useEffect(() => {
+    const animation = progressAnimationRef.current;
+    if (!animation) {
+      return;
+    }
+
+    if (isHovered || isFocusWithin || isDocumentHidden) {
+      animation.pause();
+      return;
+    }
+
+    animation.play();
+  }, [isDocumentHidden, isFocusWithin, isHovered]);
+
+  const handleBlurCapture = (event: FocusEvent<HTMLDivElement>) => {
+    const nextFocusedNode = event.relatedTarget;
+
+    if (
+      nextFocusedNode instanceof Node &&
+      event.currentTarget.contains(nextFocusedNode)
+    ) {
+      return;
+    }
+
+    setIsFocusWithin(false);
+  };
+
+  const handleExitComplete = useCallback(() => {
+    if (!dismissalRequestedRef.current) {
+      return;
+    }
+
     onDismiss?.();
   }, [onDismiss]);
 
-  useEffect(() => {
-    if (!timeout) return;
-    const id = setTimeout(handleDismiss, timeout);
-    return () => clearTimeout(id);
-  }, [timeout, handleDismiss]);
-
-  const dy = position ? entryY[position] : -8;
+  const dy = resolvedPosition ? entryY[resolvedPosition] : -8;
 
   const containerVariants: Variants = {
     hidden: { opacity: 0, y: dy, scale: 0.97, filter: "blur(6px)" },
@@ -144,70 +343,86 @@ export const Alert = ({
   };
 
   const card = (
-    <AnimatePresence>
+    <AnimatePresence onExitComplete={handleExitComplete}>
       {visible && (
         <motion.div
           animate="visible"
+          aria-atomic={true}
+          aria-describedby={messageId}
+          aria-labelledby={titleId}
+          aria-live="polite"
           className={cn(
             "relative flex items-start gap-3 overflow-hidden rounded-lg border border-foreground/8 bg-card px-3.5 shadow-[0_2px_14px_0_rgba(0,0,0,0.07)]",
-            position
+            resolvedVariant === "toast"
               ? // Fixed: let left+right inset determine width (no w-full).
                 // On mobile inset-x-4 stretches across viewport minus margins.
                 // On sm: max-w-sm caps the desktop corner width.
                 "py-3 sm:max-w-sm sm:py-2.5"
               : // In-flow: explicit full width up to max-w-sm.
-                "w-full max-w-sm py-2.5",
-            position ? positionClasses[position] : undefined,
-            position && "z-300"
+                "w-full max-w-sm py-3",
+            resolvedPosition ? positionClasses[resolvedPosition] : undefined,
+            resolvedPosition && "z-300"
           )}
           exit="exit"
           initial="hidden"
+          onBlurCapture={handleBlurCapture}
+          onFocusCapture={() => setIsFocusWithin(true)}
+          onPointerEnter={() => setIsHovered(true)}
+          onPointerLeave={() => setIsHovered(false)}
+          role="status"
           variants={containerVariants}
         >
           {/* Timeout progress bar */}
           {timeout > 0 && (
-            <motion.span
-              animate={{ scaleX: 0 }}
+            <span
               aria-hidden
               className="absolute inset-x-0 bottom-0 h-[2px] origin-left bg-foreground/10"
-              initial={{ scaleX: 1 }}
-              transition={{
-                duration: timeout / 1000,
-                ease: "linear",
-                delay: 0.3,
-              }}
+              ref={progressRef}
             />
           )}
 
           {/* Icon */}
-          <motion.div
-            className="mt-px shrink-0 text-black dark:text-white [&_svg]:h-[18px] [&_svg]:w-[18px]"
-            variants={iconVariants}
-          >
-            {icon}
-          </motion.div>
+          {icon ? (
+            <motion.div
+              className="mt-0.5 shrink-0 text-black dark:text-white [&_svg]:h-[18px] [&_svg]:w-[18px]"
+              variants={iconVariants}
+            >
+              {icon}
+            </motion.div>
+          ) : null}
 
           {/* Text */}
           <div className="min-w-0 flex-1">
-            <motion.p
-              className="font-medium text-[13px] text-foreground/80 tracking-[-0.01em]"
+            <motion.div
+              className="font-medium text-foreground text-sm leading-5 tracking-[-0.01em]"
+              id={titleId}
               variants={childVariants}
             >
               {title}
-            </motion.p>
-            <motion.p
-              className="mt-0.5 text-[12px] text-foreground/40 leading-relaxed"
+            </motion.div>
+            <motion.div
+              className="mt-1 text-[13px] text-foreground/65 leading-5"
+              id={messageId}
               variants={childVariants}
             >
               {message}
-            </motion.p>
+            </motion.div>
+            {action ? (
+              <motion.div
+                className="mt-2 flex flex-wrap items-center gap-2"
+                variants={childVariants}
+              >
+                {action}
+              </motion.div>
+            ) : null}
           </div>
 
           {/* Dismiss */}
           {dismissible && (
             <motion.button
-              className="mt-1 shrink-0 text-foreground/20 transition-colors hover:text-foreground/50"
-              onClick={handleDismiss}
+              aria-label="Dismiss alert"
+              className="relative -my-2 -mr-2 inline-flex size-10 shrink-0 items-center justify-center self-start rounded-md text-foreground/35 transition-colors hover:bg-foreground/5 hover:text-foreground/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              onClick={requestDismiss}
               type="button"
               variants={childVariants}
             >
@@ -232,7 +447,7 @@ export const Alert = ({
    * would otherwise make `position: fixed` relative to the transformed
    * element instead of the viewport.
    */
-  if (position) {
+  if (resolvedVariant === "toast") {
     return mounted ? createPortal(card, document.body) : null;
   }
 

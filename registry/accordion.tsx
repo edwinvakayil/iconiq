@@ -1,15 +1,16 @@
 "use client";
 
+import * as AccordionPrimitive from "@radix-ui/react-accordion";
 import { ChevronDown } from "lucide-react";
 import { AnimatePresence, motion, type Transition } from "motion/react";
-import { useId, useState } from "react";
+import * as React from "react";
 
 import { cn } from "@/lib/utils";
 
 export interface AccordionItem {
   id: string;
   title: string;
-  content: string;
+  content: React.ReactNode;
 }
 
 export type AccordionVariant = "default" | "editorial";
@@ -64,8 +65,6 @@ type AccordionRowProps = {
   index: number;
   isEditorial: boolean;
   isOpen: boolean;
-  baseId: string;
-  onToggle: (id: string) => void;
 };
 
 function getRowClassName(index: number, isEditorial: boolean, isOpen: boolean) {
@@ -96,7 +95,7 @@ function getContentMaskClassName(isEditorial: boolean) {
 
 function getContentCopyClassName(isEditorial: boolean) {
   return cn(
-    "text-sm leading-relaxed will-change-transform",
+    "space-y-3 text-sm leading-relaxed will-change-transform [&_a]:font-medium [&_a]:underline [&_a]:underline-offset-4 [&_li+li]:mt-1.5 [&_ol]:mt-3 [&_ol]:list-decimal [&_ol]:pl-5 [&_p+p]:mt-3 [&_ul]:mt-3 [&_ul]:list-disc [&_ul]:pl-5",
     isEditorial ? "max-w-[60ch] text-foreground/72" : "text-muted-foreground"
   );
 }
@@ -192,120 +191,114 @@ function AccordionTriggerIndicator({
   );
 }
 
-function AccordionRow({
-  item,
-  index,
-  isEditorial,
-  isOpen,
-  baseId,
-  onToggle,
-}: AccordionRowProps) {
-  const contentId = `${baseId}-content-${item.id}`;
-  const triggerId = `${baseId}-trigger-${item.id}`;
+function AccordionRow({ item, index, isEditorial, isOpen }: AccordionRowProps) {
   const itemNumber = String(index + 1).padStart(2, "0");
 
   return (
-    <motion.div
-      animate={{ opacity: 1, y: 0 }}
+    <AccordionPrimitive.Item
       className={getRowClassName(index, isEditorial, isOpen)}
-      initial={{ opacity: 0, y: 12 }}
-      transition={{
-        delay: index * 0.05,
-        duration: 0.3,
-        ease: [0.22, 1, 0.36, 1],
-      }}
+      value={item.id}
     >
-      <button
-        aria-controls={contentId}
-        aria-expanded={isOpen}
-        className={cn(
-          "flex w-full cursor-pointer items-start justify-between gap-6 text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset",
-          getTriggerClassName(isEditorial, isOpen)
-        )}
-        id={triggerId}
-        onClick={() => onToggle(item.id)}
-        type="button"
+      <motion.div
+        animate={{ opacity: 1, y: 0 }}
+        initial={{ opacity: 0, y: 12 }}
+        transition={{
+          delay: index * 0.05,
+          duration: 0.3,
+          ease: [0.22, 1, 0.36, 1],
+        }}
       >
-        <AccordionTriggerLabel
-          isEditorial={isEditorial}
-          isOpen={isOpen}
-          itemNumber={itemNumber}
-          title={item.title}
-        />
-        <AccordionTriggerIndicator isEditorial={isEditorial} isOpen={isOpen} />
-      </button>
-
-      <AnimatePresence initial={false}>
-        {isOpen && (
-          <motion.div
-            animate={{
-              height: "auto",
-              opacity: 1,
-              clipPath: "inset(0% 0% 0% 0%)",
-            }}
-            aria-labelledby={triggerId}
-            className="overflow-hidden"
-            exit={{
-              height: 0,
-              opacity: 0,
-              clipPath: "inset(0% 0% 100% 0%)",
-            }}
-            id={contentId}
-            initial={{
-              height: 0,
-              opacity: 0,
-              clipPath: "inset(0% 0% 100% 0%)",
-            }}
-            role="region"
-            transition={contentShellTransition}
+        <AccordionPrimitive.Header className="flex">
+          <AccordionPrimitive.Trigger
+            className={cn(
+              "flex w-full cursor-pointer items-start justify-between gap-6 text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset",
+              getTriggerClassName(isEditorial, isOpen)
+            )}
           >
-            <div className={getContentWrapClassName(isEditorial)}>
+            <AccordionTriggerLabel
+              isEditorial={isEditorial}
+              isOpen={isOpen}
+              itemNumber={itemNumber}
+              title={item.title}
+            />
+            <AccordionTriggerIndicator
+              isEditorial={isEditorial}
+              isOpen={isOpen}
+            />
+          </AccordionPrimitive.Trigger>
+        </AccordionPrimitive.Header>
+
+        <AnimatePresence initial={false}>
+          {isOpen ? (
+            <AccordionPrimitive.Content asChild forceMount>
               <motion.div
                 animate={{
-                  clipPath: "inset(0% 0% 0% 0%)",
+                  height: "auto",
                   opacity: 1,
+                  clipPath: "inset(0% 0% 0% 0%)",
                 }}
-                className={getContentMaskClassName(isEditorial)}
+                className="overflow-hidden"
                 exit={{
-                  clipPath: "inset(0% 100% 0% 0%)",
-                  opacity: 0.68,
+                  height: 0,
+                  opacity: 0,
+                  clipPath: "inset(0% 0% 100% 0%)",
                 }}
                 initial={{
-                  clipPath: "inset(0% 100% 0% 0%)",
-                  opacity: 0.68,
+                  height: 0,
+                  opacity: 0,
+                  clipPath: "inset(0% 0% 100% 0%)",
                 }}
-                transition={contentMaskTransition}
+                transition={contentShellTransition}
               >
-                <motion.p
-                  animate={{
-                    opacity: 1,
-                    y: 0,
-                    scale: 1,
-                    filter: "blur(0px)",
-                  }}
-                  className={getContentCopyClassName(isEditorial)}
-                  exit={{
-                    opacity: 0,
-                    y: -2,
-                    scale: 0.996,
-                    filter: "blur(1.5px)",
-                  }}
-                  initial={{
-                    opacity: 0,
-                    y: 7,
-                    scale: 0.998,
-                    filter: "blur(3px)",
-                  }}
-                  transition={contentCopyTransition}
-                >
-                  {item.content}
-                </motion.p>
+                <div className={getContentWrapClassName(isEditorial)}>
+                  <motion.div
+                    animate={{
+                      clipPath: "inset(0% 0% 0% 0%)",
+                      opacity: 1,
+                    }}
+                    className={getContentMaskClassName(isEditorial)}
+                    exit={{
+                      clipPath: "inset(0% 100% 0% 0%)",
+                      opacity: 0.68,
+                    }}
+                    initial={{
+                      clipPath: "inset(0% 100% 0% 0%)",
+                      opacity: 0.68,
+                    }}
+                    transition={contentMaskTransition}
+                  >
+                    <motion.div
+                      animate={{
+                        opacity: 1,
+                        y: 0,
+                        scale: 1,
+                        filter: "blur(0px)",
+                      }}
+                      className={getContentCopyClassName(isEditorial)}
+                      exit={{
+                        opacity: 0,
+                        y: -2,
+                        scale: 0.996,
+                        filter: "blur(1.5px)",
+                      }}
+                      initial={{
+                        opacity: 0,
+                        y: 7,
+                        scale: 0.998,
+                        filter: "blur(3px)",
+                      }}
+                      transition={contentCopyTransition}
+                    >
+                      {item.content}
+                    </motion.div>
+                  </motion.div>
+                </div>
               </motion.div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </motion.div>
+            </AccordionPrimitive.Content>
+          ) : null}
+        </AnimatePresence>
+      </motion.div>
+    </AccordionPrimitive.Item>
   );
 }
 
@@ -315,32 +308,40 @@ export function Accordion({
   multiple = false,
   variant = "default",
 }: AccordionProps) {
-  const [openItems, setOpenItems] = useState<string[]>([]);
-  const baseId = useId();
+  const [openItems, setOpenItems] = React.useState<string[]>([]);
   const isEditorial = variant === "editorial";
+  const rows = items.map((item, index) => (
+    <AccordionRow
+      index={index}
+      isEditorial={isEditorial}
+      isOpen={openItems.includes(item.id)}
+      item={item}
+      key={item.id}
+    />
+  ));
 
-  const toggle = (id: string) =>
-    setOpenItems((current) => {
-      if (current.includes(id)) {
-        return current.filter((itemId) => itemId !== id);
-      }
-
-      return multiple ? [...current, id] : [id];
-    });
+  if (multiple) {
+    return (
+      <AccordionPrimitive.Root
+        className={cn("mx-auto w-full max-w-2xl", className)}
+        onValueChange={setOpenItems}
+        type="multiple"
+        value={openItems}
+      >
+        {rows}
+      </AccordionPrimitive.Root>
+    );
+  }
 
   return (
-    <div className={cn("mx-auto w-full max-w-2xl", className)}>
-      {items.map((item, index) => (
-        <AccordionRow
-          baseId={baseId}
-          index={index}
-          isEditorial={isEditorial}
-          isOpen={openItems.includes(item.id)}
-          item={item}
-          key={item.id}
-          onToggle={toggle}
-        />
-      ))}
-    </div>
+    <AccordionPrimitive.Root
+      className={cn("mx-auto w-full max-w-2xl", className)}
+      collapsible
+      onValueChange={(value) => setOpenItems(value ? [value] : [])}
+      type="single"
+      value={openItems[0]}
+    >
+      {rows}
+    </AccordionPrimitive.Root>
   );
 }

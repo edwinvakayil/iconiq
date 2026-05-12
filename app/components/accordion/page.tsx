@@ -21,8 +21,19 @@ const demoItems: AccordionItem[] = [
   {
     id: "3",
     title: "Can I customize the content?",
-    content:
-      "Absolutely. Pass any length of body copy as content. The accordion gracefully handles variable-height content with automatic height animation.",
+    content: (
+      <>
+        <p>
+          Absolutely. Content now accepts any React node, so you can break
+          things into smaller, easier-to-scan chunks.
+        </p>
+        <ul>
+          <li>Paragraphs for context</li>
+          <li>Lists for quick scanning</li>
+          <li>Links or inline emphasis where needed</li>
+        </ul>
+      </>
+    ),
   },
   {
     id: "4",
@@ -50,8 +61,19 @@ const items: AccordionItem[] = [
   {
     id: "3",
     title: "Can I customize the content?",
-    content:
-      "Absolutely. Pass any length of body copy as content. The accordion gracefully handles variable-height content with automatic height animation.",
+    content: (
+      <>
+        <p>
+          Absolutely. Content accepts any React node, so you can break things
+          into smaller, easier-to-scan chunks.
+        </p>
+        <ul>
+          <li>Paragraphs for context</li>
+          <li>Lists for quick scanning</li>
+          <li>Links or inline emphasis where needed</li>
+        </ul>
+      </>
+    ),
   },
   {
     id: "4",
@@ -83,8 +105,19 @@ const items: AccordionItem[] = [
   {
     id: "3",
     title: "Can I customize the content?",
-    content:
-      "Absolutely. Pass any length of body copy as content. The accordion gracefully handles variable-height content with automatic height animation.",
+    content: (
+      <>
+        <p>
+          Absolutely. Content accepts any React node, so you can break things
+          into smaller, easier-to-scan chunks.
+        </p>
+        <ul>
+          <li>Paragraphs for context</li>
+          <li>Lists for quick scanning</li>
+          <li>Links or inline emphasis where needed</li>
+        </ul>
+      </>
+    ),
   },
   {
     id: "4",
@@ -122,8 +155,19 @@ const items: AccordionItem[] = [
   {
     id: "3",
     title: "Can I customize the content?",
-    content:
-      "Absolutely. Pass any length of body copy as content. The accordion gracefully handles variable-height content with automatic height animation.",
+    content: (
+      <>
+        <p>
+          Absolutely. Content accepts any React node, so you can break things
+          into smaller, easier-to-scan chunks.
+        </p>
+        <ul>
+          <li>Paragraphs for context</li>
+          <li>Lists for quick scanning</li>
+          <li>Links or inline emphasis where needed</li>
+        </ul>
+      </>
+    ),
   },
   {
     id: "4",
@@ -189,7 +233,7 @@ export default function AccordionPage() {
       preview={<Accordion className="w-full max-w-none" items={demoItems} />}
       title="Accordion"
       usageCode={usageCode}
-      usageDescription='Use the default item array pattern below, pass `variant="editorial"` when you want a lighter editorial treatment, or add `multiple` to let several rows stay open at once.'
+      usageDescription='Use the default item array pattern below, pass `variant="editorial"` when you want a lighter editorial treatment, add `multiple` to let several rows stay open at once, and pass `content` as any `ReactNode` when paragraphs or lists scan better than a single string.'
     />
   );
 }

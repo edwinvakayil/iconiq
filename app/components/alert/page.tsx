@@ -33,6 +33,7 @@ export function AlertPreview() {
           icon={<CheckCircle2 aria-hidden className="size-[18px]" />}
           key={previewKey}
           message="Your latest updates are now live for the team."
+          variant="toast"
           position="top-right"
           title="Changes saved"
         />
@@ -126,7 +127,7 @@ export default function AlertPage() {
         { label: "Alert" },
       ]}
       componentName="alert"
-      description="Dismissible banners with your own leading icon, spring motion, and optional fixed positions. Built for system feedback that feels clear instead of heavy."
+      description="Dismissible alerts with a forgiving close target, polite live announcements, paused auto-dismiss on interaction, and optional toast positioning."
       details={componentDetailsItems}
       preview={
         <div className="relative z-10 flex min-h-[300px] flex-col items-center justify-center pb-2">
@@ -181,6 +182,7 @@ export default function AlertPage() {
               message="Your latest updates are now live for the team."
               position="top-right"
               title="Changes saved"
+              variant="toast"
             />
           ) : null}
         </div>
@@ -188,7 +190,7 @@ export default function AlertPage() {
       previewClassName="overflow-visible lg:col-span-8"
       title="Alert"
       usageCode={usageCode}
-      usageDescription="Default export. Start with the inline alert below, then expand into fixed positions, auto-dismiss, and portal behavior in the API details."
+      usageDescription="Default export. Start with the inline alert below, then switch to toast mode when you want viewport positioning, timed dismissal, and polite live announcements."
     />
   );
 }

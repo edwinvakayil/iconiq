@@ -68,24 +68,24 @@ const REGISTRY_UI_META: Record<
     title: "Accordion",
     description:
       "Accordion with spring height, staggered text, default or editorial disclosure styles, and optional multi-open behavior. Built with Motion.",
-    dependencies: ["motion", "lucide-react"],
+    dependencies: ["@radix-ui/react-accordion", "motion", "lucide-react"],
   },
   alert: {
     title: "Alert",
     description:
-      "Dismissible banner with user-provided leading icon, spring enter/exit, blur, and optional fixed viewport positions. Motion.",
+      "Dismissible alert with an optional leading icon, action slot, polite live announcements, paused auto-dismiss on interaction, and inline or toast layout behavior.",
     dependencies: ["motion"],
   },
   breadcrumbs: {
     title: "Breadcrumbs",
     description:
-      "Breadcrumb trail with spring separators, hover lift, and a subtle shimmer on the current page. Built with Motion.",
+      "Breadcrumb trail with subtle easing, stronger focus states, and a dedicated current-page treatment. Built with Motion.",
     dependencies: ["motion", "lucide-react"],
   },
   button: {
     title: "Button",
     description:
-      'Primary action control with CVA variants, pointer ripples via Motion, and default type="button". Forwards ref and native button props.',
+      "Primary action control with larger default hit targets, spring press feedback, optional intrinsic width animation, and Motion ripples. Forwards ref and native button props.",
     dependencies: ["motion", "class-variance-authority"],
   },
   "button-group": {
