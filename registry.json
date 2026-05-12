@@ -130,7 +130,7 @@
       "dependencies": ["motion", "lucide-react"],
       "devDependencies": [],
       "title": "Carousel",
-      "description": "Swipeable testimonial carousel with spring-driven slide transitions, compact pagination dots, and previous/next arrow controls.",
+      "description": "Swipeable testimonial carousel with spring-driven slide transitions and previous/next arrow controls.",
       "files": [
         {
           "path": "carousels.tsx",

@@ -308,7 +308,7 @@ const carouselApiDetails: DetailItem[] = [
     id: "carousel",
     title: "Carousel",
     summary:
-      "Single exported testimonial carousel with internal pagination state, swipe gestures, animated slide transitions, and built-in arrow and dot controls.",
+      "Single exported testimonial carousel with internal slide index, swipe gestures, animated slide transitions, and built-in arrow controls.",
     fields: [
       field({
         name: "testimonials",
@@ -333,7 +333,7 @@ const carouselApiDetails: DetailItem[] = [
         type: "string",
         required: true,
         description:
-          "Main testimonial copy rendered in the large italic text block inside the active slide.",
+          "Main testimonial copy rendered in the large text block inside the active slide.",
       }),
       field({
         name: "name",
@@ -379,12 +379,6 @@ const carouselApiDetails: DetailItem[] = [
           "Dragging left or right past 80px changes slides. Smaller drags snap back to the current item.",
       }),
       field({
-        name: "pagination dots",
-        type: "built-in",
-        description:
-          "Each testimonial maps to a dot button. The active dot stretches wider and clicking any dot jumps to that index.",
-      }),
-      field({
         name: "arrow controls",
         type: "built-in",
         description:
@@ -392,7 +386,7 @@ const carouselApiDetails: DetailItem[] = [
       }),
     ],
     notes: [
-      "The root width is capped at max-w-md and the slide stage uses a fixed 230px height, so very different aspect ratios require a source edit.",
+      "The root width is capped at max-w-md and the slide stage uses a fixed height, so very different aspect ratios require a source edit.",
       "Slide direction is used by AnimatePresence to decide whether the next card enters from the left or right.",
     ],
   },

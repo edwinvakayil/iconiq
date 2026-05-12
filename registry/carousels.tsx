@@ -85,11 +85,11 @@ export function Carousel({
 
   return (
     <div className="mx-auto w-full max-w-md">
-      <div className="relative h-[214px]">
+      <div className="relative h-[222px]">
         <AnimatePresence custom={direction} initial={false} mode="wait">
           <motion.article
             animate="center"
-            className="absolute inset-0 flex cursor-grab select-none flex-col rounded-lg border border-border bg-card p-5 text-card-foreground active:cursor-grabbing"
+            className="absolute inset-0 flex cursor-grab select-none flex-col overflow-hidden rounded-2xl border border-border bg-card p-6 text-card-foreground active:cursor-grabbing"
             custom={direction}
             drag="x"
             dragConstraints={{ left: 0, right: 0 }}
@@ -105,40 +105,45 @@ export function Carousel({
             }}
             variants={variants}
           >
+            <span
+              aria-hidden
+              className="pointer-events-none absolute top-2 left-3 select-none font-serif text-[4.5rem] text-foreground/6 leading-none dark:text-foreground/9"
+            >
+              &ldquo;
+            </span>
+
             <p
-              className="h-[4.875rem] overflow-hidden text-base text-foreground/90 italic leading-relaxed"
+              className="relative z-1 h-19.5 overflow-hidden text-[15px] text-foreground/88 leading-[1.62] tracking-[-0.012em] antialiased sm:text-base"
               style={{
                 display: "-webkit-box",
                 WebkitLineClamp: 3,
                 WebkitBoxOrient: "vertical",
               }}
             >
-              &ldquo;{current.quote}&rdquo;
+              {current.quote}
             </p>
 
-            <div className="my-5 h-px bg-border" />
-
-            <div className="mt-auto flex items-center gap-3">
+            <div className="relative z-1 mt-auto flex items-center gap-3 border-border/60 border-t pt-5">
               {current.avatar ? (
                 /* biome-ignore lint/performance/noImgElement: registry component stays framework-agnostic for non-Next consumers. */
                 <img
                   alt={current.name}
-                  className="h-10 w-10 rounded-full object-cover ring-1 ring-border"
+                  className="h-10 w-10 rounded-full object-cover shadow-sm ring-2 ring-background ring-offset-0"
                   height={40}
                   loading="lazy"
                   src={current.avatar}
                   width={40}
                 />
               ) : current.initials ? (
-                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-muted font-medium text-muted-foreground text-sm ring-1 ring-border">
+                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-muted/80 font-medium text-muted-foreground text-sm shadow-sm ring-2 ring-background">
                   {current.initials}
                 </div>
               ) : null}
-              <div className="leading-tight">
-                <div className="font-semibold text-foreground">
+              <div className="min-w-0 leading-tight">
+                <div className="truncate font-semibold text-foreground tracking-tight">
                   {current.name}
                 </div>
-                <div className="text-muted-foreground text-sm">
+                <div className="truncate text-muted-foreground text-sm tracking-tight">
                   {current.handle}
                 </div>
               </div>
@@ -147,44 +152,23 @@ export function Carousel({
         </AnimatePresence>
       </div>
 
-      <div className="mt-6 flex items-center justify-between">
-        <div className="flex gap-2">
-          {testimonials.map((_, i) => (
-            <button
-              aria-label={`Go to testimonial ${i + 1}`}
-              className="h-1.5 rounded-full transition-all"
-              key={i}
-              onClick={() => setState([i, i > index ? 1 : -1])}
-              style={{
-                width: i === index ? 24 : 8,
-                backgroundColor:
-                  i === index
-                    ? "var(--color-foreground)"
-                    : "var(--color-border)",
-              }}
-              type="button"
-            />
-          ))}
-        </div>
-
-        <div className="flex gap-2">
-          <button
-            aria-label="Previous"
-            className="flex h-9 w-9 items-center justify-center rounded-full transition-colors hover:bg-accent"
-            onClick={() => paginate(-1)}
-            type="button"
-          >
-            <ChevronLeft className="h-4 w-4" />
-          </button>
-          <button
-            aria-label="Next"
-            className="flex h-9 w-9 items-center justify-center rounded-full transition-colors hover:bg-accent"
-            onClick={() => paginate(1)}
-            type="button"
-          >
-            <ChevronRight className="h-4 w-4" />
-          </button>
-        </div>
+      <div className="mt-7 flex justify-end gap-1.5">
+        <button
+          aria-label="Previous"
+          className="flex h-9 w-9 items-center justify-center rounded-full text-foreground/80 transition-colors hover:bg-accent hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+          onClick={() => paginate(-1)}
+          type="button"
+        >
+          <ChevronLeft className="h-4 w-4" strokeWidth={1.75} />
+        </button>
+        <button
+          aria-label="Next"
+          className="flex h-9 w-9 items-center justify-center rounded-full text-foreground/80 transition-colors hover:bg-accent hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+          onClick={() => paginate(1)}
+          type="button"
+        >
+          <ChevronRight className="h-4 w-4" strokeWidth={1.75} />
+        </button>
       </div>
     </div>
   );

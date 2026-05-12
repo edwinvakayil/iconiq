@@ -83,13 +83,13 @@ export default function CarouselsPage() {
         { label: "Carousel" },
       ]}
       componentName="carousels"
-      description="Swipeable testimonial carousel with spring-driven slide transitions, compact pagination dots, and next/previous arrow controls."
+      description="Swipeable testimonial carousel with spring-driven slide transitions and next/previous arrow controls."
       details={carouselApiDetails}
       preview={<CarouselPreview />}
-      previewDescription="Swipe the card or use the arrows and dots to test the built-in direction state, animated slide transitions, and pagination controls."
+      previewDescription="Swipe the card or use the arrows to test the built-in direction state and animated slide transitions."
       title="Carousel"
       usageCode={usageCode}
-      usageDescription="Pass your own testimonial array into the component and let the built-in gesture, pagination, and arrow controls handle the interaction shell."
+      usageDescription="Pass your own testimonial array into the component and let the built-in gesture and arrow controls handle the interaction shell."
     />
   );
 }

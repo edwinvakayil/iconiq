@@ -103,7 +103,7 @@ const REGISTRY_UI_META: Record<
   carousels: {
     title: "Carousel",
     description:
-      "Swipeable testimonial carousel with spring-driven slide transitions, compact pagination dots, and previous/next arrow controls.",
+      "Swipeable testimonial carousel with spring-driven slide transitions and previous/next arrow controls.",
     dependencies: ["motion", "lucide-react"],
   },
   "checkbox-group": {
