@@ -39,6 +39,23 @@ export function DrawerPreview() {
 
       <Drawer
         description="Review the latest changes before moving this update into sign-off."
+        footer={
+          <div className="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
+            <button
+              className="inline-flex min-h-11 items-center justify-center rounded-xl border border-border px-4 text-[13px] font-medium text-foreground transition-colors hover:bg-muted/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+              onClick={() => setOpen(false)}
+              type="button"
+            >
+              Keep editing
+            </button>
+            <button
+              className="inline-flex min-h-11 items-center justify-center rounded-xl bg-neutral-900 px-4 text-[13px] font-medium text-white transition-colors hover:bg-neutral-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400/30 focus-visible:ring-offset-2 dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-neutral-200"
+              type="button"
+            >
+              Move to sign-off
+            </button>
+          </div>
+        }
         onClose={() => setOpen(false)}
         open={open}
         side={isMobile ? "bottom" : "right"}
@@ -97,6 +114,23 @@ function DrawerPreview() {
       </button>
       <Drawer
         description="Review the latest changes before moving this update into sign-off."
+        footer={
+          <div className="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
+            <button
+              className="inline-flex min-h-11 items-center justify-center rounded-xl border border-border px-4 font-medium text-[13px] text-foreground transition-colors hover:bg-muted/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+              onClick={() => setOpen(false)}
+              type="button"
+            >
+              Keep editing
+            </button>
+            <button
+              className="inline-flex min-h-11 items-center justify-center rounded-xl bg-neutral-900 px-4 font-medium text-[13px] text-white transition-colors hover:bg-neutral-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400/30 focus-visible:ring-offset-2 dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-neutral-200"
+              type="button"
+            >
+              Move to sign-off
+            </button>
+          </div>
+        }
         onClose={() => setOpen(false)}
         open={open}
         side={isMobile ? "bottom" : "right"}
@@ -136,13 +170,13 @@ export default function DrawerPage() {
         { label: "Drawer" },
       ]}
       componentName="drawer"
-      description="Controlled overlay drawer with side-based slide motion, staggered content reveal, and a built-in close header."
+      description="Controlled overlay drawer with faster motion, focus-trapped dialog behavior, safe-area-aware mobile ergonomics, and an optional sticky footer."
       details={drawerApiDetails}
       preview={<DrawerPreview />}
-      previewDescription="Open the panel to test the controlled API, side-based panel movement, and built-in overlay close behavior."
+      previewDescription="Open the panel to test the controlled API, focus handling, faster open timing, and the optional sticky action footer."
       title="Drawer"
       usageCode={usageCode}
-      usageDescription="Control visibility from local state and pass your own title, description, and body content into the same shared shell."
+      usageDescription="Control visibility from local state, keep body content scrollable, and optionally pin footer actions into the shared shell."
     />
   );
 }

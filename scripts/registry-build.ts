@@ -49,7 +49,7 @@ const REGISTRY_UI_META: Record<
   drawer: {
     title: "Drawer",
     description:
-      "Controlled overlay drawer with side-based slide motion, staggered content reveal, and a built-in close header.",
+      "Controlled overlay drawer with faster slide timing, focus-trapped dialog behavior, safe-area-aware mobile ergonomics, and an optional sticky footer.",
     dependencies: ["motion", "lucide-react"],
   },
   dropdown: {

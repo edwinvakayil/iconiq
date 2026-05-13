@@ -1076,7 +1076,7 @@ const drawerApiDetails: DetailItem[] = [
     id: "drawer",
     title: "Drawer",
     summary:
-      "Single exported overlay drawer controlled entirely from parent state, with side-based panel motion and built-in body scroll locking.",
+      "Controlled overlay drawer with side-based entry, built-in focus management, scroll locking, and an optional sticky footer area for actions.",
     fields: [
       field({
         name: "open",
@@ -1103,13 +1103,19 @@ const drawerApiDetails: DetailItem[] = [
         name: "title",
         type: "string",
         description:
-          "Primary heading rendered in the header row. When omitted, the heading node still renders but stays empty.",
+          "Primary heading rendered in the header row and linked to the dialog label for assistive technology when present.",
       }),
       field({
         name: "description",
         type: "string",
         description:
-          "Secondary helper line rendered under the title when present.",
+          "Secondary helper line rendered under the title and exposed through aria-describedby when present.",
+      }),
+      field({
+        name: "footer",
+        type: "ReactNode",
+        description:
+          "Optional pinned footer region rendered beneath the scrollable body, useful for grouped actions or summary controls on mobile and desktop.",
       }),
       field({
         name: "children",
@@ -1119,16 +1125,16 @@ const drawerApiDetails: DetailItem[] = [
       }),
     ],
     notes: [
-      "This component does not forward arbitrary DOM props or refs to the overlay or panel. The public API is limited to the controlled props above.",
-      "While open, the component sets document.body.style.overflow to hidden and restores it during cleanup.",
-      "There is no focus trap, portal primitive, or aria dialog wiring here, so this version is closer to a visual application drawer than a full modal accessibility primitive.",
+      "While open, the component traps Tab navigation inside the panel, closes on Escape, restores focus to the previously focused element on teardown, and locks body scrolling.",
+      "The root aside now exposes role=dialog plus aria-modal, with title and description automatically wired when those props are provided.",
+      "Top and bottom drawers measure their inner content with ResizeObserver and animate their container height as content changes, which helps expandable sections feel smoother after open.",
     ],
   },
   {
     id: "drawer-motion-layout",
     title: "Motion, layout, and close behavior",
     summary:
-      "The drawer uses a spring-driven panel plus staggered header and body children, with a softer duration fallback when reduced motion is enabled.",
+      "The drawer opens with tighter timing, keeps the close control easier to hit, and uses a dedicated body-plus-footer layout so dense content stays chunked and actionable.",
     fields: [
       field({
         name: "overlay",
@@ -1140,12 +1146,13 @@ const drawerApiDetails: DetailItem[] = [
         name: "close button",
         type: "built-in",
         description:
-          "The header always includes a close button with the Lucide X icon wired to onClose.",
+          "The header always includes a larger 44px close target with the Lucide X icon wired to onClose.",
       }),
     ],
     notes: [
-      "Top and bottom drawers cap their height at 80vh, while left and right drawers cap their width at max-w-md and otherwise fill the viewport edge-to-edge.",
-      "A decorative top shimmer is always rendered inside the panel. Remove or restyle it locally if you want a flatter surface.",
+      "Entry motion keeps the original slide direction but reduces child delay and fade duration so the first readable content lands faster.",
+      "Bottom and top drawers now respect safe-area insets and use rounded leading edges, which makes full-width mobile presentations feel less cramped against the device chrome.",
+      "The body region is the only scrolling area. When footer content is provided, it stays pinned beneath the body instead of scrolling away with the main content.",
     ],
   },
   registryItem("drawer.json", ["motion", "lucide-react"]),
