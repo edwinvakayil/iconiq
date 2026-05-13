@@ -449,7 +449,7 @@ const COMPONENT_EXAMPLE: Record<string, string> = {
     '"use client";\n\n' +
     `import { Eye, EyeOff, LockKeyhole, Mail, User2 } from "lucide-react"\n` +
     `import { useState } from "react"\n` +
-    `import { InputGroup, Inputgroups } from "@/components/ui/input-group"\n\n` +
+    `import { InputGroup, InputGroupField } from "@/components/ui/input-group"\n\n` +
     "export default function Page() {\n" +
     '  const [name, setName] = useState("")\n' +
     '  const [email, setEmail] = useState("")\n' +
@@ -461,13 +461,13 @@ const COMPONENT_EXAMPLE: Record<string, string> = {
     "  return (\n" +
     '    <div className="mx-auto flex min-h-svh w-full max-w-xl items-center justify-center p-8">\n' +
     "      <InputGroup>\n" +
-    "        <Inputgroups\n" +
+    "        <InputGroupField\n" +
     '          label="Full name"\n' +
     "          onChange={(event) => setName(event.target.value)}\n" +
     '          prefixIcon={<User2 aria-hidden className="size-5" />}\n' +
     "          value={name}\n" +
     "        />\n" +
-    "        <Inputgroups\n" +
+    "        <InputGroupField\n" +
     "          error={emailError}\n" +
     '          label="Work email"\n' +
     "          onChange={(event) => setEmail(event.target.value)}\n" +
@@ -475,9 +475,10 @@ const COMPONENT_EXAMPLE: Record<string, string> = {
     '          type="email"\n' +
     "          value={email}\n" +
     "        />\n" +
-    "        <Inputgroups\n" +
+    "        <InputGroupField\n" +
     '          label="Password"\n' +
     '          prefixIcon={<LockKeyhole aria-hidden className="size-5" />}\n' +
+    '          suffixLabel={showPassword ? "Hide password" : "Show password"}\n' +
     '          suffixIcon={showPassword ? <EyeOff aria-hidden className="size-5" /> : <Eye aria-hidden className="size-5" />}\n' +
     "          onSuffixClick={() => setShowPassword((current) => !current)}\n" +
     '          type={showPassword ? "text" : "password"}\n' +

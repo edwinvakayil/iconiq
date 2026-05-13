@@ -1949,9 +1949,9 @@ const popoverApiDetails: DetailItem[] = [
 const inputGroupApiDetails: DetailItem[] = [
   {
     id: "inputgroups",
-    title: "Inputgroups",
+    title: "InputGroupField",
     summary:
-      "Floating-label input field with optional prefix and suffix slots, a center-out focus rule, and inline error messaging driven entirely by props.",
+      "Floating-label input field with optional prefix and suffix slots, a larger suffix hit area, and inline error messaging driven entirely by props.",
     fields: [
       field({
         name: "label",
@@ -1979,6 +1979,18 @@ const inputGroupApiDetails: DetailItem[] = [
           "Optional trailing visual rendered inside a button, which makes it useful for actions such as show-password toggles or clear controls.",
       }),
       field({
+        name: "suffixLabel",
+        type: "string",
+        description:
+          "Accessible name for the suffix action when the button only renders an icon. This is especially useful for password visibility toggles.",
+      }),
+      field({
+        name: "suffixButtonProps",
+        type: 'React.ComponentProps<"button">',
+        description:
+          "Additional props merged onto the suffix button, useful for aria-pressed, disabled, data attributes, or a custom aria-label.",
+      }),
+      field({
         name: "onSuffixClick",
         type: "() => void",
         description:
@@ -1999,22 +2011,24 @@ const inputGroupApiDetails: DetailItem[] = [
     ],
     notes: [
       "Standard native input props such as name, type, value, defaultValue, placeholder, autoComplete, disabled, onFocus, onBlur, and onChange are forwarded directly to the underlying input element.",
-      "The outer field shell uses a mouse-down focus handoff, so clicking the label area or prefix icon focuses the input without stealing focus from the suffix button.",
+      "The outer field shell uses a pointer-down focus handoff, so clicking the label area or prefix icon focuses the input without stealing focus from the suffix button on touch devices.",
       "Value presence is tracked from the real input value, which keeps the floating label aligned for both controlled and uncontrolled usage.",
+      "When error is present, the field links the message through aria-describedby and aria-errormessage so assistive tech receives the same validation context as sighted users.",
+      "Inputgroups remains exported as a backward-compatible alias, but InputGroupField is the preferred public name going forward.",
     ],
   },
   {
     id: "input-group",
     title: "InputGroup",
     summary:
-      "Lightweight vertical wrapper for stacking multiple Inputgroups fields with consistent spacing.",
+      "Lightweight vertical wrapper for stacking multiple InputGroupField fields with consistent spacing.",
     fields: [
       field({
         name: "children",
         type: "ReactNode",
         required: true,
         description:
-          "One or more Inputgroups fields, or any other custom content you want to keep in the same vertical flow.",
+          "One or more InputGroupField fields, or any other custom content you want to keep in the same vertical flow.",
       }),
       field({
         name: "className",
@@ -2035,7 +2049,7 @@ const inputGroupApiDetails: DetailItem[] = [
     notes: [
       "The label, prefix slot, and suffix slot all use spring transitions, so they respond to focus without introducing layout shift.",
       "The bottom accent line grows from the center outward only while the field is focused, then collapses away on blur.",
-      "Error copy mounts and exits through AnimatePresence, which keeps the spacing stable while still giving feedback a small fade-and-rise transition.",
+      "Error copy mounts through an animated height wrapper, which keeps neighboring fields from snapping when validation feedback appears or disappears.",
     ],
   },
   registryItem("input-group.json", ["motion"]),
