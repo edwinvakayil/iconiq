@@ -905,7 +905,7 @@ const comboboxApiDetails: DetailItem[] = [
         name: "value",
         type: "string",
         description:
-          "Currently selected option value. The component derives the visible label entirely from this prop when the field is closed.",
+          "Currently selected option value. The component derives the visible label from this prop when closed, and keeps showing that label on focus until the user starts editing the query.",
       }),
       field({
         name: "onChange",
@@ -947,10 +947,18 @@ const comboboxApiDetails: DetailItem[] = [
         description:
           "Controls whether the clear button appears once a value has been selected.",
       }),
+      field({
+        name: "openOnFocus",
+        type: "boolean",
+        defaultValue: "false",
+        description:
+          "Opens the listbox as soon as the input receives focus. When false, focus alone keeps the current selection visible and waits for typing, click, or arrow-key navigation.",
+      }),
     ],
     notes: [
       "This is effectively controlled for selection. If the parent does not feed the next onChange result back into value, the checkmark and closed-field label do not update.",
       "Closing the popover resets the live query string, so reopening the field starts from the full option list again.",
+      "The selected label stays visible on focus, but the input text is selected so the first keystroke replaces it cleanly.",
     ],
   },
   {
@@ -959,10 +967,10 @@ const comboboxApiDetails: DetailItem[] = [
     summary:
       "The dropdown is portaled to document.body, positioned from the field bounds, and supports a stronger keyboard model than the simpler select component.",
     notes: [
-      "Filtering is a case-insensitive substring match across label, value, and description.",
+      "Filtering normalizes case, accents, spaces, and hyphens, then matches across label, value, and description.",
       "ArrowUp, ArrowDown, Home, End, Enter, Escape, and Tab are all handled directly on the input to drive the internal activeIndex and open state.",
-      "The clear button uses tabIndex={-1}, so it is pointer-accessible but not keyboard reachable in this version.",
-      "Because the list is rendered in a portal with fixed positioning, overflow-hidden ancestors do not clip it. Placement is recalculated from the trigger rect while it is open.",
+      "The clear button is keyboard reachable and sized as a larger hit target instead of a tiny icon-only affordance.",
+      "Because the list is rendered in a portal with fixed positioning, overflow-hidden ancestors do not clip it. Placement is recalculated from the trigger rect while it is open, and outside-click checks treat the portaled menu as part of the component.",
     ],
   },
   registryItem("combobox.json", ["motion", "lucide-react"]),

@@ -20,6 +20,50 @@ export interface ComboboxProps {
   className?: string;
   disabled?: boolean;
   clearable?: boolean;
+  openOnFocus?: boolean;
+}
+
+type SearchParts = {
+  normalized: string;
+  compact: string;
+  tokens: string[];
+};
+
+function getSearchParts(value: string): SearchParts {
+  const normalized = value
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/[_-]+/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+
+  return {
+    normalized,
+    compact: normalized.replace(/\s+/g, ""),
+    tokens: normalized.split(" ").filter(Boolean),
+  };
+}
+
+function matchesSearch(
+  candidate: string | undefined,
+  { normalized, compact, tokens }: SearchParts
+) {
+  if (!candidate) return false;
+
+  const candidateParts = getSearchParts(candidate);
+
+  if (candidateParts.normalized.includes(normalized)) return true;
+  if (compact && candidateParts.compact.includes(compact)) return true;
+
+  return (
+    tokens.length > 0 &&
+    tokens.every(
+      (token) =>
+        candidateParts.normalized.includes(token) ||
+        candidateParts.compact.includes(token)
+    )
+  );
 }
 
 export function Combobox({
@@ -31,10 +75,12 @@ export function Combobox({
   className,
   disabled = false,
   clearable = true,
+  openOnFocus = false,
 }: ComboboxProps) {
   const [mounted, setMounted] = React.useState(false);
   const [open, setOpen] = React.useState(false);
   const [query, setQuery] = React.useState("");
+  const [isEditingQuery, setIsEditingQuery] = React.useState(false);
   const [activeIndex, setActiveIndex] = React.useState(0);
   const [isSmallScreen, setIsSmallScreen] = React.useState(false);
   const [menuStyle, setMenuStyle] = React.useState<React.CSSProperties>({
@@ -46,18 +92,20 @@ export function Combobox({
   const containerRef = React.useRef<HTMLDivElement>(null);
   const inputRef = React.useRef<HTMLInputElement>(null);
   const listRef = React.useRef<HTMLDivElement>(null);
+  const menuRef = React.useRef<HTMLDivElement>(null);
   const listboxId = React.useId();
 
   const selected = options.find((o) => o.value === value);
 
   const filtered = React.useMemo(() => {
-    const q = query.trim().toLowerCase();
-    if (!q) return options;
+    const search = getSearchParts(query);
+    if (!search.normalized) return options;
+
     return options.filter(
       (o) =>
-        o.label.toLowerCase().includes(q) ||
-        o.value.toLowerCase().includes(q) ||
-        o.description?.toLowerCase().includes(q)
+        matchesSearch(o.label, search) ||
+        matchesSearch(o.value, search) ||
+        matchesSearch(o.description, search)
     );
   }, [options, query]);
 
@@ -65,9 +113,10 @@ export function Combobox({
   React.useEffect(() => {
     if (!open) return;
     const handler = (e: MouseEvent) => {
-      if (!containerRef.current?.contains(e.target as Node)) {
-        setOpen(false);
-      }
+      const target = e.target as Node;
+      if (containerRef.current?.contains(target)) return;
+      if (menuRef.current?.contains(target)) return;
+      setOpen(false);
     };
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
@@ -78,7 +127,10 @@ export function Combobox({
     if (open) {
       const idx = filtered.findIndex((o) => o.value === value);
       setActiveIndex(idx >= 0 ? idx : 0);
-    } else setQuery("");
+    } else {
+      setQuery("");
+      setIsEditingQuery(false);
+    }
   }, [open, filtered, value]);
 
   React.useEffect(() => {
@@ -133,6 +185,17 @@ export function Combobox({
     el?.scrollIntoView({ block: "nearest" });
   }, [activeIndex, open]);
 
+  const selectDisplayedValue = React.useCallback(() => {
+    if (!selected?.label || query || isEditingQuery) return;
+
+    requestAnimationFrame(() => {
+      const input = inputRef.current;
+      if (input && document.activeElement === input) {
+        input.select();
+      }
+    });
+  }, [selected?.label, query, isEditingQuery]);
+
   const select = (opt: ComboboxOption) => {
     onChange?.(opt.value);
     setOpen(false);
@@ -142,6 +205,7 @@ export function Combobox({
   const handleArrowKey = (key: "ArrowDown" | "ArrowUp") => {
     if (!open) {
       setOpen(true);
+      selectDisplayedValue();
       return;
     }
     setActiveIndex((i) => {
@@ -196,8 +260,11 @@ export function Combobox({
     }
   };
 
-  // What's shown in the input: live query while open, otherwise selected label
-  const displayValue = open ? query : (selected?.label ?? "");
+  const displayValue = open
+    ? isEditingQuery
+      ? query
+      : (selected?.label ?? query)
+    : (selected?.label ?? "");
 
   const menuContent = (
     <AnimatePresence>
@@ -208,6 +275,7 @@ export function Combobox({
           exit={{ opacity: 0, y: -4 }}
           initial={{ opacity: 0, y: -6 }}
           key="popover"
+          ref={menuRef}
           role="presentation"
           style={
             isSmallScreen
@@ -330,14 +398,16 @@ export function Combobox({
           if (!disabled) {
             setOpen(true);
             inputRef.current?.focus();
+            selectDisplayedValue();
           }
         }}
         onKeyDown={(e) => {
-          if (disabled) return;
+          if (disabled || e.target !== e.currentTarget) return;
           if (e.key === "Enter" || e.key === " ") {
             e.preventDefault();
             setOpen(true);
             inputRef.current?.focus();
+            selectDisplayedValue();
           }
         }}
       >
@@ -354,10 +424,14 @@ export function Combobox({
           disabled={disabled}
           onChange={(e) => {
             if (!open) setOpen(true);
+            setIsEditingQuery(true);
             setQuery(e.target.value);
             setActiveIndex(0);
           }}
-          onFocus={() => setOpen(true)}
+          onFocus={() => {
+            selectDisplayedValue();
+            if (openOnFocus) setOpen(true);
+          }}
           onKeyDown={onInputKeyDown}
           placeholder={placeholder}
           ref={inputRef}
@@ -369,14 +443,14 @@ export function Combobox({
         {clearable && selected && !disabled && (
           <button
             aria-label="Clear selection"
-            className="rounded-lg p-0.5 text-muted-foreground opacity-70 hover:bg-muted hover:opacity-100"
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg text-muted-foreground opacity-70 transition hover:bg-muted hover:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/30"
             onClick={(e) => {
               e.stopPropagation();
               onChange?.("");
               setQuery("");
+              setIsEditingQuery(open);
               inputRef.current?.focus();
             }}
-            tabIndex={-1}
             type="button"
           >
             <X className="h-3.5 w-3.5" />
