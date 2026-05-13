@@ -1694,7 +1694,7 @@ const hoverCardApiDetails: DetailItem[] = [
     id: "hover-card",
     title: "HoverCard",
     summary:
-      "Stateful wrapper that opens and closes a local callout from pointer and focus events with configurable delays.",
+      "Stateful wrapper that opens a callout on delayed hover or immediate focus, then closes it once pointer and focus both leave the hover-card region.",
     fields: [
       field({
         name: "children",
@@ -1707,26 +1707,26 @@ const hoverCardApiDetails: DetailItem[] = [
         name: "className",
         type: "string",
         description:
-          "Merged onto the root span that anchors the trigger and positioned content.",
+          "Merged onto the inline-flex wrapper that groups the trigger and content primitives.",
       }),
       field({
         name: "openDelay",
         type: "number",
         defaultValue: "80",
         description:
-          "Delay in milliseconds before the card opens after pointer or focus entry.",
+          "Delay in milliseconds before the card opens after pointer entry. Keyboard focus opens immediately.",
       }),
       field({
         name: "closeDelay",
         type: "number",
         defaultValue: "120",
         description:
-          "Delay in milliseconds before the card closes after pointer or focus leaves the root.",
+          "Delay in milliseconds before the card closes after pointer exit. Blur closes immediately unless focus is still moving within the card.",
       }),
     ],
     notes: [
       "Open state is internal only. This implementation does not expose a controlled open prop or state-change callback.",
-      "The root renders a relative inline-block span and attaches the hover and focus handlers there, so the content stays anchored to that local wrapper.",
+      "The root manages hover and focus timing while Radix Popover handles portal-based positioning and collision avoidance.",
       "Pending timers are cleared before every new open or close request and again during unmount cleanup.",
     ],
   },
@@ -1757,7 +1757,8 @@ const hoverCardApiDetails: DetailItem[] = [
       }),
     ],
     notes: [
-      "When asChild is false, the component renders a plain button element. Pass type='button' yourself if you place it inside a form.",
+      "When asChild is false, the component renders a plain button with type='button', a larger default hit area, and a visible focus ring.",
+      "The trigger is also used as the positioning anchor and automatically receives aria-expanded, aria-controls, and aria-haspopup.",
       "Standard button props such as disabled, onClick, aria-*, and data-* are forwarded to the rendered trigger element.",
     ],
   },
@@ -1765,7 +1766,7 @@ const hoverCardApiDetails: DetailItem[] = [
     id: "hover-card-content",
     title: "HoverCardContent",
     summary:
-      "Animated content panel that appears below the trigger with a spring entrance and blur fade.",
+      "Animated content panel with collision-aware Popover positioning, side and align controls, and a spring-driven blur fade.",
     fields: [
       field({
         name: "children",
@@ -1779,14 +1780,60 @@ const hoverCardApiDetails: DetailItem[] = [
         description:
           "Merged onto the motion.div panel so width, spacing, or surface styles can be adjusted.",
       }),
+      field({
+        name: "side",
+        type: '"top" | "right" | "bottom" | "left"',
+        defaultValue: '"bottom"',
+        description:
+          "Preferred side for the panel before collision handling adjusts the placement.",
+      }),
+      field({
+        name: "align",
+        type: '"start" | "center" | "end"',
+        defaultValue: '"center"',
+        description:
+          "Horizontal or vertical alignment relative to the trigger, depending on side.",
+      }),
+      field({
+        name: "sideOffset",
+        type: "number",
+        defaultValue: "12",
+        description:
+          "Gap between trigger and panel. The component also extends an invisible hover bridge through that gap to reduce accidental closes.",
+      }),
+      field({
+        name: "alignOffset",
+        type: "number",
+        defaultValue: "0",
+        description: "Additional offset applied along the alignment axis.",
+      }),
+      field({
+        name: "avoidCollisions",
+        type: "boolean",
+        defaultValue: "true",
+        description:
+          "Enables Radix collision handling so the card can shift or flip when space is tight.",
+      }),
+      field({
+        name: "collisionPadding",
+        type: "number | Partial<Record<Side, number>>",
+        defaultValue: "12",
+        description:
+          "Padding from viewport edges used during collision detection.",
+      }),
     ],
     notes: [
       "Additional motion.div props such as style, role, onClick, aria-*, and data-* are forwarded, but initial, animate, exit, and transition are reserved by the component.",
-      "The panel is absolutely positioned relative to the root wrapper rather than portaled to document.body, so overflow-hidden ancestors can clip it.",
-      "By default the content is centered below the trigger with mt-3 spacing and a fixed w-72 width.",
+      "The panel is portaled through Radix Popover content, so it can escape overflow-hidden ancestors and reposition near viewport edges.",
+      "Focus can move from the trigger into interactive content without immediately closing the card.",
+      "By default the content is centered below the trigger with a fixed w-72 width and a 12px hover bridge across the trigger-to-panel gap.",
     ],
   },
-  registryItem("hover-card.json", ["@radix-ui/react-slot", "motion"]),
+  registryItem("hover-card.json", [
+    "@radix-ui/react-popover",
+    "@radix-ui/react-slot",
+    "motion",
+  ]),
 ];
 
 const popoverApiDetails: DetailItem[] = [

@@ -45,8 +45,8 @@ export function HoverCardPreview() {
       </HoverCard>
 
       <p className="max-w-sm text-center text-[13px] leading-6 text-secondary">
-        Hover or focus the trigger to inspect the local positioning, open and
-        close delay, and spring entrance.
+        Hover for delayed reveal or focus the trigger to open instantly and
+        inspect the positioning.
       </p>
     </div>
   );
@@ -83,8 +83,8 @@ function HoverCardPreview() {
       </HoverCard>
 
       <p className="max-w-sm text-center text-[13px] text-secondary leading-6">
-        Hover or focus the trigger to inspect the local positioning, open and
-        close delay, and spring entrance.
+        Hover for delayed reveal or focus the trigger to open instantly and
+        inspect the positioning.
       </p>
     </div>
   );
@@ -99,13 +99,13 @@ export default function HoverCardPage() {
         { label: "Hover Card" },
       ]}
       componentName="hover-card"
-      description="Inline hover card with delayed open and close timing, Slot-based custom triggers, and a spring-driven content panel."
+      description="Inline hover card with hover-only timing delays, instant focus reveal, collision-aware Popover positioning, and a spring-driven content panel."
       details={hoverCardApiDetails}
       preview={<HoverCardPreview />}
-      previewDescription="Hover or focus the trigger to test the timing and anchored content behavior."
+      previewDescription="Hover or focus the trigger to test delayed pointer timing, instant keyboard reveal, and collision-aware positioning."
       title="Hover Card"
       usageCode={usageCode}
-      usageDescription="Compose the root, trigger, and content primitives together, then use the API details to tune timing, trigger composition, and panel behavior."
+      usageDescription="Compose the root, trigger, and content primitives together, then tune hover timing, trigger composition, and collision-aware positioning from the API."
     />
   );
 }

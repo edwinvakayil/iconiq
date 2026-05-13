@@ -121,8 +121,8 @@ const REGISTRY_UI_META: Record<
   "hover-card": {
     title: "Hover Card",
     description:
-      "Inline hover card with delayed open and close timing, Slot-based custom triggers, and a spring-driven content panel.",
-    dependencies: ["@radix-ui/react-slot", "motion"],
+      "Inline hover card with hover-only timing delays, instant focus reveal, collision-aware Popover positioning, Slot-based custom triggers, and a spring-driven content panel.",
+    dependencies: ["@radix-ui/react-popover", "@radix-ui/react-slot", "motion"],
   },
   popover: {
     title: "Popover",

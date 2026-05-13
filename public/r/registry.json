@@ -262,10 +262,14 @@
       "name": "hover-card",
       "type": "registry:ui",
       "registryDependencies": [],
-      "dependencies": ["@radix-ui/react-slot", "motion"],
+      "dependencies": [
+        "@radix-ui/react-popover",
+        "@radix-ui/react-slot",
+        "motion"
+      ],
       "devDependencies": [],
       "title": "Hover Card",
-      "description": "Inline hover card with delayed open and close timing, Slot-based custom triggers, and a spring-driven content panel.",
+      "description": "Inline hover card with hover-only timing delays, instant focus reveal, collision-aware Popover positioning, Slot-based custom triggers, and a spring-driven content panel.",
       "files": [
         {
           "path": "hover-card.tsx",
