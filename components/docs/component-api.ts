@@ -1222,6 +1222,7 @@ const dropdownApiDetails: DetailItem[] = [
     notes: [
       "The menu stays local to the trigger wrapper and is absolutely positioned under it instead of being portaled to document.body.",
       "Escape and outside clicks close the menu. This version does not ship a full roving-focus keyboard model like Radix dropdown-menu.",
+      "While open, users can move through items with Arrow keys, Home, End, or typeahead matching based on each item's visible label or textValue.",
     ],
   },
   {
@@ -1315,7 +1316,8 @@ const dropdownApiDetails: DetailItem[] = [
       }),
     ],
     notes: [
-      "The content stays mounted only while the menu is open, and its spring animation is handled internally.",
+      "The content stays mounted only while the menu is open, animates its bounds as labels or groups change, and constrains long menus with internal scrolling.",
+      "The surface always opens below the trigger and still clamps horizontally to stay inside the viewport.",
     ],
   },
   {
@@ -1341,7 +1343,7 @@ const dropdownApiDetails: DetailItem[] = [
         name: "textValue",
         type: "string",
         description:
-          "Optional explicit label used by DropdownValue when your item children are not plain text.",
+          "Optional explicit label used by DropdownValue and typeahead when your item children are not plain text.",
       }),
       field({
         name: "onClick",
@@ -1358,6 +1360,67 @@ const dropdownApiDetails: DetailItem[] = [
     notes: [
       "Select items do not render a filled selected background in this version; only the trailing checkmark indicates the chosen value.",
       "If you omit value in select mode, the item behaves like a plain closing action and will not update the current value.",
+    ],
+  },
+  {
+    id: "dropdown-group",
+    title: "DropdownGroup",
+    summary:
+      "Optional wrapper for chunking larger menus into sections, with or without a visible label.",
+    fields: [
+      field({
+        name: "children",
+        type: "ReactNode",
+        required: true,
+        description:
+          "Usually one or more DropdownItem nodes. Add label when you want a visible heading, or omit it when you just want grouped spacing.",
+      }),
+      field({
+        name: "label",
+        type: "ReactNode",
+        description:
+          "Optional convenience heading rendered with DropdownLabel styling and linked to the group for assistive technologies.",
+      }),
+      field({
+        name: "labelClassName",
+        type: "string",
+        description:
+          "Merged onto the generated section heading when you want to tweak its spacing or tone.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description:
+          "Merged onto the group wrapper. The base version adds light vertical spacing between grouped rows.",
+      }),
+    ],
+    notes: [
+      "Label is optional. Without it, the wrapper only provides spacing unless you also pass aria-label or aria-labelledby.",
+      "If you provide label, the wrapper upgrades to role=group and wires aria-labelledby automatically.",
+    ],
+  },
+  {
+    id: "dropdown-label",
+    title: "DropdownLabel",
+    summary:
+      "Standalone non-interactive heading helper for advanced content layouts or custom grouping patterns.",
+    fields: [
+      field({
+        name: "children",
+        type: "ReactNode",
+        required: true,
+        description:
+          "Short section text such as Product, Billing, or Workspace settings.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description:
+          "Merged onto the rendered div when you want to adjust spacing, weight, or casing locally.",
+      }),
+    ],
+    notes: [
+      "Use this directly when you want a heading style without the convenience wrapper supplied by DropdownGroup.",
     ],
   },
   {

@@ -8,30 +8,58 @@ import { cn } from "@/lib/utils";
 
 export type DropdownVariant = "select" | "action";
 
+type DropdownAlign = "center" | "end" | "start";
+type DropdownFocusStrategy = "first" | "last" | "selected";
+
 const SOFT_EASE = [0.22, 1, 0.36, 1] as const;
+const MAX_CONTENT_HEIGHT = 384;
+const TYPEAHEAD_RESET_MS = 500;
+const VIEWPORT_MARGIN = 12;
 
-function getContentAlignmentClasses(align: "center" | "end" | "start") {
-  if (align === "center") {
-    return "left-1/2 -translate-x-1/2";
-  }
-
-  if (align === "end") {
-    return "right-0";
-  }
-
-  return "left-0";
+function clamp(value: number, min: number, max: number) {
+  return Math.min(Math.max(value, min), max);
 }
 
-function getContentTransformOrigin(align: "center" | "end" | "start") {
+function getContentMotion(reduceMotion: boolean) {
+  return {
+    animate: { opacity: 1, y: 0 },
+    exit: { opacity: 0, y: reduceMotion ? 0 : -4 },
+    initial: { opacity: 0, y: reduceMotion ? 0 : -4 },
+    transition: {
+      duration: reduceMotion ? 0.16 : 0.25,
+      ease: reduceMotion ? ("easeOut" as const) : SOFT_EASE,
+    },
+  };
+}
+
+function getHorizontalOrigin(align: DropdownAlign) {
   if (align === "center") {
-    return "top center";
+    return "center";
   }
 
   if (align === "end") {
-    return "top right";
+    return "right";
   }
 
-  return "top left";
+  return "left";
+}
+
+function getResolvedPlacement(
+  contentHeight: number,
+  triggerRect: DOMRect,
+  viewportHeight: number,
+  sideOffset: number
+) {
+  const availableBelow = Math.max(
+    viewportHeight - triggerRect.bottom - sideOffset - VIEWPORT_MARGIN,
+    0
+  );
+  const maxHeight =
+    availableBelow > 0
+      ? Math.min(MAX_CONTENT_HEIGHT, Math.min(contentHeight, availableBelow))
+      : null;
+
+  return { maxHeight };
 }
 
 function getInnerContentMotion(reduceMotion: boolean) {
@@ -47,26 +75,24 @@ function getInnerContentMotion(reduceMotion: boolean) {
   };
 }
 
-function getContentMotion(reduceMotion: boolean) {
-  return {
-    animate: { opacity: 1, y: 0, scaleY: 1 },
-    exit: { opacity: 0, y: -4, scaleY: 0.92 },
-    initial: { opacity: 0, y: -4, scaleY: 0.92 },
-    transition: {
-      duration: reduceMotion ? 0.16 : 0.25,
-      ease: reduceMotion ? ("easeOut" as const) : SOFT_EASE,
-    },
-  };
+function normalizeTypeaheadValue(value: string) {
+  return value
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/\s+/g, " ")
+    .trim();
 }
 
 type DropdownContextValue = {
   activeItemId: string | null;
+  contentId: string;
   containerRef: React.RefObject<HTMLDivElement | null>;
   labels: Record<string, string>;
   open: boolean;
   reduceMotion: boolean;
   setActiveItemId: (id: string | null) => void;
-  setFocusStrategy: (strategy: "first" | "last" | "selected") => void;
+  setFocusStrategy: (strategy: DropdownFocusStrategy) => void;
   setOpen: (open: boolean) => void;
   setValue: (value: string | undefined) => void;
   triggerRef: React.RefObject<HTMLButtonElement | null>;
@@ -115,6 +141,43 @@ function getTextContent(node: React.ReactNode): string {
   }
 
   return "";
+}
+
+function getResolvedHorizontalPosition({
+  align,
+  containerRect,
+  contentWidth,
+  triggerRect,
+  viewportWidth,
+}: {
+  align: DropdownAlign;
+  containerRect: DOMRect;
+  contentWidth: number;
+  triggerRect: DOMRect;
+  viewportWidth: number;
+}) {
+  const desiredLeft =
+    align === "center"
+      ? triggerRect.left + (triggerRect.width - contentWidth) / 2
+      : align === "end"
+        ? triggerRect.right - contentWidth
+        : triggerRect.left;
+  const maxLeft = Math.max(
+    VIEWPORT_MARGIN,
+    viewportWidth - contentWidth - VIEWPORT_MARGIN
+  );
+  const clampedLeft = clamp(desiredLeft, VIEWPORT_MARGIN, maxLeft);
+  const horizontalOrigin: "center" | "left" | "right" =
+    Math.abs(clampedLeft - VIEWPORT_MARGIN) < 0.5
+      ? "left"
+      : Math.abs(clampedLeft - maxLeft) < 0.5
+        ? "right"
+        : getHorizontalOrigin(align);
+
+  return {
+    horizontalOrigin,
+    left: clampedLeft - containerRect.left,
+  };
 }
 
 function collectDropdownLabels(node: React.ReactNode): Record<string, string> {
@@ -207,9 +270,10 @@ export function Dropdown({
   const containerRef = React.useRef<HTMLDivElement>(null);
   const triggerRef = React.useRef<HTMLButtonElement>(null);
   const reduceMotion = useReducedMotion() ?? false;
-  const focusStrategyRef = React.useRef<"first" | "last" | "selected">(
-    "selected"
-  );
+  const contentId = React.useId();
+  const focusStrategyRef = React.useRef<DropdownFocusStrategy>("selected");
+  const typeaheadRef = React.useRef("");
+  const typeaheadTimeoutRef = React.useRef<number | null>(null);
   const [open, setOpen] = useControllableState<boolean>({
     defaultProp: defaultOpen,
     onChange: onOpenChange,
@@ -226,14 +290,23 @@ export function Dropdown({
     [children]
   );
 
+  const clearTypeahead = React.useCallback(() => {
+    if (typeaheadTimeoutRef.current !== null) {
+      window.clearTimeout(typeaheadTimeoutRef.current);
+      typeaheadTimeoutRef.current = null;
+    }
+
+    typeaheadRef.current = "";
+  }, []);
+
   const getEnabledItems = React.useCallback(() => {
     if (!containerRef.current) {
       return [];
     }
 
     return Array.from(
-      containerRef.current.querySelectorAll<HTMLButtonElement>(
-        "[data-dropdown-item]:not([disabled])"
+      containerRef.current.querySelectorAll<HTMLElement>(
+        "[data-dropdown-item]:not([data-disabled])"
       )
     );
   }, []);
@@ -247,7 +320,9 @@ export function Dropdown({
       }
 
       const nextIndex = Math.min(Math.max(index, 0), items.length - 1);
-      items[nextIndex]?.focus();
+      const nextItem = items[nextIndex];
+      nextItem?.focus();
+      nextItem?.scrollIntoView({ block: "nearest" });
     },
     [getEnabledItems]
   );
@@ -267,6 +342,42 @@ export function Dropdown({
 
     return activeElement;
   }, []);
+
+  const findMatchingItemIndex = React.useCallback(
+    (query: string) => {
+      const normalizedQuery = normalizeTypeaheadValue(query);
+
+      if (!normalizedQuery) {
+        return null;
+      }
+
+      const items = getEnabledItems();
+
+      if (!items.length) {
+        return null;
+      }
+
+      const activeElement = getActiveDropdownElement();
+      const currentIndex = items.indexOf(activeElement as HTMLElement);
+      const startIndex =
+        currentIndex === -1 ? 0 : (currentIndex + 1) % items.length;
+
+      for (let offset = 0; offset < items.length; offset += 1) {
+        const index = (startIndex + offset) % items.length;
+        const candidate = items[index];
+        const textValue = normalizeTypeaheadValue(
+          candidate?.dataset.textValue ?? candidate?.textContent ?? ""
+        );
+
+        if (textValue.startsWith(normalizedQuery)) {
+          return index;
+        }
+      }
+
+      return null;
+    },
+    [getActiveDropdownElement, getEnabledItems]
+  );
 
   const handleMenuNavigation = React.useCallback(
     (key: "ArrowDown" | "ArrowUp" | "Home" | "End") => {
@@ -292,7 +403,7 @@ export function Dropdown({
         return true;
       }
 
-      const currentIndex = items.indexOf(activeElement as HTMLButtonElement);
+      const currentIndex = items.indexOf(activeElement as HTMLElement);
 
       if (currentIndex === -1) {
         focusItem(key === "ArrowUp" ? items.length - 1 : 0);
@@ -310,13 +421,61 @@ export function Dropdown({
     [focusItem, getActiveDropdownElement, getEnabledItems]
   );
 
+  const handleTypeaheadKey = React.useCallback(
+    (key: string) => {
+      const normalizedKey = normalizeTypeaheadValue(key);
+
+      if (!normalizedKey) {
+        return false;
+      }
+
+      const nextQuery =
+        typeaheadRef.current === normalizedKey
+          ? normalizedKey
+          : `${typeaheadRef.current}${normalizedKey}`;
+      const matchIndex = findMatchingItemIndex(nextQuery);
+
+      typeaheadRef.current = nextQuery;
+
+      if (typeaheadTimeoutRef.current !== null) {
+        window.clearTimeout(typeaheadTimeoutRef.current);
+      }
+
+      typeaheadTimeoutRef.current = window.setTimeout(() => {
+        typeaheadRef.current = "";
+        typeaheadTimeoutRef.current = null;
+      }, TYPEAHEAD_RESET_MS);
+
+      if (matchIndex !== null) {
+        focusItem(matchIndex);
+        return true;
+      }
+
+      if (nextQuery !== normalizedKey) {
+        typeaheadRef.current = normalizedKey;
+        const fallbackMatchIndex = findMatchingItemIndex(normalizedKey);
+
+        if (fallbackMatchIndex !== null) {
+          focusItem(fallbackMatchIndex);
+          return true;
+        }
+      }
+
+      return false;
+    },
+    [findMatchingItemIndex, focusItem]
+  );
+
   React.useEffect(() => {
     if (open) {
       return;
     }
 
     setActiveItemId(null);
-  }, [open]);
+    clearTypeahead();
+  }, [clearTypeahead, open]);
+
+  React.useEffect(() => clearTypeahead, [clearTypeahead]);
 
   React.useEffect(() => {
     if (!open) {
@@ -345,6 +504,18 @@ export function Dropdown({
       }
 
       if (
+        event.key.length === 1 &&
+        !event.altKey &&
+        !event.ctrlKey &&
+        !event.metaKey &&
+        event.key.trim() &&
+        handleTypeaheadKey(event.key)
+      ) {
+        event.preventDefault();
+        return;
+      }
+
+      if (
         (event.key === "ArrowDown" ||
           event.key === "ArrowUp" ||
           event.key === "Home" ||
@@ -362,7 +533,7 @@ export function Dropdown({
       document.removeEventListener("mousedown", handlePointerDown);
       document.removeEventListener("keydown", handleKeyDown);
     };
-  }, [handleMenuNavigation, open, setOpen]);
+  }, [handleMenuNavigation, handleTypeaheadKey, open, setOpen]);
 
   React.useEffect(() => {
     if (!open) {
@@ -402,12 +573,13 @@ export function Dropdown({
   const contextValue = React.useMemo(
     () => ({
       activeItemId,
+      contentId,
       containerRef,
       labels,
       open,
       reduceMotion,
       setActiveItemId,
-      setFocusStrategy: (strategy: "first" | "last" | "selected") => {
+      setFocusStrategy: (strategy: DropdownFocusStrategy) => {
         focusStrategyRef.current = strategy;
       },
       setOpen,
@@ -418,6 +590,7 @@ export function Dropdown({
     }),
     [
       activeItemId,
+      contentId,
       labels,
       open,
       reduceMotion,
@@ -466,6 +639,7 @@ export const DropdownTrigger = React.forwardRef<
     ref
   ) => {
     const {
+      contentId,
       open,
       reduceMotion,
       setFocusStrategy,
@@ -476,14 +650,17 @@ export const DropdownTrigger = React.forwardRef<
 
     return (
       <motion.button
+        aria-controls={contentId}
         aria-expanded={open}
         aria-haspopup={variant === "action" ? "menu" : "listbox"}
         className={cn(
-          "flex w-full items-center justify-between gap-2 rounded-lg border border-border bg-card px-4 py-3 text-left font-medium text-foreground text-sm transition-colors hover:bg-accent focus:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+          "flex min-h-11 w-full items-center justify-between gap-2 rounded-lg border border-border bg-card px-4 py-3 text-left font-medium text-foreground text-sm transition-colors hover:bg-accent focus:outline-none focus-visible:ring-2 focus-visible:ring-ring",
           disabled && "cursor-not-allowed opacity-60",
           className
         )}
+        data-state={open ? "open" : "closed"}
         disabled={disabled}
+        layout={reduceMotion ? false : "size"}
         onClick={(event) => {
           onClick?.(event);
 
@@ -529,9 +706,12 @@ export const DropdownTrigger = React.forwardRef<
         whileTap={disabled ? undefined : { scale: 0.98 }}
         {...props}
       >
-        <span className="flex min-w-0 flex-1 items-center gap-2">
+        <motion.span
+          className="flex min-w-0 flex-1 items-center gap-2"
+          layout={reduceMotion ? false : "position"}
+        >
           {children}
-        </span>
+        </motion.span>
         {showChevron ? (
           <motion.span
             animate={{ rotate: open ? 180 : 0 }}
@@ -577,150 +757,373 @@ DropdownValue.displayName = "DropdownValue";
 
 export interface DropdownContentProps
   extends React.ComponentPropsWithoutRef<typeof motion.div> {
-  align?: "center" | "end" | "start";
+  align?: DropdownAlign;
   sideOffset?: number;
 }
 
 export const DropdownContent = React.forwardRef<
   HTMLDivElement,
   DropdownContentProps
->(({ align = "start", children, className, sideOffset = 8, ...props }, ref) => {
-  const { open, reduceMotion, variant } = useDropdownContext("DropdownContent");
-  const contentMotion = getContentMotion(reduceMotion);
-  const innerContentMotion = getInnerContentMotion(reduceMotion);
+>(
+  (
+    { align = "start", children, className, sideOffset = 8, style, ...props },
+    ref
+  ) => {
+    const { containerRef, contentId, open, reduceMotion, triggerRef, variant } =
+      useDropdownContext("DropdownContent");
+    const shellRef = React.useRef<HTMLDivElement | null>(null);
+    const [position, setPosition] = React.useState<{
+      horizontalOrigin: "center" | "left" | "right";
+      left: number;
+      maxHeight: number | null;
+    }>({
+      horizontalOrigin: getHorizontalOrigin(align),
+      left: 0,
+      maxHeight: null,
+    });
 
-  return (
-    <AnimatePresence>
-      {open ? (
-        <motion.div
-          animate={contentMotion.animate}
-          className={cn(
-            "absolute z-[300] min-w-[12rem] overflow-hidden rounded-lg border border-border bg-card shadow-lg",
-            getContentAlignmentClasses(align),
-            className
-          )}
-          exit={contentMotion.exit}
-          initial={contentMotion.initial}
-          ref={ref}
-          role={variant === "action" ? "menu" : "listbox"}
-          style={{
-            top: `calc(100% + ${sideOffset}px)`,
-            transformOrigin: getContentTransformOrigin(align),
-            originY: 0,
-          }}
-          transition={contentMotion.transition}
-          {...props}
-        >
+    const setContentRef = React.useCallback(
+      (node: HTMLDivElement | null) => {
+        shellRef.current = node;
+        setRefValue(ref, node);
+      },
+      [ref]
+    );
+
+    const updatePosition = React.useCallback(() => {
+      const container = containerRef.current;
+      const shell = shellRef.current;
+      const trigger = triggerRef.current;
+
+      if (!(container && shell && trigger)) {
+        return;
+      }
+
+      const containerRect = container.getBoundingClientRect();
+      const shellRect = shell.getBoundingClientRect();
+      const triggerRect = trigger.getBoundingClientRect();
+      const contentWidth = shellRect.width || triggerRect.width;
+      const { maxHeight } = getResolvedPlacement(
+        shellRect.height || Math.min(MAX_CONTENT_HEIGHT, 240),
+        triggerRect,
+        window.innerHeight,
+        sideOffset
+      );
+      const { horizontalOrigin, left } = getResolvedHorizontalPosition({
+        align,
+        containerRect,
+        contentWidth,
+        triggerRect,
+        viewportWidth: window.innerWidth,
+      });
+
+      setPosition({
+        horizontalOrigin,
+        left,
+        maxHeight,
+      });
+    }, [align, containerRef, sideOffset, triggerRef]);
+
+    React.useEffect(() => {
+      if (!open) {
+        return;
+      }
+
+      const frame = window.requestAnimationFrame(updatePosition);
+      const handleViewportChange = () => updatePosition();
+      window.addEventListener("resize", handleViewportChange);
+      window.addEventListener("scroll", handleViewportChange, true);
+
+      const observer = new ResizeObserver(() => updatePosition());
+      const observedNodes = [
+        containerRef.current,
+        shellRef.current,
+        triggerRef.current,
+      ].filter(Boolean);
+
+      observedNodes.forEach((node) => {
+        observer.observe(node as Element);
+      });
+
+      return () => {
+        window.cancelAnimationFrame(frame);
+        window.removeEventListener("resize", handleViewportChange);
+        window.removeEventListener("scroll", handleViewportChange, true);
+        observer.disconnect();
+      };
+    }, [containerRef, open, triggerRef, updatePosition]);
+
+    const contentMotion = getContentMotion(reduceMotion);
+    const innerContentMotion = getInnerContentMotion(reduceMotion);
+
+    return (
+      <AnimatePresence>
+        {open ? (
           <motion.div
-            animate={innerContentMotion.animate}
-            className="p-1.5"
-            exit={innerContentMotion.exit}
-            initial={innerContentMotion.initial}
-            transition={innerContentMotion.transition}
+            animate={contentMotion.animate}
+            aria-orientation="vertical"
+            className={cn(
+              "absolute z-[300] min-w-[12rem] max-w-[calc(100vw-1.5rem)] overflow-hidden rounded-xl border border-border/60 bg-card shadow-[0_14px_34px_-22px_hsl(var(--foreground)/0.28)]",
+              className
+            )}
+            exit={contentMotion.exit}
+            id={contentId}
+            initial={contentMotion.initial}
+            ref={setContentRef}
+            role={variant === "action" ? "menu" : "listbox"}
+            style={{
+              ...style,
+              left: position.left,
+              top: `calc(100% + ${sideOffset}px)`,
+              transformOrigin: `top ${position.horizontalOrigin}`,
+            }}
+            transition={contentMotion.transition}
+            {...props}
           >
-            {children}
+            <motion.div
+              animate={innerContentMotion.animate}
+              className="scroll-py-1 overflow-y-auto overscroll-contain p-1.5"
+              exit={innerContentMotion.exit}
+              initial={innerContentMotion.initial}
+              style={{
+                maxHeight: position.maxHeight ?? undefined,
+              }}
+              transition={innerContentMotion.transition}
+            >
+              {children}
+            </motion.div>
           </motion.div>
-        </motion.div>
-      ) : null}
-    </AnimatePresence>
-  );
-});
+        ) : null}
+      </AnimatePresence>
+    );
+  }
+);
 DropdownContent.displayName = "DropdownContent";
 
 export interface DropdownItemProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  extends React.HTMLAttributes<HTMLDivElement> {
+  disabled?: boolean;
   textValue?: string;
   value?: string;
 }
 
-export const DropdownItem = React.forwardRef<
-  HTMLButtonElement,
-  DropdownItemProps
->(({ children, className, disabled, onClick, value, ...props }, ref) => {
-  const {
-    activeItemId,
-    reduceMotion,
-    setActiveItemId,
-    setOpen,
-    setValue,
-    value: currentValue,
-    variant,
-  } = useDropdownContext("DropdownItem");
-  const itemId = React.useId();
-  const isActive = activeItemId === itemId && !disabled;
-  const isSelected =
-    variant === "select" && value !== undefined && currentValue === value;
+export const DropdownItem = React.forwardRef<HTMLDivElement, DropdownItemProps>(
+  (
+    {
+      children,
+      className,
+      disabled,
+      onClick,
+      onKeyDown,
+      textValue,
+      value,
+      ...props
+    },
+    ref
+  ) => {
+    const {
+      activeItemId,
+      reduceMotion,
+      setActiveItemId,
+      setOpen,
+      setValue,
+      value: currentValue,
+      variant,
+    } = useDropdownContext("DropdownItem");
+    const itemId = React.useId();
+    const isActive = activeItemId === itemId && !disabled;
+    const isSelected =
+      variant === "select" && value !== undefined && currentValue === value;
+    const resolvedTextValue = React.useMemo(
+      () => (textValue ?? getTextContent(children)).trim(),
+      [children, textValue]
+    );
 
-  return (
-    <button
-      className={cn(
-        "group relative flex w-full items-center justify-between gap-3 rounded-lg px-3 py-2.5 text-left text-foreground text-sm transition-colors",
-        "hover:bg-accent focus-visible:bg-accent focus-visible:text-accent-foreground focus-visible:outline-none",
-        isActive && "bg-accent text-accent-foreground",
-        disabled && "pointer-events-none opacity-50",
-        className
-      )}
-      data-dropdown-item=""
-      data-state={isSelected ? "checked" : "unchecked"}
-      data-value={value}
-      disabled={disabled}
-      onBlur={() => setActiveItemId(null)}
-      onClick={(event) => {
-        onClick?.(event);
+    const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
+      onClick?.(event);
 
-        if (event.defaultPrevented || disabled) {
-          return;
-        }
+      if (event.defaultPrevented || disabled) {
+        return;
+      }
 
-        if (variant === "select" && value !== undefined) {
-          setValue(value);
-        }
+      if (variant === "select" && value !== undefined) {
+        setValue(value);
+      }
 
-        setOpen(false);
-      }}
-      onFocus={() => setActiveItemId(itemId)}
-      onMouseEnter={() => setActiveItemId(itemId)}
-      onMouseLeave={() => setActiveItemId(null)}
-      ref={ref}
-      role={variant === "action" ? "menuitem" : "option"}
-      type="button"
-      {...props}
-    >
-      <motion.span
-        className="relative z-10 flex min-w-0 flex-1 items-center gap-2 truncate"
-        transition={
-          reduceMotion
-            ? undefined
-            : { type: "spring", stiffness: 360, damping: 28, mass: 0.55 }
-        }
-      >
-        {children}
-      </motion.span>
-      {isSelected ? (
+      setOpen(false);
+    };
+
+    const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+      onKeyDown?.(event);
+
+      if (event.defaultPrevented || disabled) {
+        return;
+      }
+
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        event.currentTarget.click();
+      }
+    };
+
+    const itemContent = (
+      <>
         <motion.span
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          className="relative z-10 shrink-0 text-primary"
-          initial={{ opacity: 0, scale: 0.78, y: 1 }}
+          className="relative z-10 flex min-w-0 flex-1 items-center gap-2 truncate"
           transition={
             reduceMotion
-              ? { duration: 0.14, ease: "easeOut" }
-              : { type: "spring", stiffness: 460, damping: 24, mass: 0.5 }
+              ? undefined
+              : { type: "spring", stiffness: 360, damping: 28, mass: 0.55 }
           }
         >
-          <Check className="h-4 w-4" />
+          {children}
         </motion.span>
-      ) : null}
-    </button>
-  );
-});
+        {isSelected ? (
+          <motion.span
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            className="relative z-10 flex size-5 shrink-0 items-center justify-center text-foreground"
+            initial={{ opacity: 0, scale: 0.78, y: 1 }}
+            transition={
+              reduceMotion
+                ? { duration: 0.14, ease: "easeOut" }
+                : { type: "spring", stiffness: 460, damping: 24, mass: 0.5 }
+            }
+          >
+            <Check className="h-4 w-4" />
+          </motion.span>
+        ) : null}
+      </>
+    );
+
+    const sharedProps = {
+      ...props,
+      "aria-disabled": disabled || undefined,
+      className: cn(
+        "group relative isolate flex min-h-11 w-full scroll-m-1 items-center justify-between gap-3 rounded-[0.65rem] px-3 py-2.5 text-left text-foreground text-sm transition-colors",
+        "before:absolute before:inset-x-1 before:inset-y-0.5 before:-z-10 before:rounded-[0.5rem] before:bg-transparent before:transition-colors",
+        "hover:before:bg-accent/65 focus-visible:text-foreground focus-visible:outline-none focus-visible:before:bg-accent/65",
+        isActive && "before:bg-accent/65",
+        isSelected &&
+          variant === "select" &&
+          "text-foreground before:bg-accent/45",
+        isSelected && isActive && variant === "select" && "before:bg-accent/75",
+        disabled && "pointer-events-none opacity-50",
+        className
+      ),
+      "data-disabled": disabled ? "" : undefined,
+      "data-dropdown-item": "",
+      "data-state": isSelected ? "checked" : "unchecked",
+      "data-text-value": resolvedTextValue,
+      "data-value": value,
+      id: itemId,
+      onBlur: () => setActiveItemId(null),
+      onClick: handleClick,
+      onFocus: () => setActiveItemId(itemId),
+      onKeyDown: handleKeyDown,
+      onMouseEnter: () => setActiveItemId(itemId),
+      onMouseLeave: () => setActiveItemId(null),
+      ref,
+    };
+
+    if (variant === "select") {
+      return (
+        <div
+          {...sharedProps}
+          aria-selected={isSelected}
+          role="option"
+          tabIndex={disabled ? undefined : -1}
+        >
+          {itemContent}
+        </div>
+      );
+    }
+
+    return (
+      <div
+        {...sharedProps}
+        role="menuitem"
+        tabIndex={disabled ? undefined : -1}
+      >
+        {itemContent}
+      </div>
+    );
+  }
+);
 DropdownItem.displayName = "DropdownItem";
+
+export interface DropdownGroupProps
+  extends React.HTMLAttributes<HTMLDivElement> {
+  label?: React.ReactNode;
+  labelClassName?: string;
+}
+
+export const DropdownGroup = React.forwardRef<
+  HTMLDivElement,
+  DropdownGroupProps
+>(
+  (
+    {
+      "aria-label": ariaLabel,
+      "aria-labelledby": ariaLabelledby,
+      children,
+      className,
+      label,
+      labelClassName,
+      ...props
+    },
+    ref
+  ) => {
+    const generatedLabelId = React.useId();
+    const groupLabelId = label ? generatedLabelId : ariaLabelledby;
+    const hasAccessibleLabel = Boolean(label || ariaLabel || groupLabelId);
+
+    return (
+      <div
+        className={cn("mt-2 space-y-0.5 first:mt-0", className)}
+        ref={ref}
+        {...(hasAccessibleLabel
+          ? {
+              "aria-label": ariaLabel,
+              "aria-labelledby": groupLabelId,
+              role: "group" as const,
+            }
+          : {})}
+        {...props}
+      >
+        {label ? (
+          <DropdownLabel className={labelClassName} id={generatedLabelId}>
+            {label}
+          </DropdownLabel>
+        ) : null}
+        {children}
+      </div>
+    );
+  }
+);
+DropdownGroup.displayName = "DropdownGroup";
+
+export const DropdownLabel = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement>
+>(({ className, ...props }, ref) => (
+  <div
+    className={cn(
+      "px-3 pt-1 pb-1 font-medium text-[0.68rem] text-muted-foreground/80 uppercase tracking-[0.12em]",
+      className
+    )}
+    ref={ref}
+    {...props}
+  />
+));
+DropdownLabel.displayName = "DropdownLabel";
 
 export const DropdownSeparator = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => (
   <div
-    className={cn("my-1 h-px bg-border/60", className)}
+    aria-hidden="true"
+    className={cn("my-1 h-1 border-0", className)}
     ref={ref}
     {...props}
   />
