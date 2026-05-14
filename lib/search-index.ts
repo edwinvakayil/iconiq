@@ -25,7 +25,7 @@ const componentSummaries: Record<string, string> = {
   "/components/alert":
     "Dismissible alert banner with motion-aware entrance and close behavior.",
   "/components/avatar":
-    "Animated avatar with image, fallback initials, and hover treatment.",
+    "Motion-aware avatar with immediate fallback initials, image crossfade, and a 44px circular frame.",
   "/components/badge":
     "Compact badge component with animated accent treatment.",
   "/components/breadcrumbs":

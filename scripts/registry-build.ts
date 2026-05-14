@@ -208,7 +208,7 @@ const REGISTRY_UI_META: Record<
   avatar: {
     title: "Avatar",
     description:
-      "Circular avatar with spring entrance, image fade-in, fallback initials, hover glow and pulse ring. Fixed 42×42. Motion.",
+      "Circular avatar with immediate fallback initials, a quiet image crossfade, and a 44×44 frame. Motion.",
     dependencies: ["motion"],
   },
 };

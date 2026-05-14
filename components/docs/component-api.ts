@@ -113,31 +113,50 @@ const avatarApiDetails: DetailItem[] = [
     id: "avatar",
     title: "Avatar",
     summary:
-      "Compact motion avatar with a canonical Avatar export, optional image source, and fallback text for empty states.",
+      "Compact motion avatar with a canonical Avatar export, immediate fallback initials, and optional image loading behavior.",
     fields: [
       field({
         name: "src",
         type: "string",
         description:
-          "Image URL rendered into a framework-agnostic img element. When present, the image fills the 42x42 circular mask with a blur-and-clip reveal animation.",
+          "Image URL rendered into a framework-agnostic img element. When present, the image fades over the fallback initials once loading completes.",
       }),
       field({
         name: "fallback",
         type: "string",
         defaultValue: "?",
         description:
-          "Text rendered in the center when no src is provided, typically initials or a short placeholder character.",
+          "Optional source text for the fallback initials. The component trims and condenses this into a short 1 to 2 character label.",
+      }),
+      field({
+        name: "name",
+        type: "string",
+        description:
+          "Optional display name used to derive fallback initials and a more descriptive image alt value when alt is not provided.",
+      }),
+      field({
+        name: "alt",
+        type: "string",
+        description:
+          "Optional image alt text. Pass an empty string for decorative use, or omit it to fall back to the name prop and then a generic Avatar label.",
+      }),
+      field({
+        name: "loading",
+        type: '"eager" | "lazy"',
+        defaultValue: '"eager"',
+        description:
+          "Controls the image loading strategy. The default eager behavior favors faster identity recognition above the fold.",
       }),
       field({
         name: "className",
         type: "string",
         description:
-          "Merged onto the root motion.div. The base component already fixes the size to 42x42 and applies the circular overflow mask.",
+          "Merged onto the root motion.div. The base component fixes the frame to 44x44 and keeps the circular overflow mask.",
       }),
     ],
     notes: [
-      "The component does not forward refs or arbitrary DOM props; the public surface is only src, fallback, and className.",
-      "The root is a motion.div with pointer-style hover and tap animation, but it is not a button or link by itself.",
+      "The component forwards refs and standard div props, so aria attributes, data attributes, and wrappers can be added without forking the file.",
+      "The root stays a neutral motion.div rather than pretending to be a button or link. Wrap it in an interactive parent when it needs click or navigation behavior.",
     ],
   },
   {
@@ -146,9 +165,9 @@ const avatarApiDetails: DetailItem[] = [
     summary:
       "Motion behavior changes slightly when reduced motion is enabled, but the same two rendering paths stay intact.",
     notes: [
-      'The image path always uses a fixed alt value of "Avatar" plus width and height of 42, so this version is best suited to decorative or generic avatars.',
-      "Hover adds a soft lift and pulse ring, while tap slightly compresses the root when reduced motion is not requested.",
-      "Without src, the fallback text springs in over the primary-colored background instead of showing an empty frame.",
+      "Fallback initials render immediately, so the avatar still communicates identity while a remote image is loading or if the image request fails.",
+      "The image path uses a short crossfade instead of blur, clip-path, or hover-driven motion, which keeps the feedback quiet for a high-frequency UI element.",
+      "The frame is fixed at 44 by 44 pixels to align with a more forgiving baseline target size.",
     ],
   },
   registryItem("avatar.json", ["motion"]),

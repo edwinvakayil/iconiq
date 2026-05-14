@@ -23,20 +23,21 @@ export function AvatarPreview() {
   return (
     <div className="flex flex-col items-center gap-6 px-2 py-4">
       <Link
+        aria-label="Open avatar image for Edwin Vakayil"
         className="inline-flex rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
         href={imageSrc}
         rel="noopener noreferrer"
         target="_blank"
       >
-        <Avatar src={imageSrc} />
+        <Avatar name="Edwin Vakayil" src={imageSrc} />
       </Link>
 
       <p className="max-w-md text-center text-[13px] leading-relaxed">
-        <span className="text-emerald-600 dark:text-emerald-400">Spring in</span>
+        <span className="text-emerald-600 dark:text-emerald-400">44px frame</span>
         <span className="text-neutral-400 dark:text-neutral-500"> · </span>
-        <span className="text-sky-600 dark:text-sky-400">Hover lifts the ring</span>
+        <span className="text-sky-600 dark:text-sky-400">Fallback appears first</span>
         <span className="text-neutral-400 dark:text-neutral-500"> · </span>
-        <span className="text-violet-600 dark:text-violet-400">Image fades to fit</span>
+        <span className="text-violet-600 dark:text-violet-400">Image crossfades in</span>
       </p>
     </div>
   );
@@ -119,24 +120,25 @@ function AvatarPreview() {
   return (
     <div className="flex flex-col items-center gap-6 px-2 py-4">
       <Link
+        aria-label="Open avatar image for Edwin Vakayil"
         className="inline-flex rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
         href={PREVIEW_ACCOUNT_HREF}
         rel="noopener noreferrer"
         target="_blank"
       >
-        <Avatar src={DEMO_IMAGE_SRC} />
+        <Avatar name="Edwin Vakayil" src={DEMO_IMAGE_SRC} />
       </Link>
       <p className="max-w-md text-center font-sans text-[13px] leading-relaxed">
         <span className="text-emerald-600 dark:text-emerald-400">
-          Spring in
+          44px frame
         </span>
         <span className="text-neutral-400 dark:text-neutral-500"> · </span>
         <span className="text-sky-600 dark:text-sky-400">
-          Hover lifts the ring
+          Fallback appears first
         </span>
         <span className="text-neutral-400 dark:text-neutral-500"> · </span>
         <span className="text-violet-600 dark:text-violet-400">
-          Image fades to fit
+          Image crossfades in
         </span>
       </p>
     </div>
@@ -152,7 +154,7 @@ export default function AvatarPage() {
         { label: "Avatar" },
       ]}
       componentName="avatar"
-      description="Compact circular avatar with motion on enter, hover, and tap. Shows an image or fallback text at a fixed 42 x 42 size."
+      description="Compact circular avatar with immediate fallback initials, quiet image motion, and a fixed 44 x 44 frame."
       details={componentDetailsItems}
       detailsDescription="Expand each row for prop behavior, motion behavior, and the implementation details that affect usage."
       preview={
@@ -162,7 +164,7 @@ export default function AvatarPage() {
       }
       title="Avatar"
       usageCode={usageCode}
-      usageDescription="Use the canonical `Avatar` export, then layer it into menus, profile chips, and team lists as needed."
+      usageDescription="Use the canonical `Avatar` export, then wrap it in a link or button when the surrounding UI needs interaction semantics."
     />
   );
 }

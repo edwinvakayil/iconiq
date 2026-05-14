@@ -1,166 +1,175 @@
 "use client";
 
 import { motion, useReducedMotion } from "motion/react";
+import { forwardRef, type HTMLAttributes, useEffect, useState } from "react";
 
 import { cn } from "@/lib/utils";
 
-/** Matches root box (h-[42px] w-[42px]) for the image element and CLS. */
-const AVATAR_IMG_SIZE = 42;
+/** Keeps the visible avatar and image footprint aligned to a 44px target. */
+const AVATAR_SIZE = 44;
+const WHITESPACE_REGEX = /\s+/g;
+const FALLBACK_SPLIT_REGEX = /[\s_-]+/;
+const NON_ALPHANUMERIC_REGEX = /[^\p{L}\p{N}]+/gu;
 
-export interface AvatarProps {
+type DivHTMLAttributesForMotion = Omit<
+  HTMLAttributes<HTMLDivElement>,
+  | "children"
+  | "onAnimationEnd"
+  | "onAnimationIteration"
+  | "onAnimationStart"
+  | "onDrag"
+  | "onDragEnd"
+  | "onDragEnter"
+  | "onDragExit"
+  | "onDragLeave"
+  | "onDragOver"
+  | "onDragStart"
+  | "onDrop"
+>;
+
+export interface AvatarProps extends DivHTMLAttributesForMotion {
   src?: string;
   fallback?: string;
+  alt?: string;
+  name?: string;
+  loading?: "eager" | "lazy";
   className?: string;
 }
 
-/** Smooth deceleration — less snappy than linear spring defaults. */
-const enterEase = [0.16, 1, 0.3, 1] as [number, number, number, number];
-const smoothEase = [0.22, 1, 0.36, 1] as [number, number, number, number];
+const enterEase = [0.16, 1, 0.3, 1] as const;
+const settleEase = [0.22, 1, 0.36, 1] as const;
 
-export function Avatar({ src, fallback = "?", className }: AvatarProps) {
-  const reduceMotion = useReducedMotion();
+function normalizeText(value?: string) {
+  return value?.trim().replace(WHITESPACE_REGEX, " ") ?? "";
+}
 
-  const rootTransition = reduceMotion
-    ? { duration: 0.22, ease: "easeOut" as const }
-    : {
-        type: "spring" as const,
-        stiffness: 142,
-        damping: 25,
-        mass: 1.05,
-      };
+function firstCharacter(value: string) {
+  return Array.from(value)[0] ?? "";
+}
 
-  const hoverTransition = reduceMotion
-    ? undefined
-    : ({
-        type: "spring" as const,
-        stiffness: 340,
-        damping: 36,
-        mass: 0.62,
-      } as const);
+function getFallbackLabel(fallback?: string, name?: string, alt?: string) {
+  const normalized = [fallback, name, alt].map(normalizeText).find(Boolean);
 
-  const tapTransition = reduceMotion
-    ? undefined
-    : ({
-        type: "spring" as const,
-        stiffness: 480,
-        damping: 42,
-      } as const);
+  if (!normalized) {
+    return "?";
+  }
 
-  const imageTransition = reduceMotion
-    ? { duration: 0.2, ease: "easeOut" as const }
-    : {
-        opacity: { duration: 0.55, delay: 0.02, ease: enterEase },
-        scale: { duration: 0.75, delay: 0, ease: enterEase },
-        filter: { duration: 0.65, delay: 0.05, ease: smoothEase },
-        clipPath: { duration: 0.7, delay: 0.03, ease: enterEase },
-      };
+  const words = normalized
+    .split(FALLBACK_SPLIT_REGEX)
+    .map((word) => word.replace(NON_ALPHANUMERIC_REGEX, ""))
+    .filter(Boolean);
 
-  const fallbackTransition = reduceMotion
-    ? { duration: 0.18, ease: "easeOut" as const }
-    : {
-        type: "spring" as const,
-        stiffness: 260,
-        damping: 30,
-        mass: 0.72,
-        delay: 0.05,
-      };
+  if (words.length >= 2) {
+    return `${firstCharacter(words[0])}${firstCharacter(words[1])}`.toUpperCase();
+  }
 
-  const ringTransition = reduceMotion
-    ? undefined
-    : {
-        duration: 2.85,
-        repeat: Number.POSITIVE_INFINITY,
-        ease: "easeInOut" as const,
-      };
+  const compact = Array.from(
+    words[0] ?? normalized.replace(WHITESPACE_REGEX, "")
+  )
+    .slice(0, 2)
+    .join("");
 
-  return (
-    <motion.div
-      animate={{ scale: 1, opacity: 1, y: 0 }}
-      className={cn(
-        "relative flex h-[42px] w-[42px] cursor-pointer items-center justify-center overflow-hidden rounded-full bg-primary text-sm",
-        className
-      )}
-      initial={{ scale: 0.94, opacity: 0, y: 4 }}
-      transition={rootTransition}
-      whileHover={
-        reduceMotion
-          ? undefined
-          : {
-              scale: 1.04,
-              y: -1.5,
-              boxShadow: "0 2px 8px rgb(0 0 0 / 0.1)",
-              transition: hoverTransition,
-            }
-      }
-      whileTap={
-        reduceMotion
-          ? undefined
-          : { scale: 0.988, y: 0, transition: tapTransition }
-      }
-    >
-      {src ? (
-        <motion.div
-          animate={
-            reduceMotion
-              ? { opacity: 1, scale: 1 }
-              : {
-                  opacity: 1,
-                  scale: 1,
-                  filter: "blur(0px)",
-                  clipPath: "circle(50% at 50% 50%)",
-                }
-          }
-          className="relative h-full w-full overflow-hidden rounded-full"
-          initial={
-            reduceMotion
-              ? { opacity: 0, scale: 1 }
-              : {
-                  opacity: 0,
-                  scale: 1.035,
-                  filter: "blur(4px)",
-                  clipPath: "circle(0% at 50% 50%)",
-                }
-          }
-          transition={imageTransition}
-        >
-          {/* biome-ignore lint/performance/noImgElement: registry component stays framework-agnostic for shadcn consumers outside Next.js. */}
-          <img
-            alt="Avatar"
-            className="object-cover"
-            height={AVATAR_IMG_SIZE}
-            loading="lazy"
-            src={src}
-            width={AVATAR_IMG_SIZE}
-          />
-        </motion.div>
-      ) : (
+  return compact.toUpperCase() || "?";
+}
+
+function getAltText(alt?: string, name?: string) {
+  if (alt !== undefined) {
+    return normalizeText(alt);
+  }
+
+  const normalizedName = normalizeText(name);
+  return normalizedName || "Avatar";
+}
+
+const Avatar = forwardRef<HTMLDivElement, AvatarProps>(
+  (
+    { src, fallback = "?", alt, name, loading = "eager", className, ...props },
+    ref
+  ) => {
+    const reduceMotion = useReducedMotion();
+    const fallbackLabel = getFallbackLabel(fallback, name, alt);
+    const altText = getAltText(alt, name);
+    const [imageStatus, setImageStatus] = useState<"idle" | "loaded" | "error">(
+      src ? "idle" : "error"
+    );
+
+    useEffect(() => {
+      setImageStatus(src ? "idle" : "error");
+    }, [src]);
+
+    const rootTransition = reduceMotion
+      ? { duration: 0.16, ease: "easeOut" as const }
+      : { duration: 0.2, ease: settleEase };
+
+    const imageTransition = reduceMotion
+      ? { duration: 0.14, ease: "easeOut" as const }
+      : { duration: 0.22, ease: enterEase };
+
+    const fallbackTransition = reduceMotion
+      ? { duration: 0.12, ease: "easeOut" as const }
+      : { duration: 0.18, ease: settleEase };
+
+    return (
+      <motion.div
+        animate={{ opacity: 1, scale: 1 }}
+        className={cn(
+          "relative inline-flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-full bg-primary text-background",
+          className
+        )}
+        initial={{ opacity: 0, scale: 0.98 }}
+        ref={ref}
+        transition={rootTransition}
+        {...props}
+      >
         <motion.span
-          animate={{ opacity: 1, y: 0 }}
-          className="select-none font-semibold text-white dark:text-neutral-950"
-          initial={{ opacity: 0, y: 4 }}
+          animate={
+            imageStatus === "loaded"
+              ? { opacity: 0, scale: 0.96 }
+              : { opacity: 1, scale: 1 }
+          }
+          className="absolute inset-0 flex select-none items-center justify-center font-semibold text-sm uppercase tracking-[0.08em]"
+          initial={false}
           transition={fallbackTransition}
         >
-          {fallback}
+          {fallbackLabel}
         </motion.span>
-      )}
 
-      <motion.div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 rounded-full border-2 border-white/45 dark:border-neutral-950/50"
-        initial={{ opacity: 0 }}
-        whileHover={
-          reduceMotion
-            ? undefined
-            : {
-                opacity: [0.2, 0.92, 0.2],
-                transition: ringTransition,
-              }
-        }
-      />
-    </motion.div>
-  );
-}
+        {src ? (
+          <motion.div
+            animate={
+              imageStatus === "loaded"
+                ? { opacity: 1, scale: 1 }
+                : { opacity: 0, scale: 1.02 }
+            }
+            className="relative h-full w-full overflow-hidden rounded-full"
+            initial={false}
+            transition={imageTransition}
+          >
+            {/* biome-ignore lint/performance/noImgElement: registry component stays framework-agnostic for shadcn consumers outside Next.js. */}
+            <img
+              alt={altText}
+              className="h-full w-full object-cover"
+              decoding="async"
+              height={AVATAR_SIZE}
+              loading={loading}
+              onError={() => setImageStatus("error")}
+              onLoad={() => setImageStatus("loaded")}
+              src={src}
+              width={AVATAR_SIZE}
+            />
+          </motion.div>
+        ) : null}
+
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 rounded-full ring-1 ring-white/20 ring-inset dark:ring-black/20"
+        />
+      </motion.div>
+    );
+  }
+);
 
 Avatar.displayName = "Avatar";
 
 export { Avatar as avatar };
+export { Avatar };
