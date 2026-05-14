@@ -3087,7 +3087,7 @@ const toggleApiDetails: DetailItem[] = [
     id: "toggle",
     title: "Toggle",
     summary:
-      "Single pressed-state toggle built on Radix Toggle, with Motion-driven button, icon, and ripple feedback layered over shadcn-style size and variant classes.",
+      "Single pressed-state toggle built on Radix Toggle, with Motion-driven button, icon, and pointer-origin ripple feedback layered over larger hit targets and shadcn-style size and variant classes.",
     fields: [
       field({
         name: "children",
@@ -3108,7 +3108,7 @@ const toggleApiDetails: DetailItem[] = [
         type: '"default" | "sm" | "lg"',
         defaultValue: "default",
         description:
-          "Height and horizontal padding preset applied through the shared toggleVariants helper.",
+          "Height and horizontal padding preset applied through the shared toggleVariants helper. sm starts at 40px, default at 44px, and lg at 48px.",
       }),
       field({
         name: "pressed",
@@ -3143,17 +3143,19 @@ const toggleApiDetails: DetailItem[] = [
     notes: [
       "Additional Radix toggle button props such as aria-label, name, value, and type are forwarded through the underlying Toggle.Root surface.",
       "The component renders Radix Root with asChild internally, then supplies its own motion.button as the child node.",
+      "When you render an icon-only toggle, provide aria-label or aria-labelledby so the control still has a clear accessible name.",
     ],
   },
   {
     id: "toggle-motion",
     title: "Motion and state behavior",
     summary:
-      "Every pressed change triggers a button squash, a center ripple, and a separate icon animation sequence.",
+      "Every pressed change triggers a button squash, a pointer-origin ripple, and a separate icon animation sequence when motion is allowed.",
     notes: [
       "The outer button uses useAnimationControls so the pressed sequence can run immediately whenever Radix reports a state change.",
       "The icon motion differs between on and off transitions, so enabling and disabling the toggle do not feel identical.",
-      "Hover always applies a slight upward lift and tap applies an extra scale-down, independent of whether the toggle is currently pressed.",
+      "Hover always applies a slight upward lift and tap applies an extra scale-down when motion is enabled and the control is not disabled.",
+      "Reduced-motion preferences suppress the local toggle animations and ripple sequence.",
     ],
   },
   registryItem("toggle.json", [

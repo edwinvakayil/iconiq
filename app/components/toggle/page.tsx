@@ -60,12 +60,12 @@ export default function TogglePage() {
         { label: "Toggle" },
       ]}
       componentName="toggle"
-      description="Pressed-state toggle built on Radix with ripple feedback, icon motion, and both text and icon-only control patterns."
+      description="Pressed-state toggle built on Radix with pointer-origin ripple feedback, icon motion, and larger hit targets for both text and icon-only controls."
       details={toggleApiDetails}
       preview={<TogglePreview />}
       railNotes={[
         "Use controlled pressed state when the surrounding interface needs to react immediately to the toggle value.",
-        "Outline works well for utility toggles like favorite, save, or follow actions.",
+        "Icon-only toggles should include aria-label or aria-labelledby, and outline works well for utility actions like favorite, save, or follow.",
       ]}
       title="Toggle"
       usageCode={usageCode}

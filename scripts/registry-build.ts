@@ -180,7 +180,7 @@ const REGISTRY_UI_META: Record<
   toggle: {
     title: "Toggle",
     description:
-      "Pressed-state toggle built on Radix with button squash, icon motion, center ripple, and shadcn-style size and outline variants.",
+      "Pressed-state toggle built on Radix with button squash, icon motion, pointer-origin ripple, and larger shadcn-style size and outline variants.",
     dependencies: [
       "@radix-ui/react-toggle",
       "class-variance-authority",

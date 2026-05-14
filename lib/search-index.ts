@@ -78,7 +78,7 @@ const componentSummaries: Record<string, string> = {
   "/components/tabs":
     "Tabs primitives with a measured underline, spring-smoothed panel resizing, and softened content transitions.",
   "/components/toggle":
-    "Pressed-state toggle built on Radix with ripple, icon motion, and text or icon-only formats.",
+    "Pressed-state toggle built on Radix with pointer-origin ripple, icon motion, larger hit targets, and text or icon-only formats.",
   "/components/tooltip":
     "Tooltip component for compact hover or focus explanations.",
   "/texts/dia-text":
