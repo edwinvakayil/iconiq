@@ -427,13 +427,13 @@ const COMPONENT_EXAMPLE: Record<string, string> = {
     '          <div className="inline-flex items-center gap-3">\n' +
     '            <span className="text-sm text-muted-foreground">Project notes</span>\n' +
     "            <PopoverTrigger asChild>\n" +
-    '              <button className="rounded-md border px-3 py-2 text-sm" type="button">\n' +
+    '              <button className="min-h-11 rounded-md border px-4 text-sm" type="button">\n' +
     "                Open popover\n" +
     "              </button>\n" +
     "            </PopoverTrigger>\n" +
     "          </div>\n" +
     "        </PopoverAnchor>\n" +
-    '        <PopoverContent className="w-80" open={open}>\n' +
+    '        <PopoverContent className="w-80">\n' +
     '          <div className="space-y-2">\n' +
     '            <p className="font-medium">Kickoff summary</p>\n' +
     '            <p className="text-sm text-muted-foreground">\n' +

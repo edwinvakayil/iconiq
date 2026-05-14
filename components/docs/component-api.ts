@@ -1841,7 +1841,7 @@ const popoverApiDetails: DetailItem[] = [
     id: "popover-root",
     title: "Popover",
     summary:
-      "Standard shadcn-style export: `Popover` is `PopoverPrimitive.Root`, matching what the CLI installs into `components/ui/popover`.",
+      "Thin wrapper around `PopoverPrimitive.Root` that mirrors the resolved open state into local context so `PopoverContent` can infer presence automatically.",
     fields: [
       field({
         name: "open",
@@ -1870,14 +1870,14 @@ const popoverApiDetails: DetailItem[] = [
       }),
     ],
     notes: [
-      "Any remaining root props continue to work because the export is the Radix primitive itself.",
+      "Remaining root props such as `modal` continue to flow through to the underlying Radix popover root.",
     ],
   },
   {
     id: "popover-trigger",
     title: "PopoverTrigger and PopoverAnchor",
     summary:
-      "These exports are direct aliases of the matching Radix primitives and are used to open the popover or redefine its positioning anchor.",
+      "`PopoverTrigger` is a light wrapper around the Radix trigger with a larger default hit area when not using `asChild`, while `PopoverAnchor` remains the Radix positioning anchor.",
     fields: [
       field({
         name: "asChild",
@@ -1894,7 +1894,8 @@ const popoverApiDetails: DetailItem[] = [
       }),
     ],
     notes: [
-      "Because both exports come directly from Radix, they also accept the remaining primitive props for event handling and accessibility wiring.",
+      "Both exports still accept the remaining primitive props for event handling and accessibility wiring.",
+      "When you render an icon-only trigger with `asChild`, keep the interactive target around 40-44px so the hit area stays comfortable on touch and pointer devices.",
     ],
   },
   {
@@ -1906,9 +1907,8 @@ const popoverApiDetails: DetailItem[] = [
       field({
         name: "open",
         type: "boolean",
-        required: true,
         description:
-          "Controls whether the animated portal branch renders at all. In practice this must mirror the root open state for entry and exit motion to run correctly.",
+          "Accepted for backwards compatibility, but no longer required. The nearest `Popover` root state now drives content presence automatically.",
       }),
       field({
         name: "children",
@@ -1936,11 +1936,19 @@ const popoverApiDetails: DetailItem[] = [
         description:
           "Forwarded to Radix Popover.Content to control the gap between the anchor and the floating panel.",
       }),
+      field({
+        name: "collisionPadding",
+        type: "number | Partial<Record<Side, number>>",
+        defaultValue: "12",
+        description:
+          "Adds a little default breathing room from the viewport edge before collision handling nudges the popover inward.",
+      }),
     ],
     notes: [
       "Remaining Radix content props are forwarded through to PopoverPrimitive.Content, including side, collisionPadding, onEscapeKeyDown, and accessibility props.",
-      "The component always renders inside a Radix portal and uses the Radix transform-origin CSS variable so the motion scales from the resolved placement.",
-      "Entry and exit animation are owned internally, so initial, animate, exit, and transition are not part of the public prop surface.",
+      "The component always renders inside a Radix portal, reads the resolved placement for direction-aware motion, and uses the Radix transform-origin CSS variable so scaling stays anchored to the trigger.",
+      "Content size changes animate while the popover is open, so progressive disclosure and copy swaps do not snap abruptly.",
+      "Entry and exit animation are owned internally, so Motion-specific props such as initial, animate, exit, and transition are not part of the public prop surface.",
     ],
   },
   registryItem("popover.json", ["@radix-ui/react-popover", "motion"]),

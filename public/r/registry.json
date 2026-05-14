@@ -314,7 +314,7 @@
       "dependencies": ["@radix-ui/react-popover", "motion"],
       "devDependencies": [],
       "title": "Popover",
-      "description": "Controlled popover built on Radix with portal-based positioning, optional anchor support, and a spring-driven content panel.",
+      "description": "Popover built on Radix with portal-based positioning, optional anchor support, side-aware motion, and smooth size changes while content updates.",
       "files": [
         {
           "path": "popover.tsx",

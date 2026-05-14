@@ -32,7 +32,7 @@ export function PopoverPreview() {
             <Bell className="size-4.5" />
           </button>
         </PopoverTrigger>
-        <PopoverContent className="w-[320px]" open={open}>
+        <PopoverContent className="w-[320px]">
           <div className="space-y-3">
             <div className="flex items-start gap-3">
               <span className="mt-0.5 inline-flex size-9 items-center justify-center rounded-full bg-neutral-100 text-neutral-900 dark:bg-neutral-900 dark:text-neutral-100">
@@ -56,8 +56,8 @@ export function PopoverPreview() {
       </Popover>
 
       <p className="max-w-sm text-center text-[13px] leading-6 text-secondary">
-        Open the popover to inspect the controlled open state, portal-based
-        panel, and origin-aware spring animation.
+        Open the popover to inspect the controlled root state, side-aware
+        motion, and size-aware content panel.
       </p>
     </div>
   );
@@ -78,7 +78,7 @@ function PopoverPreview() {
             <Bell className="size-4.5" />
           </button>
         </PopoverTrigger>
-        <PopoverContent className="w-[320px]" open={open}>
+        <PopoverContent className="w-[320px]">
           <div className="space-y-3">
             <div className="flex items-start gap-3">
               <span className="mt-0.5 inline-flex size-9 items-center justify-center rounded-full bg-neutral-100 text-neutral-900 dark:bg-neutral-900 dark:text-neutral-100">
@@ -102,8 +102,8 @@ function PopoverPreview() {
       </Popover>
 
       <p className="max-w-sm text-center text-[13px] text-secondary leading-6">
-        Open the popover to inspect the controlled open state, portal-based
-        panel, and origin-aware spring animation.
+        Open the popover to inspect the controlled root state, side-aware
+        motion, and size-aware content panel.
       </p>
     </div>
   );
@@ -118,13 +118,13 @@ export default function PopoverPage() {
         { label: "Popover" },
       ]}
       componentName="popover"
-      description="Controlled popover built on Radix with portal-based positioning and a spring-driven content panel."
+      description="Popover built on Radix with portal-based positioning, side-aware motion, and smooth size changes while content updates."
       details={popoverApiDetails}
       preview={<PopoverPreview />}
-      previewDescription="Open the surface to test the controlled root state, anchor positioning, and the animated content wrapper."
+      previewDescription="Open the surface to test the controlled root state, anchor positioning, and the size-aware animated content wrapper."
       title="Popover"
       usageCode={usageCode}
-      usageDescription="Control open state from React and pass the same open boolean into PopoverContent so AnimatePresence can run entry and exit motion."
+      usageDescription="Control open state from React when you need it, but let PopoverContent follow the root automatically unless you have a reason to override presence yourself."
     />
   );
 }

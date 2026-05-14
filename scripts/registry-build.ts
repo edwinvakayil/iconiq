@@ -127,7 +127,7 @@ const REGISTRY_UI_META: Record<
   popover: {
     title: "Popover",
     description:
-      "Controlled popover built on Radix with portal-based positioning, optional anchor support, and a spring-driven content panel.",
+      "Popover built on Radix with portal-based positioning, optional anchor support, side-aware motion, and smooth size changes while content updates.",
     dependencies: ["@radix-ui/react-popover", "motion"],
   },
   tooltip: {
