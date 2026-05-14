@@ -290,11 +290,29 @@ const calendarApiDetails: DetailItem[] = [
         description:
           "Marks dates as non-interactive. Disabled days keep the same visuals but cannot be selected.",
       }),
+      field({
+        name: "locale",
+        type: "Locale",
+        description:
+          "Optional date-fns locale used for month labels, weekday headers, selected-date copy, and spoken date labels.",
+      }),
+      field({
+        name: "size",
+        type: '"sm" | "md" | "lg"',
+        description:
+          "Controls the overall calendar scale, including the card width, spacing, nav controls, weekday row, and day cell sizing. Defaults to md.",
+      }),
+      field({
+        name: "weekStartsOn",
+        type: "0 | 1 | 2 | 3 | 4 | 5 | 6",
+        description:
+          "Overrides the first day of the week for both the weekday header and rendered month grid.",
+      }),
     ],
     notes: [
       "Controlled mode: pass selected/month and respond to onSelect/onMonthChange.",
       "Uncontrolled mode: omit selected/month and optionally seed with defaultSelected/defaultMonth.",
-      "When no defaults are provided, selected date and visible month both start from new Date().",
+      "When no defaults are provided, the visible month starts from today and the footer stays empty until the user selects a date.",
     ],
   },
   {
@@ -304,8 +322,8 @@ const calendarApiDetails: DetailItem[] = [
       "The grid is rebuilt with date-fns whenever the visible month changes.",
     notes: [
       "The rendered range runs from startOfWeek(startOfMonth(currentMonth)) through endOfWeek(endOfMonth(currentMonth)), so leading and trailing days from adjacent months are always visible.",
-      "Days outside the active month are dimmed and made non-interactive with pointer-events-none, which keeps context without allowing cross-month selection from the overflow cells.",
-      "Weekday labels are hardcoded as Sun through Sat and displayed as single-letter headers, so localization or alternate week starts require editing the component source.",
+      "Days outside the active month remain visible for context, but the actual buttons are disabled so they stay out of the tab order and cannot be selected accidentally.",
+      "Weekday headers and the grid start day now follow the provided locale/weekStartsOn settings instead of being hardcoded to English Sunday-first output.",
     ],
   },
   {
@@ -316,7 +334,8 @@ const calendarApiDetails: DetailItem[] = [
     notes: [
       "Prev and next controls are real buttons with aria-label values, and each in-month day is rendered as a button with hover and tap motion.",
       "The selected day highlight uses a shared layoutId of selected-day so the active surface glides between dates instead of remounting abruptly.",
-      "This is still not a full calendar input primitive: there is no keyboard date navigation, no ARIA grid semantics, and no range or multi-select mode.",
+      "Keyboard users can move through the month with arrow keys, Home/End, and PageUp/PageDown, while the calendar exposes clearer spoken date labels and a live selected-date summary.",
+      "This is still not a full calendar input primitive: there is no range or multi-select mode.",
     ],
   },
   registryItem("calendar.json", ["motion", "lucide-react", "date-fns"]),

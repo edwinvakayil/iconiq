@@ -20,6 +20,7 @@ export function CalendarPreview() {
       disabled={(date) => date < new Date("2020-01-01")}
       onSelect={setSelected}
       selected={selected}
+      size="sm"
     />
   );
 }`;
@@ -34,6 +35,7 @@ function CalendarPreview() {
         disabled={(date) => date < new Date("2020-01-01")}
         onSelect={setSelected}
         selected={selected}
+        size="sm"
       />
     </div>
   );
