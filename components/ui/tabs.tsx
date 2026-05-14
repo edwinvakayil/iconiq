@@ -40,9 +40,9 @@ function TabsTrigger({
   return (
     <BaseTabs.Tab
       className={cn(
-        "inline-flex h-7 min-w-0 items-center justify-center gap-1.5 whitespace-nowrap rounded-md px-2.5 py-1 font-medium text-foreground text-sm transition-[background-color,color,box-shadow] duration-150 dark:text-muted-foreground",
+        "inline-flex h-7 min-w-0 items-center justify-center gap-1.5 whitespace-nowrap rounded-md px-2.5 py-1 font-medium text-foreground text-sm transition-[background-color,color] duration-150 dark:text-muted-foreground",
         "hover:text-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-foreground/15 dark:focus-visible:ring-foreground/20",
-        "data-[active]:bg-background data-[active]:text-foreground data-[active]:shadow-[0_0_0_1px_rgba(15,23,42,0.08),0_2px_6px_rgba(15,23,42,0.08)] dark:data-[active]:bg-[#0B0B09] dark:data-[active]:shadow-[0_0_0_1px_rgba(255,255,255,0.08),0_8px_18px_rgba(0,0,0,0.18)]",
+        "data-[active]:bg-neutral-200 data-[active]:text-foreground data-[active]:shadow-none dark:data-[active]:bg-neutral-800",
         "disabled:pointer-events-none disabled:opacity-50",
         className
       )}
