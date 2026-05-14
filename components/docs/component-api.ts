@@ -2392,17 +2392,23 @@ const selectApiDetails: DetailItem[] = [
         description:
           "Optional leading visual shown only inside the dropdown row.",
       }),
+      field({
+        name: "group",
+        type: "string",
+        description:
+          "Optional section label. Contiguous options that share the same group render under a shared heading.",
+      }),
     ],
   },
   {
     id: "select",
     title: "Select",
     summary:
-      "Animated single-select dropdown that manages open state internally but expects the selected value to come from the parent.",
+      "Animated single-select listbox with keyboard navigation, typeahead, optional grouped sections, and a parent-controlled selected value.",
     fields: [
       field({
         name: "options",
-        type: "{ value: string; label: string; icon?: ReactNode }[]",
+        type: "{ value: string; label: string; icon?: ReactNode; group?: string }[]",
         required: true,
         description: "Rows available in the dropdown menu.",
       }),
@@ -2434,6 +2440,7 @@ const selectApiDetails: DetailItem[] = [
     ],
     notes: [
       "This implementation is effectively controlled for selection. If you call onChange without updating value, the visible selection and checkmark do not move.",
+      "With focus on the trigger or listbox, Arrow keys, Home, End, Enter, Escape, and single-character typeahead all work without leaving keyboard users behind.",
       "The public API still does not expose disabled or native form props.",
     ],
   },
@@ -2441,11 +2448,11 @@ const selectApiDetails: DetailItem[] = [
     id: "select-overlay",
     title: "Overlay and interaction behavior",
     summary:
-      "The dropdown menu is portaled to document.body and continuously repositioned while open.",
+      "The dropdown menu is portaled to document.body, repositions while open, and clamps itself to the viewport before deciding whether to open above or below the trigger.",
     notes: [
       "A mounted flag prevents createPortal from running during the initial server render.",
-      "useLayoutEffect starts a requestAnimationFrame loop that keeps the menu aligned to the trigger while the viewport changes.",
-      "Clicking outside the trigger and menu closes the dropdown. There is no keyboard list navigation or highlighted-option state in this version.",
+      "The trigger exposes button-plus-listbox ARIA wiring, the listbox owns active descendant state, and the focused trigger is restored after keyboard and pointer selection.",
+      "Clicking outside the trigger and menu closes the dropdown, while grouped headings and built-in typeahead help larger sets stay scannable.",
     ],
   },
   registryItem("select.json", ["motion", "lucide-react"]),
