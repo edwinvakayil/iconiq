@@ -1,6 +1,6 @@
 "use client";
 
-import { HeartHandshake, PencilLine } from "lucide-react";
+import { CircleDot, Heart, PencilLine } from "lucide-react";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { useEffect, useState } from "react";
@@ -19,19 +19,6 @@ type RailAction = {
   icon: ReactNode;
   label: string;
 };
-
-function XLogoIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      aria-hidden
-      className={className}
-      fill="currentColor"
-      viewBox="0 0 24 24"
-    >
-      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-    </svg>
-  );
-}
 
 function OnThisPageIcon({ className }: { className?: string }) {
   return (
@@ -80,14 +67,8 @@ function RailActionLink({ action }: { action: RailAction }) {
 function buildDefaultRailActions() {
   return [
     {
-      external: true,
-      href: LINK.TWITTER,
-      icon: <XLogoIcon className="size-3.5" />,
-      label: "Follow @edwinvakayil",
-    },
-    {
       href: "/sponsorship",
-      icon: <HeartHandshake className="size-3.5" />,
+      icon: <Heart className="size-3.5" strokeWidth={2} />,
       label: "Support Iconiq",
     },
   ] satisfies RailAction[];
@@ -181,6 +162,15 @@ export function DocsPageRail({
           >
             <PencilLine className="size-3.5" />
             <span>Edit this page</span>
+          </a>
+          <a
+            className="flex items-center gap-1.5 text-muted-foreground transition-colors hover:text-foreground [&_svg]:size-3"
+            href={`${LINK.GITHUB}/issues/new?template=issue.md`}
+            rel="noreferrer"
+            target="_blank"
+          >
+            <CircleDot className="size-3.5" />
+            <span>Raise an issue</span>
           </a>
           {actionLinks.map((action) => (
             <RailActionLink action={action} key={action.label} />

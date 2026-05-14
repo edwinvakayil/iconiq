@@ -33,7 +33,11 @@ export function BuyMeACoffeeEmbed({ className }: { className?: string }) {
         rel="noopener noreferrer"
         target="_blank"
       >
-        <Coffee aria-hidden className="size-4 shrink-0 opacity-90" strokeWidth={2} />
+        <Coffee
+          aria-hidden
+          className="size-4 shrink-0 opacity-90"
+          strokeWidth={2}
+        />
         Buy a coffee for {SITE.NAME}
       </a>
     </>

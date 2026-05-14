@@ -170,7 +170,7 @@ export function ComponentDemoCanvas({
 
         <div className="flex items-center gap-1.5">
           <a
-            className="inline-flex h-8 items-center gap-1 rounded-md bg-neutral-950 px-3 text-white text-xs transition-colors hover:bg-neutral-800 dark:bg-white dark:text-neutral-950 dark:hover:bg-neutral-200 dark:hover:!text-neutral-950 dark:focus-visible:!text-neutral-950"
+            className="dark:hover:!text-neutral-950 dark:focus-visible:!text-neutral-950 inline-flex h-8 items-center gap-1 rounded-md bg-neutral-950 px-3 text-white text-xs transition-colors hover:bg-neutral-800 dark:bg-white dark:text-neutral-950 dark:hover:bg-neutral-200"
             href={`https://v0.dev/chat/api/open?url=${SITE.URL}/r/${componentName}.json`}
             rel="noreferrer"
             target="_blank"

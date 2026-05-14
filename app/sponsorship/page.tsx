@@ -1,9 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-
+import {
+  PageReveal,
+  PageStagger,
+  PageStaggerItem,
+} from "@/components/page-reveal";
 import { BeatingHeartTitle } from "@/components/sponsorship/beating-heart-title";
 import { BuyMeACoffeeEmbed } from "@/components/sponsorship/buy-me-a-coffee-embed";
-import { PageReveal, PageStagger, PageStaggerItem } from "@/components/page-reveal";
 import { LINK, SITE } from "@/constants";
 import { createMetadata } from "@/seo/metadata";
 
@@ -24,7 +27,7 @@ export default function SponsorshipPage() {
   return (
     <main className="min-w-0 flex-1">
       <div className="mx-auto w-full min-w-0 max-w-[1600px] px-4 py-8 sm:px-6 sm:py-10 lg:px-10">
-        <article className="min-w-0 w-full max-w-none">
+        <article className="w-full min-w-0 max-w-none">
           <PageStagger delayChildren={0.04}>
             <PageStaggerItem>
               <header className="space-y-3">
@@ -85,9 +88,10 @@ export default function SponsorshipPage() {
                   Ways to support
                 </h2>
                 <p>
-                  None of this requires a big gesture. Stars improve discoverability,
-                  social posts help teams find the project, and a coffee-sized tip
-                  occasionally buys a focused evening of implementation work.
+                  None of this requires a big gesture. Stars improve
+                  discoverability, social posts help teams find the project, and
+                  a coffee-sized tip occasionally buys a focused evening of
+                  implementation work.
                 </p>
                 <ul className="space-y-3">
                   <li>
@@ -123,8 +127,9 @@ export default function SponsorshipPage() {
                   </li>
                 </ul>
                 <p className="text-muted-foreground text-sm leading-6">
-                  You can also leave a one-off tip on Buy Me a Coffee. The widget
-                  script loads in the background after you open this page.
+                  You can also leave a one-off tip on Buy Me a Coffee. The
+                  widget script loads in the background after you open this
+                  page.
                 </p>
                 <BuyMeACoffeeEmbed />
               </section>
