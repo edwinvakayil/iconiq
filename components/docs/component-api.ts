@@ -2292,7 +2292,7 @@ const radioGroupApiDetails: DetailItem[] = [
     id: "radio-group",
     title: "RadioGroup",
     summary:
-      "Single-choice selector that can run uncontrolled from local state or sync to a controlled value prop.",
+      "Single-choice selector with animated rows, native radio inputs, and support for both controlled and uncontrolled state.",
     fields: [
       field({
         name: "options",
@@ -2301,15 +2301,45 @@ const radioGroupApiDetails: DetailItem[] = [
         description: "Available choices in display order.",
       }),
       field({
+        name: "defaultValue",
+        type: "string",
+        description:
+          "Initial uncontrolled selection. If omitted or invalid, the component falls back to the first option.",
+      }),
+      field({
         name: "value",
         type: "string",
         description:
-          "Controlled selected value. If omitted, the component starts from the first option's value and manages selection locally.",
+          "Controlled selected value. When provided, parent state owns selection and the component only reports changes.",
       }),
       field({
         name: "onChange",
         type: "(value: string) => void",
         description: "Called whenever a user selects a row.",
+      }),
+      field({
+        name: "name",
+        type: "string",
+        description:
+          "Shared radio input name. If omitted, the component generates one per instance.",
+      }),
+      field({
+        name: "layoutId",
+        type: "string",
+        description:
+          "Motion layout id used by the selected row highlight. Override it only when you want to intentionally share that highlight between groups.",
+      }),
+      field({
+        name: '"aria-label"',
+        type: "string",
+        description:
+          "Accessible name for the radiogroup. Provide this or aria-labelledby so assistive tech can announce the set clearly.",
+      }),
+      field({
+        name: '"aria-labelledby"',
+        type: "string",
+        description:
+          "ID of external text that labels the radiogroup. Use this instead of aria-label when visible copy already exists.",
       }),
       field({
         name: "className",
@@ -2319,18 +2349,18 @@ const radioGroupApiDetails: DetailItem[] = [
       }),
     ],
     notes: [
-      "If options is empty, the uncontrolled initial state becomes undefined and no row is selected.",
-      "Controlled updates are synced through an effect that watches the value prop.",
+      "If options is empty, the component returns null rather than rendering an empty radiogroup.",
+      "In uncontrolled mode, the selected value normalizes back to the first available option if the current selection disappears from the options array.",
     ],
   },
   {
     id: "radio-motion-a11y",
     title: "Motion and accessibility",
     summary:
-      "The component layers Motion over custom radio semantics rather than using native input[type=radio].",
+      "The component wraps native radio inputs in an animated label shell so keyboard, form, and screen-reader behavior stay intact.",
     notes: [
-      "The active background uses a fixed layoutId of radio-active-bg. Multiple RadioGroup instances on the same screen can therefore share cross-layout animation unless you fork the implementation.",
-      "The root sets role='radiogroup' and each row sets role='radio' plus aria-checked, but there is no arrow-key navigation or roving tabindex behavior.",
+      "The root keeps radiogroup semantics and each input supports Arrow keys plus Home and End navigation with a single tab stop inside the set.",
+      "Each instance gets its own highlight layoutId by default, so separate groups on the same page do not animate across each other unless you opt into a shared layoutId.",
     ],
   },
   registryItem("radiogroup.json", ["motion"]),

@@ -391,6 +391,7 @@ export function HomeFeaturedShowcase() {
             >
               <div className="w-full max-w-md">
                 <RadioGroup
+                  aria-label="Install workflow"
                   className="w-full"
                   onChange={setSelectedRadio}
                   options={homeRadioOptions}

@@ -54,6 +54,7 @@ export function RadioGroupPreview() {
 
   return (
     <RadioGroup
+      aria-label="Delivery options"
       className="max-w-md"
       onChange={setValue}
       options={options}
@@ -150,6 +151,7 @@ export default function RadioGroupPage() {
       preview={
         <div className="flex min-h-[320px] items-center justify-center">
           <RadioGroup
+            aria-label="Delivery options"
             className="max-w-md"
             onChange={setValue}
             options={demoOptions}

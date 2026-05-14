@@ -280,7 +280,7 @@ const COMPONENT_EXAMPLE: Record<string, string> = {
     '  const [value, setValue] = useState("standard")\n' +
     "  return (\n" +
     '    <div className="flex min-h-svh items-center justify-center p-8">\n' +
-    "      <RadioGroup onChange={setValue} options={options} value={value} />\n" +
+    '      <RadioGroup aria-label="Delivery options" onChange={setValue} options={options} value={value} />\n' +
     "    </div>\n" +
     "  )\n" +
     "}\n",
