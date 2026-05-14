@@ -1,12 +1,26 @@
 "use client";
 
 import { RefreshCw } from "lucide-react";
-import { useState } from "react";
+import { motion, useReducedMotion } from "motion/react";
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 
 import { DocsCodeSnippet } from "@/components/docs/code-snippet";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { SITE } from "@/constants";
 import { cn } from "@/lib/utils";
+
+const demoTabs = [
+  { label: "Preview", value: "preview" },
+  { label: "Code", value: "code" },
+] as const;
+
+type DemoTabValue = (typeof demoTabs)[number]["value"];
 
 function V0Icon({ className }: { className?: string }) {
   return (
@@ -35,24 +49,124 @@ export function ComponentDemoCanvas({
   code: string;
 }) {
   const [previewKey, setPreviewKey] = useState(0);
+  const [activeTab, setActiveTab] = useState<DemoTabValue>("preview");
+  const [indicator, setIndicator] = useState({
+    left: 0,
+    ready: false,
+    width: 0,
+  });
+  const tabRailRef = useRef<HTMLDivElement | null>(null);
+  const reduceMotion = useReducedMotion();
+  const updateIndicator = useCallback(() => {
+    const rail = tabRailRef.current;
+
+    if (!rail) {
+      return;
+    }
+
+    const activeTrigger = rail.querySelector<HTMLElement>(
+      `[data-demo-tab="${activeTab}"]`
+    );
+
+    if (!activeTrigger) {
+      setIndicator((current) =>
+        current.ready ? { left: 0, ready: false, width: 0 } : current
+      );
+      return;
+    }
+
+    setIndicator((current) => {
+      const next = {
+        left: activeTrigger.offsetLeft,
+        ready: true,
+        width: activeTrigger.offsetWidth,
+      };
+
+      if (
+        current.left === next.left &&
+        current.ready === next.ready &&
+        current.width === next.width
+      ) {
+        return current;
+      }
+
+      return next;
+    });
+  }, [activeTab]);
+
+  useLayoutEffect(() => {
+    updateIndicator();
+  }, [updateIndicator]);
+
+  useEffect(() => {
+    const rail = tabRailRef.current;
+
+    window.addEventListener("resize", updateIndicator);
+
+    if (!(rail && typeof ResizeObserver !== "undefined")) {
+      return () => window.removeEventListener("resize", updateIndicator);
+    }
+
+    const observer = new ResizeObserver(() => updateIndicator());
+
+    observer.observe(rail);
+
+    for (const trigger of rail.querySelectorAll<HTMLElement>(
+      "[data-demo-tab]"
+    )) {
+      observer.observe(trigger);
+    }
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", updateIndicator);
+    };
+  }, [updateIndicator]);
 
   return (
-    <Tabs className="gap-0" defaultValue="preview">
+    <Tabs
+      className="gap-0"
+      onValueChange={(value) => setActiveTab(value as DemoTabValue)}
+      value={activeTab}
+    >
       <div className="not-prose mb-4 flex items-center justify-between gap-3">
-        <TabsList className="gap-1 border-0 bg-transparent p-0">
-          <TabsTrigger
-            className="cursor-pointer px-2.5 py-1.5 text-center font-medium text-sm normal-case tracking-normal"
-            value="preview"
-          >
-            Preview
-          </TabsTrigger>
-          <TabsTrigger
-            className="cursor-pointer px-2.5 py-1.5 text-center font-medium text-sm normal-case tracking-normal"
-            value="code"
-          >
-            Code
-          </TabsTrigger>
-        </TabsList>
+        <div
+          className="relative w-fit max-w-full border-border/50 border-b"
+          ref={tabRailRef}
+        >
+          <TabsList className="relative isolate h-11 items-stretch gap-0 rounded-none border-0 bg-transparent p-0 shadow-none">
+            {demoTabs.map((tab) => (
+              <TabsTrigger
+                className="relative z-10 h-full cursor-pointer overflow-visible rounded-none px-5 py-2 text-center font-medium text-[15px] text-muted-foreground normal-case tracking-[-0.02em] transition-colors duration-200 ease-[cubic-bezier(0.32,0.72,0,1)] hover:text-foreground data-[active]:bg-transparent data-[active]:text-foreground data-[active]:shadow-none dark:text-muted-foreground dark:data-[active]:bg-transparent dark:data-[active]:text-foreground dark:data-[active]:shadow-none"
+                data-demo-tab={tab.value}
+                key={tab.value}
+                value={tab.value}
+              >
+                <span className="relative z-10">{tab.label}</span>
+              </TabsTrigger>
+            ))}
+          </TabsList>
+          <motion.div
+            animate={{
+              left: indicator.left,
+              opacity: indicator.ready ? 1 : 0,
+              width: indicator.width,
+            }}
+            aria-hidden
+            className="pointer-events-none absolute bottom-0 h-[2px] bg-foreground dark:bg-white"
+            initial={false}
+            transition={
+              reduceMotion
+                ? { duration: 0 }
+                : {
+                    type: "spring",
+                    stiffness: 360,
+                    damping: 34,
+                    mass: 0.7,
+                  }
+            }
+          />
+        </div>
 
         <div className="flex items-center gap-1.5">
           <a
