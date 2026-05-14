@@ -2500,7 +2500,13 @@ const sliderApiDetails: DetailItem[] = [
         name: "onChange",
         type: "(value: number) => void",
         description:
-          "Called whenever pointer interaction computes a new clamped value.",
+          "Called for live value updates from pointer or keyboard input when the snapped value actually changes.",
+      }),
+      field({
+        name: "onValueCommit",
+        type: "(value: number) => void",
+        description:
+          "Called when an interaction is committed, such as releasing a drag or finishing a keyboard step.",
       }),
       field({
         name: "showValue",
@@ -2510,25 +2516,58 @@ const sliderApiDetails: DetailItem[] = [
           "Controls whether the live numeric readout is shown on the right side of the label row.",
       }),
       field({
+        name: "valueDecimals",
+        type: "number",
+        defaultValue: "0",
+        description:
+          "Controls how many decimal places are shown in the readout when you want precision without custom formatting.",
+      }),
+      field({
+        name: "formatValue",
+        type: "(value: number) => string",
+        description:
+          "Optional formatter for the visible readout and aria-valuetext, useful for units such as dB, percent, or milliseconds.",
+      }),
+      field({
         name: "label",
         type: "string",
         description:
           "Optional label shown on the left side of the header row above the track.",
       }),
+      field({
+        name: "ariaLabel",
+        type: "string",
+        description:
+          "Accessible name used when no visible label is rendered for the slider.",
+      }),
+      field({
+        name: "ariaLabelledBy",
+        type: "string",
+        description:
+          "ID of an external label element that should be announced instead of the built-in label.",
+      }),
+      field({
+        name: "marks",
+        type: "{ value: number; label?: string }[]",
+        description:
+          "Optional tick marks rendered below the track so large ranges can include landmarks like Low, Medium, and High.",
+      }),
     ],
     notes: [
       "When value is undefined, the component stores the current value internally and updates it during drag operations.",
-      "The displayed number is derived from the animated motion value, so the readout stays in sync with the spring animation rather than jumping immediately.",
+      "The displayed value is derived from the animated motion value, so the readout stays in sync with the spring animation rather than jumping immediately.",
+      "Touch interaction keeps vertical page scrolling available with pan-y while still supporting horizontal dragging on the slider itself.",
     ],
   },
   {
     id: "slider-interaction",
     title: "Interaction model",
-    summary: "Slider is currently optimized for pointer interaction only.",
+    summary:
+      "Slider supports pointer, keyboard, and screen-reader friendly range semantics.",
     notes: [
       "The thumb and filled track animate with springs whenever the current value changes.",
       "Pointer capture is taken on pointer down and released on pointer up or cancel, which keeps dragging stable even when the pointer leaves the track.",
-      "This version does not expose keyboard controls, role='slider', or aria-valuenow, so accessible form-heavy experiences should wrap or extend it.",
+      "Keyboard support includes Arrow keys for step changes, Page Up and Page Down for larger jumps, and Home and End for min and max.",
     ],
   },
   registryItem("slider.json", ["motion"]),
