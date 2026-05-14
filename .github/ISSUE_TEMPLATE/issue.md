@@ -1,30 +1,33 @@
 ---
-name: Bug report or feature idea
-description: Report a bug, suggest a feature, or propose a docs or workflow improvement.
-title: ""
-labels: []
-assignees: []
+name: Report or request
+about: "Bugs, enhancements, and docs feedback—structured so maintainers can respond quickly."
 ---
 
-<!--
-Tip: search existing issues first — https://github.com/edwinvakayil/iconiq/issues
-Contributing guide — https://github.com/edwinvakayil/iconiq/blob/main/CONTRIBUTING.md
--->
+### Before you open
 
-## Type
+- [ ] I [searched existing issues](https://github.com/edwinvakayil/iconiq/issues?q=is%3Aissue) for duplicates
+- [ ] I read [CONTRIBUTING.md](https://github.com/edwinvakayil/iconiq/blob/main/CONTRIBUTING.md) (if I plan to open a PR)
 
-- [ ] Bug — something is broken or behaves differently than documented
-- [ ] Feature / enhancement — new capability or improvement
-- [ ] Documentation — site or README clarity, examples, typos
-- [ ] Other (describe below)
+---
 
-## Summary
+### 1. Kind of issue _(check one)_
 
-<!-- One short paragraph: what is wrong or what you want? -->
+- [ ] **Bug** — wrong behavior, regression, or mismatch with docs
+- [ ] **Feature / enhancement** — new capability or improvement to a component or workflow
+- [ ] **Documentation** — iconiqui.com, README, examples, or typos
+- [ ] **Other** — describe in the summary
 
-## Details
+---
 
-### If this is a bug
+### 2. Summary
+
+One short paragraph: what happened, or what you want?
+
+---
+
+### 3. Details
+
+#### If you are reporting a bug
 
 **Steps to reproduce**
 
@@ -32,32 +35,42 @@ Contributing guide — https://github.com/edwinvakayil/iconiq/blob/main/CONTRIBU
 2.
 3.
 
-**Expected behavior**
+**Expected**
 
+**What you see instead**
 
-**Actual behavior**
+**Context** _(helps us reproduce)_
 
+- **Where:** Page URL, component name, or registry path (e.g. `dialog`, docs `/mcp`)
+- **Stack:** Framework + version (e.g. Next.js 15, Vite 6)
+- **Browser / OS:** e.g. Safari 18, macOS 15
 
-**Environment** (browser, OS, framework, Iconiq component or URL if relevant)
+**Minimal reproduction** _(optional but ideal)_  
+Link (repo, StackBlitz, CodeSandbox) or a small code snippet:
 
+````text
+paste here
+````
 
-**Minimal reproduction** (repo link, CodeSandbox, or snippet — optional)
+#### If you are suggesting a feature or change
 
+**Problem today**  
+What is awkward, missing, or inconsistent?
 
-### If this is a feature or idea
+**Proposed direction**  
+What should change? (API shape, new component, doc section—be as specific as you like.)
 
-**Problem or motivation**
+**Alternatives** _(optional)_  
+Other ways you considered solving it.
 
+---
 
-**Proposed solution**
+### 4. Screenshots or screen recording _(optional)_
 
+Drag and drop images or paste a link to a short clip.
 
-**Alternatives you considered** (optional)
+---
 
+### 5. Extra context _(optional)_
 
-## Screenshots / recording (optional)
-
-
-## Checklist
-
-- [ ] I searched existing issues for duplicates
+Links to related issues, PRs, or prior art.
