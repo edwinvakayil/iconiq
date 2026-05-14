@@ -133,8 +133,8 @@ const REGISTRY_UI_META: Record<
   tooltip: {
     title: "Tooltip",
     description:
-      "Animated hover/focus tooltip with spring entrance, blur fade, directional offset, and optional delay and side placement. Built with Motion.",
-    dependencies: ["motion"],
+      "Animated hover/focus tooltip with collision-aware portaled positioning, Slot-based triggers, short-string content, and optional delay and side placement. Built with Motion and Radix Popover.",
+    dependencies: ["@radix-ui/react-popover", "@radix-ui/react-slot", "motion"],
   },
   select: {
     title: "Select",

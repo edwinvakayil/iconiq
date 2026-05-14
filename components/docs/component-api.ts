@@ -3401,27 +3401,28 @@ const tooltipApiDetails: DetailItem[] = [
     id: "tooltip",
     title: "Tooltip",
     summary:
-      "Animated tooltip with a canonical Tooltip export. It owns its own open state and toggles in response to hover and focus events.",
+      "Animated tooltip with a canonical Tooltip export. It owns its own open state, expects a single trigger element, and toggles in response to hover and focus events.",
     fields: [
       field({
         name: "children",
-        type: "ReactNode",
+        type: "ReactElement",
         required: true,
         description:
-          "Trigger content wrapped in a relative inline-flex container.",
+          "A single trigger element that receives hover, focus, and aria-describedby props through a slotted wrapper.",
       }),
       field({
         name: "content",
-        type: "ReactNode",
+        type: "string",
         required: true,
-        description: "Tooltip body rendered inside the animated bubble.",
+        description:
+          "Short, non-interactive tooltip copy rendered inside the animated bubble. Use Popover for longer or richer content.",
       }),
       field({
         name: "side",
         type: '"top" | "bottom" | "left" | "right"',
         defaultValue: "top",
         description:
-          "Controls which positioning class and directional motion offset are used.",
+          "Preferred popup side passed into the collision-aware Radix popover positioner.",
       }),
       field({
         name: "delay",
@@ -3438,22 +3439,27 @@ const tooltipApiDetails: DetailItem[] = [
       }),
     ],
     notes: [
-      "The trigger wrapper handles onMouseEnter, onMouseLeave, onFocus, and onBlur. No trigger props are forwarded directly to the child node.",
+      "The trigger forwards onMouseEnter, onMouseLeave, onFocus, and onBlur directly into the child element through Radix Slot.",
       "The timeout used for delayed open is cleared on leave and again on unmount.",
+      "Development builds warn when tooltip content grows beyond a short single-line hint.",
     ],
   },
   {
     id: "tooltip-positioning",
     title: "Positioning and accessibility",
     summary:
-      "This tooltip is absolutely positioned inside its local wrapper rather than portaled to the document body.",
+      "This tooltip is portaled through Radix Popover so it can avoid viewport collisions and escape clipping parents.",
     notes: [
-      "Because the bubble is not portaled, overflow-hidden ancestors can clip it and z-index stacking still depends on the surrounding layout.",
-      "The bubble itself gets role='tooltip', but the trigger does not receive aria-describedby or an id link automatically.",
-      "The arrow is a rotated square whose placement changes with the side prop.",
+      "The trigger receives an aria-describedby link to the active tooltip bubble.",
+      "The popup uses avoidCollisions with collisionPadding=12 and sideOffset=10.",
+      "The arrow is a rotated square whose placement follows the resolved data-side from Radix positioning.",
     ],
   },
-  registryItem("tooltip.json", ["motion"]),
+  registryItem("tooltip.json", [
+    "@radix-ui/react-popover",
+    "@radix-ui/react-slot",
+    "motion",
+  ]),
 ];
 
 export {
