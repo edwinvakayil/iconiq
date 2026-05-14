@@ -15,9 +15,47 @@ export type TableSortDirection = "asc" | "desc";
 
 type TableContextValue = {
   columns: string;
+  columnCount: number;
 };
 
 const TableContext = React.createContext<TableContextValue | null>(null);
+
+function getColumnTokens(columns: string) {
+  const tokens: string[] = [];
+  let token = "";
+  let depth = 0;
+
+  for (const char of columns) {
+    if (char === "(") {
+      depth += 1;
+    }
+
+    if (char === ")") {
+      depth = Math.max(0, depth - 1);
+    }
+
+    if (char === " " && depth === 0) {
+      const nextToken = token.trim();
+
+      if (nextToken) {
+        tokens.push(nextToken);
+      }
+
+      token = "";
+      continue;
+    }
+
+    token += char;
+  }
+
+  const lastToken = token.trim();
+
+  if (lastToken) {
+    tokens.push(lastToken);
+  }
+
+  return tokens;
+}
 
 function useTableContext(componentName: string) {
   const context = React.useContext(TableContext);
@@ -29,33 +67,53 @@ function useTableContext(componentName: string) {
   return context;
 }
 
-export interface TableProps extends React.HTMLAttributes<HTMLDivElement> {
+function getSortAriaValue(children: React.ReactNode) {
+  if (!React.isValidElement(children)) {
+    return undefined;
+  }
+
+  const childProps = children.props as {
+    active?: boolean;
+    direction?: TableSortDirection;
+  };
+
+  if (!childProps.active) {
+    return undefined;
+  }
+
+  return childProps.direction === "desc" ? "descending" : "ascending";
+}
+
+export interface TableProps
+  extends React.TableHTMLAttributes<HTMLTableElement> {
   columns?: string;
 }
 
-const Table = React.forwardRef<HTMLDivElement, TableProps>(
-  (
-    {
-      children,
-      className,
-      columns = TABLE_DEFAULT_COLUMNS,
-      role = "table",
-      ...props
-    },
-    ref
-  ) => {
-    const contextValue = React.useMemo(() => ({ columns }), [columns]);
+const Table = React.forwardRef<HTMLTableElement, TableProps>(
+  ({ children, className, columns = TABLE_DEFAULT_COLUMNS, ...props }, ref) => {
+    const columnCount = React.useMemo(
+      () => Math.max(1, getColumnTokens(columns).length),
+      [columns]
+    );
+    const contextValue = React.useMemo(
+      () => ({ columns, columnCount }),
+      [columnCount, columns]
+    );
 
     return (
       <TableContext.Provider value={contextValue}>
-        <div
-          className={cn("mx-auto w-full max-w-4xl", className)}
-          data-slot="table"
-          ref={ref}
-          role={role}
-          {...props}
-        >
-          {children}
+        <div className="w-full overflow-x-auto" data-slot="table-wrapper">
+          <table
+            className={cn(
+              "mx-auto w-full max-w-4xl caption-bottom border-separate border-spacing-0",
+              className
+            )}
+            data-slot="table"
+            ref={ref}
+            {...props}
+          >
+            {children}
+          </table>
         </div>
       </TableContext.Provider>
     );
@@ -79,50 +137,47 @@ const TableToolbar = React.forwardRef<HTMLDivElement, TableToolbarProps>(
 TableToolbar.displayName = "TableToolbar";
 
 export interface TableHeaderProps
-  extends React.HTMLAttributes<HTMLDivElement> {}
+  extends React.HTMLAttributes<HTMLTableSectionElement> {}
 
-const TableHeader = React.forwardRef<HTMLDivElement, TableHeaderProps>(
-  ({ className, role = "rowgroup", ...props }, ref) => (
-    <div
-      className={cn("border-border border-t", className)}
+const TableHeader = React.forwardRef<HTMLTableSectionElement, TableHeaderProps>(
+  ({ className, ...props }, ref) => (
+    <thead
+      className={className}
       data-slot="table-header"
       ref={ref}
-      role={role}
       {...props}
     />
   )
 );
 TableHeader.displayName = "TableHeader";
 
-export interface TableBodyProps extends React.HTMLAttributes<HTMLDivElement> {}
+export interface TableBodyProps
+  extends React.HTMLAttributes<HTMLTableSectionElement> {}
 
-const TableBody = React.forwardRef<HTMLDivElement, TableBodyProps>(
-  ({ children, className, role = "rowgroup", ...props }, ref) => (
-    <div
-      className={className}
+const TableBody = React.forwardRef<HTMLTableSectionElement, TableBodyProps>(
+  ({ children, className, ...props }, ref) => (
+    <tbody
+      className={cn("relative", className)}
       data-slot="table-body"
       ref={ref}
-      role={role}
       {...props}
     >
       <LayoutGroup>
-        <AnimatePresence initial={false} mode="popLayout">
-          {children}
-        </AnimatePresence>
+        <AnimatePresence initial={false}>{children}</AnimatePresence>
       </LayoutGroup>
-    </div>
+    </tbody>
   )
 );
 TableBody.displayName = "TableBody";
 
 export interface TableRowProps
-  extends React.ComponentPropsWithoutRef<typeof motion.div> {
+  extends React.ComponentPropsWithoutRef<typeof motion.tr> {
   hoverable?: boolean;
   index?: number;
   variant?: TableRowVariant;
 }
 
-const TableRow = React.forwardRef<HTMLDivElement, TableRowProps>(
+const TableRow = React.forwardRef<HTMLTableRowElement, TableRowProps>(
   (
     {
       animate,
@@ -132,7 +187,6 @@ const TableRow = React.forwardRef<HTMLDivElement, TableRowProps>(
       index = 0,
       initial,
       layout,
-      role = "row",
       style,
       transition,
       variant = "body",
@@ -143,18 +197,20 @@ const TableRow = React.forwardRef<HTMLDivElement, TableRowProps>(
   ) => {
     const { columns } = useTableContext("TableRow");
     const isHeader = variant === "header";
+    const isHoverable = hoverable ?? false;
 
     return (
-      <motion.div
+      <motion.tr
         animate={animate ?? (isHeader ? undefined : { opacity: 1, y: 0 })}
         className={cn(
           "grid items-center",
           isHeader
-            ? "border-border border-b px-2 py-3 text-muted-foreground text-xs uppercase tracking-wider"
-            : "group rounded-lg border-border border-b px-2 py-4 text-sm",
+            ? "border-border border-y text-muted-foreground text-xs uppercase tracking-wider"
+            : "border-border border-b text-sm",
+          isHoverable ? "rounded-lg" : "",
           className
         )}
-        data-hoverable={(hoverable ?? !isHeader) ? "true" : "false"}
+        data-hoverable={isHoverable ? "true" : "false"}
         data-slot="table-row"
         data-variant={variant}
         exit={
@@ -166,7 +222,6 @@ const TableRow = React.forwardRef<HTMLDivElement, TableRowProps>(
         initial={initial ?? (isHeader ? false : { opacity: 0, y: 8 })}
         layout={layout ?? !isHeader}
         ref={ref}
-        role={role}
         style={{ ...style, gridTemplateColumns: columns }}
         transition={
           transition ??
@@ -181,7 +236,7 @@ const TableRow = React.forwardRef<HTMLDivElement, TableRowProps>(
               })
         }
         whileHover={
-          (hoverable ?? !isHeader)
+          isHoverable
             ? (whileHover ?? { backgroundColor: "var(--muted)" })
             : undefined
         }
@@ -192,44 +247,48 @@ const TableRow = React.forwardRef<HTMLDivElement, TableRowProps>(
 );
 TableRow.displayName = "TableRow";
 
-export interface TableHeadProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface TableHeadProps
+  extends React.ThHTMLAttributes<HTMLTableCellElement> {
   align?: TableAlign;
 }
 
-const TableHead = React.forwardRef<HTMLDivElement, TableHeadProps>(
-  ({ align = "left", className, role = "columnheader", ...props }, ref) => (
-    <div
+const TableHead = React.forwardRef<HTMLTableCellElement, TableHeadProps>(
+  ({ align = "left", children, className, scope = "col", ...props }, ref) => (
+    <th
+      aria-sort={props["aria-sort"] ?? getSortAriaValue(children)}
       className={cn(
-        "min-w-0",
-        align === "right" ? "flex justify-end text-right" : "text-left",
+        "min-w-0 px-2 py-3 font-normal",
+        align === "right" ? "text-right" : "text-left",
         className
       )}
       data-align={align}
       data-slot="table-head"
       ref={ref}
-      role={role}
+      scope={scope}
       {...props}
-    />
+    >
+      {children}
+    </th>
   )
 );
 TableHead.displayName = "TableHead";
 
-export interface TableCellProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface TableCellProps
+  extends React.TdHTMLAttributes<HTMLTableCellElement> {
   align?: TableAlign;
 }
 
-const TableCell = React.forwardRef<HTMLDivElement, TableCellProps>(
-  ({ align = "left", className, role = "cell", ...props }, ref) => (
-    <div
+const TableCell = React.forwardRef<HTMLTableCellElement, TableCellProps>(
+  ({ align = "left", className, ...props }, ref) => (
+    <td
       className={cn(
-        "min-w-0",
+        "min-w-0 px-2 py-4 align-middle",
         align === "right" ? "text-right" : "text-left",
         className
       )}
       data-align={align}
       data-slot="table-cell"
       ref={ref}
-      role={role}
       {...props}
     />
   )
@@ -237,38 +296,56 @@ const TableCell = React.forwardRef<HTMLDivElement, TableCellProps>(
 TableCell.displayName = "TableCell";
 
 export interface TableCaptionProps
-  extends React.HTMLAttributes<HTMLParagraphElement> {}
+  extends React.HTMLAttributes<HTMLTableCaptionElement> {}
 
-const TableCaption = React.forwardRef<HTMLParagraphElement, TableCaptionProps>(
-  ({ className, ...props }, ref) => (
-    <p
-      className={cn("mt-6 text-muted-foreground text-xs", className)}
-      data-slot="table-caption"
-      ref={ref}
-      {...props}
-    />
-  )
-);
+const TableCaption = React.forwardRef<
+  HTMLTableCaptionElement,
+  TableCaptionProps
+>(({ className, ...props }, ref) => (
+  <caption
+    className={cn("pt-6 text-muted-foreground text-xs", className)}
+    data-slot="table-caption"
+    ref={ref}
+    {...props}
+  />
+));
 TableCaption.displayName = "TableCaption";
 
 export interface TableEmptyProps
-  extends React.ComponentPropsWithoutRef<typeof motion.div> {}
+  extends Omit<React.ComponentPropsWithoutRef<typeof motion.tr>, "children"> {
+  colSpan?: number;
+  children?: React.ReactNode;
+}
 
-const TableEmpty = React.forwardRef<HTMLDivElement, TableEmptyProps>(
-  ({ animate, className, initial, transition, ...props }, ref) => (
-    <motion.div
-      animate={animate ?? { opacity: 1 }}
-      className={cn(
-        "py-16 text-center text-muted-foreground text-sm",
-        className
-      )}
-      data-slot="table-empty"
-      initial={initial ?? { opacity: 0 }}
-      ref={ref}
-      transition={transition ?? { duration: 0.2 }}
-      {...props}
-    />
-  )
+const TableEmpty = React.forwardRef<HTMLTableRowElement, TableEmptyProps>(
+  (
+    { animate, children, className, colSpan, initial, transition, ...props },
+    ref
+  ) => {
+    const { columnCount } = useTableContext("TableEmpty");
+
+    return (
+      <motion.tr
+        animate={animate ?? { opacity: 1 }}
+        className="border-border border-b"
+        data-slot="table-empty"
+        initial={initial ?? { opacity: 0 }}
+        ref={ref}
+        transition={transition ?? { duration: 0.2 }}
+        {...props}
+      >
+        <td
+          className={cn(
+            "px-2 py-16 text-center text-muted-foreground text-sm",
+            className
+          )}
+          colSpan={colSpan ?? columnCount}
+        >
+          {children}
+        </td>
+      </motion.tr>
+    );
+  }
 );
 TableEmpty.displayName = "TableEmpty";
 
@@ -297,8 +374,11 @@ const TableSortButton = React.forwardRef<
   ) => (
     <button
       className={cn(
-        "flex items-center gap-1.5 transition-colors hover:text-foreground",
-        align === "right" ? "justify-end" : "",
+        "flex min-h-10 w-full items-center gap-2 rounded-md px-3 py-2 text-left outline-none transition-colors transition-shadow focus-visible:ring-2 focus-visible:ring-foreground/20 focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+        active
+          ? "text-foreground"
+          : "text-muted-foreground hover:text-foreground",
+        align === "right" ? "justify-end text-right" : "",
         className
       )}
       data-align={align}
@@ -308,15 +388,22 @@ const TableSortButton = React.forwardRef<
       type={type}
       {...props}
     >
-      {children}
+      <span className={cn("truncate", active ? "font-medium" : undefined)}>
+        {children}
+      </span>
       <motion.span
         animate={{
-          opacity: active ? 1 : 0.3,
+          opacity: active ? 1 : 0.45,
           rotate: active && direction === "desc" ? 180 : 0,
+          scale: active ? 1 : 0.95,
         }}
-        transition={{ duration: 0.25 }}
+        className={cn(
+          "shrink-0",
+          active ? "text-foreground" : "text-muted-foreground"
+        )}
+        transition={{ duration: 0.2 }}
       >
-        <ArrowUpDown className="h-3 w-3" />
+        <ArrowUpDown className="h-3.5 w-3.5" />
       </motion.span>
     </button>
   )

@@ -2804,20 +2804,20 @@ const tableApiDetails: DetailItem[] = [
         defaultValue:
           '"minmax(0,1.4fr) minmax(0,1fr) minmax(0,1fr) minmax(0,1fr)"',
         description:
-          "Shared grid-template-columns value applied to every header and body row so custom layouts stay aligned.",
+          "Shared grid-template-columns value applied to every header and body row so the native table semantics still keep the custom grid layout aligned.",
       }),
       field({
         name: "className",
         type: "string",
         description:
-          "Merged onto the root wrapper when you need to adjust width, spacing, or placement.",
+          "Merged onto the native table element when you need to adjust width, spacing, or placement.",
       }),
     ],
     notes: [
       "The canonical JSX export is `Table`, and the lowercase `table` alias still ships for backward compatibility.",
       "The file also exports `TABLE_DEFAULT_COLUMNS`, `TableAlign`, `TableRowVariant`, and `TableSortDirection` for stronger TypeScript reuse in app code.",
       "The registry component no longer owns demo data, search state, or add/remove actions. Those behaviors are expected to live in app code.",
-      "Semantic roles default to a div-based table structure (`table`, `rowgroup`, `row`, `columnheader`, and `cell`) so the installed primitive is more accessible without changing the visual layout.",
+      "The installed primitive now renders a native table, header, body, rows, and cells while preserving the original grid-driven layout API.",
     ],
   },
   {
@@ -2844,7 +2844,7 @@ const tableApiDetails: DetailItem[] = [
     id: "table-header",
     title: "TableHeader",
     summary:
-      "Top shell for the header area. It preserves the original top border before the first row.",
+      "Native table head wrapper for the column labels and sort controls.",
     fields: [
       field({
         name: "children",
@@ -2863,7 +2863,7 @@ const tableApiDetails: DetailItem[] = [
     id: "table-body",
     title: "TableBody",
     summary:
-      "Body wrapper that adds LayoutGroup and AnimatePresence so row insertions, removals, and reordering stay animated.",
+      "Native table body wrapper that adds LayoutGroup and AnimatePresence so row insertions, removals, and reordering stay animated.",
     fields: [
       field({
         name: "children",
@@ -2886,14 +2886,14 @@ const tableApiDetails: DetailItem[] = [
     id: "table-row",
     title: "TableRow",
     summary:
-      "Motion-enabled row primitive used for both header and body layouts.",
+      "Motion-enabled native table row used for both header and body layouts.",
     fields: [
       field({
         name: "variant",
         type: '"header" | "body"',
         defaultValue: "body",
         description:
-          "Header rows skip mount and exit motion, while body rows use the original spring-based row transitions.",
+          "Header rows skip mount and exit motion, while body rows keep the original motion defaults.",
       }),
       field({
         name: "index",
@@ -2906,7 +2906,7 @@ const tableApiDetails: DetailItem[] = [
         name: "hoverable",
         type: "boolean",
         description:
-          "When true, body rows keep the original muted hover wash. Defaults to false for header rows and true for body rows.",
+          "When true, body rows get the muted hover wash. Defaults to false so informational rows do not imply clickability.",
       }),
       field({
         name: "className",
@@ -2915,10 +2915,10 @@ const tableApiDetails: DetailItem[] = [
           "Merged onto the row shell for spacing or color overrides.",
       }),
       field({
-        name: "Motion div props",
-        type: "ComponentPropsWithoutRef<typeof motion.div>",
+        name: "Motion tr props",
+        type: "ComponentPropsWithoutRef<typeof motion.tr>",
         description:
-          "Additional motion.div props such as layout, transition, whileHover, and exit can still be passed directly.",
+          "Additional motion.tr props such as layout, transition, whileHover, and exit can still be passed directly.",
       }),
     ],
     notes: [
@@ -2930,7 +2930,7 @@ const tableApiDetails: DetailItem[] = [
     id: "table-head",
     title: "TableHead",
     summary:
-      "Header cell wrapper for labels, sort buttons, and right-aligned controls.",
+      "Native header cell wrapper for labels, sort buttons, and right-aligned controls.",
     fields: [
       field({
         name: "align",
@@ -2944,7 +2944,7 @@ const tableApiDetails: DetailItem[] = [
         type: "ReactNode",
         required: true,
         description:
-          "Header label or a custom control such as TableSortButton.",
+          "Header label or a custom control such as TableSortButton. When used with TableSortButton, the column header also receives the correct aria-sort state.",
       }),
       field({
         name: "className",
@@ -2957,7 +2957,7 @@ const tableApiDetails: DetailItem[] = [
     id: "table-cell",
     title: "TableCell",
     summary:
-      "Body cell wrapper for row content, status pills, numeric values, and row actions.",
+      "Native body cell wrapper for row content, status pills, numeric values, and row actions.",
     fields: [
       field({
         name: "align",
@@ -2982,7 +2982,7 @@ const tableApiDetails: DetailItem[] = [
     id: "table-caption",
     title: "TableCaption",
     summary:
-      "Low-emphasis caption line below the table, matching the original entry count styling.",
+      "Low-emphasis native table caption below the table, matching the original entry count styling.",
     fields: [
       field({
         name: "children",
@@ -3001,7 +3001,7 @@ const tableApiDetails: DetailItem[] = [
     id: "table-empty",
     title: "TableEmpty",
     summary:
-      "Animated empty-state block for zero-result or no-data states inside TableBody.",
+      "Animated empty-state row for zero-result or no-data states inside TableBody.",
     fields: [
       field({
         name: "children",
@@ -3010,10 +3010,16 @@ const tableApiDetails: DetailItem[] = [
         description: "Empty-state copy or a richer no-data message.",
       }),
       field({
-        name: "Motion div props",
-        type: "ComponentPropsWithoutRef<typeof motion.div>",
+        name: "colSpan",
+        type: "number",
         description:
-          "You can still override animate, initial, transition, or className when customizing the empty state.",
+          "Overrides the automatically derived column span when the empty row should cover a different number of columns.",
+      }),
+      field({
+        name: "Motion tr props",
+        type: "ComponentPropsWithoutRef<typeof motion.tr>",
+        description:
+          "You can still override animate, initial, transition, or className when customizing the empty state row.",
       }),
     ],
   },
@@ -3021,14 +3027,14 @@ const tableApiDetails: DetailItem[] = [
     id: "table-sort-button",
     title: "TableSortButton",
     summary:
-      "Optional header helper that preserves the original label-plus-chevron treatment and direction animation.",
+      "Optional header helper with a larger hit area, clearer active state, and direction animation.",
     fields: [
       field({
         name: "active",
         type: "boolean",
         defaultValue: "false",
         description:
-          "Strengthens the icon opacity and enables the active sort direction treatment.",
+          "Strengthens the visual treatment and enables the active sort direction state for the parent column header.",
       }),
       field({
         name: "direction",
@@ -3042,7 +3048,7 @@ const tableApiDetails: DetailItem[] = [
         type: '"left" | "right"',
         defaultValue: "left",
         description:
-          "Keeps the sort button aligned with the header cell it lives in.",
+          "Keeps the sort button aligned with the header cell it lives in, including full-width right-aligned targets.",
       }),
       field({
         name: "children",
