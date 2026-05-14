@@ -803,10 +803,22 @@ const checkboxGroupApiDetails: DetailItem[] = [
         description: "Optional secondary text rendered below the label.",
       }),
       field({
+        name: "group",
+        type: "string",
+        description:
+          "Optional section label used to chunk long lists into named groups when adjacent options share the same value.",
+      }),
+      field({
         name: "disabled",
         type: "boolean",
         description:
           "Disables the row button and blocks hover, active, and toggle behavior for that option.",
+      }),
+      field({
+        name: "disabledReason",
+        type: "string",
+        description:
+          "Optional explainer rendered below disabled rows so users understand why the choice is unavailable.",
       }),
     ],
   },
@@ -814,7 +826,7 @@ const checkboxGroupApiDetails: DetailItem[] = [
     id: "checkbox-group",
     title: "CheckboxGroup",
     summary:
-      "Animated multi-select list whose checked state is derived entirely from the value prop.",
+      "Animated multi-select list with optimistic toggle feedback, stable output ordering, and optional disclosure for longer option sets.",
     fields: [
       field({
         name: "options",
@@ -827,22 +839,41 @@ const checkboxGroupApiDetails: DetailItem[] = [
         type: "string[]",
         defaultValue: "[]",
         description:
-          "Current selected values. The component does not keep internal selection state beyond this prop.",
+          "Current selected values. The prop remains the source of truth, while the component renders an immediate optimistic preview after each click.",
       }),
       field({
         name: "onChange",
         type: "(value: string[]) => void",
         description:
-          "Receives the next selected values array after a row is toggled.",
+          "Receives the next selected values array after a row is toggled, normalized back into the original display order.",
       }),
       field({
         name: "className",
         type: "string",
         description: "Merged onto the root flex column wrapper.",
       }),
+      field({
+        name: "maxVisible",
+        type: "number",
+        description:
+          "Optional progressive-disclosure cap. When provided, the list initially renders up to this many rows and reveals the rest with a built-in toggle.",
+      }),
+      field({
+        name: "showMoreLabel",
+        type: "string",
+        description:
+          "Optional label prefix for the disclosure button shown when maxVisible hides rows.",
+      }),
+      field({
+        name: "showLessLabel",
+        type: "string",
+        description:
+          "Optional label used when the disclosure button collapses the list back down.",
+      }),
     ],
     notes: [
-      "If you want the UI to update when a user clicks, you must feed the next array from onChange back into value. Without that parent state loop, the component stays visually unchanged.",
+      "The component previews the next state immediately after a click, then re-syncs with whatever value the parent sends back.",
+      "If a selected option would be hidden by maxVisible, the list stays expanded so users do not lose track of active choices.",
       "Rows are buttons, not native checkbox inputs, so form submission and checkbox semantics are not provided out of the box.",
     ],
   },

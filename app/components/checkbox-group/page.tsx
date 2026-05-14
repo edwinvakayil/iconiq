@@ -13,20 +13,36 @@ import {
 
 const demoOptions: CheckboxGroupOption[] = [
   {
+    group: "Pressing",
     label: "High press",
     value: "press",
     description: "Close the alley when they receive on the turn",
   },
   {
+    group: "Pressing",
     label: "Hold the half-spaces",
     value: "halfspaces",
     description: "Narrow tens, full-backs hold the width",
   },
   {
+    group: "Pressing",
     label: "Back-three rehearsal",
     value: "backthree",
     description: "Not on the teamsheet for Saturday",
     disabled: true,
+    disabledReason: "Available after the squad list is published.",
+  },
+  {
+    group: "Set pieces",
+    label: "Near-post corner trap",
+    value: "corner-trap",
+    description: "Front zone clear, weak-side winger seals the rebound lane",
+  },
+  {
+    group: "Set pieces",
+    label: "Late-run overload",
+    value: "late-run",
+    description: "Delay the extra runner until the second movement starts",
   },
 ];
 
@@ -40,20 +56,36 @@ import {
 
 const options: CheckboxGroupOption[] = [
   {
+    group: "Pressing",
     label: "High press",
     value: "press",
     description: "Close the alley when they receive on the turn",
   },
   {
+    group: "Pressing",
     label: "Hold the half-spaces",
     value: "halfspaces",
     description: "Narrow tens, full-backs hold the width",
   },
   {
+    group: "Pressing",
     label: "Back-three rehearsal",
     value: "backthree",
     description: "Not on the teamsheet for Saturday",
     disabled: true,
+    disabledReason: "Available after the squad list is published.",
+  },
+  {
+    group: "Set pieces",
+    label: "Near-post corner trap",
+    value: "corner-trap",
+    description: "Front zone clear, weak-side winger seals the rebound lane",
+  },
+  {
+    group: "Set pieces",
+    label: "Late-run overload",
+    value: "late-run",
+    description: "Delay the extra runner until the second movement starts",
   },
 ];
 
@@ -63,8 +95,10 @@ export function CheckboxGroupPreview() {
   return (
     <CheckboxGroup
       className="max-w-md"
+      maxVisible={4}
       onChange={setValue}
       options={options}
+      showMoreLabel="Show remaining plans"
       value={value}
     />
   );
@@ -159,8 +193,10 @@ export default function CheckboxGroupPage() {
         <div className="flex min-h-[320px] items-center justify-center">
           <CheckboxGroup
             className="max-w-md"
+            maxVisible={4}
             onChange={setSelected}
             options={demoOptions}
+            showMoreLabel="Show remaining plans"
             value={selected}
           />
         </div>
