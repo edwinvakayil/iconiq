@@ -218,6 +218,27 @@ function getNextIndex(
   return (currentIndex + direction + optionCount) % optionCount;
 }
 
+function scrollOptionIntoView(
+  container: HTMLDivElement | null,
+  option: HTMLDivElement | null
+) {
+  if (!(container && option)) {
+    return;
+  }
+
+  const containerRect = container.getBoundingClientRect();
+  const optionRect = option.getBoundingClientRect();
+
+  if (optionRect.top < containerRect.top) {
+    container.scrollTop -= containerRect.top - optionRect.top;
+    return;
+  }
+
+  if (optionRect.bottom > containerRect.bottom) {
+    container.scrollTop += optionRect.bottom - containerRect.bottom;
+  }
+}
+
 function getItemVariants(reduceMotion: boolean) {
   return {
     exit: (index: number) => ({
@@ -258,16 +279,7 @@ function getMenuPosition({
   viewportHeight: number;
   viewportWidth: number;
 }) {
-  const measuredWidth = Math.max(
-    panel?.scrollWidth ?? 0,
-    panel?.getBoundingClientRect().width ?? 0,
-    triggerRect.width
-  );
-  const width = clamp(
-    Math.max(triggerRect.width, measuredWidth),
-    triggerRect.width,
-    Math.max(triggerRect.width, viewportWidth - VIEWPORT_MARGIN * 2)
-  );
+  const width = triggerRect.width;
   const availableBelow = Math.max(
     viewportHeight - triggerRect.bottom - MENU_OFFSET - VIEWPORT_MARGIN,
     0
@@ -465,8 +477,7 @@ function SelectOptionRow({
       aria-selected={isSelected}
       className={cn(
         "group relative isolate flex min-h-11 cursor-pointer touch-manipulation select-none items-center gap-3 rounded-lg px-3 py-2.5 text-foreground text-sm outline-none transition-colors",
-        isSelected && "bg-accent/45",
-        !(isActive || isSelected) && "hover:bg-accent/60"
+        !isActive && "hover:bg-accent/60"
       )}
       custom={index}
       exit="exit"
@@ -488,32 +499,17 @@ function SelectOptionRow({
     >
       {isActive ? (
         <motion.span
-          className={cn(
-            "absolute inset-0 -z-10 rounded-lg bg-accent/70",
-            isSelected && "bg-accent"
-          )}
+          className="absolute inset-0 -z-10 rounded-lg bg-accent/70"
           layoutId={activeHighlightId}
           transition={activeTransition}
         />
       ) : null}
       {option.icon ? (
-        <span
-          className={cn(
-            "flex h-4 w-4 shrink-0 items-center justify-center text-muted-foreground",
-            isSelected && "text-primary"
-          )}
-        >
+        <span className="flex h-4 w-4 shrink-0 items-center justify-center text-muted-foreground">
           {option.icon}
         </span>
       ) : null}
-      <span
-        className={cn(
-          "min-w-0 flex-1 truncate text-left",
-          isSelected && "font-medium"
-        )}
-      >
-        {option.label}
-      </span>
+      <span className="min-w-0 flex-1 truncate text-left">{option.label}</span>
       <span className="flex h-4 w-4 shrink-0 items-center justify-center">
         <AnimatePresence>
           {isSelected ? (
@@ -694,6 +690,7 @@ export function Select({
   const triggerRef = useRef<HTMLButtonElement>(null);
   const menuPanelRef = useRef<HTMLDivElement>(null);
   const listboxRef = useRef<HTMLDivElement>(null);
+  const openInteractionRef = useRef<"keyboard" | "pointer">("pointer");
   const optionRefs = useRef<Array<HTMLDivElement | null>>([]);
   const pendingTypeaheadRef = useRef<string | null>(null);
   const typeaheadRef = useRef("");
@@ -728,7 +725,7 @@ export function Select({
 
   const focusTrigger = useCallback(() => {
     window.requestAnimationFrame(() => {
-      triggerRef.current?.focus();
+      triggerRef.current?.focus({ preventScroll: true });
     });
   }, []);
 
@@ -911,8 +908,12 @@ export function Select({
       return;
     }
 
+    if (openInteractionRef.current !== "keyboard") {
+      return;
+    }
+
     const focusFrame = window.requestAnimationFrame(() => {
-      listboxRef.current?.focus();
+      listboxRef.current?.focus({ preventScroll: true });
 
       if (pendingTypeaheadRef.current) {
         runTypeahead(pendingTypeaheadRef.current);
@@ -928,9 +929,10 @@ export function Select({
       return;
     }
 
-    optionRefs.current[activeIndex]?.scrollIntoView({
-      block: "nearest",
-    });
+    scrollOptionIntoView(
+      listboxRef.current,
+      optionRefs.current[activeIndex] ?? null
+    );
   }, [activeIndex, open]);
 
   useEffect(() => {
@@ -972,9 +974,11 @@ export function Select({
             return;
           }
 
+          openInteractionRef.current = "pointer";
           openMenu(selectedIndex >= 0 ? selectedIndex : 0);
         }}
         onKeyDown={(event) => {
+          openInteractionRef.current = "keyboard";
           handleSelectTriggerKeyDown({
             closeMenu,
             event,
