@@ -6,8 +6,9 @@ import { SITE } from "@/constants";
 
 export function BeatingHeartTitle() {
   return (
-    <h1 className="text-center font-bold font-sans text-[32px] text-neutral-900 tracking-tight min-[640px]:text-[42px] dark:text-white">
-      Support {SITE.NAME}{" "}
+    <p className="max-w-2xl text-[15px] text-secondary leading-7">
+      When {SITE.NAME} helps your work, small contributions keep docs, examples,
+      and motion details moving forward{" "}
       <motion.span
         animate={{
           scale: [1, 1.2, 1, 1.15, 1],
@@ -23,6 +24,6 @@ export function BeatingHeartTitle() {
       >
         ❤️
       </motion.span>
-    </h1>
+    </p>
   );
 }

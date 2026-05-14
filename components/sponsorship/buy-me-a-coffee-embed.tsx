@@ -1,13 +1,16 @@
 "use client";
 
+import { Coffee } from "lucide-react";
 import Script from "next/script";
+
 import { LINK, SITE } from "@/constants";
+import { cn } from "@/lib/utils";
 
 const BMC_SLUG = "edwinvakayil";
 const WIDGET_SCRIPT_URL =
   "https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js";
 
-export function BuyMeACoffeeEmbed() {
+export function BuyMeACoffeeEmbed({ className }: { className?: string }) {
   return (
     <>
       <Script
@@ -19,12 +22,19 @@ export function BuyMeACoffeeEmbed() {
         strategy="afterInteractive"
       />
       <a
-        className="dark:!text-black dark:hover:!text-black inline-flex items-center gap-1.5 rounded-md border border-black bg-black px-3.5 py-2 font-medium font-sans text-sm text-white transition-opacity hover:opacity-90 focus-visible:outline-1 focus-visible:outline-primary focus-visible:outline-offset-2 sm:text-base dark:border-white dark:bg-white"
+        className={cn(
+          "inline-flex h-10 items-center justify-center gap-2 rounded-md px-5 font-medium text-sm shadow-sm transition-colors",
+          "bg-foreground text-background hover:bg-foreground/90",
+          "hover:text-background! focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+          "dark:hover:text-background!",
+          className
+        )}
         href={LINK.BUYMEACOFFEE}
         rel="noopener noreferrer"
         target="_blank"
       >
-        Enjoying {SITE.NAME} ? Fuel the motion<span aria-hidden>⚡️</span>
+        <Coffee aria-hidden className="size-4 shrink-0 opacity-90" strokeWidth={2} />
+        Buy a coffee for {SITE.NAME}
       </a>
     </>
   );
