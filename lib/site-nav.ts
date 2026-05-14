@@ -22,7 +22,6 @@ export const SITE_SECTIONS = [
       { label: "Button", href: "/components/button" },
       { label: "Button group", href: "/components/button-group" },
       { label: "Calendar", href: "/components/calendar" },
-      { label: "Carousel", href: "/components/carousels" },
       { label: "Combobox", href: "/components/combobox" },
       { label: "Context menu", href: "/components/context-menu" },
       { label: "Drawer", href: "/components/drawer" },

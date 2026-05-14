@@ -48,5 +48,5 @@ TITLE: Iconiq — launch release
 SUMMARY: Iconiq launches with motion-aware React components delivered through shadcn-style installs.
 ADDED:
 - Registry launch with 20+ UI components ready to install into your codebase.
-- Component set: Alert, Avatar, Badge, Breadcrumbs, Button, Calendar, Carousels, Checkbox Group, Collapsible, Combobox, Context Menu, Dialog, Drawer, Dropdown, File Upload, Hover Card, Input, Motion Accordion, Popover, Radio Group, Select, Slider, Spinner, Switch, Table, Tabs, and Tooltip.
+- Component set: Alert, Avatar, Badge, Breadcrumbs, Button, Calendar, Checkbox Group, Collapsible, Combobox, Context Menu, Dialog, Drawer, Dropdown, File Upload, Hover Card, Input, Motion Accordion, Popover, Radio Group, Select, Slider, Spinner, Switch, Table, Tabs, and Tooltip.
 ---

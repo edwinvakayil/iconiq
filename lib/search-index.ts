@@ -36,8 +36,6 @@ const componentSummaries: Record<string, string> = {
     "Grouped action buttons, segmented button rows, and a string-based segmented control with motion-driven selection.",
   "/components/calendar":
     "Compact animated calendar for date selection and month navigation.",
-  "/components/carousels":
-    "Testimonial carousel with swipeable motion and pagination controls.",
   "/components/checkbox-group":
     "Checkbox group for multiple selections with animated row states.",
   "/components/combobox":
@@ -127,9 +125,6 @@ const componentItems: SearchItem[] = SITE_SECTIONS.flatMap((section) =>
 
     if (slug === "radiogroup") {
       labelKeywords.push("radio group");
-    }
-    if (slug === "carousels") {
-      labelKeywords.push("carousel");
     }
     if (slug === "file-upload") {
       labelKeywords.push("upload");

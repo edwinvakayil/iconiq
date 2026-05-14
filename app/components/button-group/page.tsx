@@ -11,7 +11,7 @@ import { ButtonGroupItems, IconButton } from "@/components/ui/button-group";
 
 export function ButtonGroupPreview() {
   return (
-    <div className="mx-auto flex w-full max-w-2xl flex-col gap-6 px-2">
+    <div className="mx-auto flex w-full max-w-2xl flex-col gap-10 px-2">
       <div className="space-y-3">
         <div className="space-y-1 text-left">
           <p className="font-medium text-foreground text-sm">
@@ -87,7 +87,7 @@ export function ButtonGroupPreview() {
 
 function ButtonGroupPreview() {
   return (
-    <div className="mx-auto flex w-full max-w-2xl flex-col gap-6 px-2">
+    <div className="mx-auto flex w-full max-w-2xl flex-col gap-10 px-2">
       <div className="space-y-3">
         <div className="space-y-1 text-left">
           <p className="font-medium text-foreground text-sm">

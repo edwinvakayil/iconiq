@@ -100,12 +100,6 @@ const REGISTRY_UI_META: Record<
       "Compact monthly calendar with animated month transitions, selectable days, and date-fns-powered grid generation.",
     dependencies: ["motion", "lucide-react", "date-fns"],
   },
-  carousels: {
-    title: "Carousel",
-    description:
-      "Swipeable testimonial carousel with spring-driven slide transitions and previous/next arrow controls.",
-    dependencies: ["motion", "lucide-react"],
-  },
   "checkbox-group": {
     title: "Checkbox group",
     description:

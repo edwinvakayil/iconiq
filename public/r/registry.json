@@ -124,21 +124,6 @@
       ]
     },
     {
-      "name": "carousels",
-      "type": "registry:ui",
-      "registryDependencies": [],
-      "dependencies": ["motion", "lucide-react"],
-      "devDependencies": [],
-      "title": "Carousel",
-      "description": "Swipeable testimonial carousel with spring-driven slide transitions and previous/next arrow controls.",
-      "files": [
-        {
-          "path": "carousels.tsx",
-          "type": "registry:ui"
-        }
-      ]
-    },
-    {
       "name": "checkbox-group",
       "type": "registry:ui",
       "registryDependencies": [],

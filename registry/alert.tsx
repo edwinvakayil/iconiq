@@ -127,8 +127,6 @@ export const Alert = ({
 
   const titleId = useId();
   const messageId = useId();
-  const progressRef = useRef<HTMLSpanElement | null>(null);
-  const progressAnimationRef = useRef<Animation | null>(null);
   const timeoutIdRef = useRef<number | null>(null);
   const remainingTimeRef = useRef(timeout);
   const timerStartedAtRef = useRef<number | null>(null);
@@ -250,50 +248,6 @@ export const Alert = ({
 
   useEffect(() => clearTimer, [clearTimer]);
 
-  useEffect(() => {
-    if (!visible || timeout <= 0) {
-      return;
-    }
-
-    const progressElement = progressRef.current;
-    if (!progressElement?.animate) {
-      return;
-    }
-
-    const animation = progressElement.animate(
-      [{ transform: "scaleX(1)" }, { transform: "scaleX(0)" }],
-      {
-        duration: timeout,
-        easing: "linear",
-        fill: "forwards",
-      }
-    );
-
-    progressAnimationRef.current = animation;
-
-    return () => {
-      animation.cancel();
-
-      if (progressAnimationRef.current === animation) {
-        progressAnimationRef.current = null;
-      }
-    };
-  }, [timeout, visible]);
-
-  useEffect(() => {
-    const animation = progressAnimationRef.current;
-    if (!animation) {
-      return;
-    }
-
-    if (isHovered || isFocusWithin || isDocumentHidden) {
-      animation.pause();
-      return;
-    }
-
-    animation.play();
-  }, [isDocumentHidden, isFocusWithin, isHovered]);
-
   const handleBlurCapture = (event: FocusEvent<HTMLDivElement>) => {
     const nextFocusedNode = event.relatedTarget;
 
@@ -372,15 +326,6 @@ export const Alert = ({
           role="status"
           variants={containerVariants}
         >
-          {/* Timeout progress bar */}
-          {timeout > 0 && (
-            <span
-              aria-hidden
-              className="absolute inset-x-0 bottom-0 h-[2px] origin-left bg-foreground/10"
-              ref={progressRef}
-            />
-          )}
-
           {/* Icon */}
           {icon ? (
             <motion.div
