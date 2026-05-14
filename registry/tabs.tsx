@@ -1,11 +1,12 @@
 "use client";
 
-import { AnimatePresence, motion } from "motion/react";
+import { motion } from "motion/react";
 import * as React from "react";
 
 import { cn } from "@/lib/utils";
 
 type TabsContextValue = {
+  activationMode: "automatic" | "manual";
   baseId: string;
   hoveredValue: string | null;
   listRef: React.RefObject<HTMLDivElement | null>;
@@ -49,6 +50,23 @@ function getContentId(baseId: string, value: string) {
   return `${baseId}-content-${value}`;
 }
 
+function isArrowNavigationKey(key: string) {
+  return (
+    key === "ArrowRight" ||
+    key === "ArrowLeft" ||
+    key === "ArrowDown" ||
+    key === "ArrowUp"
+  );
+}
+
+function isActivationKey(key: string) {
+  return key === "Enter" || key === " ";
+}
+
+function getArrowDirection(key: string) {
+  return key === "ArrowLeft" || key === "ArrowUp" ? -1 : 1;
+}
+
 function useControllableState<T>({
   defaultProp,
   onChange,
@@ -74,6 +92,44 @@ function useControllableState<T>({
   );
 
   return [value, setValue] as const;
+}
+
+function useMeasure<T extends HTMLElement = HTMLElement>(): [
+  (node: T | null) => void,
+  { width: number; height: number },
+] {
+  const [element, setElement] = React.useState<T | null>(null);
+  const [bounds, setBounds] = React.useState({ width: 0, height: 0 });
+
+  const ref = React.useCallback((node: T | null) => {
+    setElement(node);
+  }, []);
+
+  React.useEffect(() => {
+    if (!(element && typeof ResizeObserver !== "undefined")) {
+      return;
+    }
+
+    const observer = new ResizeObserver(([entry]) => {
+      setBounds((current) => {
+        const next = {
+          width: entry.contentRect.width,
+          height: entry.contentRect.height,
+        };
+
+        if (current.width === next.width && current.height === next.height) {
+          return current;
+        }
+
+        return next;
+      });
+    });
+
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, [element]);
+
+  return [ref, bounds];
 }
 
 export interface TabsContentProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -130,12 +186,14 @@ function collectTabsContentElements(
 }
 
 export interface TabsProps extends React.HTMLAttributes<HTMLDivElement> {
+  activationMode?: "automatic" | "manual";
   defaultValue?: string;
   onValueChange?: (value: string) => void;
   value?: string;
 }
 
 export function Tabs({
+  activationMode = "manual",
   children,
   className,
   defaultValue,
@@ -147,9 +205,21 @@ export function Tabs({
     () => collectTabsContentElements(children),
     [children]
   );
-  const firstContentValue = contentElements[0]?.props.value;
+  const contentValues = React.useMemo(
+    () => contentElements.map((element) => element.props.value),
+    [contentElements]
+  );
+  const contentValueSet = React.useMemo(
+    () => new Set(contentValues),
+    [contentValues]
+  );
+  const firstContentValue = contentValues[0];
+  const [contentRef, contentBounds] = useMeasure<HTMLDivElement>();
   const [value, setValue] = useControllableState<string | undefined>({
-    defaultProp: defaultValue ?? firstContentValue,
+    defaultProp:
+      defaultValue === undefined || contentValueSet.has(defaultValue)
+        ? (defaultValue ?? firstContentValue)
+        : firstContentValue,
     onChange: (nextValue) => {
       if (nextValue !== undefined) {
         onValueChange?.(nextValue);
@@ -162,12 +232,63 @@ export function Tabs({
   const triggerRefs = React.useRef<Record<string, HTMLButtonElement | null>>(
     {}
   );
+  const defaultValueWarningRef = React.useRef<string | undefined>(undefined);
+  const valuePropWarningRef = React.useRef<string | undefined>(undefined);
+  const hasMountedRef = React.useRef(false);
   const baseId = React.useId();
+  const resolvedValue =
+    value !== undefined && contentValueSet.has(value)
+      ? value
+      : firstContentValue;
+
+  React.useEffect(() => {
+    hasMountedRef.current = true;
+  }, []);
+
+  React.useEffect(() => {
+    if (
+      valueProp === undefined &&
+      resolvedValue !== undefined &&
+      value !== resolvedValue
+    ) {
+      setValue(resolvedValue);
+    }
+  }, [resolvedValue, setValue, value, valueProp]);
+
+  React.useEffect(() => {
+    if (process.env.NODE_ENV === "production") {
+      return;
+    }
+
+    if (
+      defaultValue !== undefined &&
+      !contentValueSet.has(defaultValue) &&
+      defaultValueWarningRef.current !== defaultValue
+    ) {
+      defaultValueWarningRef.current = defaultValue;
+      console.warn(
+        `Tabs received a defaultValue of "${defaultValue}" that does not match any TabsContent. Falling back to "${firstContentValue ?? "undefined"}".`
+      );
+    }
+
+    if (
+      valueProp !== undefined &&
+      !contentValueSet.has(valueProp) &&
+      valuePropWarningRef.current !== valueProp
+    ) {
+      valuePropWarningRef.current = valueProp;
+      console.warn(
+        `Tabs received a value of "${valueProp}" that does not match any TabsContent. Falling back to "${firstContentValue ?? "undefined"}".`
+      );
+    }
+  }, [contentValueSet, defaultValue, firstContentValue, valueProp]);
 
   const activeContent =
-    value === undefined
+    resolvedValue === undefined
       ? contentElements[0]
-      : contentElements.find((element) => element.props.value === value);
+      : contentElements.find(
+          (element) => element.props.value === resolvedValue
+        );
 
   const activeContentRef = activeContent?.ref;
   const {
@@ -179,15 +300,16 @@ export function Tabs({
 
   const contextValue = React.useMemo(
     () => ({
+      activationMode,
       baseId,
       hoveredValue,
       listRef,
       setHoveredValue,
       setValue: (nextValue: string) => setValue(nextValue),
       triggerRefs,
-      value,
+      value: resolvedValue,
     }),
-    [baseId, hoveredValue, setValue, value]
+    [activationMode, baseId, hoveredValue, resolvedValue, setValue]
   );
 
   return (
@@ -195,30 +317,68 @@ export function Tabs({
       <div className={cn("w-full", className)} {...props}>
         {children}
         {activeContent ? (
-          <div className="relative mt-10 overflow-hidden">
-            <AnimatePresence initial={false} mode="wait">
-              <motion.div
-                animate={{ filter: "blur(0px)", opacity: 1, y: 0 }}
-                exit={{ filter: "blur(8px)", opacity: 0, y: -12 }}
-                initial={{ filter: "blur(8px)", opacity: 0, y: 12 }}
-                key={activeContent.props.value}
-                transition={{ duration: 0.45, ease: [0.32, 0.72, 0, 1] }}
-              >
-                <div
-                  {...activePanelProps}
-                  aria-labelledby={getTriggerId(
-                    baseId,
-                    activeContent.props.value
-                  )}
-                  className={activeContentClassName}
-                  id={getContentId(baseId, activeContent.props.value)}
-                  ref={(node) => setRefValue(activeContentRef, node)}
-                  role="tabpanel"
+          <div className="relative mt-10">
+            <motion.div
+              animate={{
+                height:
+                  contentBounds.height > 0 ? contentBounds.height : "auto",
+              }}
+              className="overflow-hidden"
+              initial={false}
+              transition={{
+                damping: 30,
+                mass: 0.9,
+                stiffness: 260,
+                type: "spring",
+              }}
+            >
+              <div ref={contentRef}>
+                <motion.div
+                  animate={{
+                    filter: "blur(0px)",
+                    opacity: 1,
+                    scale: 1,
+                    y: 0,
+                  }}
+                  className="w-full"
+                  initial={
+                    hasMountedRef.current
+                      ? {
+                          filter: "blur(7px)",
+                          opacity: 0.72,
+                          scale: 0.988,
+                          y: 8,
+                        }
+                      : false
+                  }
+                  key={activeContent.props.value}
+                  layout
+                  style={{ willChange: "filter, opacity, transform" }}
+                  transition={{
+                    damping: 24,
+                    mass: 0.85,
+                    stiffness: 220,
+                    type: "spring",
+                    filter: { duration: 0.24, ease: [0.22, 1, 0.36, 1] },
+                    opacity: { duration: 0.18, ease: "easeOut" },
+                  }}
                 >
-                  {activeContentChildren}
-                </div>
-              </motion.div>
-            </AnimatePresence>
+                  <div
+                    {...activePanelProps}
+                    aria-labelledby={getTriggerId(
+                      baseId,
+                      activeContent.props.value
+                    )}
+                    className={activeContentClassName}
+                    id={getContentId(baseId, activeContent.props.value)}
+                    ref={(node) => setRefValue(activeContentRef, node)}
+                    role="tabpanel"
+                  >
+                    {activeContentChildren}
+                  </div>
+                </motion.div>
+              </div>
+            </motion.div>
           </div>
         ) : null}
       </div>
@@ -233,6 +393,16 @@ export const TabsList = React.forwardRef<HTMLDivElement, TabsListProps>(
     const { listRef, setHoveredValue, triggerRefs, value } =
       useTabsContext("TabsList");
     const [activeRect, setActiveRect] = React.useState({ left: 0, width: 0 });
+    const getTriggerElement = React.useCallback(
+      (tabValue: string | null) => {
+        if (!tabValue) {
+          return null;
+        }
+
+        return triggerRefs.current[tabValue] ?? null;
+      },
+      [triggerRefs]
+    );
 
     const measure = React.useCallback(
       (tabValue: string | null) => {
@@ -240,22 +410,19 @@ export const TabsList = React.forwardRef<HTMLDivElement, TabsListProps>(
           return null;
         }
 
-        const element = triggerRefs.current[tabValue];
+        const element = getTriggerElement(tabValue);
         const container = listRef.current;
 
         if (!(element && container)) {
           return null;
         }
 
-        const elementRect = element.getBoundingClientRect();
-        const containerRect = container.getBoundingClientRect();
-
         return {
-          left: elementRect.left - containerRect.left,
-          width: elementRect.width,
+          left: element.offsetLeft,
+          width: element.offsetWidth,
         };
       },
-      [listRef, triggerRefs]
+      [getTriggerElement, listRef]
     );
 
     React.useLayoutEffect(() => {
@@ -267,29 +434,50 @@ export const TabsList = React.forwardRef<HTMLDivElement, TabsListProps>(
 
     React.useLayoutEffect(() => {
       const updateRects = () => {
-        setActiveRect(measure(value ?? null) ?? { left: 0, width: 0 });
+        setActiveRect((current) => {
+          const next = measure(value ?? null) ?? { left: 0, width: 0 };
+
+          if (current.left === next.left && current.width === next.width) {
+            return current;
+          }
+
+          return next;
+        });
       };
 
       updateRects();
 
       const container = listRef.current;
-      if (!(container && typeof ResizeObserver !== "undefined")) {
-        window.addEventListener("resize", updateRects);
+      const activeTrigger = getTriggerElement(value ?? null);
+
+      window.addEventListener("resize", updateRects);
+
+      if (typeof ResizeObserver === "undefined") {
         return () => window.removeEventListener("resize", updateRects);
       }
 
       const observer = new ResizeObserver(updateRects);
-      observer.observe(container);
 
-      return () => observer.disconnect();
-    }, [listRef, measure, value]);
+      if (container) {
+        observer.observe(container);
+      }
+
+      if (activeTrigger) {
+        observer.observe(activeTrigger);
+      }
+
+      return () => {
+        observer.disconnect();
+        window.removeEventListener("resize", updateRects);
+      };
+    }, [getTriggerElement, listRef, measure, value]);
 
     return (
       <div
         {...props}
         aria-orientation="horizontal"
         className={cn(
-          "relative inline-flex items-center border-border/50 border-b",
+          "relative inline-flex max-w-full items-center overflow-x-auto overscroll-x-contain whitespace-nowrap border-border/50 border-b",
           className
         )}
         onMouseLeave={(event) => {
@@ -309,7 +497,11 @@ export const TabsList = React.forwardRef<HTMLDivElement, TabsListProps>(
         <motion.div
           animate={{ left: activeRect.left, width: activeRect.width }}
           aria-hidden
-          className="pointer-events-none absolute -bottom-px h-[1.5px] bg-foreground"
+          className="pointer-events-none absolute -bottom-px h-[2px]"
+          style={{
+            backgroundColor:
+              "color-mix(in oklab, var(--color-foreground) 88%, black)",
+          }}
           transition={{
             damping: 34,
             mass: 0.7,
@@ -348,6 +540,7 @@ export const TabsTrigger = React.forwardRef<
     ref
   ) => {
     const {
+      activationMode,
       baseId,
       hoveredValue,
       listRef,
@@ -358,18 +551,102 @@ export const TabsTrigger = React.forwardRef<
     } = useTabsContext("TabsTrigger");
     const isActive = activeValue === value;
     const isHover = hoveredValue === value;
+    const automaticActivation = activationMode === "automatic";
 
     const moveFocus = React.useCallback(
-      (nextElement: HTMLButtonElement) => {
+      (nextElement: HTMLButtonElement, activate: boolean) => {
         nextElement.focus();
         const nextValue = nextElement.dataset.value;
 
         if (nextValue) {
           setHoveredValue(nextValue);
-          setValue(nextValue);
+
+          if (activate) {
+            setValue(nextValue);
+          }
         }
       },
       [setHoveredValue, setValue]
+    );
+    const getEnabledTriggers = React.useCallback(() => {
+      if (!listRef.current) {
+        return [];
+      }
+
+      return Array.from(
+        listRef.current.querySelectorAll<HTMLButtonElement>(
+          '[role="tab"]:not([disabled])'
+        )
+      );
+    }, [listRef]);
+    const focusBoundaryTrigger = React.useCallback(
+      (key: string, triggers: HTMLButtonElement[]) => {
+        if (key === "Home") {
+          moveFocus(triggers[0], automaticActivation);
+          return true;
+        }
+
+        if (key === "End") {
+          const lastTrigger = triggers.at(-1);
+
+          if (lastTrigger) {
+            moveFocus(lastTrigger, automaticActivation);
+          }
+
+          return true;
+        }
+
+        return false;
+      },
+      [automaticActivation, moveFocus]
+    );
+    const handleTriggerKeyDown = React.useCallback(
+      (event: React.KeyboardEvent<HTMLButtonElement>) => {
+        onKeyDown?.(event);
+
+        if (event.defaultPrevented) {
+          return;
+        }
+
+        const triggers = getEnabledTriggers();
+        const currentIndex = triggers.indexOf(event.currentTarget);
+
+        if (currentIndex === -1) {
+          return;
+        }
+
+        if (focusBoundaryTrigger(event.key, triggers)) {
+          event.preventDefault();
+          return;
+        }
+
+        if (isActivationKey(event.key)) {
+          event.preventDefault();
+          setValue(value);
+          return;
+        }
+
+        if (!isArrowNavigationKey(event.key)) {
+          return;
+        }
+
+        event.preventDefault();
+
+        const nextIndex =
+          (currentIndex + getArrowDirection(event.key) + triggers.length) %
+          triggers.length;
+
+        moveFocus(triggers[nextIndex], automaticActivation);
+      },
+      [
+        automaticActivation,
+        focusBoundaryTrigger,
+        getEnabledTriggers,
+        moveFocus,
+        onKeyDown,
+        setValue,
+        value,
+      ]
     );
 
     return (
@@ -378,7 +655,7 @@ export const TabsTrigger = React.forwardRef<
         aria-controls={getContentId(baseId, value)}
         aria-selected={isActive}
         className={cn(
-          "relative px-6 py-4 text-sm tracking-tight outline-none",
+          "relative inline-flex min-h-11 min-w-11 touch-manipulation items-center justify-center rounded-md px-6 py-4 text-sm tracking-tight outline-none focus-visible:ring-2 focus-visible:ring-ring/40 focus-visible:ring-inset",
           className
         )}
         data-state={isActive ? "active" : "inactive"}
@@ -410,56 +687,7 @@ export const TabsTrigger = React.forwardRef<
             setHoveredValue(value);
           }
         }}
-        onKeyDown={(event) => {
-          onKeyDown?.(event);
-
-          if (event.defaultPrevented || !listRef.current) {
-            return;
-          }
-
-          const triggers = Array.from(
-            listRef.current.querySelectorAll<HTMLButtonElement>(
-              '[role="tab"]:not([disabled])'
-            )
-          );
-          const currentIndex = triggers.indexOf(event.currentTarget);
-
-          if (currentIndex === -1) {
-            return;
-          }
-
-          if (event.key === "Home") {
-            event.preventDefault();
-            moveFocus(triggers[0]);
-            return;
-          }
-
-          if (event.key === "End") {
-            event.preventDefault();
-            const lastTrigger = triggers.at(-1);
-            if (lastTrigger) {
-              moveFocus(lastTrigger);
-            }
-            return;
-          }
-
-          if (
-            event.key !== "ArrowRight" &&
-            event.key !== "ArrowLeft" &&
-            event.key !== "ArrowDown" &&
-            event.key !== "ArrowUp"
-          ) {
-            return;
-          }
-
-          event.preventDefault();
-
-          const direction =
-            event.key === "ArrowLeft" || event.key === "ArrowUp" ? -1 : 1;
-          const nextIndex =
-            (currentIndex + direction + triggers.length) % triggers.length;
-          moveFocus(triggers[nextIndex]);
-        }}
+        onKeyDown={handleTriggerKeyDown}
         onMouseEnter={(event) => {
           onMouseEnter?.(event);
 
@@ -479,7 +707,7 @@ export const TabsTrigger = React.forwardRef<
             : isHover
               ? "color-mix(in oklab, var(--color-foreground) 75%, transparent)"
               : "color-mix(in oklab, var(--color-foreground) 40%, transparent)",
-          transition: "color 400ms cubic-bezier(0.32, 0.72, 0, 1)",
+          transition: "color 160ms cubic-bezier(0.32, 0.72, 0, 1)",
         }}
         type="button"
       >

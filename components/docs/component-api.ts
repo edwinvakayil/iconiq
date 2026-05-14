@@ -2658,30 +2658,39 @@ const tabsApiDetails: DetailItem[] = [
     id: "tabs",
     title: "Tabs",
     summary:
-      "Root wrapper for a clean tab interface with controlled or uncontrolled value handling from Base UI.",
+      "Root wrapper for measured tabs with controlled or uncontrolled state, spring-smoothed panel sizing, and a forgiving fallback when values do not match content.",
     fields: [
       field({
         name: "children",
         type: "ReactNode",
         required: true,
         description:
-          "Compose TabsList, TabsTrigger, and TabsContent inside the root, following the familiar shadcn-style structure.",
+          "Compose TabsList, TabsTrigger, and TabsContent inside the root.",
       }),
       field({
         name: "defaultValue",
         type: "string",
-        description: "Initial active tab value for uncontrolled usage.",
+        description:
+          "Initial active tab value for uncontrolled usage. Invalid values fall back to the first declared TabsContent.",
       }),
       field({
         name: "value",
         type: "string",
-        description: "Controlled active tab value.",
+        description:
+          "Controlled active tab value. Invalid values fall back to the first declared TabsContent.",
       }),
       field({
         name: "onValueChange",
-        type: "(value: string, details: object) => void",
+        type: "(value: string) => void",
         description:
-          "Called when a trigger changes the active tab through click or keyboard navigation.",
+          "Called when a trigger activates a different tab through click or keyboard interaction.",
+      }),
+      field({
+        name: "activationMode",
+        type: '"manual" | "automatic"',
+        defaultValue: '"manual"',
+        description:
+          "Controls keyboard behavior. In manual mode arrow keys move focus and Enter or Space activates the focused tab. In automatic mode focus movement also changes the active tab.",
       }),
       field({
         name: "className",
@@ -2691,15 +2700,16 @@ const tabsApiDetails: DetailItem[] = [
       }),
     ],
     notes: [
-      "The implementation stays intentionally small: it relies on Base UI for selection state, keyboard behavior, and panel wiring.",
-      "Use local className overrides on TabsList or TabsTrigger when a specific screen needs a more opinionated visual treatment.",
+      "The root measures the active panel and animates the outer container height, which helps tab sets with uneven content avoid layout jumps.",
+      "TabsContent elements act as declarative panel definitions. The root collects them and renders only the active panel into the animated shell.",
+      "Development builds warn when value or defaultValue does not match any TabsContent.",
     ],
   },
   {
     id: "tabs-list",
     title: "TabsList",
     summary:
-      "Inline trigger rail that provides the muted segmented background behind a set of tab triggers.",
+      "Inline trigger rail with a spring-driven underline indicator and horizontal overflow support for longer tab sets.",
     fields: [
       field({
         name: "children",
@@ -2713,14 +2723,15 @@ const tabsApiDetails: DetailItem[] = [
       }),
     ],
     notes: [
-      "The default styles keep the list compact so it works well for docs toggles, install blocks, and simple settings surfaces.",
+      "The active underline measures the selected trigger width and offset, then follows it with spring motion.",
+      "The list can scroll horizontally instead of compressing trigger hit areas when labels get wider.",
     ],
   },
   {
     id: "tabs-trigger",
     title: "TabsTrigger",
     summary:
-      "Interactive tab button with a clean active surface, quieter inactive state, and built-in accessibility wiring from Base UI.",
+      "Interactive tab button with touch-friendly sizing, quicker hover feedback, a visible keyboard focus ring, and coordination with the shared underline.",
     fields: [
       field({
         name: "value",
@@ -2749,14 +2760,15 @@ const tabsApiDetails: DetailItem[] = [
       }),
     ],
     notes: [
-      "Active styling uses the presence of Base UI's data-active attribute rather than a custom indicator layer.",
-      "Focus, arrow-key navigation, and ARIA relationships come from the underlying tabs primitive.",
+      "In the default `manual` activation mode, arrow keys move focus without switching content. Press Enter or Space to activate the focused tab.",
+      'If you want selection-on-focus behavior, set `activationMode="automatic"` on the Tabs root.',
     ],
   },
   {
     id: "tabs-content",
     title: "TabsContent",
-    summary: "Single panel tied to a matching trigger value.",
+    summary:
+      "Declarative panel definition tied to a matching trigger value and rendered through the root's animated panel shell.",
     fields: [
       field({
         name: "value",
@@ -2773,15 +2785,16 @@ const tabsApiDetails: DetailItem[] = [
       field({
         name: "className",
         type: "string",
-        description: "Merged onto the rendered panel element.",
+        description:
+          "Merged onto the rendered active panel element when this content value is selected.",
       }),
     ],
     notes: [
-      "Hidden panels are managed by the underlying tabs primitive, so you keep the usual DOM and accessibility behavior without extra wrapper logic.",
-      "Standard div attributes such as data-*, aria-*, id, style, and event handlers are forwarded to the panel element.",
+      "TabsContent itself does not render a live wrapper where it is declared. The root collects these elements and mounts only the active panel.",
+      "Standard div attributes such as data-*, aria-*, id, style, and event handlers are forwarded to the rendered panel element.",
     ],
   },
-  registryItem("tabs.json", ["@base-ui/react"]),
+  registryItem("tabs.json", ["motion"]),
 ];
 
 const tableApiDetails: DetailItem[] = [

@@ -76,7 +76,7 @@ const componentSummaries: Record<string, string> = {
   "/components/table":
     "Composable table primitives with aligned rows, sort helpers, and empty states.",
   "/components/tabs":
-    "Tabs primitives with measured indicators and animated panel transitions.",
+    "Tabs primitives with a measured underline, spring-smoothed panel resizing, and softened content transitions.",
   "/components/toggle":
     "Pressed-state toggle built on Radix with ripple, icon motion, and text or icon-only formats.",
   "/components/tooltip":
