@@ -6,6 +6,7 @@ import Link from "next/link";
 
 import { HomeFeaturedShowcase } from "@/components/home-featured-showcase";
 import { PageStagger, PageStaggerItem } from "@/components/page-reveal";
+import { useMotionTier } from "@/providers/motion-tier";
 
 function ReactLogo() {
   return (
@@ -83,26 +84,26 @@ const frameworkLogos = [
   { label: "shadcn", icon: <ShadcnLogo /> },
 ] as const;
 
+let hasPlayedHomeEntrance = false;
+
+const HERO_MOTION_EASE = [0.22, 1, 0.36, 1] as const;
+
 const heroHeadingLineMotion = {
   hidden: {
     opacity: 0,
-    y: 14,
-    scale: 0.965,
+    y: 10,
   },
   visible: {
     opacity: 1,
     y: 0,
-    scale: 1,
     transition: {
-      type: "spring" as const,
-      stiffness: 150,
-      damping: 22,
-      mass: 1.05,
+      duration: 0.24,
+      ease: HERO_MOTION_EASE,
     },
   },
 };
 
-function HeroHeading() {
+function HeroHeading({ animateEntrance }: { animateEntrance: boolean }) {
   const prefersReducedMotion = useReducedMotion();
 
   const heading = (
@@ -145,7 +146,7 @@ function HeroHeading() {
     </>
   );
 
-  if (prefersReducedMotion) {
+  if (prefersReducedMotion || !animateEntrance) {
     return (
       <h1 className="max-w-none font-medium text-[clamp(1.7rem,8vw,2rem)] text-foreground leading-[1.04] tracking-[-0.075em] sm:mx-auto sm:max-w-[24ch] sm:text-[4.35rem] sm:leading-[0.98] lg:text-[5.2rem]">
         {heading}
@@ -214,53 +215,34 @@ function HeroHeading() {
 }
 
 export function HomeHero() {
+  const tier = useMotionTier();
   const prefersReducedMotion = useReducedMotion();
+  const animateEntrance =
+    !(hasPlayedHomeEntrance || prefersReducedMotion) && tier === "full";
+
+  if (animateEntrance) {
+    hasPlayedHomeEntrance = true;
+  }
 
   return (
     <section className="bg-background pt-12 pb-18 sm:pt-16 sm:pb-24">
       <div className="mx-auto w-full max-w-[1280px] px-4 sm:px-6 lg:px-8">
         <motion.div
-          animate={
-            prefersReducedMotion
-              ? undefined
-              : {
-                  opacity: 1,
-                  y: 0,
-                  scale: 1,
-                }
-          }
-          initial={
-            prefersReducedMotion
-              ? false
-              : {
-                  opacity: 0,
-                  y: 12,
-                  scale: 0.986,
-                }
-          }
+          animate={animateEntrance ? { opacity: 1, y: 0 } : undefined}
+          initial={animateEntrance ? { opacity: 0, y: 8 } : false}
           transition={
-            prefersReducedMotion
-              ? undefined
-              : {
-                  opacity: { duration: 0.32, ease: [0.22, 1, 0.36, 1] },
-                  y: {
-                    type: "spring",
-                    stiffness: 135,
-                    damping: 23,
-                    mass: 1.08,
-                  },
-                  scale: {
-                    type: "spring",
-                    stiffness: 150,
-                    damping: 22,
-                    mass: 1,
-                  },
+            animateEntrance
+              ? {
+                  duration: 0.22,
+                  ease: HERO_MOTION_EASE,
                 }
+              : undefined
           }
         >
           <PageStagger
             className="mx-auto max-w-[1120px] text-left sm:text-center"
             delayChildren={0.04}
+            enabled={animateEntrance}
           >
             <PageStaggerItem>
               <div className="mb-3 w-full sm:mx-auto sm:mb-4 sm:max-w-[760px]">
@@ -281,7 +263,7 @@ export function HomeHero() {
             </PageStaggerItem>
 
             <PageStaggerItem>
-              <HeroHeading />
+              <HeroHeading animateEntrance={animateEntrance} />
             </PageStaggerItem>
 
             <PageStaggerItem>

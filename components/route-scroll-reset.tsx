@@ -1,22 +1,21 @@
 "use client";
 
+import { usePathname } from "next/navigation";
 import { useLayoutEffect } from "react";
 
+import { scrollToTop } from "@/lib/scroll-to-top";
+
 export function RouteScrollReset() {
+  const pathname = usePathname();
+
   useLayoutEffect(() => {
     const previous = window.history.scrollRestoration;
     window.history.scrollRestoration = "manual";
 
-    if (!window.location.hash) {
-      window.scrollTo({ top: 0, left: 0, behavior: "auto" });
-      document.documentElement.scrollTop = 0;
-      document.body.scrollTop = 0;
+    if (pathname && !window.location.hash) {
+      scrollToTop();
 
-      const frame = requestAnimationFrame(() => {
-        window.scrollTo({ top: 0, left: 0, behavior: "auto" });
-        document.documentElement.scrollTop = 0;
-        document.body.scrollTop = 0;
-      });
+      const frame = requestAnimationFrame(scrollToTop);
 
       return () => {
         cancelAnimationFrame(frame);
@@ -27,7 +26,7 @@ export function RouteScrollReset() {
     return () => {
       window.history.scrollRestoration = previous;
     };
-  }, []);
+  }, [pathname]);
 
   return null;
 }

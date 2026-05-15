@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { SITE } from "@/constants";
+import { scrollToTop } from "@/lib/scroll-to-top";
 import { cn } from "@/lib/utils";
 
 type BrandVariant = "mark" | "wordmark";
@@ -92,6 +93,7 @@ function BrandLink({ className, size, variant = "wordmark" }: BrandLinkProps) {
         className
       )}
       href="/"
+      onClick={() => scrollToTop()}
       prefetch
     >
       {variant === "mark" ? <span className="sr-only">{SITE.LOGO}</span> : null}
