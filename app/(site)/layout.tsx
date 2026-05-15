@@ -11,7 +11,6 @@ import { PageTitleSync } from "@/components/page-title-sync";
 import { PageTransition } from "@/components/page-transition";
 import { RouteScrollReset } from "@/components/route-scroll-reset";
 import { StarPromptCard } from "@/components/star-prompt-card";
-import { ViewportBottomFog } from "@/components/viewport-bottom-fog";
 import { PackageNameProvider } from "@/providers/package-name";
 
 export default function SiteLayout({
@@ -62,7 +61,6 @@ export default function SiteLayout({
           <StarPromptCard />
         </PackageNameProvider>
       </div>
-      <ViewportBottomFog />
     </>
   );
 }
