@@ -13,6 +13,8 @@ export function ConditionalFooter() {
 
   return (
     <motion.div
+      className="mt-auto w-full shrink-0"
+      id="site-footer"
       initial={
         prefersReducedMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }
       }
