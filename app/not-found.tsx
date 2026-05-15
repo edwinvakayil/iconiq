@@ -7,7 +7,7 @@ export default function NotFound() {
     <div className="relative flex min-h-dvh w-full flex-col overflow-hidden bg-background">
       <NotFoundInteractiveGrid />
 
-      <main className="relative z-10 flex flex-1 flex-col items-center justify-center px-6 py-16 text-center">
+      <main className="pointer-events-none relative z-10 flex flex-1 flex-col items-center justify-center px-6 py-16 text-center">
         <p className="mb-6 rounded-full bg-muted px-3 py-1 font-sans text-muted-foreground text-xs tracking-wide">
           Error 404
         </p>
@@ -23,7 +23,7 @@ export default function NotFound() {
         </p>
 
         <Link
-          className="mt-10 inline-flex min-h-11 min-w-44 items-center justify-center rounded-full bg-primary px-10 font-medium font-sans text-[0.95rem] text-background transition-colors hover:bg-primary/90 focus-visible:outline-2 focus-visible:outline-foreground focus-visible:outline-offset-2"
+          className="pointer-events-auto mt-10 inline-flex min-h-11 min-w-44 items-center justify-center rounded-full bg-primary px-10 font-medium font-sans text-[0.95rem] text-background transition-colors hover:bg-primary/90 focus-visible:outline-2 focus-visible:outline-foreground focus-visible:outline-offset-2"
           href="/"
         >
           Take me Back
