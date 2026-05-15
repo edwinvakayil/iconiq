@@ -1,6 +1,9 @@
 const Footer = () => {
   return (
-    <footer className="mt-auto w-full shrink-0 border-neutral-200/50 border-t bg-background dark:border-neutral-800/50 dark:bg-background">
+    <footer
+      className="mt-auto w-full shrink-0 border-neutral-200/50 border-t bg-background dark:border-neutral-800/50 dark:bg-background"
+      id="site-footer"
+    >
       <div className="mx-auto w-full max-w-[1480px] px-4 py-5 sm:px-6 sm:py-6 lg:px-10">
         <p className="text-[14px] text-muted-foreground leading-7 tracking-[-0.02em]">
           Built by{" "}

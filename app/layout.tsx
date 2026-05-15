@@ -15,6 +15,7 @@ import { PageTitleSync } from "@/components/page-title-sync";
 import { PageTransition } from "@/components/page-transition";
 import { RouteScrollReset } from "@/components/route-scroll-reset";
 import { StarPromptCard } from "@/components/star-prompt-card";
+import { ViewportBottomBlur } from "@/components/viewport-bottom-blur";
 import { SITE } from "@/constants";
 import { MotionTierProvider } from "@/providers/motion-tier";
 import { PackageNameProvider } from "@/providers/package-name";
@@ -123,6 +124,7 @@ export default function RootLayout({
                 <StarPromptCard />
               </PackageNameProvider>
             </div>
+            <ViewportBottomBlur />
           </MotionTierProvider>
         </ThemeProvider>
       </body>

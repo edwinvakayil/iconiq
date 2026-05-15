@@ -282,7 +282,7 @@ export function HomeHero() {
                   See Docs
                 </Link>
                 <Link
-                  className="inline-flex h-10 items-center gap-2 rounded-xl bg-foreground px-5 font-medium text-background text-sm shadow-[0_10px_24px_rgba(14,165,233,0.22)] transition-[background-color,box-shadow] hover:bg-foreground/92 hover:shadow-[0_12px_28px_rgba(14,165,233,0.3)]"
+                  className="inline-flex h-10 items-center gap-2 rounded-xl bg-foreground px-5 font-medium text-background text-sm shadow-[0_10px_24px_rgba(14,165,233,0.22)] transition-[background-color,box-shadow,color] hover:bg-foreground/92 hover:shadow-[0_12px_28px_rgba(14,165,233,0.3)] dark:hover:text-background!"
                   href="/components/accordion"
                 >
                   View components
