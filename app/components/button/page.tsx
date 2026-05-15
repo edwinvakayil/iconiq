@@ -1,6 +1,5 @@
 "use client";
 
-import { Star } from "lucide-react";
 import { motion, type Variants } from "motion/react";
 import type { ReactNode } from "react";
 
@@ -9,46 +8,22 @@ import { ComponentDocsPage } from "@/components/docs/page-shell";
 import { cn } from "@/lib/utils";
 import { Button } from "@/registry/button";
 
-const usageCode = `import { Star } from "lucide-react";
-import { Button } from "@/components/ui/button";
+const usageCode = `import { Button } from "@/components/ui/button";
 
 export function ButtonPreview() {
   return (
-    <blockquote className="mx-auto max-w-4xl text-center">
-      <p className="flex flex-wrap items-center justify-center gap-x-2 gap-y-3 text-balance text-lg font-medium leading-snug tracking-tight dark:text-neutral-100">
-        <span>Start with</span>
-        <span className="inline-flex translate-y-px align-middle">
-          <Button icon={<Star />} iconPosition="end">
-            Continue
-          </Button>
-        </span>
-        <span>offer</span>
-        <span className="inline-flex translate-y-px align-middle">
-          <Button variant="outline">Preview</Button>
-        </span>
-        <span>keep</span>
-        <span className="inline-flex translate-y-px align-middle">
-          <Button variant="secondary">Maybe later</Button>
-        </span>
-        <span>tuck in</span>
-        <span className="inline-flex translate-y-px align-middle">
-          <Button variant="ghost">Skip</Button>
-        </span>
-        <span>thread through</span>
-        <span className="inline-flex translate-y-px align-middle">
-          <Button variant="link">Learn more</Button>
-        </span>
-        <span>and save</span>
-        <span className="inline-flex translate-y-px align-middle">
-          <Button variant="destructive">Delete</Button>
-        </span>
-        <span>for the last resort.</span>
+    <div className="mx-auto max-w-2xl space-y-3 text-center">
+      <p className="text-balance text-lg font-medium leading-snug tracking-tight dark:text-neutral-100">
+        When you are ready to ship.
       </p>
-      <p className="mt-4 text-balance font-normal text-[0.95rem] text-neutral-500 leading-7 dark:text-neutral-400">
-        One sentence, six interaction tones, and enough contrast to feel when a
-        button should lead, support, whisper, link away, or warn.
+      <p className="flex flex-wrap items-center justify-center gap-x-2 gap-y-2 text-balance text-lg font-medium leading-snug tracking-tight dark:text-neutral-100">
+        <span>Tap</span>
+        <span className="inline-flex translate-y-px align-middle">
+          <Button>Continue</Button>
+        </span>
+        <span>to finish.</span>
       </p>
-    </blockquote>
+    </div>
   );
 }`;
 
@@ -138,41 +113,18 @@ export default function ButtonPage() {
       details={componentDetailsItems}
       preview={
         <div className="flex min-h-[280px] items-center justify-center px-4 py-2">
-          <blockquote className="mx-auto max-w-4xl text-center">
-            <p className="flex flex-wrap items-center justify-center gap-x-2 gap-y-3 text-balance font-medium text-lg text-neutral-800 leading-snug tracking-tight sm:text-xl dark:text-neutral-100">
-              <span>Start with</span>
-              <span className="inline-flex translate-y-px align-middle">
-                <Button icon={<Star />} iconPosition="end">
-                  Continue
-                </Button>
-              </span>
-              <span>offer</span>
-              <span className="inline-flex translate-y-px align-middle">
-                <Button variant="outline">Preview</Button>
-              </span>
-              <span>keep</span>
-              <span className="inline-flex translate-y-px align-middle">
-                <Button variant="secondary">Maybe later</Button>
-              </span>
-              <span>tuck in</span>
-              <span className="inline-flex translate-y-px align-middle">
-                <Button variant="ghost">Skip</Button>
-              </span>
-              <span>thread through</span>
-              <span className="inline-flex translate-y-px align-middle">
-                <Button variant="link">Learn more</Button>
-              </span>
-              <span>and save</span>
-              <span className="inline-flex translate-y-px align-middle">
-                <Button variant="destructive">Delete</Button>
-              </span>
-              <span>for the last resort.</span>
+          <div className="mx-auto max-w-2xl space-y-3 text-center">
+            <p className="text-balance font-medium text-lg text-neutral-800 leading-snug tracking-tight sm:text-xl dark:text-neutral-100">
+              When you are ready to ship.
             </p>
-            <p className="mt-4 text-balance font-normal text-[0.95rem] text-neutral-500 leading-7 dark:text-neutral-400">
-              One sentence, six interaction tones, and enough contrast to feel
-              when a button should lead, support, whisper, link away, or warn.
+            <p className="flex flex-wrap items-center justify-center gap-x-2 gap-y-2 text-balance font-medium text-lg text-neutral-800 leading-snug tracking-tight sm:text-xl dark:text-neutral-100">
+              <span>Tap</span>
+              <span className="inline-flex translate-y-px align-middle">
+                <Button>Continue</Button>
+              </span>
+              <span>to finish.</span>
             </p>
-          </blockquote>
+          </div>
         </div>
       }
       title="Button"
