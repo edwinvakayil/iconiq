@@ -27,7 +27,7 @@ export function AnnouncementBanner() {
     <div className="sticky top-0 z-[160] w-full border-sky-200/70 border-b bg-sky-50 text-foreground dark:border-sky-500/15 dark:bg-sky-500/10">
       <div className="mx-auto flex h-[var(--announcement-height-mobile)] w-full items-center justify-between gap-3 px-4 sm:px-6 lg:h-[var(--announcement-height-desktop)] lg:px-10">
         <div className="flex min-w-0 items-center gap-3">
-          <p className="truncate text-[13px] tracking-[-0.02em] text-foreground/90 sm:text-[14px]">
+          <p className="truncate text-[13px] text-foreground/90 tracking-[-0.02em] sm:text-[14px]">
             <span className="font-semibold text-sky-600 dark:text-sky-400">
               New:
             </span>{" "}
