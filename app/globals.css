@@ -26,7 +26,7 @@
 }
 
 :root {
-  --announcement-height-mobile: 0rem;
+  --announcement-height-mobile: 3.25rem;
   --announcement-height-desktop: 3.25rem;
   --header-height-mobile: 3.5rem;
   --header-height-desktop: 3.5rem;
