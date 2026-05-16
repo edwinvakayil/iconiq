@@ -181,7 +181,9 @@ function MobileNav({ className }: { className?: string }) {
 }
 
 export function Header() {
+  const pathname = usePathname();
   const [starCount, setStarCount] = useState<number | null>(null);
+  const isHome = pathname === "/";
 
   useEffect(() => {
     fetch(GITHUB_REPO_API, {
@@ -197,7 +199,12 @@ export function Header() {
   }, []);
 
   return (
-    <header className="fixed top-[var(--announcement-height-mobile)] right-0 left-0 z-[150] w-full border-border/50 border-b bg-background lg:top-[var(--announcement-height-desktop)]">
+    <header
+      className={cn(
+        "fixed top-[var(--announcement-height-mobile)] right-0 left-0 z-[150] w-full border-border/50 bg-background lg:top-[var(--announcement-height-desktop)]",
+        !isHome && "border-b"
+      )}
+    >
       <div className="flex h-14 w-full items-center justify-between gap-4 px-4">
         <div className="flex items-center">
           <div className="flex items-center gap-3">
