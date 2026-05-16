@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 
 import { drawerApiDetails } from "@/components/docs/component-api";
 import { ComponentDocsPage } from "@/components/docs/page-shell";
-import { usageToV0Page } from "@/lib/component-v0-pages";
 import { Drawer } from "@/registry/drawer";
 
 const usageCode = `"use client";
@@ -178,7 +177,6 @@ export default function DrawerPage() {
       title="Drawer"
       usageCode={usageCode}
       usageDescription="Control visibility from local state, keep body content scrollable, and optionally pin footer actions into the shared shell."
-      v0PageCode={usageToV0Page(usageCode)}
     />
   );
 }

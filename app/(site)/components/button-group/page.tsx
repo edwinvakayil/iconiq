@@ -4,7 +4,6 @@ import { Grid2x2, List, MoreHorizontal, Table2 } from "lucide-react";
 
 import { buttonGroupApiDetails } from "@/components/docs/component-api";
 import { ComponentDocsPage } from "@/components/docs/page-shell";
-import { usageToV0Page } from "@/lib/component-v0-pages";
 import { ButtonGroupItems, IconButton } from "@/registry/button-group";
 
 const usageCode = `import { Grid2x2, List, MoreHorizontal, Table2 } from "lucide-react";
@@ -182,7 +181,6 @@ export default function ButtonGroupPage() {
       title="Button Group"
       usageCode={usageCode}
       usageDescription="Start with the divided row for clearer boundaries, then remove dividers and ripple when you want a softer toolbar treatment with fluid hover motion."
-      v0PageCode={usageToV0Page(usageCode)}
     />
   );
 }

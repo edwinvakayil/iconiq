@@ -2,7 +2,12 @@ import fs from "node:fs/promises";
 import path from "node:path";
 
 import { SITE } from "@/constants";
-import { skeletonV0Page, usageToV0Page } from "@/lib/component-v0-pages";
+import {
+  badgePreviewCode,
+  buildV0Page,
+  getComponentV0Page,
+  skeletonPreviewCode,
+} from "@/lib/component-v0-pages";
 
 /** Example app/page.tsx snippets for v0 templates (registry name → content). */
 const COMPONENT_EXAMPLE: Record<string, string> = {
@@ -38,20 +43,39 @@ const COMPONENT_EXAMPLE: Record<string, string> = {
     "    </div>\n" +
     "  )\n" +
     "}\n",
-  accordion:
-    '"use client";\n\n' +
-    `import { Accordion } from "@/components/ui/accordion"\n\n` +
-    "const items = [\n" +
-    '  { id: "1", title: "First question", content: "Answer for the first item." },\n' +
-    '  { id: "2", title: "Second question", content: "Answer for the second item." },\n' +
-    "]\n\n" +
-    "export default function Page() {\n" +
-    "  return (\n" +
-    '    <div className="flex min-h-svh items-center justify-center p-8">\n' +
-    "      <Accordion items={items} />\n" +
-    "    </div>\n" +
-    "  )\n" +
-    "}\n",
+  accordion: buildV0Page(
+    `import { Accordion, type AccordionItem } from "@/components/ui/accordion";
+
+const items: AccordionItem[] = [
+  {
+    id: "1",
+    title: "What makes this accordion special?",
+    content:
+      "It uses spring-based physics animations powered by Motion, creating fluid and natural feeling transitions that respond organically to user interaction.",
+  },
+  {
+    id: "2",
+    title: "How does the animation work?",
+    content:
+      "Each element animates independently with carefully tuned spring parameters for a layered, premium feel.",
+  },
+  {
+    id: "3",
+    title: "Can I customize the content?",
+    content: "Content accepts any React node for richer FAQ answers.",
+  },
+  {
+    id: "4",
+    title: "Is it accessible?",
+    content:
+      "Yes. It uses semantic button elements, proper ARIA attributes, and supports full keyboard navigation out of the box.",
+  },
+];
+
+export function AccordionPreview() {
+  return <Accordion className="w-full max-w-none" items={items} />;
+}`
+  ),
   breadcrumbs:
     '"use client";\n\n' +
     `import { Breadcrumbs } from "@/components/ui/breadcrumbs"\n` +
@@ -270,16 +294,8 @@ const COMPONENT_EXAMPLE: Record<string, string> = {
     "    </div>\n" +
     "  )\n" +
     "}\n",
-  badge:
-    '"use client";\n\n' +
-    `import Badge from "@/components/ui/badge"\n\n` +
-    "export default function Page() {\n" +
-    "  return (\n" +
-    '    <div className="flex min-h-svh items-center justify-center p-8">\n' +
-    "      <Badge>New</Badge>\n" +
-    "    </div>\n" +
-    "  )\n" +
-    "}\n",
+  badge: buildV0Page(badgePreviewCode),
+  skeleton: buildV0Page(skeletonPreviewCode),
   select:
     '"use client";\n\n' +
     `import { Select } from "@/components/ui/select"\n` +
@@ -645,7 +661,7 @@ const COMPONENT_EXAMPLE: Record<string, string> = {
     "    </div>\n" +
     "  )\n" +
     "}\n",
-  switch: usageToV0Page(`"use client";
+  switch: buildV0Page(`"use client";
 
 import { useState } from "react";
 import { Switch } from "@/components/ui/switch";
@@ -662,8 +678,7 @@ export function MotionSwitch() {
     />
   );
 }`),
-  skeleton: skeletonV0Page,
-  "dia-text": usageToV0Page(`"use client";
+  "dia-text": buildV0Page(`"use client";
 
 import { DiaText } from "@/components/ui/dia-text";
 
@@ -679,7 +694,7 @@ export function HeroHeadline() {
     </p>
   );
 }`),
-  "shimmer-text": usageToV0Page(`"use client";
+  "shimmer-text": buildV0Page(`"use client";
 
 import { TextShimmer } from "@/components/ui/shimmer-text";
 
@@ -708,7 +723,7 @@ const getComponentForV0 = async (
 
     const pageContent =
       pageContentOverride ??
-      COMPONENT_EXAMPLE[name] ??
+      (getComponentV0Page(name) || COMPONENT_EXAMPLE[name]) ??
       [
         '"use client";',
         "",

@@ -5,7 +5,6 @@ import type { ReactNode } from "react";
 
 import { buttonApiDetails } from "@/components/docs/component-api";
 import { ComponentDocsPage } from "@/components/docs/page-shell";
-import { usageToV0Page } from "@/lib/component-v0-pages";
 import { cn } from "@/lib/utils";
 import { Button } from "@/registry/button";
 
@@ -131,7 +130,6 @@ export default function ButtonPage() {
       title="Button"
       usageCode={usageCode}
       usageDescription="Start with the default button, then branch into variants, the unstyled escape hatch, optional size animation for changing labels, and the built-in interaction states through the API panel."
-      v0PageCode={usageToV0Page(usageCode)}
     />
   );
 }

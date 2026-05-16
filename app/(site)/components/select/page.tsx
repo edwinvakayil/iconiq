@@ -6,7 +6,6 @@ import { type ReactNode, useState } from "react";
 
 import { selectApiDetails } from "@/components/docs/component-api";
 import { ComponentDocsPage } from "@/components/docs/page-shell";
-import { usageToV0Page } from "@/lib/component-v0-pages";
 import { cn } from "@/lib/utils";
 import { Select } from "@/registry/select";
 
@@ -150,7 +149,6 @@ export default function SelectPage() {
       title="Select"
       usageCode={usageCode}
       usageDescription="Use the canonical `Select` export, then tune options, icons, placeholders, and selection behavior from the API details below."
-      v0PageCode={usageToV0Page(usageCode)}
     />
   );
 }

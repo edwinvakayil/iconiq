@@ -16,7 +16,7 @@ import {
   PageStaggerItem,
 } from "@/components/page-reveal";
 import { LINK } from "@/constants";
-import { usageToV0Page } from "@/lib/component-v0-pages";
+import { getComponentV0Page } from "@/lib/component-v0-pages";
 import { DiaText } from "@/registry/dia-text";
 import { BreadcrumbJsonLdClient } from "@/seo/breadcrumb-json-ld-client";
 import { createMetadata } from "@/seo/metadata";
@@ -109,6 +109,8 @@ export default function DiaTextPage() {
     usageCode.trim(),
   ].join("\n");
 
+  const v0PageCode = getComponentV0Page("dia-text", usageCode);
+
   return (
     <div className="mx-auto w-full min-w-0 max-w-[1600px] px-4 py-8 sm:px-6 sm:py-10 lg:px-10">
       <BreadcrumbJsonLdClient items={breadcrumbs} />
@@ -136,7 +138,7 @@ export default function DiaTextPage() {
                           pageContent={pageContent}
                           pageUrl="/texts/dia-text"
                           title="Dia Text"
-                          v0PageCode={usageToV0Page(usageCode)}
+                          v0PageCode={v0PageCode}
                         />
                       </div>
                     </div>
@@ -148,7 +150,7 @@ export default function DiaTextPage() {
                       componentName="dia-text"
                       preview={<DiaTextPreview />}
                       previewClassName="px-4 py-6 sm:px-8 sm:py-10"
-                      v0PageCode={usageToV0Page(usageCode)}
+                      v0PageCode={v0PageCode}
                     />
                   </div>
                 </header>

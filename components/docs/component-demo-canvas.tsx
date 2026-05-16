@@ -13,6 +13,7 @@ import {
 import { DocsCodeSnippet } from "@/components/docs/code-snippet";
 import { OpenInV0Button } from "@/components/docs/open-in-v0-button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { getComponentV0Page } from "@/lib/component-v0-pages";
 import { cn } from "@/lib/utils";
 
 const demoTabs = [
@@ -35,6 +36,9 @@ export function ComponentDemoCanvas({
   code: string;
   v0PageCode?: string;
 }) {
+  const resolvedV0PageCode =
+    v0PageCode || getComponentV0Page(componentName, code);
+
   const [previewKey, setPreviewKey] = useState(0);
   const [activeTab, setActiveTab] = useState<DemoTabValue>("preview");
   const [indicator, setIndicator] = useState({
@@ -156,7 +160,10 @@ export function ComponentDemoCanvas({
         </div>
 
         <div className="flex items-center gap-1.5">
-          <OpenInV0Button name={componentName} pageContent={v0PageCode} />
+          <OpenInV0Button
+            name={componentName}
+            pageContent={resolvedV0PageCode || undefined}
+          />
           <button
             aria-label="Refresh preview"
             className="inline-flex rounded-md p-1.5 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"

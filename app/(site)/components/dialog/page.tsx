@@ -6,7 +6,6 @@ import { useState } from "react";
 
 import { dialogApiDetails } from "@/components/docs/component-api";
 import { ComponentDocsPage } from "@/components/docs/page-shell";
-import { usageToV0Page } from "@/lib/component-v0-pages";
 import { cn } from "@/lib/utils";
 import { Button } from "@/registry/button";
 import {
@@ -211,7 +210,6 @@ export default function DialogDocsPage() {
       title="Dialog"
       usageCode={usageCode}
       usageDescription="Control the dialog from local state, then customize labels, actions, and motion through the details below."
-      v0PageCode={usageToV0Page(usageCode)}
     />
   );
 }

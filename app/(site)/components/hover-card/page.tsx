@@ -2,7 +2,6 @@
 
 import { hoverCardApiDetails } from "@/components/docs/component-api";
 import { ComponentDocsPage } from "@/components/docs/page-shell";
-import { usageToV0Page } from "@/lib/component-v0-pages";
 import {
   HoverCard,
   HoverCardContent,
@@ -107,7 +106,6 @@ export default function HoverCardPage() {
       title="Hover Card"
       usageCode={usageCode}
       usageDescription="Compose the root, trigger, and content primitives together, then tune hover timing, trigger composition, and collision-aware positioning from the API."
-      v0PageCode={usageToV0Page(usageCode)}
     />
   );
 }

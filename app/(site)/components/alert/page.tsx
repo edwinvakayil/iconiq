@@ -6,7 +6,6 @@ import { type ReactNode, useState } from "react";
 
 import { alertApiDetails } from "@/components/docs/component-api";
 import { ComponentDocsPage } from "@/components/docs/page-shell";
-import { usageToV0Page } from "@/lib/component-v0-pages";
 import { cn } from "@/lib/utils";
 import Alert from "@/registry/alert";
 
@@ -192,7 +191,6 @@ export default function AlertPage() {
       title="Alert"
       usageCode={usageCode}
       usageDescription="Default export. Start with the inline alert below, then switch to toast mode when you want viewport positioning, timed dismissal, and polite live announcements."
-      v0PageCode={usageToV0Page(usageCode)}
     />
   );
 }

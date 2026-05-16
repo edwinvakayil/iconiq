@@ -5,7 +5,6 @@ import { useState } from "react";
 
 import { popoverApiDetails } from "@/components/docs/component-api";
 import { ComponentDocsPage } from "@/components/docs/page-shell";
-import { usageToV0Page } from "@/lib/component-v0-pages";
 import { Popover, PopoverContent, PopoverTrigger } from "@/registry/popover";
 
 const usageCode = `"use client";
@@ -126,7 +125,6 @@ export default function PopoverPage() {
       title="Popover"
       usageCode={usageCode}
       usageDescription="Control open state from React when you need it, but let PopoverContent follow the root automatically unless you have a reason to override presence yourself."
-      v0PageCode={usageToV0Page(usageCode)}
     />
   );
 }

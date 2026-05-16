@@ -12,6 +12,7 @@ import {
   PageStaggerItem,
 } from "@/components/page-reveal";
 import { Separator } from "@/components/ui/separator";
+import { getComponentV0Page } from "@/lib/component-v0-pages";
 import { nodeToText } from "@/lib/node-to-text";
 import { SITE_SECTIONS } from "@/lib/site-nav";
 import { cn } from "@/lib/utils";
@@ -672,6 +673,12 @@ function ComponentDocsPage({
     { id: "props", label: "Props" },
   ];
 
+  const demoCode = previewCode ?? usageCode;
+  const resolvedV0PageCode =
+    v0PageCode ??
+    (getComponentV0Page(componentName, demoCode) ||
+      getComponentV0Page(componentName));
+
   return (
     <>
       <ComponentDocJsonLd
@@ -708,7 +715,7 @@ function ComponentDocsPage({
                         componentName={componentName}
                         pageContent={pageCopyContent}
                         title={title}
-                        v0PageCode={v0PageCode}
+                        v0PageCode={resolvedV0PageCode || undefined}
                       />
                       <ComponentPager componentName={componentName} />
                     </div>
@@ -717,11 +724,11 @@ function ComponentDocsPage({
 
                 <div className="space-y-4">
                   <ComponentDemoCanvas
-                    code={previewCode ?? usageCode}
+                    code={demoCode}
                     componentName={componentName}
                     preview={preview}
                     previewClassName={previewClassName}
-                    v0PageCode={v0PageCode}
+                    v0PageCode={resolvedV0PageCode || undefined}
                   />
                 </div>
               </header>

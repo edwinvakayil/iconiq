@@ -16,7 +16,7 @@ import {
   PageStaggerItem,
 } from "@/components/page-reveal";
 import { LINK } from "@/constants";
-import { usageToV0Page } from "@/lib/component-v0-pages";
+import { getComponentV0Page } from "@/lib/component-v0-pages";
 import { TextShimmer } from "@/registry/shimmer-text";
 import { BreadcrumbJsonLdClient } from "@/seo/breadcrumb-json-ld-client";
 import { createMetadata } from "@/seo/metadata";
@@ -99,6 +99,8 @@ export default function ShimmerTextPage() {
     usageCode.trim(),
   ].join("\n");
 
+  const v0PageCode = getComponentV0Page("shimmer-text", usageCode);
+
   return (
     <div className="mx-auto w-full min-w-0 max-w-[1600px] px-4 py-8 sm:px-6 sm:py-10 lg:px-10">
       <BreadcrumbJsonLdClient items={breadcrumbs} />
@@ -126,7 +128,7 @@ export default function ShimmerTextPage() {
                           pageContent={pageContent}
                           pageUrl="/texts/shimmer-text"
                           title="Shimmer Text"
-                          v0PageCode={usageToV0Page(usageCode)}
+                          v0PageCode={v0PageCode}
                         />
                       </div>
                     </div>
@@ -138,7 +140,7 @@ export default function ShimmerTextPage() {
                       componentName="shimmer-text"
                       preview={<ShimmerTextPreview />}
                       previewClassName="px-4 py-6 sm:px-8 sm:py-10"
-                      v0PageCode={usageToV0Page(usageCode)}
+                      v0PageCode={v0PageCode}
                     />
                   </div>
                 </header>

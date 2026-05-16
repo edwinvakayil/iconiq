@@ -6,7 +6,6 @@ import type { ReactNode } from "react";
 
 import { avatarApiDetails } from "@/components/docs/component-api";
 import { ComponentDocsPage } from "@/components/docs/page-shell";
-import { usageToV0Page } from "@/lib/component-v0-pages";
 import { cn } from "@/lib/utils";
 import { Avatar } from "@/registry/avatar";
 
@@ -165,7 +164,6 @@ export default function AvatarPage() {
       title="Avatar"
       usageCode={usageCode}
       usageDescription="Use the canonical `Avatar` export, then wrap it in a link or button when the surrounding UI needs interaction semantics."
-      v0PageCode={usageToV0Page(usageCode)}
     />
   );
 }

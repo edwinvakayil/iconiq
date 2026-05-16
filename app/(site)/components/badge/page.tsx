@@ -2,7 +2,7 @@
 
 import { badgeApiDetails } from "@/components/docs/component-api";
 import { ComponentDocsPage } from "@/components/docs/page-shell";
-import { usageToV0Page } from "@/lib/component-v0-pages";
+import { badgePreviewCode } from "@/lib/component-v0-pages";
 import { Badge } from "@/registry/badge";
 
 const launchBadgeTone = {
@@ -89,10 +89,10 @@ export default function BadgePage() {
       details={badgeApiDetails}
       detailsDescription="Props and visual behavior are grouped into expandable rows instead of a dense table."
       preview={<BadgePreview />}
+      previewCode={badgePreviewCode}
       title="Badge"
       usageCode={usageCode}
       usageDescription='Start with the animated default badge, switch to `variant="dot"` for a quieter status label, then tune size, color, and shimmer through the API panel.'
-      v0PageCode={usageToV0Page(usageCode)}
     />
   );
 }

@@ -4,7 +4,6 @@ import { useState } from "react";
 
 import { paginationApiDetails } from "@/components/docs/component-api";
 import { ComponentDocsPage } from "@/components/docs/page-shell";
-import { usageToV0Page } from "@/lib/component-v0-pages";
 import {
   Pagination,
   PaginationContent,
@@ -146,7 +145,6 @@ export default function PaginationPage() {
       title="Pagination"
       usageCode={usageCode}
       usageDescription="Compose the same paginator from small pieces while keeping the current centered rail and motion treatment intact."
-      v0PageCode={usageToV0Page(usageCode)}
     />
   );
 }

@@ -6,7 +6,6 @@ import type { ReactNode } from "react";
 
 import { breadcrumbsApiDetails } from "@/components/docs/component-api";
 import { ComponentDocsPage } from "@/components/docs/page-shell";
-import { usageToV0Page } from "@/lib/component-v0-pages";
 import { cn } from "@/lib/utils";
 import { type BreadcrumbItem, Breadcrumbs } from "@/registry/breadcrumbs";
 
@@ -130,7 +129,6 @@ export default function BreadcrumbsPage() {
       title="Breadcrumbs"
       usageCode={usageCode}
       usageDescription="Use the minimal trail below as the baseline, then expand into icons, current-state styling, and custom separators through the API details."
-      v0PageCode={usageToV0Page(usageCode)}
     />
   );
 }

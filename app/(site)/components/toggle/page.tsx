@@ -5,7 +5,6 @@ import { useState } from "react";
 
 import { toggleApiDetails } from "@/components/docs/component-api";
 import { ComponentDocsPage } from "@/components/docs/page-shell";
-import { usageToV0Page } from "@/lib/component-v0-pages";
 import { Toggle } from "@/registry/toggle";
 
 const usageCode = `"use client";
@@ -71,7 +70,6 @@ export default function TogglePage() {
       title="Toggle"
       usageCode={usageCode}
       usageDescription="Start with a single controlled utility toggle like the snippet below, then expand into additional variants and sizes as needed."
-      v0PageCode={usageToV0Page(usageCode)}
     />
   );
 }

@@ -4,7 +4,6 @@ import { useState } from "react";
 
 import { comboboxApiDetails } from "@/components/docs/component-api";
 import { ComponentDocsPage } from "@/components/docs/page-shell";
-import { usageToV0Page } from "@/lib/component-v0-pages";
 import { Combobox, type ComboboxOption } from "@/registry/combobox";
 
 const demoOptions: ComboboxOption[] = [
@@ -106,7 +105,6 @@ export default function ComboboxPage() {
       title="Combobox"
       usageCode={usageCode}
       usageDescription="Use the canonical `Combobox` export, then tune filtering, clearing, disabled state, and keyboard behavior from the API details below."
-      v0PageCode={usageToV0Page(usageCode)}
     />
   );
 }

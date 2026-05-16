@@ -5,7 +5,6 @@ import { type ReactNode, useState } from "react";
 
 import { sliderApiDetails } from "@/components/docs/component-api";
 import { ComponentDocsPage } from "@/components/docs/page-shell";
-import { usageToV0Page } from "@/lib/component-v0-pages";
 import { cn } from "@/lib/utils";
 import { Slider } from "@/registry/slider";
 
@@ -167,7 +166,6 @@ export default function SliderPage() {
       title="Slider"
       usageCode={usageCode}
       usageDescription="Use the compact example below as the baseline, then open the API details for value handling, limits, and interaction behavior."
-      v0PageCode={usageToV0Page(usageCode)}
     />
   );
 }
