@@ -7,9 +7,9 @@ const IMPORT_BLOCK =
 const PAGE_FUNCTION_START = /export default function Page\s*\(/;
 const PAGE_FUNCTION_BODY =
   /export default function Page\(\)\s*\{([\s\S]*)\}\s*$/;
-const RETURN_STATEMENT = /^return\s+([\s\S]+?);?\s*$/;
-const FUNCTION_DECLARATIONS =
-  /^((?:(?:const|let)\s[\s\S]*?;\s*)+)(return\s[\s\S]*)$/;
+const TOP_LEVEL_DECLARATION = /^(?:const|let)\s/;
+const USES_REACT_HOOKS = /\buse(?:Effect|Memo|Callback|LayoutEffect)\s*\(/;
+const JSX_RETURN_PATTERN = /return\s*\(\s*(?:\n\s*)?</g;
 
 function splitModulePreamble(body: string): {
   preamble: string;
@@ -38,20 +38,203 @@ function indentForFunctionBody(block: string): string {
     .join("\n");
 }
 
-function extractDeclarationsBeforeReturn(fnBody: string): {
+function extractTopLevelDeclarations(fnBody: string): {
   declarations: string;
   remainder: string;
 } {
-  const match = fnBody.trim().match(FUNCTION_DECLARATIONS);
+  const lines = fnBody.split("\n");
+  const declarationLines: string[] = [];
+  let index = 0;
 
-  if (!match) {
-    return { declarations: "", remainder: fnBody.trim() };
+  while (index < lines.length) {
+    const line = lines[index];
+    const trimmed = line.trim();
+
+    if (!trimmed) {
+      if (declarationLines.length > 0) {
+        break;
+      }
+      index += 1;
+      continue;
+    }
+
+    if (!TOP_LEVEL_DECLARATION.test(trimmed)) {
+      break;
+    }
+
+    let statement = line;
+    index += 1;
+
+    while (index < lines.length && !statement.includes(";")) {
+      statement += `\n${lines[index]}`;
+      index += 1;
+    }
+
+    declarationLines.push(statement);
   }
 
   return {
-    declarations: match[1].trim(),
-    remainder: match[2].trim(),
+    declarations: declarationLines.join("\n").trim(),
+    remainder: lines.slice(index).join("\n").trim(),
   };
+}
+
+function skipQuotedLiteral(
+  source: string,
+  start: number,
+  quote: string
+): number {
+  let index = start + 1;
+
+  while (index < source.length) {
+    const char = source[index];
+
+    if (char === "\\") {
+      index += 2;
+      continue;
+    }
+
+    if (char === quote) {
+      return index + 1;
+    }
+
+    index += 1;
+  }
+
+  return source.length;
+}
+
+function skipLineComment(source: string, start: number): number {
+  let index = start + 2;
+
+  while (index < source.length && source[index] !== "\n") {
+    index += 1;
+  }
+
+  return index;
+}
+
+function skipBlockComment(source: string, start: number): number {
+  let index = start + 2;
+
+  while (index < source.length - 1) {
+    if (source[index] === "*" && source[index + 1] === "/") {
+      return index + 2;
+    }
+
+    index += 1;
+  }
+
+  return source.length;
+}
+
+function balanceParentheses(source: string, openIndex: number): number {
+  let depth = 0;
+
+  for (let index = openIndex; index < source.length; index += 1) {
+    const char = source[index];
+    const next = source[index + 1];
+
+    if (char === "'" || char === '"' || char === "`") {
+      index = skipQuotedLiteral(source, index, char) - 1;
+      continue;
+    }
+
+    if (char === "/" && next === "/") {
+      index = skipLineComment(source, index) - 1;
+      continue;
+    }
+
+    if (char === "/" && next === "*") {
+      index = skipBlockComment(source, index) - 1;
+      continue;
+    }
+
+    if (char === "(") {
+      depth += 1;
+    } else if (char === ")") {
+      depth -= 1;
+
+      if (depth === 0) {
+        return index;
+      }
+    }
+  }
+
+  return -1;
+}
+
+function findLastJsxReturnOpenParen(fnBody: string): number {
+  let lastOpenParen = -1;
+
+  for (const match of fnBody.matchAll(JSX_RETURN_PATTERN)) {
+    lastOpenParen = match.index + match[0].lastIndexOf("(");
+  }
+
+  return lastOpenParen;
+}
+
+function wrapJsxReturnInCanvas(fnBody: string, skipCanvas: boolean): string {
+  if (skipCanvas) {
+    return fnBody;
+  }
+
+  const openParen = findLastJsxReturnOpenParen(fnBody);
+
+  if (openParen === -1) {
+    return fnBody;
+  }
+
+  const closeIndex = balanceParentheses(fnBody, openParen);
+
+  if (closeIndex === -1) {
+    return fnBody;
+  }
+
+  const inner = fnBody.slice(openParen + 1, closeIndex).trim();
+
+  return `${fnBody.slice(0, openParen + 1)}
+${V0_CANVAS_SHELL}        ${inner}
+${V0_CANVAS_SHELL_CLOSE}${fnBody.slice(closeIndex)}`;
+}
+
+function extractMainReturn(fnBody: string): {
+  hookBody: string;
+  returnInner: string | null;
+} {
+  const openParen = findLastJsxReturnOpenParen(fnBody);
+
+  if (openParen === -1) {
+    return { hookBody: fnBody.trim(), returnInner: null };
+  }
+
+  const returnStart = fnBody.lastIndexOf("return", openParen);
+  const closeIndex = balanceParentheses(fnBody, openParen);
+
+  if (returnStart === -1 || closeIndex === -1) {
+    return { hookBody: fnBody.trim(), returnInner: null };
+  }
+
+  return {
+    hookBody: fnBody.slice(0, returnStart).trim(),
+    returnInner: fnBody.slice(openParen + 1, closeIndex).trim(),
+  };
+}
+
+function unwrapJsxReturnParens(inner: string): string {
+  const trimmed = inner.trim();
+
+  if (!(trimmed.startsWith("(") && trimmed.endsWith(")"))) {
+    return trimmed;
+  }
+
+  const unwrapped = trimmed.slice(1, -1).trim();
+
+  if (unwrapped.startsWith("<") || unwrapped.startsWith("<>")) {
+    return unwrapped;
+  }
+
+  return trimmed;
 }
 
 function mergePageDeclarations(
@@ -94,21 +277,34 @@ export function buildV0Page(source: string): string {
     return `${sections.join("\n\n")}\n`;
   }
 
-  const { declarations: inFunctionDeclarations, remainder } =
-    extractDeclarationsBeforeReturn(fnBodyMatch[1]);
-  const returnMatch = remainder.match(RETURN_STATEMENT);
+  const fnBody = fnBodyMatch[1].trim();
+  const skipCanvas = code.includes("min-h-svh");
 
-  if (!returnMatch) {
+  if (USES_REACT_HOOKS.test(fnBody)) {
+    const wrappedBody = wrapJsxReturnInCanvas(fnBody, skipCanvas);
+    const sections = [
+      imports,
+      preamble,
+      `export default function Page() {
+${indentForFunctionBody(wrappedBody)}
+}`,
+    ].filter(Boolean);
+
+    return `${sections.join("\n\n")}\n`;
+  }
+
+  const { declarations: inFunctionDeclarations, remainder } =
+    extractTopLevelDeclarations(fnBody);
+  const { hookBody, returnInner } = extractMainReturn(remainder);
+
+  if (!returnInner) {
     const sections = [imports, preamble, pageFunction].filter(Boolean);
     return `${sections.join("\n\n")}\n`;
   }
 
-  let inner = returnMatch[1].trim();
-  if (inner.startsWith("(") && inner.endsWith(")")) {
-    inner = inner.slice(1, -1).trim();
-  }
+  const inner = unwrapJsxReturnParens(returnInner);
 
-  const wrappedInner = code.includes("min-h-svh")
+  const wrappedInner = skipCanvas
     ? inner
     : `${V0_CANVAS_SHELL}        ${inner}\n${V0_CANVAS_SHELL_CLOSE}`;
 
@@ -117,11 +313,15 @@ export function buildV0Page(source: string): string {
     inFunctionDeclarations
   );
   const inlinedDeclarations = indentForFunctionBody(pageDeclarations);
+  const inlinedHookBody = indentForFunctionBody(hookBody);
+  const pageBodyPrefix = [inlinedDeclarations, inlinedHookBody]
+    .filter(Boolean)
+    .join("\n\n");
 
   const sections = [
     imports,
     `export default function Page() {
-${inlinedDeclarations}${inlinedDeclarations ? "\n\n" : ""}  return (
+${pageBodyPrefix}${pageBodyPrefix ? "\n\n" : ""}  return (
 ${wrappedInner}
   );
 }`,
