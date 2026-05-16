@@ -114,7 +114,7 @@ async function generateSocialImage() {
             <span style={{ marginRight: 8 }}>Built on</span>
             <span style={{ marginRight: 8 }}>shadcn/ui</span>
             <span style={{ color: SECONDARY, marginRight: 8 }}>with</span>
-            <span>Motion</span>
+            <span>Motion.</span>
           </div>
 
           <div
