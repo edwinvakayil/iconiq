@@ -1,8 +1,21 @@
+import { Instrument_Sans } from "next/font/google";
 import Link from "next/link";
 
 import { SITE } from "@/constants";
 import { scrollToTop } from "@/lib/scroll-to-top";
 import { cn } from "@/lib/utils";
+
+const brandType = Instrument_Sans({
+  subsets: ["latin"],
+  weight: "500",
+  display: "swap",
+});
+
+const wordmarkSizeClass = {
+  mobile: "text-[23px] tracking-[-0.045em]",
+  desktop: "text-[20px] tracking-[-0.04em]",
+  footer: "text-[19px] tracking-[-0.038em]",
+} as const;
 
 type BrandVariant = "mark" | "wordmark";
 
@@ -52,27 +65,16 @@ function BrandWordmark({
   const dot = SITE.LOGO.endsWith(".") ? "." : "";
 
   return (
-    <span className="inline-flex items-end text-foreground leading-none">
-      <span
-        className={cn(
-          "font-semibold tracking-[-0.09em]",
-          size === "mobile" && "text-[24px]",
-          size === "desktop" && "text-[21px]",
-          size === "footer" && "text-[20px]"
-        )}
-      >
-        {label}
-      </span>
+    <span
+      className={cn(
+        brandType.className,
+        "inline-flex items-baseline text-foreground leading-none antialiased",
+        wordmarkSizeClass[size]
+      )}
+    >
+      <span>{label}</span>
       {dot ? (
-        <span
-          aria-hidden
-          className={cn(
-            "ml-0.5 font-semibold text-neutral-400",
-            size === "mobile" && "text-[24px]",
-            size === "desktop" && "text-[21px]",
-            size === "footer" && "text-[20px]"
-          )}
-        >
+        <span aria-hidden className="ml-px text-muted-foreground">
           {dot}
         </span>
       ) : null}
@@ -89,7 +91,7 @@ function BrandLink({ className, size, variant = "wordmark" }: BrandLinkProps) {
     <Link
       className={cn(
         "group inline-flex text-foreground leading-none",
-        variant === "mark" ? "items-center" : "items-end",
+        variant === "mark" ? "items-center" : "items-baseline",
         className
       )}
       href="/"
