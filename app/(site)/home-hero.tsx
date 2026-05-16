@@ -29,7 +29,7 @@ const heroHeadingLineMotion = {
 };
 
 const heroBrandMarkClassName =
-  "relative mx-1 inline-flex h-[0.82em] w-[0.82em] shrink-0 items-center justify-center overflow-hidden rounded-full border border-border/70 bg-background align-middle shadow-[0_1px_0_rgba(0,0,0,0.04)] ring-1 ring-black/3 sm:mx-1.5";
+  "relative mx-1 inline-flex h-[0.82em] w-[0.82em] shrink-0 items-center justify-center overflow-hidden rounded-full bg-background align-middle sm:mx-1.5";
 
 function HeroBrandMark({
   alt,
