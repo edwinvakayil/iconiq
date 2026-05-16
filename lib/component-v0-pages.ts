@@ -8,6 +8,8 @@ const PAGE_FUNCTION_START = /export default function Page\s*\(/;
 const PAGE_FUNCTION_BODY =
   /export default function Page\(\)\s*\{([\s\S]*)\}\s*$/;
 const RETURN_STATEMENT = /^return\s+([\s\S]+?);?\s*$/;
+const FUNCTION_DECLARATIONS =
+  /^((?:(?:const|let)\s[\s\S]*?;\s*)+)(return\s[\s\S]*)$/;
 
 function splitModulePreamble(body: string): {
   preamble: string;
@@ -23,6 +25,40 @@ function splitModulePreamble(body: string): {
     preamble: body.slice(0, pageStart).trim(),
     pageFunction: body.slice(pageStart).trim(),
   };
+}
+
+function indentForFunctionBody(block: string): string {
+  if (!block.trim()) {
+    return "";
+  }
+
+  return block
+    .split("\n")
+    .map((line) => (line.length > 0 ? `  ${line}` : line))
+    .join("\n");
+}
+
+function extractDeclarationsBeforeReturn(fnBody: string): {
+  declarations: string;
+  remainder: string;
+} {
+  const match = fnBody.trim().match(FUNCTION_DECLARATIONS);
+
+  if (!match) {
+    return { declarations: "", remainder: fnBody.trim() };
+  }
+
+  return {
+    declarations: match[1].trim(),
+    remainder: match[2].trim(),
+  };
+}
+
+function mergePageDeclarations(
+  modulePreamble: string,
+  functionDeclarations: string
+): string {
+  return [modulePreamble, functionDeclarations].filter(Boolean).join("\n\n");
 }
 
 const V0_CANVAS_SHELL = `    <div className="flex min-h-svh w-full items-center justify-center p-6 md:p-10">
@@ -58,8 +94,9 @@ export function buildV0Page(source: string): string {
     return `${sections.join("\n\n")}\n`;
   }
 
-  const fnBody = fnBodyMatch[1].trim();
-  const returnMatch = fnBody.match(RETURN_STATEMENT);
+  const { declarations: inFunctionDeclarations, remainder } =
+    extractDeclarationsBeforeReturn(fnBodyMatch[1]);
+  const returnMatch = remainder.match(RETURN_STATEMENT);
 
   if (!returnMatch) {
     const sections = [imports, preamble, pageFunction].filter(Boolean);
@@ -75,11 +112,16 @@ export function buildV0Page(source: string): string {
     ? inner
     : `${V0_CANVAS_SHELL}        ${inner}\n${V0_CANVAS_SHELL_CLOSE}`;
 
+  const pageDeclarations = mergePageDeclarations(
+    preamble,
+    inFunctionDeclarations
+  );
+  const inlinedDeclarations = indentForFunctionBody(pageDeclarations);
+
   const sections = [
     imports,
-    preamble,
     `export default function Page() {
-  return (
+${inlinedDeclarations}${inlinedDeclarations ? "\n\n" : ""}  return (
 ${wrappedInner}
   );
 }`,
@@ -87,6 +129,36 @@ ${wrappedInner}
 
   return `${sections.join("\n\n")}\n`;
 }
+
+/** Avatar docs preview — matches usageCode with shadcn image + link. */
+export const avatarPreviewCode = `import { Avatar } from "@/components/ui/avatar";
+import Link from "next/link";
+
+const imageSrc = "/assets/shadcn.jpg";
+
+export function AvatarPreview() {
+  return (
+    <div className="flex flex-col items-center gap-6 px-2 py-4">
+      <Link
+        aria-label="Open shadcn/ui"
+        className="inline-flex rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+        href="https://ui.shadcn.com/"
+        rel="noopener noreferrer"
+        target="_blank"
+      >
+        <Avatar alt="shadcn/ui" name="shadcn/ui" src={imageSrc} />
+      </Link>
+
+      <p className="max-w-md text-center text-[13px] leading-relaxed">
+        <span className="text-emerald-600 dark:text-emerald-400">44px frame</span>
+        <span className="text-neutral-400 dark:text-neutral-500"> · </span>
+        <span className="text-sky-600 dark:text-sky-400">Fallback appears first</span>
+        <span className="text-neutral-400 dark:text-neutral-500"> · </span>
+        <span className="text-violet-600 dark:text-violet-400">Image crossfades in</span>
+      </p>
+    </div>
+  );
+}`;
 
 /** Badge docs preview uses custom tone objects (not in usageCode). */
 export const badgePreviewCode = `import { Badge } from "@/components/ui/badge";
@@ -171,6 +243,7 @@ export function SkeletonPreview() {
 }`;
 
 const COMPONENT_PREVIEW_OVERRIDES: Record<string, string> = {
+  avatar: avatarPreviewCode,
   badge: badgePreviewCode,
   skeleton: skeletonPreviewCode,
 };

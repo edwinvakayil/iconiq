@@ -3,6 +3,7 @@ import path from "node:path";
 
 import { SITE } from "@/constants";
 import {
+  avatarPreviewCode,
   badgePreviewCode,
   buildV0Page,
   getComponentV0Page,
@@ -26,23 +27,7 @@ const COMPONENT_EXAMPLE: Record<string, string> = {
     "    </div>\n" +
     "  )\n" +
     "}\n",
-  avatar:
-    '"use client";\n\n' +
-    `import { Avatar } from "@/components/ui/avatar"\n\n` +
-    "export default function Page() {\n" +
-    "  return (\n" +
-    '    <div className="flex min-h-svh items-center justify-center p-8">\n' +
-    "      <a\n" +
-    '        className="inline-flex rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"\n' +
-    '        href="https://github.com/account"\n' +
-    '        rel="noopener noreferrer"\n' +
-    '        target="_blank"\n' +
-    "      >\n" +
-    '        <Avatar src="https://avatars.githubusercontent.com/u/180170746?v=4" />\n' +
-    "      </a>\n" +
-    "    </div>\n" +
-    "  )\n" +
-    "}\n",
+  avatar: buildV0Page(avatarPreviewCode),
   accordion: buildV0Page(
     `import { Accordion, type AccordionItem } from "@/components/ui/accordion";
 
