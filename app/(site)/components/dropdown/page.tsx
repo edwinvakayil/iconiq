@@ -5,6 +5,7 @@ import { useState } from "react";
 
 import { dropdownApiDetails } from "@/components/docs/component-api";
 import { ComponentDocsPage } from "@/components/docs/page-shell";
+import { usageToV0Page } from "@/lib/component-v0-pages";
 import {
   Dropdown,
   DropdownContent,
@@ -172,6 +173,7 @@ export default function DropdownPage() {
       title="Dropdown"
       usageCode={usageCode}
       usageDescription="Compose the trigger, content, and items directly when you want the API to feel closer to shadcn patterns while still supporting a built-in select mode."
+      v0PageCode={usageToV0Page(usageCode)}
     />
   );
 }

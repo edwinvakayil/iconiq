@@ -3,6 +3,7 @@
 import { accordionApiDetails } from "@/components/docs/component-api";
 import { ComponentDemoCanvas } from "@/components/docs/component-demo-canvas";
 import { ComponentDocsPage } from "@/components/docs/page-shell";
+import { usageToV0Page } from "@/lib/component-v0-pages";
 import { Accordion, type AccordionItem } from "@/registry/accordion";
 
 const demoItems: AccordionItem[] = [
@@ -234,6 +235,7 @@ export default function AccordionPage() {
       title="Accordion"
       usageCode={usageCode}
       usageDescription='Use the default item array pattern below, pass `variant="editorial"` when you want a lighter editorial treatment, add `multiple` to let several rows stay open at once, and pass `content` as any `ReactNode` when paragraphs or lists scan better than a single string.'
+      v0PageCode={usageToV0Page(usageCode)}
     />
   );
 }

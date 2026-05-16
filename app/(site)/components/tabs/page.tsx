@@ -2,6 +2,7 @@
 
 import { tabsApiDetails } from "@/components/docs/component-api";
 import { ComponentDocsPage } from "@/components/docs/page-shell";
+import { usageToV0Page } from "@/lib/component-v0-pages";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/registry/tabs";
 
 const tabSections = [
@@ -135,6 +136,7 @@ export default function TabsPage() {
       title="Tabs"
       usageCode={usageCode}
       usageDescription='Use the root, list, trigger, and content primitives for the default manual-activation pattern. Pass `activationMode="automatic"` when arrow keys should change tabs immediately.'
+      v0PageCode={usageToV0Page(usageCode)}
     />
   );
 }

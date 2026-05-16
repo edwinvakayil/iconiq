@@ -5,6 +5,7 @@ import { useState } from "react";
 
 import { inputGroupApiDetails } from "@/components/docs/component-api";
 import { ComponentDocsPage } from "@/components/docs/page-shell";
+import { usageToV0Page } from "@/lib/component-v0-pages";
 import { InputGroup, InputGroupField } from "@/registry/input-group";
 
 const usageCode = `"use client";
@@ -126,6 +127,7 @@ export default function InputGroupPage() {
       title="Input Group"
       usageCode={usageCode}
       usageDescription="Use InputGroupField for each field, then wrap several fields in InputGroup when you want the same vertical spacing across a compact form section."
+      v0PageCode={usageToV0Page(usageCode)}
     />
   );
 }

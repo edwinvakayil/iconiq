@@ -2,6 +2,7 @@
 
 import { badgeApiDetails } from "@/components/docs/component-api";
 import { ComponentDocsPage } from "@/components/docs/page-shell";
+import { usageToV0Page } from "@/lib/component-v0-pages";
 import { Badge } from "@/registry/badge";
 
 const launchBadgeTone = {
@@ -91,6 +92,7 @@ export default function BadgePage() {
       title="Badge"
       usageCode={usageCode}
       usageDescription='Start with the animated default badge, switch to `variant="dot"` for a quieter status label, then tune size, color, and shimmer through the API panel.'
+      v0PageCode={usageToV0Page(usageCode)}
     />
   );
 }

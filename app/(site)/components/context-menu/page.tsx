@@ -5,6 +5,7 @@ import { useState } from "react";
 
 import { contextMenuApiDetails } from "@/components/docs/component-api";
 import { ComponentDocsPage } from "@/components/docs/page-shell";
+import { usageToV0Page } from "@/lib/component-v0-pages";
 import { ContextMenu, type ContextMenuItem } from "@/registry/context-menu";
 
 const usageCode = `"use client";
@@ -126,6 +127,7 @@ export default function ContextMenuPage() {
       title="Context Menu"
       usageCode={usageCode}
       usageDescription="Pass a typed item array and wrap the exact local surface you want to make context-clickable. Use the API details below to tune rows, callbacks, and menu styling."
+      v0PageCode={usageToV0Page(usageCode)}
     />
   );
 }

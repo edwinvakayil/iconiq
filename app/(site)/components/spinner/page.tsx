@@ -5,6 +5,7 @@ import type { ReactNode } from "react";
 
 import { spinnerApiDetails } from "@/components/docs/component-api";
 import { ComponentDocsPage } from "@/components/docs/page-shell";
+import { usageToV0Page } from "@/lib/component-v0-pages";
 import { cn } from "@/lib/utils";
 import Spinner from "@/registry/spinner";
 
@@ -161,6 +162,7 @@ export default function SpinnerPage() {
       title="Spinner"
       usageCode={usageCode}
       usageDescription="Default export. Start with the compact snippet below, then expand into sizing, variants, and accessibility behavior through the API details."
+      v0PageCode={usageToV0Page(usageCode)}
     />
   );
 }

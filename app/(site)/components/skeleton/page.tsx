@@ -2,6 +2,7 @@
 
 import { skeletonApiDetails } from "@/components/docs/component-api";
 import { ComponentDocsPage } from "@/components/docs/page-shell";
+import { skeletonV0Page } from "@/lib/component-v0-pages";
 import { ShimmerSkeleton } from "@/registry/skeleton";
 
 const usageCode = `import { Skeleton } from "@/components/ui/skeleton";
@@ -63,6 +64,7 @@ export default function SkeletonPage() {
       title="Skeleton"
       usageCode={usageCode}
       usageDescription="Use the same primitive for avatar circles, title lines, body rows, and larger content blocks by changing only size and radius."
+      v0PageCode={skeletonV0Page}
     />
   );
 }

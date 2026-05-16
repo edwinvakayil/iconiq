@@ -4,6 +4,7 @@ import { useState } from "react";
 
 import { switchApiDetails } from "@/components/docs/component-api";
 import { ComponentDocsPage } from "@/components/docs/page-shell";
+import { usageToV0Page } from "@/lib/component-v0-pages";
 import { Switch } from "@/registry/switch";
 
 const usageCode = `"use client";
@@ -54,6 +55,7 @@ export default function SwitchPage() {
       title="Switch"
       usageCode={usageCode}
       usageDescription="Use the controlled pattern below when the surrounding interface needs to react immediately to the switch state."
+      v0PageCode={usageToV0Page(usageCode)}
     />
   );
 }

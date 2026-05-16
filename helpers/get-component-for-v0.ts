@@ -2,6 +2,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 
 import { SITE } from "@/constants";
+import { skeletonV0Page, usageToV0Page } from "@/lib/component-v0-pages";
 
 /** Example app/page.tsx snippets for v0 templates (registry name → content). */
 const COMPONENT_EXAMPLE: Record<string, string> = {
@@ -644,9 +645,57 @@ const COMPONENT_EXAMPLE: Record<string, string> = {
     "    </div>\n" +
     "  )\n" +
     "}\n",
+  switch: usageToV0Page(`"use client";
+
+import { useState } from "react";
+import { Switch } from "@/components/ui/switch";
+
+export function MotionSwitch() {
+  const [enabled, setEnabled] = useState(true);
+
+  return (
+    <Switch
+      aria-label="Enable motion"
+      checked={enabled}
+      label="Enable motion"
+      onCheckedChange={setEnabled}
+    />
+  );
+}`),
+  skeleton: skeletonV0Page,
+  "dia-text": usageToV0Page(`"use client";
+
+import { DiaText } from "@/components/ui/dia-text";
+
+export function HeroHeadline() {
+  return (
+    <p className="font-light text-4xl tracking-tight">
+      Make interfaces feel{" "}
+      <DiaText
+        repeat
+        repeatDelay={1.1}
+        text={["smooth.", "focused.", "refined."]}
+      />
+    </p>
+  );
+}`),
+  "shimmer-text": usageToV0Page(`"use client";
+
+import { TextShimmer } from "@/components/ui/shimmer-text";
+
+export function StatusLine() {
+  return (
+    <TextShimmer className="font-light text-md tracking-tight">
+      Agent is thinking ...
+    </TextShimmer>
+  );
+}`),
 };
 
-const getComponentForV0 = async (name: string) => {
+const getComponentForV0 = async (
+  name: string,
+  pageContentOverride?: string
+) => {
   try {
     const registryFilePath = path.join(
       process.cwd(),
@@ -658,6 +707,7 @@ const getComponentForV0 = async (name: string) => {
     const registryData = JSON.parse(registryFile);
 
     const pageContent =
+      pageContentOverride ??
       COMPONENT_EXAMPLE[name] ??
       [
         '"use client";',

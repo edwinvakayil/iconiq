@@ -16,6 +16,7 @@ import {
   PageStaggerItem,
 } from "@/components/page-reveal";
 import { LINK } from "@/constants";
+import { usageToV0Page } from "@/lib/component-v0-pages";
 import { DiaText } from "@/registry/dia-text";
 import { BreadcrumbJsonLdClient } from "@/seo/breadcrumb-json-ld-client";
 import { createMetadata } from "@/seo/metadata";
@@ -135,6 +136,7 @@ export default function DiaTextPage() {
                           pageContent={pageContent}
                           pageUrl="/texts/dia-text"
                           title="Dia Text"
+                          v0PageCode={usageToV0Page(usageCode)}
                         />
                       </div>
                     </div>
@@ -146,6 +148,7 @@ export default function DiaTextPage() {
                       componentName="dia-text"
                       preview={<DiaTextPreview />}
                       previewClassName="px-4 py-6 sm:px-8 sm:py-10"
+                      v0PageCode={usageToV0Page(usageCode)}
                     />
                   </div>
                 </header>

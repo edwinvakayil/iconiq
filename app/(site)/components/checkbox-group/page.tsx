@@ -5,6 +5,7 @@ import { type ReactNode, useState } from "react";
 
 import { checkboxGroupApiDetails } from "@/components/docs/component-api";
 import { ComponentDocsPage } from "@/components/docs/page-shell";
+import { usageToV0Page } from "@/lib/component-v0-pages";
 import { cn } from "@/lib/utils";
 import {
   CheckboxGroup,
@@ -204,6 +205,7 @@ export default function CheckboxGroupPage() {
       title="Checkbox Group"
       usageCode={usageCode}
       usageDescription="Use the controlled example below as the default pattern, then open the API details for option shape, selection flow, and accessibility notes."
+      v0PageCode={usageToV0Page(usageCode)}
     />
   );
 }

@@ -5,6 +5,7 @@ import { type ReactNode, useState } from "react";
 
 import { radioGroupApiDetails } from "@/components/docs/component-api";
 import { ComponentDocsPage } from "@/components/docs/page-shell";
+import { usageToV0Page } from "@/lib/component-v0-pages";
 import { cn } from "@/lib/utils";
 import RadioGroup from "@/registry/radiogroup";
 
@@ -162,6 +163,7 @@ export default function RadioGroupPage() {
       title="Radio Group"
       usageCode={usageCode}
       usageDescription="Import the default export and control it from state. The API details below cover the option contract, controlled state, and accessibility notes."
+      v0PageCode={usageToV0Page(usageCode)}
     />
   );
 }

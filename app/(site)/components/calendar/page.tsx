@@ -4,6 +4,7 @@ import { useState } from "react";
 
 import { calendarApiDetails } from "@/components/docs/component-api";
 import { ComponentDocsPage } from "@/components/docs/page-shell";
+import { usageToV0Page } from "@/lib/component-v0-pages";
 import { Calendar } from "@/registry/calendar";
 
 const usageCode = `"use client";
@@ -57,6 +58,7 @@ export default function CalendarPage() {
       title="Calendar"
       usageCode={usageCode}
       usageDescription="Use controlled or uncontrolled props depending on your form flow. The visual shell and animation behavior stay the same either way."
+      v0PageCode={usageToV0Page(usageCode)}
     />
   );
 }

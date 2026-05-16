@@ -633,6 +633,7 @@ function ComponentDocsPage({
   details,
   extraSections = [],
   previewClassName,
+  v0PageCode,
 }: {
   breadcrumbs: BreadcrumbItem[];
   eyebrow?: string;
@@ -643,6 +644,7 @@ function ComponentDocsPage({
   previewDescription?: ReactNode;
   previewCode?: string;
   usageCode: string;
+  v0PageCode?: string;
   usageDescription?: ReactNode;
   details: DetailItem[];
   extraSections?: ComponentDocsExtraSection[];
@@ -706,6 +708,7 @@ function ComponentDocsPage({
                         componentName={componentName}
                         pageContent={pageCopyContent}
                         title={title}
+                        v0PageCode={v0PageCode}
                       />
                       <ComponentPager componentName={componentName} />
                     </div>
@@ -718,6 +721,7 @@ function ComponentDocsPage({
                     componentName={componentName}
                     preview={preview}
                     previewClassName={previewClassName}
+                    v0PageCode={v0PageCode}
                   />
                 </div>
               </header>

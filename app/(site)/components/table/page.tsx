@@ -5,6 +5,7 @@ import { useMemo, useState } from "react";
 
 import { tableApiDetails } from "@/components/docs/component-api";
 import { ComponentDocsPage } from "@/components/docs/page-shell";
+import { usageToV0Page } from "@/lib/component-v0-pages";
 import {
   Table,
   TableBody,
@@ -369,6 +370,7 @@ export default function TablePage() {
       title="Table"
       usageCode={usageCode}
       usageDescription="Use the canonical `Table` primitives for production data, then add your own filtering, sorting, and row actions around them in app code."
+      v0PageCode={usageToV0Page(usageCode)}
     />
   );
 }

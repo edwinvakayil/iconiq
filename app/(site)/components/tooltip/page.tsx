@@ -5,6 +5,7 @@ import type { ReactNode } from "react";
 
 import { tooltipApiDetails } from "@/components/docs/component-api";
 import { ComponentDocsPage } from "@/components/docs/page-shell";
+import { usageToV0Page } from "@/lib/component-v0-pages";
 import { cn } from "@/lib/utils";
 import { Tooltip } from "@/registry/tooltip";
 
@@ -202,6 +203,7 @@ export default function TooltipPage() {
       title="Tooltip"
       usageCode={usageCode}
       usageDescription="Use the canonical `Tooltip` export so the component drops cleanly into icon buttons, controls, and command surfaces."
+      v0PageCode={usageToV0Page(usageCode)}
     />
   );
 }

@@ -3,6 +3,7 @@
 import { Check, ChevronDown, Copy, ExternalLink } from "lucide-react";
 import { useMemo, useState } from "react";
 
+import { OpenInV0Button } from "@/components/docs/open-in-v0-button";
 import { SITE } from "@/constants";
 import { cn } from "@/lib/utils";
 import { Popover, PopoverContent, PopoverTrigger } from "@/registry/popover";
@@ -18,11 +19,13 @@ export function PageCopyActions({
   pageContent,
   pageUrl,
   title,
+  v0PageCode,
 }: {
   componentName: string;
   pageContent: string;
   pageUrl?: string;
   title: string;
+  v0PageCode?: string;
 }) {
   const [copied, setCopied] = useState(false);
   const [open, setOpen] = useState(false);
@@ -38,10 +41,6 @@ export function PageCopyActions({
       {
         href: registryUrl,
         label: "View registry JSON",
-      },
-      {
-        href: `https://v0.dev/chat/api/open?url=${registryUrl}`,
-        label: "Open in v0",
       },
       {
         href: `https://chatgpt.com/?q=${getChatGptPrompt(
@@ -128,6 +127,11 @@ export function PageCopyActions({
               <ExternalLink className="size-3.5 text-muted-foreground" />
             </a>
           ))}
+          <OpenInV0Button
+            name={componentName}
+            pageContent={v0PageCode}
+            variant="menu"
+          />
         </PopoverContent>
       </Popover>
     </div>

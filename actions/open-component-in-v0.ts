@@ -3,9 +3,12 @@
 import { SITE } from "@/constants";
 import { getComponentForV0 } from "@/helpers/get-component-for-v0";
 
-export async function openComponentInV0Action(name: string) {
+export async function openComponentInV0Action(
+  name: string,
+  pageContent?: string
+) {
   try {
-    const template = await getComponentForV0(name);
+    const template = await getComponentForV0(name, pageContent);
 
     if (!template) {
       throw new Error(`Component ${name} not found.`);
