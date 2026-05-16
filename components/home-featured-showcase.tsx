@@ -1,6 +1,5 @@
 "use client";
 
-import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { type ReactNode, startTransition, useEffect, useState } from "react";
 
@@ -92,25 +91,18 @@ function ShowcaseCard({
 }) {
   return (
     <article
-      className={`flex flex-col rounded-[30px] border border-border/70 bg-muted/[0.32] p-5 text-left shadow-[0_16px_40px_rgba(15,23,42,0.04)] sm:p-6 ${className ?? ""}`}
+      className={`flex flex-col rounded-[22px] border border-border/70 bg-muted/32 p-5 text-left sm:p-6 ${className ?? ""}`}
     >
-      <div className="flex min-h-0 flex-1 items-center justify-center overflow-hidden rounded-[22px] bg-background/75 px-4 py-6">
+      <div className="flex min-h-0 flex-1 items-center justify-center overflow-hidden rounded-2xl px-4 py-6">
         {children}
       </div>
 
-      <div className="mt-4 flex items-end justify-between gap-4">
-        <div className="min-w-0">
-          <h3 className="font-medium text-[1.05rem] text-foreground tracking-[-0.04em]">
-            {title}
-          </h3>
-        </div>
-
+      <div className="mt-4 min-w-0">
         <Link
-          className="inline-flex size-10 shrink-0 items-center justify-center rounded-full border border-border/70 bg-background text-muted-foreground transition-colors hover:text-foreground"
+          className="inline-block font-medium text-[1.05rem] text-foreground tracking-[-0.04em] decoration-transparent underline-offset-4 transition-[color,text-decoration-color] hover:underline hover:decoration-foreground"
           href={href}
         >
-          <ArrowRight className="size-4" />
-          <span className="sr-only">Open {title}</span>
+          {title}
         </Link>
       </div>
     </article>
@@ -152,7 +144,7 @@ export function HomeFeaturedShowcase() {
         </h2>
       </div>
 
-      <div className="mt-6 grid gap-4 lg:grid-cols-12">
+      <div className="mt-8 grid gap-4 sm:mt-10 lg:grid-cols-12">
         <ShowcaseCard
           className="lg:col-span-6"
           href="/texts/dia-text"
@@ -203,7 +195,7 @@ export function HomeFeaturedShowcase() {
           href="/components/skeleton"
           title="Skeleton"
         >
-          <div className="w-full max-w-[360px] rounded-[22px] border border-border/65 bg-background/90 p-4">
+          <div className="w-full max-w-[360px] rounded-2xl border border-border/65 p-4">
             <div className="flex items-center gap-3">
               <ShimmerSkeleton className="size-11" rounded="full" />
               <div className="min-w-0 flex-1 space-y-2">
@@ -226,65 +218,6 @@ export function HomeFeaturedShowcase() {
         {showExtendedShowcase ? (
           <>
             <ShowcaseCard
-              className="lg:col-span-12"
-              href="/components/tabs"
-              title="Tabs"
-            >
-              <Tabs className="w-full max-w-[760px]" defaultValue="browse">
-                <TabsList className="mx-auto">
-                  <TabsTrigger value="browse">Browse</TabsTrigger>
-                  <TabsTrigger value="ship">Ship</TabsTrigger>
-                  <TabsTrigger value="adapt">Adapt</TabsTrigger>
-                </TabsList>
-
-                <TabsContent
-                  className="rounded-[22px] bg-background/85 p-5"
-                  value="browse"
-                >
-                  <div className="space-y-1 text-left">
-                    <p className="font-medium text-[1rem] text-foreground tracking-[-0.03em]">
-                      Browse the interaction first
-                    </p>
-                    <p className="text-[13px] text-secondary leading-5">
-                      Open the live example, test the motion, and understand the
-                      behavior before you copy anything into your app.
-                    </p>
-                  </div>
-                </TabsContent>
-
-                <TabsContent
-                  className="rounded-[22px] bg-background/85 p-5"
-                  value="ship"
-                >
-                  <div className="space-y-1 text-left">
-                    <p className="font-medium text-[1rem] text-foreground tracking-[-0.03em]">
-                      Ship from a stronger starting point
-                    </p>
-                    <p className="text-[13px] text-secondary leading-5">
-                      Install the component as source, review the structure, and
-                      move into production with less setup work.
-                    </p>
-                  </div>
-                </TabsContent>
-
-                <TabsContent
-                  className="rounded-[22px] bg-background/85 p-5"
-                  value="adapt"
-                >
-                  <div className="space-y-1 text-left">
-                    <p className="font-medium text-[1rem] text-foreground tracking-[-0.03em]">
-                      Adapt it to your product
-                    </p>
-                    <p className="text-[13px] text-secondary leading-5">
-                      Rename parts, tweak motion, and reshape the UI around your
-                      own workflow without fighting a black-box dependency.
-                    </p>
-                  </div>
-                </TabsContent>
-              </Tabs>
-            </ShowcaseCard>
-
-            <ShowcaseCard
               className="lg:col-span-4"
               href="/components/calendar"
               title="Calendar"
@@ -303,7 +236,7 @@ export function HomeFeaturedShowcase() {
                   <p className="max-w-sm text-center font-sans text-[15px] text-foreground leading-relaxed">
                     Hover the{" "}
                     <Tooltip
-                      content="Helpful context, right where you need it."
+                      content="Quick context on hover."
                       delay={0.12}
                       side="top"
                     >
@@ -412,6 +345,71 @@ export function HomeFeaturedShowcase() {
                   options={homeCheckboxOptions}
                   value={selectedCheckboxes}
                 />
+              </div>
+            </ShowcaseCard>
+
+            <ShowcaseCard
+              className="lg:col-span-12"
+              href="/components/tabs"
+              title="Tabs"
+            >
+              <div className="flex w-full justify-start">
+                <Tabs
+                  className="[&>div.relative]:!mt-3 w-full max-w-[640px]"
+                  defaultValue="browse"
+                >
+                  <TabsList>
+                    <TabsTrigger value="browse">Browse</TabsTrigger>
+                    <TabsTrigger value="ship">Ship</TabsTrigger>
+                    <TabsTrigger value="adapt">Adapt</TabsTrigger>
+                  </TabsList>
+
+                  <TabsContent
+                    className="max-w-lg rounded-2xl p-5 text-left"
+                    value="browse"
+                  >
+                    <div className="space-y-1 text-left">
+                      <p className="font-medium text-[1rem] text-foreground tracking-[-0.03em]">
+                        Browse the interaction first
+                      </p>
+                      <p className="text-[13px] text-secondary leading-5">
+                        Open the live example, test the motion, and understand
+                        the behavior before you copy anything into your app.
+                      </p>
+                    </div>
+                  </TabsContent>
+
+                  <TabsContent
+                    className="max-w-lg rounded-2xl p-5 text-left"
+                    value="ship"
+                  >
+                    <div className="space-y-1 text-left">
+                      <p className="font-medium text-[1rem] text-foreground tracking-[-0.03em]">
+                        Ship from a stronger starting point
+                      </p>
+                      <p className="text-[13px] text-secondary leading-5">
+                        Install the component as source, review the structure,
+                        and move into production with less setup work.
+                      </p>
+                    </div>
+                  </TabsContent>
+
+                  <TabsContent
+                    className="max-w-lg rounded-2xl p-5 text-left"
+                    value="adapt"
+                  >
+                    <div className="space-y-1 text-left">
+                      <p className="font-medium text-[1rem] text-foreground tracking-[-0.03em]">
+                        Adapt it to your product
+                      </p>
+                      <p className="text-[13px] text-secondary leading-5">
+                        Rename parts, tweak motion, and reshape the UI around
+                        your own workflow without fighting a black-box
+                        dependency.
+                      </p>
+                    </div>
+                  </TabsContent>
+                </Tabs>
               </div>
             </ShowcaseCard>
           </>

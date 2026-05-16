@@ -5,6 +5,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 
 import { SITE } from "@/constants";
 import { MotionTierProvider } from "@/providers/motion-tier";
+import { PackageNameProvider } from "@/providers/package-name";
 import { ThemeProvider } from "@/providers/theme";
 import { JsonLdScripts } from "@/seo/json-ld";
 import { baseMetadata } from "@/seo/metadata";
@@ -66,7 +67,9 @@ export default function RootLayout({
       </head>
       <body className={`${geist.className} relative bg-background antialiased`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <MotionTierProvider>{children}</MotionTierProvider>
+          <MotionTierProvider>
+            <PackageNameProvider>{children}</PackageNameProvider>
+          </MotionTierProvider>
         </ThemeProvider>
       </body>
     </html>

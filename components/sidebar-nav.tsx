@@ -23,9 +23,7 @@ type SidebarSection = {
 const sections: SidebarSection[] = [
   {
     title: "Getting Started",
-    items: BASE_LINKS.filter(
-      (item) => item.href !== "/" && item.href !== "/changelog"
-    ).map((item) => ({
+    items: BASE_LINKS.filter((item) => item.href !== "/").map((item) => ({
       label: item.label,
       href: item.href,
     })),

@@ -461,7 +461,7 @@ export const Calendar = ({
     ? {
         cardBackground: "linear-gradient(135deg, #000000 0%, #0f0f0f 100%)",
         cardBorder: "1px solid rgba(255, 255, 255, 0.12)",
-        cardShadow: "0 16px 46px -16px rgba(0, 0, 0, 0.62)",
+        cardShadow: "none",
         textPrimary: "#f5f5f5",
         textMuted: "#a3a3a3",
         textDim: "rgba(255, 255, 255, 0.35)",
@@ -481,7 +481,7 @@ export const Calendar = ({
     : {
         cardBackground: "linear-gradient(135deg, #ffffff 0%, #f4f4f5 100%)",
         cardBorder: "1px solid rgba(0, 0, 0, 0.08)",
-        cardShadow: "0 16px 44px -18px rgba(0, 0, 0, 0.14)",
+        cardShadow: "none",
         textPrimary: "#0a0a0a",
         textMuted: "#737373",
         textDim: "rgba(0, 0, 0, 0.25)",

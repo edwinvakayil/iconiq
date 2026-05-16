@@ -477,7 +477,7 @@ export const TabsList = React.forwardRef<HTMLDivElement, TabsListProps>(
         {...props}
         aria-orientation="horizontal"
         className={cn(
-          "relative inline-flex max-w-full items-center overflow-x-auto overscroll-x-contain whitespace-nowrap border-border/50 border-b",
+          "no-scrollbar relative isolate inline-flex max-w-full items-center overflow-x-auto overscroll-x-contain whitespace-nowrap after:pointer-events-none after:absolute after:inset-x-0 after:bottom-0 after:z-0 after:h-px after:bg-border/50 after:content-['']",
           className
         )}
         onMouseLeave={(event) => {
@@ -497,7 +497,7 @@ export const TabsList = React.forwardRef<HTMLDivElement, TabsListProps>(
         <motion.div
           animate={{ left: activeRect.left, width: activeRect.width }}
           aria-hidden
-          className="pointer-events-none absolute -bottom-px h-[2px]"
+          className="pointer-events-none absolute bottom-0 z-10 h-px"
           style={{
             backgroundColor:
               "color-mix(in oklab, var(--color-foreground) 88%, black)",
