@@ -171,6 +171,12 @@ const REGISTRY_UI_META: Record<
       "Clean segmented tabs with active-state surfaces, keyboard navigation, and straightforward panel switching.",
     dependencies: ["@base-ui/react"],
   },
+  typography: {
+    title: "Typography",
+    description:
+      "Single typography primitive that maps the full heading, label, paragraph, subheading, and documentation scale through one variant prop.",
+    dependencies: ["class-variance-authority"],
+  },
   toggle: {
     title: "Toggle",
     description:

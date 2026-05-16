@@ -9,6 +9,7 @@ const DOCS_PREFIXES = [
   "/installation",
   "/mcp",
   "/components",
+  "/foundation",
   "/texts",
 ];
 

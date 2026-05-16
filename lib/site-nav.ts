@@ -46,6 +46,10 @@ export const SITE_SECTIONS = [
     ],
   },
   {
+    label: "Foundation",
+    children: [{ label: "Typography", href: "/foundation/typography" }],
+  },
+  {
     label: "Texts",
     children: [
       { label: "Dia Text", href: "/texts/dia-text" },
@@ -55,5 +59,10 @@ export const SITE_SECTIONS = [
 ] as const;
 
 /** Section headings (h2/h3) per page for "On this page" anchor links. */
-export const PAGE_SECTIONS: Record<string, { label: string; id: string }[]> =
-  {};
+export const PAGE_SECTIONS: Record<string, { label: string; id: string }[]> = {
+  "/foundation/typography": [
+    { label: "Installation", id: "installation" },
+    { label: "Scale", id: "scale" },
+    { label: "Props", id: "props" },
+  ],
+};

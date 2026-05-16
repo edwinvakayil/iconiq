@@ -3344,6 +3344,82 @@ const shimmerTextApiDetails: DetailItem[] = [
   registryItem("shimmer-text.json", ["motion"]),
 ];
 
+const typographyApiDetails: DetailItem[] = [
+  {
+    id: "typography",
+    title: "Typography",
+    summary:
+      "Single text primitive that keeps the full type scale in one place, with semantic element defaults derived from the selected variant.",
+    fields: [
+      field({
+        name: "variant",
+        type: [
+          '"h1"',
+          '"h2"',
+          '"h3"',
+          '"h4"',
+          '"h5"',
+          '"h6"',
+          '"label-xl"',
+          '"label-lg"',
+          '"label-md"',
+          '"label-sm"',
+          '"label-xs"',
+          '"paragraph-xl"',
+          '"paragraph-lg"',
+          '"paragraph-md"',
+          '"paragraph-sm"',
+          '"paragraph-xs"',
+          '"subheading-md"',
+          '"subheading-sm"',
+          '"subheading-xs"',
+          '"subheading-2xs"',
+          '"doc-label"',
+          '"doc-paragraph"',
+        ].join(" | "),
+        defaultValue: '"paragraph-md"',
+        description:
+          "Chooses one of the exported typography recipes. Each variant locks in the exact font size, line height, weight, and letter spacing from the scale.",
+      }),
+      field({
+        name: "as",
+        type: "React.ElementType",
+        description:
+          "Overrides the rendered HTML tag when the default semantic element for the chosen variant is not the one you want in a specific layout.",
+      }),
+      field({
+        name: "children",
+        type: "ReactNode",
+        required: true,
+        description:
+          "Text or inline content rendered with the selected recipe.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description:
+          "Merged after the variant classes so local color, spacing, or layout adjustments can be layered on top without forking the scale.",
+      }),
+    ],
+    notes: [
+      "Heading variants default to their matching h1 through h6 tags.",
+      "Label, paragraph, subheading, and doc variants default to paragraph tags so they remain flexible in flow content.",
+      "The scale metadata is exported from the same file as the component, which keeps docs previews and the runtime component aligned.",
+    ],
+  },
+  {
+    id: "typography-scale",
+    title: "Scale structure",
+    summary:
+      "The component ships with grouped metadata for titles, labels, paragraphs, subheadings, and documentation copy.",
+    notes: [
+      "Use label variants for interface emphasis, paragraph variants for reading copy, subheading variants for overlines or small section leads, and doc variants when you need a looser editorial line height.",
+      "Letter spacing values are encoded in em units so the browser scales tracking proportionally with the selected font size.",
+    ],
+  },
+  registryItem("typography.json", ["class-variance-authority"]),
+];
+
 const tooltipApiDetails: DetailItem[] = [
   {
     id: "tooltip",
@@ -3440,6 +3516,7 @@ export {
   switchApiDetails,
   tableApiDetails,
   tabsApiDetails,
+  typographyApiDetails,
   toggleApiDetails,
   tooltipApiDetails,
 };

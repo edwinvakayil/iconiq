@@ -63,7 +63,7 @@ function DocsBreadcrumbs({
   const visibleItems = items;
   const usesEditorialBreadcrumb =
     visibleItems.length >= 2 &&
-    ["components", "getting started", "texts"].includes(
+    ["components", "foundation", "getting started", "texts"].includes(
       visibleItems
         .find((item) => item.label.toLowerCase() !== "docs")
         ?.label.toLowerCase() ?? ""

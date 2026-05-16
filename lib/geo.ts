@@ -28,6 +28,7 @@ import {
   tabsApiDetails,
   toggleApiDetails,
   tooltipApiDetails,
+  typographyApiDetails,
 } from "@/components/docs/component-api";
 import type { DetailItem } from "@/components/docs/page-shell";
 import { SITE } from "@/constants";
@@ -114,6 +115,7 @@ const COMPONENT_API_DETAILS: Record<string, DetailItem[]> = {
   switch: switchApiDetails,
   table: tableApiDetails,
   tabs: tabsApiDetails,
+  typography: typographyApiDetails,
   toggle: toggleApiDetails,
   tooltip: tooltipApiDetails,
 };

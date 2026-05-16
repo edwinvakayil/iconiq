@@ -79,6 +79,8 @@ const componentSummaries: Record<string, string> = {
     "Pressed-state toggle built on Radix with pointer-origin ripple, icon motion, larger hit targets, and text or icon-only formats.",
   "/components/tooltip":
     "Tooltip component for compact hover or focus explanations.",
+  "/foundation/typography":
+    "Single typography primitive for headings, labels, paragraphs, subheadings, and documentation copy.",
   "/texts/dia-text":
     "Animated text reveal with a sweeping gradient band, repeat controls, and optional fixed-width rotation.",
   "/texts/shimmer-text":
@@ -137,6 +139,16 @@ const componentItems: SearchItem[] = SITE_SECTIONS.flatMap((section) =>
     }
     if (slug === "skeleton") {
       labelKeywords.push("loading", "placeholder", "shimmer");
+    }
+    if (slug === "typography") {
+      labelKeywords.push(
+        "type scale",
+        "heading",
+        "label",
+        "paragraph",
+        "subheading",
+        "foundation"
+      );
     }
 
     return {

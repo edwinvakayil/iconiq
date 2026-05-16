@@ -479,6 +479,21 @@
           "type": "registry:ui"
         }
       ]
+    },
+    {
+      "name": "typography",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": ["class-variance-authority"],
+      "devDependencies": [],
+      "title": "Typography",
+      "description": "Single typography primitive that maps the full heading, label, paragraph, subheading, and documentation scale through one variant prop.",
+      "files": [
+        {
+          "path": "typography.tsx",
+          "type": "registry:ui"
+        }
+      ]
     }
   ]
 }
