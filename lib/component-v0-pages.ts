@@ -4,9 +4,26 @@ const EXPORT_DEFAULT_NOT_PAGE = /export default function (?!Page)\w+\s*\(/g;
 const USE_CLIENT_DIRECTIVE = /^["']use client["'];\s*/;
 const IMPORT_BLOCK =
   /^((?:["']use client["'];\s*)?(?:import\s[\s\S]*?;[\r\n]*)*)/;
+const PAGE_FUNCTION_START = /export default function Page\s*\(/;
 const PAGE_FUNCTION_BODY =
   /export default function Page\(\)\s*\{([\s\S]*)\}\s*$/;
 const RETURN_STATEMENT = /^return\s+([\s\S]+?);?\s*$/;
+
+function splitModulePreamble(body: string): {
+  preamble: string;
+  pageFunction: string;
+} {
+  const pageStart = body.search(PAGE_FUNCTION_START);
+
+  if (pageStart === -1) {
+    return { preamble: "", pageFunction: body };
+  }
+
+  return {
+    preamble: body.slice(0, pageStart).trim(),
+    pageFunction: body.slice(pageStart).trim(),
+  };
+}
 
 const V0_CANVAS_SHELL = `    <div className="flex min-h-svh w-full items-center justify-center p-6 md:p-10">
       <div className="flex w-full max-w-4xl flex-col items-center justify-center">
@@ -33,16 +50,20 @@ export function buildV0Page(source: string): string {
     .replace(EXPORT_NAMED_FUNCTION, "export default function Page(")
     .replace(EXPORT_DEFAULT_NOT_PAGE, "export default function Page(");
 
-  const fnBodyMatch = body.match(PAGE_FUNCTION_BODY);
+  const { preamble, pageFunction } = splitModulePreamble(body);
+  const fnBodyMatch = pageFunction.match(PAGE_FUNCTION_BODY);
+
   if (!fnBodyMatch) {
-    return `${`${imports}\n\n${body}\n`.trimEnd()}\n`;
+    const sections = [imports, preamble, pageFunction].filter(Boolean);
+    return `${sections.join("\n\n")}\n`;
   }
 
   const fnBody = fnBodyMatch[1].trim();
   const returnMatch = fnBody.match(RETURN_STATEMENT);
 
   if (!returnMatch) {
-    return `${`${imports}\n\n${body}\n`.trimEnd()}\n`;
+    const sections = [imports, preamble, pageFunction].filter(Boolean);
+    return `${sections.join("\n\n")}\n`;
   }
 
   let inner = returnMatch[1].trim();
@@ -54,14 +75,17 @@ export function buildV0Page(source: string): string {
     ? inner
     : `${V0_CANVAS_SHELL}        ${inner}\n${V0_CANVAS_SHELL_CLOSE}`;
 
-  return `${imports}
-
-export default function Page() {
+  const sections = [
+    imports,
+    preamble,
+    `export default function Page() {
   return (
 ${wrappedInner}
   );
-}
-`;
+}`,
+  ].filter(Boolean);
+
+  return `${sections.join("\n\n")}\n`;
 }
 
 /** Badge docs preview uses custom tone objects (not in usageCode). */
