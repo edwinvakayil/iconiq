@@ -9,27 +9,26 @@ import { ComponentDocsPage } from "@/components/docs/page-shell";
 import { cn } from "@/lib/utils";
 import { Avatar } from "@/registry/avatar";
 
-const DEMO_IMAGE_SRC = "https://avatars.githubusercontent.com/u/180170746?v=4";
+const DEMO_IMAGE_SRC = "/assets/shadcn.jpg";
 
-const PREVIEW_ACCOUNT_HREF =
-  "https://avatars.githubusercontent.com/u/180170746?v=4";
+const PREVIEW_ACCOUNT_HREF = "https://ui.shadcn.com/";
 
 const usageCode = `import { Avatar } from "@/components/ui/avatar";
 import Link from "next/link";
 
-const imageSrc = "https://avatars.githubusercontent.com/u/180170746?v=4";
+const imageSrc = "/assets/shadcn.jpg";
 
 export function AvatarPreview() {
   return (
     <div className="flex flex-col items-center gap-6 px-2 py-4">
       <Link
-        aria-label="Open avatar image for Edwin Vakayil"
+        aria-label="Open shadcn/ui"
         className="inline-flex rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-        href={imageSrc}
+        href="https://ui.shadcn.com/"
         rel="noopener noreferrer"
         target="_blank"
       >
-        <Avatar name="Edwin Vakayil" src={imageSrc} />
+        <Avatar alt="shadcn/ui" name="shadcn/ui" src={imageSrc} />
       </Link>
 
       <p className="max-w-md text-center text-[13px] leading-relaxed">
@@ -120,13 +119,13 @@ function AvatarPreview() {
   return (
     <div className="flex flex-col items-center gap-6 px-2 py-4">
       <Link
-        aria-label="Open avatar image for Edwin Vakayil"
+        aria-label="Open shadcn/ui"
         className="inline-flex rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
         href={PREVIEW_ACCOUNT_HREF}
         rel="noopener noreferrer"
         target="_blank"
       >
-        <Avatar name="Edwin Vakayil" src={DEMO_IMAGE_SRC} />
+        <Avatar alt="shadcn/ui" name="shadcn/ui" src={DEMO_IMAGE_SRC} />
       </Link>
       <p className="max-w-md text-center font-sans text-[13px] leading-relaxed">
         <span className="text-emerald-600 dark:text-emerald-400">

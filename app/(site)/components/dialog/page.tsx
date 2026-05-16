@@ -18,6 +18,9 @@ import {
   DialogTrigger,
 } from "@/registry/dialog";
 
+const cancelButtonClassName =
+  "h-8 min-h-8 [&>span:last-child]:min-h-8 [&>span:last-child]:px-2.5 [&>span:last-child]:text-[11px]";
+
 const usageCode = `"use client";
 
 import { useState } from "react";
@@ -60,6 +63,7 @@ export function DialogPreview() {
         </DialogHeader>
         <DialogFooter>
           <Button
+            className="${cancelButtonClassName}"
             onClick={() => setOpen(false)}
             size="sm"
             type="button"
@@ -175,6 +179,7 @@ function DialogPreview() {
           </DialogHeader>
           <DialogFooter className="gap-2 sm:gap-0">
             <Button
+              className={cancelButtonClassName}
               onClick={() => setOpen(false)}
               size="sm"
               type="button"
