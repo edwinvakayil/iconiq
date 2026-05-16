@@ -4,6 +4,7 @@ import { LINK, SITE } from "@/constants";
 import { AI_DISCOVERY_LINKS, COMPONENT_CATALOG } from "@/lib/geo";
 import { compactWhitespace, nodeToText } from "@/lib/node-to-text";
 import { SITE_SECTIONS } from "@/lib/site-nav";
+import { getSocialImageUrl, openGraphImagePath } from "@/seo/og-image";
 
 const COMPONENT_ITEMS =
   SITE_SECTIONS.find((section) => section.label === "Components")?.children ??
@@ -19,7 +20,7 @@ const WebsiteJsonLd = () => {
     url: SITE.URL,
     description: SITE.DESCRIPTION.LONG,
     inLanguage: "en-US",
-    image: `${SITE.URL}${SITE.OG_IMAGE}`,
+    image: getSocialImageUrl(openGraphImagePath),
     publisher: {
       "@type": "Organization",
       name: SITE.NAME,

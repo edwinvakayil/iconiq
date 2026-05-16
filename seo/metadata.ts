@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
 import { LINK, SITE } from "@/constants";
+import { openGraphImageMetadata, twitterImageMetadata } from "@/seo/og-image";
 
 const aiDiscoveryMeta = {
   "ai:index": `${SITE.URL}/ai-index.json`,
@@ -67,14 +68,7 @@ const createMetadata = (options: CreateMetadataOptions = {}): Metadata => {
       siteName: SITE.NAME,
       locale: "en_US",
       type: "website",
-      images: [
-        {
-          url: SITE.OG_IMAGE,
-          width: 1200,
-          height: 630,
-          alt: `${SITE.NAME} Open Graph image`,
-        },
-      ],
+      images: [openGraphImageMetadata],
     },
     twitter: {
       card: "summary_large_image",
@@ -82,7 +76,7 @@ const createMetadata = (options: CreateMetadataOptions = {}): Metadata => {
       description: ogDescription || description,
       creator: SITE.AUTHOR.TWITTER,
       site: SITE.AUTHOR.TWITTER,
-      images: [SITE.OG_IMAGE],
+      images: [twitterImageMetadata],
     },
     other: aiDiscoveryMeta,
     robots: noIndex
@@ -124,14 +118,7 @@ const baseMetadata: Metadata = {
     type: "website",
     locale: "en_US",
     url: SITE.URL,
-    images: [
-      {
-        url: SITE.OG_IMAGE,
-        width: 1200,
-        height: 630,
-        alt: `${SITE.NAME} Open Graph image`,
-      },
-    ],
+    images: [openGraphImageMetadata],
   },
   applicationName: SITE.NAME,
   appleWebApp: {
@@ -172,7 +159,7 @@ const baseMetadata: Metadata = {
     description: SITE.DESCRIPTION.SHORT,
     creator: SITE.AUTHOR.TWITTER,
     site: SITE.AUTHOR.TWITTER,
-    images: [SITE.OG_IMAGE],
+    images: [twitterImageMetadata],
   },
   category: "technology",
 };

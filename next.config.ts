@@ -8,6 +8,24 @@ const nextConfig: NextConfig = {
   async headers() {
     return [
       {
+        source: "/opengraph-image",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
+          },
+        ],
+      },
+      {
+        source: "/twitter-image",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
+          },
+        ],
+      },
+      {
         source: "/r/:path*.json",
         headers: [
           {
