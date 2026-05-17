@@ -1,8 +1,13 @@
 import * as TogglePrimitive from "@radix-ui/react-toggle";
 import { cva, type VariantProps } from "class-variance-authority";
-import { motion, useAnimationControls, useReducedMotion } from "motion/react";
+import { motion, useAnimationControls } from "motion/react";
 import * as React from "react";
 
+import {
+  ReducedMotionConfig,
+  type ReducedMotionProp,
+  useResolvedReducedMotion,
+} from "@/lib/reduced-motion";
 import { cn } from "@/lib/utils";
 
 type Ripple = {
@@ -53,7 +58,8 @@ const toggleVariants = cva(
 const Toggle = React.forwardRef<
   React.ElementRef<typeof TogglePrimitive.Root>,
   React.ComponentPropsWithoutRef<typeof TogglePrimitive.Root> &
-    VariantProps<typeof toggleVariants>
+    VariantProps<typeof toggleVariants> &
+    ReducedMotionProp
 >(
   (
     {
@@ -63,16 +69,17 @@ const Toggle = React.forwardRef<
       onPointerDown,
       onPressedChange,
       children,
+      reducedMotion,
       ...props
     },
     ref
   ) => {
     const buttonControls = useAnimationControls();
     const iconControls = useAnimationControls();
-    const prefersReducedMotion = useReducedMotion() ?? false;
+    const resolvedReducedMotion = useResolvedReducedMotion(reducedMotion);
     const [ripples, setRipples] = React.useState<Ripple[]>([]);
     const isIconOnly = !hasTextContent(children);
-    const canAnimate = !(props.disabled || prefersReducedMotion);
+    const canAnimate = !(props.disabled || resolvedReducedMotion);
 
     const ariaLabel = props["aria-label"];
     const ariaLabelledBy = props["aria-labelledby"];
@@ -145,84 +152,86 @@ const Toggle = React.forwardRef<
     };
 
     return (
-      <TogglePrimitive.Root
-        asChild
-        onPressedChange={handlePressedChange}
-        ref={ref}
-        {...props}
-      >
-        <motion.button
-          animate={buttonControls}
-          className={cn(
-            toggleVariants({ variant, size }),
-            isIconOnly && "px-0",
-            className
-          )}
-          onPointerDown={(event) => {
-            onPointerDown?.(event);
-
-            if (event.defaultPrevented || event.button !== 0) {
-              return;
-            }
-
-            const rect = event.currentTarget.getBoundingClientRect();
-            spawnRipple(
-              event.currentTarget,
-              event.clientX - rect.left,
-              event.clientY - rect.top
-            );
-          }}
-          whileHover={
-            canAnimate
-              ? {
-                  scale: 1.006,
-                  y: -0.5,
-                  transition: { type: "spring", stiffness: 320, damping: 26 },
-                }
-              : undefined
-          }
-          whileTap={canAnimate ? { scale: 0.985, y: 0 } : undefined}
+      <ReducedMotionConfig reducedMotion={reducedMotion}>
+        <TogglePrimitive.Root
+          asChild
+          onPressedChange={handlePressedChange}
+          ref={ref}
+          {...props}
         >
-          <span
-            aria-hidden
-            className="pointer-events-none absolute inset-0 z-0 overflow-hidden rounded-[inherit]"
-          >
-            {ripples.map((ripple) => (
-              <motion.span
-                animate={{ opacity: 0, scale: 1 }}
-                className="pointer-events-none absolute -translate-x-1/2 -translate-y-1/2 rounded-full bg-current"
-                initial={{ opacity: 0.16, scale: 0 }}
-                key={ripple.id}
-                onAnimationComplete={() => {
-                  setRipples((current) =>
-                    current.filter((item) => item.id !== ripple.id)
-                  );
-                }}
-                style={{
-                  height: ripple.size,
-                  left: ripple.x,
-                  top: ripple.y,
-                  width: ripple.size,
-                }}
-                transition={{
-                  duration: 0.42,
-                  ease: [0.22, 1, 0.36, 1],
-                }}
-              />
-            ))}
-          </span>
-          <motion.span
-            animate={iconControls}
+          <motion.button
+            animate={buttonControls}
             className={cn(
-              "relative z-10 inline-flex items-center gap-2 transition-transform [&_svg]:size-4 [&_svg]:shrink-0 group-data-[state=on]/toggle:[&_svg]:scale-105",
-              isIconOnly && "gap-0"
+              toggleVariants({ variant, size }),
+              isIconOnly && "px-0",
+              className
             )}
-            style={{ transformOrigin: "center" }}
+            onPointerDown={(event) => {
+              onPointerDown?.(event);
+
+              if (event.defaultPrevented || event.button !== 0) {
+                return;
+              }
+
+              const rect = event.currentTarget.getBoundingClientRect();
+              spawnRipple(
+                event.currentTarget,
+                event.clientX - rect.left,
+                event.clientY - rect.top
+              );
+            }}
+            whileHover={
+              canAnimate
+                ? {
+                    scale: 1.006,
+                    y: -0.5,
+                    transition: { type: "spring", stiffness: 320, damping: 26 },
+                  }
+                : undefined
+            }
+            whileTap={canAnimate ? { scale: 0.985, y: 0 } : undefined}
           >
-            {children}
-          </motion.span>
-        </motion.button>
-      </TogglePrimitive.Root>
+            <span
+              aria-hidden
+              className="pointer-events-none absolute inset-0 z-0 overflow-hidden rounded-[inherit]"
+            >
+              {ripples.map((ripple) => (
+                <motion.span
+                  animate={{ opacity: 0, scale: 1 }}
+                  className="pointer-events-none absolute -translate-x-1/2 -translate-y-1/2 rounded-full bg-current"
+                  initial={{ opacity: 0.16, scale: 0 }}
+                  key={ripple.id}
+                  onAnimationComplete={() => {
+                    setRipples((current) =>
+                      current.filter((item) => item.id !== ripple.id)
+                    );
+                  }}
+                  style={{
+                    height: ripple.size,
+                    left: ripple.x,
+                    top: ripple.y,
+                    width: ripple.size,
+                  }}
+                  transition={{
+                    duration: 0.42,
+                    ease: [0.22, 1, 0.36, 1],
+                  }}
+                />
+              ))}
+            </span>
+            <motion.span
+              animate={iconControls}
+              className={cn(
+                "relative z-10 inline-flex items-center gap-2 transition-transform [&_svg]:size-4 [&_svg]:shrink-0 group-data-[state=on]/toggle:[&_svg]:scale-105",
+                isIconOnly && "gap-0"
+              )}
+              style={{ transformOrigin: "center" }}
+            >
+              {children}
+            </motion.span>
+          </motion.button>
+        </TogglePrimitive.Root>
+      </ReducedMotionConfig>
     );
   }
 );

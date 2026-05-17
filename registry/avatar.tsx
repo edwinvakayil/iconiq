@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useReducedMotion } from "motion/react";
+import { motion } from "motion/react";
 import { forwardRef, type HTMLAttributes, useEffect, useState } from "react";
 
 import { cn } from "@/lib/utils";
@@ -86,7 +86,6 @@ const Avatar = forwardRef<HTMLDivElement, AvatarProps>(
     { src, fallback = "?", alt, name, loading = "eager", className, ...props },
     ref
   ) => {
-    const reduceMotion = useReducedMotion();
     const fallbackLabel = getFallbackLabel(fallback, name, alt);
     const altText = getAltText(alt, name);
     const [imageStatus, setImageStatus] = useState<"idle" | "loaded" | "error">(
@@ -97,17 +96,11 @@ const Avatar = forwardRef<HTMLDivElement, AvatarProps>(
       setImageStatus(src ? "idle" : "error");
     }, [src]);
 
-    const rootTransition = reduceMotion
-      ? { duration: 0.16, ease: "easeOut" as const }
-      : { duration: 0.2, ease: settleEase };
+    const rootTransition = { duration: 0.2, ease: settleEase };
 
-    const imageTransition = reduceMotion
-      ? { duration: 0.14, ease: "easeOut" as const }
-      : { duration: 0.22, ease: enterEase };
+    const imageTransition = { duration: 0.22, ease: enterEase };
 
-    const fallbackTransition = reduceMotion
-      ? { duration: 0.12, ease: "easeOut" as const }
-      : { duration: 0.18, ease: settleEase };
+    const fallbackTransition = { duration: 0.18, ease: settleEase };
 
     return (
       <motion.div

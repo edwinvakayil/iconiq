@@ -308,12 +308,8 @@ export const Alert = ({
           className={cn(
             "relative flex items-start gap-3 overflow-hidden rounded-lg border border-foreground/8 bg-card px-3.5 shadow-[0_2px_14px_0_rgba(0,0,0,0.07)]",
             resolvedVariant === "toast"
-              ? // Fixed: let left+right inset determine width (no w-full).
-                // On mobile inset-x-4 stretches across viewport minus margins.
-                // On sm: max-w-sm caps the desktop corner width.
-                "py-3 sm:max-w-sm sm:py-2.5"
-              : // In-flow: explicit full width up to max-w-sm.
-                "w-full max-w-sm py-3",
+              ? "py-3 sm:max-w-sm sm:py-2.5"
+              : "w-full max-w-sm py-3",
             resolvedPosition ? positionClasses[resolvedPosition] : undefined,
             resolvedPosition && "z-300"
           )}
@@ -326,7 +322,6 @@ export const Alert = ({
           role="status"
           variants={containerVariants}
         >
-          {/* Icon */}
           {icon ? (
             <motion.div
               className="mt-0.5 shrink-0 text-black dark:text-white [&_svg]:h-[18px] [&_svg]:w-[18px]"
@@ -336,7 +331,6 @@ export const Alert = ({
             </motion.div>
           ) : null}
 
-          {/* Text */}
           <div className="min-w-0 flex-1">
             <motion.div
               className="font-medium text-foreground text-sm leading-5 tracking-[-0.01em]"
@@ -362,7 +356,6 @@ export const Alert = ({
             ) : null}
           </div>
 
-          {/* Dismiss */}
           {dismissible && (
             <motion.button
               aria-label="Dismiss alert"

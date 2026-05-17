@@ -2,6 +2,10 @@
 
 import { AnimatePresence, motion } from "motion/react";
 import * as React from "react";
+import {
+  ReducedMotionConfig,
+  type ReducedMotionProp,
+} from "@/lib/reduced-motion";
 import { cn } from "@/lib/utils";
 
 interface InputGroupFieldProps extends React.ComponentProps<"input"> {
@@ -430,15 +434,24 @@ function InputGroupField({
   );
 }
 
-interface InputGroupProps extends React.ComponentProps<"div"> {
+interface InputGroupProps
+  extends React.ComponentProps<"div">,
+    ReducedMotionProp {
   children: React.ReactNode;
 }
 
-function InputGroup({ className, children, ...props }: InputGroupProps) {
+function InputGroup({
+  className,
+  children,
+  reducedMotion,
+  ...props
+}: InputGroupProps) {
   return (
-    <div className={cn("flex w-full flex-col gap-6", className)} {...props}>
-      {children}
-    </div>
+    <ReducedMotionConfig reducedMotion={reducedMotion}>
+      <div className={cn("flex w-full flex-col gap-6", className)} {...props}>
+        {children}
+      </div>
+    </ReducedMotionConfig>
   );
 }
 

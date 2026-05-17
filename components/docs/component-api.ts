@@ -163,7 +163,7 @@ const avatarApiDetails: DetailItem[] = [
     id: "avatar-image-motion",
     title: "Image and motion behavior",
     summary:
-      "Motion behavior changes slightly when reduced motion is enabled, but the same two rendering paths stay intact.",
+      "The component keeps the same two rendering paths: immediate fallback initials plus a quiet image crossfade once loading completes.",
     notes: [
       "Fallback initials render immediately, so the avatar still communicates identity while a remote image is loading or if the image request fails.",
       "The image path uses a short crossfade instead of blur, clip-path, or hover-driven motion, which keeps the feedback quiet for a high-frequency UI element.",
@@ -3275,7 +3275,6 @@ const diaTextApiDetails: DetailItem[] = [
     summary:
       "The reveal is driven by a motion value that builds a gradient band in real time, then optionally replays and rotates through measured text entries.",
     notes: [
-      "Reduced-motion mode skips the sweep and settles immediately into the completed text state.",
       "When multiple text values are provided, the component clones the span to measure each string and can animate the width between entries for a smoother swap.",
       "If triggerOnView is enabled, playback is gated by the local viewport observer instead of always running on mount.",
     ],

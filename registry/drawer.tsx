@@ -5,7 +5,6 @@ import {
   AnimatePresence,
   motion,
   type Transition,
-  useReducedMotion,
   type Variants,
 } from "motion/react";
 import {
@@ -17,6 +16,10 @@ import {
   useState,
 } from "react";
 import { createPortal } from "react-dom";
+import {
+  type ReducedMotionProp,
+  useResolvedReducedMotion,
+} from "@/lib/reduced-motion";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 const FOCUSABLE_SELECTOR = [
@@ -31,7 +34,7 @@ const FOCUSABLE_SELECTOR = [
 export type DrawerSide = "left" | "right" | "top" | "bottom";
 type PanelMotion = { x?: string | number; y?: string | number };
 
-export interface DrawerProps {
+export interface DrawerProps extends ReducedMotionProp {
   open: boolean;
   onClose: () => void;
   side?: DrawerSide;
@@ -189,9 +192,10 @@ export function Drawer({
   description,
   footer,
   children,
+  reducedMotion,
 }: DrawerProps) {
   const variant = panelVariants[side];
-  const reduce = useReducedMotion();
+  const reduce = useResolvedReducedMotion(reducedMotion);
   const panelRef = useRef<HTMLElement | null>(null);
   const closeButtonRef = useRef<HTMLButtonElement | null>(null);
   const previousFocusRef = useRef<HTMLElement | null>(null);

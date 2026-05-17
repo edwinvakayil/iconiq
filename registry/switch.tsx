@@ -3,6 +3,11 @@
 import * as SwitchPrimitive from "@radix-ui/react-switch";
 import { animate, motion, useMotionValue, useTransform } from "motion/react";
 import { forwardRef, useEffect, useRef, useState } from "react";
+import {
+  ReducedMotionConfig,
+  type ReducedMotionProp,
+  useResolvedReducedMotion,
+} from "@/lib/reduced-motion";
 import { cn } from "@/lib/utils";
 
 const TRACK_W = 44;
@@ -16,9 +21,10 @@ const springSnap = { type: "spring" as const, duration: 0.4, bounce: 0.5 };
 
 interface SwitchProps
   extends Omit<
-    React.ComponentPropsWithoutRef<typeof SwitchPrimitive.Root>,
-    "asChild"
-  > {
+      React.ComponentPropsWithoutRef<typeof SwitchPrimitive.Root>,
+      "asChild"
+    >,
+    ReducedMotionProp {
   label?: string;
   /** @default "right" */
   labelSide?: "left" | "right";
@@ -37,6 +43,7 @@ const Switch = forwardRef<
       className,
       disabled,
       defaultChecked,
+      reducedMotion,
       ...props
     },
     ref
@@ -52,6 +59,7 @@ const Switch = forwardRef<
     const thumbScaleY = useMotionValue(1);
 
     const fillOpacity = useTransform(thumbX, [0, THUMB_TRAVEL], [0, 1]);
+    const reduceMotion = useResolvedReducedMotion(reducedMotion);
 
     const prevChecked = useRef(internalChecked);
     const directionRef = useRef<1 | -1>(1);
@@ -59,16 +67,31 @@ const Switch = forwardRef<
     useEffect(() => {
       if (prevChecked.current === internalChecked) return;
       prevChecked.current = internalChecked;
+      if (reduceMotion) {
+        thumbX.set(internalChecked ? THUMB_TRAVEL : 0);
+        return;
+      }
+
       animate(thumbX, internalChecked ? THUMB_TRAVEL : 0, spring);
-    }, [internalChecked, thumbX]);
+    }, [internalChecked, reduceMotion, thumbX]);
 
     const handlePointerDown = () => {
+      if (reduceMotion) {
+        return;
+      }
+
       // Flatten thumb on press (squeeze effect)
       animate(thumbScaleX, 0.82, springFast);
       animate(thumbScaleY, 1.1, springFast);
     };
 
     const handlePointerUp = () => {
+      if (reduceMotion) {
+        thumbScaleX.set(1);
+        thumbScaleY.set(1);
+        return;
+      }
+
       // Snap back with bounce
       animate(thumbScaleX, 1, springSnap);
       animate(thumbScaleY, 1, springSnap);
@@ -79,6 +102,14 @@ const Switch = forwardRef<
 
       if (!isControlled) {
         setUncontrolledChecked(next);
+      }
+
+      if (reduceMotion) {
+        thumbScaleX.set(1);
+        thumbScaleY.set(1);
+        thumbX.set(next ? THUMB_TRAVEL : 0);
+        onCheckedChange?.(next);
+        return;
       }
 
       // Squeeze in direction of travel on release
@@ -148,37 +179,45 @@ const Switch = forwardRef<
       </SwitchPrimitive.Root>
     );
 
-    if (!label) return switchEl;
+    if (!label) {
+      return (
+        <ReducedMotionConfig reducedMotion={reducedMotion}>
+          {switchEl}
+        </ReducedMotionConfig>
+      );
+    }
 
     return (
-      <div
-        className={cn(
-          "flex cursor-pointer select-none items-center gap-2.5",
-          disabled && "cursor-not-allowed opacity-50"
-        )}
-      >
-        {labelSide === "left" && (
-          <button
-            className="bg-transparent p-0 text-foreground text-sm"
-            disabled={disabled}
-            onClick={toggleFromLabel}
-            type="button"
-          >
-            {label}
-          </button>
-        )}
-        {switchEl}
-        {labelSide === "right" && (
-          <button
-            className="bg-transparent p-0 text-foreground text-sm"
-            disabled={disabled}
-            onClick={toggleFromLabel}
-            type="button"
-          >
-            {label}
-          </button>
-        )}
-      </div>
+      <ReducedMotionConfig reducedMotion={reducedMotion}>
+        <div
+          className={cn(
+            "flex cursor-pointer select-none items-center gap-2.5",
+            disabled && "cursor-not-allowed opacity-50"
+          )}
+        >
+          {labelSide === "left" && (
+            <button
+              className="bg-transparent p-0 text-foreground text-sm"
+              disabled={disabled}
+              onClick={toggleFromLabel}
+              type="button"
+            >
+              {label}
+            </button>
+          )}
+          {switchEl}
+          {labelSide === "right" && (
+            <button
+              className="bg-transparent p-0 text-foreground text-sm"
+              disabled={disabled}
+              onClick={toggleFromLabel}
+              type="button"
+            >
+              {label}
+            </button>
+          )}
+        </div>
+      </ReducedMotionConfig>
     );
   }
 );

@@ -1,7 +1,7 @@
 "use client";
 
 import { Check, ChevronDown } from "lucide-react";
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
 import {
   type CSSProperties,
   type Dispatch,
@@ -19,6 +19,10 @@ import {
 } from "react";
 import { createPortal } from "react-dom";
 
+import {
+  type ReducedMotionProp,
+  useResolvedReducedMotion,
+} from "@/lib/reduced-motion";
 import { cn } from "@/lib/utils";
 
 const MAX_MENU_HEIGHT = 320;
@@ -53,7 +57,7 @@ export interface SelectOption {
   group?: string;
 }
 
-export interface SelectProps {
+export interface SelectProps extends ReducedMotionProp {
   options: SelectOption[];
   value?: string;
   onChange?: (value: string) => void;
@@ -680,8 +684,9 @@ export function Select({
   onChange,
   placeholder = "Select an option…",
   className,
+  reducedMotion,
 }: SelectProps) {
-  const reduceMotion = useReducedMotion() ?? false;
+  const reduceMotion = useResolvedReducedMotion(reducedMotion);
   const generatedId = useId();
   const [activeIndex, setActiveIndex] = useState(0);
   const [mounted, setMounted] = useState(false);

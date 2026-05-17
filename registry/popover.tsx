@@ -4,6 +4,10 @@ import * as PopoverPrimitive from "@radix-ui/react-popover";
 import { AnimatePresence, motion } from "motion/react";
 import * as React from "react";
 
+import {
+  ReducedMotionConfig,
+  type ReducedMotionProp,
+} from "@/lib/reduced-motion";
 import { cn } from "@/lib/utils";
 
 type Side = "top" | "right" | "bottom" | "left";
@@ -33,13 +37,15 @@ const usePopover = () => {
 
 type PopoverProps = React.ComponentPropsWithoutRef<
   typeof PopoverPrimitive.Root
->;
+> &
+  ReducedMotionProp;
 
 const Popover = ({
   children,
   defaultOpen = false,
   onOpenChange,
   open: openProp,
+  reducedMotion,
   ...props
 }: PopoverProps) => {
   const isControlled = openProp !== undefined;
@@ -58,15 +64,17 @@ const Popover = ({
   );
 
   return (
-    <PopoverContext.Provider value={{ open }}>
-      <PopoverPrimitive.Root
-        {...props}
-        onOpenChange={handleOpenChange}
-        open={open}
-      >
-        {children}
-      </PopoverPrimitive.Root>
-    </PopoverContext.Provider>
+    <ReducedMotionConfig reducedMotion={reducedMotion}>
+      <PopoverContext.Provider value={{ open }}>
+        <PopoverPrimitive.Root
+          {...props}
+          onOpenChange={handleOpenChange}
+          open={open}
+        >
+          {children}
+        </PopoverPrimitive.Root>
+      </PopoverContext.Provider>
+    </ReducedMotionConfig>
   );
 };
 Popover.displayName = "Popover";

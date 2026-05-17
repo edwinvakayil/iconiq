@@ -10,6 +10,11 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const registryComponents = path.join(__dirname, "../public/r");
 const registryIndexPath = path.join(__dirname, "../public/r/registry.json");
 const registryRootPath = path.join(__dirname, "../registry.json");
+const reducedMotionHelperPath = path.join(
+  __dirname,
+  "../lib/reduced-motion.tsx"
+);
+const reducedMotionImport = 'from "@/lib/reduced-motion"';
 
 /** Optional title, description, and dependencies for registry UI components. */
 const REGISTRY_UI_META: Record<
@@ -238,6 +243,22 @@ function buildAndWrite(schema: Schema) {
 
 for (const component of components) {
   const content = fs.readFileSync(component.path, "utf8");
+  const files: Schema["files"] = [
+    {
+      path: `${component.name}.tsx`,
+      content,
+      type: "registry:ui",
+    },
+  ];
+
+  if (content.includes(reducedMotionImport)) {
+    files.push({
+      path: "reduced-motion.tsx",
+      content: fs.readFileSync(reducedMotionHelperPath, "utf8"),
+      target: "lib/reduced-motion.tsx",
+      type: "registry:lib",
+    });
+  }
 
   const schema: Schema = {
     $schema: "https://ui.shadcn.com/schema/registry-item.json",
@@ -246,13 +267,7 @@ for (const component of components) {
     registryDependencies: component.registryDependencies || [],
     dependencies: component.dependencies || [],
     devDependencies: component.devDependencies || [],
-    files: [
-      {
-        path: `${component.name}.tsx`,
-        content,
-        type: "registry:ui",
-      },
-    ],
+    files,
   };
 
   if (component.title) schema.title = component.title;

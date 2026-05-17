@@ -5,6 +5,11 @@ import { ChevronDown } from "lucide-react";
 import { AnimatePresence, motion, type Transition } from "motion/react";
 import * as React from "react";
 
+import {
+  ReducedMotionConfig,
+  type ReducedMotionProp,
+  useResolvedReducedMotion,
+} from "@/lib/reduced-motion";
 import { cn } from "@/lib/utils";
 
 export interface AccordionItem {
@@ -15,7 +20,7 @@ export interface AccordionItem {
 
 export type AccordionVariant = "default" | "editorial";
 
-export interface AccordionProps {
+export interface AccordionProps extends ReducedMotionProp {
   items: AccordionItem[];
   className?: string;
   multiple?: boolean;
@@ -65,6 +70,7 @@ type AccordionRowProps = {
   index: number;
   isEditorial: boolean;
   isOpen: boolean;
+  reduceMotion: boolean;
 };
 
 function getRowClassName(index: number, isEditorial: boolean, isOpen: boolean) {
@@ -104,11 +110,13 @@ function AccordionTriggerLabel({
   isEditorial,
   isOpen,
   itemNumber,
+  reduceMotion,
   title,
 }: {
   isEditorial: boolean;
   isOpen: boolean;
   itemNumber: string;
+  reduceMotion: boolean;
   title: string;
 }) {
   if (isEditorial) {
@@ -120,14 +128,28 @@ function AccordionTriggerLabel({
         >
           {itemNumber}
         </span>
-        <motion.span
-          animate={{ x: isOpen ? 4 : 0 }}
-          className="pr-2 font-medium text-[15px] text-foreground leading-6 tracking-[-0.02em] sm:text-base"
-          transition={{ type: "spring", stiffness: 300, damping: 28 }}
-        >
-          {title}
-        </motion.span>
+        {reduceMotion ? (
+          <span className="pr-2 font-medium text-[15px] text-foreground leading-6 tracking-[-0.02em] sm:text-base">
+            {title}
+          </span>
+        ) : (
+          <motion.span
+            animate={{ x: isOpen ? 4 : 0 }}
+            className="pr-2 font-medium text-[15px] text-foreground leading-6 tracking-[-0.02em] sm:text-base"
+            transition={{ type: "spring", stiffness: 300, damping: 28 }}
+          >
+            {title}
+          </motion.span>
+        )}
       </div>
+    );
+  }
+
+  if (reduceMotion) {
+    return (
+      <span className="pr-4 font-medium text-[15px] text-foreground leading-6 tracking-[-0.02em] sm:text-base">
+        {title}
+      </span>
     );
   }
 
@@ -191,7 +213,13 @@ function AccordionTriggerIndicator({
   );
 }
 
-function AccordionRow({ item, index, isEditorial, isOpen }: AccordionRowProps) {
+function AccordionRow({
+  item,
+  index,
+  isEditorial,
+  isOpen,
+  reduceMotion,
+}: AccordionRowProps) {
   const itemNumber = String(index + 1).padStart(2, "0");
 
   return (
@@ -219,6 +247,7 @@ function AccordionRow({ item, index, isEditorial, isOpen }: AccordionRowProps) {
               isEditorial={isEditorial}
               isOpen={isOpen}
               itemNumber={itemNumber}
+              reduceMotion={reduceMotion}
               title={item.title}
             />
             <AccordionTriggerIndicator
@@ -267,30 +296,36 @@ function AccordionRow({ item, index, isEditorial, isOpen }: AccordionRowProps) {
                     }}
                     transition={contentMaskTransition}
                   >
-                    <motion.div
-                      animate={{
-                        opacity: 1,
-                        y: 0,
-                        scale: 1,
-                        filter: "blur(0px)",
-                      }}
-                      className={getContentCopyClassName(isEditorial)}
-                      exit={{
-                        opacity: 0,
-                        y: -2,
-                        scale: 0.996,
-                        filter: "blur(1.5px)",
-                      }}
-                      initial={{
-                        opacity: 0,
-                        y: 7,
-                        scale: 0.998,
-                        filter: "blur(3px)",
-                      }}
-                      transition={contentCopyTransition}
-                    >
-                      {item.content}
-                    </motion.div>
+                    {reduceMotion ? (
+                      <div className={getContentCopyClassName(isEditorial)}>
+                        {item.content}
+                      </div>
+                    ) : (
+                      <motion.div
+                        animate={{
+                          opacity: 1,
+                          y: 0,
+                          scale: 1,
+                          filter: "blur(0px)",
+                        }}
+                        className={getContentCopyClassName(isEditorial)}
+                        exit={{
+                          opacity: 0,
+                          y: -2,
+                          scale: 0.996,
+                          filter: "blur(1.5px)",
+                        }}
+                        initial={{
+                          opacity: 0,
+                          y: 7,
+                          scale: 0.998,
+                          filter: "blur(3px)",
+                        }}
+                        transition={contentCopyTransition}
+                      >
+                        {item.content}
+                      </motion.div>
+                    )}
                   </motion.div>
                 </div>
               </motion.div>
@@ -306,10 +341,12 @@ export function Accordion({
   items,
   className,
   multiple = false,
+  reducedMotion,
   variant = "default",
 }: AccordionProps) {
   const [openItems, setOpenItems] = React.useState<string[]>([]);
   const isEditorial = variant === "editorial";
+  const reduceMotion = useResolvedReducedMotion(reducedMotion);
   const rows = items.map((item, index) => (
     <AccordionRow
       index={index}
@@ -317,31 +354,36 @@ export function Accordion({
       isOpen={openItems.includes(item.id)}
       item={item}
       key={item.id}
+      reduceMotion={reduceMotion}
     />
   ));
 
   if (multiple) {
     return (
-      <AccordionPrimitive.Root
-        className={cn("mx-auto w-full max-w-2xl", className)}
-        onValueChange={setOpenItems}
-        type="multiple"
-        value={openItems}
-      >
-        {rows}
-      </AccordionPrimitive.Root>
+      <ReducedMotionConfig reducedMotion={reducedMotion}>
+        <AccordionPrimitive.Root
+          className={cn("mx-auto w-full max-w-2xl", className)}
+          onValueChange={setOpenItems}
+          type="multiple"
+          value={openItems}
+        >
+          {rows}
+        </AccordionPrimitive.Root>
+      </ReducedMotionConfig>
     );
   }
 
   return (
-    <AccordionPrimitive.Root
-      className={cn("mx-auto w-full max-w-2xl", className)}
-      collapsible
-      onValueChange={(value) => setOpenItems(value ? [value] : [])}
-      type="single"
-      value={openItems[0]}
-    >
-      {rows}
-    </AccordionPrimitive.Root>
+    <ReducedMotionConfig reducedMotion={reducedMotion}>
+      <AccordionPrimitive.Root
+        className={cn("mx-auto w-full max-w-2xl", className)}
+        collapsible
+        onValueChange={(value) => setOpenItems(value ? [value] : [])}
+        type="single"
+        value={openItems[0]}
+      >
+        {rows}
+      </AccordionPrimitive.Root>
+    </ReducedMotionConfig>
   );
 }

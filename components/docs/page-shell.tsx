@@ -14,6 +14,7 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { getComponentV0Page } from "@/lib/component-v0-pages";
 import { nodeToText } from "@/lib/node-to-text";
+import { ReducedMotionOverride } from "@/lib/reduced-motion";
 import { SITE_SECTIONS } from "@/lib/site-nav";
 import { cn } from "@/lib/utils";
 import { BreadcrumbJsonLdClient } from "@/seo/breadcrumb-json-ld-client";
@@ -53,6 +54,212 @@ type ComponentDocsExtraSection = {
   title: string;
   content: ReactNode;
 };
+
+const REDUCED_MOTION_SECTION_ID = "reduced-motion";
+const REDUCED_MOTION_SECTION_TITLE = "ReducedMotion";
+const TYPE_IMPORT_PREFIX_RE = /^type\s+/;
+const IMPORT_ALIAS_RE = /\s+as\s+/;
+const REDUCED_MOTION_COMPONENTS = new Set([
+  "accordion",
+  "badge",
+  "button",
+  "button-group",
+  "combobox",
+  "context-menu",
+  "dialog",
+  "drawer",
+  "dropdown",
+  "hover-card",
+  "input-group",
+  "popover",
+  "select",
+  "slider",
+  "switch",
+  "tabs",
+  "toggle",
+  "tooltip",
+]);
+
+const REDUCED_MOTION_DETAIL: DetailItem = {
+  id: "reduced-motion-prop",
+  title: "ReducedMotion",
+  summary:
+    "Shared motion override for the motion-enabled exports documented on this page.",
+  fields: [
+    {
+      name: "reducedMotion",
+      type: "boolean",
+      description:
+        "When true, the component uses its calmer motion path immediately. Leaving it unset still respects the user's system-level reduced motion preference.",
+    },
+  ],
+  notes: [
+    "This prop can force reduced motion on, but it does not opt out of OS-level accessibility preferences when the system is already requesting less motion.",
+  ],
+};
+
+function escapeRegExp(value: string) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function extractUsageComponentNames(usageCode: string, componentName: string) {
+  const names = new Set<string>();
+  const importPattern = new RegExp(
+    `import\\s*\\{([\\s\\S]*?)\\}\\s*from\\s*["']@/components/ui/${escapeRegExp(componentName)}["'];?`,
+    "g"
+  );
+
+  for (const match of usageCode.matchAll(importPattern)) {
+    const specifiers = match[1]
+      .split(",")
+      .map((entry) => entry.replace(/\s+/g, " ").trim())
+      .filter(Boolean);
+
+    for (const specifier of specifiers) {
+      const normalized = specifier.replace(TYPE_IMPORT_PREFIX_RE, "");
+
+      if (!normalized || specifier.startsWith("type ")) {
+        continue;
+      }
+
+      const aliasParts = normalized.split(IMPORT_ALIAS_RE);
+      const localName = aliasParts.at(-1)?.trim();
+
+      if (localName) {
+        names.add(localName);
+      }
+    }
+  }
+
+  return names;
+}
+
+function injectReducedMotionIntoCode(usageCode: string, componentName: string) {
+  const componentNames = extractUsageComponentNames(usageCode, componentName);
+
+  if (componentNames.size === 0) {
+    return usageCode;
+  }
+
+  let nextCode = usageCode;
+
+  for (const componentNameEntry of componentNames) {
+    const openingTagPattern = new RegExp(
+      `<${escapeRegExp(componentNameEntry)}(?!\\s+reducedMotion)(?=[\\s>])`,
+      "g"
+    );
+
+    nextCode = nextCode.replace(
+      openingTagPattern,
+      `<${componentNameEntry} reducedMotion`
+    );
+  }
+
+  return nextCode;
+}
+
+function supportsReducedMotionDocs(componentName: string) {
+  return REDUCED_MOTION_COMPONENTS.has(componentName);
+}
+
+function withReducedMotionDetail(details: DetailItem[]) {
+  if (
+    details.some((item) =>
+      item.fields?.some(
+        (field) =>
+          typeof field.name === "string" && field.name === "reducedMotion"
+      )
+    )
+  ) {
+    return details;
+  }
+
+  const registryIndex = details.findIndex(
+    (item) => item.id === "registry" || item.registryPath
+  );
+
+  if (registryIndex === -1) {
+    return [...details, REDUCED_MOTION_DETAIL];
+  }
+
+  return [
+    ...details.slice(0, registryIndex),
+    REDUCED_MOTION_DETAIL,
+    ...details.slice(registryIndex),
+  ];
+}
+
+function ReducedMotionSection({
+  componentName,
+  code,
+  preview,
+  previewClassName,
+}: {
+  componentName: string;
+  code: string;
+  preview: ReactNode;
+  previewClassName?: string;
+}) {
+  return (
+    <div className="space-y-5">
+      <p className="max-w-3xl text-[14px] text-secondary leading-6">
+        Pass <code>reducedMotion</code> when you want the installed component to
+        settle into its quieter motion path immediately. Leaving the prop unset
+        still respects the user&apos;s system-level reduced motion preference.
+      </p>
+      <ComponentDemoCanvas
+        code={code}
+        componentName={componentName}
+        preview={
+          <ReducedMotionOverride reducedMotion>{preview}</ReducedMotionOverride>
+        }
+        previewClassName={previewClassName}
+      />
+    </div>
+  );
+}
+
+function buildReducedMotionCopyLines(
+  componentName: string,
+  usageCode: string
+): string[] {
+  if (!supportsReducedMotionDocs(componentName)) {
+    return [];
+  }
+
+  return [
+    "",
+    `## ${REDUCED_MOTION_SECTION_TITLE}`,
+    "Pass reducedMotion when you want the installed component to use its calmer motion path immediately. Leaving the prop unset still respects the user's system-level reduced motion preference.",
+    injectReducedMotionIntoCode(usageCode, componentName).trim(),
+  ];
+}
+
+function appendDetailCopyLines(lines: string[], item: DetailItem) {
+  lines.push(`### ${item.title}`);
+
+  const summary = nodeToText(item.summary ?? item.content);
+  if (summary) {
+    lines.push(summary);
+  }
+
+  for (const field of item.fields ?? []) {
+    const name = nodeToText(field.name);
+    const type = nodeToText(field.type);
+    const defaultValue = nodeToText(field.defaultValue);
+    const descriptionText = nodeToText(field.description);
+
+    lines.push(
+      `- ${name}${type ? ` (${type})` : ""}${field.required ? " [required]" : ""}${defaultValue ? ` [default: ${defaultValue}]` : ""}: ${descriptionText}`
+    );
+  }
+
+  for (const note of item.notes ?? []) {
+    lines.push(`- ${nodeToText(note)}`);
+  }
+
+  lines.push("");
+}
 
 function DocsBreadcrumbs({
   items,
@@ -592,30 +799,16 @@ function buildComponentPageCopyContent({
     "## Props",
   ];
 
+  const reducedMotionLines = buildReducedMotionCopyLines(
+    componentName,
+    usageCode
+  );
+  if (reducedMotionLines.length > 0) {
+    lines.splice(5, 0, ...reducedMotionLines);
+  }
+
   for (const item of details) {
-    lines.push(`### ${item.title}`);
-
-    const summary = nodeToText(item.summary ?? item.content);
-    if (summary) {
-      lines.push(summary);
-    }
-
-    for (const field of item.fields ?? []) {
-      const name = nodeToText(field.name);
-      const type = nodeToText(field.type);
-      const defaultValue = nodeToText(field.defaultValue);
-      const descriptionText = nodeToText(field.description);
-
-      lines.push(
-        `- ${name}${type ? ` (${type})` : ""}${field.required ? " [required]" : ""}${defaultValue ? ` [default: ${defaultValue}]` : ""}: ${descriptionText}`
-      );
-    }
-
-    for (const note of item.notes ?? []) {
-      lines.push(`- ${nodeToText(note)}`);
-    }
-
-    lines.push("");
+    appendDetailCopyLines(lines, item);
   }
 
   return lines.join("\n").trim();
@@ -655,18 +848,42 @@ function ComponentDocsPage({
   railNotes?: string[];
   previewClassName?: string;
 }) {
+  const shouldShowReducedMotion = supportsReducedMotionDocs(componentName);
+  const reducedMotionCode = shouldShowReducedMotion
+    ? injectReducedMotionIntoCode(usageCode, componentName)
+    : usageCode;
+  const resolvedDetails = shouldShowReducedMotion
+    ? withReducedMotionDetail(details)
+    : details;
+  const resolvedExtraSections = shouldShowReducedMotion
+    ? [
+        {
+          id: REDUCED_MOTION_SECTION_ID,
+          title: REDUCED_MOTION_SECTION_TITLE,
+          content: (
+            <ReducedMotionSection
+              code={reducedMotionCode}
+              componentName={componentName}
+              preview={preview}
+              previewClassName={previewClassName}
+            />
+          ),
+        },
+        ...extraSections,
+      ]
+    : extraSections;
   const pageCopyContent = buildComponentPageCopyContent({
     title,
     description,
     componentName,
     usageCode,
     usageDescription,
-    details,
+    details: resolvedDetails,
   });
 
   const sectionLinks = [
     { id: "installation", label: "Installation" },
-    ...extraSections.map((section) => ({
+    ...resolvedExtraSections.map((section) => ({
       id: section.id,
       label: section.title,
     })),
@@ -684,7 +901,7 @@ function ComponentDocsPage({
       <ComponentDocJsonLd
         componentName={componentName}
         description={description}
-        details={details}
+        details={resolvedDetails}
         title={title}
       />
       <div className="mx-auto w-full min-w-0 max-w-[1600px] px-4 py-8 sm:px-6 sm:py-10 lg:px-10">
@@ -740,7 +957,7 @@ function ComponentDocsPage({
                   </div>
                 </ComponentSection>
 
-                {extraSections.map((section) => (
+                {resolvedExtraSections.map((section) => (
                   <ComponentSection
                     id={section.id}
                     key={section.id}
@@ -751,7 +968,7 @@ function ComponentDocsPage({
                 ))}
 
                 <ComponentSection id="props" title="Props">
-                  <DetailLedger details={details} />
+                  <DetailLedger details={resolvedDetails} />
                 </ComponentSection>
               </div>
 

@@ -1,9 +1,13 @@
 "use client";
 
 import { Check, ChevronDown } from "lucide-react";
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
 import * as React from "react";
 
+import {
+  type ReducedMotionProp,
+  useResolvedReducedMotion,
+} from "@/lib/reduced-motion";
 import { cn } from "@/lib/utils";
 
 export type DropdownVariant = "select" | "action";
@@ -244,7 +248,7 @@ function useControllableState<T>({
   return [value, setValue] as const;
 }
 
-export interface DropdownProps {
+export interface DropdownProps extends ReducedMotionProp {
   children: React.ReactNode;
   className?: string;
   defaultOpen?: boolean;
@@ -264,12 +268,13 @@ export function Dropdown({
   onOpenChange,
   onValueChange,
   open: openProp,
+  reducedMotion,
   value: valueProp,
   variant = "select",
 }: DropdownProps) {
   const containerRef = React.useRef<HTMLDivElement>(null);
   const triggerRef = React.useRef<HTMLButtonElement>(null);
-  const reduceMotion = useReducedMotion() ?? false;
+  const reduceMotion = useResolvedReducedMotion(reducedMotion);
   const contentId = React.useId();
   const focusStrategyRef = React.useRef<DropdownFocusStrategy>("selected");
   const typeaheadRef = React.useRef("");

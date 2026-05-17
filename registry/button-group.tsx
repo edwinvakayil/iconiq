@@ -1,7 +1,11 @@
 "use client";
 
-import { motion, useReducedMotion } from "motion/react";
+import { motion } from "motion/react";
 import * as React from "react";
+import {
+  type ReducedMotionProp,
+  useResolvedReducedMotion,
+} from "@/lib/reduced-motion";
 import { cn } from "@/lib/utils";
 
 const MotionButton = motion.button;
@@ -57,14 +61,14 @@ const contentSizeStyles: Record<ButtonGroupSize, string> = {
   lg: "gap-2 [&_svg]:size-4 [&_svg]:shrink-0",
 };
 
-interface ButtonProps extends MotionSafeButtonProps {
+interface ButtonProps extends MotionSafeButtonProps, ReducedMotionProp {
   children: React.ReactNode;
   disableRipple?: boolean;
   size?: ButtonGroupSize;
   showBorder?: boolean;
 }
 
-interface RippleButtonProps extends MotionSafeButtonProps {
+interface RippleButtonProps extends MotionSafeButtonProps, ReducedMotionProp {
   children: React.ReactNode;
   className?: string;
   contentClassName?: string;
@@ -107,13 +111,14 @@ const RippleButton = React.forwardRef<HTMLButtonElement, RippleButtonProps>(
       disabled,
       disableRipple,
       onPointerDown,
+      reducedMotion,
       type = "button",
       ...props
     },
     ref
   ) => {
     const [ripples, setRipples] = React.useState<Ripple[]>([]);
-    const prefersReducedMotion = useReducedMotion();
+    const prefersReducedMotion = useResolvedReducedMotion(reducedMotion);
 
     const handlePointerDown = (e: React.PointerEvent<HTMLButtonElement>) => {
       onPointerDown?.(e);
@@ -203,6 +208,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       disableRipple = false,
       showBorder = true,
       size = "md",
+      reducedMotion,
       ...props
     },
     ref
@@ -219,6 +225,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         )}
         contentClassName={contentSizeStyles[size]}
         disableRipple={disableRipple}
+        reducedMotion={reducedMotion}
         ref={ref}
         {...props}
       >
@@ -229,7 +236,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 );
 Button.displayName = "Button";
 
-interface IconButtonProps extends MotionSafeButtonProps {
+interface IconButtonProps extends MotionSafeButtonProps, ReducedMotionProp {
   children: React.ReactNode;
   disableRipple?: boolean;
   size?: ButtonGroupSize;
@@ -244,6 +251,7 @@ const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
       disableRipple = false,
       showBorder = true,
       size = "md",
+      reducedMotion,
       ...props
     },
     ref
@@ -260,6 +268,7 @@ const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
         )}
         contentClassName={contentSizeStyles[size]}
         disableRipple={disableRipple}
+        reducedMotion={reducedMotion}
         ref={ref}
         {...props}
       >
@@ -285,6 +294,7 @@ function ButtonGroup({ children, className, ...props }: ButtonGroupProps) {
 interface ButtonGroupItemsProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
   disableRipple?: boolean;
+  reducedMotion?: boolean;
   showDividers?: boolean;
   size?: ButtonGroupSize;
 }
@@ -301,12 +311,13 @@ function ButtonGroupItems({
   className,
   disableRipple = false,
   onPointerLeave,
+  reducedMotion,
   role = "group",
   showDividers = true,
   size = "md",
   ...props
 }: ButtonGroupItemsProps) {
-  const prefersReducedMotion = useReducedMotion();
+  const prefersReducedMotion = useResolvedReducedMotion(reducedMotion);
   const [activeHoverIndex, setActiveHoverIndex] = React.useState<number | null>(
     null
   );
@@ -455,6 +466,7 @@ function ButtonGroupItems({
               }
             }}
             onPointerLeave={childOnPointerLeave}
+            reducedMotion={reducedMotion}
             ref={(node) => {
               itemRefs.current[index] = node;
             }}
@@ -469,7 +481,7 @@ function ButtonGroupItems({
 }
 
 // Segmented control variant with animated indicator
-interface SegmentedControlProps {
+interface SegmentedControlProps extends ReducedMotionProp {
   options: string[];
   value?: string;
   onChange?: (value: string) => void;
@@ -488,9 +500,10 @@ function SegmentedControl({
   ariaLabelledBy,
   className,
   layoutId = "segmented-indicator",
+  reducedMotion,
   size = "md",
 }: SegmentedControlProps) {
-  const prefersReducedMotion = useReducedMotion();
+  const prefersReducedMotion = useResolvedReducedMotion(reducedMotion);
   const [selected, setSelected] = React.useState(value ?? options[0] ?? "");
   const [isHovered, setIsHovered] = React.useState<string | null>(null);
   const buttonRefs = React.useRef<Array<HTMLButtonElement | null>>([]);

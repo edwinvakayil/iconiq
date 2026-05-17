@@ -6,7 +6,6 @@ import {
   motion,
   useInView,
   useMotionValue,
-  useReducedMotion,
   useTransform,
 } from "motion/react";
 import {
@@ -137,7 +136,6 @@ const DiaTextReveal = forwardRef<HTMLSpanElement, DiaTextRevealProps>(
     const textOpacity = useMotionValue(1);
     const textBlur = useMotionValue(0);
     const textShift = useMotionValue(0);
-    const prefersReducedMotion = Boolean(useReducedMotion());
     const inView = useInView(spanRef, { once, amount: 0.1 });
     const previousActiveIndexRef = useRef(0);
 
@@ -251,30 +249,13 @@ const DiaTextReveal = forwardRef<HTMLSpanElement, DiaTextRevealProps>(
       hasPlayedRef.current = false;
       clearCycle();
 
-      if (prefersReducedMotion) {
-        sweepPos.set(SWEEP_END);
-        textOpacity.set(1);
-        textBlur.set(0);
-        textShift.set(0);
-        return;
-      }
-
       sweepPos.set(SWEEP_START);
 
       if (isVisible) {
         hasPlayedRef.current = true;
         playRef.current();
       }
-    }, [
-      clearCycle,
-      isVisible,
-      prefersReducedMotion,
-      sweepPos,
-      textBlur.set,
-      textKey,
-      textOpacity.set,
-      textShift.set,
-    ]);
+    }, [clearCycle, isVisible, sweepPos, textKey]);
 
     useEffect(() => {
       const element = spanRef.current;
@@ -288,15 +269,6 @@ const DiaTextReveal = forwardRef<HTMLSpanElement, DiaTextRevealProps>(
     }, [isMulti, texts]);
 
     useEffect(() => {
-      if (prefersReducedMotion) {
-        clearCycle();
-        sweepPos.set(SWEEP_END);
-        textOpacity.set(1);
-        textBlur.set(0);
-        textShift.set(0);
-        return;
-      }
-
       if (!isVisible) {
         if (!once) {
           hasPlayedRef.current = false;
@@ -312,19 +284,10 @@ const DiaTextReveal = forwardRef<HTMLSpanElement, DiaTextRevealProps>(
       playRef.current();
 
       return clearCycle;
-    }, [
-      clearCycle,
-      isVisible,
-      once,
-      prefersReducedMotion,
-      sweepPos,
-      textBlur,
-      textOpacity,
-      textShift,
-    ]);
+    }, [clearCycle, isVisible, once]);
 
     useEffect(() => {
-      if (prefersReducedMotion || !isMulti) {
+      if (!isMulti) {
         textOpacity.set(1);
         textBlur.set(0);
         textShift.set(0);
@@ -359,14 +322,7 @@ const DiaTextReveal = forwardRef<HTMLSpanElement, DiaTextRevealProps>(
         blurControls.stop();
         shiftControls.stop();
       };
-    }, [
-      activeIndex,
-      isMulti,
-      prefersReducedMotion,
-      textBlur,
-      textOpacity,
-      textShift,
-    ]);
+    }, [activeIndex, isMulti, textBlur, textOpacity, textShift]);
 
     useEffect(() => clearCycle, [clearCycle]);
 

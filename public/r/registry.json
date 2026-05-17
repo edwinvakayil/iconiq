@@ -15,6 +15,11 @@
         {
           "path": "accordion.tsx",
           "type": "registry:ui"
+        },
+        {
+          "path": "reduced-motion.tsx",
+          "target": "lib/reduced-motion.tsx",
+          "type": "registry:lib"
         }
       ]
     },
@@ -60,6 +65,11 @@
         {
           "path": "badge.tsx",
           "type": "registry:ui"
+        },
+        {
+          "path": "reduced-motion.tsx",
+          "target": "lib/reduced-motion.tsx",
+          "type": "registry:lib"
         }
       ]
     },
@@ -90,6 +100,11 @@
         {
           "path": "button-group.tsx",
           "type": "registry:ui"
+        },
+        {
+          "path": "reduced-motion.tsx",
+          "target": "lib/reduced-motion.tsx",
+          "type": "registry:lib"
         }
       ]
     },
@@ -105,6 +120,11 @@
         {
           "path": "button.tsx",
           "type": "registry:ui"
+        },
+        {
+          "path": "reduced-motion.tsx",
+          "target": "lib/reduced-motion.tsx",
+          "type": "registry:lib"
         }
       ]
     },
@@ -150,6 +170,11 @@
         {
           "path": "combobox.tsx",
           "type": "registry:ui"
+        },
+        {
+          "path": "reduced-motion.tsx",
+          "target": "lib/reduced-motion.tsx",
+          "type": "registry:lib"
         }
       ]
     },
@@ -165,6 +190,11 @@
         {
           "path": "context-menu.tsx",
           "type": "registry:ui"
+        },
+        {
+          "path": "reduced-motion.tsx",
+          "target": "lib/reduced-motion.tsx",
+          "type": "registry:lib"
         }
       ]
     },
@@ -195,6 +225,11 @@
         {
           "path": "dialog.tsx",
           "type": "registry:ui"
+        },
+        {
+          "path": "reduced-motion.tsx",
+          "target": "lib/reduced-motion.tsx",
+          "type": "registry:lib"
         }
       ]
     },
@@ -210,6 +245,11 @@
         {
           "path": "drawer.tsx",
           "type": "registry:ui"
+        },
+        {
+          "path": "reduced-motion.tsx",
+          "target": "lib/reduced-motion.tsx",
+          "type": "registry:lib"
         }
       ]
     },
@@ -225,6 +265,11 @@
         {
           "path": "dropdown.tsx",
           "type": "registry:ui"
+        },
+        {
+          "path": "reduced-motion.tsx",
+          "target": "lib/reduced-motion.tsx",
+          "type": "registry:lib"
         }
       ]
     },
@@ -259,6 +304,11 @@
         {
           "path": "hover-card.tsx",
           "type": "registry:ui"
+        },
+        {
+          "path": "reduced-motion.tsx",
+          "target": "lib/reduced-motion.tsx",
+          "type": "registry:lib"
         }
       ]
     },
@@ -274,6 +324,11 @@
         {
           "path": "input-group.tsx",
           "type": "registry:ui"
+        },
+        {
+          "path": "reduced-motion.tsx",
+          "target": "lib/reduced-motion.tsx",
+          "type": "registry:lib"
         }
       ]
     },
@@ -304,6 +359,11 @@
         {
           "path": "popover.tsx",
           "type": "registry:ui"
+        },
+        {
+          "path": "reduced-motion.tsx",
+          "target": "lib/reduced-motion.tsx",
+          "type": "registry:lib"
         }
       ]
     },
@@ -334,6 +394,11 @@
         {
           "path": "select.tsx",
           "type": "registry:ui"
+        },
+        {
+          "path": "reduced-motion.tsx",
+          "target": "lib/reduced-motion.tsx",
+          "type": "registry:lib"
         }
       ]
     },
@@ -379,6 +444,11 @@
         {
           "path": "slider.tsx",
           "type": "registry:ui"
+        },
+        {
+          "path": "reduced-motion.tsx",
+          "target": "lib/reduced-motion.tsx",
+          "type": "registry:lib"
         }
       ]
     },
@@ -409,6 +479,11 @@
         {
           "path": "switch.tsx",
           "type": "registry:ui"
+        },
+        {
+          "path": "reduced-motion.tsx",
+          "target": "lib/reduced-motion.tsx",
+          "type": "registry:lib"
         }
       ]
     },
@@ -439,6 +514,11 @@
         {
           "path": "tabs.tsx",
           "type": "registry:ui"
+        },
+        {
+          "path": "reduced-motion.tsx",
+          "target": "lib/reduced-motion.tsx",
+          "type": "registry:lib"
         }
       ]
     },
@@ -458,6 +538,11 @@
         {
           "path": "toggle.tsx",
           "type": "registry:ui"
+        },
+        {
+          "path": "reduced-motion.tsx",
+          "target": "lib/reduced-motion.tsx",
+          "type": "registry:lib"
         }
       ]
     },
@@ -477,6 +562,11 @@
         {
           "path": "tooltip.tsx",
           "type": "registry:ui"
+        },
+        {
+          "path": "reduced-motion.tsx",
+          "target": "lib/reduced-motion.tsx",
+          "type": "registry:lib"
         }
       ]
     },

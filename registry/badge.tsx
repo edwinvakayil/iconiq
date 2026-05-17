@@ -1,9 +1,14 @@
 "use client";
 
 import { cva, type VariantProps } from "class-variance-authority";
-import { motion, useReducedMotion } from "motion/react";
+import { motion } from "motion/react";
 import { forwardRef, type HTMLAttributes } from "react";
 
+import {
+  ReducedMotionConfig,
+  type ReducedMotionProp,
+  useResolvedReducedMotion,
+} from "@/lib/reduced-motion";
 import { cn } from "@/lib/utils";
 
 const badgeColors = {
@@ -72,7 +77,8 @@ type SpanHTMLAttributesForMotion = Omit<
 
 interface BadgeProps
   extends Omit<SpanHTMLAttributesForMotion, "color">,
-    VariantProps<typeof badgeVariants> {
+    VariantProps<typeof badgeVariants>,
+    ReducedMotionProp {
   color?: BadgeColor;
   waveColor?: string;
 }
@@ -111,17 +117,18 @@ const Badge = forwardRef<HTMLSpanElement, BadgeProps>(
       color = "gray",
       waveColor,
       children,
+      reducedMotion,
       style,
       ...props
     },
     ref
   ) => {
-    const prefersReducedMotion = useReducedMotion();
+    const resolveReducedMotion = useResolvedReducedMotion(reducedMotion);
     const resolvedSize = size ?? "md";
     const colorValue = badgeColors[color];
     const isDefault = variant === "default";
-    const shouldAnimate = isDefault && !prefersReducedMotion;
-    const shouldBlinkDot = !(isDefault || prefersReducedMotion);
+    const shouldAnimate = isDefault && !resolveReducedMotion;
+    const shouldBlinkDot = !(isDefault || resolveReducedMotion);
     const dotSize = badgeDotSizes[resolvedSize];
 
     const colorStyle = getBadgeColorStyle(isDefault, color, colorValue);
@@ -129,65 +136,68 @@ const Badge = forwardRef<HTMLSpanElement, BadgeProps>(
     const dotColor = color === "gray" ? "var(--muted-foreground)" : colorValue;
 
     return (
-      <motion.span
-        animate={shouldAnimate ? { opacity: 1, scale: 1 } : undefined}
-        className={cn(
-          badgeVariants({ variant, size: resolvedSize }),
-          className
-        )}
-        initial={shouldAnimate ? { opacity: 0, scale: 0.95 } : undefined}
-        ref={ref}
-        style={{ ...colorStyle, ...style }}
-        transition={shouldAnimate ? { duration: 0.3 } : undefined}
-        {...props}
-      >
-        {shouldAnimate ? (
-          <motion.span
-            animate={{ x: ["-100%", "200%"] }}
-            aria-hidden
-            className="pointer-events-none absolute inset-0 rounded-full"
-            style={{
-              background: `linear-gradient(90deg, transparent 0%, ${
-                waveColor ?? "color-mix(in srgb, currentColor 18%, transparent)"
-              } 50%, transparent 100%)`,
-            }}
-            transition={{
-              duration: 2,
-              repeat: Number.POSITIVE_INFINITY,
-              repeatDelay: 1.5,
-              ease: "easeInOut",
-            }}
-          />
-        ) : null}
-        {isDefault ? null : (
-          <motion.span
-            animate={
-              shouldBlinkDot
-                ? {
-                    opacity: [0.5, 1, 0.5],
-                    scale: [0.9, 1, 0.9],
-                  }
-                : undefined
-            }
-            className="relative z-10 shrink-0 rounded-full"
-            style={{
-              width: dotSize,
-              height: dotSize,
-              backgroundColor: dotColor,
-            }}
-            transition={
-              shouldBlinkDot
-                ? {
-                    duration: 1.8,
-                    repeat: Number.POSITIVE_INFINITY,
-                    ease: "easeInOut",
-                  }
-                : undefined
-            }
-          />
-        )}
-        <span className="relative z-10">{children}</span>
-      </motion.span>
+      <ReducedMotionConfig reducedMotion={reducedMotion}>
+        <motion.span
+          animate={shouldAnimate ? { opacity: 1, scale: 1 } : undefined}
+          className={cn(
+            badgeVariants({ variant, size: resolvedSize }),
+            className
+          )}
+          initial={shouldAnimate ? { opacity: 0, scale: 0.95 } : undefined}
+          ref={ref}
+          style={{ ...colorStyle, ...style }}
+          transition={shouldAnimate ? { duration: 0.3 } : undefined}
+          {...props}
+        >
+          {shouldAnimate ? (
+            <motion.span
+              animate={{ x: ["-100%", "200%"] }}
+              aria-hidden
+              className="pointer-events-none absolute inset-0 rounded-full"
+              style={{
+                background: `linear-gradient(90deg, transparent 0%, ${
+                  waveColor ??
+                  "color-mix(in srgb, currentColor 18%, transparent)"
+                } 50%, transparent 100%)`,
+              }}
+              transition={{
+                duration: 2,
+                repeat: Number.POSITIVE_INFINITY,
+                repeatDelay: 1.5,
+                ease: "easeInOut",
+              }}
+            />
+          ) : null}
+          {isDefault ? null : (
+            <motion.span
+              animate={
+                shouldBlinkDot
+                  ? {
+                      opacity: [0.5, 1, 0.5],
+                      scale: [0.9, 1, 0.9],
+                    }
+                  : undefined
+              }
+              className="relative z-10 shrink-0 rounded-full"
+              style={{
+                width: dotSize,
+                height: dotSize,
+                backgroundColor: dotColor,
+              }}
+              transition={
+                shouldBlinkDot
+                  ? {
+                      duration: 1.8,
+                      repeat: Number.POSITIVE_INFINITY,
+                      ease: "easeInOut",
+                    }
+                  : undefined
+              }
+            />
+          )}
+          <span className="relative z-10">{children}</span>
+        </motion.span>
+      </ReducedMotionConfig>
     );
   }
 );

@@ -5,6 +5,10 @@ import { Slot } from "@radix-ui/react-slot";
 import { AnimatePresence, motion } from "motion/react";
 import * as React from "react";
 
+import {
+  ReducedMotionConfig,
+  type ReducedMotionProp,
+} from "@/lib/reduced-motion";
 import { cn } from "@/lib/utils";
 
 type Side = "top" | "bottom" | "left" | "right";
@@ -12,7 +16,7 @@ type TooltipTriggerElement = React.ReactElement<{
   "aria-describedby"?: string;
 }>;
 
-export interface TooltipProps {
+export interface TooltipProps extends ReducedMotionProp {
   children: TooltipTriggerElement;
   content: string;
   side?: Side;
@@ -40,6 +44,7 @@ export function Tooltip({
   side = "top",
   delay = 0.15,
   className,
+  reducedMotion,
 }: TooltipProps) {
   const [open, setOpen] = React.useState(false);
   const timeoutRef = React.useRef<ReturnType<typeof setTimeout>>(undefined);
@@ -85,85 +90,87 @@ export function Tooltip({
   }
 
   return (
-    <PopoverPrimitive.Root modal={false} onOpenChange={setOpen} open={open}>
-      <PopoverPrimitive.Anchor asChild>
-        <Slot
-          aria-describedby={triggerDescription}
-          onBlur={handleLeave}
-          onFocus={handleEnter}
-          onMouseEnter={handleEnter}
-          onMouseLeave={handleLeave}
-        >
-          {children}
-        </Slot>
-      </PopoverPrimitive.Anchor>
+    <ReducedMotionConfig reducedMotion={reducedMotion}>
+      <PopoverPrimitive.Root modal={false} onOpenChange={setOpen} open={open}>
+        <PopoverPrimitive.Anchor asChild>
+          <Slot
+            aria-describedby={triggerDescription}
+            onBlur={handleLeave}
+            onFocus={handleEnter}
+            onMouseEnter={handleEnter}
+            onMouseLeave={handleLeave}
+          >
+            {children}
+          </Slot>
+        </PopoverPrimitive.Anchor>
 
-      <AnimatePresence>
-        {open && (
-          <PopoverPrimitive.Portal forceMount>
-            <PopoverPrimitive.Content
-              align="center"
-              asChild
-              avoidCollisions
-              collisionPadding={12}
-              forceMount
-              onCloseAutoFocus={(event) => event.preventDefault()}
-              onOpenAutoFocus={(event) => event.preventDefault()}
-              side={side}
-              sideOffset={10}
-            >
-              <motion.div
-                animate={{
-                  opacity: 1,
-                  scale: 1,
-                  filter: "blur(0px)",
-                }}
-                className={cn(
-                  "group/tooltip pointer-events-none relative z-50 max-w-60 whitespace-normal rounded-lg bg-foreground px-3 py-1.5 font-medium text-background text-xs leading-snug shadow-[0_4px_24px_-4px_rgba(0,0,0,0.25)]",
-                  className
-                )}
-                exit={{
-                  opacity: 0,
-                  scale: 0.92,
-                  filter: "blur(4px)",
-                }}
-                id={tooltipId}
-                initial={{
-                  opacity: 0,
-                  scale: 0.92,
-                  filter: "blur(4px)",
-                }}
-                role="tooltip"
-                style={{
-                  transformOrigin:
-                    "var(--radix-popover-content-transform-origin)",
-                }}
-                transition={{
-                  type: "spring",
-                  stiffness: 400,
-                  damping: 24,
-                  mass: 0.6,
-                }}
+        <AnimatePresence>
+          {open && (
+            <PopoverPrimitive.Portal forceMount>
+              <PopoverPrimitive.Content
+                align="center"
+                asChild
+                avoidCollisions
+                collisionPadding={12}
+                forceMount
+                onCloseAutoFocus={(event) => event.preventDefault()}
+                onOpenAutoFocus={(event) => event.preventDefault()}
+                side={side}
+                sideOffset={10}
               >
-                <motion.span
-                  animate={{ scale: 1 }}
-                  className="absolute h-2 w-2 rotate-45 bg-foreground group-data-[side=bottom]/tooltip:-top-1 group-data-[side=left]/tooltip:top-1/2 group-data-[side=right]/tooltip:top-1/2 group-data-[side=left]/tooltip:-right-1 group-data-[side=top]/tooltip:-bottom-1 group-data-[side=bottom]/tooltip:left-1/2 group-data-[side=right]/tooltip:-left-1 group-data-[side=top]/tooltip:left-1/2 group-data-[side=bottom]/tooltip:-translate-x-1/2 group-data-[side=top]/tooltip:-translate-x-1/2 group-data-[side=left]/tooltip:-translate-y-1/2 group-data-[side=right]/tooltip:-translate-y-1/2"
-                  exit={{ scale: 0 }}
-                  initial={{ scale: 0 }}
+                <motion.div
+                  animate={{
+                    opacity: 1,
+                    scale: 1,
+                    filter: "blur(0px)",
+                  }}
+                  className={cn(
+                    "group/tooltip pointer-events-none relative z-50 max-w-60 whitespace-normal rounded-lg bg-foreground px-3 py-1.5 font-medium text-background text-xs leading-snug shadow-[0_4px_24px_-4px_rgba(0,0,0,0.25)]",
+                    className
+                  )}
+                  exit={{
+                    opacity: 0,
+                    scale: 0.92,
+                    filter: "blur(4px)",
+                  }}
+                  id={tooltipId}
+                  initial={{
+                    opacity: 0,
+                    scale: 0.92,
+                    filter: "blur(4px)",
+                  }}
+                  role="tooltip"
+                  style={{
+                    transformOrigin:
+                      "var(--radix-popover-content-transform-origin)",
+                  }}
                   transition={{
                     type: "spring",
-                    stiffness: 500,
-                    damping: 28,
-                    delay: 0.03,
+                    stiffness: 400,
+                    damping: 24,
+                    mass: 0.6,
                   }}
-                />
-                {normalizedContent}
-              </motion.div>
-            </PopoverPrimitive.Content>
-          </PopoverPrimitive.Portal>
-        )}
-      </AnimatePresence>
-    </PopoverPrimitive.Root>
+                >
+                  <motion.span
+                    animate={{ scale: 1 }}
+                    className="absolute h-2 w-2 rotate-45 bg-foreground group-data-[side=bottom]/tooltip:-top-1 group-data-[side=left]/tooltip:top-1/2 group-data-[side=right]/tooltip:top-1/2 group-data-[side=left]/tooltip:-right-1 group-data-[side=top]/tooltip:-bottom-1 group-data-[side=bottom]/tooltip:left-1/2 group-data-[side=right]/tooltip:-left-1 group-data-[side=top]/tooltip:left-1/2 group-data-[side=bottom]/tooltip:-translate-x-1/2 group-data-[side=top]/tooltip:-translate-x-1/2 group-data-[side=left]/tooltip:-translate-y-1/2 group-data-[side=right]/tooltip:-translate-y-1/2"
+                    exit={{ scale: 0 }}
+                    initial={{ scale: 0 }}
+                    transition={{
+                      type: "spring",
+                      stiffness: 500,
+                      damping: 28,
+                      delay: 0.03,
+                    }}
+                  />
+                  {normalizedContent}
+                </motion.div>
+              </PopoverPrimitive.Content>
+            </PopoverPrimitive.Portal>
+          )}
+        </AnimatePresence>
+      </PopoverPrimitive.Root>
+    </ReducedMotionConfig>
   );
 }
 

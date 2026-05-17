@@ -4,6 +4,10 @@ import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { X } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import * as React from "react";
+import {
+  ReducedMotionConfig,
+  type ReducedMotionProp,
+} from "@/lib/reduced-motion";
 import { cn } from "@/lib/utils";
 
 const Dialog = DialogPrimitive.Root;
@@ -64,50 +68,52 @@ const DialogContent = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content> & {
     open?: boolean;
-  }
->(({ className, children, open, ...props }, ref) => (
-  <AnimatePresence>
-    {open && (
-      <DialogPortal forceMount>
-        <DialogPrimitive.Overlay asChild forceMount>
-          <motion.div
-            animate="visible"
-            className="fixed inset-0 z-50 bg-black/45 backdrop-blur-sm dark:bg-black/60"
-            exit="hidden"
-            initial="hidden"
-            transition={{ duration: 0.25, ease: "easeOut" }}
-            variants={overlayVariants}
-          />
-        </DialogPrimitive.Overlay>
-        <DialogPrimitive.Content
-          className="fixed inset-0 z-50 grid place-items-center overflow-y-auto bg-transparent p-4 outline-none"
-          forceMount
-          ref={ref}
-          {...props}
-        >
-          <motion.div
-            animate="visible"
-            className={cn(
-              "relative flex w-[min(100%,32rem)] max-w-lg flex-col gap-4 overflow-y-auto rounded-lg border bg-background p-6 shadow-2xl dark:bg-neutral-900",
-              "max-h-[min(90svh,calc(100svh-env(safe-area-inset-top,0px)-env(safe-area-inset-bottom,0px)-2rem))]",
-              className
-            )}
-            exit="exit"
-            initial="hidden"
-            variants={contentVariants}
+  } & ReducedMotionProp
+>(({ className, children, open, reducedMotion, ...props }, ref) => (
+  <ReducedMotionConfig reducedMotion={reducedMotion}>
+    <AnimatePresence>
+      {open && (
+        <DialogPortal forceMount>
+          <DialogPrimitive.Overlay asChild forceMount>
+            <motion.div
+              animate="visible"
+              className="fixed inset-0 z-50 bg-black/45 backdrop-blur-sm dark:bg-black/60"
+              exit="hidden"
+              initial="hidden"
+              transition={{ duration: 0.25, ease: "easeOut" }}
+              variants={overlayVariants}
+            />
+          </DialogPrimitive.Overlay>
+          <DialogPrimitive.Content
+            className="fixed inset-0 z-50 grid place-items-center overflow-y-auto bg-transparent p-4 outline-none"
+            forceMount
+            ref={ref}
+            {...props}
           >
-            {React.Children.map(children, (child) => (
-              <motion.div variants={childVariants}>{child}</motion.div>
-            ))}
-            <DialogPrimitive.Close className="absolute top-4 right-4 rounded-lg p-1.5 text-foreground opacity-70 transition-colors hover:bg-muted hover:opacity-100 focus:outline-none disabled:pointer-events-none">
-              <X className="h-4 w-4" />
-              <span className="sr-only">Close</span>
-            </DialogPrimitive.Close>
-          </motion.div>
-        </DialogPrimitive.Content>
-      </DialogPortal>
-    )}
-  </AnimatePresence>
+            <motion.div
+              animate="visible"
+              className={cn(
+                "relative flex w-[min(100%,32rem)] max-w-lg flex-col gap-4 overflow-y-auto rounded-lg border bg-background p-6 shadow-2xl dark:bg-neutral-900",
+                "max-h-[min(90svh,calc(100svh-env(safe-area-inset-top,0px)-env(safe-area-inset-bottom,0px)-2rem))]",
+                className
+              )}
+              exit="exit"
+              initial="hidden"
+              variants={contentVariants}
+            >
+              {React.Children.map(children, (child) => (
+                <motion.div variants={childVariants}>{child}</motion.div>
+              ))}
+              <DialogPrimitive.Close className="absolute top-4 right-4 rounded-lg p-1.5 text-foreground opacity-70 transition-colors hover:bg-muted hover:opacity-100 focus:outline-none disabled:pointer-events-none">
+                <X className="h-4 w-4" />
+                <span className="sr-only">Close</span>
+              </DialogPrimitive.Close>
+            </motion.div>
+          </DialogPrimitive.Content>
+        </DialogPortal>
+      )}
+    </AnimatePresence>
+  </ReducedMotionConfig>
 ));
 DialogContent.displayName = "DialogContent";
 

@@ -5,6 +5,10 @@ import { Slot } from "@radix-ui/react-slot";
 import { AnimatePresence, motion } from "motion/react";
 import * as React from "react";
 
+import {
+  ReducedMotionConfig,
+  type ReducedMotionProp,
+} from "@/lib/reduced-motion";
 import { cn } from "@/lib/utils";
 
 type Side = "top" | "right" | "bottom" | "left";
@@ -66,7 +70,7 @@ const useHoverCard = () => {
   return context;
 };
 
-type HoverCardProps = {
+type HoverCardProps = ReducedMotionProp & {
   className?: string;
   openDelay?: number;
   closeDelay?: number;
@@ -78,6 +82,7 @@ const HoverCard = ({
   openDelay = 80,
   closeDelay = 120,
   children,
+  reducedMotion,
 }: HoverCardProps) => {
   const [open, setOpen] = React.useState(false);
   const timeoutRef = React.useRef<number | null>(null);
@@ -170,34 +175,36 @@ const HoverCard = ({
   React.useEffect(() => clearTimer, [clearTimer]);
 
   return (
-    <HoverCardContext.Provider
-      value={{
-        open,
-        contentId: `${reactId}-content`,
-        triggerId: `${reactId}-trigger`,
-        setContentNode: (node) => {
-          contentRef.current = node;
-        },
-        setTriggerNode: (node) => {
-          triggerRef.current = node;
-        },
-        handleFocusEnd,
-        handleFocusStart,
-        handleHoverEnd,
-        handleHoverStart,
-      }}
-    >
-      <PopoverPrimitive.Root
-        modal={false}
-        onOpenChange={(nextOpen) => {
-          clearTimer();
-          setOpen(nextOpen);
+    <ReducedMotionConfig reducedMotion={reducedMotion}>
+      <HoverCardContext.Provider
+        value={{
+          open,
+          contentId: `${reactId}-content`,
+          triggerId: `${reactId}-trigger`,
+          setContentNode: (node) => {
+            contentRef.current = node;
+          },
+          setTriggerNode: (node) => {
+            triggerRef.current = node;
+          },
+          handleFocusEnd,
+          handleFocusStart,
+          handleHoverEnd,
+          handleHoverStart,
         }}
-        open={open}
       >
-        <span className={cn("inline-flex w-fit", className)}>{children}</span>
-      </PopoverPrimitive.Root>
-    </HoverCardContext.Provider>
+        <PopoverPrimitive.Root
+          modal={false}
+          onOpenChange={(nextOpen) => {
+            clearTimer();
+            setOpen(nextOpen);
+          }}
+          open={open}
+        >
+          <span className={cn("inline-flex w-fit", className)}>{children}</span>
+        </PopoverPrimitive.Root>
+      </HoverCardContext.Provider>
+    </ReducedMotionConfig>
   );
 };
 

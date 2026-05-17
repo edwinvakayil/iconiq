@@ -3,6 +3,10 @@ import { Check, ChevronsUpDown, X } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import * as React from "react";
 import { createPortal } from "react-dom";
+import {
+  ReducedMotionConfig,
+  type ReducedMotionProp,
+} from "@/lib/reduced-motion";
 import { cn } from "@/lib/utils";
 
 export type ComboboxOption = {
@@ -11,7 +15,7 @@ export type ComboboxOption = {
   description?: string;
 };
 
-export interface ComboboxProps {
+export interface ComboboxProps extends ReducedMotionProp {
   options: ComboboxOption[];
   value?: string;
   onChange?: (value: string) => void;
@@ -76,6 +80,7 @@ export function Combobox({
   disabled = false,
   clearable = true,
   openOnFocus = false,
+  reducedMotion,
 }: ComboboxProps) {
   const [mounted, setMounted] = React.useState(false);
   const [open, setOpen] = React.useState(false);
@@ -385,95 +390,97 @@ export function Combobox({
   );
 
   return (
-    <div className={cn("relative w-full", className)} ref={containerRef}>
-      <div
-        className={cn(
-          "group flex h-11 w-full items-center gap-2 rounded-lg border border-input bg-background px-3.5 text-base shadow-sm transition-all sm:text-sm",
-          "hover:border-ring/40 hover:shadow",
-          "focus-within:border-ring focus-within:ring-2 focus-within:ring-ring/30",
-          disabled && "cursor-not-allowed opacity-50",
-          open && "border-ring ring-2 ring-ring/30"
-        )}
-        onClick={() => {
-          if (!disabled) {
-            setOpen(true);
-            inputRef.current?.focus();
-            selectDisplayedValue();
-          }
-        }}
-        onKeyDown={(e) => {
-          if (disabled || e.target !== e.currentTarget) return;
-          if (e.key === "Enter" || e.key === " ") {
-            e.preventDefault();
-            setOpen(true);
-            inputRef.current?.focus();
-            selectDisplayedValue();
-          }
-        }}
-      >
-        <input
-          aria-activedescendant={
-            open && filtered[activeIndex]
-              ? `${listboxId}-opt-${filtered[activeIndex].value}`
-              : undefined
-          }
-          aria-autocomplete="list"
-          aria-controls={listboxId}
-          aria-expanded={open}
-          className="h-full w-full flex-1 bg-transparent text-[16px] text-foreground placeholder:text-muted-foreground focus:outline-none disabled:cursor-not-allowed sm:text-sm"
-          disabled={disabled}
-          onChange={(e) => {
-            if (!open) setOpen(true);
-            setIsEditingQuery(true);
-            setQuery(e.target.value);
-            setActiveIndex(0);
-          }}
-          onFocus={() => {
-            selectDisplayedValue();
-            if (openOnFocus) setOpen(true);
-          }}
-          onKeyDown={onInputKeyDown}
-          placeholder={placeholder}
-          ref={inputRef}
-          role="combobox"
-          type="text"
-          value={displayValue}
-        />
-
-        {clearable && selected && !disabled && (
-          <button
-            aria-label="Clear selection"
-            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg text-muted-foreground opacity-70 transition hover:bg-muted hover:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/30"
-            onClick={(e) => {
-              e.stopPropagation();
-              onChange?.("");
-              setQuery("");
-              setIsEditingQuery(open);
+    <ReducedMotionConfig reducedMotion={reducedMotion}>
+      <div className={cn("relative w-full", className)} ref={containerRef}>
+        <div
+          className={cn(
+            "group flex h-11 w-full items-center gap-2 rounded-lg border border-input bg-background px-3.5 text-base shadow-sm transition-all sm:text-sm",
+            "hover:border-ring/40 hover:shadow",
+            "focus-within:border-ring focus-within:ring-2 focus-within:ring-ring/30",
+            disabled && "cursor-not-allowed opacity-50",
+            open && "border-ring ring-2 ring-ring/30"
+          )}
+          onClick={() => {
+            if (!disabled) {
+              setOpen(true);
               inputRef.current?.focus();
-            }}
-            type="button"
-          >
-            <X className="h-3.5 w-3.5" />
-          </button>
-        )}
-
-        <motion.span
-          animate={{ rotate: open ? 180 : 0 }}
-          className="text-muted-foreground"
-          transition={{ type: "spring", stiffness: 300, damping: 22 }}
+              selectDisplayedValue();
+            }
+          }}
+          onKeyDown={(e) => {
+            if (disabled || e.target !== e.currentTarget) return;
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              setOpen(true);
+              inputRef.current?.focus();
+              selectDisplayedValue();
+            }
+          }}
         >
-          <ChevronsUpDown className="h-4 w-4" />
-        </motion.span>
-      </div>
+          <input
+            aria-activedescendant={
+              open && filtered[activeIndex]
+                ? `${listboxId}-opt-${filtered[activeIndex].value}`
+                : undefined
+            }
+            aria-autocomplete="list"
+            aria-controls={listboxId}
+            aria-expanded={open}
+            className="h-full w-full flex-1 bg-transparent text-[16px] text-foreground placeholder:text-muted-foreground focus:outline-none disabled:cursor-not-allowed sm:text-sm"
+            disabled={disabled}
+            onChange={(e) => {
+              if (!open) setOpen(true);
+              setIsEditingQuery(true);
+              setQuery(e.target.value);
+              setActiveIndex(0);
+            }}
+            onFocus={() => {
+              selectDisplayedValue();
+              if (openOnFocus) setOpen(true);
+            }}
+            onKeyDown={onInputKeyDown}
+            placeholder={placeholder}
+            ref={inputRef}
+            role="combobox"
+            type="text"
+            value={displayValue}
+          />
 
-      {isSmallScreen ? (
-        <div className="absolute inset-x-0 top-full z-[9999] mt-1">
-          {menuContent}
+          {clearable && selected && !disabled && (
+            <button
+              aria-label="Clear selection"
+              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg text-muted-foreground opacity-70 transition hover:bg-muted hover:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/30"
+              onClick={(e) => {
+                e.stopPropagation();
+                onChange?.("");
+                setQuery("");
+                setIsEditingQuery(open);
+                inputRef.current?.focus();
+              }}
+              type="button"
+            >
+              <X className="h-3.5 w-3.5" />
+            </button>
+          )}
+
+          <motion.span
+            animate={{ rotate: open ? 180 : 0 }}
+            className="text-muted-foreground"
+            transition={{ type: "spring", stiffness: 300, damping: 22 }}
+          >
+            <ChevronsUpDown className="h-4 w-4" />
+          </motion.span>
         </div>
-      ) : mounted ? (
-        createPortal(menuContent, document.body)
-      ) : null}
-    </div>
+
+        {isSmallScreen ? (
+          <div className="absolute inset-x-0 top-full z-[9999] mt-1">
+            {menuContent}
+          </div>
+        ) : mounted ? (
+          createPortal(menuContent, document.body)
+        ) : null}
+      </div>
+    </ReducedMotionConfig>
   );
 }
 
