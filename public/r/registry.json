@@ -403,6 +403,21 @@
       ]
     },
     {
+      "name": "selectiontoolbar",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": ["lucide-react"],
+      "devDependencies": [],
+      "title": "Selection Toolbar",
+      "description": "Floating inline formatting toolbar for editable text selections with bold, italic, and underline actions.",
+      "files": [
+        {
+          "path": "selectiontoolbar.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "shimmer-text",
       "type": "registry:ui",
       "registryDependencies": [],

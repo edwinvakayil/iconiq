@@ -34,6 +34,7 @@ export const SITE_SECTIONS = [
       { label: "Checkbox group", href: "/components/checkbox-group" },
       { label: "Radio group", href: "/components/radiogroup" },
       { label: "Select", href: "/components/select" },
+      { label: "Selection Toolbar", href: "/components/selectiontoolbar" },
       { label: "Skeleton", href: "/components/skeleton" },
       { label: "Slider", href: "/components/slider" },
       { label: "Spinner", href: "/components/spinner" },

@@ -61,6 +61,8 @@ const componentSummaries: Record<string, string> = {
   "/components/radiogroup":
     "Radio group for single-choice options with animated selection treatment.",
   "/components/select": "Animated select control for single-choice selections.",
+  "/components/selectiontoolbar":
+    "Floating text-selection toolbar for inline bold, italic, and underline formatting inside editable content.",
   "/components/skeleton":
     "Shimmer skeleton placeholder for loading states, lines, avatars, and content blocks.",
   "/components/slider":

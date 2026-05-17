@@ -146,7 +146,7 @@ export function HomeHero() {
   }
 
   return (
-    <section className="bg-background pt-12 pb-18 sm:pt-44 lg:pt-36 sm:pb-24">
+    <section className="bg-background pt-12 pb-18 sm:pt-44 sm:pb-24 lg:pt-36">
       <motion.div
         animate={animateEntrance ? { opacity: 1, y: 0 } : undefined}
         className="mx-auto w-full max-w-[1280px] px-4 sm:px-6 lg:px-8"

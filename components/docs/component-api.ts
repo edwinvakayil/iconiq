@@ -2406,6 +2406,41 @@ const selectApiDetails: DetailItem[] = [
   registryItem("select.json", ["motion", "lucide-react"]),
 ];
 
+const selectionToolbarApiDetails: DetailItem[] = [
+  {
+    id: "selectiontoolbar",
+    title: "SelectionToolbar",
+    summary:
+      "Floating formatting toolbar for editable text. It watches document selection, shows itself only when the selection lives inside the provided container, and exposes bold, italic, and underline actions.",
+    fields: [
+      field({
+        name: "containerRef",
+        type: "React.RefObject<HTMLElement | null>",
+        required: true,
+        description:
+          "Ref pointing at the editable container whose text selection should drive the toolbar. Selections outside this element immediately hide the toolbar.",
+      }),
+    ],
+    notes: [
+      "The toolbar listens to document-level selectionchange and mousedown events, so it updates as the selection moves and closes when people click away.",
+      "Formatting actions run on mousedown instead of click so the active text selection is preserved while bold, italic, or underline is applied.",
+      "Active states are read from document.queryCommandState for the same three formatting commands the toolbar exposes.",
+    ],
+  },
+  {
+    id: "selectiontoolbar-positioning",
+    title: "Positioning and editing behavior",
+    summary:
+      "The toolbar positions itself from the live range rectangle returned by the browser selection API and applies formatting through the native rich-text command pipeline.",
+    notes: [
+      "Coordinates are derived from Range.getBoundingClientRect plus the current page scroll offset, which keeps the toolbar visually anchored to the selected phrase.",
+      "Because the toolbar uses page-level coordinates, it works best when rendered in a non-clipping part of the tree rather than inside a tightly overflow-hidden local wrapper.",
+      "The current implementation depends on document.execCommand for inline formatting. That makes it convenient for lightweight editable surfaces, but apps with a custom text model may want to fork the behavior.",
+    ],
+  },
+  registryItem("selectiontoolbar.json", ["lucide-react"]),
+];
+
 const sliderApiDetails: DetailItem[] = [
   {
     id: "slider",
@@ -3510,6 +3545,7 @@ export {
   shimmerTextApiDetails,
   skeletonApiDetails,
   selectApiDetails,
+  selectionToolbarApiDetails,
   sliderApiDetails,
   spinnerApiDetails,
   switchApiDetails,

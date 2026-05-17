@@ -141,6 +141,12 @@ const REGISTRY_UI_META: Record<
       "Animated single-select dropdown with staggered options, chevron rotation, scaleY panel, row hover slide, and check mark on the active item. Motion + Lucide.",
     dependencies: ["motion", "lucide-react"],
   },
+  selectiontoolbar: {
+    title: "Selection Toolbar",
+    description:
+      "Floating inline formatting toolbar for editable text selections with bold, italic, and underline actions.",
+    dependencies: ["lucide-react"],
+  },
   skeleton: {
     title: "Skeleton",
     description:
