@@ -29,7 +29,6 @@ export const SITE_SECTIONS = [
       { label: "File upload", href: "/components/file-upload" },
       { label: "Hover card", href: "/components/hover-card" },
       { label: "Input group", href: "/components/input-group" },
-      { label: "Pagination", href: "/components/pagination" },
       { label: "Popover", href: "/components/popover" },
       { label: "Checkbox group", href: "/components/checkbox-group" },
       { label: "Radio group", href: "/components/radiogroup" },

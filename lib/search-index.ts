@@ -52,8 +52,6 @@ const componentSummaries: Record<string, string> = {
     "Hover card for richer inline profile or detail previews.",
   "/components/input-group":
     "Floating-label input group with prefix and suffix slots, inline errors, and stacked form-field layouts.",
-  "/components/pagination":
-    "Pagination control with animated page transitions, compact ellipsis handling, and previous or next navigation.",
   "/components/accordion":
     "Accordion component with spring-driven expansion and structured content sections.",
   "/components/popover":
