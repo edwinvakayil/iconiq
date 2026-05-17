@@ -83,8 +83,6 @@ const GUIDE_SUMMARIES: Record<string, string> = {
     "Installation guide for the shadcn registry flow, direct registry JSON URLs, and sample component entries.",
   "/mcp":
     "MCP setup guide for connecting Iconiq to AI coding tools through the shadcn registry workflow.",
-  "/changelog":
-    "Release notes rendered from the local changelog source file, covering added, updated, and fixed work.",
 };
 
 const COMPONENT_API_DETAILS: Record<string, DetailItem[]> = {

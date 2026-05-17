@@ -3,7 +3,6 @@ import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { Toaster } from "sonner";
 
 import { Analytics } from "@/components/analytics";
-import { AnnouncementBanner } from "@/components/announcement-banner";
 import { ConditionalFooter } from "@/components/conditional-footer";
 import { DocsSidebar } from "@/components/docs-sidebar";
 import { Header } from "@/components/header";
@@ -22,7 +21,6 @@ export default function SiteLayout({
       <PageTitleSync />
       <RouteScrollReset />
       <div className="root">
-        <AnnouncementBanner />
         <Header />
         <div className="root-content">
           <div className="flex min-h-0 min-w-0 flex-1">

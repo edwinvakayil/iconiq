@@ -17,7 +17,6 @@ Iconiq is a component library and documentation site for teams that want polishe
 - Website: [iconiqui.com](https://iconiqui.com)
 - Documentation: [iconiqui.com/introduction](https://iconiqui.com/introduction)
 - Components: [iconiqui.com/components/button](https://iconiqui.com/components/button)
-- Changelog: [iconiqui.com/changelog](https://iconiqui.com/changelog)
 - Sponsor: [buymeacoffee.com/edwinvakayil](https://buymeacoffee.com/edwinvakayil)
 
 ## Install Components
@@ -131,4 +130,3 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) for the current contribution flow.
 - Motion
 - Radix UI primitives
 - Lucide icons
-

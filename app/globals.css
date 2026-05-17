@@ -26,18 +26,10 @@
 }
 
 :root {
-  --announcement-height-mobile: 3.25rem;
-  --announcement-height-desktop: 3.25rem;
   --header-height-mobile: 3.5rem;
   --header-height-desktop: 3.5rem;
-  --nav-stack-height-mobile: calc(
-    var(--announcement-height-mobile) +
-    var(--header-height-mobile)
-  );
-  --nav-stack-height-desktop: calc(
-    var(--announcement-height-desktop) +
-    var(--header-height-desktop)
-  );
+  --nav-stack-height-mobile: var(--header-height-mobile);
+  --nav-stack-height-desktop: var(--header-height-desktop);
   --background: #ffffff;
   --foreground: #111111;
   --primary: #111111;
@@ -59,12 +51,6 @@
 
   --radius: 0.4rem;
 }
-
-html[data-banner-hidden="true"] {
-  --announcement-height-mobile: 0rem;
-  --announcement-height-desktop: 0rem;
-}
-
 .dark {
   --background: #111111;
   --foreground: #f6f3ec;

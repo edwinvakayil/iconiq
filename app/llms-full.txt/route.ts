@@ -1,14 +1,11 @@
 import { SITE } from "@/constants";
-import { getChangelogEntries } from "@/lib/changelog";
 import {
   AI_DISCOVERY_LINKS,
   COMPONENT_CATALOG,
   GUIDE_CATALOG,
 } from "@/lib/geo";
 
-export async function GET() {
-  const latestRelease = (await getChangelogEntries())[0];
-
+export function GET() {
   const guideSection = GUIDE_CATALOG.map(
     (guide) =>
       `- ${guide.title}\n  URL: ${guide.url}\n  Summary: ${guide.summary}`
@@ -60,17 +57,6 @@ ${SITE.DESCRIPTION.LONG}
 - Overview: ${AI_DISCOVERY_LINKS.llmsOverview}
 - Full index: ${AI_DISCOVERY_LINKS.llmsFull}
 - JSON catalog: ${AI_DISCOVERY_LINKS.indexJson}
-
-## Latest Release
-
-${
-  latestRelease
-    ? `- Version: ${latestRelease.version}
-- Date: ${latestRelease.date}
-- Title: ${latestRelease.title}
-- Summary: ${latestRelease.summary || "No summary provided."}`
-    : "- No changelog entries available."
-}
 
 ## Guides
 

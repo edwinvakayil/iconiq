@@ -19,7 +19,7 @@ export function GET() {
 
 > ${SITE.DESCRIPTION.SHORT}
 
-${SITE.NAME} is a React component library delivered through the shadcn registry workflow. The site includes component docs, live playgrounds, installation instructions, and a local changelog.
+${SITE.NAME} is a React component library delivered through the shadcn registry workflow. The site includes component docs, live playgrounds, and installation instructions.
 
 ## Canonical
 

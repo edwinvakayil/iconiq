@@ -201,7 +201,7 @@ export function Header() {
   return (
     <header
       className={cn(
-        "fixed top-[var(--announcement-height-mobile)] right-0 left-0 z-[150] w-full border-border/50 bg-background lg:top-[var(--announcement-height-desktop)]",
+        "fixed top-0 right-0 left-0 z-[150] w-full border-border/50 bg-background",
         !isHome && "border-b"
       )}
     >
