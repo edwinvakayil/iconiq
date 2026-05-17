@@ -221,6 +221,34 @@ function AccordionRow({
   reduceMotion,
 }: AccordionRowProps) {
   const itemNumber = String(index + 1).padStart(2, "0");
+  const contentCopy = reduceMotion ? (
+    <div className={getContentCopyClassName(isEditorial)}>{item.content}</div>
+  ) : (
+    <motion.div
+      animate={{
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        filter: "blur(0px)",
+      }}
+      className={getContentCopyClassName(isEditorial)}
+      exit={{
+        opacity: 0,
+        y: -2,
+        scale: 0.996,
+        filter: "blur(1.5px)",
+      }}
+      initial={{
+        opacity: 0,
+        y: 7,
+        scale: 0.998,
+        filter: "blur(3px)",
+      }}
+      transition={contentCopyTransition}
+    >
+      {item.content}
+    </motion.div>
+  );
 
   return (
     <AccordionPrimitive.Item
@@ -259,77 +287,58 @@ function AccordionRow({
 
         <AnimatePresence initial={false}>
           {isOpen ? (
-            <AccordionPrimitive.Content asChild forceMount>
-              <motion.div
-                animate={{
-                  height: "auto",
-                  opacity: 1,
-                  clipPath: "inset(0% 0% 0% 0%)",
-                }}
-                className="overflow-hidden"
-                exit={{
-                  height: 0,
-                  opacity: 0,
-                  clipPath: "inset(0% 0% 100% 0%)",
-                }}
-                initial={{
-                  height: 0,
-                  opacity: 0,
-                  clipPath: "inset(0% 0% 100% 0%)",
-                }}
-                transition={contentShellTransition}
-              >
+            reduceMotion ? (
+              <AccordionPrimitive.Content forceMount>
                 <div className={getContentWrapClassName(isEditorial)}>
-                  <motion.div
-                    animate={{
-                      clipPath: "inset(0% 0% 0% 0%)",
-                      opacity: 1,
-                    }}
-                    className={getContentMaskClassName(isEditorial)}
-                    exit={{
-                      clipPath: "inset(0% 100% 0% 0%)",
-                      opacity: 0.68,
-                    }}
-                    initial={{
-                      clipPath: "inset(0% 100% 0% 0%)",
-                      opacity: 0.68,
-                    }}
-                    transition={contentMaskTransition}
-                  >
-                    {reduceMotion ? (
-                      <div className={getContentCopyClassName(isEditorial)}>
-                        {item.content}
-                      </div>
-                    ) : (
-                      <motion.div
-                        animate={{
-                          opacity: 1,
-                          y: 0,
-                          scale: 1,
-                          filter: "blur(0px)",
-                        }}
-                        className={getContentCopyClassName(isEditorial)}
-                        exit={{
-                          opacity: 0,
-                          y: -2,
-                          scale: 0.996,
-                          filter: "blur(1.5px)",
-                        }}
-                        initial={{
-                          opacity: 0,
-                          y: 7,
-                          scale: 0.998,
-                          filter: "blur(3px)",
-                        }}
-                        transition={contentCopyTransition}
-                      >
-                        {item.content}
-                      </motion.div>
-                    )}
-                  </motion.div>
+                  <div className={getContentMaskClassName(isEditorial)}>
+                    {contentCopy}
+                  </div>
                 </div>
-              </motion.div>
-            </AccordionPrimitive.Content>
+              </AccordionPrimitive.Content>
+            ) : (
+              <AccordionPrimitive.Content asChild forceMount>
+                <motion.div
+                  animate={{
+                    height: "auto",
+                    opacity: 1,
+                    clipPath: "inset(0% 0% 0% 0%)",
+                  }}
+                  className="overflow-hidden"
+                  exit={{
+                    height: 0,
+                    opacity: 0,
+                    clipPath: "inset(0% 0% 100% 0%)",
+                  }}
+                  initial={{
+                    height: 0,
+                    opacity: 0,
+                    clipPath: "inset(0% 0% 100% 0%)",
+                  }}
+                  transition={contentShellTransition}
+                >
+                  <div className={getContentWrapClassName(isEditorial)}>
+                    <motion.div
+                      animate={{
+                        clipPath: "inset(0% 0% 0% 0%)",
+                        opacity: 1,
+                      }}
+                      className={getContentMaskClassName(isEditorial)}
+                      exit={{
+                        clipPath: "inset(0% 100% 0% 0%)",
+                        opacity: 0.68,
+                      }}
+                      initial={{
+                        clipPath: "inset(0% 100% 0% 0%)",
+                        opacity: 0.68,
+                      }}
+                      transition={contentMaskTransition}
+                    >
+                      {contentCopy}
+                    </motion.div>
+                  </div>
+                </motion.div>
+              </AccordionPrimitive.Content>
+            )
           ) : null}
         </AnimatePresence>
       </motion.div>
