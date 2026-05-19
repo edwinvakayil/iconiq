@@ -2520,6 +2520,49 @@ const originButtonApiDetails: DetailItem[] = [
   registryItem("origin-button.json", ["motion"]),
 ];
 
+const faqProApiDetails: DetailItem[] = [
+  {
+    id: "faq-pro",
+    title: "FaqPro",
+    summary:
+      "Searchable FAQ accordion with rounded cards, animated panels, query highlighting, and automatic expansion for filtered results.",
+    fields: [
+      field({
+        name: "items",
+        type: "FaqProItem[]",
+        required: true,
+        description:
+          "Array of `{ id, question, answer }` entries. Each id must be unique within the list.",
+      }),
+      field({
+        name: "searchPlaceholder",
+        type: "string",
+        defaultValue: "Search FAQs...",
+        description: "Placeholder copy for the search field.",
+      }),
+      field({
+        name: "defaultOpenFirst",
+        type: "boolean",
+        defaultValue: "false",
+        description:
+          "Opens the first item when there is no active search query.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description: "Optional class names applied to the root container.",
+      }),
+    ],
+    notes: [
+      "Search filters by question and answer text. The first matching row opens automatically while you type.",
+      "Only one FAQ panel can be open at a time. Clicking another item closes the previous one.",
+      "Matched substrings render inside a highlight mark in both the question and answer.",
+      "When the query is cleared, the list returns to the default open state controlled by defaultOpenFirst.",
+    ],
+  },
+  registryItem("faq-pro.json", ["motion", "lucide-react"]),
+];
+
 const sliderApiDetails: DetailItem[] = [
   {
     id: "slider",
@@ -3618,6 +3661,7 @@ export {
   hoverCardApiDetails,
   iconBarApiDetails,
   originButtonApiDetails,
+  faqProApiDetails,
   popoverApiDetails,
   inputGroupApiDetails,
   accordionApiDetails,

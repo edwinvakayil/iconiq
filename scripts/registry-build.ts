@@ -135,6 +135,12 @@ const REGISTRY_UI_META: Record<
       "Rounded action button with a pointer-origin foreground fill that spreads on hover or focus-visible. Built with Motion.",
     dependencies: ["motion"],
   },
+  "faq-pro": {
+    title: "FAQ Pro",
+    description:
+      "Searchable FAQ accordion with rounded cards, animated panels, automatic match expansion, and inline query highlighting. Built with Motion and Lucide.",
+    dependencies: ["motion", "lucide-react"],
+  },
   popover: {
     title: "Popover",
     description:

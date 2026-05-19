@@ -274,6 +274,21 @@
       ]
     },
     {
+      "name": "faq-pro",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": ["motion", "lucide-react"],
+      "devDependencies": [],
+      "title": "FAQ Pro",
+      "description": "Searchable FAQ accordion with rounded cards, animated panels, automatic match expansion, and inline query highlighting. Built with Motion and Lucide.",
+      "files": [
+        {
+          "path": "faq-pro.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "file-upload",
       "type": "registry:ui",
       "registryDependencies": [],

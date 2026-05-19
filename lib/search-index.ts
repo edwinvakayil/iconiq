@@ -81,6 +81,8 @@ const componentSummaries: Record<string, string> = {
     "Horizontal icon chips that expand on hover to reveal short labels with spring motion.",
   "/special-one/origin-button":
     "Rounded action button with a pointer-origin fill that spreads on hover and inverts the label.",
+  "/special-one/faq-pro":
+    "Searchable FAQ accordion that filters items, auto-expands matches, and highlights query text.",
   "/foundation/typography":
     "Single typography primitive for headings, labels, paragraphs, subheadings, and documentation copy.",
   "/texts/dia-text":

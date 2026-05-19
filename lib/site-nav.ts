@@ -15,6 +15,7 @@ export const SITE_SECTIONS = [
     children: [
       { label: "Icon Bar", href: "/special-one/icon-bar" },
       { label: "Origin Button", href: "/special-one/origin-button" },
+      { label: "FAQ Pro", href: "/special-one/faq-pro" },
     ],
   },
   {

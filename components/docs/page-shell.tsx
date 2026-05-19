@@ -81,7 +81,11 @@ const REDUCED_MOTION_COMPONENTS = new Set([
 ]);
 
 /** Special One and other docs pages that should not render the ReducedMotion section. */
-const REDUCED_MOTION_DOCS_EXCLUDED = new Set(["icon-bar", "origin-button"]);
+const REDUCED_MOTION_DOCS_EXCLUDED = new Set([
+  "icon-bar",
+  "origin-button",
+  "faq-pro",
+]);
 
 const REDUCED_MOTION_DETAIL: DetailItem = {
   id: "reduced-motion-prop",
