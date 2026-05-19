@@ -3,11 +3,6 @@
 import { motion } from "motion/react";
 import * as React from "react";
 
-import {
-  ReducedMotionConfig,
-  type ReducedMotionProp,
-  useResolvedReducedMotion,
-} from "@/lib/reduced-motion";
 import { cn } from "@/lib/utils";
 
 const FILL_DURATION = 0.5;
@@ -67,11 +62,10 @@ function hasTextContent(node: React.ReactNode): boolean {
   return false;
 }
 
-type OriginButtonProps = ReducedMotionProp &
-  ButtonHTMLAttributesForMotion & {
-    children?: React.ReactNode;
-    loading?: boolean;
-  };
+type OriginButtonProps = ButtonHTMLAttributesForMotion & {
+  children?: React.ReactNode;
+  loading?: boolean;
+};
 
 const OriginButton = React.forwardRef<HTMLButtonElement, OriginButtonProps>(
   (
@@ -91,15 +85,12 @@ const OriginButton = React.forwardRef<HTMLButtonElement, OriginButtonProps>(
       onPointerEnter,
       onPointerLeave,
       onPointerUp,
-      reducedMotion,
       ...props
     },
     ref
   ) => {
     const buttonRef = React.useRef<HTMLButtonElement>(null);
-    const resolvedReducedMotion = useResolvedReducedMotion(reducedMotion);
     const isDisabled = Boolean(disabled || loading);
-    const canAnimate = !(isDisabled || resolvedReducedMotion);
     const [hovered, setHovered] = React.useState(false);
     const [isPressed, setIsPressed] = React.useState(false);
     const [origin, setOrigin] = React.useState({ x: 0, y: 0 });
@@ -177,9 +168,7 @@ const OriginButton = React.forwardRef<HTMLButtonElement, OriginButtonProps>(
       return () => observer.disconnect();
     }, [showFill, origin.x, origin.y]);
 
-    const fillTransition = resolvedReducedMotion
-      ? { duration: 0 }
-      : { duration: FILL_DURATION, ease: FILL_EASE };
+    const fillTransition = { duration: FILL_DURATION, ease: FILL_EASE };
 
     const setMergedRef = React.useCallback(
       (node: HTMLButtonElement | null) => {
@@ -190,120 +179,118 @@ const OriginButton = React.forwardRef<HTMLButtonElement, OriginButtonProps>(
     );
 
     return (
-      <ReducedMotionConfig reducedMotion={reducedMotion}>
-        <motion.button
-          {...props}
-          aria-busy={loading || undefined}
-          className={cn(
-            "relative inline-flex h-12 cursor-pointer touch-manipulation select-none items-center justify-center overflow-hidden rounded-xl px-8 font-medium text-[15px] tracking-[-0.02em]",
-            "border-[0.5px] border-border bg-card text-card-foreground",
-            "dark:bg-muted dark:text-foreground",
-            "transition-[color] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]",
-            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
-            "disabled:pointer-events-none disabled:opacity-50",
-            showFill && "text-background dark:text-neutral-950",
-            className
-          )}
-          data-pressed={isPressed ? "true" : "false"}
-          disabled={isDisabled}
-          onBlur={(event) => {
-            onBlur?.(event);
+      <motion.button
+        {...props}
+        aria-busy={loading || undefined}
+        className={cn(
+          "relative inline-flex h-12 cursor-pointer touch-manipulation select-none items-center justify-center overflow-hidden rounded-xl px-8 font-medium text-[15px] tracking-[-0.02em]",
+          "border-[0.5px] border-border bg-card text-card-foreground",
+          "dark:bg-muted dark:text-foreground",
+          "transition-[color] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]",
+          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+          "disabled:pointer-events-none disabled:opacity-50",
+          showFill && "text-background dark:text-neutral-950",
+          className
+        )}
+        data-pressed={isPressed ? "true" : "false"}
+        disabled={isDisabled}
+        onBlur={(event) => {
+          onBlur?.(event);
+          setIsPressed(false);
+          if (!event.defaultPrevented) {
+            setHovered(false);
+          }
+        }}
+        onClick={onClick}
+        onFocus={(event) => {
+          onFocus?.(event);
+          if (isDisabled || event.defaultPrevented) return;
+          if (event.currentTarget.matches(":focus-visible")) {
+            updateOriginFromCenter();
+            setHovered(true);
+          }
+        }}
+        onKeyDown={(event) => {
+          onKeyDown?.(event);
+
+          if (
+            event.defaultPrevented ||
+            isDisabled ||
+            event.repeat ||
+            (event.key !== " " && event.key !== "Enter")
+          ) {
+            return;
+          }
+
+          if (event.key === " ") {
+            event.preventDefault();
+          }
+
+          updateOriginFromCenter();
+          setIsPressed(true);
+          setHovered(true);
+        }}
+        onKeyUp={(event) => {
+          onKeyUp?.(event);
+
+          if (event.key === " " || event.key === "Enter") {
             setIsPressed(false);
-            if (!event.defaultPrevented) {
+            if (!event.currentTarget.matches(":focus-visible")) {
               setHovered(false);
             }
-          }}
-          onClick={onClick}
-          onFocus={(event) => {
-            onFocus?.(event);
-            if (isDisabled || event.defaultPrevented) return;
-            if (event.currentTarget.matches(":focus-visible")) {
-              updateOriginFromCenter();
-              setHovered(true);
-            }
-          }}
-          onKeyDown={(event) => {
-            onKeyDown?.(event);
+          }
+        }}
+        onPointerCancel={(event) => {
+          onPointerCancel?.(event);
+          setIsPressed(false);
+        }}
+        onPointerDown={(event) => {
+          onPointerDown?.(event);
 
-            if (
-              event.defaultPrevented ||
-              isDisabled ||
-              event.repeat ||
-              (event.key !== " " && event.key !== "Enter")
-            ) {
-              return;
-            }
+          if (event.defaultPrevented || isDisabled || event.button !== 0) {
+            return;
+          }
 
-            if (event.key === " ") {
-              event.preventDefault();
-            }
-
-            updateOriginFromCenter();
-            setIsPressed(true);
-            setHovered(true);
+          updateOriginFromPointer(event);
+          setIsPressed(true);
+          setHovered(true);
+        }}
+        onPointerEnter={(event) => {
+          onPointerEnter?.(event);
+          if (isDisabled || event.defaultPrevented) return;
+          updateOriginFromPointer(event);
+          setHovered(true);
+        }}
+        onPointerLeave={(event) => {
+          onPointerLeave?.(event);
+          setHovered(false);
+          setIsPressed(false);
+        }}
+        onPointerUp={(event) => {
+          onPointerUp?.(event);
+          setIsPressed(false);
+        }}
+        ref={setMergedRef}
+        type={type}
+        whileTap={isDisabled ? undefined : { scale: 0.985 }}
+      >
+        <motion.span
+          animate={{ scale: showFill && coverSize > 0 ? 1 : 0 }}
+          aria-hidden
+          className="pointer-events-none absolute -translate-x-1/2 -translate-y-1/2 rounded-full bg-foreground dark:bg-neutral-50"
+          initial={false}
+          style={{
+            height: coverSize,
+            left: origin.x,
+            top: origin.y,
+            width: coverSize,
           }}
-          onKeyUp={(event) => {
-            onKeyUp?.(event);
-
-            if (event.key === " " || event.key === "Enter") {
-              setIsPressed(false);
-              if (!event.currentTarget.matches(":focus-visible")) {
-                setHovered(false);
-              }
-            }
-          }}
-          onPointerCancel={(event) => {
-            onPointerCancel?.(event);
-            setIsPressed(false);
-          }}
-          onPointerDown={(event) => {
-            onPointerDown?.(event);
-
-            if (event.defaultPrevented || isDisabled || event.button !== 0) {
-              return;
-            }
-
-            updateOriginFromPointer(event);
-            setIsPressed(true);
-            setHovered(true);
-          }}
-          onPointerEnter={(event) => {
-            onPointerEnter?.(event);
-            if (isDisabled || event.defaultPrevented) return;
-            updateOriginFromPointer(event);
-            setHovered(true);
-          }}
-          onPointerLeave={(event) => {
-            onPointerLeave?.(event);
-            setHovered(false);
-            setIsPressed(false);
-          }}
-          onPointerUp={(event) => {
-            onPointerUp?.(event);
-            setIsPressed(false);
-          }}
-          ref={setMergedRef}
-          type={type}
-          whileTap={canAnimate ? { scale: 0.985 } : undefined}
-        >
-          <motion.span
-            animate={{ scale: showFill && coverSize > 0 ? 1 : 0 }}
-            aria-hidden
-            className="pointer-events-none absolute -translate-x-1/2 -translate-y-1/2 rounded-full bg-foreground dark:bg-neutral-50"
-            initial={false}
-            style={{
-              height: coverSize,
-              left: origin.x,
-              top: origin.y,
-              width: coverSize,
-            }}
-            transition={fillTransition}
-          />
-          <span className="relative z-10 inline-flex items-center justify-center gap-2">
-            {children}
-          </span>
-        </motion.button>
-      </ReducedMotionConfig>
+          transition={fillTransition}
+        />
+        <span className="relative z-10 inline-flex items-center justify-center gap-2">
+          {children}
+        </span>
+      </motion.button>
     );
   }
 );

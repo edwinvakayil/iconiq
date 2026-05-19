@@ -324,11 +324,6 @@
         {
           "path": "icon-bar.tsx",
           "type": "registry:ui"
-        },
-        {
-          "path": "reduced-motion.tsx",
-          "target": "lib/reduced-motion.tsx",
-          "type": "registry:lib"
         }
       ]
     },
@@ -364,11 +359,6 @@
         {
           "path": "origin-button.tsx",
           "type": "registry:ui"
-        },
-        {
-          "path": "reduced-motion.tsx",
-          "target": "lib/reduced-motion.tsx",
-          "type": "registry:lib"
         }
       ]
     },

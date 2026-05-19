@@ -4,11 +4,6 @@ import type { LucideIcon } from "lucide-react";
 import { motion } from "motion/react";
 import * as React from "react";
 
-import {
-  ReducedMotionConfig,
-  type ReducedMotionProp,
-  useResolvedReducedMotion,
-} from "@/lib/reduced-motion";
 import { cn } from "@/lib/utils";
 
 const ICON_CELL_PX = 36;
@@ -33,7 +28,7 @@ function useIconBarContext(componentName: string) {
   return context;
 }
 
-type IconBarProps = ReducedMotionProp & {
+type IconBarProps = {
   className?: string;
   children?: React.ReactNode;
   defaultValue?: string | null;
@@ -46,7 +41,6 @@ function IconBar({
   children,
   defaultValue,
   onValueChange,
-  reducedMotion,
   value: valueProp,
 }: IconBarProps) {
   const [uncontrolledValue, setUncontrolledValue] = React.useState<
@@ -73,30 +67,27 @@ function IconBar({
   );
 
   return (
-    <ReducedMotionConfig reducedMotion={reducedMotion}>
-      <IconBarContext.Provider value={contextValue}>
-        <motion.div
-          aria-orientation="horizontal"
-          className={cn("flex flex-wrap items-center gap-2", className)}
-          role="toolbar"
-        >
-          {children}
-        </motion.div>
-      </IconBarContext.Provider>
-    </ReducedMotionConfig>
+    <IconBarContext.Provider value={contextValue}>
+      <div
+        aria-orientation="horizontal"
+        className={cn("flex flex-wrap items-center gap-2", className)}
+        role="toolbar"
+      >
+        {children}
+      </div>
+    </IconBarContext.Provider>
   );
 }
 IconBar.displayName = "IconBar";
 
-type IconBarItemProps = ReducedMotionProp &
-  Omit<
-    React.ComponentPropsWithoutRef<typeof motion.button>,
-    "children" | "aria-expanded" | "aria-label" | "aria-pressed"
-  > & {
-    icon: LucideIcon;
-    label: string;
-    value?: string;
-  };
+type IconBarItemProps = Omit<
+  React.ComponentPropsWithoutRef<typeof motion.button>,
+  "children" | "aria-expanded" | "aria-label" | "aria-pressed"
+> & {
+  icon: LucideIcon;
+  label: string;
+  value?: string;
+};
 
 const IconBarItem = React.forwardRef<HTMLButtonElement, IconBarItemProps>(
   (
@@ -108,7 +99,6 @@ const IconBarItem = React.forwardRef<HTMLButtonElement, IconBarItemProps>(
       onBlur: onBlurProp,
       onClick,
       onFocus: onFocusProp,
-      reducedMotion,
       value,
       ...buttonProps
     },
@@ -120,7 +110,6 @@ const IconBarItem = React.forwardRef<HTMLButtonElement, IconBarItemProps>(
     const [hoverPreview, setHoverPreview] = React.useState(false);
     const measureRef = React.useRef<HTMLSpanElement>(null);
     const [labelWidth, setLabelWidth] = React.useState(0);
-    const resolvedReducedMotion = useResolvedReducedMotion(reducedMotion);
 
     const isSelected = !disabled && selectedValue === itemValue;
     const expanded = !disabled && (isSelected || hoverPreview);
@@ -146,12 +135,10 @@ const IconBarItem = React.forwardRef<HTMLButtonElement, IconBarItemProps>(
       return () => observer.disconnect();
     }, []);
 
-    const widthTransition = resolvedReducedMotion
-      ? { duration: 0 }
-      : {
-          duration: expanded ? EXPAND_DURATION : COLLAPSE_DURATION,
-          ease: FLUID_EASE,
-        };
+    const widthTransition = {
+      duration: expanded ? EXPAND_DURATION : COLLAPSE_DURATION,
+      ease: FLUID_EASE,
+    };
 
     const showLabel = expanded && labelWidth > 0;
 
