@@ -4,6 +4,12 @@ run-name: >-
   ${{
     github.event_name == 'release' &&
     format('Release {0}', github.event.release.tag_name) ||
+    github.event_name == 'push' &&
+    format('{0} · {1}', github.workflow, github.event.head_commit.message) ||
+    github.event_name == 'pull_request' &&
+    format('{0} · PR #{1}: {2}', github.workflow, github.event.pull_request.number, github.event.pull_request.title) ||
+    github.event_name == 'workflow_dispatch' &&
+    format('{0} · manual ({1})', github.workflow, github.ref_name) ||
     format('{0} · {1}', github.workflow, github.ref_name)
   }}
 'on':
