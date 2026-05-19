@@ -123,6 +123,12 @@ const REGISTRY_UI_META: Record<
       "Inline hover card with hover-only timing delays, instant focus reveal, collision-aware Popover positioning, Slot-based custom triggers, and a spring-driven content panel.",
     dependencies: ["@radix-ui/react-popover", "@radix-ui/react-slot", "motion"],
   },
+  "icon-bar": {
+    title: "Icon Bar",
+    description:
+      "Row of compact icon chips that expand on hover or focus and stay open when selected. Built with Motion and Lucide.",
+    dependencies: ["motion", "lucide-react"],
+  },
   popover: {
     title: "Popover",
     description:

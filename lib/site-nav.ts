@@ -11,6 +11,10 @@ export const BASE_LINKS = [
 
 export const SITE_SECTIONS = [
   {
+    label: "Special One",
+    children: [{ label: "Icon Bar", href: "/special-one/icon-bar" }],
+  },
+  {
     label: "Components",
     children: [
       { label: "Accordion", href: "/components/accordion" },

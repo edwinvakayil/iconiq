@@ -77,6 +77,8 @@ const componentSummaries: Record<string, string> = {
     "Pressed-state toggle built on Radix with pointer-origin ripple, icon motion, larger hit targets, and text or icon-only formats.",
   "/components/tooltip":
     "Tooltip component for compact hover or focus explanations.",
+  "/special-one/icon-bar":
+    "Horizontal icon chips that expand on hover to reveal short labels with spring motion.",
   "/foundation/typography":
     "Single typography primitive for headings, labels, paragraphs, subheadings, and documentation copy.",
   "/texts/dia-text":

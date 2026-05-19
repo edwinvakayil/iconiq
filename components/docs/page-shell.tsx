@@ -80,6 +80,9 @@ const REDUCED_MOTION_COMPONENTS = new Set([
   "tooltip",
 ]);
 
+/** Special One and other docs pages that should not render the ReducedMotion section. */
+const REDUCED_MOTION_DOCS_EXCLUDED = new Set(["icon-bar"]);
+
 const REDUCED_MOTION_DETAIL: DetailItem = {
   id: "reduced-motion-prop",
   title: "ReducedMotion",
@@ -159,7 +162,10 @@ function injectReducedMotionIntoCode(usageCode: string, componentName: string) {
 }
 
 function supportsReducedMotionDocs(componentName: string) {
-  return REDUCED_MOTION_COMPONENTS.has(componentName);
+  return (
+    REDUCED_MOTION_COMPONENTS.has(componentName) &&
+    !REDUCED_MOTION_DOCS_EXCLUDED.has(componentName)
+  );
 }
 
 function withReducedMotionDetail(details: DetailItem[]) {
@@ -271,7 +277,13 @@ function DocsBreadcrumbs({
   const visibleItems = items;
   const usesEditorialBreadcrumb =
     visibleItems.length >= 2 &&
-    ["components", "foundation", "getting started", "texts"].includes(
+    [
+      "components",
+      "foundation",
+      "getting started",
+      "texts",
+      "special one",
+    ].includes(
       visibleItems
         .find((item) => item.label.toLowerCase() !== "docs")
         ?.label.toLowerCase() ?? ""

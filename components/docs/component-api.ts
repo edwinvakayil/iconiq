@@ -2357,6 +2357,97 @@ const selectionToolbarApiDetails: DetailItem[] = [
   registryItem("selectiontoolbar.json", ["lucide-react"]),
 ];
 
+const iconBarApiDetails: DetailItem[] = [
+  {
+    id: "icon-bar",
+    title: "IconBar",
+    summary:
+      "Horizontal toolbar of compact icon chips. Hover or focus previews labels; clicking selects one item and keeps it expanded.",
+    fields: [
+      field({
+        name: "value",
+        type: "string | null",
+        description:
+          "Controlled selected item value. Pair with onValueChange for fully controlled selection.",
+      }),
+      field({
+        name: "defaultValue",
+        type: "string | null",
+        description:
+          "Optional initial selected item when uncontrolled. Omit to start with every chip collapsed until the user clicks one.",
+      }),
+      field({
+        name: "onValueChange",
+        type: "(value: string | null) => void",
+        description:
+          "Called when selection changes. Receives null when the active chip is clicked again to deselect.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description:
+          "Optional class names applied to the outer flex container.",
+      }),
+      field({
+        name: "children",
+        type: "React.ReactNode",
+        description:
+          "One or more IconBarItem elements rendered in a single row with consistent spacing.",
+      }),
+    ],
+  },
+  {
+    id: "icon-bar-item",
+    title: "IconBarItem",
+    summary:
+      "Individual pill chip with a Lucide icon and animated label reveal on hover, focus, or selection.",
+    fields: [
+      field({
+        name: "icon",
+        type: "LucideIcon",
+        required: true,
+        description:
+          "Lucide icon component rendered inside the fixed 36px icon well.",
+      }),
+      field({
+        name: "label",
+        type: "string",
+        required: true,
+        description:
+          "Short text revealed when the chip expands. Keep labels concise so the width animation stays smooth.",
+      }),
+      field({
+        name: "value",
+        type: "string",
+        description:
+          "Selection identity for this chip. Defaults to label when omitted.",
+      }),
+      field({
+        name: "onClick",
+        type: "(event: React.MouseEvent<HTMLButtonElement>) => void",
+        description: "Optional click handler fired after selection updates.",
+      }),
+      field({
+        name: "disabled",
+        type: "boolean",
+        defaultValue: "false",
+        description: "Disables interaction, hover preview, and selection.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description: "Optional class names merged onto the chip button.",
+      }),
+    ],
+    notes: [
+      "Only one item stays expanded at a time. Clicking a chip selects it; clicking another moves selection; clicking the active chip again collapses it.",
+      "Hover and keyboard focus preview labels on non-selected chips. Give each item a unique value when labels repeat.",
+      "In controlled mode, update value from onValueChange (including null on deselect) for the UI to stay in sync.",
+    ],
+  },
+  registryItem("icon-bar.json", ["motion", "lucide-react"]),
+];
+
 const sliderApiDetails: DetailItem[] = [
   {
     id: "slider",
@@ -3453,6 +3544,7 @@ export {
   dropdownApiDetails,
   fileUploadApiDetails,
   hoverCardApiDetails,
+  iconBarApiDetails,
   popoverApiDetails,
   inputGroupApiDetails,
   accordionApiDetails,

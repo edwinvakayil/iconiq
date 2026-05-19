@@ -313,6 +313,26 @@
       ]
     },
     {
+      "name": "icon-bar",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": ["motion", "lucide-react"],
+      "devDependencies": [],
+      "title": "Icon Bar",
+      "description": "Row of compact icon chips that expand on hover or focus and stay open when selected. Built with Motion and Lucide.",
+      "files": [
+        {
+          "path": "icon-bar.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "reduced-motion.tsx",
+          "target": "lib/reduced-motion.tsx",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
       "name": "input-group",
       "type": "registry:ui",
       "registryDependencies": [],

@@ -11,6 +11,7 @@ const DOCS_PREFIXES = [
   "/components",
   "/foundation",
   "/texts",
+  "/special-one",
 ];
 
 export function DocsSidebar() {
