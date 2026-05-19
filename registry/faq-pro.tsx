@@ -217,7 +217,9 @@ function FaqPro({
   }, []);
 
   return (
-    <div className={cn("flex w-full max-w-2xl flex-col gap-3", className)}>
+    <div
+      className={cn("mx-auto flex w-full max-w-2xl flex-col gap-3", className)}
+    >
       <div className="relative">
         <input
           aria-label={searchPlaceholder}

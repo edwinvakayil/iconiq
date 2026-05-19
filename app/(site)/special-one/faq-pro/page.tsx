@@ -25,21 +25,28 @@ const demoItems: FaqProItem[] = [
   },
 ];
 
+function formatItemsForUsageCode(items: FaqProItem[]) {
+  return items
+    .map(
+      (item) => `  {
+    id: "${item.id}",
+    question: ${JSON.stringify(item.question)},
+    answer: ${JSON.stringify(item.answer)},
+  }`
+    )
+    .join(",\n");
+}
+
 const usageCode = `"use client";
 
 import { FaqPro, type FaqProItem } from "@/components/ui/faq-pro";
 
 const items: FaqProItem[] = [
-  {
-    id: "what-is-iconiq",
-    question: "What is Iconiq?",
-    answer:
-      "Iconiq is an open-source library of motion-powered React components built around the shadcn registry workflow.",
-  },
+${formatItemsForUsageCode(demoItems)}
 ];
 
 export function FaqProPreview() {
-  return <FaqPro defaultOpenFirst items={items} />;
+  return <FaqPro className="w-full" defaultOpenFirst items={items} />;
 }`;
 
 function FaqProPreview() {

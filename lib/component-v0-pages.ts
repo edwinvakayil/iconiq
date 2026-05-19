@@ -10,6 +10,7 @@ const PAGE_FUNCTION_BODY =
 const TOP_LEVEL_DECLARATION = /^(?:const|let)\s/;
 const USES_REACT_HOOKS = /\buse(?:Effect|Memo|Callback|LayoutEffect)\s*\(/;
 const JSX_RETURN_PATTERN = /return\s*\(\s*(?:\n\s*)?</g;
+const TRAILING_SEMICOLON = /;\s*$/;
 
 function splitModulePreamble(body: string): {
   preamble: string;
@@ -182,7 +183,16 @@ function wrapJsxReturnInCanvas(fnBody: string, skipCanvas: boolean): string {
   const openParen = findLastJsxReturnOpenParen(fnBody);
 
   if (openParen === -1) {
-    return fnBody;
+    const { hookBody, returnInner } = extractBareJsxReturn(fnBody);
+
+    if (!returnInner) {
+      return fnBody;
+    }
+
+    const wrappedInner = `${V0_CANVAS_SHELL}        ${returnInner}\n${V0_CANVAS_SHELL_CLOSE}`;
+    const returnBlock = `  return (\n${wrappedInner}\n  );`;
+
+    return hookBody ? `${hookBody}\n\n${returnBlock}` : returnBlock;
   }
 
   const closeIndex = balanceParentheses(fnBody, openParen);
@@ -198,6 +208,29 @@ ${V0_CANVAS_SHELL}        ${inner}
 ${V0_CANVAS_SHELL_CLOSE}${fnBody.slice(closeIndex)}`;
 }
 
+function extractBareJsxReturn(fnBody: string): {
+  hookBody: string;
+  returnInner: string | null;
+} {
+  const trimmed = fnBody.trim();
+  const returnIndex = trimmed.lastIndexOf("return");
+
+  if (returnIndex === -1) {
+    return { hookBody: trimmed, returnInner: null };
+  }
+
+  const afterReturn = trimmed.slice(returnIndex + "return".length).trimStart();
+
+  if (!afterReturn.startsWith("<")) {
+    return { hookBody: trimmed, returnInner: null };
+  }
+
+  return {
+    hookBody: trimmed.slice(0, returnIndex).trim(),
+    returnInner: afterReturn.replace(TRAILING_SEMICOLON, "").trim(),
+  };
+}
+
 function extractMainReturn(fnBody: string): {
   hookBody: string;
   returnInner: string | null;
@@ -205,7 +238,7 @@ function extractMainReturn(fnBody: string): {
   const openParen = findLastJsxReturnOpenParen(fnBody);
 
   if (openParen === -1) {
-    return { hookBody: fnBody.trim(), returnInner: null };
+    return extractBareJsxReturn(fnBody);
   }
 
   const returnStart = fnBody.lastIndexOf("return", openParen);
