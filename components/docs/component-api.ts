@@ -2448,6 +2448,78 @@ const iconBarApiDetails: DetailItem[] = [
   registryItem("icon-bar.json", ["motion", "lucide-react"]),
 ];
 
+const originButtonApiDetails: DetailItem[] = [
+  {
+    id: "origin-button",
+    title: "OriginButton",
+    summary:
+      "Ref-forwarding motion button with a pointer-origin fill, press feedback, and native form support. Hover, focus-visible, pointer-down, and keyboard activation spread the fill from the entry point.",
+    fields: [
+      field({
+        name: "children",
+        type: "React.ReactNode",
+        description:
+          "Button label or custom content rendered above the animated fill layer.",
+      }),
+      field({
+        name: "type",
+        type: '"button" | "submit" | "reset"',
+        defaultValue: "button",
+        description:
+          "Native button type. Defaults to button so the control does not submit a form unless you opt in.",
+      }),
+      field({
+        name: "loading",
+        type: "boolean",
+        defaultValue: "false",
+        description:
+          "Sets aria-busy and disables interaction while a form or async action is in progress.",
+      }),
+      field({
+        name: "disabled",
+        type: "boolean",
+        defaultValue: "false",
+        description:
+          "Native disabled state. Also suppresses fill, press, and ripple-like feedback.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description:
+          "Optional class names merged onto the root button element.",
+      }),
+      field({
+        name: "onClick",
+        type: "React.MouseEventHandler<HTMLButtonElement>",
+        description: "Native click handler forwarded to the underlying button.",
+      }),
+      field({
+        name: "name",
+        type: "string",
+        description: "Form field name submitted with the parent form.",
+      }),
+      field({
+        name: "value",
+        type: "string",
+        description: "Optional submitted value when type is submit.",
+      }),
+      field({
+        name: "form",
+        type: "string",
+        description: "Associates the button with a form element by id.",
+      }),
+    ],
+    notes: [
+      "Standard button attributes such as aria-*, autoFocus, formAction, formEncType, formMethod, formNoValidate, formTarget, and data-* are forwarded to the underlying motion.button.",
+      "Pointer-down sets the fill origin at the click point and enters a pressed state; pointer-up, pointer-leave, pointer-cancel, and blur clear it.",
+      "Space and Enter mirror the pressed and fill state for keyboard users. Space calls preventDefault so the page does not scroll while the button is focused.",
+      "Uses card/muted surfaces in dark mode, a foreground fill in light mode, and a neutral-50 fill in dark mode so resting and filled states stay legible.",
+      "Icon-only usage should include aria-label or aria-labelledby for an accessible name.",
+    ],
+  },
+  registryItem("origin-button.json", ["motion"]),
+];
+
 const sliderApiDetails: DetailItem[] = [
   {
     id: "slider",
@@ -3545,6 +3617,7 @@ export {
   fileUploadApiDetails,
   hoverCardApiDetails,
   iconBarApiDetails,
+  originButtonApiDetails,
   popoverApiDetails,
   inputGroupApiDetails,
   accordionApiDetails,

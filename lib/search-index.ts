@@ -79,6 +79,8 @@ const componentSummaries: Record<string, string> = {
     "Tooltip component for compact hover or focus explanations.",
   "/special-one/icon-bar":
     "Horizontal icon chips that expand on hover to reveal short labels with spring motion.",
+  "/special-one/origin-button":
+    "Rounded action button with a pointer-origin fill that spreads on hover and inverts the label.",
   "/foundation/typography":
     "Single typography primitive for headings, labels, paragraphs, subheadings, and documentation copy.",
   "/texts/dia-text":

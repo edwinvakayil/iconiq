@@ -129,6 +129,12 @@ const REGISTRY_UI_META: Record<
       "Row of compact icon chips that expand on hover or focus and stay open when selected. Built with Motion and Lucide.",
     dependencies: ["motion", "lucide-react"],
   },
+  "origin-button": {
+    title: "Origin Button",
+    description:
+      "Rounded action button with a pointer-origin foreground fill that spreads on hover or focus-visible. Built with Motion.",
+    dependencies: ["motion"],
+  },
   popover: {
     title: "Popover",
     description:
