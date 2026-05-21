@@ -193,7 +193,7 @@ export default function AccordionPage() {
         { label: "Accordion" },
       ]}
       componentName="accordion"
-      description="Animated accordion with composable items, spring reveal, and theme-aware disclosure chrome. Designed for FAQs, settings, and structured help content."
+      description="Structured disclosure for FAQs, settings, and help content."
       details={componentDetailsItems}
       extraSections={[
         {

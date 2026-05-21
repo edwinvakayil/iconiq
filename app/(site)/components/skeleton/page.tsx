@@ -58,7 +58,7 @@ export default function SkeletonPage() {
         { label: "Skeleton" },
       ]}
       componentName="skeleton"
-      description="Shimmer loading placeholder with configurable corner radius, optional animation, and a lightweight API for building calmer loading states."
+      description="Loading placeholder for text, media, and layout scaffolding."
       details={skeletonApiDetails}
       preview={<SkeletonPreview />}
       previewCode={skeletonPreviewCode}

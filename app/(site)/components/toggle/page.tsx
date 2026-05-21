@@ -60,7 +60,7 @@ export default function TogglePage() {
         { label: "Toggle" },
       ]}
       componentName="toggle"
-      description="Pressed-state toggle built on Radix with pointer-origin ripple feedback, icon motion, and larger hit targets for both text and icon-only controls."
+      description="Pressed-state control for single on or off actions."
       details={toggleApiDetails}
       preview={<TogglePreview />}
       railNotes={[

@@ -48,7 +48,7 @@ export default function SwitchPage() {
         { label: "Switch" },
       ]}
       componentName="switch"
-      description="Animated on or off switch with a spring-driven thumb, pressure-like press feedback, and an optional inline label for settings rows."
+      description="On or off control for settings and preference rows."
       details={switchApiDetails}
       preview={<SwitchPreview />}
       title="Switch"

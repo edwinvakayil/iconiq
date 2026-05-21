@@ -117,7 +117,7 @@ export default function SelectionToolbarPage() {
         { label: "Selection Toolbar" },
       ]}
       componentName="selectiontoolbar"
-      description="Floating inline text formatter for contentEditable surfaces. It tracks the current text selection, anchors itself above the selected range, and exposes quick bold, italic, and underline actions."
+      description="Inline text toolbar for quick formatting actions."
       details={selectionToolbarApiDetails}
       preview={<SelectionToolbarPreview />}
       previewClassName="min-h-[24rem] overflow-visible"

@@ -196,7 +196,7 @@ export default function TooltipPage() {
         { label: "Tooltip" },
       ]}
       componentName="tooltip"
-      description="Contextual label with soft motion and a compact callout surface. Ideal for icon-only controls, dense toolbars, and short hints."
+      description="Compact hint surface for icons, toolbars, and short labels."
       details={componentDetailsItems}
       preview={<TooltipPreview />}
       title="Tooltip"

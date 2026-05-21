@@ -362,7 +362,7 @@ export default function TablePage() {
         { label: "Table" },
       ]}
       componentName="table"
-      description="Composable table primitives with animated sort helpers, layout-preserving rows, and the same minimal data-grid styling as the original demo."
+      description="Composable table primitives for structured data and sortable views."
       details={tableApiDetails}
       preview={<TablePreview />}
       previewDescription="Search and sort rows in the live playground while the installed component stays reusable and data-agnostic."

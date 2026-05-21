@@ -114,7 +114,7 @@ export default function InputGroupPage() {
         { label: "Input Group" },
       ]}
       componentName="input-group"
-      description="Floating-label form fields with optional prefix and suffix actions, accessible inline errors, and a companion wrapper for stacked input sets."
+      description="Form fields with labels, support text, and inline actions."
       details={inputGroupApiDetails}
       preview={<InputGroupPreview />}
       previewDescription="Use the grouped fields to inspect the floating label motion, focus underline, destructive state, error reveal, and suffix-button behavior in one compact form."

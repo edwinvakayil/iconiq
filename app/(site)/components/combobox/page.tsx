@@ -98,7 +98,7 @@ export default function ComboboxPage() {
         { label: "Combobox" },
       ]}
       componentName="combobox"
-      description="Searchable single-select input with inline filtering, arrow-key navigation, and an animated dropdown that stays visually attached to the field."
+      description="Searchable single-select field for quick option lookup."
       details={comboboxApiDetails}
       preview={<ComboboxPreview />}
       previewDescription="Type to filter the list, move with the arrow keys, and press Enter to commit a selection."

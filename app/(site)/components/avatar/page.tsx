@@ -153,7 +153,7 @@ export default function AvatarPage() {
         { label: "Avatar" },
       ]}
       componentName="avatar"
-      description="Compact circular avatar with immediate fallback initials, quiet image motion, and a fixed 44 x 44 frame."
+      description="Compact avatars with initials fallback and image support."
       details={componentDetailsItems}
       detailsDescription="Expand each row for prop behavior, motion behavior, and the implementation details that affect usage."
       preview={

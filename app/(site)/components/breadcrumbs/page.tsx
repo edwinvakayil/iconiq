@@ -118,7 +118,7 @@ export default function BreadcrumbsPage() {
         { label: "Breadcrumbs" },
       ]}
       componentName="breadcrumbs"
-      description="Breadcrumb trail with subtle easing, stronger focus states, and a calmer current-page treatment. Built with Motion and tuned to the theme tokens that drive the rest of the library."
+      description="Clear path navigation for nested pages and flows."
       details={componentDetailsItems}
       detailsDescription="Each item expands into the segment contract, current-state behavior, and the motion details that affect usage."
       preview={

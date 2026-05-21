@@ -170,7 +170,7 @@ export default function ButtonGroupPage() {
         { label: "Button Group" },
       ]}
       componentName="button-group"
-      description="Compact button rows for adjacent actions, with size controls, optional dividers, and quieter toolbar variants."
+      description="Grouped controls for adjacent actions and toolbar layouts."
       details={buttonGroupApiDetails}
       preview={<ButtonGroupPreview />}
       previewDescription="Compare a more defined divided row against a quieter toolbar-style variant with a smoother traveling hover treatment."

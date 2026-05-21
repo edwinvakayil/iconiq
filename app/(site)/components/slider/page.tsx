@@ -156,7 +156,7 @@ export default function SliderPage() {
         { label: "Slider" },
       ]}
       componentName="slider"
-      description="Horizontal range input with springy thumb motion and subtle track feedback. Great for volume, intensity, and any single numeric range."
+      description="Range input for volume, intensity, and numeric adjustment."
       details={componentDetailsItems}
       preview={
         <div className="flex min-h-[320px] items-center justify-center">

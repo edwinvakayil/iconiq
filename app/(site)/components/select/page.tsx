@@ -134,7 +134,7 @@ export default function SelectPage() {
         { label: "Select" },
       ]}
       componentName="select"
-      description="Animated single-select dropdown with staggered options, chevron rotation, and a check on the active row. Built to feel quick without becoming flashy."
+      description="Single-select field for compact option picking."
       details={componentDetailsItems}
       preview={
         <div className="flex min-h-[320px] items-center justify-center">

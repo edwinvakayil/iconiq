@@ -109,7 +109,7 @@ export default function ButtonPage() {
         { label: "Button" },
       ]}
       componentName="button"
-      description="CVA variants with spring hover and press feedback, larger default hit targets, and optional intrinsic width animation for changing labels."
+      description="Action buttons with clear variants, sizes, and feedback."
       details={componentDetailsItems}
       preview={
         <div className="flex min-h-[280px] items-center justify-center px-4 py-2">

@@ -50,7 +50,7 @@ export default function CalendarPage() {
         { label: "Calendar" },
       ]}
       componentName="calendar"
-      description="Compact calendar card with animated month transitions, inline day selection, and a built-in selected-date summary."
+      description="Compact date picking for month browsing and day selection."
       details={calendarApiDetails}
       preview={<CalendarPreview />}
       previewDescription="Move between months, choose a day, and test the controlled selected/onSelect API while keeping the same card visuals and transitions."

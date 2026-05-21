@@ -170,7 +170,7 @@ export default function DrawerPage() {
         { label: "Drawer" },
       ]}
       componentName="drawer"
-      description="Controlled overlay drawer with faster motion, focus-trapped dialog behavior, safe-area-aware mobile ergonomics, and an optional sticky footer."
+      description="Layered panel for side tasks, reviews, and mobile flows."
       details={drawerApiDetails}
       preview={<DrawerPreview />}
       previewDescription="Open the panel to test the controlled API, focus handling, faster open timing, and the optional sticky action footer."

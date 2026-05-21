@@ -204,7 +204,7 @@ export default function DialogDocsPage() {
         { label: "Dialog" },
       ]}
       componentName="dialog"
-      description="Modal surface with Motion transitions, Radix-backed accessibility, and composable header and footer slots."
+      description="Modal surface for focused tasks and short decisions."
       details={componentDetailsItems}
       preview={<DialogPreview />}
       title="Dialog"

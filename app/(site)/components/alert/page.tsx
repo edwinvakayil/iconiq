@@ -127,7 +127,7 @@ export default function AlertPage() {
         { label: "Alert" },
       ]}
       componentName="alert"
-      description="Dismissible alerts with a forgiving close target, polite live announcements, paused auto-dismiss on interaction, and optional toast positioning."
+      description="Dismissible notices for inline feedback and toast updates."
       details={componentDetailsItems}
       preview={
         <div className="relative z-10 flex min-h-[300px] flex-col items-center justify-center pb-2">

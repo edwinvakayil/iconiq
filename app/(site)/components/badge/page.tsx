@@ -85,14 +85,14 @@ export default function BadgePage() {
         { label: "Badge" },
       ]}
       componentName="badge"
-      description="Preset-color badge with an animated default fill, a quieter dot variant, and compact size controls."
+      description="Compact status labels with default and dot variants."
       details={badgeApiDetails}
       detailsDescription="Props and visual behavior are grouped into expandable rows instead of a dense table."
       preview={<BadgePreview />}
       previewCode={badgePreviewCode}
       title="Badge"
       usageCode={usageCode}
-      usageDescription='Start with the animated default badge, switch to `variant="dot"` for a quieter status label, then tune size, color, and shimmer through the API panel.'
+      usageDescription='Start with the default badge, switch to `variant="dot"` for a quieter status label, then tune size, color, and shimmer through the API panel.'
     />
   );
 }

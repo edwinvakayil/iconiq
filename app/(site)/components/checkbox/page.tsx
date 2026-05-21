@@ -39,7 +39,7 @@ export default function CheckboxPage() {
         { label: "Checkbox" },
       ]}
       componentName="checkbox"
-      description="Animated checkbox with a spring-pressed box, line-drawn checkmark, and optional inline label. Designed for lightweight preferences, consent rows, and compact task lists."
+      description="Single checkbox for preferences, consent rows, and task lists."
       details={componentDetailsItems}
       preview={
         <div className="w-full max-w-sm">

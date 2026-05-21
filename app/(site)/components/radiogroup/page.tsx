@@ -146,7 +146,7 @@ export default function RadioGroupPage() {
         { label: "Radio Group" },
       ]}
       componentName="radiogroup"
-      description="Single-select list with a sliding highlight, spring radio control, and optional descriptions. Built to stay sharp in pricing tables, settings, and onboarding flows."
+      description="Single-choice rows for settings, pricing, and onboarding."
       details={componentDetailsItems}
       preview={
         <div className="flex min-h-[320px] items-center justify-center">

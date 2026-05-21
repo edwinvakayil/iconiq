@@ -187,7 +187,7 @@ export default function CheckboxGroupPage() {
         { label: "Checkbox Group" },
       ]}
       componentName="checkbox-group"
-      description="Multi-select rows with a bordered empty box when off and a lone animated tick when on. Motion keeps the state change tactile without overloading dense forms."
+      description="Multi-select rows for grouped preferences and plan choices."
       details={componentDetailsItems}
       preview={
         <div className="flex min-h-[320px] items-center justify-center">

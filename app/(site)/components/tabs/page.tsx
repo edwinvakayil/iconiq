@@ -20,7 +20,7 @@ const tabSections = [
     value: "activity",
   },
   {
-    body: "Attach decks, mockups, and implementation references while preserving a clear animated transition between each content block.",
+    body: "Attach decks, mockups, and implementation references while preserving a clear transition between each content block.",
     detail:
       "Longer panel content stretches the container with a spring instead of snapping, which makes the active view feel anchored even when each tab has a different amount of information.",
     heading: "Shared assets",
@@ -51,7 +51,7 @@ const tabSections = [
     value: "activity",
   },
   {
-    body: "Attach decks, mockups, and implementation references while preserving a clear animated transition between each content block.",
+    body: "Attach decks, mockups, and implementation references while preserving a clear transition between each content block.",
     detail:
       "Longer panel content stretches the container with a spring instead of snapping, which makes the active view feel anchored even when each tab has a different amount of information.",
     heading: "Shared assets",
@@ -128,7 +128,7 @@ export default function TabsPage() {
         { label: "Tabs" },
       ]}
       componentName="tabs"
-      description="Segmented tabs with a measured active underline, spring-smoothed panel sizing, and softened content transitions."
+      description="Segmented navigation for related content panels."
       details={tabsApiDetails}
       preview={<TabsPreview />}
       previewDescription="Switch between the three views or use the keyboard to feel the measured underline, manual activation flow, and fluid panel resize."

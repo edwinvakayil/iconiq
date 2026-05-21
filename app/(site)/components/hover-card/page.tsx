@@ -99,7 +99,7 @@ export default function HoverCardPage() {
         { label: "Hover Card" },
       ]}
       componentName="hover-card"
-      description="Inline hover card with hover-only timing delays, instant focus reveal, collision-aware Popover positioning, and a spring-driven content panel."
+      description="Inline detail panel for profiles, metadata, and quick context."
       details={hoverCardApiDetails}
       preview={<HoverCardPreview />}
       previewDescription="Hover or focus the trigger to test delayed pointer timing, instant keyboard reveal, and collision-aware positioning."

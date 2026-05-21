@@ -155,7 +155,7 @@ export default function SpinnerPage() {
         { label: "Spinner" },
       ]}
       componentName="spinner"
-      description="Lightweight loading states with a rotating ring or bouncing dots. Motion-driven, theme-aware, and easy to drop into inline or full-screen waits."
+      description="Loading indicators for inline waits and blocking states."
       details={componentDetailsItems}
       preview={<SpinnerPreview />}
       title="Spinner"

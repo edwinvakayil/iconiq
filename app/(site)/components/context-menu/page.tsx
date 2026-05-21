@@ -119,7 +119,7 @@ export default function ContextMenuPage() {
         { label: "Context Menu" },
       ]}
       componentName="context-menu"
-      description="Animated context menu that opens from a native right-click surface, handles viewport flipping, and supports per-item icons, shortcuts, and destructive actions."
+      description="Right-click menu for contextual actions and shortcuts."
       details={contextMenuApiDetails}
       preview={<ContextMenuPreview />}
       previewDescription="Right-click the surface to test viewport-aware placement, separators, shortcuts, and the internal highlighted-row state."

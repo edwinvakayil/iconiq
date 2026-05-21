@@ -164,7 +164,7 @@ export default function DropdownPage() {
         { label: "Dropdown" },
       ]}
       componentName="dropdown"
-      description="Composable dropdown primitives with a selectable value flow for persistent choices and an action-menu flow for immediate commands."
+      description="Composable menu for selections and immediate actions."
       details={dropdownApiDetails}
       preview={<DropdownPreview />}
       previewClassName="min-h-[22rem] overflow-visible"

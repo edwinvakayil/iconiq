@@ -31,7 +31,7 @@ export default function FileUploadPage() {
         { label: "File Upload" },
       ]}
       componentName="file-upload"
-      description="Drag-and-drop file uploader with click-to-browse fallback, queued file rows, image previews, and animated removal."
+      description="File upload surface with previews and queue states."
       details={fileUploadApiDetails}
       preview={<FileUploadPreview />}
       previewDescription="Drop files onto the surface, click to browse, then remove queued items to inspect the built-in preview and list behavior."

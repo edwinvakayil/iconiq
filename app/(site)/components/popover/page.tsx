@@ -118,10 +118,10 @@ export default function PopoverPage() {
         { label: "Popover" },
       ]}
       componentName="popover"
-      description="Popover built on Radix with portal-based positioning, side-aware motion, and smooth size changes while content updates."
+      description="Floating surface for compact context and secondary actions."
       details={popoverApiDetails}
       preview={<PopoverPreview />}
-      previewDescription="Open the surface to test the controlled root state, anchor positioning, and the size-aware animated content wrapper."
+      previewDescription="Open the surface to test the controlled root state, anchor positioning, and the size-aware content wrapper."
       title="Popover"
       usageCode={usageCode}
       usageDescription="Control open state from React when you need it, but let PopoverContent follow the root automatically unless you have a reason to override presence yourself."
