@@ -6,6 +6,7 @@ import {
   useCallback,
   useEffect,
   useLayoutEffect,
+  useMemo,
   useRef,
   useState,
 } from "react";
@@ -36,8 +37,10 @@ export function ComponentDemoCanvas({
   code: string;
   v0PageCode?: string;
 }) {
-  const resolvedV0PageCode =
-    v0PageCode || getComponentV0Page(componentName, code);
+  const resolvedV0PageCode = useMemo(
+    () => v0PageCode || getComponentV0Page(componentName, code),
+    [code, componentName, v0PageCode]
+  );
 
   const [previewKey, setPreviewKey] = useState(0);
   const [activeTab, setActiveTab] = useState<DemoTabValue>("preview");
@@ -193,7 +196,7 @@ export function ComponentDemoCanvas({
       </TabsContent>
 
       <TabsContent className="mt-0 [&_pre]:my-0" value="code">
-        <DocsCodeSnippet code={code} />
+        {activeTab === "code" ? <DocsCodeSnippet code={code} /> : null}
       </TabsContent>
     </Tabs>
   );

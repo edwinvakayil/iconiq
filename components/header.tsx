@@ -24,6 +24,13 @@ type HeaderSection = {
 };
 
 const GITHUB_REPO_API = "https://api.github.com/repos/edwinvakayil/iconiq";
+const GITHUB_STARS_CACHE_KEY = "iconiq:github-stars";
+const GITHUB_STARS_CACHE_TTL_MS = 30 * 60 * 1000;
+
+type GitHubStarsCache = {
+  count: number;
+  fetchedAt: number;
+};
 
 const mobileNavSections: HeaderSection[] = [
   {
@@ -186,13 +193,45 @@ export function Header() {
   const isHome = pathname === "/";
 
   useEffect(() => {
+    try {
+      const cached = window.sessionStorage.getItem(GITHUB_STARS_CACHE_KEY);
+
+      if (cached) {
+        const parsed = JSON.parse(cached) as GitHubStarsCache;
+
+        if (
+          typeof parsed.count === "number" &&
+          Date.now() - parsed.fetchedAt < GITHUB_STARS_CACHE_TTL_MS
+        ) {
+          setStarCount(parsed.count);
+          return;
+        }
+      }
+    } catch {
+      // Ignore invalid cache payloads.
+    }
+
     fetch(GITHUB_REPO_API, {
       headers: { Accept: "application/vnd.github.v3+json" },
     })
       .then((res) => res.json())
       .then((data: { stargazers_count?: number }) => {
-        if (typeof data?.stargazers_count === "number") {
-          setStarCount(data.stargazers_count);
+        if (typeof data?.stargazers_count !== "number") {
+          return;
+        }
+
+        setStarCount(data.stargazers_count);
+
+        try {
+          window.sessionStorage.setItem(
+            GITHUB_STARS_CACHE_KEY,
+            JSON.stringify({
+              count: data.stargazers_count,
+              fetchedAt: Date.now(),
+            } satisfies GitHubStarsCache)
+          );
+        } catch {
+          // Ignore quota or privacy mode storage errors.
         }
       })
       .catch(() => undefined);

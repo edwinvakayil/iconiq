@@ -116,11 +116,11 @@ export function OnThisPage() {
   const toc = getTocForPath(pathname);
   const [activeSectionId, setActiveSectionId] = useState<string | null>(null);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: run once on mount; sections are re-bound on navigation via remount
   useEffect(() => {
     if (typeof window === "undefined") return;
 
     const sections = PAGE_SECTIONS[pathname] ?? [];
+    const contentRoot = document.querySelector("main");
 
     const updateFromHash = () => {
       const hash = window.location.hash.replace("#", "");
@@ -130,9 +130,11 @@ export function OnThisPage() {
     };
 
     updateFromHash();
+    setActiveSectionId(null);
 
     let observer: IntersectionObserver | null = null;
     let domObserver: MutationObserver | null = null;
+    let mutationFrame = 0;
     const observedIds = new Set<string>();
 
     if (sections.length) {
@@ -165,24 +167,28 @@ export function OnThisPage() {
         });
       };
 
-      // Initial bind (some sections may not exist yet, e.g. accordion content).
       observeAvailableSections();
 
-      // Re-bind as sections mount/unmount (Radix Accordion unmounts closed panels).
-      domObserver = new MutationObserver(() => {
-        observeAvailableSections();
-      });
-      domObserver.observe(document.body, { childList: true, subtree: true });
+      if (contentRoot) {
+        domObserver = new MutationObserver(() => {
+          window.cancelAnimationFrame(mutationFrame);
+          mutationFrame = window.requestAnimationFrame(
+            observeAvailableSections
+          );
+        });
+        domObserver.observe(contentRoot, { childList: true, subtree: true });
+      }
     }
 
     window.addEventListener("hashchange", updateFromHash);
 
     return () => {
       window.removeEventListener("hashchange", updateFromHash);
+      window.cancelAnimationFrame(mutationFrame);
       if (domObserver) domObserver.disconnect();
       if (observer) observer.disconnect();
     };
-  }, []);
+  }, [pathname]);
 
   const linkClass = (href: string, isAnchor = false) =>
     `block py-0.5 font-sans text-[13px] underline-offset-4 transition-colors hover:text-neutral-900 hover:underline focus-visible:outline-1 focus-visible:outline-primary dark:hover:text-white ${

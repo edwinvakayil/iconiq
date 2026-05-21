@@ -1,24 +1,24 @@
 "use client";
 
+import { Building2, Cloud, GraduationCap, Sun } from "lucide-react";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { type ReactNode, startTransition, useEffect, useState } from "react";
 
 import { Accordion, type AccordionItem } from "@/registry/accordion";
-import { Badge } from "@/registry/badge";
-import { Button } from "@/registry/button";
-import { Calendar } from "@/registry/calendar";
-import {
-  CheckboxGroup,
-  type CheckboxGroupOption,
-} from "@/registry/checkbox-group";
+import type { CheckboxGroupOption } from "@/registry/checkbox-group";
 import { DiaText } from "@/registry/dia-text";
-import { RadioGroup, type RadioOption } from "@/registry/radiogroup";
-import { TextShimmer } from "@/registry/shimmer-text";
+import { IconBar, IconBarItem } from "@/registry/icon-bar";
+import type { RadioOption } from "@/registry/radiogroup";
 import { ShimmerSkeleton } from "@/registry/skeleton";
-import { Slider } from "@/registry/slider";
-import { Switch } from "@/registry/switch";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/registry/tabs";
-import { Tooltip } from "@/registry/tooltip";
+
+const HomeFeaturedShowcaseExtended = dynamic(
+  () =>
+    import("@/components/home-featured-showcase-extended").then(
+      (mod) => mod.HomeFeaturedShowcaseExtended
+    ),
+  { ssr: false }
+);
 
 const featuredAccordionItems: AccordionItem[] = [
   {
@@ -164,18 +164,16 @@ export function HomeFeaturedShowcase() {
 
         <ShowcaseCard
           className="lg:col-span-6"
-          href="/texts/shimmer-text"
-          title="Shimmer Text"
+          href="/special-one/icon-bar"
+          title="Icon Bar"
         >
-          <div className="w-full text-center">
-            <TextShimmer
-              as="p"
-              className="font-light text-4xl tracking-tight"
-              duration={2.7}
-              spread={3}
-            >
-              Details in motion
-            </TextShimmer>
+          <div className="flex w-full items-center justify-center px-4">
+            <IconBar>
+              <IconBarItem icon={Building2} label="Office" />
+              <IconBarItem icon={GraduationCap} label="School" />
+              <IconBarItem icon={Sun} label="Sunny" />
+              <IconBarItem icon={Cloud} label="Cloudy" />
+            </IconBar>
           </div>
         </ShowcaseCard>
 
@@ -195,7 +193,7 @@ export function HomeFeaturedShowcase() {
           href="/components/skeleton"
           title="Skeleton"
         >
-          <div className="w-full max-w-[360px] rounded-2xl border border-border/65 p-4">
+          <div className="w-full max-w-[360px] p-4">
             <div className="flex items-center gap-3">
               <ShimmerSkeleton className="size-11" rounded="full" />
               <div className="min-w-0 flex-1 space-y-2">
@@ -216,203 +214,14 @@ export function HomeFeaturedShowcase() {
         </ShowcaseCard>
 
         {showExtendedShowcase ? (
-          <>
-            <ShowcaseCard
-              className="lg:col-span-4"
-              href="/components/calendar"
-              title="Calendar"
-            >
-              <div className="flex w-full justify-center">
-                <Calendar
-                  defaultMonth={new Date("2026-05-10")}
-                  defaultSelected={new Date("2026-05-10")}
-                />
-              </div>
-            </ShowcaseCard>
-
-            <div className="grid gap-4 lg:col-span-8 lg:grid-cols-2">
-              <ShowcaseCard href="/components/tooltip" title="Tooltip">
-                <div className="flex min-h-[150px] w-full items-center justify-center px-4">
-                  <p className="max-w-sm text-center font-sans text-[15px] text-foreground leading-relaxed">
-                    Hover the{" "}
-                    <Tooltip
-                      content="Quick context on hover."
-                      delay={0.12}
-                      side="top"
-                    >
-                      <button
-                        className="rounded-lg px-0.5 font-medium text-sky-700 underline decoration-sky-500/40 decoration-dotted underline-offset-[5px] transition-colors hover:text-sky-600 dark:text-sky-400 dark:hover:text-sky-300"
-                        type="button"
-                      >
-                        trigger
-                      </button>
-                    </Tooltip>{" "}
-                    to preview the floating label.
-                  </p>
-                </div>
-              </ShowcaseCard>
-
-              <ShowcaseCard href="/components/badge" title="Badge">
-                <div className="flex min-h-[150px] w-full items-center justify-center px-4">
-                  <Badge color="indigo">Early Access</Badge>
-                </div>
-              </ShowcaseCard>
-
-              <ShowcaseCard
-                className="lg:col-span-2"
-                href="/components/button"
-                title="Button"
-              >
-                <div className="flex w-full max-w-[360px] flex-wrap items-center justify-center gap-2.5">
-                  <Button size="sm">Default</Button>
-                  <Button size="sm" variant="outline">
-                    Outline
-                  </Button>
-                  <Button size="sm" variant="secondary">
-                    Secondary
-                  </Button>
-                  <Button size="sm" variant="ghost">
-                    Ghost
-                  </Button>
-                </div>
-              </ShowcaseCard>
-            </div>
-
-            <ShowcaseCard
-              className="lg:col-span-6"
-              href="/components/switch"
-              title="Switch"
-            >
-              <div className="w-full max-w-[320px] space-y-4">
-                <div className="flex items-center justify-between gap-4">
-                  <p className="text-[14px] text-foreground tracking-[-0.02em]">
-                    Motion
-                  </p>
-                  <Switch defaultChecked />
-                </div>
-                <div className="flex items-center justify-between gap-4">
-                  <p className="text-[14px] text-foreground tracking-[-0.02em]">
-                    Previews
-                  </p>
-                  <Switch defaultChecked />
-                </div>
-                <div className="flex items-center justify-between gap-4">
-                  <p className="text-[14px] text-foreground tracking-[-0.02em]">
-                    Reduced UI
-                  </p>
-                  <Switch />
-                </div>
-              </div>
-            </ShowcaseCard>
-
-            <ShowcaseCard
-              className="lg:col-span-6"
-              href="/components/slider"
-              title="Slider"
-            >
-              <div className="w-full max-w-[320px] space-y-4">
-                <Slider defaultValue={42} label="Volume" />
-                <Slider defaultValue={68} label="Brightness" />
-                <Slider defaultValue={55} label="Opacity" />
-              </div>
-            </ShowcaseCard>
-
-            <ShowcaseCard
-              className="lg:col-span-6"
-              href="/components/radiogroup"
-              title="Radio Group"
-            >
-              <div className="w-full max-w-md">
-                <RadioGroup
-                  aria-label="Install workflow"
-                  className="w-full"
-                  onChange={setSelectedRadio}
-                  options={homeRadioOptions}
-                  value={selectedRadio}
-                />
-              </div>
-            </ShowcaseCard>
-
-            <ShowcaseCard
-              className="lg:col-span-6"
-              href="/components/checkbox-group"
-              title="Checkbox Group"
-            >
-              <div className="w-full max-w-md">
-                <CheckboxGroup
-                  className="w-full"
-                  onChange={setSelectedCheckboxes}
-                  options={homeCheckboxOptions}
-                  value={selectedCheckboxes}
-                />
-              </div>
-            </ShowcaseCard>
-
-            <ShowcaseCard
-              className="lg:col-span-12"
-              href="/components/tabs"
-              title="Tabs"
-            >
-              <div className="flex w-full justify-start">
-                <Tabs
-                  className="[&>div.relative]:!mt-3 w-full max-w-[640px]"
-                  defaultValue="browse"
-                >
-                  <TabsList>
-                    <TabsTrigger value="browse">Browse</TabsTrigger>
-                    <TabsTrigger value="ship">Ship</TabsTrigger>
-                    <TabsTrigger value="adapt">Adapt</TabsTrigger>
-                  </TabsList>
-
-                  <TabsContent
-                    className="max-w-lg rounded-2xl p-5 text-left"
-                    value="browse"
-                  >
-                    <div className="space-y-1 text-left">
-                      <p className="font-medium text-[1rem] text-foreground tracking-[-0.03em]">
-                        Browse the interaction first
-                      </p>
-                      <p className="text-[13px] text-secondary leading-5">
-                        Open the live example, test the motion, and understand
-                        the behavior before you copy anything into your app.
-                      </p>
-                    </div>
-                  </TabsContent>
-
-                  <TabsContent
-                    className="max-w-lg rounded-2xl p-5 text-left"
-                    value="ship"
-                  >
-                    <div className="space-y-1 text-left">
-                      <p className="font-medium text-[1rem] text-foreground tracking-[-0.03em]">
-                        Ship from a stronger starting point
-                      </p>
-                      <p className="text-[13px] text-secondary leading-5">
-                        Install the component as source, review the structure,
-                        and move into production with less setup work.
-                      </p>
-                    </div>
-                  </TabsContent>
-
-                  <TabsContent
-                    className="max-w-lg rounded-2xl p-5 text-left"
-                    value="adapt"
-                  >
-                    <div className="space-y-1 text-left">
-                      <p className="font-medium text-[1rem] text-foreground tracking-[-0.03em]">
-                        Adapt it to your product
-                      </p>
-                      <p className="text-[13px] text-secondary leading-5">
-                        Rename parts, tweak motion, and reshape the UI around
-                        your own workflow without fighting a black-box
-                        dependency.
-                      </p>
-                    </div>
-                  </TabsContent>
-                </Tabs>
-              </div>
-            </ShowcaseCard>
-          </>
+          <HomeFeaturedShowcaseExtended
+            checkboxOptions={homeCheckboxOptions}
+            onCheckboxChange={setSelectedCheckboxes}
+            onRadioChange={setSelectedRadio}
+            radioOptions={homeRadioOptions}
+            selectedCheckboxes={selectedCheckboxes}
+            selectedRadio={selectedRadio}
+          />
         ) : null}
       </div>
     </section>

@@ -7,6 +7,7 @@ import { useTheme } from "next-themes";
 import * as React from "react";
 
 import { Kbd, KbdGroup } from "@/components/ui/kbd";
+import { useDebouncedValue } from "@/hooks/use-debounced-value";
 import { cn } from "@/lib/utils";
 
 const QUERY_SPLIT_REGEX = /\s+/;
@@ -152,6 +153,7 @@ function CommandMenu({
   const [open, setOpen] = React.useState(false);
   const [showContent, setShowContent] = React.useState(false);
   const [query, setQuery] = React.useState("");
+  const debouncedQuery = useDebouncedValue(query, 120);
   const [activeIndex, setActiveIndex] = React.useState(0);
   const [isMac, setIsMac] = React.useState(true);
 
@@ -248,15 +250,17 @@ function CommandMenu({
       groups
         .map((group) => ({
           ...group,
-          items: group.items.filter((item) => matchesQuery(item, query)),
+          items: group.items.filter((item) =>
+            matchesQuery(item, debouncedQuery)
+          ),
         }))
         .filter((group) => group.items.length > 0),
-    [groups, query]
+    [debouncedQuery, groups]
   );
 
   const filteredThemeItems = React.useMemo(
-    () => themeItems.filter((item) => matchesQuery(item, query)),
-    [query, themeItems]
+    () => themeItems.filter((item) => matchesQuery(item, debouncedQuery)),
+    [debouncedQuery, themeItems]
   );
 
   const resolvedItems = React.useMemo<CommandMenuItemDef[]>(() => {

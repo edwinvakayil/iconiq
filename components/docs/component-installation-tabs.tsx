@@ -206,7 +206,9 @@ export function ComponentInstallationTabs({
       </TabsContent>
 
       <TabsContent className="mt-0" value="manual">
-        <RegistrySourceCode componentName={componentName} />
+        {activeTab === "manual" ? (
+          <RegistrySourceCode componentName={componentName} />
+        ) : null}
       </TabsContent>
     </Tabs>
   );

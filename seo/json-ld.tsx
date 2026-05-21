@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import type { DetailItem } from "@/components/docs/page-shell";
 import { LINK, SITE } from "@/constants";
-import { AI_DISCOVERY_LINKS, COMPONENT_CATALOG } from "@/lib/geo";
+import { AI_DISCOVERY_LINKS } from "@/lib/geo";
 import { compactWhitespace, nodeToText } from "@/lib/node-to-text";
 import { SITE_SECTIONS } from "@/lib/site-nav";
 import { getSocialImageUrl, openGraphImagePath } from "@/seo/og-image";
@@ -232,7 +232,7 @@ const AiCatalogJsonLd = () => {
       "registry path",
       "api summaries",
     ],
-    size: COMPONENT_CATALOG.length,
+    size: componentCount,
   };
 
   return (
