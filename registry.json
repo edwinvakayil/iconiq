@@ -159,6 +159,21 @@
       ]
     },
     {
+      "name": "checkbox",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": ["motion"],
+      "devDependencies": [],
+      "title": "Checkbox",
+      "description": "Single checkbox with spring-pressed feedback, a line-drawn checkmark, and an optional inline label. Motion only.",
+      "files": [
+        {
+          "path": "checkbox.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "combobox",
       "type": "registry:ui",
       "registryDependencies": [],

@@ -132,6 +132,25 @@ export function AccordionPreview() {
     "    </div>\n" +
     "  )\n" +
     "}\n",
+  checkbox:
+    '"use client";\n\n' +
+    `import { Checkbox } from "@/components/ui/checkbox"\n` +
+    `import { useState } from "react"\n\n` +
+    "export default function Page() {\n" +
+    "  const [checked, setChecked] = useState(true)\n" +
+    "  return (\n" +
+    '    <div className="flex min-h-svh items-center justify-center p-8">\n' +
+    '      <div className="w-full max-w-sm">\n' +
+    "        <Checkbox\n" +
+    "          checked={checked}\n" +
+    '          id="release-updates"\n' +
+    '          label="Email me when the next release ships"\n' +
+    "          onCheckedChange={setChecked}\n" +
+    "        />\n" +
+    "      </div>\n" +
+    "    </div>\n" +
+    "  )\n" +
+    "}\n",
   "checkbox-group":
     '"use client";\n\n' +
     `import { CheckboxGroup } from "@/components/ui/checkbox-group"\n` +

@@ -105,6 +105,12 @@ const REGISTRY_UI_META: Record<
       "Compact monthly calendar with animated month transitions, selectable days, and date-fns-powered grid generation.",
     dependencies: ["motion", "lucide-react", "date-fns"],
   },
+  checkbox: {
+    title: "Checkbox",
+    description:
+      "Single checkbox with spring-pressed feedback, a line-drawn checkmark, and an optional inline label. Motion only.",
+    dependencies: ["motion"],
+  },
   "checkbox-group": {
     title: "Checkbox group",
     description:

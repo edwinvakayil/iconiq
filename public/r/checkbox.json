@@ -1,0 +1,17 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "checkbox",
+  "type": "registry:ui",
+  "registryDependencies": [],
+  "dependencies": ["motion"],
+  "devDependencies": [],
+  "files": [
+    {
+      "path": "checkbox.tsx",
+      "content": "\"use client\";\nimport * as React from \"react\";\nimport { motion } from \"motion/react\";\nimport { cn } from \"@/lib/utils\";\n\ninterface CheckboxProps {\n  checked?: boolean;\n  defaultChecked?: boolean;\n  onCheckedChange?: (checked: boolean) => void;\n  label?: string;\n  className?: string;\n  id?: string;\n}\n\nexport function Checkbox({\n  checked,\n  defaultChecked = false,\n  onCheckedChange,\n  label,\n  className,\n  id,\n}: CheckboxProps) {\n  const [internal, setInternal] = React.useState(defaultChecked);\n  const isControlled = checked !== undefined;\n  const value = isControlled ? checked : internal;\n\n  const toggle = () => {\n    const next = !value;\n    if (!isControlled) setInternal(next);\n    onCheckedChange?.(next);\n  };\n\n  return (\n    <label\n      htmlFor={id}\n      className={cn(\n        \"inline-flex cursor-pointer select-none items-center gap-3\",\n        className,\n      )}\n    >\n      <input\n        id={id}\n        type=\"checkbox\"\n        className=\"sr-only\"\n        checked={value}\n        onChange={toggle}\n      />\n      <motion.span\n        aria-hidden\n        initial={false}\n        animate={{\n          backgroundColor: value\n            ? \"var(--color-foreground)\"\n            : \"var(--color-background)\",\n          borderColor: value\n            ? \"var(--color-foreground)\"\n            : \"var(--color-border)\",\n        }}\n        whileTap={{ scale: 0.88 }}\n        transition={{ type: \"spring\", stiffness: 500, damping: 30 }}\n        className=\"relative flex h-5 w-5 items-center justify-center rounded border\"\n      >\n        <motion.svg\n          viewBox=\"0 0 24 24\"\n          fill=\"none\"\n          stroke=\"var(--color-background)\"\n          strokeWidth={3}\n          strokeLinecap=\"round\"\n          strokeLinejoin=\"round\"\n          className=\"h-3.5 w-3.5\"\n          initial={false}\n          animate={value ? \"checked\" : \"unchecked\"}\n        >\n          <motion.path\n            d=\"M5 12.5l4.5 4.5L19 7.5\"\n            variants={{\n              checked: {\n                pathLength: 1,\n                opacity: 1,\n                transition: {\n                  pathLength: { duration: 0.3, ease: [0.65, 0, 0.35, 1] },\n                  opacity: { duration: 0.05 },\n                },\n              },\n              unchecked: {\n                pathLength: 0,\n                opacity: 1,\n                transition: {\n                  pathLength: { duration: 0.25, ease: [0.65, 0, 0.35, 1] },\n                },\n              },\n            }}\n          />\n        </motion.svg>\n      </motion.span>\n      {label && (\n        <motion.span\n          animate={{ opacity: value ? 0.55 : 1 }}\n          transition={{ duration: 0.2 }}\n          className=\"text-sm text-foreground\"\n        >\n          {label}\n        </motion.span>\n      )}\n    </label>\n  );\n}\n",
+      "type": "registry:ui"
+    }
+  ],
+  "title": "Checkbox",
+  "description": "Single checkbox with spring-pressed feedback, a line-drawn checkmark, and an optional inline label. Motion only."
+}

@@ -34,6 +34,8 @@ const componentSummaries: Record<string, string> = {
     "Grouped action buttons, segmented button rows, and a string-based segmented control with motion-driven selection.",
   "/components/calendar":
     "Compact animated calendar for date selection and month navigation.",
+  "/components/checkbox":
+    "Animated single checkbox with controlled or uncontrolled state and a line-drawn checkmark.",
   "/components/checkbox-group":
     "Checkbox group for multiple selections with animated row states.",
   "/components/combobox":

@@ -838,6 +838,71 @@ const checkboxGroupApiDetails: DetailItem[] = [
   registryItem("checkbox-group.json", ["motion", "lucide-react"]),
 ];
 
+const checkboxApiDetails: DetailItem[] = [
+  {
+    id: "checkbox",
+    title: "Checkbox",
+    summary:
+      "Single checkbox with controlled or uncontrolled state, a visually hidden native input, and an optional inline label.",
+    fields: [
+      field({
+        name: "checked",
+        type: "boolean",
+        description:
+          "Controlled checked state. When you pass this prop, the component always renders from it and stops mutating its own internal state.",
+      }),
+      field({
+        name: "defaultChecked",
+        type: "boolean",
+        defaultValue: "false",
+        description:
+          "Initial state for uncontrolled usage. It is only read on the first render.",
+      }),
+      field({
+        name: "onCheckedChange",
+        type: "(checked: boolean) => void",
+        description:
+          "Called with the next boolean value each time the checkbox is toggled.",
+      }),
+      field({
+        name: "label",
+        type: "string",
+        description:
+          "Optional text rendered to the right of the box inside the same clickable label wrapper.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description:
+          "Merged onto the root label so you can reposition the row or override spacing.",
+      }),
+      field({
+        name: "id",
+        type: "string",
+        description:
+          "Passed to the hidden input and linked from the wrapping label for explicit form-field association.",
+      }),
+    ],
+    notes: [
+      "The component supports both controlled and uncontrolled usage, but `checked` becomes the source of truth whenever it is provided.",
+      "There is no disabled or indeterminate state in this version, so more complex form behavior still needs a wrapper or extension.",
+      "The full row stays clickable because the custom control and optional label both live inside a native label element.",
+    ],
+  },
+  {
+    id: "checkbox-motion",
+    title: "Motion and accessibility",
+    summary:
+      "Visual feedback comes from Motion while input semantics still come from the hidden native checkbox element.",
+    notes: [
+      "The box animates its border and fill between theme tokens, then the checkmark path draws in or out based on the next state.",
+      "Tap feedback briefly compresses the control, while the label subtly dims when the row is checked.",
+      "Keyboard toggling and screen-reader semantics still travel through the native input, even though the visible box is custom rendered.",
+    ],
+  },
+  registryItem("checkbox.json", ["motion"]),
+];
+
 const comboboxApiDetails: DetailItem[] = [
   {
     id: "combobox-option",
@@ -3650,6 +3715,7 @@ export {
   breadcrumbsApiDetails,
   buttonApiDetails,
   buttonGroupApiDetails,
+  checkboxApiDetails,
   checkboxGroupApiDetails,
   comboboxApiDetails,
   contextMenuApiDetails,
