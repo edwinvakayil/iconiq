@@ -322,7 +322,7 @@ const calendarApiDetails: DetailItem[] = [
       "The grid is rebuilt with date-fns whenever the visible month changes.",
     notes: [
       "The rendered range runs from startOfWeek(startOfMonth(currentMonth)) through endOfWeek(endOfMonth(currentMonth)), so leading and trailing days from adjacent months are always visible.",
-      "Days outside the active month remain visible for context, but the actual buttons are disabled so they stay out of the tab order and cannot be selected accidentally.",
+      "Days outside the active month remain visible for context and can still be selected. Choosing one switches the visible month and selects that day, unless the date is marked unavailable through disabled.",
       "Weekday headers and the grid start day now follow the provided locale/weekStartsOn settings instead of being hardcoded to English Sunday-first output.",
     ],
   },

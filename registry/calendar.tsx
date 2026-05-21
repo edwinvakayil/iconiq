@@ -242,7 +242,7 @@ const getDayAriaLabel = ({
 type DayCellStatus = {
   inMonth: boolean;
   isDisabled: boolean;
-  isInteractive: boolean;
+  isSelectable: boolean;
   isSelected: boolean;
   isSelectedInMonth: boolean;
   showTodayIndicator: boolean;
@@ -264,12 +264,12 @@ const getDayCellStatus = ({
   const inMonth = isSameMonth(day, currentMonth);
   const today = isToday(day);
   const isDisabled = disabled?.(day) ?? false;
-  const isInteractive = inMonth && !isDisabled;
+  const isSelectable = !isDisabled;
   const isSelectedInMonth = inMonth && isSelected;
   return {
     inMonth,
     isDisabled,
-    isInteractive,
+    isSelectable,
     isSelected,
     isSelectedInMonth,
     showTodayIndicator: today && !isSelectedInMonth,
@@ -477,6 +477,14 @@ export const Calendar = ({
   const setSelectedValue = (nextDate: Date) => {
     if (selected === undefined) setInternalSelected(nextDate);
     onSelect?.(nextDate);
+  };
+
+  const handleDaySelect = (day: Date) => {
+    if (disabled?.(day)) return;
+    if (!isSameMonth(day, currentMonth)) {
+      setMonthValue(startOfMonth(day));
+    }
+    setSelectedValue(day);
   };
 
   const days = useMemo(() => {
@@ -767,14 +775,11 @@ export const Calendar = ({
                         dimensions={dimensions}
                         disabled={disabled}
                         index={weekIndex * WEEK_LENGTH + dayIndex}
-                        isFocused={
-                          isSameMonth(day, currentMonth) &&
-                          isSameDay(day, focusedDate)
-                        }
+                        isFocused={isSameDay(day, focusedDate)}
                         locale={locale}
                         onDayFocus={setFocusedDate}
                         onDayKeyDown={handleDayKeyDown}
-                        onSelectDay={setSelectedValue}
+                        onSelectDay={handleDaySelect}
                         palette={palette}
                         registerDayButton={(buttonDay, node, interactive) => {
                           const key = getDateKey(buttonDay);
@@ -1240,7 +1245,7 @@ const DayCell = ({
   };
   const whileTap = { scale: 1, y: 0 };
   let whileFocus: { boxShadow: string } | undefined;
-  if (status.isInteractive) {
+  if (status.isSelectable) {
     whileFocus = { boxShadow: `0 0 0 2px ${palette.focusRing}` };
     whileHover.scale = 1.04;
     whileHover.y = -1.5;
@@ -1250,7 +1255,7 @@ const DayCell = ({
   }
 
   const handleClick = () => {
-    if (!status.isInteractive) return;
+    if (!status.isSelectable) return;
     onSelectDay(day);
   };
 
@@ -1266,12 +1271,12 @@ const DayCell = ({
         inMonth: status.inMonth,
         isDisabled: status.isDisabled,
       })}
-      disabled={!status.isInteractive}
+      disabled={!status.isSelectable}
       initial={{ opacity: 0, scale: 0.8 }}
       onClick={handleClick}
       onFocus={() => onDayFocus(day)}
       onKeyDown={(event) => onDayKeyDown(event, day)}
-      ref={(node) => registerDayButton(day, node, status.isInteractive)}
+      ref={(node) => registerDayButton(day, node, status.isSelectable)}
       style={{
         position: "relative",
         aspectRatio: "1 / 1",
@@ -1285,14 +1290,14 @@ const DayCell = ({
         borderRadius: dimensions.dayCellRadius,
         border: "none",
         background: "transparent",
-        cursor: status.isInteractive ? "pointer" : "default",
+        cursor: status.isSelectable ? "pointer" : "default",
         color: status.inMonth ? palette.textPrimary : palette.textDim,
         padding: 0,
         fontFamily: "inherit",
         outline: "none",
-        opacity: status.isDisabled && status.inMonth ? 0.45 : 1,
+        opacity: status.isDisabled ? 0.45 : 1,
       }}
-      tabIndex={status.isInteractive ? (isFocused ? 0 : -1) : -1}
+      tabIndex={status.isSelectable ? (isFocused ? 0 : -1) : -1}
       transition={{ delay: index * 0.012, duration: 0.3, ease: SPRING_EASE }}
       type="button"
       whileFocus={whileFocus}

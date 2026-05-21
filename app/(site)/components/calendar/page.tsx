@@ -17,7 +17,6 @@ export function CalendarPreview() {
   return (
     <Calendar
       defaultMonth={selected}
-      disabled={(date) => date < new Date("2020-01-01")}
       onSelect={setSelected}
       selected={selected}
       size="sm"
@@ -32,7 +31,6 @@ function CalendarPreview() {
     <div className="flex w-full justify-center">
       <Calendar
         defaultMonth={selected}
-        disabled={(date) => date < new Date("2020-01-01")}
         onSelect={setSelected}
         selected={selected}
         size="sm"
