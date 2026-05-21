@@ -1,7 +1,30 @@
 {
-  "cSpell.words": ["Downvote", "LUCIDE", "nuqs", "iconiqs", "Upvote"],
+  "cSpell.words": [
+    "biomejs",
+    "combobox",
+    "date-fns",
+    "dia",
+    "Geist",
+    "iconiq",
+    "iconiqui",
+    "lucide",
+    "nuqs",
+    "openpanel",
+    "radiogroup",
+    "selectiontoolbar",
+    "shadcn",
+    "sonner",
+    "tailwindcss",
+    "toolwind",
+    "ultracite"
+  ],
   "typescript.tsdk": "node_modules/typescript/lib",
+  "typescript.enablePromptUseWorkspaceTsdk": true,
   "css.lint.unknownAtRules": "ignore",
+  "files.associations": {
+    "*.css": "tailwindcss"
+  },
+  "tailwindCSS.experimental.configFile": "app/globals.css",
   "editor.defaultFormatter": "biomejs.biome",
   "editor.formatOnSave": true,
   "biome.enabled": true,
@@ -26,5 +49,19 @@
   },
   "[jsonc]": {
     "editor.defaultFormatter": "biomejs.biome"
+  },
+  "[markdown]": {
+    "editor.defaultFormatter": "biomejs.biome"
+  },
+  "[css]": {
+    "editor.defaultFormatter": "biomejs.biome"
+  },
+  "files.watcherExclude": {
+    "**/.next/**": true,
+    "**/node_modules/**": true
+  },
+  "search.exclude": {
+    "**/.next": true,
+    "**/node_modules": true
   }
 }
