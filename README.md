@@ -56,6 +56,18 @@ npx skills add https://github.com/edwinvakayil/iconiq --skill iconiq
 
 This **always clones the repository**. Prefer the iconiqui.com command above. Use the GitHub URL only if you want installs counted toward [skills.sh](https://skills.sh/edwinvakayil/iconiq) stats.
 
+### skills.sh listing
+
+The skill file for the directory is **`skills/iconiq/SKILL.md` only**. Do not commit `.agents/` or `skills-lock.json`—they break indexing and show “No SKILL.md available” on [skills.sh](https://skills.sh/edwinvakayil/iconiq/iconiq).
+
+After pushing fixes, trigger a fresh snapshot:
+
+```bash
+npx skills add https://github.com/edwinvakayil/iconiq --skill iconiq -y
+```
+
+The skills.sh page can take time to refresh after that install.
+
 ## Contributing
 
 Please read the [contributing guide](/CONTRIBUTING.md).
