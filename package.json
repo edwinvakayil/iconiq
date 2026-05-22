@@ -18,7 +18,9 @@
     "lint": "npx ultracite fix",
     "lint:check": "npx ultracite check",
     "build-registry": "tsx scripts/registry-build.ts",
-    "gen-cli": "pnpm run build-registry && pnpm lint"
+    "gen-cli": "pnpm run build-registry && pnpm lint",
+    "skills:install": "npx skills add https://iconiqui.com --skill iconiq -y",
+    "skills:install:local": "npx skills add . --skill iconiq -y"
   },
   "dependencies": {
     "@base-ui/react": "^1.4.1",

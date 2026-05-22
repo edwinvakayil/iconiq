@@ -1,7 +1,7 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 
-const SKILL_MD_PATH = path.join(process.cwd(), "SKILL.md");
+const SKILL_MD_PATH = path.join(process.cwd(), "skills", "iconiq", "SKILL.md");
 const CRLF_REGEX = /\r?\n/;
 const FRONTMATTER_REGEX = /^---\r?\n([\s\S]*?)\r?\n---/;
 const INDENTED_LINE_REGEX = /^\s+/;

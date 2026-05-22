@@ -42,6 +42,10 @@ yarn-error.log*
 .cursor
 .pnpm-store
 
+# skills CLI local install artifacts
+.agents/
+skills-lock.json
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
