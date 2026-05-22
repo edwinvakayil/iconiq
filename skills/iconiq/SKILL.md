@@ -1,10 +1,6 @@
 ---
 name: iconiq
-description: >-
-  Work on the Iconiq (iconiqui.com) shadcn registry and docs site—registry
-  components, documentation pages, registry build output, and MCP docs. Use
-  when editing this repo, adding or updating @iconiq components, registry
-  files, docs pages, site navigation, or running gen-cli / build-registry.
+description: Work on the Iconiq (iconiqui.com) shadcn registry and docs site—registry components, documentation pages, registry build output, and MCP docs. Use when editing this repo, adding or updating @iconiq components, registry files, docs pages, site navigation, or running gen-cli / build-registry.
 ---
 
 # Iconiq
