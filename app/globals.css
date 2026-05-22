@@ -75,8 +75,8 @@
   --separator-dash: rgb(92 91 84 / 1);
   --selection-bg: #cfeeff;
   --selection-fg: #0f172a;
-  --nav-menu-surface: #27272a;
-  --nav-menu-item-hover: #3f3f46;
+  --nav-menu-surface: #1a1a1c;
+  --nav-menu-item-hover: #262628;
 }
 
 /* Hero brush-stroke underline (highlighter style) */
