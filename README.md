@@ -64,4 +64,4 @@ Please read the [contributing guide](/CONTRIBUTING.md).
 
 Licensed under the [MIT license](./LICENSE).
 
-[![skills.sh](https://skills.sh/b/edwinvakayil/iconiq)](https://skills.sh/edwinvakayil/iconiq)
+[![skills.sh](https://skills.sh/b/edwinvakayil/iconiq)](https://skills.sh/edwinvakayil/iconiq/iconiq)
