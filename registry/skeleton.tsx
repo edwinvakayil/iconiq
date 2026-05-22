@@ -1,4 +1,5 @@
 import type { OutputHTMLAttributes } from "react";
+import { registryTheme } from "@/lib/registry-theme";
 import { cn } from "@/lib/utils";
 
 interface ShimmerSkeletonProps extends OutputHTMLAttributes<HTMLOutputElement> {
@@ -24,6 +25,7 @@ function ShimmerSkeleton({
     <output
       aria-label="Loading"
       className={cn(
+        registryTheme,
         "relative block overflow-hidden bg-muted",
         roundedClass,
         className

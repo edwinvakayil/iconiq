@@ -4,6 +4,7 @@ import { ArrowUpDown } from "lucide-react";
 import { AnimatePresence, LayoutGroup, motion } from "motion/react";
 import * as React from "react";
 
+import { registryTheme } from "@/lib/registry-theme";
 import { cn } from "@/lib/utils";
 
 export const TABLE_DEFAULT_COLUMNS =
@@ -102,7 +103,10 @@ const Table = React.forwardRef<HTMLTableElement, TableProps>(
 
     return (
       <TableContext.Provider value={contextValue}>
-        <div className="w-full overflow-x-auto" data-slot="table-wrapper">
+        <div
+          className={cn(registryTheme, "w-full overflow-x-auto")}
+          data-slot="table-wrapper"
+        >
           <table
             className={cn(
               "mx-auto w-full max-w-4xl caption-bottom border-separate border-spacing-0",
@@ -374,6 +378,7 @@ const TableSortButton = React.forwardRef<
   ) => (
     <button
       className={cn(
+        registryTheme,
         "flex min-h-10 w-full items-center gap-2 rounded-md px-3 py-2 text-left outline-none transition-colors transition-shadow focus-visible:ring-2 focus-visible:ring-foreground/20 focus-visible:ring-offset-2 focus-visible:ring-offset-background",
         active
           ? "text-foreground"

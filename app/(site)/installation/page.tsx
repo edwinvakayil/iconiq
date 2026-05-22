@@ -69,7 +69,7 @@ Install editable, fluid motion-powered React components directly into your app.
 ## Registry workflow
 
 1. Run the install command for the component you want.
-2. Let shadcn add the files and supporting dependencies to your project.
+2. Let shadcn add the component, any helper files such as lib/registry-theme.ts when needed, and supporting dependencies to your project.
 3. Review the generated files locally and adjust them to match your product.
 
 Example command:
@@ -174,8 +174,8 @@ ${featuredComponents
                         Run one command for the component you want to add.
                       </li>
                       <li>
-                        Let the registry place the implementation directly in
-                        your codebase.
+                        Let the registry place the implementation and any
+                        required helper files directly in your codebase.
                       </li>
                       <li>
                         Review the files locally and adjust them to match your
@@ -205,6 +205,11 @@ ${featuredComponents
                       <li>
                         The direct URL follows the same shadcn add flow as the
                         scoped component command.
+                      </li>
+                      <li>
+                        Helper files referenced by the installed source, such as{" "}
+                        <code>lib/registry-theme.ts</code>, are still pulled in
+                        automatically from that registry entry.
                       </li>
                       <li>
                         It works well when you want to point teammates or

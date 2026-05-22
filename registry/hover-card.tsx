@@ -9,6 +9,7 @@ import {
   ReducedMotionConfig,
   type ReducedMotionProp,
 } from "@/lib/reduced-motion";
+import { registryTheme } from "@/lib/registry-theme";
 import { cn } from "@/lib/utils";
 
 type Side = "top" | "right" | "bottom" | "left";
@@ -201,7 +202,9 @@ const HoverCard = ({
           }}
           open={open}
         >
-          <span className={cn("inline-flex w-fit", className)}>{children}</span>
+          <span className={cn(registryTheme, "inline-flex w-fit", className)}>
+            {children}
+          </span>
         </PopoverPrimitive.Root>
       </HoverCardContext.Provider>
     </ReducedMotionConfig>
@@ -366,6 +369,7 @@ const HoverCardContentBody = React.forwardRef<
           animate={{ opacity: 1, x: 0, y: 0, scale: 1, filter: "blur(0px)" }}
           aria-labelledby={triggerId}
           className={cn(
+            registryTheme,
             "relative z-50 w-72 rounded-lg border border-border bg-white p-4 text-foreground shadow-2xl outline-none dark:bg-black",
             hoverBridgeStyles[side],
             className

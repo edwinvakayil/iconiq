@@ -14,7 +14,12 @@ const reducedMotionHelperPath = path.join(
   __dirname,
   "../lib/reduced-motion.tsx"
 );
+const registryThemeHelperPath = path.join(
+  __dirname,
+  "../lib/registry-theme.ts"
+);
 const reducedMotionImport = 'from "@/lib/reduced-motion"';
+const registryThemeImport = 'from "@/lib/registry-theme"';
 
 /** Optional title, description, and dependencies for registry UI components. */
 const REGISTRY_UI_META: Record<
@@ -280,6 +285,15 @@ for (const component of components) {
       path: "reduced-motion.tsx",
       content: fs.readFileSync(reducedMotionHelperPath, "utf8"),
       target: "lib/reduced-motion.tsx",
+      type: "registry:lib",
+    });
+  }
+
+  if (content.includes(registryThemeImport)) {
+    files.push({
+      path: "registry-theme.ts",
+      content: fs.readFileSync(registryThemeHelperPath, "utf8"),
+      target: "lib/registry-theme.ts",
       type: "registry:lib",
     });
   }

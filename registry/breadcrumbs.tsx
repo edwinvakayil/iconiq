@@ -3,6 +3,7 @@
 import { ChevronRight } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import type { ReactNode } from "react";
+import { registryTheme } from "@/lib/registry-theme";
 import { cn } from "@/lib/utils";
 
 export interface BreadcrumbItem {
@@ -32,7 +33,10 @@ const itemVariants = {
 
 export function Breadcrumbs({ items, className }: BreadcrumbsProps) {
   return (
-    <nav aria-label="breadcrumb" className={cn("inline-flex", className)}>
+    <nav
+      aria-label="breadcrumb"
+      className={cn(registryTheme, "inline-flex", className)}
+    >
       <ol className="flex items-center gap-1">
         <AnimatePresence mode="popLayout">
           {items.map((item, index) => {

@@ -8,6 +8,7 @@ import {
   ReducedMotionConfig,
   type ReducedMotionProp,
 } from "@/lib/reduced-motion";
+import { registryTheme } from "@/lib/registry-theme";
 import { cn } from "@/lib/utils";
 
 const Dialog = DialogPrimitive.Root;
@@ -93,6 +94,7 @@ const DialogContent = React.forwardRef<
             <motion.div
               animate="visible"
               className={cn(
+                registryTheme,
                 "relative flex w-[min(100%,32rem)] max-w-lg flex-col gap-4 overflow-y-auto rounded-lg border bg-background p-6 shadow-2xl dark:bg-neutral-900",
                 "max-h-[min(90svh,calc(100svh-env(safe-area-inset-top,0px)-env(safe-area-inset-bottom,0px)-2rem))]",
                 className

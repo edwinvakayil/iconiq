@@ -12,11 +12,17 @@ import {
 import { CodeBlockInstall } from "@/components/code-block-install";
 import { DocsCodeSnippet } from "@/components/docs/code-snippet";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { cn } from "@/lib/utils";
 
 type RegistryResponse = {
-  files?: Array<{
-    content?: string;
-  }>;
+  files?: RegistryFile[];
+};
+
+type RegistryFile = {
+  content?: string;
+  path?: string;
+  target?: string;
+  type?: string;
 };
 
 const installationTabs = [
@@ -26,9 +32,90 @@ const installationTabs = [
 
 type InstallationTabValue = (typeof installationTabs)[number]["value"];
 
+type FileTabTriggerProps = {
+  file: RegistryFile;
+  index: number;
+  activeFileId: string;
+  reduceMotion: boolean;
+  getFileId: (file: RegistryFile, index: number) => string;
+  fileLabel: (file: RegistryFile, index: number) => string;
+  onSelect: (id: string) => void;
+};
+
+function FileTabTrigger({
+  file,
+  index,
+  activeFileId,
+  reduceMotion,
+  getFileId,
+  fileLabel,
+  onSelect,
+}: FileTabTriggerProps) {
+  const id = getFileId(file, index);
+  const isActive = activeFileId === id;
+  const springTransition = reduceMotion
+    ? { duration: 0 }
+    : {
+        type: "spring" as const,
+        stiffness: 380,
+        damping: 30,
+        mass: 0.7,
+      };
+  const labelAnimation = reduceMotion
+    ? undefined
+    : {
+        opacity: isActive ? 1 : 0.74,
+        y: isActive ? -0.5 : 0,
+      };
+  const labelTransition = reduceMotion
+    ? { duration: 0 }
+    : {
+        duration: 0.18,
+        ease: [0.22, 1, 0.36, 1] as const,
+      };
+
+  return (
+    <motion.button
+      className={cn(
+        "relative shrink-0 cursor-pointer px-3 py-2 font-mono text-xs transition-colors",
+        isActive
+          ? "text-foreground"
+          : "text-muted-foreground hover:text-foreground"
+      )}
+      data-file-tab={id}
+      onClick={() => onSelect(id)}
+      transition={springTransition}
+      type="button"
+      whileTap={reduceMotion ? undefined : { y: 1 }}
+    >
+      <motion.span
+        animate={labelAnimation}
+        className="relative z-10"
+        transition={labelTransition}
+      >
+        {fileLabel(file, index)}
+      </motion.span>
+    </motion.button>
+  );
+}
+
 function RegistrySourceCode({ componentName }: { componentName: string }) {
-  const [content, setContent] = useState<string>("");
+  const [activeFileId, setActiveFileId] = useState<string>("");
+  const [fileIndicator, setFileIndicator] = useState({
+    left: 0,
+    ready: false,
+    width: 0,
+  });
+  const [files, setFiles] = useState<RegistryFile[]>([]);
   const [status, setStatus] = useState<"loading" | "done" | "error">("loading");
+  const fileRailRef = useRef<HTMLDivElement | null>(null);
+  const reduceMotion = useReducedMotion() ?? false;
+
+  const getFileId = useCallback(
+    (file: RegistryFile, index: number) =>
+      file.target ?? file.path ?? `${componentName}-${index}`,
+    [componentName]
+  );
 
   useEffect(() => {
     let cancelled = false;
@@ -37,14 +124,22 @@ function RegistrySourceCode({ componentName }: { componentName: string }) {
       try {
         const response = await fetch(`/r/${componentName}.json`);
         const data = (await response.json()) as RegistryResponse;
-        const source = data.files?.[0]?.content ?? "";
+        const sourceFiles = (data.files ?? []).filter((file) => file.content);
+        const defaultFile =
+          sourceFiles.find((file) => file.type === "registry:ui") ??
+          sourceFiles[0];
 
         if (cancelled) {
           return;
         }
 
-        setContent(source);
-        setStatus(source ? "done" : "error");
+        setFiles(sourceFiles);
+        setActiveFileId(
+          defaultFile
+            ? getFileId(defaultFile, sourceFiles.indexOf(defaultFile))
+            : ""
+        );
+        setStatus(sourceFiles.length > 0 ? "done" : "error");
       } catch {
         if (!cancelled) {
           setStatus("error");
@@ -57,7 +152,73 @@ function RegistrySourceCode({ componentName }: { componentName: string }) {
     return () => {
       cancelled = true;
     };
-  }, [componentName]);
+  }, [componentName, getFileId]);
+
+  const updateFileIndicator = useCallback(() => {
+    const rail = fileRailRef.current;
+
+    if (!(rail && activeFileId)) {
+      return;
+    }
+
+    const activeTrigger = rail.querySelector<HTMLElement>(
+      `[data-file-tab="${activeFileId}"]`
+    );
+
+    if (!activeTrigger) {
+      setFileIndicator((current) =>
+        current.ready ? { left: 0, ready: false, width: 0 } : current
+      );
+      return;
+    }
+
+    setFileIndicator((current) => {
+      const next = {
+        left: activeTrigger.offsetLeft,
+        ready: true,
+        width: activeTrigger.offsetWidth,
+      };
+
+      if (
+        current.left === next.left &&
+        current.ready === next.ready &&
+        current.width === next.width
+      ) {
+        return current;
+      }
+
+      return next;
+    });
+  }, [activeFileId]);
+
+  useLayoutEffect(() => {
+    updateFileIndicator();
+  }, [updateFileIndicator]);
+
+  useEffect(() => {
+    const rail = fileRailRef.current;
+
+    window.addEventListener("resize", updateFileIndicator);
+
+    if (!(rail && typeof ResizeObserver !== "undefined")) {
+      return () => window.removeEventListener("resize", updateFileIndicator);
+    }
+
+    const observer = new ResizeObserver(() => updateFileIndicator());
+
+    observer.observe(rail);
+
+    for (const trigger of rail.querySelectorAll<HTMLElement>(
+      "[data-file-tab]"
+    )) {
+      observer.observe(trigger);
+    }
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", updateFileIndicator);
+    };
+  }, [updateFileIndicator]);
 
   if (status === "loading") {
     return (
@@ -75,7 +236,93 @@ function RegistrySourceCode({ componentName }: { componentName: string }) {
     );
   }
 
-  return <DocsCodeSnippet code={content} />;
+  const activeFile =
+    files.find((file, index) => getFileId(file, index) === activeFileId) ??
+    files[0];
+  const helperFiles = files.filter((file) => file.target);
+  const hasRegistryThemeHelper = helperFiles.some(
+    (file) => file.target === "lib/registry-theme.ts"
+  );
+  const fileLabel = (file: RegistryFile, index: number) =>
+    file.target ?? file.path ?? `${componentName}-${index + 1}`;
+
+  return (
+    <div className="space-y-4">
+      <div className="border border-border/80 bg-muted/20 px-4 py-4 sm:px-5">
+        <div className="space-y-3">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="font-medium text-foreground text-sm">
+              Generated files
+            </span>
+          </div>
+          <p className="text-muted-foreground text-sm leading-6">
+            <span className="text-foreground">shadcn add</span> adds the
+            component source along with any supporting files required by this
+            registry entry.
+          </p>
+        </div>
+        {hasRegistryThemeHelper ? (
+          <p className="mt-3 text-muted-foreground text-sm leading-6">
+            When needed, the registry also installs{" "}
+            <code>lib/registry-theme.ts</code>, so imports like{" "}
+            <code>
+              import {"{ registryTheme }"} from "@/lib/registry-theme";
+            </code>{" "}
+            work without any extra setup.
+          </p>
+        ) : null}
+      </div>
+
+      {files.length > 1 ? (
+        <div className="space-y-2">
+          <p className="font-medium text-[13px] text-muted-foreground">
+            Browse installed files
+          </p>
+          <div
+            className="relative max-w-full overflow-x-auto border-border/60 border-b"
+            ref={fileRailRef}
+          >
+            <div className="flex min-w-max items-center gap-1">
+              {files.map((file, index) => (
+                <FileTabTrigger
+                  activeFileId={activeFileId}
+                  file={file}
+                  fileLabel={fileLabel}
+                  getFileId={getFileId}
+                  index={index}
+                  key={getFileId(file, index)}
+                  onSelect={setActiveFileId}
+                  reduceMotion={reduceMotion}
+                />
+              ))}
+            </div>
+            <motion.div
+              animate={{
+                left: fileIndicator.left,
+                opacity: fileIndicator.ready ? 1 : 0,
+                width: fileIndicator.width,
+              }}
+              aria-hidden
+              className="pointer-events-none absolute bottom-0 h-px bg-foreground"
+              initial={false}
+              transition={
+                reduceMotion
+                  ? { duration: 0 }
+                  : {
+                      type: "spring",
+                      stiffness: 420,
+                      damping: 34,
+                      mass: 0.75,
+                    }
+              }
+            />
+          </div>
+        </div>
+      ) : null}
+
+      <DocsCodeSnippet code={activeFile?.content ?? ""} />
+    </div>
+  );
 }
 
 export function ComponentInstallationTabs({
@@ -90,7 +337,7 @@ export function ComponentInstallationTabs({
     width: 0,
   });
   const tabRailRef = useRef<HTMLDivElement | null>(null);
-  const reduceMotion = useReducedMotion();
+  const reduceMotion = useReducedMotion() ?? false;
   const updateIndicator = useCallback(() => {
     const rail = tabRailRef.current;
 

@@ -6,6 +6,7 @@ import {
   type ReducedMotionProp,
   useResolvedReducedMotion,
 } from "@/lib/reduced-motion";
+import { registryTheme } from "@/lib/registry-theme";
 import { cn } from "@/lib/utils";
 
 const MotionButton = motion.button;
@@ -149,6 +150,7 @@ const RippleButton = React.forwardRef<HTMLButtonElement, RippleButtonProps>(
     return (
       <MotionButton
         className={cn(
+          registryTheme,
           "relative cursor-pointer touch-manipulation select-none overflow-hidden",
           className
         )}
@@ -365,6 +367,7 @@ function ButtonGroupItems({
   return (
     <div
       className={cn(
+        registryTheme,
         "relative inline-flex items-stretch rounded-lg bg-background",
         showDividers && "border border-border",
         className
@@ -594,6 +597,7 @@ function SegmentedControl({
       aria-labelledby={ariaLabelledBy}
       aria-orientation="horizontal"
       className={cn(
+        registryTheme,
         "inline-flex items-center rounded-lg border border-border bg-background",
         segmentedShellSizeStyles[size],
         className

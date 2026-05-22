@@ -7,6 +7,7 @@ import {
   ReducedMotionConfig,
   type ReducedMotionProp,
 } from "@/lib/reduced-motion";
+import { registryTheme } from "@/lib/registry-theme";
 import { cn } from "@/lib/utils";
 
 type TabsContextValue = {
@@ -322,7 +323,7 @@ export function Tabs({
   return (
     <ReducedMotionConfig reducedMotion={reducedMotion}>
       <TabsContext.Provider value={contextValue}>
-        <div className={cn("w-full", className)} {...props}>
+        <div className={cn(registryTheme, "w-full", className)} {...props}>
           {children}
           {activeContent ? (
             <div className="relative mt-10">

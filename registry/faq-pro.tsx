@@ -4,6 +4,7 @@ import { ChevronDown, X } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import * as React from "react";
 
+import { registryTheme } from "@/lib/registry-theme";
 import { cn } from "@/lib/utils";
 
 const PANEL_EASE = [0.16, 1, 0.3, 1] as const;
@@ -218,7 +219,11 @@ function FaqPro({
 
   return (
     <div
-      className={cn("mx-auto flex w-full max-w-2xl flex-col gap-3", className)}
+      className={cn(
+        registryTheme,
+        "mx-auto flex w-full max-w-2xl flex-col gap-3",
+        className
+      )}
     >
       <div className="relative">
         <input

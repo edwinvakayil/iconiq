@@ -14,6 +14,8 @@ import {
   type ReducedMotionProp,
   useResolvedReducedMotion,
 } from "@/lib/reduced-motion";
+import { registryTheme } from "@/lib/registry-theme";
+import { cn } from "@/lib/utils";
 
 interface SliderMark {
   value: number;
@@ -285,7 +287,7 @@ export function Slider({
 
   return (
     <ReducedMotionConfig reducedMotion={reducedMotion}>
-      <div className="w-full select-none">
+      <div className={cn(registryTheme, "w-full select-none")}>
         {(label || showValue) && (
           <div className="mb-3 flex items-baseline justify-between">
             {label && (

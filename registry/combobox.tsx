@@ -7,6 +7,7 @@ import {
   ReducedMotionConfig,
   type ReducedMotionProp,
 } from "@/lib/reduced-motion";
+import { registryTheme } from "@/lib/registry-theme";
 import { cn } from "@/lib/utils";
 
 export type ComboboxOption = {
@@ -276,7 +277,10 @@ export function Combobox({
       {open && (
         <motion.div
           animate={{ opacity: 1, y: 0 }}
-          className="z-[9999] overflow-hidden rounded-lg border border-neutral-200 bg-white text-neutral-900 shadow-lg dark:border-neutral-700 dark:bg-neutral-950 dark:text-neutral-100"
+          className={cn(
+            registryTheme,
+            "z-[9999] overflow-hidden rounded-lg border border-neutral-200 bg-white text-neutral-900 shadow-lg dark:border-neutral-700 dark:bg-neutral-950 dark:text-neutral-100"
+          )}
           exit={{ opacity: 0, y: -4 }}
           initial={{ opacity: 0, y: -6 }}
           key="popover"
@@ -391,7 +395,10 @@ export function Combobox({
 
   return (
     <ReducedMotionConfig reducedMotion={reducedMotion}>
-      <div className={cn("relative w-full", className)} ref={containerRef}>
+      <div
+        className={cn(registryTheme, "relative w-full", className)}
+        ref={containerRef}
+      >
         <div
           className={cn(
             "group flex h-11 w-full items-center gap-2 rounded-lg border border-input bg-background px-3.5 text-base shadow-sm transition-all sm:text-sm",

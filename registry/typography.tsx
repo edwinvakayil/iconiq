@@ -1,6 +1,7 @@
 import { cva, type VariantProps } from "class-variance-authority";
 import * as React from "react";
 
+import { registryTheme } from "@/lib/registry-theme";
 import { cn } from "@/lib/utils";
 
 const TYPOGRAPHY_SAMPLE_TEXT = "Talent without working hard is nothing.";
@@ -294,6 +295,7 @@ const Typography = React.forwardRef<HTMLElement, TypographyProps>(
     return (
       <Component
         className={cn(
+          registryTheme,
           typographyVariants({ variant: resolvedVariant }),
           className
         )}

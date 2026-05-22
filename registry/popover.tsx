@@ -8,6 +8,7 @@ import {
   ReducedMotionConfig,
   type ReducedMotionProp,
 } from "@/lib/reduced-motion";
+import { registryTheme } from "@/lib/registry-theme";
 import { cn } from "@/lib/utils";
 
 type Side = "top" | "right" | "bottom" | "left";
@@ -91,6 +92,7 @@ const PopoverTrigger = React.forwardRef<
     <PopoverPrimitive.Trigger
       asChild={asChild}
       className={cn(
+        !asChild && registryTheme,
         !asChild &&
           "inline-flex min-h-11 min-w-11 touch-manipulation items-center justify-center rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
         className
@@ -126,6 +128,7 @@ const PopoverContentPanel = React.forwardRef<
     <motion.div
       animate={{ opacity: 1, scale: 1, x: 0, y: 0 }}
       className={cn(
+        registryTheme,
         "z-50 w-72 rounded-lg border border-border bg-white p-4 text-foreground shadow-lg outline-none dark:bg-black",
         className
       )}

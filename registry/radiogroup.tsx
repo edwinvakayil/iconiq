@@ -3,6 +3,7 @@
 import { AnimatePresence, motion } from "motion/react";
 import * as React from "react";
 
+import { registryTheme } from "@/lib/registry-theme";
 import { cn } from "@/lib/utils";
 
 function getValidSelection(options: RadioOption[], candidate?: string) {
@@ -138,7 +139,7 @@ export const RadioGroup: React.FC<RadioGroupProps> = ({
       aria-label={ariaLabel}
       aria-labelledby={ariaLabelledBy}
       aria-orientation="vertical"
-      className={cn("flex flex-col gap-0.5", className)}
+      className={cn(registryTheme, "flex flex-col gap-0.5", className)}
       role="radiogroup"
     >
       {options.map((option, index) => {
@@ -198,8 +199,8 @@ export const RadioGroup: React.FC<RadioGroupProps> = ({
                   animate={{
                     borderWidth: isSelected ? 6 : 2,
                     borderColor: isSelected
-                      ? "hsl(var(--primary))"
-                      : "hsl(var(--muted-foreground) / 0.25)",
+                      ? "var(--primary)"
+                      : "color-mix(in srgb, var(--muted-foreground) 25%, transparent)",
                   }}
                   className="absolute inset-0 rounded-full"
                   style={{ borderStyle: "solid" }}
@@ -228,8 +229,8 @@ export const RadioGroup: React.FC<RadioGroupProps> = ({
                 <motion.span
                   animate={{
                     color: isSelected
-                      ? "hsl(var(--foreground))"
-                      : "hsl(var(--muted-foreground))",
+                      ? "var(--foreground)"
+                      : "var(--muted-foreground)",
                     fontWeight: isSelected ? 500 : 400,
                   }}
                   className="text-[14px] leading-tight"

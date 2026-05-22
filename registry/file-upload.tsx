@@ -18,6 +18,7 @@ import {
   useTransform,
 } from "motion/react";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { registryTheme } from "@/lib/registry-theme";
 
 export type FileUploadStatus = "uploading" | "done";
 
@@ -295,7 +296,7 @@ export function FileUpload({
 
   return (
     <div
-      className={["mx-auto w-full max-w-2xl", className]
+      className={[registryTheme, "mx-auto w-full max-w-2xl", className]
         .filter(Boolean)
         .join(" ")}
     >

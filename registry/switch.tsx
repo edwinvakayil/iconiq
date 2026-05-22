@@ -8,6 +8,7 @@ import {
   type ReducedMotionProp,
   useResolvedReducedMotion,
 } from "@/lib/reduced-motion";
+import { registryTheme } from "@/lib/registry-theme";
 import { cn } from "@/lib/utils";
 
 const TRACK_W = 44;
@@ -133,6 +134,7 @@ const Switch = forwardRef<
       <SwitchPrimitive.Root
         checked={internalChecked}
         className={cn(
+          registryTheme,
           "relative inline-flex shrink-0 cursor-pointer items-center rounded-full",
           "outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
           "disabled:cursor-not-allowed disabled:opacity-50",
@@ -191,6 +193,7 @@ const Switch = forwardRef<
       <ReducedMotionConfig reducedMotion={reducedMotion}>
         <div
           className={cn(
+            registryTheme,
             "flex cursor-pointer select-none items-center gap-2.5",
             disabled && "cursor-not-allowed opacity-50"
           )}

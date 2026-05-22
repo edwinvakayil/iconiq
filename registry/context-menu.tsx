@@ -9,6 +9,7 @@ import {
   ReducedMotionConfig,
   type ReducedMotionProp,
 } from "@/lib/reduced-motion";
+import { registryTheme } from "@/lib/registry-theme";
 import { cn } from "@/lib/utils";
 
 export type ContextMenuItem = {
@@ -455,6 +456,7 @@ export function ContextMenu({
           animate={{ opacity: 1, scale: 1, y: 0 }}
           aria-orientation="vertical"
           className={cn(
+            registryTheme,
             "rounded-lg border border-border/60 bg-white p-1.5 text-popover-foreground shadow-2xl dark:border-neutral-800 dark:bg-black",
             menuClassName
           )}
@@ -511,6 +513,7 @@ export function ContextMenu({
   );
 
   const triggerClassName = cn(
+    registryTheme,
     "outline-none focus-visible:ring-2 focus-visible:ring-ring/50 focus-visible:ring-offset-2 focus-visible:ring-offset-background",
     className
   );

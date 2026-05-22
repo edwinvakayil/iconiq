@@ -18,6 +18,7 @@ import {
   type ReducedMotionProp,
   useResolvedReducedMotion,
 } from "@/lib/reduced-motion";
+import { registryTheme } from "@/lib/registry-theme";
 import { cn } from "@/lib/utils";
 
 const buttonVariantStyles = {
@@ -312,7 +313,11 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
                   scale: canAnimate && isPressed ? 0.985 : 1,
                 }
           }
-          className={cn(buttonRootVariants({ variant }), className)}
+          className={cn(
+            registryTheme,
+            buttonRootVariants({ variant }),
+            className
+          )}
           data-pressed={isPressed ? "true" : "false"}
           disabled={disabled}
           initial={false}

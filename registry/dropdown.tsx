@@ -8,6 +8,7 @@ import {
   type ReducedMotionProp,
   useResolvedReducedMotion,
 } from "@/lib/reduced-motion";
+import { registryTheme } from "@/lib/registry-theme";
 import { cn } from "@/lib/utils";
 
 export type DropdownVariant = "select" | "action";
@@ -609,7 +610,7 @@ export function Dropdown({
   return (
     <DropdownContext.Provider value={contextValue}>
       <div
-        className={cn("relative inline-block", className)}
+        className={cn(registryTheme, "relative inline-block", className)}
         ref={containerRef}
       >
         {children}

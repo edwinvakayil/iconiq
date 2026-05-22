@@ -23,6 +23,7 @@ import {
   type ReducedMotionProp,
   useResolvedReducedMotion,
 } from "@/lib/reduced-motion";
+import { registryTheme } from "@/lib/registry-theme";
 import { cn } from "@/lib/utils";
 
 const MAX_MENU_HEIGHT = 320;
@@ -615,7 +616,10 @@ function SelectMenuContent({
   return (
     <motion.div
       animate={{ opacity: 1, y: 0 }}
-      className="z-[300] overflow-hidden rounded-lg border border-border bg-card shadow-lg"
+      className={cn(
+        registryTheme,
+        "z-[300] overflow-hidden rounded-lg border border-border bg-card shadow-lg"
+      )}
       exit={{ opacity: 0, y: reduceMotion ? 0 : -4 }}
       initial={{ opacity: 0, y: reduceMotion ? 0 : -4 }}
       key="select-dropdown"
@@ -965,7 +969,7 @@ export function Select({
   }, [closeMenu, open]);
 
   return (
-    <div className={cn("relative w-72 max-w-full", className)}>
+    <div className={cn(registryTheme, "relative w-72 max-w-full", className)}>
       <motion.button
         aria-controls={open ? listboxId : undefined}
         aria-expanded={open}

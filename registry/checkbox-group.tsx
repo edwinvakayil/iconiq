@@ -3,6 +3,7 @@
 import { Check } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useState } from "react";
+import { registryTheme } from "@/lib/registry-theme";
 import { cn } from "@/lib/utils";
 
 /** Soft settle — fluid, low bounce (water-like). */
@@ -132,7 +133,7 @@ function CheckboxGroup({
   };
 
   return (
-    <div className={cn("flex flex-col gap-1.5", className)}>
+    <div className={cn(registryTheme, "flex flex-col gap-1.5", className)}>
       {sections.map((section) => (
         <div className="flex flex-col gap-1" key={section.key}>
           {section.label ? (

@@ -8,6 +8,7 @@ import {
   type ReducedMotionProp,
   useResolvedReducedMotion,
 } from "@/lib/reduced-motion";
+import { registryTheme } from "@/lib/registry-theme";
 import { cn } from "@/lib/utils";
 
 type Ripple = {
@@ -162,6 +163,7 @@ const Toggle = React.forwardRef<
           <motion.button
             animate={buttonControls}
             className={cn(
+              registryTheme,
               toggleVariants({ variant, size }),
               isIconOnly && "px-0",
               className

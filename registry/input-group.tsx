@@ -6,6 +6,7 @@ import {
   ReducedMotionConfig,
   type ReducedMotionProp,
 } from "@/lib/reduced-motion";
+import { registryTheme } from "@/lib/registry-theme";
 import { cn } from "@/lib/utils";
 
 interface InputGroupFieldProps extends React.ComponentProps<"input"> {
@@ -313,7 +314,7 @@ function InputGroupField({
   };
 
   return (
-    <div className="relative w-full">
+    <div className={cn(registryTheme, "relative w-full")}>
       <div
         className={cn(
           "group relative flex items-center gap-3 pt-5 pb-2 transition-opacity",
@@ -448,7 +449,10 @@ function InputGroup({
 }: InputGroupProps) {
   return (
     <ReducedMotionConfig reducedMotion={reducedMotion}>
-      <div className={cn("flex w-full flex-col gap-6", className)} {...props}>
+      <div
+        className={cn(registryTheme, "flex w-full flex-col gap-6", className)}
+        {...props}
+      >
         {children}
       </div>
     </ReducedMotionConfig>

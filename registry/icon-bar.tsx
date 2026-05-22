@@ -4,6 +4,7 @@ import type { LucideIcon } from "lucide-react";
 import { motion } from "motion/react";
 import * as React from "react";
 
+import { registryTheme } from "@/lib/registry-theme";
 import { cn } from "@/lib/utils";
 
 const ICON_CELL_PX = 36;
@@ -70,7 +71,11 @@ function IconBar({
     <IconBarContext.Provider value={contextValue}>
       <div
         aria-orientation="horizontal"
-        className={cn("flex flex-wrap items-center gap-2", className)}
+        className={cn(
+          registryTheme,
+          "flex flex-wrap items-center gap-2",
+          className
+        )}
         role="toolbar"
       >
         {children}

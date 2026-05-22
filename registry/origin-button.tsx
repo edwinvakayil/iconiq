@@ -3,6 +3,7 @@
 import { motion } from "motion/react";
 import * as React from "react";
 
+import { registryTheme } from "@/lib/registry-theme";
 import { cn } from "@/lib/utils";
 
 const FILL_DURATION = 0.5;
@@ -183,6 +184,7 @@ const OriginButton = React.forwardRef<HTMLButtonElement, OriginButtonProps>(
         {...props}
         aria-busy={loading || undefined}
         className={cn(
+          registryTheme,
           "relative inline-flex h-12 cursor-pointer touch-manipulation select-none items-center justify-center overflow-hidden rounded-xl px-8 font-medium text-[15px] tracking-[-0.02em]",
           "border-[0.5px] border-border bg-card text-card-foreground",
           "dark:bg-muted dark:text-foreground",

@@ -9,6 +9,7 @@ import {
   type ReducedMotionProp,
   useResolvedReducedMotion,
 } from "@/lib/reduced-motion";
+import { registryTheme } from "@/lib/registry-theme";
 import { cn } from "@/lib/utils";
 
 const badgeColors = {
@@ -140,6 +141,7 @@ const Badge = forwardRef<HTMLSpanElement, BadgeProps>(
         <motion.span
           animate={shouldAnimate ? { opacity: 1, scale: 1 } : undefined}
           className={cn(
+            registryTheme,
             badgeVariants({ variant, size: resolvedSize }),
             className
           )}

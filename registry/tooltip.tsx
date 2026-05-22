@@ -9,6 +9,7 @@ import {
   ReducedMotionConfig,
   type ReducedMotionProp,
 } from "@/lib/reduced-motion";
+import { registryTheme } from "@/lib/registry-theme";
 import { cn } from "@/lib/utils";
 
 type Side = "top" | "bottom" | "left" | "right";
@@ -125,6 +126,7 @@ export function Tooltip({
                     filter: "blur(0px)",
                   }}
                   className={cn(
+                    registryTheme,
                     "group/tooltip pointer-events-none relative z-50 max-w-60 whitespace-normal rounded-lg bg-foreground px-3 py-1.5 font-medium text-background text-xs leading-snug shadow-[0_4px_24px_-4px_rgba(0,0,0,0.25)]",
                     className
                   )}

@@ -20,6 +20,8 @@ import {
   type ReducedMotionProp,
   useResolvedReducedMotion,
 } from "@/lib/reduced-motion";
+import { registryTheme } from "@/lib/registry-theme";
+import { cn } from "@/lib/utils";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 const FOCUSABLE_SELECTOR = [
@@ -280,7 +282,7 @@ export function Drawer({
   const drawerContent = (
     <AnimatePresence>
       {open && (
-        <div className="fixed inset-0 z-[2147483647]">
+        <div className={cn(registryTheme, "fixed inset-0 z-[2147483647]")}>
           <motion.div
             animate={{ opacity: 1, backdropFilter: "blur(6px)" }}
             className="absolute inset-0 bg-foreground/30"

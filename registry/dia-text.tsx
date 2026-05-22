@@ -19,6 +19,7 @@ import {
   useState,
 } from "react";
 
+import { registryTheme } from "@/lib/registry-theme";
 import { cn } from "@/lib/utils";
 
 const DEFAULT_COLORS = ["#c679c4", "#fa3d1d", "#ffb005", "#e1e1fe", "#0358f7"];
@@ -339,7 +340,11 @@ const DiaTextReveal = forwardRef<HTMLSpanElement, DiaTextRevealProps>(
     return (
       <motion.span
         animate={animatedW != null ? { width: animatedW } : undefined}
-        className={cn("align-bottom text-inherit leading-[100%]", className)}
+        className={cn(
+          registryTheme,
+          "align-bottom text-inherit leading-[100%]",
+          className
+        )}
         ref={setRefs}
         style={containerStyle}
         transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}

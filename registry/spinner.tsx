@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "motion/react";
+import { registryTheme } from "@/lib/registry-theme";
 import { cn } from "@/lib/utils";
 
 const MotionOutput = motion.create("output");
@@ -19,6 +20,7 @@ export function Spinner({ variant = "ring", className }: SpinnerProps) {
         aria-label="Loading"
         aria-live="polite"
         className={cn(
+          registryTheme,
           "inline-flex size-6 items-center justify-center gap-[18%]",
           className
         )}
@@ -46,6 +48,7 @@ export function Spinner({ variant = "ring", className }: SpinnerProps) {
       aria-label="Loading"
       aria-live="polite"
       className={cn(
+        registryTheme,
         "box-border size-6 rounded-full border-2 border-muted border-t-primary",
         className
       )}

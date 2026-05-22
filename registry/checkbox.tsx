@@ -1,6 +1,7 @@
 "use client";
 import { motion } from "motion/react";
 import * as React from "react";
+import { registryTheme } from "@/lib/registry-theme";
 import { cn } from "@/lib/utils";
 
 interface CheckboxProps {
@@ -33,6 +34,7 @@ export function Checkbox({
   return (
     <label
       className={cn(
+        registryTheme,
         "inline-flex cursor-pointer select-none items-center gap-3",
         className
       )}

@@ -12,6 +12,7 @@ import {
 } from "react";
 import { createPortal } from "react-dom";
 
+import { registryTheme } from "@/lib/registry-theme";
 import { cn } from "@/lib/utils";
 
 export type AlertPosition =
@@ -306,6 +307,7 @@ export const Alert = ({
           aria-labelledby={titleId}
           aria-live="polite"
           className={cn(
+            registryTheme,
             "relative flex items-start gap-3 overflow-hidden rounded-lg border border-foreground/8 bg-card px-3.5 shadow-[0_2px_14px_0_rgba(0,0,0,0.07)]",
             resolvedVariant === "toast"
               ? "py-3 sm:max-w-sm sm:py-2.5"

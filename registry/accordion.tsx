@@ -10,6 +10,7 @@ import {
   type ReducedMotionProp,
   useResolvedReducedMotion,
 } from "@/lib/reduced-motion";
+import { registryTheme } from "@/lib/registry-theme";
 import { cn } from "@/lib/utils";
 
 export interface AccordionItem {
@@ -371,7 +372,7 @@ export function Accordion({
     return (
       <ReducedMotionConfig reducedMotion={reducedMotion}>
         <AccordionPrimitive.Root
-          className={cn("mx-auto w-full max-w-2xl", className)}
+          className={cn(registryTheme, "mx-auto w-full max-w-2xl", className)}
           onValueChange={setOpenItems}
           type="multiple"
           value={openItems}
@@ -385,7 +386,7 @@ export function Accordion({
   return (
     <ReducedMotionConfig reducedMotion={reducedMotion}>
       <AccordionPrimitive.Root
-        className={cn("mx-auto w-full max-w-2xl", className)}
+        className={cn(registryTheme, "mx-auto w-full max-w-2xl", className)}
         collapsible
         onValueChange={(value) => setOpenItems(value ? [value] : [])}
         type="single"

@@ -3,6 +3,7 @@
 import { motion } from "motion/react";
 import { forwardRef, type HTMLAttributes, useEffect, useState } from "react";
 
+import { registryTheme } from "@/lib/registry-theme";
 import { cn } from "@/lib/utils";
 
 /** Keeps the visible avatar and image footprint aligned to a 44px target. */
@@ -106,6 +107,7 @@ const Avatar = forwardRef<HTMLDivElement, AvatarProps>(
       <motion.div
         animate={{ opacity: 1, scale: 1 }}
         className={cn(
+          registryTheme,
           "relative inline-flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-full bg-primary text-background",
           className
         )}
