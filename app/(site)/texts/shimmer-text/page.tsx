@@ -9,6 +9,8 @@ import {
   type BreadcrumbItem,
   DetailLedger,
   DocsBreadcrumbs,
+  SectionPager,
+  SectionPrevNextNav,
 } from "@/components/docs/page-shell";
 import {
   PageReveal,
@@ -130,6 +132,10 @@ export default function ShimmerTextPage() {
                           title="Shimmer Text"
                           v0PageCode={v0PageCode}
                         />
+                        <SectionPager
+                          itemSlug="shimmer-text"
+                          sectionLabel="Texts"
+                        />
                       </div>
                     </div>
                   </div>
@@ -156,6 +162,8 @@ export default function ShimmerTextPage() {
                 <DetailLedger details={shimmerTextApiDetails} />
               </TextDocsSection>
             </div>
+
+            <SectionPrevNextNav itemSlug="shimmer-text" sectionLabel="Texts" />
           </article>
         </main>
 

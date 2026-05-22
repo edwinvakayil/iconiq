@@ -9,7 +9,6 @@ import { Header } from "@/components/header";
 import { PageTitleSync } from "@/components/page-title-sync";
 import { PageTransition } from "@/components/page-transition";
 import { RouteScrollReset } from "@/components/route-scroll-reset";
-import { StarPromptCard } from "@/components/star-prompt-card";
 
 export default function SiteLayout({
   children,
@@ -54,7 +53,6 @@ export default function SiteLayout({
             </div>
           </div>
         </div>
-        <StarPromptCard />
       </div>
     </>
   );

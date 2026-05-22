@@ -9,6 +9,8 @@ import {
   type BreadcrumbItem,
   DetailLedger,
   DocsBreadcrumbs,
+  SectionPager,
+  SectionPrevNextNav,
 } from "@/components/docs/page-shell";
 import {
   PageReveal,
@@ -140,6 +142,10 @@ export default function DiaTextPage() {
                           title="Dia Text"
                           v0PageCode={v0PageCode}
                         />
+                        <SectionPager
+                          itemSlug="dia-text"
+                          sectionLabel="Texts"
+                        />
                       </div>
                     </div>
                   </div>
@@ -166,6 +172,8 @@ export default function DiaTextPage() {
                 <DetailLedger details={diaTextApiDetails} />
               </TextDocsSection>
             </div>
+
+            <SectionPrevNextNav itemSlug="dia-text" sectionLabel="Texts" />
           </article>
         </main>
 

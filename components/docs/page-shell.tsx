@@ -438,14 +438,18 @@ function DocsHero({
   );
 }
 
-const COMPONENT_NAV_ITEMS =
-  SITE_SECTIONS.find((section) => section.label === "Components")?.children ??
-  [];
+function getSectionNavItems(sectionLabel: string) {
+  return (
+    SITE_SECTIONS.find(
+      (section) => section.label.toLowerCase() === sectionLabel.toLowerCase()
+    )?.children ?? []
+  );
+}
 
-function getComponentNeighbors(componentName: string) {
-  const currentHref = `/components/${componentName}`;
-  const currentIndex = COMPONENT_NAV_ITEMS.findIndex(
-    (item) => item.href === currentHref
+function getSectionNeighbors(sectionLabel: string, itemSlug: string) {
+  const navItems = getSectionNavItems(sectionLabel);
+  const currentIndex = navItems.findIndex(
+    (item) => item.href.split("/").pop() === itemSlug
   );
 
   if (currentIndex === -1) {
@@ -456,17 +460,23 @@ function getComponentNeighbors(componentName: string) {
   }
 
   return {
-    previousItem:
-      currentIndex > 0 ? COMPONENT_NAV_ITEMS[currentIndex - 1] : null,
+    previousItem: currentIndex > 0 ? navItems[currentIndex - 1] : null,
     nextItem:
-      currentIndex < COMPONENT_NAV_ITEMS.length - 1
-        ? COMPONENT_NAV_ITEMS[currentIndex + 1]
-        : null,
+      currentIndex < navItems.length - 1 ? navItems[currentIndex + 1] : null,
   };
 }
 
-function ComponentPager({ componentName }: { componentName: string }) {
-  const { previousItem, nextItem } = getComponentNeighbors(componentName);
+function SectionPager({
+  sectionLabel,
+  itemSlug,
+}: {
+  sectionLabel: string;
+  itemSlug: string;
+}) {
+  const { previousItem, nextItem } = getSectionNeighbors(
+    sectionLabel,
+    itemSlug
+  );
 
   const baseButtonClassName =
     "inline-flex size-9 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2";
@@ -497,8 +507,17 @@ function ComponentPager({ componentName }: { componentName: string }) {
   );
 }
 
-function ComponentPrevNextNav({ componentName }: { componentName: string }) {
-  const { previousItem, nextItem } = getComponentNeighbors(componentName);
+function SectionPrevNextNav({
+  sectionLabel,
+  itemSlug,
+}: {
+  sectionLabel: string;
+  itemSlug: string;
+}) {
+  const { previousItem, nextItem } = getSectionNeighbors(
+    sectionLabel,
+    itemSlug
+  );
 
   return (
     <nav className="mt-14 flex items-center justify-between border-border/80 border-t pt-8">
@@ -865,6 +884,7 @@ function ComponentDocsPage({
   previewClassName?: string;
 }) {
   const shouldShowReducedMotion = supportsReducedMotionDocs(componentName);
+  const sectionLabel = breadcrumbs[1]?.label ?? "Components";
   const reducedMotionCode = shouldShowReducedMotion
     ? injectReducedMotionIntoCode(usageCode, componentName)
     : usageCode;
@@ -950,7 +970,10 @@ function ComponentDocsPage({
                         title={title}
                         v0PageCode={resolvedV0PageCode || undefined}
                       />
-                      <ComponentPager componentName={componentName} />
+                      <SectionPager
+                        itemSlug={componentName}
+                        sectionLabel={sectionLabel}
+                      />
                     </div>
                   </div>
                 </div>
@@ -988,7 +1011,10 @@ function ComponentDocsPage({
                 </ComponentSection>
               </div>
 
-              <ComponentPrevNextNav componentName={componentName} />
+              <SectionPrevNextNav
+                itemSlug={componentName}
+                sectionLabel={sectionLabel}
+              />
             </article>
           </main>
 
@@ -1009,5 +1035,7 @@ export {
   DocsSection,
   ComponentDocsPage,
   DetailLedger,
+  SectionPager,
+  SectionPrevNextNav,
 };
 export type { BreadcrumbItem, DetailField, DetailItem, HeroMetaItem };
