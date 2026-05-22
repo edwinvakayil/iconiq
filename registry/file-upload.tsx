@@ -10,13 +10,7 @@ import {
   Video,
   X,
 } from "lucide-react";
-import {
-  AnimatePresence,
-  motion,
-  useMotionValue,
-  useSpring,
-  useTransform,
-} from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { registryTheme } from "@/lib/registry-theme";
 
@@ -115,7 +109,7 @@ function ProgressRing({
         cy={size / 2}
         fill="none"
         r={r}
-        stroke="var(--color-brand)"
+        stroke="color-mix(in oklab, var(--color-foreground) 26%, transparent)"
         strokeDasharray={c}
         strokeLinecap="round"
         strokeWidth={stroke}
@@ -139,28 +133,9 @@ export function FileUpload({
   const [files, setFiles] = useState<FileUploadItem[]>([]);
   const [isDragging, setIsDragging] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
-  const dropRef = useRef<HTMLDivElement>(null);
   const filesRef = useRef<FileUploadItem[]>([]);
   const completedSignatureRef = useRef("");
   const reportedSignatureRef = useRef("");
-
-  // Pointer-tracking glow
-  const mx = useMotionValue(0.5);
-  const my = useMotionValue(0.5);
-  const sx = useSpring(mx, { stiffness: 120, damping: 20 });
-  const sy = useSpring(my, { stiffness: 120, damping: 20 });
-  const glow = useTransform(
-    [sx, sy],
-    ([x, y]) =>
-      `radial-gradient(420px circle at ${(x as number) * 100}% ${(y as number) * 100}%, color-mix(in oklab, var(--color-brand) 22%, transparent), transparent 60%)`
-  );
-
-  const handlePointer = (e: React.PointerEvent) => {
-    const rect = dropRef.current?.getBoundingClientRect();
-    if (!rect) return;
-    mx.set((e.clientX - rect.left) / rect.width);
-    my.set((e.clientY - rect.top) / rect.height);
-  };
 
   const addFiles = useCallback(
     (incoming: FileList | File[]) => {
@@ -296,7 +271,15 @@ export function FileUpload({
 
   return (
     <div
-      className={[registryTheme, "mx-auto w-full max-w-2xl", className]
+      className={[
+        registryTheme,
+        "[--file-upload-shell-shadow:0_12px_28px_-24px_rgba(15,23,42,0.18)]",
+        "[--file-upload-icon-shadow:0_10px_18px_-16px_rgba(15,23,42,0.16)]",
+        "dark:[--file-upload-shell-shadow:0_16px_32px_-26px_rgba(0,0,0,0.38)]",
+        "dark:[--file-upload-icon-shadow:0_12px_22px_-18px_rgba(0,0,0,0.32)]",
+        "mx-auto w-full max-w-2xl",
+        className,
+      ]
         .filter(Boolean)
         .join(" ")}
     >
@@ -320,20 +303,11 @@ export function FileUpload({
         }}
         onDrop={onDrop}
         onKeyDown={handleKeyDown}
-        onPointerMove={disabled ? undefined : handlePointer}
-        ref={dropRef}
         role="button"
-        style={{ boxShadow: "var(--shadow-soft)" }}
+        style={{ boxShadow: "var(--file-upload-shell-shadow)" }}
         tabIndex={disabled ? -1 : 0}
         transition={{ type: "spring", stiffness: 260, damping: 24 }}
       >
-        {/* Pointer glow */}
-        <motion.div
-          aria-hidden
-          className="pointer-events-none absolute inset-0"
-          style={{ background: glow as unknown as string }}
-        />
-
         <input
           accept={accept}
           className="hidden"
@@ -367,7 +341,7 @@ export function FileUpload({
             <motion.div
               animate={{ scale: isDragging ? 1.06 : 1 }}
               className="absolute inset-0 flex items-center justify-center rounded-lg bg-foreground text-background"
-              style={{ boxShadow: "var(--shadow-soft)" }}
+              style={{ boxShadow: "var(--file-upload-icon-shadow)" }}
               transition={{ type: "spring", stiffness: 240, damping: 16 }}
             >
               <motion.div
@@ -452,19 +426,6 @@ export function FileUpload({
                   mass: 0.6,
                 }}
               >
-                {/* Progress fill behind row */}
-                <motion.div
-                  animate={{ width: `${f.progress}%` }}
-                  aria-hidden
-                  className="absolute inset-y-0 left-0 origin-left"
-                  initial={{ width: 0 }}
-                  style={{
-                    background:
-                      "linear-gradient(90deg, color-mix(in oklab, var(--color-brand-soft) 60%, transparent), transparent)",
-                  }}
-                  transition={{ type: "spring", stiffness: 80, damping: 20 }}
-                />
-
                 {/* Thumb / ring */}
                 <div className="relative z-10 flex h-12 w-12 shrink-0 items-center justify-center">
                   {f.preview ? (
