@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
 import { BrandLink } from "@/components/brand-wordmark";
+import { HomeHeaderNav } from "@/components/home-header-nav";
 import { SiteSearch } from "@/components/site-search";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { LINK } from "@/constants";
@@ -241,14 +242,16 @@ export function Header() {
     <header
       className={cn(
         "fixed top-0 right-0 left-0 z-[150] w-full border-border/50 bg-background",
+        isHome && "overflow-visible",
         !isHome && "border-b"
       )}
     >
       <div className="flex h-14 w-full items-center justify-between gap-4 px-4">
         <div className="flex items-center">
-          <div className="flex items-center gap-3">
+          <div className="flex min-w-0 items-center gap-3">
             <MobileNav className="md:hidden" />
             <BrandHeaderLink />
+            {isHome ? <HomeHeaderNav className="hidden lg:flex" /> : null}
           </div>
         </div>
 
