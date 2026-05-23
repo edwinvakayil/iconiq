@@ -144,6 +144,26 @@
       ]
     },
     {
+      "name": "b-checkbox",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": ["@base-ui/react", "motion"],
+      "devDependencies": [],
+      "title": "Checkbox (Base UI)",
+      "description": "Checkbox with the same Iconiq API layered over Base UI primitives, preserving the original fill spring, press scale, checkmark draw, and label fade.",
+      "files": [
+        {
+          "path": "b-checkbox.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "registry-theme.ts",
+          "target": "lib/registry-theme.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
       "name": "badge",
       "type": "registry:ui",
       "registryDependencies": [],
@@ -664,6 +684,26 @@
           "path": "reduced-motion.tsx",
           "target": "lib/reduced-motion.tsx",
           "type": "registry:lib"
+        },
+        {
+          "path": "registry-theme.ts",
+          "target": "lib/registry-theme.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
+      "name": "r-checkbox",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": ["@radix-ui/react-checkbox", "motion"],
+      "devDependencies": [],
+      "title": "Checkbox (Radix UI)",
+      "description": "Checkbox with the same Iconiq API layered over Radix UI primitives, preserving the original fill spring, press scale, checkmark draw, and label fade.",
+      "files": [
+        {
+          "path": "r-checkbox.tsx",
+          "type": "registry:ui"
         },
         {
           "path": "registry-theme.ts",

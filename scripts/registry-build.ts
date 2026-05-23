@@ -98,6 +98,12 @@ const REGISTRY_UI_META: Record<
       "Avatar with the same single Iconiq API layered over Base UI primitives, keeping immediate fallback initials and a quiet image crossfade.",
     dependencies: ["@base-ui/react", "motion"],
   },
+  "b-checkbox": {
+    title: "Checkbox (Base UI)",
+    description:
+      "Checkbox with the same Iconiq API layered over Base UI primitives, preserving the original fill spring, press scale, checkmark draw, and label fade.",
+    dependencies: ["@base-ui/react", "motion"],
+  },
   alert: {
     title: "Alert",
     description:
@@ -181,6 +187,12 @@ const REGISTRY_UI_META: Record<
     description:
       "Avatar with the same single Iconiq API layered over Radix UI primitives, preserving immediate fallback initials and the quiet image reveal.",
     dependencies: ["@radix-ui/react-avatar", "motion"],
+  },
+  "r-checkbox": {
+    title: "Checkbox (Radix UI)",
+    description:
+      "Checkbox with the same Iconiq API layered over Radix UI primitives, preserving the original fill spring, press scale, checkmark draw, and label fade.",
+    dependencies: ["@radix-ui/react-checkbox", "motion"],
   },
   "faq-pro": {
     title: "FAQ Pro",

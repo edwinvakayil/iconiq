@@ -26,6 +26,8 @@ const componentSummaries: Record<string, string> = {
     "Alert dialog docs with a provider switch that swaps between Base UI and Radix UI registry entries.",
   "/radix-base-ui/avatar":
     "Avatar docs with a provider switch that swaps between Base UI and Radix UI registry entries.",
+  "/radix-base-ui/checkbox":
+    "Checkbox docs with a provider switch that swaps between Base UI and Radix UI registry entries.",
   "/components/alert":
     "Dismissible alert banner with motion-aware entrance and close behavior.",
   "/components/avatar":
