@@ -1,0 +1,420 @@
+"use client";
+
+import { Slider as SliderPrimitive } from "@base-ui/react/slider";
+import {
+  animate,
+  type MotionValue,
+  motion,
+  useMotionValue,
+  useTransform,
+} from "motion/react";
+import { useEffect, useId, useState } from "react";
+
+import {
+  ReducedMotionConfig,
+  type ReducedMotionProp,
+  useResolvedReducedMotion,
+} from "@/lib/reduced-motion";
+import { registryTheme } from "@/lib/registry-theme";
+import { cn } from "@/lib/utils";
+
+export interface SliderMark {
+  value: number;
+  label?: string;
+}
+
+export interface SliderProps extends ReducedMotionProp {
+  value?: number;
+  defaultValue?: number;
+  min?: number;
+  max?: number;
+  step?: number;
+  onChange?: (value: number) => void;
+  onValueCommit?: (value: number) => void;
+  showValue?: boolean;
+  valueDecimals?: number;
+  formatValue?: (value: number) => string;
+  label?: string;
+  ariaLabel?: string;
+  ariaLabelledBy?: string;
+  marks?: SliderMark[];
+  className?: string;
+}
+
+function SliderMarks({
+  marks,
+  range,
+  resolvedMin,
+}: {
+  marks: SliderMark[];
+  range: number;
+  resolvedMin: number;
+}) {
+  if (marks.length === 0) {
+    return null;
+  }
+
+  const hasMarkLabels = marks.some((mark) => mark.label);
+
+  return (
+    <div
+      aria-hidden
+      className={`pointer-events-none relative mt-2 ${
+        hasMarkLabels ? "h-8" : "h-3"
+      }`}
+    >
+      {marks.map((mark) => {
+        const left =
+          range === 0 ? "0%" : `${((mark.value - resolvedMin) / range) * 100}%`;
+
+        return (
+          <div
+            className="absolute top-0 -translate-x-1/2 text-center"
+            key={`${mark.value}-${mark.label ?? "tick"}`}
+            style={{ left }}
+          >
+            <span className="mx-auto block h-2 w-px rounded-full bg-foreground/25" />
+            {mark.label ? (
+              <span className="mt-1 block whitespace-nowrap font-medium text-[11px] text-muted-foreground">
+                {mark.label}
+              </span>
+            ) : null}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+function SliderVisualShell({
+  active,
+  isDragging,
+  isHovered,
+  leftPercent,
+  widthPercent,
+}: {
+  active: boolean;
+  isDragging: boolean;
+  isHovered: boolean;
+  leftPercent: MotionValue<string>;
+  widthPercent: MotionValue<string>;
+}) {
+  return (
+    <div aria-hidden className="pointer-events-none absolute inset-0">
+      <motion.div
+        animate={{ height: active ? 6 : 4 }}
+        className="absolute top-1/2 right-0 left-0 -translate-y-1/2 overflow-hidden rounded-full bg-foreground/15"
+        transition={{
+          type: "spring",
+          stiffness: 200,
+          damping: 28,
+          mass: 0.8,
+        }}
+      />
+
+      <motion.div
+        animate={{ height: active ? 6 : 4 }}
+        className="absolute top-1/2 left-0 origin-left -translate-y-1/2 overflow-hidden rounded-full bg-foreground"
+        style={{ width: widthPercent }}
+        transition={{
+          type: "spring",
+          stiffness: 200,
+          damping: 28,
+          mass: 0.8,
+        }}
+      />
+
+      <motion.div
+        animate={{
+          scale: isDragging ? 1.15 : isHovered ? 1.08 : 1,
+        }}
+        className="absolute top-1/2 -translate-x-1/2 -translate-y-1/2"
+        style={{ left: leftPercent }}
+        transition={{
+          type: "spring",
+          stiffness: 220,
+          damping: 22,
+          mass: 0.7,
+        }}
+      >
+        <div className="relative h-4 w-4 rounded-full border-[1.5px] border-foreground bg-background shadow-sm" />
+      </motion.div>
+    </div>
+  );
+}
+
+function clamp(value: number, min: number, max: number) {
+  return Math.min(Math.max(value, min), max);
+}
+
+function getPrecision(value: number) {
+  if (!Number.isFinite(value)) {
+    return 0;
+  }
+
+  const normalized = value.toString().toLowerCase();
+
+  if (normalized.includes("e-")) {
+    const [base, exponent] = normalized.split("e-");
+    return (base.split(".")[1]?.length ?? 0) + Number(exponent);
+  }
+
+  return normalized.split(".")[1]?.length ?? 0;
+}
+
+function snapValue(raw: number, min: number, max: number, step: number) {
+  const safeStep = step > 0 ? step : 1;
+  const precision = Math.max(
+    getPrecision(safeStep),
+    getPrecision(min),
+    getPrecision(max)
+  );
+  const stepped = min + Math.round((raw - min) / safeStep) * safeStep;
+  return clamp(Number(stepped.toFixed(precision)), min, max);
+}
+
+function resolveBlurTarget(
+  currentTarget: EventTarget & HTMLDivElement,
+  relatedTarget: EventTarget | null
+) {
+  return !currentTarget.contains(relatedTarget as Node | null);
+}
+
+function resolveSliderPrimitiveValue(
+  nextValue: number | readonly number[],
+  min: number,
+  max: number,
+  step: number
+) {
+  return snapValue(
+    Array.isArray(nextValue) ? (nextValue[0] ?? min) : nextValue,
+    min,
+    max,
+    step
+  );
+}
+
+export function Slider({
+  value: controlledValue,
+  defaultValue = 50,
+  min = 0,
+  max = 100,
+  step = 1,
+  onChange,
+  onValueCommit,
+  showValue = true,
+  valueDecimals = 0,
+  formatValue,
+  label,
+  ariaLabel,
+  ariaLabelledBy,
+  marks,
+  reducedMotion,
+  className,
+}: SliderProps) {
+  const labelId = useId();
+  const resolvedMin = Math.min(min, max);
+  const resolvedMax = Math.max(min, max);
+  const safeStep = step > 0 ? step : 1;
+  const safeValueDecimals = Math.max(0, valueDecimals);
+  const range = resolvedMax - resolvedMin;
+  const [internalValue, setInternalValue] = useState(() =>
+    snapValue(
+      controlledValue ?? defaultValue,
+      resolvedMin,
+      resolvedMax,
+      safeStep
+    )
+  );
+  const [isDragging, setIsDragging] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
+
+  useEffect(() => {
+    if (controlledValue !== undefined) {
+      return;
+    }
+
+    setInternalValue((current) => {
+      const next = snapValue(current, resolvedMin, resolvedMax, safeStep);
+      return current === next ? current : next;
+    });
+  }, [controlledValue, resolvedMin, resolvedMax, safeStep]);
+
+  const value =
+    controlledValue === undefined
+      ? internalValue
+      : snapValue(controlledValue, resolvedMin, resolvedMax, safeStep);
+  const progress = range === 0 ? 0 : ((value - resolvedMin) / range) * 100;
+
+  const progressMV = useMotionValue(progress);
+  const widthPercent = useTransform(progressMV, (currentProgress) => {
+    return `${currentProgress}%`;
+  });
+  const leftPercent = useTransform(progressMV, (currentProgress) => {
+    return `${currentProgress}%`;
+  });
+  const resolveReducedMotion = useResolvedReducedMotion(reducedMotion);
+  const displayValue = useTransform(progressMV, (currentProgress) => {
+    const nextValue = snapValue(
+      resolvedMin + (currentProgress / 100) * range,
+      resolvedMin,
+      resolvedMax,
+      safeStep
+    );
+
+    return formatValue
+      ? formatValue(nextValue)
+      : nextValue.toFixed(safeValueDecimals);
+  });
+
+  useEffect(() => {
+    if (resolveReducedMotion) {
+      progressMV.set(progress);
+      return;
+    }
+
+    const controls = animate(progressMV, progress, {
+      type: "spring",
+      stiffness: 180,
+      damping: 26,
+      mass: 0.9,
+      restDelta: 0.001,
+    });
+
+    return controls.stop;
+  }, [progress, progressMV, resolveReducedMotion]);
+
+  const normalizedMarks = (marks ?? [])
+    .map((mark) => ({
+      ...mark,
+      value: clamp(mark.value, resolvedMin, resolvedMax),
+    }))
+    .sort((firstMark, secondMark) => firstMark.value - secondMark.value);
+  const active = isDragging || isHovered || isFocused;
+  const formattedValue = formatValue
+    ? formatValue(value)
+    : value.toFixed(safeValueDecimals);
+
+  return (
+    <ReducedMotionConfig reducedMotion={reducedMotion}>
+      <div className={cn(registryTheme, "w-full select-none", className)}>
+        {(label || showValue) && (
+          <div className="mb-3 flex items-baseline justify-between">
+            {label ? (
+              <span
+                className="font-medium text-muted-foreground text-sm tracking-wide"
+                id={labelId}
+              >
+                {label}
+              </span>
+            ) : null}
+            {showValue ? (
+              <motion.span className="font-semibold text-foreground text-sm tabular-nums">
+                {displayValue}
+              </motion.span>
+            ) : null}
+          </div>
+        )}
+
+        <SliderPrimitive.Root
+          aria-label={ariaLabel}
+          aria-labelledby={ariaLabelledBy ?? (label ? labelId : undefined)}
+          className="relative"
+          max={resolvedMax}
+          min={resolvedMin}
+          onValueChange={(nextValue) => {
+            const resolvedValue = resolveSliderPrimitiveValue(
+              nextValue,
+              resolvedMin,
+              resolvedMax,
+              safeStep
+            );
+
+            if (controlledValue === undefined) {
+              setInternalValue(resolvedValue);
+            }
+
+            onChange?.(resolvedValue);
+          }}
+          onValueCommitted={(nextValue) => {
+            const resolvedValue = resolveSliderPrimitiveValue(
+              nextValue,
+              resolvedMin,
+              resolvedMax,
+              safeStep
+            );
+
+            onValueCommit?.(resolvedValue);
+          }}
+          step={safeStep}
+          value={value}
+        >
+          <div className="relative">
+            <SliderPrimitive.Control
+              className="relative flex h-11 w-full cursor-pointer items-center rounded-full outline-none focus-within:outline-2 focus-within:outline-foreground/35 focus-within:outline-offset-4"
+              onBlurCapture={(event) => {
+                if (
+                  resolveBlurTarget(event.currentTarget, event.relatedTarget)
+                ) {
+                  setIsFocused(false);
+                }
+              }}
+              onFocusCapture={() => {
+                setIsFocused(true);
+              }}
+              onMouseEnter={() => {
+                setIsHovered(true);
+              }}
+              onMouseLeave={() => {
+                setIsHovered(false);
+              }}
+              onPointerCancelCapture={() => {
+                setIsDragging(false);
+              }}
+              onPointerDownCapture={() => {
+                setIsDragging(true);
+              }}
+              onPointerUpCapture={() => {
+                setIsDragging(false);
+              }}
+              style={{ touchAction: "pan-y" }}
+            >
+              <SliderPrimitive.Track className="absolute top-1/2 right-0 left-0 h-4 -translate-y-1/2 opacity-0">
+                <SliderPrimitive.Indicator className="absolute inset-y-0 left-0 h-full" />
+              </SliderPrimitive.Track>
+
+              <SliderPrimitive.Thumb
+                className="block h-4 w-4 opacity-0"
+                getAriaLabel={
+                  ariaLabel || !(ariaLabelledBy || label)
+                    ? () => ariaLabel ?? "Slider"
+                    : undefined
+                }
+                getAriaValueText={
+                  formatValue ? () => formattedValue : undefined
+                }
+              />
+
+              <SliderVisualShell
+                active={active}
+                isDragging={isDragging}
+                isHovered={isHovered}
+                leftPercent={leftPercent}
+                widthPercent={widthPercent}
+              />
+            </SliderPrimitive.Control>
+
+            <SliderMarks
+              marks={normalizedMarks}
+              range={range}
+              resolvedMin={resolvedMin}
+            />
+          </div>
+        </SliderPrimitive.Root>
+      </div>
+    </ReducedMotionConfig>
+  );
+}
+
+export { Slider as slider };

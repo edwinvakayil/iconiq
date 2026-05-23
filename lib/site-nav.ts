@@ -28,6 +28,7 @@ export const SITE_SECTIONS = [
       { label: "Popover", href: "/radix-base-ui/popover" },
       { label: "Radio Group", href: "/radix-base-ui/radio-group" },
       { label: "Select", href: "/radix-base-ui/select" },
+      { label: "Slider", href: "/radix-base-ui/slider" },
     ],
   },
   {

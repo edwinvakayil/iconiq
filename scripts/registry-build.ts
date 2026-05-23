@@ -175,6 +175,12 @@ const REGISTRY_UI_META: Record<
       "Select with the same Iconiq API layered over Base UI primitives, preserving the original trigger press, chevron rotation, grouped rows, and panel motion.",
     dependencies: ["@base-ui/react", "motion", "lucide-react"],
   },
+  "b-slider": {
+    title: "Slider (Base UI)",
+    description:
+      "Slider with the same Iconiq API layered over Base UI primitives, preserving the original spring-settled fill, active track height, and thumb scale motion.",
+    dependencies: ["@base-ui/react", "motion"],
+  },
   alert: {
     title: "Alert",
     description:
@@ -310,6 +316,12 @@ const REGISTRY_UI_META: Record<
     description:
       "Select with the same Iconiq API layered over Radix UI primitives, preserving the original trigger press, chevron rotation, grouped rows, and panel motion.",
     dependencies: ["@radix-ui/react-select", "motion", "lucide-react"],
+  },
+  "r-slider": {
+    title: "Slider (Radix UI)",
+    description:
+      "Slider with the same Iconiq API layered over Radix UI primitives, preserving the original spring-settled fill, active track height, and thumb scale motion.",
+    dependencies: ["@radix-ui/react-slider", "motion"],
   },
   "faq-pro": {
     title: "FAQ Pro",
