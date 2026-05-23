@@ -92,6 +92,12 @@ const REGISTRY_UI_META: Record<
       "Alert dialog with a shared Iconiq trigger, content, cancel, and action API layered over Base UI primitives, plus Motion-backed confirm-state transitions.",
     dependencies: ["@base-ui/react", "motion"],
   },
+  "b-avatar": {
+    title: "Avatar (Base UI)",
+    description:
+      "Avatar with the same single Iconiq API layered over Base UI primitives, keeping immediate fallback initials and a quiet image crossfade.",
+    dependencies: ["@base-ui/react", "motion"],
+  },
   alert: {
     title: "Alert",
     description:
@@ -169,6 +175,12 @@ const REGISTRY_UI_META: Record<
     description:
       "Alert dialog with a shared Iconiq trigger, content, cancel, and action API layered over Radix UI primitives, plus Motion-backed confirm-state transitions.",
     dependencies: ["@radix-ui/react-alert-dialog", "motion"],
+  },
+  "r-avatar": {
+    title: "Avatar (Radix UI)",
+    description:
+      "Avatar with the same single Iconiq API layered over Radix UI primitives, preserving immediate fallback initials and the quiet image reveal.",
+    dependencies: ["@radix-ui/react-avatar", "motion"],
   },
   "faq-pro": {
     title: "FAQ Pro",
