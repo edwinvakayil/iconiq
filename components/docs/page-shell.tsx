@@ -61,7 +61,9 @@ const TYPE_IMPORT_PREFIX_RE = /^type\s+/;
 const IMPORT_ALIAS_RE = /\s+as\s+/;
 const REDUCED_MOTION_COMPONENTS = new Set([
   "accordion",
+  "alert-dialog",
   "b-accordion",
+  "b-alert-dialog",
   "badge",
   "button",
   "button-group",
@@ -74,6 +76,7 @@ const REDUCED_MOTION_COMPONENTS = new Set([
   "input-group",
   "popover",
   "r-accordion",
+  "r-alert-dialog",
   "select",
   "slider",
   "switch",

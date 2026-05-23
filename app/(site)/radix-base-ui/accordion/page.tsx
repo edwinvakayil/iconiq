@@ -1,20 +1,19 @@
 "use client";
 
-import { Check, ChevronDown } from "lucide-react";
 import type { ReactNode } from "react";
 import { useMemo, useState } from "react";
 
+import {
+  type PrimitiveProvider,
+  ProviderSwitch,
+} from "@/app/(site)/radix-base-ui/_components/provider-switch";
 import {
   ComponentDocsPage,
   type DetailItem,
 } from "@/components/docs/page-shell";
 import { LINK } from "@/constants";
-import { cn } from "@/lib/utils";
 import { Accordion as BaseAccordion } from "@/registry/b-accordion";
-import { Popover, PopoverContent, PopoverTrigger } from "@/registry/popover";
 import { Accordion as RadixAccordion } from "@/registry/r-accordion";
-
-type ProviderKey = "base" | "radix";
 
 type ProviderConfig = {
   componentName: "b-accordion" | "r-accordion";
@@ -56,14 +55,6 @@ const breadcrumbs = [
   { label: "Docs", href: "/" },
   { label: "Radix UI + Base UI" },
   { label: "Accordion" },
-];
-
-const providerOptions: Array<{
-  key: ProviderKey;
-  label: "Base UI" | "Radix UI";
-}> = [
-  { key: "base", label: "Base UI" },
-  { key: "radix", label: "Radix UI" },
 ];
 
 const usageCodeByProvider: Record<ProviderConfig["componentName"], string> = {
@@ -121,80 +112,9 @@ export function AccordionPreview() {
 }`,
 };
 
-function ProviderSwitch({
-  selectedProvider,
-  onSelect,
-}: {
-  selectedProvider: ProviderKey;
-  onSelect: (provider: ProviderKey) => void;
-}) {
-  const [open, setOpen] = useState(false);
-  const activeOption =
-    providerOptions.find((option) => option.key === selectedProvider) ??
-    providerOptions[0];
-
-  return (
-    <div className="mr-2 inline-flex h-8 shrink-0 items-center gap-3 whitespace-nowrap rounded-md px-3 text-sm">
-      <span className="text-muted-foreground">Primitive</span>
-      <Popover onOpenChange={setOpen} open={open}>
-        <PopoverTrigger asChild>
-          <button
-            aria-expanded={open}
-            aria-haspopup="menu"
-            className="inline-flex items-center gap-1.5 font-medium text-foreground transition-colors hover:text-foreground/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-            type="button"
-          >
-            <span>{activeOption.label}</span>
-            <ChevronDown
-              className={cn(
-                "size-4 transition-transform",
-                open && "rotate-180"
-              )}
-            />
-          </button>
-        </PopoverTrigger>
-        <PopoverContent
-          align="end"
-          className="z-20 mt-2 w-44 rounded-2xl border border-border/80 bg-background p-1.5 shadow-[0_20px_60px_rgba(15,23,42,0.12)] dark:bg-neutral-950"
-          open={open}
-          side="bottom"
-          sideOffset={8}
-        >
-          {providerOptions.map((option) => {
-            const isActive = option.key === selectedProvider;
-
-            return (
-              <button
-                className={cn(
-                  "flex w-full items-center justify-between rounded-xl px-3 py-2 text-left text-[14px] text-foreground transition-colors hover:bg-muted/70",
-                  isActive && "bg-muted/55"
-                )}
-                key={option.key}
-                onClick={() => {
-                  onSelect(option.key);
-                  setOpen(false);
-                }}
-                type="button"
-              >
-                <span>{option.label}</span>
-                <Check
-                  className={cn(
-                    "size-4 text-emerald-500 transition-opacity",
-                    isActive ? "opacity-100" : "opacity-0"
-                  )}
-                />
-              </button>
-            );
-          })}
-        </PopoverContent>
-      </Popover>
-    </div>
-  );
-}
-
 export default function RadixBaseAccordionPage() {
   const [selectedProvider, setSelectedProvider] =
-    useState<ProviderKey>("radix");
+    useState<PrimitiveProvider>("radix");
 
   const provider = useMemo<ProviderConfig>(() => {
     if (selectedProvider === "base") {

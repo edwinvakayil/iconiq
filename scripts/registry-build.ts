@@ -86,6 +86,12 @@ const REGISTRY_UI_META: Record<
       "Accordion with the same Iconiq API layered over Base UI primitives, keeping the editorial and default variants while swapping the underlying headless library.",
     dependencies: ["@base-ui/react", "motion", "lucide-react"],
   },
+  "b-alert-dialog": {
+    title: "Alert Dialog (Base UI)",
+    description:
+      "Alert dialog with a shared Iconiq trigger, content, cancel, and action API layered over Base UI primitives, plus Motion-backed confirm-state transitions.",
+    dependencies: ["@base-ui/react", "motion"],
+  },
   alert: {
     title: "Alert",
     description:
@@ -157,6 +163,12 @@ const REGISTRY_UI_META: Record<
     description:
       "Accordion with the same Iconiq API layered over Radix UI primitives, preserving the existing Motion-heavy panel choreography and install surface.",
     dependencies: ["@radix-ui/react-accordion", "motion", "lucide-react"],
+  },
+  "r-alert-dialog": {
+    title: "Alert Dialog (Radix UI)",
+    description:
+      "Alert dialog with a shared Iconiq trigger, content, cancel, and action API layered over Radix UI primitives, plus Motion-backed confirm-state transitions.",
+    dependencies: ["@radix-ui/react-alert-dialog", "motion"],
   },
   "faq-pro": {
     title: "FAQ Pro",

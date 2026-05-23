@@ -94,6 +94,31 @@
       ]
     },
     {
+      "name": "b-alert-dialog",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": ["@base-ui/react", "motion"],
+      "devDependencies": [],
+      "title": "Alert Dialog (Base UI)",
+      "description": "Alert dialog with a shared Iconiq trigger, content, cancel, and action API layered over Base UI primitives, plus Motion-backed confirm-state transitions.",
+      "files": [
+        {
+          "path": "b-alert-dialog.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "reduced-motion.tsx",
+          "target": "lib/reduced-motion.tsx",
+          "type": "registry:lib"
+        },
+        {
+          "path": "registry-theme.ts",
+          "target": "lib/registry-theme.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
       "name": "badge",
       "type": "registry:ui",
       "registryDependencies": [],
@@ -558,6 +583,31 @@
       "files": [
         {
           "path": "r-accordion.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "reduced-motion.tsx",
+          "target": "lib/reduced-motion.tsx",
+          "type": "registry:lib"
+        },
+        {
+          "path": "registry-theme.ts",
+          "target": "lib/registry-theme.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
+      "name": "r-alert-dialog",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": ["@radix-ui/react-alert-dialog", "motion"],
+      "devDependencies": [],
+      "title": "Alert Dialog (Radix UI)",
+      "description": "Alert dialog with a shared Iconiq trigger, content, cancel, and action API layered over Radix UI primitives, plus Motion-backed confirm-state transitions.",
+      "files": [
+        {
+          "path": "r-alert-dialog.tsx",
           "type": "registry:ui"
         },
         {
