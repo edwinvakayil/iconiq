@@ -689,6 +689,19 @@ const getComponentForV0 = async (
 
     const description =
       registryData.description ?? `${name} component from Iconiq`;
+    const registryFiles = (registryData.files ?? []).map(
+      (file: {
+        content: string;
+        path: string;
+        target?: string;
+        type?: string;
+      }) => ({
+        path: file.path,
+        content: file.content,
+        type: file.type === "registry:ui" ? "registry:component" : file.type,
+        target: file.target ?? `components/ui/${name}.tsx`,
+      })
+    );
 
     const template = {
       name,
@@ -739,12 +752,7 @@ export default function RootLayout({
           type: "registry:page",
           target: "app/layout.tsx",
         },
-        {
-          path: `components/ui/${name}.tsx`,
-          content: registryData.files[0].content,
-          type: "registry:component",
-          target: `components/ui/${name}.tsx`,
-        },
+        ...registryFiles,
       ],
     };
 
