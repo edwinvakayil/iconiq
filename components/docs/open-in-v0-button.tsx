@@ -4,6 +4,8 @@ import { Loader } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { openComponentInV0Action } from "@/actions/open-component-in-v0";
+import { capturePostHogEvent } from "@/lib/posthog";
+import { posthogEventName } from "@/lib/posthog-event-name";
 import { cn } from "@/lib/utils";
 
 function V0Icon({ className }: { className?: string }) {
@@ -43,6 +45,10 @@ export function OpenInV0Button({
 
     try {
       setState("loading");
+      capturePostHogEvent(posthogEventName("open-in-v0", name), {
+        component_name: name,
+        variant,
+      });
       const data = await openComponentInV0Action(name, pageContent);
 
       if (data.url) {

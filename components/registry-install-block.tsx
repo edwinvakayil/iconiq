@@ -5,6 +5,7 @@ import { useMemo } from "react";
 import { InstallCommandTerminal } from "@/components/install-command-terminal";
 import { SITE } from "@/constants";
 import { getPackageManagerPrefix } from "@/lib/get-package-manager-prefix";
+import { registrySlugFromPath } from "@/lib/posthog-event-name";
 
 export function RegistryInstallBlock({
   registryPath,
@@ -23,5 +24,11 @@ export function RegistryInstallBlock({
     [registryPath]
   );
 
-  return <InstallCommandTerminal className={className} commands={commands} />;
+  return (
+    <InstallCommandTerminal
+      className={className}
+      commands={commands}
+      eventSlug={registrySlugFromPath(registryPath)}
+    />
+  );
 }

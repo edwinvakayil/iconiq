@@ -5,6 +5,8 @@ import { useMemo, useState } from "react";
 
 import { OpenInV0Button } from "@/components/docs/open-in-v0-button";
 import { SITE } from "@/constants";
+import { capturePostHogEvent } from "@/lib/posthog";
+import { posthogEventName } from "@/lib/posthog-event-name";
 import { cn } from "@/lib/utils";
 import { Popover, PopoverContent, PopoverTrigger } from "@/registry/popover";
 
@@ -56,6 +58,11 @@ export function PageCopyActions({
   const handleCopy = async () => {
     try {
       await navigator.clipboard.writeText(pageContent);
+      capturePostHogEvent(posthogEventName("copied-page", componentName), {
+        component_name: componentName,
+        page_url: resolvedPageUrl,
+        title,
+      });
       setCopied(true);
       window.setTimeout(() => setCopied(false), 1500);
     } catch {
@@ -119,7 +126,27 @@ export function PageCopyActions({
               className="flex items-center justify-between whitespace-nowrap rounded-xl px-3 py-2 text-[14px] text-foreground transition-colors hover:bg-muted/70"
               href={item.href}
               key={item.label}
-              onClick={() => setOpen(false)}
+              onClick={() => {
+                if (item.label === "Ask ChatGPT") {
+                  capturePostHogEvent(
+                    posthogEventName("ask-chatgpt", componentName),
+                    {
+                      component_name: componentName,
+                      page_url: resolvedPageUrl,
+                      title,
+                    }
+                  );
+                } else if (item.label === "View registry JSON") {
+                  capturePostHogEvent(
+                    posthogEventName("view-registry-json", componentName),
+                    {
+                      component_name: componentName,
+                      registry_url: registryUrl,
+                    }
+                  );
+                }
+                setOpen(false);
+              }}
               rel="noreferrer"
               target="_blank"
             >

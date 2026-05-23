@@ -22,5 +22,11 @@ export function CodeBlockInstall({
     [componentName]
   );
 
-  return <InstallCommandTerminal className={className} commands={commands} />;
+  return (
+    <InstallCommandTerminal
+      className={className}
+      commands={commands}
+      eventSlug={componentName}
+    />
+  );
 }

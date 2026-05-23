@@ -5,9 +5,10 @@ import { Command, Monitor, Moon, Search, Sun, X } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
 import * as React from "react";
-
 import { Kbd, KbdGroup } from "@/components/ui/kbd";
 import { useDebouncedValue } from "@/hooks/use-debounced-value";
+import { capturePostHogEvent } from "@/lib/posthog";
+import { posthogEventName, slugFromDocsHref } from "@/lib/posthog-event-name";
 import { cn } from "@/lib/utils";
 
 const QUERY_SPLIT_REGEX = /\s+/;
@@ -202,6 +203,9 @@ function CommandMenu({
       ) {
         event.preventDefault();
         event.stopPropagation();
+        if (!openRef.current) {
+          capturePostHogEvent("search_opened");
+        }
         setOpen((current) => !current);
       }
     };
@@ -216,6 +220,14 @@ function CommandMenu({
   const run = React.useCallback((fn: () => void) => {
     setOpen(false);
     fn();
+  }, []);
+
+  const openRef = React.useRef(open);
+  openRef.current = open;
+
+  const handleOpen = React.useCallback(() => {
+    capturePostHogEvent("search_opened");
+    setOpen(true);
   }, []);
 
   const themeItems = React.useMemo<CommandMenuItemDef[]>(
@@ -291,6 +303,19 @@ function CommandMenu({
 
   const handleItemSelect = React.useCallback(
     (item: CommandMenuItemDef) => {
+      const docsSlug = item.href ? slugFromDocsHref(item.href) : null;
+      capturePostHogEvent(
+        docsSlug
+          ? posthogEventName("selected", docsSlug)
+          : "search_item_selected",
+        {
+          label: item.label,
+          href: item.href ?? null,
+          query,
+          ...(docsSlug ? { component_name: docsSlug } : {}),
+        }
+      );
+
       if (item.action) {
         run(item.action);
         return;
@@ -301,7 +326,7 @@ function CommandMenu({
         run(() => router.push(href));
       }
     },
-    [router, run]
+    [router, run, query]
   );
 
   const handleListKeyDown = (event: React.KeyboardEvent<HTMLElement>) => {
@@ -395,14 +420,10 @@ function CommandMenu({
       {trigger ? (
         React.isValidElement<{ onClick?: () => void }>(trigger) ? (
           React.cloneElement(trigger, {
-            onClick: () => setOpen(true),
+            onClick: handleOpen,
           })
         ) : (
-          <button
-            className="cursor-pointer"
-            onClick={() => setOpen(true)}
-            type="button"
-          >
+          <button className="cursor-pointer" onClick={handleOpen} type="button">
             {trigger}
           </button>
         )
@@ -410,7 +431,7 @@ function CommandMenu({
         <CommandMenuTrigger
           shortcut={shortcutKey.toUpperCase()}
           {...triggerProps}
-          onClick={() => setOpen(true)}
+          onClick={handleOpen}
         />
       )}
 

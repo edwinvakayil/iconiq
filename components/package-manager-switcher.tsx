@@ -1,6 +1,7 @@
 "use client";
 
 import { PACKAGE_MANAGER } from "@/constants";
+import { capturePostHogEvent } from "@/lib/posthog";
 import { cn } from "@/lib/utils";
 
 type PackageManagerSwitcherProps = {
@@ -31,7 +32,13 @@ export function PackageManagerSwitcher({
                   "bg-background text-foreground shadow-[0_0_0_1px_rgba(15,23,42,0.08),0_2px_6px_rgba(15,23,42,0.08)] dark:bg-[#0B0B09] dark:shadow-[0_0_0_1px_rgba(255,255,255,0.08),0_8px_18px_rgba(0,0,0,0.18)]"
               )}
               key={packageManager}
-              onClick={() => onValueChange(packageManager)}
+              onClick={() => {
+                capturePostHogEvent("package_manager_changed", {
+                  package_manager: packageManager,
+                  previous_package_manager: value,
+                });
+                onValueChange(packageManager);
+              }}
               type="button"
             >
               {packageManager}

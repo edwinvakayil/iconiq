@@ -4,6 +4,8 @@ import { Check, ChevronDown, Copy, ExternalLink } from "lucide-react";
 import { useMemo, useState } from "react";
 
 import { SITE } from "@/constants";
+import { capturePostHogEvent } from "@/lib/posthog";
+import { posthogEventName, slugFromPageUrl } from "@/lib/posthog-event-name";
 import { cn } from "@/lib/utils";
 import { Popover, PopoverContent, PopoverTrigger } from "@/registry/popover";
 
@@ -29,6 +31,7 @@ export function DocsCopyActions({
   const absolutePageUrl = pageUrl.startsWith("http")
     ? pageUrl
     : `${SITE.URL}${pageUrl}`;
+  const pageSlug = slugFromPageUrl(pageUrl);
 
   const menuItems = useMemo(
     () => [
@@ -51,6 +54,11 @@ export function DocsCopyActions({
   const handleCopy = async () => {
     try {
       await navigator.clipboard.writeText(pageContent);
+      capturePostHogEvent(posthogEventName("copied-page", pageSlug), {
+        page_url: pageUrl,
+        title,
+        page_slug: pageSlug,
+      });
       setCopied(true);
       window.setTimeout(() => setCopied(false), 1500);
     } catch {
@@ -115,7 +123,19 @@ export function DocsCopyActions({
                 className="flex items-center justify-between whitespace-nowrap rounded-xl px-3 py-2 text-[14px] text-foreground transition-colors hover:bg-muted/70"
                 href={item.href}
                 key={item.label}
-                onClick={() => setOpen(false)}
+                onClick={() => {
+                  if (item.label === "Ask ChatGPT") {
+                    capturePostHogEvent(
+                      posthogEventName("ask-chatgpt", pageSlug),
+                      {
+                        page_url: pageUrl,
+                        title,
+                        page_slug: pageSlug,
+                      }
+                    );
+                  }
+                  setOpen(false);
+                }}
                 rel="noreferrer"
                 target="_blank"
               >

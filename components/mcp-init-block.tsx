@@ -32,7 +32,13 @@ export function McpInitBlock({
     [client]
   );
 
-  return <InstallCommandTerminal className={className} commands={commands} />;
+  return (
+    <InstallCommandTerminal
+      className={className}
+      commands={commands}
+      eventSlug={client ? `mcp-init-${client}` : "mcp-init"}
+    />
+  );
 }
 
 export type { McpClient };

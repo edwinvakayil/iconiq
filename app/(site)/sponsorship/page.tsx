@@ -7,6 +7,7 @@ import {
 } from "@/components/page-reveal";
 import { BeatingHeartTitle } from "@/components/sponsorship/beating-heart-title";
 import { BuyMeACoffeeEmbed } from "@/components/sponsorship/buy-me-a-coffee-embed";
+import { SponsorshipTracker } from "@/components/sponsorship/sponsorship-tracker";
 import { LINK, SITE } from "@/constants";
 import { createMetadata } from "@/seo/metadata";
 
@@ -26,6 +27,7 @@ const supportAreas = [
 export default function SponsorshipPage() {
   return (
     <main className="min-w-0 flex-1">
+      <SponsorshipTracker />
       <div className="mx-auto w-full min-w-0 max-w-[1600px] px-4 py-8 sm:px-6 sm:py-10 lg:px-10">
         <article className="w-full min-w-0 max-w-none">
           <PageStagger delayChildren={0.04}>
