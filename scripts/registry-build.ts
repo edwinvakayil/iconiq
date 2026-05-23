@@ -104,6 +104,12 @@ const REGISTRY_UI_META: Record<
       "Button with the same Iconiq API layered over the Base UI button primitive, preserving the original ripple, press spring, hover lift, and intrinsic-width animation.",
     dependencies: ["@base-ui/react", "motion", "class-variance-authority"],
   },
+  "b-collapsible": {
+    title: "Collapsible (Base UI)",
+    description:
+      "Collapsible with the same Iconiq API layered over Base UI primitives, preserving the same height, icon, and content transitions as the Radix version.",
+    dependencies: ["@base-ui/react", "motion", "lucide-react"],
+  },
   "b-checkbox": {
     title: "Checkbox (Base UI)",
     description:
@@ -199,6 +205,12 @@ const REGISTRY_UI_META: Record<
     description:
       "Avatar with the same single Iconiq API layered over Radix UI primitives, preserving immediate fallback initials and the quiet image reveal.",
     dependencies: ["@radix-ui/react-avatar", "motion"],
+  },
+  "r-collapsible": {
+    title: "Collapsible (Radix UI)",
+    description:
+      "Collapsible with the same Iconiq API layered over Radix UI primitives, preserving the same height, icon, and content transitions as the Base UI version.",
+    dependencies: ["@radix-ui/react-collapsible", "motion", "lucide-react"],
   },
   "r-checkbox": {
     title: "Checkbox (Radix UI)",

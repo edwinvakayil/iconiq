@@ -209,6 +209,31 @@
       ]
     },
     {
+      "name": "b-collapsible",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": ["@base-ui/react", "motion", "lucide-react"],
+      "devDependencies": [],
+      "title": "Collapsible (Base UI)",
+      "description": "Collapsible with the same Iconiq API layered over Base UI primitives, preserving the same height, icon, and content transitions as the Radix version.",
+      "files": [
+        {
+          "path": "b-collapsible.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "reduced-motion.tsx",
+          "target": "lib/reduced-motion.tsx",
+          "type": "registry:lib"
+        },
+        {
+          "path": "registry-theme.ts",
+          "target": "lib/registry-theme.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
       "name": "badge",
       "type": "registry:ui",
       "registryDependencies": [],
@@ -749,6 +774,31 @@
         {
           "path": "r-checkbox.tsx",
           "type": "registry:ui"
+        },
+        {
+          "path": "registry-theme.ts",
+          "target": "lib/registry-theme.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
+      "name": "r-collapsible",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": ["@radix-ui/react-collapsible", "motion", "lucide-react"],
+      "devDependencies": [],
+      "title": "Collapsible (Radix UI)",
+      "description": "Collapsible with the same Iconiq API layered over Radix UI primitives, preserving the same height, icon, and content transitions as the Base UI version.",
+      "files": [
+        {
+          "path": "r-collapsible.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "reduced-motion.tsx",
+          "target": "lib/reduced-motion.tsx",
+          "type": "registry:lib"
         },
         {
           "path": "registry-theme.ts",
