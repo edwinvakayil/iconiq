@@ -1,7 +1,5 @@
 "use client";
 
-import { usePathname } from "next/navigation";
-
 import { SITE } from "@/constants";
 
 type BreadcrumbItem = {
@@ -24,8 +22,13 @@ function toAbsoluteUrl(path: string) {
   return `${SITE.URL}${path}`;
 }
 
-export function BreadcrumbJsonLdClient({ items }: { items: BreadcrumbItem[] }) {
-  const pathname = usePathname();
+export function BreadcrumbJsonLdClient({
+  items,
+  currentPath,
+}: {
+  items: BreadcrumbItem[];
+  currentPath?: string;
+}) {
   const visibleItems = items.filter(
     (item) => item.label.toLowerCase() !== "docs"
   );
@@ -36,7 +39,7 @@ export function BreadcrumbJsonLdClient({ items }: { items: BreadcrumbItem[] }) {
       const url = item.href
         ? toAbsoluteUrl(item.href)
         : isLast
-          ? toAbsoluteUrl(pathname || "/")
+          ? toAbsoluteUrl(currentPath || "/")
           : null;
 
       if (!url) {

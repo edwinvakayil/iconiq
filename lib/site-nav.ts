@@ -29,6 +29,7 @@ export const SITE_SECTIONS = [
       { label: "Radio Group", href: "/radix-base-ui/radio-group" },
       { label: "Select", href: "/radix-base-ui/select" },
       { label: "Slider", href: "/radix-base-ui/slider" },
+      { label: "Tooltip", href: "/radix-base-ui/tooltip" },
     ],
   },
   {

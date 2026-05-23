@@ -181,6 +181,12 @@ const REGISTRY_UI_META: Record<
       "Slider with the same Iconiq API layered over Base UI primitives, preserving the original spring-settled fill, active track height, and thumb scale motion.",
     dependencies: ["@base-ui/react", "motion"],
   },
+  "b-tooltip": {
+    title: "Tooltip (Base UI)",
+    description:
+      "Tooltip with the same Iconiq API layered over Base UI primitives, preserving the original controlled delay timing, bubble shell, rotated-square arrow, and spring entrance motion.",
+    dependencies: ["@base-ui/react", "motion"],
+  },
   alert: {
     title: "Alert",
     description:
@@ -322,6 +328,12 @@ const REGISTRY_UI_META: Record<
     description:
       "Slider with the same Iconiq API layered over Radix UI primitives, preserving the original spring-settled fill, active track height, and thumb scale motion.",
     dependencies: ["@radix-ui/react-slider", "motion"],
+  },
+  "r-tooltip": {
+    title: "Tooltip (Radix UI)",
+    description:
+      "Tooltip with the same Iconiq API layered over Radix Tooltip primitives, preserving the original controlled delay timing, bubble shell, rotated-square arrow, and spring entrance motion.",
+    dependencies: ["@radix-ui/react-tooltip", "@radix-ui/react-slot", "motion"],
   },
   "faq-pro": {
     title: "FAQ Pro",

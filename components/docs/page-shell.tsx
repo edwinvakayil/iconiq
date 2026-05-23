@@ -66,6 +66,8 @@ const REDUCED_MOTION_COMPONENTS = new Set([
   "b-alert-dialog",
   "b-avatar",
   "b-button",
+  "b-checkbox",
+  "b-checkbox-group",
   "b-collapsible",
   "b-combobox",
   "b-context-menu",
@@ -92,11 +94,16 @@ const REDUCED_MOTION_COMPONENTS = new Set([
   "r-popover",
   "r-select",
   "r-slider",
+  "r-tooltip",
   "r-context-menu",
   "r-accordion",
   "r-alert-dialog",
   "r-avatar",
+  "r-checkbox",
   "r-collapsible",
+  "r-radio-group",
+  "b-tooltip",
+  "b-radio-group",
   "select",
   "slider",
   "switch",
@@ -966,6 +973,8 @@ function ComponentDocsPage({
     v0PageCode ??
     (getComponentV0Page(componentName, demoCode) ||
       getComponentV0Page(componentName));
+  const resolvedPageUrl =
+    pageUrl ?? breadcrumbs.at(-1)?.href ?? `/components/${componentName}`;
 
   return (
     <>
@@ -976,7 +985,10 @@ function ComponentDocsPage({
         title={title}
       />
       <div className="mx-auto w-full min-w-0 max-w-[1600px] px-4 py-8 sm:px-6 sm:py-10 lg:px-10">
-        <BreadcrumbJsonLdClient items={breadcrumbs} />
+        <BreadcrumbJsonLdClient
+          currentPath={resolvedPageUrl}
+          items={breadcrumbs}
+        />
         <div className="xl:grid xl:grid-cols-[minmax(0,1fr)_248px] xl:gap-4">
           <main className="min-w-0">
             <article className="min-w-0 max-w-4xl">
@@ -1003,7 +1015,7 @@ function ComponentDocsPage({
                       <PageCopyActions
                         componentName={componentName}
                         pageContent={pageCopyContent}
-                        pageUrl={pageUrl}
+                        pageUrl={resolvedPageUrl}
                         title={title}
                         v0PageCode={resolvedV0PageCode || undefined}
                       />

@@ -4,8 +4,183 @@ import * as RadioGroupPrimitive from "@radix-ui/react-radio-group";
 import { AnimatePresence, motion } from "motion/react";
 import * as React from "react";
 
+import {
+  ReducedMotionConfig,
+  type ReducedMotionProp,
+  useResolvedReducedMotion,
+} from "@/lib/reduced-motion";
 import { registryTheme } from "@/lib/registry-theme";
 import { cn } from "@/lib/utils";
+
+const reducedTransition = { duration: 0.12 } as const;
+
+function getHighlightTransition(reduceMotion: boolean) {
+  if (reduceMotion) {
+    return reducedTransition;
+  }
+
+  return {
+    type: "spring" as const,
+    stiffness: 300,
+    damping: 28,
+    mass: 0.8,
+  };
+}
+
+function getRingTransition(reduceMotion: boolean) {
+  if (reduceMotion) {
+    return reducedTransition;
+  }
+
+  return {
+    type: "spring" as const,
+    stiffness: 400,
+    damping: 22,
+  };
+}
+
+function getDotMotion(reduceMotion: boolean) {
+  if (reduceMotion) {
+    return {
+      animate: { opacity: 1 },
+      exit: { opacity: 0 },
+      initial: { opacity: 0 },
+      transition: reducedTransition,
+    };
+  }
+
+  return {
+    animate: { scale: 1, opacity: 1 },
+    exit: { scale: 0, opacity: 0 },
+    initial: { scale: 0, opacity: 0 },
+    transition: {
+      type: "spring" as const,
+      stiffness: 500,
+      damping: 25,
+      delay: 0.05,
+    },
+  };
+}
+
+function getTextTransition(reduceMotion: boolean) {
+  return reduceMotion ? reducedTransition : { duration: 0.2 };
+}
+
+function getRowTransition(reduceMotion: boolean, index: number) {
+  return reduceMotion
+    ? reducedTransition
+    : { delay: index * 0.05, duration: 0.3 };
+}
+
+type RadioOptionRowProps = {
+  description?: string;
+  descriptionId?: string;
+  index: number;
+  isSelected: boolean;
+  label: string;
+  labelId: string;
+  layoutId: string;
+  reduceMotion: boolean;
+  value: string;
+};
+
+function RadioOptionRow({
+  description,
+  descriptionId,
+  index,
+  isSelected,
+  label,
+  labelId,
+  layoutId,
+  reduceMotion,
+  value,
+}: RadioOptionRowProps) {
+  const highlightTransition = getHighlightTransition(reduceMotion);
+  const ringTransition = getRingTransition(reduceMotion);
+  const dotMotion = getDotMotion(reduceMotion);
+  const textTransition = getTextTransition(reduceMotion);
+
+  return (
+    <RadioGroupPrimitive.Item asChild value={value}>
+      <motion.button
+        animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
+        aria-describedby={descriptionId}
+        aria-labelledby={labelId}
+        className="relative flex w-full touch-manipulation select-none items-center gap-3.5 rounded-lg px-4 py-3.5 text-left outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        initial={reduceMotion ? false : { opacity: 0, y: 8 }}
+        transition={getRowTransition(reduceMotion, index)}
+        type="button"
+        whileHover={reduceMotion ? undefined : { x: 2 }}
+        whileTap={reduceMotion ? undefined : { scale: 0.98 }}
+      >
+        {isSelected ? (
+          <motion.div
+            aria-hidden
+            className="absolute inset-0 rounded-lg bg-foreground/[0.04]"
+            layoutId={reduceMotion ? undefined : layoutId}
+            transition={highlightTransition}
+          />
+        ) : null}
+
+        <div
+          aria-hidden
+          className="relative z-10 flex h-5 w-5 shrink-0 items-center justify-center"
+        >
+          <motion.div
+            animate={{
+              borderWidth: isSelected ? 6 : 2,
+              borderColor: isSelected
+                ? "var(--primary)"
+                : "color-mix(in srgb, var(--muted-foreground) 25%, transparent)",
+            }}
+            className="absolute inset-0 rounded-full"
+            style={{ borderStyle: "solid" }}
+            transition={ringTransition}
+          />
+
+          <AnimatePresence>
+            {isSelected ? (
+              <motion.div
+                animate={dotMotion.animate}
+                className="absolute h-1.5 w-1.5 rounded-full bg-background"
+                exit={dotMotion.exit}
+                initial={dotMotion.initial}
+                transition={dotMotion.transition}
+              />
+            ) : null}
+          </AnimatePresence>
+        </div>
+
+        <div className="relative z-10 flex flex-col gap-0.5">
+          <motion.span
+            animate={{
+              color: isSelected
+                ? "var(--foreground)"
+                : "var(--muted-foreground)",
+              fontWeight: isSelected ? 500 : 400,
+            }}
+            className="text-[14px] leading-tight"
+            id={labelId}
+            transition={textTransition}
+          >
+            {label}
+          </motion.span>
+
+          {description ? (
+            <motion.span
+              animate={{ opacity: isSelected ? 0.85 : 0.5 }}
+              className="text-muted-foreground/60 text-xs leading-snug"
+              id={descriptionId}
+              transition={textTransition}
+            >
+              {description}
+            </motion.span>
+          ) : null}
+        </div>
+      </motion.button>
+    </RadioGroupPrimitive.Item>
+  );
+}
 
 function getValidSelection(options: RadioOption[], candidate?: string) {
   if (candidate === undefined) {
@@ -23,7 +198,7 @@ export interface RadioOption {
   description?: string;
 }
 
-export interface RadioGroupProps {
+export interface RadioGroupProps extends ReducedMotionProp {
   options: RadioOption[];
   defaultValue?: string;
   value?: string;
@@ -46,6 +221,7 @@ const RadioGroup = React.forwardRef<HTMLDivElement, RadioGroupProps>(
       name,
       onChange,
       options,
+      reducedMotion,
       value,
     },
     ref
@@ -58,6 +234,7 @@ const RadioGroup = React.forwardRef<HTMLDivElement, RadioGroupProps>(
     const selected = isControlled ? value : uncontrolledSelected;
     const resolvedLayoutId = layoutId ?? `radio-active-bg-${generatedId}`;
     const groupName = name ?? `radio-group-${generatedId}`;
+    const reduceMotion = useResolvedReducedMotion(reducedMotion);
 
     React.useEffect(() => {
       if (isControlled) {
@@ -91,124 +268,39 @@ const RadioGroup = React.forwardRef<HTMLDivElement, RadioGroupProps>(
     }
 
     return (
-      <RadioGroupPrimitive.Root
-        aria-label={ariaLabel}
-        aria-labelledby={ariaLabelledBy}
-        className={cn(registryTheme, "flex flex-col gap-0.5", className)}
-        name={groupName}
-        onValueChange={handleSelect}
-        orientation="vertical"
-        ref={ref}
-        value={selected}
-      >
-        {options.map((option, index) => {
-          const isSelected = selected === option.value;
-          const optionId = `${generatedId}-option-${index}`;
-          const labelId = `${optionId}-label`;
-          const descriptionId = option.description
-            ? `${optionId}-description`
-            : undefined;
+      <ReducedMotionConfig reducedMotion={reducedMotion}>
+        <RadioGroupPrimitive.Root
+          aria-label={ariaLabel}
+          aria-labelledby={ariaLabelledBy}
+          className={cn(registryTheme, "flex flex-col gap-0.5", className)}
+          name={groupName}
+          onValueChange={handleSelect}
+          orientation="vertical"
+          ref={ref}
+          value={selected}
+        >
+          {options.map((option, index) => {
+            const optionId = `${generatedId}-option-${index}`;
 
-          return (
-            <RadioGroupPrimitive.Item
-              asChild
-              key={option.value}
-              value={option.value}
-            >
-              <motion.button
-                animate={{ opacity: 1, y: 0 }}
-                aria-describedby={descriptionId}
-                aria-labelledby={labelId}
-                className="relative flex w-full touch-manipulation select-none items-center gap-3.5 rounded-lg px-4 py-3.5 text-left outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                initial={{ opacity: 0, y: 8 }}
-                transition={{ delay: index * 0.05, duration: 0.3 }}
-                type="button"
-                whileHover={{ x: 2 }}
-                whileTap={{ scale: 0.98 }}
-              >
-                {isSelected ? (
-                  <motion.div
-                    aria-hidden
-                    className="absolute inset-0 rounded-lg bg-foreground/[0.04]"
-                    layoutId={resolvedLayoutId}
-                    transition={{
-                      type: "spring",
-                      stiffness: 300,
-                      damping: 28,
-                      mass: 0.8,
-                    }}
-                  />
-                ) : null}
-
-                <div
-                  aria-hidden
-                  className="relative z-10 flex h-5 w-5 shrink-0 items-center justify-center"
-                >
-                  <motion.div
-                    animate={{
-                      borderWidth: isSelected ? 6 : 2,
-                      borderColor: isSelected
-                        ? "var(--primary)"
-                        : "color-mix(in srgb, var(--muted-foreground) 25%, transparent)",
-                    }}
-                    className="absolute inset-0 rounded-full"
-                    style={{ borderStyle: "solid" }}
-                    transition={{
-                      type: "spring",
-                      stiffness: 400,
-                      damping: 22,
-                    }}
-                  />
-
-                  <AnimatePresence>
-                    {isSelected ? (
-                      <motion.div
-                        animate={{ scale: 1, opacity: 1 }}
-                        className="absolute h-1.5 w-1.5 rounded-full bg-background"
-                        exit={{ scale: 0, opacity: 0 }}
-                        initial={{ scale: 0, opacity: 0 }}
-                        transition={{
-                          type: "spring",
-                          stiffness: 500,
-                          damping: 25,
-                          delay: 0.05,
-                        }}
-                      />
-                    ) : null}
-                  </AnimatePresence>
-                </div>
-
-                <div className="relative z-10 flex flex-col gap-0.5">
-                  <motion.span
-                    animate={{
-                      color: isSelected
-                        ? "var(--foreground)"
-                        : "var(--muted-foreground)",
-                      fontWeight: isSelected ? 500 : 400,
-                    }}
-                    className="text-[14px] leading-tight"
-                    id={labelId}
-                    transition={{ duration: 0.2 }}
-                  >
-                    {option.label}
-                  </motion.span>
-
-                  {option.description ? (
-                    <motion.span
-                      animate={{ opacity: isSelected ? 0.85 : 0.5 }}
-                      className="text-muted-foreground/60 text-xs leading-snug"
-                      id={descriptionId}
-                      transition={{ duration: 0.2 }}
-                    >
-                      {option.description}
-                    </motion.span>
-                  ) : null}
-                </div>
-              </motion.button>
-            </RadioGroupPrimitive.Item>
-          );
-        })}
-      </RadioGroupPrimitive.Root>
+            return (
+              <RadioOptionRow
+                description={option.description}
+                descriptionId={
+                  option.description ? `${optionId}-description` : undefined
+                }
+                index={index}
+                isSelected={selected === option.value}
+                key={option.value}
+                label={option.label}
+                labelId={`${optionId}-label`}
+                layoutId={resolvedLayoutId}
+                reduceMotion={reduceMotion}
+                value={option.value}
+              />
+            );
+          })}
+        </RadioGroupPrimitive.Root>
+      </ReducedMotionConfig>
     );
   }
 );

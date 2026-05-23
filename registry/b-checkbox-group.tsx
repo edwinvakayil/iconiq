@@ -7,6 +7,11 @@ import { AnimatePresence, motion } from "motion/react";
 import type * as React from "react";
 import { useEffect, useState } from "react";
 
+import {
+  ReducedMotionConfig,
+  type ReducedMotionProp,
+  useResolvedReducedMotion,
+} from "@/lib/reduced-motion";
 import { registryTheme } from "@/lib/registry-theme";
 import { cn } from "@/lib/utils";
 
@@ -31,6 +36,9 @@ const springCheck = {
   mass: 0.38,
 };
 
+const reducedTransition = { duration: 0.12 } as const;
+const reducedExitTransition = { duration: 0.1 } as const;
+
 export interface CheckboxGroupOption {
   description?: string;
   disabled?: boolean;
@@ -40,7 +48,7 @@ export interface CheckboxGroupOption {
   value: string;
 }
 
-interface CheckboxGroupProps {
+interface CheckboxGroupProps extends ReducedMotionProp {
   className?: string;
   maxVisible?: number;
   onChange?: (value: string[]) => void;
@@ -61,6 +69,12 @@ type CheckboxRootRenderProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   className?: string;
   ref?: React.Ref<HTMLButtonElement>;
   style?: React.CSSProperties;
+};
+
+type CheckboxGroupRowProps = {
+  checked: boolean;
+  option: CheckboxGroupOption;
+  reduceMotion: boolean;
 };
 
 function setRef<T>(ref: React.Ref<T> | undefined, value: T) {
@@ -139,17 +153,195 @@ function resolveRootRenderProps(rootProps: CheckboxRootRenderProps) {
   };
 }
 
+function CheckboxGroupIndicator({
+  checked,
+  reduceMotion,
+}: Pick<CheckboxGroupRowProps, "checked" | "reduceMotion">) {
+  if (!checked) {
+    return null;
+  }
+
+  const animate = reduceMotion
+    ? {
+        opacity: 1,
+        scale: 1,
+      }
+    : {
+        opacity: 1,
+        rotate: 0,
+        scale: 1,
+      };
+  const exit = reduceMotion
+    ? {
+        opacity: 0,
+        transition: reducedExitTransition,
+      }
+    : {
+        opacity: 0,
+        rotate: -8,
+        scale: 0.86,
+        transition: {
+          duration: 0.12,
+          ease: [0.4, 0, 1, 1] as const,
+        },
+      };
+  const initial = reduceMotion
+    ? {
+        opacity: 0,
+        scale: 1,
+      }
+    : {
+        opacity: 0.92,
+        rotate: -5,
+        scale: 0.78,
+      };
+
+  return (
+    <motion.div
+      animate={animate}
+      className="flex items-center justify-center"
+      exit={exit}
+      initial={initial}
+      key="check"
+      transition={reduceMotion ? reducedTransition : springCheck}
+    >
+      <Check className="h-4 w-4 text-primary" strokeWidth={3} />
+    </motion.div>
+  );
+}
+
+function CheckboxGroupCopy({
+  option,
+  reduceMotion,
+}: Pick<CheckboxGroupRowProps, "option" | "reduceMotion">) {
+  return (
+    <div
+      className={cn(
+        "flex min-w-0 flex-col",
+        reduceMotion
+          ? "transition-none"
+          : "transition-transform duration-520 ease-[cubic-bezier(0.22,1,0.36,1)]",
+        !reduceMotion && "group-hover:translate-x-0.5"
+      )}
+    >
+      <span className="font-medium text-foreground text-sm">
+        {option.label}
+      </span>
+      {option.description ? (
+        <span className="text-muted-foreground text-xs">
+          {option.description}
+        </span>
+      ) : null}
+      {option.disabled && option.disabledReason ? (
+        <span className="text-[11px] text-muted-foreground/90">
+          {option.disabledReason}
+        </span>
+      ) : null}
+    </div>
+  );
+}
+
+function CheckboxGroupRow({
+  checked,
+  option,
+  reduceMotion,
+}: CheckboxGroupRowProps) {
+  const disabled = option.disabled;
+  const rowTransition = reduceMotion ? reducedTransition : springTap;
+  const checkboxTransition = reduceMotion ? reducedTransition : springFlow;
+  const whileTap =
+    disabled || reduceMotion
+      ? undefined
+      : {
+          scale: 0.985,
+          y: 0,
+          transition: springTap,
+        };
+
+  return (
+    <CheckboxPrimitive.Root
+      disabled={disabled}
+      nativeButton
+      render={(rootProps) => {
+        const {
+          resolvedRootProps,
+          rootClassName,
+          rootRef,
+          rootStyle,
+          rowChildren,
+        } = resolveRootRenderProps(rootProps);
+
+        return (
+          <motion.button
+            {...resolvedRootProps}
+            className={cn(
+              "group relative flex items-center gap-3 rounded-lg px-4 py-3 text-left",
+              reduceMotion
+                ? "transition-colors duration-150"
+                : "transition-[background-color] duration-480 ease-[cubic-bezier(0.22,1,0.36,1)]",
+              "hover:bg-neutral-100/90 dark:hover:bg-neutral-800/50",
+              "active:bg-neutral-100 dark:active:bg-neutral-800/78",
+              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+              "disabled:cursor-not-allowed disabled:opacity-50",
+              "disabled:active:bg-transparent disabled:hover:bg-transparent",
+              "dark:disabled:active:bg-transparent dark:disabled:hover:bg-transparent",
+              rootClassName
+            )}
+            ref={(node) => {
+              setRef(rootRef, node);
+            }}
+            style={rootStyle}
+            transition={rowTransition}
+            whileTap={whileTap}
+          >
+            {rowChildren}
+          </motion.button>
+        );
+      }}
+      value={option.value}
+    >
+      <div className="flex h-[18px] w-[18px] shrink-0 items-center justify-center">
+        <motion.div
+          className={cn(
+            "flex h-[18px] w-[18px] items-center justify-center rounded transition-[border-color] duration-420 ease-[cubic-bezier(0.25,0.85,0.3,1)]",
+            checked
+              ? "border-0 bg-transparent"
+              : [
+                  "border-2 bg-transparent",
+                  "border-neutral-300/90 group-hover:border-neutral-500/85",
+                  "dark:border-neutral-600 dark:group-hover:border-neutral-400",
+                ]
+          )}
+          layout={reduceMotion ? false : "position"}
+          transition={checkboxTransition}
+        >
+          <AnimatePresence initial={false} mode="sync">
+            <CheckboxGroupIndicator
+              checked={checked}
+              reduceMotion={reduceMotion}
+            />
+          </AnimatePresence>
+        </motion.div>
+      </div>
+
+      <CheckboxGroupCopy option={option} reduceMotion={reduceMotion} />
+    </CheckboxPrimitive.Root>
+  );
+}
+
 function CheckboxGroup({
   options,
   value = [],
   onChange,
   className,
   maxVisible,
+  reducedMotion,
   showMoreLabel = "Show more",
   showLessLabel = "Show less",
 }: CheckboxGroupProps) {
   const [optimisticValue, setOptimisticValue] = useState(value);
   const [expanded, setExpanded] = useState(false);
+  const reduceMotion = useResolvedReducedMotion(reducedMotion);
 
   useEffect(() => {
     setOptimisticValue(value);
@@ -179,162 +371,45 @@ function CheckboxGroup({
   };
 
   return (
-    <CheckboxGroupPrimitive
-      className={cn(registryTheme, "flex flex-col gap-1.5", className)}
-      onValueChange={handleValueChange}
-      value={optimisticValue}
-    >
-      {sections.map((section) => (
-        <div className="flex flex-col gap-1" key={section.key}>
-          {section.label ? (
-            <p className="px-4 pt-2 font-medium text-[11px] text-muted-foreground/80 uppercase tracking-[0.16em]">
-              {section.label}
-            </p>
-          ) : null}
+    <ReducedMotionConfig reducedMotion={reducedMotion}>
+      <CheckboxGroupPrimitive
+        className={cn(registryTheme, "flex flex-col gap-1.5", className)}
+        onValueChange={handleValueChange}
+        value={optimisticValue}
+      >
+        {sections.map((section) => (
+          <div className="flex flex-col gap-1" key={section.key}>
+            {section.label ? (
+              <p className="px-4 pt-2 font-medium text-[11px] text-muted-foreground/80 uppercase tracking-[0.16em]">
+                {section.label}
+              </p>
+            ) : null}
 
-          {section.options.map((option) => {
-            const checked = optimisticValue.includes(option.value);
-            const disabled = option.disabled;
-
-            return (
-              <CheckboxPrimitive.Root
-                disabled={disabled}
+            {section.options.map((option) => (
+              <CheckboxGroupRow
+                checked={optimisticValue.includes(option.value)}
                 key={option.value}
-                nativeButton
-                render={(rootProps) => {
-                  const {
-                    resolvedRootProps,
-                    rootClassName,
-                    rootRef,
-                    rootStyle,
-                    rowChildren,
-                  } = resolveRootRenderProps(rootProps);
+                option={option}
+                reduceMotion={reduceMotion}
+              />
+            ))}
+          </div>
+        ))}
 
-                  return (
-                    <motion.button
-                      {...resolvedRootProps}
-                      className={cn(
-                        "group relative flex items-center gap-3 rounded-lg px-4 py-3 text-left",
-                        "transition-[background-color] duration-480 ease-[cubic-bezier(0.22,1,0.36,1)]",
-                        "hover:bg-neutral-100/90 dark:hover:bg-neutral-800/50",
-                        "active:bg-neutral-100 dark:active:bg-neutral-800/78",
-                        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:ring-offset-2 focus-visible:ring-offset-background",
-                        "disabled:cursor-not-allowed disabled:opacity-50",
-                        "disabled:active:bg-transparent disabled:hover:bg-transparent",
-                        "dark:disabled:active:bg-transparent dark:disabled:hover:bg-transparent",
-                        rootClassName
-                      )}
-                      ref={(node) => {
-                        setRef(rootRef, node);
-                      }}
-                      style={rootStyle}
-                      transition={springTap}
-                      whileTap={
-                        disabled
-                          ? undefined
-                          : {
-                              scale: 0.985,
-                              y: 0,
-                              transition: springTap,
-                            }
-                      }
-                    >
-                      {rowChildren}
-                    </motion.button>
-                  );
-                }}
-                value={option.value}
-              >
-                <div className="flex h-[18px] w-[18px] shrink-0 items-center justify-center">
-                  <motion.div
-                    className={cn(
-                      "flex h-[18px] w-[18px] items-center justify-center rounded transition-[border-color] duration-420 ease-[cubic-bezier(0.25,0.85,0.3,1)]",
-                      checked
-                        ? "border-0 bg-transparent"
-                        : [
-                            "border-2 bg-transparent",
-                            "border-neutral-300/90 group-hover:border-neutral-500/85",
-                            "dark:border-neutral-600 dark:group-hover:border-neutral-400",
-                          ]
-                    )}
-                    layout="position"
-                    transition={springFlow}
-                  >
-                    <AnimatePresence initial={false} mode="sync">
-                      {checked ? (
-                        <motion.div
-                          animate={{
-                            opacity: 1,
-                            rotate: 0,
-                            scale: 1,
-                          }}
-                          className="flex items-center justify-center"
-                          exit={{
-                            opacity: 0,
-                            rotate: -8,
-                            scale: 0.86,
-                            transition: {
-                              duration: 0.12,
-                              ease: [0.4, 0, 1, 1],
-                            },
-                          }}
-                          initial={{
-                            opacity: 0.92,
-                            rotate: -5,
-                            scale: 0.78,
-                          }}
-                          key="check"
-                          transition={springCheck}
-                        >
-                          <Check
-                            className="h-4 w-4 text-primary"
-                            strokeWidth={3}
-                          />
-                        </motion.div>
-                      ) : null}
-                    </AnimatePresence>
-                  </motion.div>
-                </div>
-
-                <div
-                  className={cn(
-                    "flex min-w-0 flex-col transition-transform duration-520 ease-[cubic-bezier(0.22,1,0.36,1)]",
-                    "group-hover:translate-x-0.5"
-                  )}
-                >
-                  <span className="font-medium text-foreground text-sm">
-                    {option.label}
-                  </span>
-                  {option.description ? (
-                    <span className="text-muted-foreground text-xs">
-                      {option.description}
-                    </span>
-                  ) : null}
-                  {disabled && option.disabledReason ? (
-                    <span className="text-[11px] text-muted-foreground/90">
-                      {option.disabledReason}
-                    </span>
-                  ) : null}
-                </div>
-              </CheckboxPrimitive.Root>
-            );
-          })}
-        </div>
-      ))}
-
-      {canCollapse && !forcedExpanded ? (
-        <button
-          className={cn(
-            "self-start rounded-md px-4 py-2 font-medium text-muted-foreground text-sm transition-colors hover:text-foreground",
-            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-          )}
-          onClick={() => setExpanded((previous) => !previous)}
-          type="button"
-        >
-          {expanded ? showLessLabel : `${showMoreLabel} (${hiddenCount})`}
-        </button>
-      ) : null}
-    </CheckboxGroupPrimitive>
+        {canCollapse && !forcedExpanded ? (
+          <button
+            className={cn(
+              "self-start rounded-md px-4 py-2 font-medium text-muted-foreground text-sm transition-colors hover:text-foreground",
+              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+            )}
+            onClick={() => setExpanded((previous) => !previous)}
+            type="button"
+          >
+            {expanded ? showLessLabel : `${showMoreLabel} (${hiddenCount})`}
+          </button>
+        ) : null}
+      </CheckboxGroupPrimitive>
+    </ReducedMotionConfig>
   );
 }
 

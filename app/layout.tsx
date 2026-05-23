@@ -66,7 +66,7 @@ export default function RootLayout({
         <JsonLdScripts />
       </head>
       <body className={`${geist.className} relative bg-background antialiased`}>
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+        <ThemeProvider>
           <MotionTierProvider>
             <PackageNameProvider>{children}</PackageNameProvider>
           </MotionTierProvider>
