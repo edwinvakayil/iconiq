@@ -234,6 +234,31 @@
       ]
     },
     {
+      "name": "b-combobox",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": ["@base-ui/react", "motion", "lucide-react"],
+      "devDependencies": [],
+      "title": "Combobox (Base UI)",
+      "description": "Combobox with the same Iconiq API layered over Base UI primitives, preserving the original filtering rules, keyboard search, clear action, and dropdown motion.",
+      "files": [
+        {
+          "path": "b-combobox.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "reduced-motion.tsx",
+          "target": "lib/reduced-motion.tsx",
+          "type": "registry:lib"
+        },
+        {
+          "path": "registry-theme.ts",
+          "target": "lib/registry-theme.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
       "name": "badge",
       "type": "registry:ui",
       "registryDependencies": [],

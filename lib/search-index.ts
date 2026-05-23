@@ -34,6 +34,8 @@ const componentSummaries: Record<string, string> = {
     "Base UI checkbox group docs in the Radix UI + Base UI section, preserving the same Iconiq row motion and disclosure behavior as the core checkbox group.",
   "/radix-base-ui/collapsible":
     "Collapsible docs with a provider switch that swaps between Base UI and Radix UI registry entries.",
+  "/radix-base-ui/combobox":
+    "Base UI combobox docs in the Radix UI + Base UI section, preserving the same Iconiq filtering, keyboard navigation, and dropdown motion as the core combobox.",
   "/components/alert":
     "Dismissible alert banner with motion-aware entrance and close behavior.",
   "/components/avatar":

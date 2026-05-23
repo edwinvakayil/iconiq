@@ -67,6 +67,7 @@ const REDUCED_MOTION_COMPONENTS = new Set([
   "b-avatar",
   "b-button",
   "b-collapsible",
+  "b-combobox",
   "avatar",
   "badge",
   "button",

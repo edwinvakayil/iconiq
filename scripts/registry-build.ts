@@ -110,6 +110,12 @@ const REGISTRY_UI_META: Record<
       "Collapsible with the same Iconiq API layered over Base UI primitives, preserving the same height, icon, and content transitions as the Radix version.",
     dependencies: ["@base-ui/react", "motion", "lucide-react"],
   },
+  "b-combobox": {
+    title: "Combobox (Base UI)",
+    description:
+      "Combobox with the same Iconiq API layered over Base UI primitives, preserving the original filtering rules, keyboard search, clear action, and dropdown motion.",
+    dependencies: ["@base-ui/react", "motion", "lucide-react"],
+  },
   "b-checkbox": {
     title: "Checkbox (Base UI)",
     description:
