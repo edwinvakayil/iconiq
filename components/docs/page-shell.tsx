@@ -65,6 +65,7 @@ const REDUCED_MOTION_COMPONENTS = new Set([
   "b-accordion",
   "b-alert-dialog",
   "b-avatar",
+  "b-button",
   "avatar",
   "badge",
   "button",

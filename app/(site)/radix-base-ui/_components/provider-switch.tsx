@@ -18,7 +18,9 @@ const providerOptions: Array<{
 export function ProviderSwitch({
   selectedProvider,
   onSelect,
+  disabledProviders = [],
 }: {
+  disabledProviders?: PrimitiveProvider[];
   selectedProvider: PrimitiveProvider;
   onSelect: (provider: PrimitiveProvider) => void;
 }) {
@@ -56,15 +58,24 @@ export function ProviderSwitch({
         >
           {providerOptions.map((option) => {
             const isActive = option.key === selectedProvider;
+            const isDisabled = disabledProviders.includes(option.key);
 
             return (
               <button
+                aria-disabled={isDisabled}
                 className={cn(
-                  "flex w-full items-center justify-between rounded-xl px-3 py-2 text-left text-[14px] text-foreground transition-colors hover:bg-muted/70",
-                  isActive && "bg-muted/55"
+                  "flex w-full items-center justify-between rounded-xl px-3 py-2 text-left text-[14px] text-foreground transition-colors",
+                  !isDisabled && "hover:bg-muted/70",
+                  isActive && "bg-muted/55",
+                  isDisabled && "cursor-not-allowed text-muted-foreground/70"
                 )}
+                disabled={isDisabled}
                 key={option.key}
                 onClick={() => {
+                  if (isDisabled) {
+                    return;
+                  }
+
                   onSelect(option.key);
                   setOpen(false);
                 }}

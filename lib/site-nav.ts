@@ -16,6 +16,7 @@ export const SITE_SECTIONS = [
       { label: "Accordion", href: "/radix-base-ui/accordion" },
       { label: "Alert Dialog", href: "/radix-base-ui/alert-dialog" },
       { label: "Avatar", href: "/radix-base-ui/avatar" },
+      { label: "Button", href: "/radix-base-ui/button" },
       { label: "Checkbox", href: "/radix-base-ui/checkbox" },
     ],
   },

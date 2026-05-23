@@ -144,6 +144,31 @@
       ]
     },
     {
+      "name": "b-button",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": ["@base-ui/react", "motion", "class-variance-authority"],
+      "devDependencies": [],
+      "title": "Button (Base UI)",
+      "description": "Button with the same Iconiq API layered over the Base UI button primitive, preserving the original ripple, press spring, hover lift, and intrinsic-width animation.",
+      "files": [
+        {
+          "path": "b-button.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "reduced-motion.tsx",
+          "target": "lib/reduced-motion.tsx",
+          "type": "registry:lib"
+        },
+        {
+          "path": "registry-theme.ts",
+          "target": "lib/registry-theme.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
       "name": "b-checkbox",
       "type": "registry:ui",
       "registryDependencies": [],

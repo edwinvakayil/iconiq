@@ -98,6 +98,12 @@ const REGISTRY_UI_META: Record<
       "Avatar with the same single Iconiq API layered over Base UI primitives, keeping immediate fallback initials and a quiet image crossfade.",
     dependencies: ["@base-ui/react", "motion"],
   },
+  "b-button": {
+    title: "Button (Base UI)",
+    description:
+      "Button with the same Iconiq API layered over the Base UI button primitive, preserving the original ripple, press spring, hover lift, and intrinsic-width animation.",
+    dependencies: ["@base-ui/react", "motion", "class-variance-authority"],
+  },
   "b-checkbox": {
     title: "Checkbox (Base UI)",
     description:
