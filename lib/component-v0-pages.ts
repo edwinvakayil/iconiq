@@ -363,6 +363,20 @@ ${wrappedInner}
   return `${sections.join("\n\n")}\n`;
 }
 
+export function ensureV0Page(source: string): string {
+  const code = source.trim();
+
+  if (!code) {
+    return code;
+  }
+
+  if (PAGE_FUNCTION_START.test(code)) {
+    return code.endsWith("\n") ? code : `${code}\n`;
+  }
+
+  return buildV0Page(code);
+}
+
 /** Avatar docs preview — matches usageCode with shadcn image + link. */
 export const avatarPreviewCode = `import { Avatar } from "@/components/ui/avatar";
 import Link from "next/link";

@@ -6,6 +6,7 @@ import {
   avatarPreviewCode,
   badgePreviewCode,
   buildV0Page,
+  ensureV0Page,
   getComponentV0Page,
   skeletonPreviewCode,
 } from "@/lib/component-v0-pages";
@@ -666,7 +667,7 @@ const getComponentForV0 = async (
     const registryFile = await fs.readFile(registryFilePath, "utf8");
     const registryData = JSON.parse(registryFile);
 
-    const pageContent =
+    const pageContentSource =
       pageContentOverride ??
       (getComponentV0Page(name) || COMPONENT_EXAMPLE[name]) ??
       [
@@ -686,6 +687,8 @@ const getComponentForV0 = async (
         "  )",
         "}",
       ].join("\n");
+
+    const pageContent = ensureV0Page(pageContentSource);
 
     const description =
       registryData.description ?? `${name} component from Iconiq`;
