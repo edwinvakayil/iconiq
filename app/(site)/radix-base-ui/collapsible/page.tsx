@@ -43,8 +43,41 @@ export function ReleaseNote() {
     <Collapsible className="w-full max-w-xl">
       <CollapsibleTrigger>What changed in this release?</CollapsibleTrigger>
       <CollapsibleContent>
-        We tightened the setup flow, reduced empty states across the dashboard,
-        and simplified the approval path so frequent actions take fewer steps.
+        <div className="space-y-4">
+          <p>
+            This release focuses on reducing friction across setup, review, and
+            team handoff.
+          </p>
+          <div className="space-y-3">
+            <div className="flex items-start justify-between gap-4 border-border/50 border-t pt-3">
+              <div className="space-y-1">
+                <p className="font-medium text-foreground">Setup flow</p>
+                <p>Workspace creation now takes three fewer steps.</p>
+              </div>
+              <span className="shrink-0 text-[11px] text-muted-foreground uppercase tracking-[0.16em]">
+                3 steps saved
+              </span>
+            </div>
+            <div className="flex items-start justify-between gap-4 border-border/50 border-t pt-3">
+              <div className="space-y-1">
+                <p className="font-medium text-foreground">Dashboard states</p>
+                <p>Empty and loading states were reduced into one cleaner path.</p>
+              </div>
+              <span className="shrink-0 text-[11px] text-muted-foreground uppercase tracking-[0.16em]">
+                Cleaner
+              </span>
+            </div>
+            <div className="flex items-start justify-between gap-4 border-border/50 border-t pt-3">
+              <div className="space-y-1">
+                <p className="font-medium text-foreground">Approval handoff</p>
+                <p>Frequent review flows now need fewer confirmation screens.</p>
+              </div>
+              <span className="shrink-0 text-[11px] text-muted-foreground uppercase tracking-[0.16em]">
+                Faster review
+              </span>
+            </div>
+          </div>
+        </div>
       </CollapsibleContent>
     </Collapsible>
   );
@@ -60,8 +93,41 @@ export function ReleaseNote() {
     <Collapsible className="w-full max-w-xl">
       <CollapsibleTrigger>What changed in this release?</CollapsibleTrigger>
       <CollapsibleContent>
-        We tightened the setup flow, reduced empty states across the dashboard,
-        and simplified the approval path so frequent actions take fewer steps.
+        <div className="space-y-4">
+          <p>
+            This release focuses on reducing friction across setup, review, and
+            team handoff.
+          </p>
+          <div className="space-y-3">
+            <div className="flex items-start justify-between gap-4 border-border/50 border-t pt-3">
+              <div className="space-y-1">
+                <p className="font-medium text-foreground">Setup flow</p>
+                <p>Workspace creation now takes three fewer steps.</p>
+              </div>
+              <span className="shrink-0 text-[11px] text-muted-foreground uppercase tracking-[0.16em]">
+                3 steps saved
+              </span>
+            </div>
+            <div className="flex items-start justify-between gap-4 border-border/50 border-t pt-3">
+              <div className="space-y-1">
+                <p className="font-medium text-foreground">Dashboard states</p>
+                <p>Empty and loading states were reduced into one cleaner path.</p>
+              </div>
+              <span className="shrink-0 text-[11px] text-muted-foreground uppercase tracking-[0.16em]">
+                Cleaner
+              </span>
+            </div>
+            <div className="flex items-start justify-between gap-4 border-border/50 border-t pt-3">
+              <div className="space-y-1">
+                <p className="font-medium text-foreground">Approval handoff</p>
+                <p>Frequent review flows now need fewer confirmation screens.</p>
+              </div>
+              <span className="shrink-0 text-[11px] text-muted-foreground uppercase tracking-[0.16em]">
+                Faster review
+              </span>
+            </div>
+          </div>
+        </div>
       </CollapsibleContent>
     </Collapsible>
   );
@@ -77,9 +143,50 @@ function CollapsiblePreview({ ui }: { ui: CollapsibleModule }) {
         <Collapsible className="w-full">
           <CollapsibleTrigger>What changed in this release?</CollapsibleTrigger>
           <CollapsibleContent>
-            We tightened the setup flow, reduced empty states across the
-            dashboard, and simplified the approval path so frequent actions take
-            fewer steps.
+            <div className="space-y-4">
+              <p>
+                This release focuses on reducing friction across setup, review,
+                and team handoff.
+              </p>
+              <div className="space-y-3">
+                <div className="flex items-start justify-between gap-4 border-border/50 border-t pt-3">
+                  <div className="space-y-1">
+                    <p className="font-medium text-foreground">Setup flow</p>
+                    <p>Workspace creation now takes three fewer steps.</p>
+                  </div>
+                  <span className="shrink-0 text-[11px] text-muted-foreground uppercase tracking-[0.16em]">
+                    3 steps saved
+                  </span>
+                </div>
+                <div className="flex items-start justify-between gap-4 border-border/50 border-t pt-3">
+                  <div className="space-y-1">
+                    <p className="font-medium text-foreground">
+                      Dashboard states
+                    </p>
+                    <p>
+                      Empty and loading states were reduced into one cleaner
+                      path.
+                    </p>
+                  </div>
+                  <span className="shrink-0 text-[11px] text-muted-foreground uppercase tracking-[0.16em]">
+                    Cleaner
+                  </span>
+                </div>
+                <div className="flex items-start justify-between gap-4 border-border/50 border-t pt-3">
+                  <div className="space-y-1">
+                    <p className="font-medium text-foreground">
+                      Approval handoff
+                    </p>
+                    <p>
+                      Frequent review flows now need fewer confirmation screens.
+                    </p>
+                  </div>
+                  <span className="shrink-0 text-[11px] text-muted-foreground uppercase tracking-[0.16em]">
+                    Faster review
+                  </span>
+                </div>
+              </div>
+            </div>
           </CollapsibleContent>
         </Collapsible>
       </div>
