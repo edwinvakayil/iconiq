@@ -61,6 +61,7 @@ const TYPE_IMPORT_PREFIX_RE = /^type\s+/;
 const IMPORT_ALIAS_RE = /\s+as\s+/;
 const REDUCED_MOTION_COMPONENTS = new Set([
   "accordion",
+  "b-accordion",
   "badge",
   "button",
   "button-group",
@@ -72,6 +73,7 @@ const REDUCED_MOTION_COMPONENTS = new Set([
   "hover-card",
   "input-group",
   "popover",
+  "r-accordion",
   "select",
   "slider",
   "switch",
@@ -285,6 +287,7 @@ function DocsBreadcrumbs({
       "components",
       "foundation",
       "getting started",
+      "radix ui + base ui",
       "texts",
       "special one",
     ].includes(
@@ -855,12 +858,16 @@ function ComponentDocsPage({
   title,
   description,
   componentName,
+  itemSlug,
+  pageUrl,
   preview,
   previewCode,
   usageCode,
   usageDescription,
   details,
   extraSections = [],
+  headerActions,
+  editHref,
   previewClassName,
   v0PageCode,
 }: {
@@ -869,6 +876,8 @@ function ComponentDocsPage({
   title: string;
   description: ReactNode;
   componentName: string;
+  itemSlug?: string;
+  pageUrl?: string;
   preview: ReactNode;
   previewDescription?: ReactNode;
   previewCode?: string;
@@ -882,9 +891,12 @@ function ComponentDocsPage({
   actionDescription?: ReactNode;
   railNotes?: string[];
   previewClassName?: string;
+  headerActions?: ReactNode;
+  editHref?: string;
 }) {
   const shouldShowReducedMotion = supportsReducedMotionDocs(componentName);
   const sectionLabel = breadcrumbs[1]?.label ?? "Components";
+  const resolvedItemSlug = itemSlug ?? componentName;
   const reducedMotionCode = shouldShowReducedMotion
     ? injectReducedMotionIntoCode(usageCode, componentName)
     : usageCode;
@@ -964,14 +976,16 @@ function ComponentDocsPage({
                     </div>
 
                     <div className="flex items-center gap-2 self-start">
+                      {headerActions}
                       <PageCopyActions
                         componentName={componentName}
                         pageContent={pageCopyContent}
+                        pageUrl={pageUrl}
                         title={title}
                         v0PageCode={resolvedV0PageCode || undefined}
                       />
                       <SectionPager
-                        itemSlug={componentName}
+                        itemSlug={resolvedItemSlug}
                         sectionLabel={sectionLabel}
                       />
                     </div>
@@ -1012,7 +1026,7 @@ function ComponentDocsPage({
               </div>
 
               <SectionPrevNextNav
-                itemSlug={componentName}
+                itemSlug={resolvedItemSlug}
                 sectionLabel={sectionLabel}
               />
             </article>
@@ -1020,6 +1034,7 @@ function ComponentDocsPage({
 
           <ComponentPageRail
             componentName={componentName}
+            editHref={editHref}
             sections={sectionLinks}
           />
         </div>

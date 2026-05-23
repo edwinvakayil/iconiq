@@ -11,6 +11,10 @@ export const BASE_LINKS = [
 
 export const SITE_SECTIONS = [
   {
+    label: "Radix UI + Base UI",
+    children: [{ label: "Accordion", href: "/radix-base-ui/accordion" }],
+  },
+  {
     label: "Special One",
     children: [
       { label: "Icon Bar", href: "/special-one/icon-bar" },

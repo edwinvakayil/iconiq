@@ -69,6 +69,31 @@
       ]
     },
     {
+      "name": "b-accordion",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": ["@base-ui/react", "motion", "lucide-react"],
+      "devDependencies": [],
+      "title": "Accordion (Base UI)",
+      "description": "Accordion with the same Iconiq API layered over Base UI primitives, keeping the editorial and default variants while swapping the underlying headless library.",
+      "files": [
+        {
+          "path": "b-accordion.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "reduced-motion.tsx",
+          "target": "lib/reduced-motion.tsx",
+          "type": "registry:lib"
+        },
+        {
+          "path": "registry-theme.ts",
+          "target": "lib/registry-theme.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
       "name": "badge",
       "type": "registry:ui",
       "registryDependencies": [],
@@ -508,6 +533,31 @@
       "files": [
         {
           "path": "popover.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "reduced-motion.tsx",
+          "target": "lib/reduced-motion.tsx",
+          "type": "registry:lib"
+        },
+        {
+          "path": "registry-theme.ts",
+          "target": "lib/registry-theme.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
+      "name": "r-accordion",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": ["@radix-ui/react-accordion", "motion", "lucide-react"],
+      "devDependencies": [],
+      "title": "Accordion (Radix UI)",
+      "description": "Accordion with the same Iconiq API layered over Radix UI primitives, preserving the existing Motion-heavy panel choreography and install surface.",
+      "files": [
+        {
+          "path": "r-accordion.tsx",
           "type": "registry:ui"
         },
         {

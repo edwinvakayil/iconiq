@@ -183,14 +183,19 @@ export function DocsPageRail({
 
 export function ComponentPageRail({
   componentName,
+  editHref,
   sections,
 }: {
   componentName: string;
+  editHref?: string;
   sections: RailSection[];
 }) {
   return (
     <DocsPageRail
-      editHref={`${LINK.GITHUB}/edit/main/app/components/${componentName}/page.tsx`}
+      editHref={
+        editHref ??
+        `${LINK.GITHUB}/edit/main/app/components/${componentName}/page.tsx`
+      }
       sections={sections}
     />
   );

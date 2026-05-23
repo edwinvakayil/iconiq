@@ -80,6 +80,12 @@ const REGISTRY_UI_META: Record<
       "Accordion with spring height, staggered text, default or editorial disclosure styles, and optional multi-open behavior. Built with Motion.",
     dependencies: ["@radix-ui/react-accordion", "motion", "lucide-react"],
   },
+  "b-accordion": {
+    title: "Accordion (Base UI)",
+    description:
+      "Accordion with the same Iconiq API layered over Base UI primitives, keeping the editorial and default variants while swapping the underlying headless library.",
+    dependencies: ["@base-ui/react", "motion", "lucide-react"],
+  },
   alert: {
     title: "Alert",
     description:
@@ -145,6 +151,12 @@ const REGISTRY_UI_META: Record<
     description:
       "Rounded action button with a pointer-origin foreground fill that spreads on hover or focus-visible. Built with Motion.",
     dependencies: ["motion"],
+  },
+  "r-accordion": {
+    title: "Accordion (Radix UI)",
+    description:
+      "Accordion with the same Iconiq API layered over Radix UI primitives, preserving the existing Motion-heavy panel choreography and install surface.",
+    dependencies: ["@radix-ui/react-accordion", "motion", "lucide-react"],
   },
   "faq-pro": {
     title: "FAQ Pro",

@@ -20,6 +20,8 @@ const pageSummaries: Record<string, string> = {
 };
 
 const componentSummaries: Record<string, string> = {
+  "/radix-base-ui/accordion":
+    "Accordion docs with a provider switch that swaps between Base UI and Radix UI registry entries.",
   "/components/alert":
     "Dismissible alert banner with motion-aware entrance and close behavior.",
   "/components/avatar":

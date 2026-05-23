@@ -10,6 +10,7 @@ const DOCS_PREFIXES = [
   "/mcp",
   "/components",
   "/foundation",
+  "/radix-base-ui",
   "/texts",
   "/special-one",
 ];
