@@ -284,6 +284,36 @@
       ]
     },
     {
+      "name": "b-dialog",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": [
+        "@base-ui/react",
+        "@radix-ui/react-slot",
+        "motion",
+        "lucide-react"
+      ],
+      "devDependencies": [],
+      "title": "Dialog (Base UI)",
+      "description": "Dialog with the same exported Iconiq parts layered over Base UI primitives, preserving the original dialog springs while using the softer alert-dialog card styling and overlay treatment.",
+      "files": [
+        {
+          "path": "b-dialog.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "reduced-motion.tsx",
+          "target": "lib/reduced-motion.tsx",
+          "type": "registry:lib"
+        },
+        {
+          "path": "registry-theme.ts",
+          "target": "lib/registry-theme.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
       "name": "badge",
       "type": "registry:ui",
       "registryDependencies": [],
@@ -868,6 +898,31 @@
       "files": [
         {
           "path": "r-context-menu.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "reduced-motion.tsx",
+          "target": "lib/reduced-motion.tsx",
+          "type": "registry:lib"
+        },
+        {
+          "path": "registry-theme.ts",
+          "target": "lib/registry-theme.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
+      "name": "r-dialog",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": ["@radix-ui/react-dialog", "motion", "lucide-react"],
+      "devDependencies": [],
+      "title": "Dialog (Radix UI)",
+      "description": "Dialog with the same exported Iconiq parts layered over Radix UI primitives, preserving the original dialog springs while using the softer alert-dialog card styling and overlay treatment.",
+      "files": [
+        {
+          "path": "r-dialog.tsx",
           "type": "registry:ui"
         },
         {

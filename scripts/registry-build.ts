@@ -122,6 +122,17 @@ const REGISTRY_UI_META: Record<
       "Context menu with the same Iconiq API layered over Base UI primitives, preserving the original panel spring, row entrance, active highlight, and shortcut layout.",
     dependencies: ["@base-ui/react", "motion"],
   },
+  "b-dialog": {
+    title: "Dialog (Base UI)",
+    description:
+      "Dialog with the same exported Iconiq parts layered over Base UI primitives, preserving the original dialog springs while using the softer alert-dialog card styling and overlay treatment.",
+    dependencies: [
+      "@base-ui/react",
+      "@radix-ui/react-slot",
+      "motion",
+      "lucide-react",
+    ],
+  },
   "b-checkbox": {
     title: "Checkbox (Base UI)",
     description:
@@ -235,6 +246,12 @@ const REGISTRY_UI_META: Record<
     description:
       "Context menu with the same Iconiq API layered over Radix UI primitives, preserving the original panel spring, row entrance, active highlight, and shortcut layout.",
     dependencies: ["@radix-ui/react-context-menu", "motion"],
+  },
+  "r-dialog": {
+    title: "Dialog (Radix UI)",
+    description:
+      "Dialog with the same exported Iconiq parts layered over Radix UI primitives, preserving the original dialog springs while using the softer alert-dialog card styling and overlay treatment.",
+    dependencies: ["@radix-ui/react-dialog", "motion", "lucide-react"],
   },
   "faq-pro": {
     title: "FAQ Pro",

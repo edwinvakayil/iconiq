@@ -22,6 +22,7 @@ export const SITE_SECTIONS = [
       { label: "Collapsible", href: "/radix-base-ui/collapsible" },
       { label: "Combobox", href: "/radix-base-ui/combobox" },
       { label: "Context Menu", href: "/radix-base-ui/context-menu" },
+      { label: "Dialog", href: "/radix-base-ui/dialog" },
     ],
   },
   {
