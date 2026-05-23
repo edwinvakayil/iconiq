@@ -122,7 +122,9 @@ function RegistrySourceCode({ componentName }: { componentName: string }) {
 
     const load = async () => {
       try {
-        const response = await fetch(`/r/${componentName}.json`);
+        const response = await fetch(`/r/${componentName}.json`, {
+          cache: "no-store",
+        });
         const data = (await response.json()) as RegistryResponse;
         const sourceFiles = (data.files ?? []).filter((file) => file.content);
         const defaultFile =

@@ -42,6 +42,8 @@ const componentSummaries: Record<string, string> = {
     "Dialog docs with a provider switch that swaps between Base UI and Radix UI registry entries.",
   "/radix-base-ui/drawer":
     "Base UI drawer docs in the Radix UI + Base UI section, preserving the same Iconiq controlled API, side-based entry, and layered motion as the core drawer.",
+  "/radix-base-ui/hover-card":
+    "Hover card docs with a provider switch that swaps between a Base UI popover-backed install and a Radix Hover Card primitive install.",
   "/components/alert":
     "Dismissible alert banner with motion-aware entrance and close behavior.",
   "/components/avatar":

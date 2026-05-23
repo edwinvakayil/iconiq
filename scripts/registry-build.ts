@@ -139,6 +139,12 @@ const REGISTRY_UI_META: Record<
       "Drawer with the same Iconiq controlled API layered over Base UI primitives, preserving the original slide direction, overlay blur, content stagger, and safe-area-aware panel motion.",
     dependencies: ["@base-ui/react", "motion", "lucide-react"],
   },
+  "b-hover-card": {
+    title: "Hover Card (Base UI)",
+    description:
+      "Hover card with the same Iconiq API layered over Base UI popover primitives, preserving delayed hover reveal, instant focus open, collision-aware placement, and spring-driven content motion.",
+    dependencies: ["@base-ui/react", "motion"],
+  },
   "b-checkbox": {
     title: "Checkbox (Base UI)",
     description:
@@ -258,6 +264,16 @@ const REGISTRY_UI_META: Record<
     description:
       "Dialog with the same exported Iconiq parts layered over Radix UI primitives, preserving the original dialog springs while using the softer alert-dialog card styling and overlay treatment.",
     dependencies: ["@radix-ui/react-dialog", "motion", "lucide-react"],
+  },
+  "r-hover-card": {
+    title: "Hover Card (Radix UI)",
+    description:
+      "Hover card with the same Iconiq API layered over the dedicated Radix Hover Card primitive, preserving delayed hover reveal, instant focus open, collision-aware placement, and spring-driven content motion.",
+    dependencies: [
+      "@radix-ui/react-hover-card",
+      "@radix-ui/react-slot",
+      "motion",
+    ],
   },
   "faq-pro": {
     title: "FAQ Pro",

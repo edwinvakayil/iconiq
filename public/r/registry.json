@@ -339,6 +339,31 @@
       ]
     },
     {
+      "name": "b-hover-card",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": ["@base-ui/react", "motion"],
+      "devDependencies": [],
+      "title": "Hover Card (Base UI)",
+      "description": "Hover card with the same Iconiq API layered over Base UI popover primitives, preserving delayed hover reveal, instant focus open, collision-aware placement, and spring-driven content motion.",
+      "files": [
+        {
+          "path": "b-hover-card.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "reduced-motion.tsx",
+          "target": "lib/reduced-motion.tsx",
+          "type": "registry:lib"
+        },
+        {
+          "path": "registry-theme.ts",
+          "target": "lib/registry-theme.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
       "name": "badge",
       "type": "registry:ui",
       "registryDependencies": [],
@@ -948,6 +973,35 @@
       "files": [
         {
           "path": "r-dialog.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "reduced-motion.tsx",
+          "target": "lib/reduced-motion.tsx",
+          "type": "registry:lib"
+        },
+        {
+          "path": "registry-theme.ts",
+          "target": "lib/registry-theme.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
+      "name": "r-hover-card",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": [
+        "@radix-ui/react-hover-card",
+        "@radix-ui/react-slot",
+        "motion"
+      ],
+      "devDependencies": [],
+      "title": "Hover Card (Radix UI)",
+      "description": "Hover card with the same Iconiq API layered over the dedicated Radix Hover Card primitive, preserving delayed hover reveal, instant focus open, collision-aware placement, and spring-driven content motion.",
+      "files": [
+        {
+          "path": "r-hover-card.tsx",
           "type": "registry:ui"
         },
         {
