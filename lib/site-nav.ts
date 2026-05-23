@@ -25,6 +25,7 @@ export const SITE_SECTIONS = [
       { label: "Dialog", href: "/radix-base-ui/dialog" },
       { label: "Drawer", href: "/radix-base-ui/drawer" },
       { label: "Hover Card", href: "/radix-base-ui/hover-card" },
+      { label: "Popover", href: "/radix-base-ui/popover" },
     ],
   },
   {

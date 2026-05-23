@@ -145,6 +145,12 @@ const REGISTRY_UI_META: Record<
       "Hover card with the same Iconiq API layered over Base UI popover primitives, preserving delayed hover reveal, instant focus open, collision-aware placement, and spring-driven content motion.",
     dependencies: ["@base-ui/react", "motion"],
   },
+  "b-popover": {
+    title: "Popover (Base UI)",
+    description:
+      "Popover with the same Iconiq API layered over Base UI popover primitives, preserving side-aware panel motion, optional anchor support, and size-aware content transitions.",
+    dependencies: ["@base-ui/react", "motion"],
+  },
   "b-checkbox": {
     title: "Checkbox (Base UI)",
     description:
@@ -274,6 +280,12 @@ const REGISTRY_UI_META: Record<
       "@radix-ui/react-slot",
       "motion",
     ],
+  },
+  "r-popover": {
+    title: "Popover (Radix UI)",
+    description:
+      "Popover with the same Iconiq API layered over Radix UI popover primitives, preserving side-aware panel motion, optional anchor support, and size-aware content transitions.",
+    dependencies: ["@radix-ui/react-popover", "motion"],
   },
   "faq-pro": {
     title: "FAQ Pro",

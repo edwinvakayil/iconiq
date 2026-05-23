@@ -364,6 +364,31 @@
       ]
     },
     {
+      "name": "b-popover",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": ["@base-ui/react", "motion"],
+      "devDependencies": [],
+      "title": "Popover (Base UI)",
+      "description": "Popover with the same Iconiq API layered over Base UI popover primitives, preserving side-aware panel motion, optional anchor support, and size-aware content transitions.",
+      "files": [
+        {
+          "path": "b-popover.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "reduced-motion.tsx",
+          "target": "lib/reduced-motion.tsx",
+          "type": "registry:lib"
+        },
+        {
+          "path": "registry-theme.ts",
+          "target": "lib/registry-theme.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
       "name": "badge",
       "type": "registry:ui",
       "registryDependencies": [],
@@ -1002,6 +1027,31 @@
       "files": [
         {
           "path": "r-hover-card.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "reduced-motion.tsx",
+          "target": "lib/reduced-motion.tsx",
+          "type": "registry:lib"
+        },
+        {
+          "path": "registry-theme.ts",
+          "target": "lib/registry-theme.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
+      "name": "r-popover",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": ["@radix-ui/react-popover", "motion"],
+      "devDependencies": [],
+      "title": "Popover (Radix UI)",
+      "description": "Popover with the same Iconiq API layered over Radix UI popover primitives, preserving side-aware panel motion, optional anchor support, and size-aware content transitions.",
+      "files": [
+        {
+          "path": "r-popover.tsx",
           "type": "registry:ui"
         },
         {
