@@ -21,6 +21,7 @@ export const SITE_SECTIONS = [
       { label: "Checkbox Group", href: "/radix-base-ui/checkbox-group" },
       { label: "Collapsible", href: "/radix-base-ui/collapsible" },
       { label: "Combobox", href: "/radix-base-ui/combobox" },
+      { label: "Context Menu", href: "/radix-base-ui/context-menu" },
     ],
   },
   {

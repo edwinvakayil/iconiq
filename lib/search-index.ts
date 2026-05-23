@@ -36,6 +36,8 @@ const componentSummaries: Record<string, string> = {
     "Collapsible docs with a provider switch that swaps between Base UI and Radix UI registry entries.",
   "/radix-base-ui/combobox":
     "Base UI combobox docs in the Radix UI + Base UI section, preserving the same Iconiq filtering, keyboard navigation, and dropdown motion as the core combobox.",
+  "/radix-base-ui/context-menu":
+    "Context menu docs with a provider switch that swaps between Base UI and Radix UI registry entries.",
   "/components/alert":
     "Dismissible alert banner with motion-aware entrance and close behavior.",
   "/components/avatar":

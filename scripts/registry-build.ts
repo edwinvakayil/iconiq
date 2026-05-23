@@ -116,6 +116,12 @@ const REGISTRY_UI_META: Record<
       "Combobox with the same Iconiq API layered over Base UI primitives, preserving the original filtering rules, keyboard search, clear action, and dropdown motion.",
     dependencies: ["@base-ui/react", "motion", "lucide-react"],
   },
+  "b-context-menu": {
+    title: "Context Menu (Base UI)",
+    description:
+      "Context menu with the same Iconiq API layered over Base UI primitives, preserving the original panel spring, row entrance, active highlight, and shortcut layout.",
+    dependencies: ["@base-ui/react", "motion"],
+  },
   "b-checkbox": {
     title: "Checkbox (Base UI)",
     description:
@@ -223,6 +229,12 @@ const REGISTRY_UI_META: Record<
     description:
       "Checkbox with the same Iconiq API layered over Radix UI primitives, preserving the original fill spring, press scale, checkmark draw, and label fade.",
     dependencies: ["@radix-ui/react-checkbox", "motion"],
+  },
+  "r-context-menu": {
+    title: "Context Menu (Radix UI)",
+    description:
+      "Context menu with the same Iconiq API layered over Radix UI primitives, preserving the original panel spring, row entrance, active highlight, and shortcut layout.",
+    dependencies: ["@radix-ui/react-context-menu", "motion"],
   },
   "faq-pro": {
     title: "FAQ Pro",
