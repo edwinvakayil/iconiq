@@ -2,7 +2,6 @@ import { CircleXIcon, TriangleAlertIcon } from "lucide-react";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { Toaster } from "sonner";
 
-import { Analytics } from "@/components/analytics";
 import { ConditionalFooter } from "@/components/conditional-footer";
 import { DocsSidebar } from "@/components/docs-sidebar";
 import { Header } from "@/components/header";
@@ -49,7 +48,6 @@ export default function SiteLayout({
                 />
               </NuqsAdapter>
               <ConditionalFooter />
-              <Analytics />
             </div>
           </div>
         </div>
