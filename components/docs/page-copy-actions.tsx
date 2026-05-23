@@ -6,7 +6,7 @@ import { useMemo, useState } from "react";
 import { OpenInV0Button } from "@/components/docs/open-in-v0-button";
 import { SITE } from "@/constants";
 import { capturePostHogEvent } from "@/lib/posthog";
-import { posthogEventName } from "@/lib/posthog-event-name";
+import { POSTHOG_EVENTS } from "@/lib/posthog-events";
 import { cn } from "@/lib/utils";
 import { Popover, PopoverContent, PopoverTrigger } from "@/registry/popover";
 
@@ -58,10 +58,12 @@ export function PageCopyActions({
   const handleCopy = async () => {
     try {
       await navigator.clipboard.writeText(pageContent);
-      capturePostHogEvent(posthogEventName("copied-page", componentName), {
-        component_name: componentName,
+      capturePostHogEvent(POSTHOG_EVENTS.DOCS_PAGE_COPIED, {
+        component_slug: componentName,
+        section: "components",
         page_url: resolvedPageUrl,
         title,
+        source: "component_header",
       });
       setCopied(true);
       window.setTimeout(() => setCopied(false), 1500);
@@ -128,20 +130,21 @@ export function PageCopyActions({
               key={item.label}
               onClick={() => {
                 if (item.label === "Ask ChatGPT") {
-                  capturePostHogEvent(
-                    posthogEventName("ask-chatgpt", componentName),
-                    {
-                      component_name: componentName,
-                      page_url: resolvedPageUrl,
-                      title,
-                    }
-                  );
+                  capturePostHogEvent(POSTHOG_EVENTS.DOCS_ASK_CHATGPT_CLICKED, {
+                    component_slug: componentName,
+                    section: "components",
+                    page_url: resolvedPageUrl,
+                    title,
+                    source: "component_header",
+                  });
                 } else if (item.label === "View registry JSON") {
                   capturePostHogEvent(
-                    posthogEventName("view-registry-json", componentName),
+                    POSTHOG_EVENTS.DOCS_REGISTRY_JSON_VIEWED,
                     {
-                      component_name: componentName,
+                      component_slug: componentName,
+                      section: "components",
                       registry_url: registryUrl,
+                      source: "component_header",
                     }
                   );
                 }

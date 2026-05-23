@@ -5,7 +5,8 @@ import { useMemo, useState } from "react";
 
 import { SITE } from "@/constants";
 import { capturePostHogEvent } from "@/lib/posthog";
-import { posthogEventName, slugFromPageUrl } from "@/lib/posthog-event-name";
+import { slugFromPageUrl } from "@/lib/posthog-event-name";
+import { POSTHOG_EVENTS } from "@/lib/posthog-events";
 import { cn } from "@/lib/utils";
 import { Popover, PopoverContent, PopoverTrigger } from "@/registry/popover";
 
@@ -54,10 +55,11 @@ export function DocsCopyActions({
   const handleCopy = async () => {
     try {
       await navigator.clipboard.writeText(pageContent);
-      capturePostHogEvent(posthogEventName("copied-page", pageSlug), {
+      capturePostHogEvent(POSTHOG_EVENTS.DOCS_PAGE_COPIED, {
+        component_slug: pageSlug,
         page_url: pageUrl,
         title,
-        page_slug: pageSlug,
+        source: "docs_header",
       });
       setCopied(true);
       window.setTimeout(() => setCopied(false), 1500);
@@ -126,11 +128,12 @@ export function DocsCopyActions({
                 onClick={() => {
                   if (item.label === "Ask ChatGPT") {
                     capturePostHogEvent(
-                      posthogEventName("ask-chatgpt", pageSlug),
+                      POSTHOG_EVENTS.DOCS_ASK_CHATGPT_CLICKED,
                       {
+                        component_slug: pageSlug,
                         page_url: pageUrl,
                         title,
-                        page_slug: pageSlug,
+                        source: "docs_header",
                       }
                     );
                   }

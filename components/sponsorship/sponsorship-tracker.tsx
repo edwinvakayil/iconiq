@@ -3,10 +3,11 @@
 import { useEffect } from "react";
 
 import { capturePostHogEvent } from "@/lib/posthog";
+import { POSTHOG_EVENTS } from "@/lib/posthog-events";
 
 export function SponsorshipTracker() {
   useEffect(() => {
-    capturePostHogEvent("sponsorship_page_viewed");
+    capturePostHogEvent(POSTHOG_EVENTS.SPONSOR_PAGE_VIEWED);
   }, []);
 
   return null;

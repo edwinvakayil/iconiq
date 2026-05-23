@@ -5,7 +5,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { openComponentInV0Action } from "@/actions/open-component-in-v0";
 import { capturePostHogEvent } from "@/lib/posthog";
-import { posthogEventName } from "@/lib/posthog-event-name";
+import { POSTHOG_EVENTS } from "@/lib/posthog-events";
 import { cn } from "@/lib/utils";
 
 function V0Icon({ className }: { className?: string }) {
@@ -45,9 +45,11 @@ export function OpenInV0Button({
 
     try {
       setState("loading");
-      capturePostHogEvent(posthogEventName("open-in-v0", name), {
-        component_name: name,
-        variant,
+      capturePostHogEvent(POSTHOG_EVENTS.DOCS_OPEN_IN_V0_CLICKED, {
+        component_slug: name,
+        section: "components",
+        ui_variant: variant,
+        source: variant === "menu" ? "component_header" : "component_canvas",
       });
       const data = await openComponentInV0Action(name, pageContent);
 

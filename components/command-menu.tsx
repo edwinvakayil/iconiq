@@ -8,7 +8,11 @@ import * as React from "react";
 import { Kbd, KbdGroup } from "@/components/ui/kbd";
 import { useDebouncedValue } from "@/hooks/use-debounced-value";
 import { capturePostHogEvent } from "@/lib/posthog";
-import { posthogEventName, slugFromDocsHref } from "@/lib/posthog-event-name";
+import {
+  sectionFromDocsHref,
+  slugFromDocsHref,
+} from "@/lib/posthog-event-name";
+import { POSTHOG_EVENTS } from "@/lib/posthog-events";
 import { cn } from "@/lib/utils";
 
 const QUERY_SPLIT_REGEX = /\s+/;
@@ -204,7 +208,9 @@ function CommandMenu({
         event.preventDefault();
         event.stopPropagation();
         if (!openRef.current) {
-          capturePostHogEvent("search_opened");
+          capturePostHogEvent(POSTHOG_EVENTS.SEARCH_OPENED, {
+            source: "keyboard_shortcut",
+          });
         }
         setOpen((current) => !current);
       }
@@ -226,7 +232,9 @@ function CommandMenu({
   openRef.current = open;
 
   const handleOpen = React.useCallback(() => {
-    capturePostHogEvent("search_opened");
+    capturePostHogEvent(POSTHOG_EVENTS.SEARCH_OPENED, {
+      source: "search_button",
+    });
     setOpen(true);
   }, []);
 
@@ -304,17 +312,15 @@ function CommandMenu({
   const handleItemSelect = React.useCallback(
     (item: CommandMenuItemDef) => {
       const docsSlug = item.href ? slugFromDocsHref(item.href) : null;
-      capturePostHogEvent(
-        docsSlug
-          ? posthogEventName("selected", docsSlug)
-          : "search_item_selected",
-        {
-          label: item.label,
-          href: item.href ?? null,
-          query,
-          ...(docsSlug ? { component_name: docsSlug } : {}),
-        }
-      );
+      const section = item.href ? sectionFromDocsHref(item.href) : null;
+      capturePostHogEvent(POSTHOG_EVENTS.SEARCH_RESULT_SELECTED, {
+        label: item.label,
+        href: item.href ?? null,
+        query,
+        source: "command_menu",
+        ...(docsSlug ? { component_slug: docsSlug } : {}),
+        ...(section ? { section } : {}),
+      });
 
       if (item.action) {
         run(item.action);

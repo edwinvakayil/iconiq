@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import type { PACKAGE_MANAGER } from "@/constants";
 import { capturePostHogEvent } from "@/lib/posthog";
-import { posthogEventName } from "@/lib/posthog-event-name";
+import { POSTHOG_EVENTS } from "@/lib/posthog-events";
 import { cn } from "@/lib/utils";
 import { usePackageNameContext } from "@/providers/package-name";
 
@@ -23,7 +23,7 @@ export function InstallCommandTerminal({
 }: {
   className?: string;
   commands: Record<PackageManager, string>;
-  /** Registry component or page slug for events like `copied-accordion`. */
+  /** Registry component or page slug (e.g. `accordion`, `mcp-init`). */
   eventSlug: string;
 }) {
   const [copied, setCopied] = useState(false);
@@ -34,10 +34,11 @@ export function InstallCommandTerminal({
     startTransition(async () => {
       try {
         await navigator.clipboard.writeText(commands[packageName]);
-        capturePostHogEvent(posthogEventName("copied", eventSlug), {
+        capturePostHogEvent(POSTHOG_EVENTS.DOCS_INSTALL_COPIED, {
+          component_slug: eventSlug,
           package_manager: packageName,
           command: commands[packageName],
-          component_name: eventSlug,
+          source: "install_block",
         });
         setCopied(true);
         await new Promise((resolve) => setTimeout(resolve, 2000));

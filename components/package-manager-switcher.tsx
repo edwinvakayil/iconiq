@@ -2,6 +2,7 @@
 
 import { PACKAGE_MANAGER } from "@/constants";
 import { capturePostHogEvent } from "@/lib/posthog";
+import { POSTHOG_EVENTS } from "@/lib/posthog-events";
 import { cn } from "@/lib/utils";
 
 type PackageManagerSwitcherProps = {
@@ -33,10 +34,14 @@ export function PackageManagerSwitcher({
               )}
               key={packageManager}
               onClick={() => {
-                capturePostHogEvent("package_manager_changed", {
-                  package_manager: packageManager,
-                  previous_package_manager: value,
-                });
+                capturePostHogEvent(
+                  POSTHOG_EVENTS.SETTINGS_PACKAGE_MANAGER_CHANGED,
+                  {
+                    package_manager: packageManager,
+                    previous_package_manager: value,
+                    source: "package_manager_switcher",
+                  }
+                );
                 onValueChange(packageManager);
               }}
               type="button"
