@@ -169,6 +169,26 @@
       ]
     },
     {
+      "name": "b-checkbox-group",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": ["@base-ui/react", "motion", "lucide-react"],
+      "devDependencies": [],
+      "title": "Checkbox Group (Base UI)",
+      "description": "Checkbox group with the same Iconiq API layered over Base UI primitives, preserving the original row hover, tap spring, check icon entrance, and disclosure behavior.",
+      "files": [
+        {
+          "path": "b-checkbox-group.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "registry-theme.ts",
+          "target": "lib/registry-theme.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
       "name": "b-checkbox",
       "type": "registry:ui",
       "registryDependencies": [],

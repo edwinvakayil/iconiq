@@ -18,6 +18,7 @@ export const SITE_SECTIONS = [
       { label: "Avatar", href: "/radix-base-ui/avatar" },
       { label: "Button", href: "/radix-base-ui/button" },
       { label: "Checkbox", href: "/radix-base-ui/checkbox" },
+      { label: "Checkbox Group", href: "/radix-base-ui/checkbox-group" },
     ],
   },
   {

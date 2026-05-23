@@ -30,6 +30,8 @@ const componentSummaries: Record<string, string> = {
     "Base UI button docs in the Radix UI + Base UI section, preserving the same Iconiq motion and API as the core button.",
   "/radix-base-ui/checkbox":
     "Checkbox docs with a provider switch that swaps between Base UI and Radix UI registry entries.",
+  "/radix-base-ui/checkbox-group":
+    "Base UI checkbox group docs in the Radix UI + Base UI section, preserving the same Iconiq row motion and disclosure behavior as the core checkbox group.",
   "/components/alert":
     "Dismissible alert banner with motion-aware entrance and close behavior.",
   "/components/avatar":

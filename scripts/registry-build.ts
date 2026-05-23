@@ -110,6 +110,12 @@ const REGISTRY_UI_META: Record<
       "Checkbox with the same Iconiq API layered over Base UI primitives, preserving the original fill spring, press scale, checkmark draw, and label fade.",
     dependencies: ["@base-ui/react", "motion"],
   },
+  "b-checkbox-group": {
+    title: "Checkbox Group (Base UI)",
+    description:
+      "Checkbox group with the same Iconiq API layered over Base UI primitives, preserving the original row hover, tap spring, check icon entrance, and disclosure behavior.",
+    dependencies: ["@base-ui/react", "motion", "lucide-react"],
+  },
   alert: {
     title: "Alert",
     description:
