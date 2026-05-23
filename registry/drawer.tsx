@@ -44,6 +44,7 @@ export interface DrawerProps extends ReducedMotionProp {
   description?: string;
   footer?: ReactNode;
   children?: ReactNode;
+  lockBodyScroll?: boolean;
 }
 
 function useMeasure<T extends HTMLElement = HTMLElement>(): [
@@ -186,6 +187,18 @@ const itemFade: Variants = {
   },
 };
 
+function getSafeAreaStyle(side: DrawerSide) {
+  if (side === "bottom") {
+    return { paddingBottom: "max(env(safe-area-inset-bottom, 0px), 0.5rem)" };
+  }
+
+  if (side === "top") {
+    return { paddingTop: "max(env(safe-area-inset-top, 0px), 0.5rem)" };
+  }
+
+  return undefined;
+}
+
 export function Drawer({
   open,
   onClose,
@@ -195,6 +208,7 @@ export function Drawer({
   footer,
   children,
   reducedMotion,
+  lockBodyScroll = true,
 }: DrawerProps) {
   const variant = panelVariants[side];
   const reduce = useResolvedReducedMotion(reducedMotion);
@@ -221,7 +235,10 @@ export function Drawer({
     previousFocusRef.current = getActiveHTMLElement();
 
     const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
+
+    if (lockBodyScroll) {
+      document.body.style.overflow = "hidden";
+    }
 
     const frame = requestAnimationFrame(() => {
       const preferredFocus =
@@ -250,7 +267,9 @@ export function Drawer({
     return () => {
       cancelAnimationFrame(frame);
       document.removeEventListener("keydown", onKeyDown);
-      document.body.style.overflow = previousOverflow;
+      if (lockBodyScroll) {
+        document.body.style.overflow = previousOverflow;
+      }
 
       if (
         previousFocusRef.current &&
@@ -259,7 +278,7 @@ export function Drawer({
         previousFocusRef.current.focus();
       }
     };
-  }, [open, onClose]);
+  }, [lockBodyScroll, open, onClose]);
 
   const spring: Transition = reduce
     ? { duration: 0.16 }
@@ -272,12 +291,7 @@ export function Drawer({
       }
     : variant.animate;
 
-  const safeAreaStyle =
-    side === "bottom"
-      ? { paddingBottom: "max(env(safe-area-inset-bottom, 0px), 0.5rem)" }
-      : side === "top"
-        ? { paddingTop: "max(env(safe-area-inset-top, 0px), 0.5rem)" }
-        : undefined;
+  const safeAreaStyle = getSafeAreaStyle(side);
 
   const drawerContent = (
     <AnimatePresence>

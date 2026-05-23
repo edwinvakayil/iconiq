@@ -136,7 +136,7 @@ const REGISTRY_UI_META: Record<
   "b-drawer": {
     title: "Drawer (Base UI)",
     description:
-      "Drawer with the same Iconiq controlled API layered over Base UI primitives, preserving the original slide direction, overlay blur, content stagger, and safe-area-aware panel motion.",
+      "Drawer in the Base section that keeps the Iconiq motion shell while layering it over Base UI drawer primitives for controlled state and close actions.",
     dependencies: ["@base-ui/react", "motion", "lucide-react"],
   },
   "b-hover-card": {

@@ -12,11 +12,11 @@ import {
   type ReactNode,
   useCallback,
   useEffect,
+  useId,
   useRef,
   useState,
 } from "react";
 import { createPortal } from "react-dom";
-
 import {
   type ReducedMotionProp,
   useResolvedReducedMotion,
@@ -35,7 +35,6 @@ const FOCUSABLE_SELECTOR = [
 ].join(",");
 
 export type DrawerSide = "left" | "right" | "top" | "bottom";
-
 type PanelMotion = { x?: string | number; y?: string | number };
 
 export interface DrawerProps extends ReducedMotionProp {
@@ -46,6 +45,7 @@ export interface DrawerProps extends ReducedMotionProp {
   description?: string;
   footer?: ReactNode;
   children?: ReactNode;
+  lockBodyScroll?: boolean;
 }
 
 function useMeasure<T extends HTMLElement = HTMLElement>(): [
@@ -188,148 +188,16 @@ const itemFade: Variants = {
   },
 };
 
-const PANEL_SPRING: Transition = {
-  type: "spring",
-  stiffness: 300,
-  damping: 32,
-  mass: 0.9,
-};
+function getSafeAreaStyle(side: DrawerSide) {
+  if (side === "bottom") {
+    return { paddingBottom: "max(env(safe-area-inset-bottom, 0px), 0.5rem)" };
+  }
 
-function DrawerSurface({
-  children,
-  closeButtonRef,
-  footer,
-  footerRef,
-  headerRef,
-  onClose,
-  panelAnimate,
-  panelRef,
-  reduce,
-  safeAreaStyle,
-  spring,
-  title,
-  description,
-  variant,
-  bodyRef,
-}: {
-  bodyRef: (node: HTMLDivElement | null) => void;
-  children?: ReactNode;
-  closeButtonRef: React.RefObject<HTMLButtonElement | null>;
-  description?: string;
-  footer?: ReactNode;
-  footerRef: (node: HTMLDivElement | null) => void;
-  headerRef: (node: HTMLDivElement | null) => void;
-  onClose: () => void;
-  panelAnimate: PanelMotion & { height?: string | number };
-  panelRef: React.RefObject<HTMLElement | null>;
-  reduce: boolean;
-  safeAreaStyle: React.CSSProperties | undefined;
-  spring: Transition;
-  title?: string;
-  variant: {
-    className: string;
-    exit: PanelMotion;
-    initial: PanelMotion;
-  };
-}) {
-  return (
-    <div className={cn(registryTheme, "fixed inset-0 z-[2147483647]")}>
-      <motion.div
-        animate={{ opacity: 1, backdropFilter: "blur(6px)" }}
-        className="absolute inset-0 bg-foreground/30 will-change-[opacity,backdrop-filter]"
-        exit={{ opacity: 0, backdropFilter: "blur(0px)" }}
-        initial={{ opacity: 0, backdropFilter: "blur(0px)" }}
-        onClick={onClose}
-        transition={{ duration: reduce ? 0.12 : 0.22, ease: EASE }}
-      />
-      <motion.aside
-        animate={panelAnimate}
-        aria-modal="true"
-        className={`absolute flex transform-gpu flex-col overflow-hidden border-neutral-200/80 bg-background shadow-2xl outline-none will-change-transform dark:border-neutral-800 ${variant.className}`}
-        exit={variant.exit}
-        initial={variant.initial}
-        ref={panelRef}
-        role="dialog"
-        style={safeAreaStyle}
-        tabIndex={-1}
-        transition={spring}
-      >
-        <motion.div
-          animate={{ opacity: 1 }}
-          aria-hidden
-          className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-muted/30 to-transparent"
-          initial={{ opacity: 0 }}
-          transition={{ delay: reduce ? 0 : 0.08, duration: 0.24 }}
-        />
+  if (side === "top") {
+    return { paddingTop: "max(env(safe-area-inset-top, 0px), 0.5rem)" };
+  }
 
-        <div ref={headerRef}>
-          <motion.header
-            animate="show"
-            className="relative flex items-start justify-between gap-4 border-neutral-200/80 border-b px-6 py-4 sm:px-7 sm:py-5 dark:border-neutral-800"
-            exit="exit"
-            initial="hidden"
-            variants={containerStagger}
-          >
-            <div className="max-w-[min(100%,18rem)] space-y-1.5 pr-2">
-              {title ? (
-                <motion.h2
-                  className="font-medium text-[17px] text-foreground tracking-[-0.03em] sm:text-[18px]"
-                  variants={itemFade}
-                >
-                  {title}
-                </motion.h2>
-              ) : null}
-              {description ? (
-                <motion.p
-                  className="max-w-sm text-[13px] text-secondary leading-5"
-                  variants={itemFade}
-                >
-                  {description}
-                </motion.p>
-              ) : null}
-            </div>
-            <DrawerPrimitive.Close
-              aria-label="Close drawer"
-              className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl text-muted-foreground transition-colors duration-150 hover:bg-muted/70 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-              ref={closeButtonRef}
-              render={<motion.button variants={itemFade} />}
-              type="button"
-            >
-              <X className="size-[15px]" />
-            </DrawerPrimitive.Close>
-          </motion.header>
-        </div>
-
-        <div className="min-h-0 flex-1 overflow-y-auto">
-          <div ref={bodyRef}>
-            <motion.div
-              animate="show"
-              className="relative px-6 py-5 text-foreground text-sm"
-              exit="exit"
-              initial="hidden"
-              variants={containerStagger}
-            >
-              <motion.div variants={itemFade}>{children}</motion.div>
-            </motion.div>
-          </div>
-        </div>
-
-        {footer ? (
-          <div ref={footerRef}>
-            <motion.footer
-              animate="show"
-              className="relative border-neutral-200/80 border-t bg-background/95 px-6 py-4 backdrop-blur sm:px-7 dark:border-neutral-800"
-              exit="exit"
-              initial="hidden"
-              variants={containerStagger}
-            >
-              <motion.div variants={itemFade}>{footer}</motion.div>
-            </motion.footer>
-          </div>
-        ) : null}
-      </motion.aside>
-    </div>
-  );
+  return undefined;
 }
 
 export function Drawer({
@@ -341,12 +209,15 @@ export function Drawer({
   footer,
   children,
   reducedMotion,
+  lockBodyScroll = true,
 }: DrawerProps) {
   const variant = panelVariants[side];
   const reduce = useResolvedReducedMotion(reducedMotion);
   const panelRef = useRef<HTMLElement | null>(null);
   const closeButtonRef = useRef<HTMLButtonElement | null>(null);
   const previousFocusRef = useRef<HTMLElement | null>(null);
+  const titleId = useId();
+  const descriptionId = useId();
   const isVertical = side === "top" || side === "bottom";
   const [headerRef, headerBounds] = useMeasure<HTMLDivElement>();
   const [bodyRef, bodyBounds] = useMeasure<HTMLDivElement>();
@@ -365,7 +236,10 @@ export function Drawer({
     previousFocusRef.current = getActiveHTMLElement();
 
     const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
+
+    if (lockBodyScroll) {
+      document.body.style.overflow = "hidden";
+    }
 
     const frame = requestAnimationFrame(() => {
       const preferredFocus =
@@ -394,7 +268,9 @@ export function Drawer({
     return () => {
       cancelAnimationFrame(frame);
       document.removeEventListener("keydown", onKeyDown);
-      document.body.style.overflow = previousOverflow;
+      if (lockBodyScroll) {
+        document.body.style.overflow = previousOverflow;
+      }
 
       if (
         previousFocusRef.current &&
@@ -403,9 +279,11 @@ export function Drawer({
         previousFocusRef.current.focus();
       }
     };
-  }, [open, onClose]);
+  }, [lockBodyScroll, open, onClose]);
 
-  const spring: Transition = reduce ? { duration: 0.16 } : PANEL_SPRING;
+  const spring: Transition = reduce
+    ? { duration: 0.16 }
+    : { type: "spring", stiffness: 360, damping: 38, mass: 0.7 };
 
   const panelAnimate = isVertical
     ? {
@@ -414,54 +292,9 @@ export function Drawer({
       }
     : variant.animate;
 
-  const safeAreaStyle =
-    side === "bottom"
-      ? { paddingBottom: "max(env(safe-area-inset-bottom, 0px), 0.5rem)" }
-      : side === "top"
-        ? { paddingTop: "max(env(safe-area-inset-top, 0px), 0.5rem)" }
-        : undefined;
+  const safeAreaStyle = getSafeAreaStyle(side);
+
   const drawerContent = (
-    <AnimatePresence>
-      {open ? (
-        <DrawerSurface
-          bodyRef={bodyRef}
-          closeButtonRef={closeButtonRef}
-          description={description}
-          footer={footer}
-          footerRef={footerRef}
-          headerRef={headerRef}
-          onClose={onClose}
-          panelAnimate={panelAnimate}
-          panelRef={panelRef}
-          reduce={reduce}
-          safeAreaStyle={safeAreaStyle}
-          spring={spring}
-          title={title}
-          variant={variant}
-        >
-          {children}
-        </DrawerSurface>
-      ) : null}
-    </AnimatePresence>
-  );
-
-  if (typeof document === "undefined") {
-    return (
-      <DrawerPrimitive.Root
-        modal={false}
-        onOpenChange={(nextOpen) => {
-          if (!nextOpen) {
-            onClose();
-          }
-        }}
-        open={open}
-      >
-        {drawerContent}
-      </DrawerPrimitive.Root>
-    );
-  }
-
-  return (
     <DrawerPrimitive.Root
       modal={false}
       onOpenChange={(nextOpen) => {
@@ -471,7 +304,116 @@ export function Drawer({
       }}
       open={open}
     >
-      {createPortal(drawerContent, document.body)}
+      <AnimatePresence>
+        {open && (
+          <div className={cn(registryTheme, "fixed inset-0 z-[2147483647]")}>
+            <motion.div
+              animate={{ opacity: 1, backdropFilter: "blur(6px)" }}
+              className="absolute inset-0 bg-foreground/30"
+              exit={{ opacity: 0, backdropFilter: "blur(0px)" }}
+              initial={{ opacity: 0, backdropFilter: "blur(0px)" }}
+              onClick={onClose}
+              transition={{ duration: reduce ? 0.12 : 0.18, ease: EASE }}
+            />
+            <motion.aside
+              animate={panelAnimate}
+              aria-describedby={description ? descriptionId : undefined}
+              aria-labelledby={title ? titleId : undefined}
+              aria-modal="true"
+              className={`absolute flex flex-col overflow-hidden border-neutral-200/80 bg-background shadow-2xl outline-none dark:border-neutral-800 ${variant.className}`}
+              exit={variant.exit}
+              initial={variant.initial}
+              ref={panelRef}
+              role="dialog"
+              style={safeAreaStyle}
+              tabIndex={-1}
+              transition={spring}
+            >
+              <motion.div
+                animate={{ opacity: 1 }}
+                aria-hidden
+                className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-muted/30 to-transparent"
+                initial={{ opacity: 0 }}
+                transition={{ delay: reduce ? 0 : 0.08, duration: 0.24 }}
+              />
+
+              <div ref={headerRef}>
+                <motion.header
+                  animate="show"
+                  className="relative flex items-start justify-between gap-4 border-neutral-200/80 border-b px-6 py-4 sm:px-7 sm:py-5 dark:border-neutral-800"
+                  exit="exit"
+                  initial="hidden"
+                  variants={containerStagger}
+                >
+                  <div className="max-w-[min(100%,18rem)] space-y-1.5 pr-2">
+                    {title && (
+                      <motion.h2
+                        className="font-medium text-[17px] text-foreground tracking-[-0.03em] sm:text-[18px]"
+                        id={titleId}
+                        variants={itemFade}
+                      >
+                        {title}
+                      </motion.h2>
+                    )}
+                    {description && (
+                      <motion.p
+                        className="max-w-sm text-[13px] text-secondary leading-5"
+                        id={descriptionId}
+                        variants={itemFade}
+                      >
+                        {description}
+                      </motion.p>
+                    )}
+                  </div>
+                  <DrawerPrimitive.Close
+                    aria-label="Close drawer"
+                    className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl text-muted-foreground transition-colors duration-150 hover:bg-muted/70 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                    ref={closeButtonRef}
+                    render={<motion.button variants={itemFade} />}
+                    type="button"
+                  >
+                    <X className="size-[15px]" />
+                  </DrawerPrimitive.Close>
+                </motion.header>
+              </div>
+
+              <div className="min-h-0 flex-1 overflow-y-auto">
+                <div ref={bodyRef}>
+                  <motion.div
+                    animate="show"
+                    className="relative px-6 py-5 text-foreground text-sm"
+                    exit="exit"
+                    initial="hidden"
+                    variants={containerStagger}
+                  >
+                    <motion.div variants={itemFade}>{children}</motion.div>
+                  </motion.div>
+                </div>
+              </div>
+
+              {footer && (
+                <div ref={footerRef}>
+                  <motion.footer
+                    animate="show"
+                    className="relative border-neutral-200/80 border-t bg-background/95 px-6 py-4 backdrop-blur sm:px-7 dark:border-neutral-800"
+                    exit="exit"
+                    initial="hidden"
+                    variants={containerStagger}
+                  >
+                    <motion.div variants={itemFade}>{footer}</motion.div>
+                  </motion.footer>
+                </div>
+              )}
+            </motion.aside>
+          </div>
+        )}
+      </AnimatePresence>
     </DrawerPrimitive.Root>
   );
+
+  if (typeof document === "undefined") {
+    return drawerContent;
+  }
+
+  return createPortal(drawerContent, document.body);
 }

@@ -131,6 +131,7 @@ function DrawerPreview() {
             </button>
           </div>
         }
+        lockBodyScroll={false}
         onClose={() => setOpen(false)}
         open={open}
         side={isMobile ? "bottom" : "right"}

@@ -108,7 +108,7 @@ function getDetails(): DetailItem[] {
       ...item,
       notes: [
         "Dependencies: @base-ui/react, motion, lucide-react.",
-        "This page documents the Base UI install only, because Radix UI does not ship a dedicated drawer primitive.",
+        "This page documents the Base section install only, because Radix UI does not ship a dedicated drawer primitive. The Base install keeps the Iconiq motion shell while using Base UI drawer primitives for the root and close actions.",
         "The generated registry file is /r/b-drawer.json.",
       ],
       registryPath: "b-drawer.json",
@@ -141,7 +141,7 @@ export default function RadixBaseDrawerPage() {
     <ComponentDocsPage
       breadcrumbs={breadcrumbs}
       componentName="b-drawer"
-      description="Base UI drawer with the same controlled API, side-based entry, and layered motion as the core Iconiq drawer."
+      description="Drawer in the Base section with the same controlled API, side-based entry, and layered motion as the core Iconiq drawer."
       details={details}
       editHref={`${LINK.GITHUB}/edit/main/app/(site)/radix-base-ui/drawer/page.tsx`}
       headerActions={
@@ -181,6 +181,7 @@ export default function RadixBaseDrawerPage() {
                 </button>
               </div>
             }
+            lockBodyScroll={false}
             onClose={() => setOpen(false)}
             open={open}
             side={isMobile ? "bottom" : "right"}
@@ -211,7 +212,7 @@ export default function RadixBaseDrawerPage() {
       }
       title="Drawer"
       usageCode={usageCode}
-      usageDescription="This Base UI install keeps the same controlled visibility model, side mapping, staggered content reveal, overlay blur, and safe-area-aware drawer motion as the core Iconiq drawer."
+      usageDescription="This install keeps the same controlled visibility model, side mapping, staggered content reveal, overlay blur, and safe-area-aware drawer motion as the core Iconiq drawer."
       v0PageCode={usageCode}
     />
   );
