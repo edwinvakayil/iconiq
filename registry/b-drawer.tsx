@@ -35,7 +35,11 @@ const FOCUSABLE_SELECTOR = [
 ].join(",");
 
 export type DrawerSide = "left" | "right" | "top" | "bottom";
-type PanelMotion = { x?: string | number; y?: string | number };
+type PanelMotion = {
+  x?: string | number;
+  y?: string | number;
+  opacity?: number;
+};
 
 export interface DrawerProps extends ReducedMotionProp {
   open: boolean;
@@ -137,28 +141,28 @@ const panelVariants: Record<
   }
 > = {
   right: {
-    initial: { x: "100%" },
-    animate: { x: 0 },
-    exit: { x: "100%" },
+    initial: { x: "112%", opacity: 0.9 },
+    animate: { x: 0, opacity: 1 },
+    exit: { x: "106%", opacity: 0.96 },
     className: "top-0 right-0 h-full w-full max-w-md border-l",
   },
   left: {
-    initial: { x: "-100%" },
-    animate: { x: 0 },
-    exit: { x: "-100%" },
+    initial: { x: "-112%", opacity: 0.9 },
+    animate: { x: 0, opacity: 1 },
+    exit: { x: "-106%", opacity: 0.96 },
     className: "top-0 left-0 h-full w-full max-w-md border-r",
   },
   top: {
-    initial: { y: "-100%" },
-    animate: { y: 0 },
-    exit: { y: "-100%" },
+    initial: { y: "-108%", opacity: 0.9 },
+    animate: { y: 0, opacity: 1 },
+    exit: { y: "-104%", opacity: 0.96 },
     className:
       "top-0 left-0 w-full max-h-[min(90svh,calc(100svh-env(safe-area-inset-top,0px)-env(safe-area-inset-bottom,0px)-0.75rem))] rounded-b-[1.75rem] border-b",
   },
   bottom: {
-    initial: { y: "100%" },
-    animate: { y: 0 },
-    exit: { y: "100%" },
+    initial: { y: "108%", opacity: 0.9 },
+    animate: { y: 0, opacity: 1 },
+    exit: { y: "104%", opacity: 0.96 },
     className:
       "bottom-0 left-0 w-full max-h-[min(90svh,calc(100svh-env(safe-area-inset-top,0px)-env(safe-area-inset-bottom,0px)-0.75rem))] rounded-t-[1.75rem] border-t",
   },
@@ -186,6 +190,11 @@ const itemFade: Variants = {
     y: 4,
     transition: { duration: 0.12, ease: "easeIn" },
   },
+};
+
+const PANEL_TRANSITION: Transition = {
+  duration: 0.42,
+  ease: EASE,
 };
 
 function getSafeAreaStyle(side: DrawerSide) {
@@ -241,14 +250,17 @@ export function Drawer({
       document.body.style.overflow = "hidden";
     }
 
+    let focusFrame = 0;
     const frame = requestAnimationFrame(() => {
-      const preferredFocus =
-        panel.querySelector<HTMLElement>("[data-autofocus], [autofocus]") ??
-        getFocusableElements(panel)[0] ??
-        closeButtonRef.current ??
-        panel;
+      focusFrame = requestAnimationFrame(() => {
+        const preferredFocus =
+          panel.querySelector<HTMLElement>("[data-autofocus], [autofocus]") ??
+          getFocusableElements(panel)[0] ??
+          closeButtonRef.current ??
+          panel;
 
-      preferredFocus.focus();
+        preferredFocus.focus();
+      });
     });
 
     const onKeyDown = (event: KeyboardEvent) => {
@@ -267,6 +279,7 @@ export function Drawer({
 
     return () => {
       cancelAnimationFrame(frame);
+      cancelAnimationFrame(focusFrame);
       document.removeEventListener("keydown", onKeyDown);
       if (lockBodyScroll) {
         document.body.style.overflow = previousOverflow;
@@ -281,9 +294,7 @@ export function Drawer({
     };
   }, [lockBodyScroll, open, onClose]);
 
-  const spring: Transition = reduce
-    ? { duration: 0.16 }
-    : { type: "spring", stiffness: 360, damping: 38, mass: 0.7 };
+  const spring: Transition = reduce ? { duration: 0.16 } : PANEL_TRANSITION;
 
   const panelAnimate = isVertical
     ? {
@@ -295,32 +306,32 @@ export function Drawer({
   const safeAreaStyle = getSafeAreaStyle(side);
 
   const drawerContent = (
-    <DrawerPrimitive.Root
-      modal={false}
-      onOpenChange={(nextOpen) => {
-        if (!nextOpen) {
-          onClose();
-        }
-      }}
-      open={open}
-    >
-      <AnimatePresence>
-        {open && (
+    <AnimatePresence>
+      {open && (
+        <DrawerPrimitive.Root
+          defaultOpen
+          modal={false}
+          onOpenChange={(nextOpen) => {
+            if (!nextOpen) {
+              onClose();
+            }
+          }}
+        >
           <div className={cn(registryTheme, "fixed inset-0 z-[2147483647]")}>
             <motion.div
               animate={{ opacity: 1, backdropFilter: "blur(6px)" }}
-              className="absolute inset-0 bg-foreground/30"
+              className="absolute inset-0 bg-foreground/30 will-change-[opacity,backdrop-filter]"
               exit={{ opacity: 0, backdropFilter: "blur(0px)" }}
               initial={{ opacity: 0, backdropFilter: "blur(0px)" }}
               onClick={onClose}
-              transition={{ duration: reduce ? 0.12 : 0.18, ease: EASE }}
+              transition={{ duration: reduce ? 0.12 : 0.26, ease: EASE }}
             />
             <motion.aside
               animate={panelAnimate}
               aria-describedby={description ? descriptionId : undefined}
               aria-labelledby={title ? titleId : undefined}
               aria-modal="true"
-              className={`absolute flex flex-col overflow-hidden border-neutral-200/80 bg-background shadow-2xl outline-none dark:border-neutral-800 ${variant.className}`}
+              className={`absolute flex transform-gpu flex-col overflow-hidden border-neutral-200/80 bg-background shadow-2xl outline-none will-change-transform dark:border-neutral-800 ${variant.className}`}
               exit={variant.exit}
               initial={variant.initial}
               ref={panelRef}
@@ -406,9 +417,9 @@ export function Drawer({
               )}
             </motion.aside>
           </div>
-        )}
-      </AnimatePresence>
-    </DrawerPrimitive.Root>
+        </DrawerPrimitive.Root>
+      )}
+    </AnimatePresence>
   );
 
   if (typeof document === "undefined") {
