@@ -169,6 +169,12 @@ const REGISTRY_UI_META: Record<
       "Radio group with the same Iconiq API layered over Base UI primitives, preserving the original shared highlight, spring-loaded ring and dot, and staggered row entrance.",
     dependencies: ["@base-ui/react", "motion"],
   },
+  "b-select": {
+    title: "Select (Base UI)",
+    description:
+      "Select with the same Iconiq API layered over Base UI primitives, preserving the original trigger press, chevron rotation, grouped rows, and panel motion.",
+    dependencies: ["@base-ui/react", "motion", "lucide-react"],
+  },
   alert: {
     title: "Alert",
     description:
@@ -298,6 +304,12 @@ const REGISTRY_UI_META: Record<
     description:
       "Radio group with the same Iconiq API layered over Radix UI primitives, preserving the original shared highlight, spring-loaded ring and dot, and staggered row entrance.",
     dependencies: ["@radix-ui/react-radio-group", "motion"],
+  },
+  "r-select": {
+    title: "Select (Radix UI)",
+    description:
+      "Select with the same Iconiq API layered over Radix UI primitives, preserving the original trigger press, chevron rotation, grouped rows, and panel motion.",
+    dependencies: ["@radix-ui/react-select", "motion", "lucide-react"],
   },
   "faq-pro": {
     title: "FAQ Pro",

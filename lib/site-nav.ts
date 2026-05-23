@@ -27,6 +27,7 @@ export const SITE_SECTIONS = [
       { label: "Hover Card", href: "/radix-base-ui/hover-card" },
       { label: "Popover", href: "/radix-base-ui/popover" },
       { label: "Radio Group", href: "/radix-base-ui/radio-group" },
+      { label: "Select", href: "/radix-base-ui/select" },
     ],
   },
   {

@@ -48,6 +48,8 @@ const componentSummaries: Record<string, string> = {
     "Popover docs with a provider switch that swaps between Base UI and Radix UI registry entries.",
   "/radix-base-ui/radio-group":
     "Radio group docs with a provider switch that swaps between Base UI and Radix UI registry entries.",
+  "/radix-base-ui/select":
+    "Select docs with a provider switch that swaps between Base UI and Radix UI registry entries.",
   "/components/alert":
     "Dismissible alert banner with motion-aware entrance and close behavior.",
   "/components/avatar":

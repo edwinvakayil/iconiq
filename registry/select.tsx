@@ -20,6 +20,7 @@ import {
 import { createPortal } from "react-dom";
 
 import {
+  ReducedMotionConfig,
   type ReducedMotionProp,
   useResolvedReducedMotion,
 } from "@/lib/reduced-motion";
@@ -95,6 +96,8 @@ type SelectOptionRowProps = {
   reduceMotion: boolean;
   setActiveIndex: Dispatch<SetStateAction<number>>;
   setOptionRef: (index: number, node: HTMLDivElement | null) => void;
+  setShowActiveHighlight: Dispatch<SetStateAction<boolean>>;
+  showActiveHighlight: boolean;
 };
 
 type SelectMenuSectionProps = {
@@ -108,6 +111,8 @@ type SelectMenuSectionProps = {
   sectionIndex: number;
   selectOption: (index: number, restoreFocus?: boolean) => void;
   setActiveIndex: Dispatch<SetStateAction<number>>;
+  setShowActiveHighlight: Dispatch<SetStateAction<boolean>>;
+  showActiveHighlight: boolean;
   value?: string;
 };
 
@@ -130,6 +135,8 @@ type SelectMenuContentProps = {
   sections: SelectSection[];
   selectOption: (index: number, restoreFocus?: boolean) => void;
   setActiveIndex: Dispatch<SetStateAction<number>>;
+  setShowActiveHighlight: Dispatch<SetStateAction<boolean>>;
+  showActiveHighlight: boolean;
   triggerId: string;
   value?: string;
 };
@@ -465,6 +472,8 @@ function SelectOptionRow({
   reduceMotion,
   setActiveIndex,
   setOptionRef,
+  setShowActiveHighlight,
+  showActiveHighlight,
 }: SelectOptionRowProps) {
   const pressTransition = reduceMotion
     ? { duration: 0.12, ease: "easeOut" as const }
@@ -492,7 +501,10 @@ function SelectOptionRow({
       onMouseDown={(event) => {
         event.preventDefault();
       }}
-      onMouseEnter={() => setActiveIndex(index)}
+      onMouseEnter={() => {
+        setActiveIndex(index);
+        setShowActiveHighlight(true);
+      }}
       ref={(node) => {
         setOptionRef(index, node);
       }}
@@ -502,7 +514,7 @@ function SelectOptionRow({
       variants={itemVariants}
       whileTap={reduceMotion ? undefined : { scale: 0.985 }}
     >
-      {isActive ? (
+      {showActiveHighlight && isActive ? (
         <motion.span
           className="absolute inset-0 -z-10 rounded-lg bg-accent/70"
           layoutId={activeHighlightId}
@@ -545,6 +557,8 @@ function SelectMenuSection({
   sectionIndex,
   selectOption,
   setActiveIndex,
+  setShowActiveHighlight,
+  showActiveHighlight,
   value,
 }: SelectMenuSectionProps) {
   const groupLabelId = `${listboxId}-group-${sectionIndex}`;
@@ -564,6 +578,8 @@ function SelectMenuSection({
       setOptionRef={(nextIndex, node) => {
         optionRefs.current[nextIndex] = node;
       }}
+      setShowActiveHighlight={setShowActiveHighlight}
+      showActiveHighlight={showActiveHighlight}
     />
   ));
 
@@ -600,6 +616,8 @@ function SelectMenuContent({
   sections,
   selectOption,
   setActiveIndex,
+  setShowActiveHighlight,
+  showActiveHighlight,
   triggerId,
   value,
 }: SelectMenuContentProps) {
@@ -638,6 +656,7 @@ function SelectMenuContent({
         className="overflow-y-auto overscroll-contain p-1.5 outline-none"
         id={listboxId}
         onKeyDown={(event) => {
+          setShowActiveHighlight(true);
           handleSelectListboxKeyDown({
             activeIndex,
             closeMenu,
@@ -673,6 +692,8 @@ function SelectMenuContent({
               sectionIndex={sectionIndex}
               selectOption={selectOption}
               setActiveIndex={setActiveIndex}
+              setShowActiveHighlight={setShowActiveHighlight}
+              showActiveHighlight={showActiveHighlight}
               value={value}
             />
           ))
@@ -696,6 +717,7 @@ export function Select({
   const [mounted, setMounted] = useState(false);
   const [menuPosition, setMenuPosition] = useState<MenuPosition | null>(null);
   const [open, setOpen] = useState(false);
+  const [showActiveHighlight, setShowActiveHighlight] = useState(false);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const menuPanelRef = useRef<HTMLDivElement>(null);
   const listboxRef = useRef<HTMLDivElement>(null);
@@ -774,6 +796,7 @@ export function Select({
       setActiveIndex(
         clamp(nextActiveIndex, 0, Math.max(options.length - 1, 0))
       );
+      setShowActiveHighlight(openInteractionRef.current === "keyboard");
       setOpen(true);
     },
     [options.length, selectedIndex]
@@ -782,6 +805,7 @@ export function Select({
   const closeMenu = useCallback(
     (restoreFocus = false) => {
       setOpen(false);
+      setShowActiveHighlight(false);
       clearTypeahead();
       pendingTypeaheadRef.current = null;
 
@@ -845,6 +869,7 @@ export function Select({
 
       if (nextIndex >= 0) {
         setActiveIndex(nextIndex);
+        setShowActiveHighlight(true);
       }
     },
     [activeIndex, options]
@@ -969,87 +994,91 @@ export function Select({
   }, [closeMenu, open]);
 
   return (
-    <div className={cn(registryTheme, "relative w-72 max-w-full", className)}>
-      <motion.button
-        aria-controls={open ? listboxId : undefined}
-        aria-expanded={open}
-        aria-haspopup="listbox"
-        className="flex min-h-11 w-full touch-manipulation items-center justify-between gap-2 rounded-lg border border-border bg-card px-4 py-3 text-left font-medium text-foreground text-sm transition-colors hover:bg-accent focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-        data-state={open ? "open" : "closed"}
-        id={triggerId}
-        onClick={() => {
-          if (open) {
-            closeMenu(false);
-            return;
-          }
+    <ReducedMotionConfig reducedMotion={reducedMotion}>
+      <div className={cn(registryTheme, "relative w-72 max-w-full", className)}>
+        <motion.button
+          aria-controls={open ? listboxId : undefined}
+          aria-expanded={open}
+          aria-haspopup="listbox"
+          className="flex min-h-11 w-full touch-manipulation items-center justify-between gap-2 rounded-lg border border-border bg-card px-4 py-3 text-left font-medium text-foreground text-sm transition-colors hover:bg-accent focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          data-state={open ? "open" : "closed"}
+          id={triggerId}
+          onClick={() => {
+            if (open) {
+              closeMenu(false);
+              return;
+            }
 
-          openInteractionRef.current = "pointer";
-          openMenu(selectedIndex >= 0 ? selectedIndex : 0);
-        }}
-        onKeyDown={(event) => {
-          openInteractionRef.current = "keyboard";
-          handleSelectTriggerKeyDown({
-            closeMenu,
-            event,
-            open,
-            openMenu,
-            optionsLength: options.length,
-            pendingTypeaheadRef,
-            selectedIndex,
-          });
-        }}
-        ref={triggerRef}
-        transition={buttonTransition}
-        type="button"
-        whileTap={reduceMotion ? undefined : { scale: 0.985 }}
-      >
-        <span
-          className={cn(
-            "min-w-0 flex-1 truncate",
-            selected ? "text-foreground" : "text-muted-foreground"
-          )}
-          title={selected ? selected.label : placeholder}
+            openInteractionRef.current = "pointer";
+            openMenu(selectedIndex >= 0 ? selectedIndex : 0);
+          }}
+          onKeyDown={(event) => {
+            openInteractionRef.current = "keyboard";
+            handleSelectTriggerKeyDown({
+              closeMenu,
+              event,
+              open,
+              openMenu,
+              optionsLength: options.length,
+              pendingTypeaheadRef,
+              selectedIndex,
+            });
+          }}
+          ref={triggerRef}
+          transition={buttonTransition}
+          type="button"
+          whileTap={reduceMotion ? undefined : { scale: 0.985 }}
         >
-          {selected ? selected.label : placeholder}
-        </span>
-        <motion.span
-          animate={{ rotate: open ? 180 : 0 }}
-          className="shrink-0"
-          transition={chevronTransition}
-        >
-          <ChevronDown className="h-4 w-4 text-muted-foreground" />
-        </motion.span>
-      </motion.button>
+          <span
+            className={cn(
+              "min-w-0 flex-1 truncate",
+              selected ? "text-foreground" : "text-muted-foreground"
+            )}
+            title={selected ? selected.label : placeholder}
+          >
+            {selected ? selected.label : placeholder}
+          </span>
+          <motion.span
+            animate={{ rotate: open ? 180 : 0 }}
+            className="shrink-0"
+            transition={chevronTransition}
+          >
+            <ChevronDown className="h-4 w-4 text-muted-foreground" />
+          </motion.span>
+        </motion.button>
 
-      {mounted
-        ? createPortal(
-            <AnimatePresence>
-              {open ? (
-                <SelectMenuContent
-                  activeIndex={activeIndex}
-                  closeMenu={closeMenu}
-                  itemVariants={itemVariants}
-                  listboxId={listboxId}
-                  listboxRef={listboxRef}
-                  menuPanelRef={menuPanelRef}
-                  menuPosition={menuPosition}
-                  optionRefs={optionRefs}
-                  options={options}
-                  panelTransition={panelTransition}
-                  reduceMotion={reduceMotion}
-                  runTypeahead={runTypeahead}
-                  sections={sections}
-                  selectOption={selectOption}
-                  setActiveIndex={setActiveIndex}
-                  triggerId={triggerId}
-                  value={value}
-                />
-              ) : null}
-            </AnimatePresence>,
-            document.body
-          )
-        : null}
-    </div>
+        {mounted
+          ? createPortal(
+              <AnimatePresence>
+                {open ? (
+                  <SelectMenuContent
+                    activeIndex={activeIndex}
+                    closeMenu={closeMenu}
+                    itemVariants={itemVariants}
+                    listboxId={listboxId}
+                    listboxRef={listboxRef}
+                    menuPanelRef={menuPanelRef}
+                    menuPosition={menuPosition}
+                    optionRefs={optionRefs}
+                    options={options}
+                    panelTransition={panelTransition}
+                    reduceMotion={reduceMotion}
+                    runTypeahead={runTypeahead}
+                    sections={sections}
+                    selectOption={selectOption}
+                    setActiveIndex={setActiveIndex}
+                    setShowActiveHighlight={setShowActiveHighlight}
+                    showActiveHighlight={showActiveHighlight}
+                    triggerId={triggerId}
+                    value={value}
+                  />
+                ) : null}
+              </AnimatePresence>,
+              document.body
+            )
+          : null}
+      </div>
+    </ReducedMotionConfig>
   );
 }
 
