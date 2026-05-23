@@ -314,6 +314,31 @@
       ]
     },
     {
+      "name": "b-drawer",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": ["@base-ui/react", "motion", "lucide-react"],
+      "devDependencies": [],
+      "title": "Drawer (Base UI)",
+      "description": "Drawer with the same Iconiq controlled API layered over Base UI primitives, preserving the original slide direction, overlay blur, content stagger, and safe-area-aware panel motion.",
+      "files": [
+        {
+          "path": "b-drawer.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "reduced-motion.tsx",
+          "target": "lib/reduced-motion.tsx",
+          "type": "registry:lib"
+        },
+        {
+          "path": "registry-theme.ts",
+          "target": "lib/registry-theme.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
       "name": "badge",
       "type": "registry:ui",
       "registryDependencies": [],

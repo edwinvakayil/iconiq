@@ -70,6 +70,7 @@ const REDUCED_MOTION_COMPONENTS = new Set([
   "b-combobox",
   "b-context-menu",
   "b-dialog",
+  "b-drawer",
   "avatar",
   "badge",
   "button",

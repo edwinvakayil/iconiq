@@ -133,6 +133,12 @@ const REGISTRY_UI_META: Record<
       "lucide-react",
     ],
   },
+  "b-drawer": {
+    title: "Drawer (Base UI)",
+    description:
+      "Drawer with the same Iconiq controlled API layered over Base UI primitives, preserving the original slide direction, overlay blur, content stagger, and safe-area-aware panel motion.",
+    dependencies: ["@base-ui/react", "motion", "lucide-react"],
+  },
   "b-checkbox": {
     title: "Checkbox (Base UI)",
     description:
