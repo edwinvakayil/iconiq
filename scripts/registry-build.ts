@@ -163,6 +163,12 @@ const REGISTRY_UI_META: Record<
       "Checkbox group with the same Iconiq API layered over Base UI primitives, preserving the original row hover, tap spring, check icon entrance, and disclosure behavior.",
     dependencies: ["@base-ui/react", "motion", "lucide-react"],
   },
+  "b-radio-group": {
+    title: "Radio Group (Base UI)",
+    description:
+      "Radio group with the same Iconiq API layered over Base UI primitives, preserving the original shared highlight, spring-loaded ring and dot, and staggered row entrance.",
+    dependencies: ["@base-ui/react", "motion"],
+  },
   alert: {
     title: "Alert",
     description:
@@ -286,6 +292,12 @@ const REGISTRY_UI_META: Record<
     description:
       "Popover with the same Iconiq API layered over Radix UI popover primitives, preserving side-aware panel motion, optional anchor support, and size-aware content transitions.",
     dependencies: ["@radix-ui/react-popover", "motion"],
+  },
+  "r-radio-group": {
+    title: "Radio Group (Radix UI)",
+    description:
+      "Radio group with the same Iconiq API layered over Radix UI primitives, preserving the original shared highlight, spring-loaded ring and dot, and staggered row entrance.",
+    dependencies: ["@radix-ui/react-radio-group", "motion"],
   },
   "faq-pro": {
     title: "FAQ Pro",

@@ -46,6 +46,8 @@ const componentSummaries: Record<string, string> = {
     "Hover card docs with a provider switch that swaps between a Base UI popover-backed install and a Radix Hover Card primitive install.",
   "/radix-base-ui/popover":
     "Popover docs with a provider switch that swaps between Base UI and Radix UI registry entries.",
+  "/radix-base-ui/radio-group":
+    "Radio group docs with a provider switch that swaps between Base UI and Radix UI registry entries.",
   "/components/alert":
     "Dismissible alert banner with motion-aware entrance and close behavior.",
   "/components/avatar":
@@ -157,8 +159,9 @@ const componentItems: SearchItem[] = SITE_SECTIONS.flatMap((section) =>
     const slug = item.href.split("/").pop() ?? item.href;
     const labelKeywords = [item.label, slug, section.label];
 
-    if (slug === "radiogroup") {
+    if (slug === "radiogroup" || slug === "radio-group") {
       labelKeywords.push("radio group");
+      labelKeywords.push("radiogroup");
     }
     if (slug === "file-upload") {
       labelKeywords.push("upload");

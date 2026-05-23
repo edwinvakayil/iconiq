@@ -389,6 +389,26 @@
       ]
     },
     {
+      "name": "b-radio-group",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": ["@base-ui/react", "motion"],
+      "devDependencies": [],
+      "title": "Radio Group (Base UI)",
+      "description": "Radio group with the same Iconiq API layered over Base UI primitives, preserving the original shared highlight, spring-loaded ring and dot, and staggered row entrance.",
+      "files": [
+        {
+          "path": "b-radio-group.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "registry-theme.ts",
+          "target": "lib/registry-theme.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
       "name": "badge",
       "type": "registry:ui",
       "registryDependencies": [],
@@ -1058,6 +1078,26 @@
           "path": "reduced-motion.tsx",
           "target": "lib/reduced-motion.tsx",
           "type": "registry:lib"
+        },
+        {
+          "path": "registry-theme.ts",
+          "target": "lib/registry-theme.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
+      "name": "r-radio-group",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": ["@radix-ui/react-radio-group", "motion"],
+      "devDependencies": [],
+      "title": "Radio Group (Radix UI)",
+      "description": "Radio group with the same Iconiq API layered over Radix UI primitives, preserving the original shared highlight, spring-loaded ring and dot, and staggered row entrance.",
+      "files": [
+        {
+          "path": "r-radio-group.tsx",
+          "type": "registry:ui"
         },
         {
           "path": "registry-theme.ts",
