@@ -35,18 +35,18 @@ function hasTextContent(node: React.ReactNode): boolean {
 }
 
 const toggleVariants = cva(
-  "group/toggle relative inline-flex touch-manipulation select-none items-center justify-center gap-2 rounded-lg border border-transparent font-medium text-sm transition-[background-color,color,box-shadow,transform] before:pointer-events-auto before:absolute before:-inset-1 before:rounded-[inherit] before:content-[''] hover:bg-muted hover:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=on]:bg-accent data-[state=on]:text-accent-foreground data-[state=on]:shadow-sm data-[state=on]:ring-1 data-[state=on]:ring-foreground/10 data-[state=on]:ring-inset",
+  "group/toggle relative inline-flex touch-manipulation select-none items-center justify-center gap-2 overflow-hidden rounded-lg border font-medium text-[14px] tracking-[-0.01em] transition-[background-color,border-color,color,transform,box-shadow] duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
   {
     variants: {
       variant: {
-        default: "bg-transparent",
+        default: "border-transparent bg-muted/58 text-foreground",
         outline:
-          "border border-input bg-transparent shadow-sm hover:bg-accent hover:text-accent-foreground",
+          "border-border bg-background text-foreground hover:border-foreground/14",
       },
       size: {
-        default: "h-11 min-w-11 px-4",
-        sm: "h-10 min-w-10 px-3",
-        lg: "h-12 min-w-12 px-5",
+        default: "h-10 min-w-10 px-4",
+        sm: "h-9 min-w-9 px-3",
+        lg: "h-11 min-w-11 px-5",
       },
     },
     defaultVariants: {
@@ -55,6 +55,27 @@ const toggleVariants = cva(
     },
   }
 );
+
+function getIdleBackground(variant: "default" | "outline" | null | undefined) {
+  return variant === "outline" ? "var(--background)" : "var(--muted)";
+}
+
+function getIdleBorderColor(variant: "default" | "outline" | null | undefined) {
+  return variant === "outline" ? "var(--border)" : "transparent";
+}
+
+function getSurfaceStyle(
+  pressed: boolean,
+  variant: "default" | "outline" | null | undefined
+) {
+  return {
+    backgroundColor: pressed ? "var(--foreground)" : getIdleBackground(variant),
+    borderColor: pressed ? "var(--foreground)" : getIdleBorderColor(variant),
+    boxShadow: pressed
+      ? "0 8px 20px -16px rgba(17,17,17,0.4)"
+      : "0 0 0 rgba(17,17,17,0)",
+  };
+}
 
 const Toggle = React.forwardRef<
   React.ElementRef<typeof TogglePrimitive.Root>,
@@ -81,9 +102,18 @@ const Toggle = React.forwardRef<
     const [ripples, setRipples] = React.useState<Ripple[]>([]);
     const isIconOnly = !hasTextContent(children);
     const canAnimate = !(props.disabled || resolvedReducedMotion);
+    const isPressedControlled = props.pressed !== undefined;
+    const [uncontrolledPressed, setUncontrolledPressed] = React.useState(
+      props.defaultPressed ?? false
+    );
+    const pressed = isPressedControlled
+      ? props.pressed === true
+      : uncontrolledPressed;
 
     const ariaLabel = props["aria-label"];
     const ariaLabelledBy = props["aria-labelledby"];
+    const resolvedVariant = variant ?? "default";
+    const surfaceStyle = getSurfaceStyle(pressed, resolvedVariant);
 
     React.useEffect(() => {
       if (process.env.NODE_ENV === "production") {
@@ -124,29 +154,40 @@ const Toggle = React.forwardRef<
       [canAnimate]
     );
 
-    const handlePressedChange = (pressed: boolean) => {
-      if (canAnimate) {
+    const runPressedMotion = React.useCallback(
+      (pressed: boolean) => {
         buttonControls.start({
-          scale: [1, 0.985, 1.01, 1],
-          y: [0, -0.5, 0],
+          scale: pressed ? [1, 0.952, 1.036, 1] : [1, 0.974, 1.014, 1],
+          y: pressed ? [0, -1.6, -0.2, 0] : [0, -0.85, -0.1, 0],
           transition: {
-            duration: 0.34,
-            ease: [0.16, 1, 0.3, 1],
+            duration: 0.48,
+            ease: [0.22, 1, 0.36, 1],
           },
         });
 
         iconControls.start({
-          scale: pressed ? [1, 0.97, 1.02, 1] : [1, 0.985, 1.015, 1],
-          rotate: pressed ? [0, -4, 0] : [0, 3, 0],
-          x: pressed ? [0, 1.2, 0] : [0, -0.8, 0],
-          y: pressed ? [0, -0.6, 0] : [0, 0.35, 0],
+          scale: pressed ? [1, 0.9, 1.12, 1.04] : [1, 0.97, 1.04, 1],
+          rotate: pressed ? [0, -9, -3] : [-3, 4, 0],
+          x: pressed ? [0, 2.8, 1.6] : [1.6, -0.8, 0],
+          y: pressed ? [0, -1.1, -0.4] : [-0.4, 0.35, 0],
           transition: {
             type: "spring",
-            stiffness: 260,
-            damping: 20,
-            mass: 0.9,
+            stiffness: 210,
+            damping: 15,
+            mass: 0.85,
           },
         });
+      },
+      [buttonControls, iconControls]
+    );
+
+    const handlePressedChange = (pressed: boolean) => {
+      if (!isPressedControlled) {
+        setUncontrolledPressed(pressed);
+      }
+
+      if (canAnimate) {
+        runPressedMotion(pressed);
       }
 
       onPressedChange?.(pressed);
@@ -182,26 +223,51 @@ const Toggle = React.forwardRef<
                 event.clientY - rect.top
               );
             }}
+            style={surfaceStyle}
             whileHover={
               canAnimate
                 ? {
-                    scale: 1.006,
+                    scale: 1.008,
                     y: -0.5,
-                    transition: { type: "spring", stiffness: 320, damping: 26 },
+                    transition: { type: "spring", stiffness: 280, damping: 24 },
                   }
                 : undefined
             }
-            whileTap={canAnimate ? { scale: 0.985, y: 0 } : undefined}
+            whileTap={canAnimate ? { scale: 0.978, y: 0.2 } : undefined}
           >
+            <motion.span
+              animate={
+                pressed
+                  ? {
+                      opacity: 1,
+                      x: 0,
+                    }
+                  : {
+                      opacity: 0,
+                      x: -8,
+                    }
+              }
+              aria-hidden
+              className="absolute inset-0 z-0 rounded-[inherit] bg-background/12 dark:bg-neutral-950/12"
+              initial={false}
+              transition={
+                canAnimate
+                  ? {
+                      duration: 0.28,
+                      ease: [0.22, 1, 0.36, 1],
+                    }
+                  : { duration: 0.14 }
+              }
+            />
             <span
               aria-hidden
-              className="pointer-events-none absolute inset-0 z-0 overflow-hidden rounded-[inherit]"
+              className="pointer-events-none absolute inset-0 z-10 overflow-hidden rounded-[inherit]"
             >
               {ripples.map((ripple) => (
                 <motion.span
                   animate={{ opacity: 0, scale: 1 }}
                   className="pointer-events-none absolute -translate-x-1/2 -translate-y-1/2 rounded-full bg-current"
-                  initial={{ opacity: 0.16, scale: 0 }}
+                  initial={{ opacity: 0.22, scale: 0 }}
                   key={ripple.id}
                   onAnimationComplete={() => {
                     setRipples((current) =>
@@ -215,21 +281,43 @@ const Toggle = React.forwardRef<
                     width: ripple.size,
                   }}
                   transition={{
-                    duration: 0.42,
+                    duration: 0.5,
                     ease: [0.22, 1, 0.36, 1],
                   }}
                 />
               ))}
             </span>
             <motion.span
-              animate={iconControls}
-              className={cn(
-                "relative z-10 inline-flex items-center gap-2 transition-transform [&_svg]:size-4 [&_svg]:shrink-0 group-data-[state=on]/toggle:[&_svg]:scale-105",
-                isIconOnly && "gap-0"
-              )}
-              style={{ transformOrigin: "center" }}
+              animate={
+                canAnimate
+                  ? {
+                      x: pressed ? 1.1 : 0,
+                      y: pressed ? -0.1 : 0,
+                    }
+                  : undefined
+              }
+              className="relative z-20 inline-flex"
+              initial={false}
+              transition={{
+                type: "spring",
+                stiffness: 250,
+                damping: 20,
+                mass: 0.9,
+              }}
             >
-              {children}
+              <motion.span
+                animate={iconControls}
+                className={cn(
+                  "inline-flex items-center gap-2 transition-[color,transform] duration-200 [&_svg]:size-4 [&_svg]:shrink-0",
+                  pressed
+                    ? "text-background dark:text-neutral-950"
+                    : "text-foreground",
+                  isIconOnly && "gap-0"
+                )}
+                style={{ transformOrigin: "center" }}
+              >
+                {children}
+              </motion.span>
             </motion.span>
           </motion.button>
         </TogglePrimitive.Root>

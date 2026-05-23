@@ -187,6 +187,12 @@ const REGISTRY_UI_META: Record<
       "Tooltip with the same Iconiq API layered over Base UI primitives, preserving the original controlled delay timing, bubble shell, rotated-square arrow, and spring entrance motion.",
     dependencies: ["@base-ui/react", "motion"],
   },
+  "b-toggle": {
+    title: "Toggle (Base UI)",
+    description:
+      "Pressed-state toggle with the same Iconiq ripple, icon motion, and size and variant shell layered over the Base UI toggle primitive.",
+    dependencies: ["@base-ui/react", "class-variance-authority", "motion"],
+  },
   alert: {
     title: "Alert",
     description:
@@ -334,6 +340,16 @@ const REGISTRY_UI_META: Record<
     description:
       "Tooltip with the same Iconiq API layered over Radix Tooltip primitives, preserving the original controlled delay timing, bubble shell, rotated-square arrow, and spring entrance motion.",
     dependencies: ["@radix-ui/react-tooltip", "@radix-ui/react-slot", "motion"],
+  },
+  "r-toggle": {
+    title: "Toggle (Radix UI)",
+    description:
+      "Pressed-state toggle with the same Iconiq ripple, icon motion, and size and variant shell layered over the Radix toggle primitive.",
+    dependencies: [
+      "@radix-ui/react-toggle",
+      "class-variance-authority",
+      "motion",
+    ],
   },
   "faq-pro": {
     title: "FAQ Pro",

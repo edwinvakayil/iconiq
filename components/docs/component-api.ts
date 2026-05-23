@@ -3257,7 +3257,7 @@ const toggleApiDetails: DetailItem[] = [
     id: "toggle",
     title: "Toggle",
     summary:
-      "Single pressed-state toggle built on Radix Toggle, with Motion-driven button, icon, and pointer-origin ripple feedback layered over larger hit targets and shadcn-style size and variant classes.",
+      "Single pressed-state toggle built on Radix Toggle, with Motion-driven surface and icon transitions layered over shadcn-style size and variant classes.",
     fields: [
       field({
         name: "children",
@@ -3320,12 +3320,13 @@ const toggleApiDetails: DetailItem[] = [
     id: "toggle-motion",
     title: "Motion and state behavior",
     summary:
-      "Every pressed change triggers a button squash, a pointer-origin ripple, and a separate icon animation sequence when motion is allowed.",
+      "Every pressed change triggers a button squash, an active-surface transition, and a separate icon animation sequence when motion is allowed.",
     notes: [
       "The outer button uses useAnimationControls so the pressed sequence can run immediately whenever Radix reports a state change.",
       "The icon motion differs between on and off transitions, so enabling and disabling the toggle do not feel identical.",
+      "A subtle active surface fades and settles into place behind the content when the toggle turns on.",
       "Hover always applies a slight upward lift and tap applies an extra scale-down when motion is enabled and the control is not disabled.",
-      "Reduced-motion preferences suppress the local toggle animations and ripple sequence.",
+      "Reduced-motion preferences suppress the local toggle animations and keep the control on its quieter visual path.",
     ],
   },
   registryItem("toggle.json", [

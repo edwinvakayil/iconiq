@@ -113,6 +113,8 @@ const componentSummaries: Record<string, string> = {
     "Pressed-state toggle built on Radix with pointer-origin ripple, icon motion, larger hit targets, and text or icon-only formats.",
   "/components/tooltip":
     "Tooltip component for compact hover or focus explanations.",
+  "/radix-base-ui/toggle":
+    "Compare the same pressed-state toggle API on Radix UI and Base UI, with the same ripple, icon motion, and pressed styling layered over different primitives.",
   "/special-one/icon-bar":
     "Horizontal icon chips that expand on hover to reveal short labels with spring motion.",
   "/special-one/origin-button":

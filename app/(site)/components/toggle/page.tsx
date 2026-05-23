@@ -20,10 +20,8 @@ export function TogglePreview() {
     <div className="flex items-center justify-center px-2 py-4">
       <Toggle
         aria-label="Toggle favorite"
-        className="gap-2 rounded-lg px-4 shadow-sm"
         onPressedChange={setFavorite}
         pressed={favorite}
-        variant="outline"
       >
         <Star className="size-5" fill={favorite ? "currentColor" : "none"} />
         Favorite
@@ -39,10 +37,8 @@ function TogglePreview() {
     <div className="flex items-center justify-center px-2 py-4">
       <Toggle
         aria-label="Toggle favorite"
-        className="gap-2 rounded-lg px-4 shadow-sm"
         onPressedChange={setFavorite}
         pressed={favorite}
-        variant="outline"
       >
         <Star className="size-5" fill={favorite ? "currentColor" : "none"} />
         Favorite

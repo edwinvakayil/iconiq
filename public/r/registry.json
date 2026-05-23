@@ -474,6 +474,31 @@
       ]
     },
     {
+      "name": "b-toggle",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": ["@base-ui/react", "class-variance-authority", "motion"],
+      "devDependencies": [],
+      "title": "Toggle (Base UI)",
+      "description": "Pressed-state toggle with the same Iconiq ripple, icon motion, and size and variant shell layered over the Base UI toggle primitive.",
+      "files": [
+        {
+          "path": "b-toggle.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "reduced-motion.tsx",
+          "target": "lib/reduced-motion.tsx",
+          "type": "registry:lib"
+        },
+        {
+          "path": "registry-theme.ts",
+          "target": "lib/registry-theme.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
       "name": "b-tooltip",
       "type": "registry:ui",
       "registryDependencies": [],
@@ -1242,6 +1267,35 @@
       "files": [
         {
           "path": "r-slider.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "reduced-motion.tsx",
+          "target": "lib/reduced-motion.tsx",
+          "type": "registry:lib"
+        },
+        {
+          "path": "registry-theme.ts",
+          "target": "lib/registry-theme.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
+      "name": "r-toggle",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": [
+        "@radix-ui/react-toggle",
+        "class-variance-authority",
+        "motion"
+      ],
+      "devDependencies": [],
+      "title": "Toggle (Radix UI)",
+      "description": "Pressed-state toggle with the same Iconiq ripple, icon motion, and size and variant shell layered over the Radix toggle primitive.",
+      "files": [
+        {
+          "path": "r-toggle.tsx",
           "type": "registry:ui"
         },
         {
