@@ -15,19 +15,6 @@ import { cn } from "@/lib/utils";
 
 const reducedTransition = { duration: 0.12 } as const;
 
-function getHighlightTransition(reduceMotion: boolean) {
-  if (reduceMotion) {
-    return reducedTransition;
-  }
-
-  return {
-    type: "spring" as const,
-    stiffness: 300,
-    damping: 28,
-    mass: 0.8,
-  };
-}
-
 function getRingTransition(reduceMotion: boolean) {
   if (reduceMotion) {
     return reducedTransition;
@@ -118,7 +105,6 @@ type RadioOptionContentProps = {
   isSelected: boolean;
   label: string;
   labelId: string;
-  layoutId: string;
   reduceMotion: boolean;
 };
 
@@ -134,25 +120,14 @@ function RadioOptionContent({
   isSelected,
   label,
   labelId,
-  layoutId,
   reduceMotion,
 }: RadioOptionContentProps) {
-  const highlightTransition = getHighlightTransition(reduceMotion);
   const ringTransition = getRingTransition(reduceMotion);
   const dotMotion = getDotMotion(reduceMotion);
   const textTransition = getTextTransition(reduceMotion);
 
   return (
     <>
-      {isSelected ? (
-        <motion.div
-          aria-hidden
-          className="absolute inset-0 rounded-lg bg-foreground/[0.04]"
-          layoutId={reduceMotion ? undefined : layoutId}
-          transition={highlightTransition}
-        />
-      ) : null}
-
       <div
         aria-hidden
         className="relative z-10 flex h-5 w-5 shrink-0 items-center justify-center"
@@ -217,7 +192,6 @@ function BaseRadioOptionButton({
   isSelected,
   label,
   labelId,
-  layoutId,
   reduceMotion,
   rootProps,
 }: BaseRadioOptionButtonProps) {
@@ -265,7 +239,6 @@ function BaseRadioOptionButton({
         isSelected={isSelected}
         label={label}
         labelId={labelId}
-        layoutId={layoutId}
         reduceMotion={reduceMotion}
       />
     </motion.button>
@@ -279,7 +252,6 @@ const RadioGroup = React.forwardRef<HTMLDivElement, RadioGroupProps>(
       "aria-labelledby": ariaLabelledBy,
       className,
       defaultValue,
-      layoutId,
       name,
       onChange,
       options,
@@ -294,7 +266,6 @@ const RadioGroup = React.forwardRef<HTMLDivElement, RadioGroupProps>(
       string | undefined
     >(() => getValidSelection(options, defaultValue));
     const selected = isControlled ? value : uncontrolledSelected;
-    const resolvedLayoutId = layoutId ?? `radio-active-bg-${generatedId}`;
     const groupName = name ?? `radio-group-${generatedId}`;
     const reduceMotion = useResolvedReducedMotion(reducedMotion);
 
@@ -362,7 +333,6 @@ const RadioGroup = React.forwardRef<HTMLDivElement, RadioGroupProps>(
                     isSelected={isSelected}
                     label={option.label}
                     labelId={labelId}
-                    layoutId={resolvedLayoutId}
                     reduceMotion={reduceMotion}
                     rootProps={rootProps}
                   />

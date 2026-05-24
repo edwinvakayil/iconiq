@@ -138,8 +138,8 @@ function CollapsiblePreview({ ui }: { ui: CollapsibleModule }) {
   const { Collapsible, CollapsibleContent, CollapsibleTrigger } = ui;
 
   return (
-    <div className="flex min-h-[18rem] w-full items-center justify-center p-6">
-      <div className="w-full max-w-xl">
+    <div className="flex min-h-[18rem] w-full justify-center p-6">
+      <div className="w-full max-w-xl pt-24">
         <Collapsible className="w-full">
           <CollapsibleTrigger>What changed in this release?</CollapsibleTrigger>
           <CollapsibleContent>

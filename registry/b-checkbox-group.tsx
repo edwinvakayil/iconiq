@@ -275,16 +275,12 @@ function CheckboxGroupRow({
           <motion.button
             {...resolvedRootProps}
             className={cn(
-              "group relative flex items-center gap-3 rounded-lg px-4 py-3 text-left",
+              "group relative flex appearance-none items-center gap-3 rounded-lg px-4 py-3 text-left",
               reduceMotion
                 ? "transition-colors duration-150"
                 : "transition-[background-color] duration-480 ease-[cubic-bezier(0.22,1,0.36,1)]",
-              "hover:bg-neutral-100/90 dark:hover:bg-neutral-800/50",
-              "active:bg-neutral-100 dark:active:bg-neutral-800/78",
               "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:ring-offset-2 focus-visible:ring-offset-background",
               "disabled:cursor-not-allowed disabled:opacity-50",
-              "disabled:active:bg-transparent disabled:hover:bg-transparent",
-              "dark:disabled:active:bg-transparent dark:disabled:hover:bg-transparent",
               rootClassName
             )}
             ref={(node) => {

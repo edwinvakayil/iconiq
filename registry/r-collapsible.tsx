@@ -2,7 +2,7 @@
 
 import * as CollapsiblePrimitive from "@radix-ui/react-collapsible";
 import { ChevronDown } from "lucide-react";
-import { motion } from "motion/react";
+import { motion, type Transition } from "motion/react";
 import * as React from "react";
 
 import {
@@ -62,6 +62,51 @@ const triggerPressTransition = {
   mass: 0.7,
 };
 
+const contentShellTransition: Transition = {
+  height: {
+    type: "spring",
+    stiffness: 142,
+    damping: 25,
+    mass: 0.96,
+  },
+  opacity: {
+    duration: 0.24,
+    ease: [0.18, 1, 0.32, 1],
+  },
+  clipPath: {
+    duration: 0.34,
+    ease: [0.16, 1, 0.3, 1],
+  },
+};
+
+const contentMaskTransition: Transition = {
+  duration: 0.34,
+  ease: [0.16, 1, 0.3, 1],
+};
+
+const contentCopyTransition: Transition = {
+  y: {
+    type: "spring",
+    stiffness: 148,
+    damping: 23,
+    mass: 0.96,
+  },
+  scale: {
+    duration: 0.28,
+    ease: [0.18, 1, 0.32, 1],
+  },
+  opacity: {
+    duration: 0.22,
+    ease: [0.18, 1, 0.32, 1],
+    delay: 0.03,
+  },
+  filter: {
+    duration: 0.24,
+    ease: [0.18, 1, 0.32, 1],
+    delay: 0.03,
+  },
+};
+
 function useCollapsibleContext() {
   const context = React.useContext(CollapsibleContext);
 
@@ -80,12 +125,18 @@ function getContentTransition(reduceMotion: boolean) {
     };
   }
 
-  return {
-    type: "spring" as const,
-    stiffness: 300,
-    damping: 28,
-    mass: 0.78,
-  };
+  return contentShellTransition;
+}
+
+function getMaskTransition(reduceMotion: boolean) {
+  if (reduceMotion) {
+    return {
+      duration: 0.14,
+      ease: settleEase,
+    };
+  }
+
+  return contentMaskTransition;
 }
 
 function getInnerTransition(reduceMotion: boolean) {
@@ -96,12 +147,7 @@ function getInnerTransition(reduceMotion: boolean) {
     };
   }
 
-  return {
-    type: "spring" as const,
-    stiffness: 320,
-    damping: 26,
-    mass: 0.72,
-  };
+  return contentCopyTransition;
 }
 
 function getIconTransition(reduceMotion: boolean) {
@@ -120,10 +166,31 @@ function getIconTransition(reduceMotion: boolean) {
   };
 }
 
-function getContentAnimate(open: boolean) {
+function getContentAnimate(open: boolean, reduceMotion: boolean) {
+  if (reduceMotion) {
+    return {
+      height: open ? "auto" : 0,
+      opacity: open ? 1 : 0,
+    };
+  }
+
   return {
     height: open ? "auto" : 0,
+    clipPath: open ? "inset(0% 0% 0% 0%)" : "inset(0% 0% 100% 0%)",
     opacity: open ? 1 : 0,
+  };
+}
+
+function getMaskAnimate(open: boolean, reduceMotion: boolean) {
+  if (reduceMotion) {
+    return {
+      opacity: open ? 1 : 0,
+    };
+  }
+
+  return {
+    clipPath: open ? "inset(0% 0% 0% 0%)" : "inset(0% 0% 100% 0%)",
+    opacity: open ? 1 : 0.68,
   };
 }
 
@@ -136,9 +203,10 @@ function getInnerAnimate(open: boolean, reduceMotion: boolean) {
   }
 
   return {
+    scale: open ? 1 : 0.996,
     opacity: open ? 1 : 0,
-    y: open ? 0 : -8,
-    filter: open ? "blur(0px)" : "blur(4px)",
+    y: open ? 0 : -3,
+    filter: open ? "blur(0px)" : "blur(1.5px)",
   };
 }
 
@@ -223,11 +291,6 @@ const CollapsibleTrigger = React.forwardRef<
         ref={ref}
         transition={triggerPressTransition}
         type={type}
-        whileHover={
-          disabled || reduceMotion
-            ? undefined
-            : { y: -1, transition: triggerPressTransition }
-        }
         whileTap={
           disabled || reduceMotion
             ? undefined
@@ -242,6 +305,7 @@ const CollapsibleTrigger = React.forwardRef<
           animate={{
             rotate: open ? 180 : 0,
             scale: open && !reduceMotion ? 1.04 : 1,
+            y: open && !reduceMotion ? 1 : 0,
           }}
           className="inline-flex shrink-0 items-center justify-center text-muted-foreground"
           transition={getIconTransition(reduceMotion)}
@@ -264,20 +328,30 @@ const CollapsibleContent = React.forwardRef<
   return (
     <CollapsiblePrimitive.Content asChild forceMount>
       <motion.div
-        animate={getContentAnimate(open)}
-        className={cn("overflow-hidden", className)}
+        animate={getContentAnimate(open, reduceMotion)}
+        className={cn(
+          "origin-top overflow-hidden will-change-[height,opacity,clip-path]",
+          className
+        )}
         initial={false}
         ref={ref}
         transition={getContentTransition(reduceMotion)}
         {...props}
       >
         <motion.div
-          animate={getInnerAnimate(open, reduceMotion)}
-          className="pr-8 pb-3 text-muted-foreground text-sm leading-6"
+          animate={getMaskAnimate(open, reduceMotion)}
+          className="overflow-hidden will-change-[clip-path,opacity]"
           initial={false}
-          transition={getInnerTransition(reduceMotion)}
+          transition={getMaskTransition(reduceMotion)}
         >
-          {children}
+          <motion.div
+            animate={getInnerAnimate(open, reduceMotion)}
+            className="pr-8 pb-3 text-muted-foreground text-sm leading-6 will-change-transform"
+            initial={false}
+            transition={getInnerTransition(reduceMotion)}
+          >
+            {children}
+          </motion.div>
         </motion.div>
       </motion.div>
     </CollapsiblePrimitive.Content>

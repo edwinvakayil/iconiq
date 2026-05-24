@@ -16,12 +16,6 @@ import { cn } from "@/lib/utils";
 const MAX_MENU_HEIGHT = 320;
 const SOFT_EASE = [0.22, 1, 0.36, 1] as const;
 const EXIT_EASE = [0.55, 0.06, 0.68, 0.19] as const;
-const ACTIVE_SPRING = {
-  type: "spring",
-  stiffness: 460,
-  damping: 34,
-  mass: 0.58,
-} as const;
 const CHECK_SPRING = {
   type: "spring",
   stiffness: 520,
@@ -83,14 +77,12 @@ type ItemRenderProps = React.HTMLAttributes<HTMLElement> & {
 type SelectItemRowProps = {
   activeHighlightId: string;
   index: number;
-  isActive: boolean;
+  isHovered: boolean;
   isSelected: boolean;
   itemVariants: ReturnType<typeof getItemVariants>;
   option: SelectOption;
   reduceMotion: boolean;
-  setShowActiveHighlight: React.Dispatch<React.SetStateAction<boolean>>;
-  setActiveValue: React.Dispatch<React.SetStateAction<string | null>>;
-  showActiveHighlight: boolean;
+  setHoveredValue: React.Dispatch<React.SetStateAction<string | undefined>>;
 };
 
 function getSelectSections(options: SelectOption[]) {
@@ -248,21 +240,19 @@ function resolveItemProps(itemProps: ItemRenderProps) {
 function SelectItemRow({
   activeHighlightId,
   index,
-  isActive,
+  isHovered,
   isSelected,
   itemVariants,
   option,
   reduceMotion,
-  setShowActiveHighlight,
-  setActiveValue,
-  showActiveHighlight,
+  setHoveredValue,
 }: SelectItemRowProps) {
   const pressTransition = reduceMotion
     ? { duration: 0.12, ease: "easeOut" as const }
     : PRESS_SPRING;
-  const activeTransition = reduceMotion
+  const hoverTransition = reduceMotion
     ? { duration: 0.12, ease: "easeOut" as const }
-    : ACTIVE_SPRING;
+    : { type: "spring" as const, stiffness: 600, damping: 38 };
   const checkTransition = reduceMotion
     ? { duration: 0.12, ease: "easeOut" as const }
     : CHECK_SPRING;
@@ -279,17 +269,17 @@ function SelectItemRow({
             {...resolvedItemProps}
             animate="visible"
             className={cn(
-              "group relative isolate flex min-h-11 cursor-pointer touch-manipulation select-none items-center gap-3 rounded-lg px-3 py-2.5 text-foreground text-sm outline-none transition-colors",
-              !isActive && "hover:bg-accent/60",
+              "relative flex min-h-11 cursor-pointer touch-manipulation select-none items-center gap-3 rounded-lg px-3 py-2.5 text-foreground text-sm outline-none transition-colors",
               itemClassName
             )}
             custom={index}
             exit="exit"
             initial="hidden"
-            onFocus={() => setActiveValue(option.value)}
+            onMouseEnter={() => {
+              setHoveredValue(option.value);
+            }}
             onPointerMove={() => {
-              setActiveValue(option.value);
-              setShowActiveHighlight(true);
+              setHoveredValue(option.value);
             }}
             ref={(node) => {
               setRef(itemRef, node);
@@ -299,22 +289,22 @@ function SelectItemRow({
             variants={itemVariants}
             whileTap={reduceMotion ? undefined : { scale: 0.985 }}
           >
-            {showActiveHighlight && isActive ? (
+            {isHovered ? (
               <motion.span
-                className="absolute inset-0 -z-10 rounded-lg bg-accent/70"
+                className="absolute inset-0 rounded-lg bg-accent"
                 layoutId={activeHighlightId}
-                transition={activeTransition}
+                transition={hoverTransition}
               />
             ) : null}
             {option.icon ? (
-              <span className="flex h-4 w-4 shrink-0 items-center justify-center text-muted-foreground">
+              <span className="relative z-10 flex h-4 w-4 shrink-0 items-center justify-center text-muted-foreground">
                 {option.icon}
               </span>
             ) : null}
-            <SelectPrimitive.ItemText className="min-w-0 flex-1 truncate text-left">
+            <SelectPrimitive.ItemText className="relative z-10 min-w-0 flex-1 truncate text-left">
               {option.label}
             </SelectPrimitive.ItemText>
-            <span className="flex h-4 w-4 shrink-0 items-center justify-center">
+            <span className="relative z-10 flex h-4 w-4 shrink-0 items-center justify-center">
               <AnimatePresence>
                 {isSelected ? (
                   <motion.span
@@ -339,38 +329,32 @@ function SelectItemRow({
 
 function SelectMenuSection({
   activeHighlightId,
-  activeValue,
+  hoveredValue,
   itemVariants,
   reduceMotion,
   section,
-  setShowActiveHighlight,
-  setActiveValue,
-  showActiveHighlight,
+  setHoveredValue,
   value,
 }: {
   activeHighlightId: string;
-  activeValue: string | null;
+  hoveredValue?: string;
   itemVariants: ReturnType<typeof getItemVariants>;
   reduceMotion: boolean;
   section: SelectSection;
-  setShowActiveHighlight: React.Dispatch<React.SetStateAction<boolean>>;
-  setActiveValue: React.Dispatch<React.SetStateAction<string | null>>;
-  showActiveHighlight: boolean;
+  setHoveredValue: React.Dispatch<React.SetStateAction<string | undefined>>;
   value?: string;
 }) {
   const items = section.items.map((option) => (
     <SelectItemRow
       activeHighlightId={activeHighlightId}
       index={option.index}
-      isActive={option.option.value === activeValue}
+      isHovered={option.option.value === hoveredValue}
       isSelected={option.option.value === value}
       itemVariants={itemVariants}
       key={option.option.value}
       option={option.option}
       reduceMotion={reduceMotion}
-      setActiveValue={setActiveValue}
-      setShowActiveHighlight={setShowActiveHighlight}
-      showActiveHighlight={showActiveHighlight}
+      setHoveredValue={setHoveredValue}
     />
   ));
 
@@ -397,12 +381,8 @@ export function Select({
   reducedMotion,
 }: SelectProps) {
   const reduceMotion = useResolvedReducedMotion(reducedMotion);
-  const [activeValue, setActiveValue] = React.useState<string | null>(
-    value ?? options[0]?.value ?? null
-  );
   const [open, setOpen] = React.useState(false);
-  const [showActiveHighlight, setShowActiveHighlight] = React.useState(false);
-  const openInteractionRef = React.useRef<"keyboard" | "pointer">("pointer");
+  const [hoveredValue, setHoveredValue] = React.useState<string | undefined>();
   const selected = options.find((option) => option.value === value);
   const itemVariants = React.useMemo(
     () => getItemVariants(reduceMotion),
@@ -419,28 +399,13 @@ export function Select({
     : { duration: 0.2, ease: SOFT_EASE };
   const sections = React.useMemo(() => getSelectSections(options), [options]);
 
-  React.useEffect(() => {
-    if (!open) {
-      return;
-    }
-
-    if (value && options.some((option) => option.value === value)) {
-      setActiveValue(value);
-      return;
-    }
-
-    setActiveValue(options[0]?.value ?? null);
-  }, [open, options, value]);
-
   return (
     <ReducedMotionConfig reducedMotion={reducedMotion}>
       <div className={cn(registryTheme, "relative w-72 max-w-full", className)}>
         <SelectPrimitive.Root
           onOpenChange={(nextOpen) => {
             setOpen(nextOpen);
-            setShowActiveHighlight(
-              nextOpen ? openInteractionRef.current === "keyboard" : false
-            );
+            setHoveredValue(undefined);
           }}
           onValueChange={(nextValue) => {
             if (typeof nextValue === "string") {
@@ -468,12 +433,6 @@ export function Select({
                     triggerClassName
                   )}
                   data-state={open ? "open" : "closed"}
-                  onKeyDownCapture={() => {
-                    openInteractionRef.current = "keyboard";
-                  }}
-                  onPointerDownCapture={() => {
-                    openInteractionRef.current = "pointer";
-                  }}
                   ref={(node) => {
                     setRef(triggerRef, node);
                   }}
@@ -546,8 +505,8 @@ export function Select({
                         >
                           <SelectPrimitive.List
                             className="overflow-y-auto overscroll-contain p-1.5 outline-none"
-                            onKeyDownCapture={() => {
-                              setShowActiveHighlight(true);
+                            onPointerLeave={() => {
+                              setHoveredValue(undefined);
                             }}
                           >
                             {options.length === 0 ? (
@@ -558,16 +517,12 @@ export function Select({
                               sections.map((section) => (
                                 <SelectMenuSection
                                   activeHighlightId="select-active-option"
-                                  activeValue={activeValue}
+                                  hoveredValue={hoveredValue}
                                   itemVariants={itemVariants}
                                   key={section.key}
                                   reduceMotion={reduceMotion}
                                   section={section}
-                                  setActiveValue={setActiveValue}
-                                  setShowActiveHighlight={
-                                    setShowActiveHighlight
-                                  }
-                                  showActiveHighlight={showActiveHighlight}
+                                  setHoveredValue={setHoveredValue}
                                   value={value}
                                 />
                               ))

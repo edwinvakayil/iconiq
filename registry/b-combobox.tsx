@@ -166,9 +166,7 @@ export function Combobox({
   const [open, setOpen] = React.useState(false);
   const [query, setQuery] = React.useState("");
   const [isEditingQuery, setIsEditingQuery] = React.useState(false);
-  const [highlightedValue, setHighlightedValue] = React.useState<
-    string | undefined
-  >();
+  const [hoveredValue, setHoveredValue] = React.useState<string | undefined>();
 
   const selected = React.useMemo(
     () => options.find((option) => option.value === value),
@@ -189,27 +187,14 @@ export function Combobox({
 
   React.useEffect(() => {
     if (open) {
-      setHighlightedValue(selected?.value ?? filtered[0]?.value);
+      setHoveredValue(undefined);
       return;
     }
 
     setQuery("");
     setIsEditingQuery(false);
-    setHighlightedValue(undefined);
-  }, [filtered, open, selected?.value]);
-
-  React.useEffect(() => {
-    if (
-      highlightedValue &&
-      filtered.some((option) => option.value === highlightedValue)
-    ) {
-      return;
-    }
-
-    if (open) {
-      setHighlightedValue(selected?.value ?? filtered[0]?.value);
-    }
-  }, [filtered, highlightedValue, open, selected?.value]);
+    setHoveredValue(undefined);
+  }, [open]);
 
   const selectDisplayedValue = React.useCallback(() => {
     if (!selected?.label || query || isEditingQuery) return;
@@ -291,9 +276,6 @@ export function Combobox({
           itemToStringValue={(item) => item.value}
           modal={false}
           onInputValueChange={handleInputValueChange}
-          onItemHighlighted={(option) => {
-            setHighlightedValue(option?.value);
-          }}
           onOpenChange={handleOpenChange}
           onValueChange={(nextOption) => {
             onChange?.(nextOption?.value ?? "");
@@ -413,7 +395,12 @@ export function Combobox({
                         ease: [0.22, 1, 0.36, 1],
                       }}
                     >
-                      <ComboboxPrimitive.List className="max-h-64 overflow-y-auto p-1">
+                      <ComboboxPrimitive.List
+                        className="max-h-64 overflow-y-auto p-1"
+                        onPointerLeave={() => {
+                          setHoveredValue(undefined);
+                        }}
+                      >
                         <ComboboxPrimitive.Empty className="text-center text-muted-foreground text-sm">
                           <motion.span
                             animate={{ opacity: 1 }}
@@ -436,26 +423,22 @@ export function Combobox({
                                   itemStyle,
                                   resolvedItemProps,
                                 } = resolveItemProps(itemProps);
-                                const isActive =
-                                  highlightedValue === option.value ||
-                                  (!highlightedValue &&
-                                    index === 0 &&
-                                    filtered.length > 0);
+                                const isHovered = hoveredValue === option.value;
 
                                 return (
                                   <motion.div
                                     {...resolvedItemProps}
                                     animate={{ opacity: 1, y: 0 }}
                                     className={cn(
-                                      "relative flex cursor-pointer select-none items-start gap-2 rounded-lg px-2.5 py-2 text-sm transition-colors",
-                                      isActive
-                                        ? "bg-accent text-accent-foreground"
-                                        : "text-foreground",
+                                      "relative flex cursor-pointer select-none items-start gap-2 rounded-lg px-2.5 py-2 text-foreground text-sm transition-colors",
                                       itemClassName
                                     )}
                                     initial={{ opacity: 0, y: 2 }}
                                     onMouseEnter={() => {
-                                      setHighlightedValue(option.value);
+                                      setHoveredValue(option.value);
+                                    }}
+                                    onPointerMove={() => {
+                                      setHoveredValue(option.value);
                                     }}
                                     ref={(node) => {
                                       setRef(itemRef, node);
@@ -466,19 +449,19 @@ export function Combobox({
                                       ease: "easeOut",
                                     }}
                                   >
-                                    {isActive ? (
+                                    {isHovered ? (
                                       <motion.div
-                                        className="absolute inset-0 -z-10 rounded-lg bg-accent"
+                                        className="absolute inset-0 rounded-lg bg-accent"
                                         layoutId="combobox-active"
                                         transition={{
                                           type: "spring",
-                                          stiffness: 500,
-                                          damping: 35,
+                                          stiffness: 600,
+                                          damping: 38,
                                         }}
                                       />
                                     ) : null}
 
-                                    <span className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center">
+                                    <span className="relative z-10 mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center">
                                       <AnimatePresence>
                                         {itemState.selected ? (
                                           <motion.span
@@ -501,7 +484,7 @@ export function Combobox({
                                       </AnimatePresence>
                                     </span>
 
-                                    <span className="flex flex-col">
+                                    <span className="relative z-10 flex flex-col">
                                       <span className="font-medium leading-tight">
                                         {option.label}
                                       </span>

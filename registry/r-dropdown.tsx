@@ -51,10 +51,12 @@ function getInnerContentMotion(reduceMotion: boolean) {
 type DropdownContextValue = {
   contentId: string;
   focusStrategyRef: React.MutableRefObject<DropdownFocusStrategy>;
+  hoveredItemId: string | undefined;
   labels: Record<string, string>;
   open: boolean;
   reduceMotion: boolean;
   setFocusStrategy: (strategy: DropdownFocusStrategy) => void;
+  setHoveredItemId: React.Dispatch<React.SetStateAction<string | undefined>>;
   setOpen: (open: boolean) => void;
   setValue: (value: string | undefined) => void;
   triggerRef: React.RefObject<HTMLButtonElement | null>;
@@ -227,6 +229,9 @@ export function Dropdown({
     onChange: onOpenChange,
     prop: openProp,
   });
+  const [hoveredItemId, setHoveredItemId] = React.useState<
+    string | undefined
+  >();
   const [value, setValue] = useControllableState<string | undefined>({
     defaultProp: defaultValue,
     onChange: onValueChange,
@@ -241,19 +246,31 @@ export function Dropdown({
     () => ({
       contentId,
       focusStrategyRef,
+      hoveredItemId,
       labels,
       open,
       reduceMotion,
       setFocusStrategy: (strategy: DropdownFocusStrategy) => {
         focusStrategyRef.current = strategy;
       },
+      setHoveredItemId,
       setOpen,
       setValue,
       triggerRef,
       value,
       variant,
     }),
-    [contentId, labels, open, reduceMotion, setOpen, setValue, value, variant]
+    [
+      contentId,
+      hoveredItemId,
+      labels,
+      open,
+      reduceMotion,
+      setOpen,
+      setValue,
+      value,
+      variant,
+    ]
   );
 
   return (
@@ -261,7 +278,13 @@ export function Dropdown({
       <DropdownContext.Provider value={contextValue}>
         <DropdownMenuPrimitive.Root
           modal={false}
-          onOpenChange={setOpen}
+          onOpenChange={(nextOpen) => {
+            setOpen(nextOpen);
+
+            if (!nextOpen) {
+              setHoveredItemId(undefined);
+            }
+          }}
           open={open}
         >
           <div
@@ -428,7 +451,7 @@ export const DropdownContent = React.forwardRef<
     { align = "start", children, className, sideOffset = 8, style, ...props },
     ref
   ) => {
-    const { focusStrategyRef, open, reduceMotion, value } =
+    const { focusStrategyRef, open, reduceMotion, setHoveredItemId, value } =
       useDropdownContext("DropdownContent");
     const contentRef = React.useRef<HTMLDivElement | null>(null);
     const contentMotion = getContentMotion(reduceMotion);
@@ -526,6 +549,9 @@ export const DropdownContent = React.forwardRef<
                   className="scroll-py-1 overflow-y-auto overscroll-contain p-1.5"
                   exit={innerContentMotion.exit}
                   initial={innerContentMotion.initial}
+                  onPointerLeave={() => {
+                    setHoveredItemId(undefined);
+                  }}
                   style={{
                     maxHeight: `min(${MAX_CONTENT_HEIGHT}px, var(--radix-dropdown-menu-content-available-height, ${MAX_CONTENT_HEIGHT}px))`,
                   }}
@@ -556,13 +582,18 @@ export const DropdownItem = React.forwardRef<HTMLDivElement, DropdownItemProps>(
     ref
   ) => {
     const {
+      contentId,
+      hoveredItemId,
       reduceMotion,
+      setHoveredItemId,
       setValue,
       value: currentValue,
       variant,
     } = useDropdownContext("DropdownItem");
+    const itemId = React.useId();
     const isSelected =
       variant === "select" && value !== undefined && currentValue === value;
+    const isHovered = hoveredItemId === itemId;
     const resolvedTextValue = React.useMemo(
       () => (textValue ?? getTextContent(children)).trim(),
       [children, textValue]
@@ -589,13 +620,8 @@ export const DropdownItem = React.forwardRef<HTMLDivElement, DropdownItemProps>(
           {...props}
           aria-disabled={disabled || undefined}
           className={cn(
-            "group relative isolate flex min-h-11 w-full scroll-m-1 items-center justify-between gap-3 rounded-[0.65rem] px-3 py-2.5 text-left text-foreground text-sm outline-none transition-colors",
-            "before:absolute before:inset-x-1 before:inset-y-0.5 before:-z-10 before:rounded-[0.5rem] before:bg-transparent before:transition-colors",
-            "hover:before:bg-accent/65 focus-visible:text-foreground focus-visible:outline-none focus-visible:before:bg-accent/65",
-            "data-[highlighted]:before:bg-accent/65",
-            isSelected &&
-              variant === "select" &&
-              "text-foreground before:bg-accent/45 data-[highlighted]:before:bg-accent/75",
+            "relative flex min-h-11 w-full scroll-m-1 items-center justify-between gap-3 rounded-[0.65rem] px-3 py-2.5 text-left text-foreground text-sm outline-none transition-colors",
+            "focus-visible:text-foreground focus-visible:outline-none",
             disabled && "pointer-events-none opacity-50",
             className
           )}
@@ -604,8 +630,29 @@ export const DropdownItem = React.forwardRef<HTMLDivElement, DropdownItemProps>(
           data-state={isSelected ? "checked" : "unchecked"}
           data-text-value={resolvedTextValue}
           data-value={value}
+          onMouseEnter={() => {
+            if (!disabled) {
+              setHoveredItemId(itemId);
+            }
+          }}
+          onPointerMove={() => {
+            if (!disabled) {
+              setHoveredItemId(itemId);
+            }
+          }}
           ref={ref}
         >
+          {isHovered ? (
+            <motion.span
+              className="absolute inset-0 rounded-[0.65rem] bg-accent"
+              layoutId={`${contentId}-dropdown-active-item`}
+              transition={
+                reduceMotion
+                  ? { duration: 0.12, ease: "easeOut" }
+                  : { type: "spring", stiffness: 600, damping: 38 }
+              }
+            />
+          ) : null}
           <motion.span
             className="relative z-10 flex min-w-0 flex-1 items-center gap-2 truncate"
             transition={
