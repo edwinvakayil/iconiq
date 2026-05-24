@@ -175,6 +175,12 @@ const REGISTRY_UI_META: Record<
       "Select with the same Iconiq API layered over Base UI primitives, preserving the original trigger press, chevron rotation, grouped rows, and panel motion.",
     dependencies: ["@base-ui/react", "motion", "lucide-react"],
   },
+  "b-selection-toolbar": {
+    title: "Selection Toolbar (Base UI)",
+    description:
+      "Floating selection toolbar with the same Iconiq API layered over Base UI toolbar primitives, preserving the original inline formatting shell, fixed-position reveal, and editable-surface selection tracking.",
+    dependencies: ["@base-ui/react", "lucide-react"],
+  },
   "b-slider": {
     title: "Slider (Base UI)",
     description:
@@ -328,6 +334,12 @@ const REGISTRY_UI_META: Record<
     description:
       "Select with the same Iconiq API layered over Radix UI primitives, preserving the original trigger press, chevron rotation, grouped rows, and panel motion.",
     dependencies: ["@radix-ui/react-select", "motion", "lucide-react"],
+  },
+  "r-selection-toolbar": {
+    title: "Selection Toolbar (Radix UI)",
+    description:
+      "Floating selection toolbar with the same Iconiq API layered over Radix UI toolbar primitives, preserving the original inline formatting shell, fixed-position reveal, and editable-surface selection tracking.",
+    dependencies: ["@radix-ui/react-toolbar", "lucide-react"],
   },
   "r-slider": {
     title: "Slider (Radix UI)",

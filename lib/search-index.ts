@@ -50,6 +50,8 @@ const componentSummaries: Record<string, string> = {
     "Radio group docs with a provider switch that swaps between Base UI and Radix UI registry entries.",
   "/radix-base-ui/select":
     "Select docs with a provider switch that swaps between Base UI and Radix UI registry entries.",
+  "/radix-base-ui/selection-toolbar":
+    "Selection toolbar docs with a provider switch that swaps between Base UI and Radix UI registry entries.",
   "/radix-base-ui/slider":
     "Slider docs with a provider switch that swaps between Base UI and Radix UI registry entries.",
   "/radix-base-ui/tooltip":

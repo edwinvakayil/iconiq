@@ -449,6 +449,26 @@
       ]
     },
     {
+      "name": "b-selection-toolbar",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": ["@base-ui/react", "lucide-react"],
+      "devDependencies": [],
+      "title": "Selection Toolbar (Base UI)",
+      "description": "Floating selection toolbar with the same Iconiq API layered over Base UI toolbar primitives, preserving the original inline formatting shell, fixed-position reveal, and editable-surface selection tracking.",
+      "files": [
+        {
+          "path": "b-selection-toolbar.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "reduced-motion.tsx",
+          "target": "lib/reduced-motion.tsx",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
       "name": "b-slider",
       "type": "registry:ui",
       "registryDependencies": [],
@@ -1252,6 +1272,26 @@
         {
           "path": "registry-theme.ts",
           "target": "lib/registry-theme.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
+      "name": "r-selection-toolbar",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": ["@radix-ui/react-toolbar", "lucide-react"],
+      "devDependencies": [],
+      "title": "Selection Toolbar (Radix UI)",
+      "description": "Floating selection toolbar with the same Iconiq API layered over Radix UI toolbar primitives, preserving the original inline formatting shell, fixed-position reveal, and editable-surface selection tracking.",
+      "files": [
+        {
+          "path": "r-selection-toolbar.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "reduced-motion.tsx",
+          "target": "lib/reduced-motion.tsx",
           "type": "registry:lib"
         }
       ]
