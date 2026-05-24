@@ -246,30 +246,6 @@ function RegistrySourceCode({ componentName }: { componentName: string }) {
 
   return (
     <div className="space-y-4">
-      <div className="border border-border/80 bg-muted/20 px-4 py-4 sm:px-5">
-        <div className="space-y-3">
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="font-medium text-foreground text-sm">
-              Generated files
-            </span>
-          </div>
-          <p className="text-muted-foreground text-sm leading-6">
-            {files.length === 1 ? (
-              <>
-                <span className="text-foreground">shadcn add</span> installs a
-                self-contained component file for this registry entry.
-              </>
-            ) : (
-              <>
-                <span className="text-foreground">shadcn add</span> adds the
-                component source along with any supporting files declared by
-                this registry entry.
-              </>
-            )}
-          </p>
-        </div>
-      </div>
-
       {files.length > 1 ? (
         <div className="space-y-2">
           <p className="font-medium text-[13px] text-muted-foreground">
