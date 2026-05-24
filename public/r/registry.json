@@ -10,7 +10,7 @@
       "dependencies": ["@radix-ui/react-accordion", "motion", "lucide-react"],
       "devDependencies": [],
       "title": "Accordion",
-      "description": "Accordion with spring height, staggered text, default or editorial disclosure styles, and optional multi-open behavior. Built with Motion.",
+      "description": "Accordion with spring height, staggered text, default or quiet disclosure styles, and optional multi-open behavior. Built with Motion.",
       "files": [
         {
           "path": "accordion.tsx",
@@ -55,7 +55,7 @@
       "dependencies": ["@base-ui/react", "motion", "lucide-react"],
       "devDependencies": [],
       "title": "Accordion (Base UI)",
-      "description": "Accordion with the same Iconiq API layered over Base UI primitives, keeping the editorial and default variants while swapping the underlying headless library.",
+      "description": "Accordion with the same Iconiq API layered over Base UI primitives, keeping the default and quiet variants while swapping the underlying headless library.",
       "files": [
         {
           "path": "b-accordion.tsx",

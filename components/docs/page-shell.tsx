@@ -809,6 +809,8 @@ function ComponentDocsPage({
   usageDescription,
   details,
   extraSections = [],
+  reducedMotionSectionPosition = "before",
+  installationContent,
   headerActions,
   editHref,
   previewClassName,
@@ -829,6 +831,8 @@ function ComponentDocsPage({
   usageDescription?: ReactNode;
   details: DetailItem[];
   extraSections?: ComponentDocsExtraSection[];
+  reducedMotionSectionPosition?: "before" | "after";
+  installationContent?: ReactNode;
   detailsDescription?: ReactNode;
   installDescription?: ReactNode;
   actionDescription?: ReactNode;
@@ -846,22 +850,22 @@ function ComponentDocsPage({
   const resolvedDetails = shouldShowReducedMotion
     ? withReducedMotionDetail(details)
     : details;
+  const reducedMotionSection = {
+    id: REDUCED_MOTION_SECTION_ID,
+    title: REDUCED_MOTION_SECTION_TITLE,
+    content: (
+      <ReducedMotionSection
+        code={reducedMotionCode}
+        componentName={componentName}
+        preview={preview}
+        previewClassName={previewClassName}
+      />
+    ),
+  };
   const resolvedExtraSections = shouldShowReducedMotion
-    ? [
-        {
-          id: REDUCED_MOTION_SECTION_ID,
-          title: REDUCED_MOTION_SECTION_TITLE,
-          content: (
-            <ReducedMotionSection
-              code={reducedMotionCode}
-              componentName={componentName}
-              preview={preview}
-              previewClassName={previewClassName}
-            />
-          ),
-        },
-        ...extraSections,
-      ]
+    ? reducedMotionSectionPosition === "after"
+      ? [...extraSections, reducedMotionSection]
+      : [reducedMotionSection, ...extraSections]
     : extraSections;
   const pageCopyContent = buildComponentPageCopyContent({
     title,
@@ -958,6 +962,7 @@ function ComponentDocsPage({
                 <ComponentSection id="installation" title="Installation">
                   <div className="space-y-5">
                     <ComponentInstallationTabs componentName={componentName} />
+                    {installationContent}
                   </div>
                 </ComponentSection>
 

@@ -2163,16 +2163,17 @@ const accordionApiDetails: DetailItem[] = [
       }),
       field({
         name: "variant",
-        type: '"default" | "editorial"',
+        type: '"default" | "quiet"',
         defaultValue: '"default"',
         description:
-          "Switches between the plain divided list and the lighter editorial layout with numbered rows and chevron disclosure.",
+          "Switches between the plain divided list and the quieter inline plus/minus treatment.",
       }),
     ],
     notes: [
       "Clicking an already open row closes it again by removing that item id from the internal open-state list.",
       "Single-open is the default behavior; pass multiple when you want a keep-open FAQ or settings list.",
       "There is no prop for default open or controlled open behavior in this implementation.",
+      "The quiet variant keeps the same state model and API, but swaps in a lighter inline disclosure style.",
     ],
   },
   {
@@ -2182,7 +2183,7 @@ const accordionApiDetails: DetailItem[] = [
       "The accordion uses native buttons and animated height transitions rather than a headless primitive.",
     notes: [
       "Each trigger button sets aria-expanded and aria-controls, and each open panel receives a matching id.",
-      "The editorial variant uses the same open-state model, with chevron disclosure, numbered triggers, and an indented content rail.",
+      "The quiet variant uses a minimal plus/minus label while preserving the same keyboard, state, and content motion behavior.",
       "The content body reveals through a horizontal clipped wipe while the paragraph settles upward with a soft blur fade.",
       "Keyboard support is limited to standard button tab and click semantics; there is no arrow-key roving between items.",
     ],

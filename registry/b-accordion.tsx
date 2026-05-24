@@ -1,7 +1,6 @@
 "use client";
 
 import { Accordion as AccordionPrimitive } from "@base-ui/react/accordion";
-import { ChevronDown } from "lucide-react";
 import { motion, type Transition } from "motion/react";
 import * as React from "react";
 
@@ -19,7 +18,7 @@ export interface AccordionItem {
   content: React.ReactNode;
 }
 
-export type AccordionVariant = "default" | "editorial";
+export type AccordionVariant = "default" | "quiet";
 
 export interface AccordionProps extends ReducedMotionProp {
   items: AccordionItem[];
@@ -69,83 +68,114 @@ const contentCopyTransition: Transition = {
 type AccordionRowProps = {
   item: AccordionItem;
   index: number;
-  isEditorial: boolean;
   isOpen: boolean;
   reduceMotion: boolean;
 };
 
-function getRowClassName(index: number, isEditorial: boolean, isOpen: boolean) {
-  return cn(
-    "group",
-    index !== 0 && "border-border/80 border-t",
-    isEditorial &&
-      isOpen &&
-      "bg-linear-to-r from-transparent via-muted/20 to-transparent"
-  );
+function getRowClassName(index: number) {
+  return cn("group", index !== 0 && "border-border/80 border-t");
 }
 
-function getTriggerClassName(isEditorial: boolean, isOpen: boolean) {
-  if (isEditorial) {
-    return isOpen ? "px-0 pt-6 pb-4" : "px-0 py-6";
-  }
-
+function getTriggerClassName(isOpen: boolean) {
   return isOpen ? "px-1 pt-5 pb-3" : "px-1 py-5";
 }
 
-function getContentWrapClassName(isEditorial: boolean) {
-  return isEditorial ? "pr-10 pb-6 pl-8 sm:pl-9" : "px-1 pr-12 pb-5";
+function getContentWrapClassName() {
+  return "px-1 pr-12 pb-5";
 }
 
-function getContentMaskClassName(isEditorial: boolean) {
-  return cn("overflow-hidden", isEditorial && "border-border/60 border-l pl-4");
+function getContentMaskClassName() {
+  return "overflow-hidden";
 }
 
-function getContentCopyClassName(isEditorial: boolean) {
-  return cn(
-    "space-y-3 text-sm leading-relaxed will-change-transform [&_a]:font-medium [&_a]:underline [&_a]:underline-offset-4 [&_li+li]:mt-1.5 [&_ol]:mt-3 [&_ol]:list-decimal [&_ol]:pl-5 [&_p+p]:mt-3 [&_ul]:mt-3 [&_ul]:list-disc [&_ul]:pl-5",
-    isEditorial ? "max-w-[60ch] text-foreground/72" : "text-muted-foreground"
-  );
+function getContentCopyClassName() {
+  return "space-y-3 text-sm leading-relaxed text-muted-foreground will-change-transform [&_a]:font-medium [&_a]:underline [&_a]:underline-offset-4 [&_li+li]:mt-1.5 [&_ol]:mt-3 [&_ol]:list-decimal [&_ol]:pl-5 [&_p+p]:mt-3 [&_ul]:mt-3 [&_ul]:list-disc [&_ul]:pl-5";
 }
 
-function AccordionTriggerLabel({
-  isEditorial,
+function getQuietContentClassName() {
+  return "max-w-2xl pl-7 text-sm leading-relaxed text-muted-foreground [&_a]:font-medium [&_a]:underline [&_a]:underline-offset-4 [&_li+li]:mt-1.5 [&_ol]:mt-3 [&_ol]:list-decimal [&_ol]:pl-5 [&_p+p]:mt-3 [&_ul]:mt-3 [&_ul]:list-disc [&_ul]:pl-5";
+}
+
+function getQuietContentWrapClassName() {
+  return "pt-1.5";
+}
+
+function getQuietContentMaskClassName() {
+  return "overflow-hidden";
+}
+
+function AccordionPanelBody({
   isOpen,
-  itemNumber,
+  item,
+  wrapClassName,
+  maskClassName,
+  copyClassName,
   reduceMotion,
-  title,
 }: {
-  isEditorial: boolean;
   isOpen: boolean;
-  itemNumber: string;
+  item: AccordionItem;
+  wrapClassName: string;
+  maskClassName: string;
+  copyClassName: string;
   reduceMotion: boolean;
-  title: string;
 }) {
-  if (isEditorial) {
+  if (reduceMotion) {
     return (
-      <div className="flex min-w-0 items-start gap-4">
-        <span
-          aria-hidden
-          className="pt-1 font-mono text-[11px] text-muted-foreground/70 uppercase tabular-nums tracking-[0.24em]"
-        >
-          {itemNumber}
-        </span>
-        {reduceMotion ? (
-          <span className="pr-2 font-medium text-[15px] text-foreground leading-6 tracking-[-0.02em] sm:text-base">
-            {title}
-          </span>
-        ) : (
-          <motion.span
-            animate={{ x: isOpen ? 4 : 0 }}
-            className="pr-2 font-medium text-[15px] text-foreground leading-6 tracking-[-0.02em] sm:text-base"
-            transition={{ type: "spring", stiffness: 300, damping: 28 }}
-          >
-            {title}
-          </motion.span>
-        )}
+      <div className={wrapClassName}>
+        <div className={maskClassName}>
+          <div className={copyClassName}>{item.content}</div>
+        </div>
       </div>
     );
   }
 
+  return (
+    <motion.div
+      animate={{
+        height: isOpen ? "auto" : 0,
+        opacity: isOpen ? 1 : 0,
+        clipPath: isOpen ? "inset(0% 0% 0% 0%)" : "inset(0% 0% 100% 0%)",
+      }}
+      className="overflow-hidden"
+      initial={false}
+      transition={contentShellTransition}
+    >
+      <div className={wrapClassName}>
+        <motion.div
+          animate={{
+            clipPath: isOpen ? "inset(0% 0% 0% 0%)" : "inset(0% 100% 0% 0%)",
+            opacity: isOpen ? 1 : 0.68,
+          }}
+          className={maskClassName}
+          initial={false}
+          transition={contentMaskTransition}
+        >
+          <motion.div
+            animate={{
+              opacity: isOpen ? 1 : 0,
+              y: isOpen ? 0 : -2,
+              scale: isOpen ? 1 : 0.996,
+              filter: isOpen ? "blur(0px)" : "blur(1.5px)",
+            }}
+            className={copyClassName}
+            initial={false}
+            transition={contentCopyTransition}
+          >
+            {item.content}
+          </motion.div>
+        </motion.div>
+      </div>
+    </motion.div>
+  );
+}
+
+function AccordionTriggerLabel({
+  reduceMotion,
+  title,
+}: {
+  reduceMotion: boolean;
+  title: string;
+}) {
   if (reduceMotion) {
     return (
       <span className="pr-4 font-medium text-[15px] text-foreground leading-6 tracking-[-0.02em] sm:text-base">
@@ -165,30 +195,7 @@ function AccordionTriggerLabel({
   );
 }
 
-function AccordionTriggerIndicator({
-  isEditorial,
-  isOpen,
-}: {
-  isEditorial: boolean;
-  isOpen: boolean;
-}) {
-  if (isEditorial) {
-    return (
-      <motion.span
-        animate={{
-          opacity: isOpen ? 1 : 0.7,
-          rotate: isOpen ? 180 : 0,
-          y: isOpen ? 1 : 0,
-        }}
-        aria-hidden
-        className="mt-1 flex h-5 w-5 shrink-0 items-center justify-center text-muted-foreground"
-        transition={{ type: "spring", stiffness: 320, damping: 24 }}
-      >
-        <ChevronDown className="h-4 w-4" />
-      </motion.span>
-    );
-  }
-
+function AccordionTriggerIndicator({ isOpen }: { isOpen: boolean }) {
   return (
     <motion.div
       animate={{ opacity: isOpen ? 1 : 0.72 }}
@@ -214,83 +221,14 @@ function AccordionTriggerIndicator({
   );
 }
 
-function AccordionPanelBody({
-  isEditorial,
-  isOpen,
-  item,
-  reduceMotion,
-}: {
-  isEditorial: boolean;
-  isOpen: boolean;
-  item: AccordionItem;
-  reduceMotion: boolean;
-}) {
-  if (reduceMotion) {
-    return (
-      <div className={getContentWrapClassName(isEditorial)}>
-        <div className={getContentMaskClassName(isEditorial)}>
-          <div className={getContentCopyClassName(isEditorial)}>
-            {item.content}
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  return (
-    <motion.div
-      animate={{
-        height: isOpen ? "auto" : 0,
-        opacity: isOpen ? 1 : 0,
-        clipPath: isOpen ? "inset(0% 0% 0% 0%)" : "inset(0% 0% 100% 0%)",
-      }}
-      className="overflow-hidden"
-      initial={false}
-      transition={contentShellTransition}
-    >
-      <div className={getContentWrapClassName(isEditorial)}>
-        <motion.div
-          animate={{
-            clipPath: isOpen ? "inset(0% 0% 0% 0%)" : "inset(0% 100% 0% 0%)",
-            opacity: isOpen ? 1 : 0.68,
-          }}
-          className={getContentMaskClassName(isEditorial)}
-          initial={false}
-          transition={contentMaskTransition}
-        >
-          <motion.div
-            animate={{
-              opacity: isOpen ? 1 : 0,
-              y: isOpen ? 0 : -2,
-              scale: isOpen ? 1 : 0.996,
-              filter: isOpen ? "blur(0px)" : "blur(1.5px)",
-            }}
-            className={getContentCopyClassName(isEditorial)}
-            initial={false}
-            transition={contentCopyTransition}
-          >
-            {item.content}
-          </motion.div>
-        </motion.div>
-      </div>
-    </motion.div>
-  );
-}
-
 function AccordionRow({
   item,
   index,
-  isEditorial,
   isOpen,
   reduceMotion,
 }: AccordionRowProps) {
-  const itemNumber = String(index + 1).padStart(2, "0");
-
   return (
-    <AccordionPrimitive.Item
-      className={getRowClassName(index, isEditorial, isOpen)}
-      value={item.id}
-    >
+    <AccordionPrimitive.Item className={getRowClassName(index)} value={item.id}>
       <motion.div
         animate={{ opacity: 1, y: 0 }}
         initial={{ opacity: 0, y: 12 }}
@@ -304,20 +242,14 @@ function AccordionRow({
           <AccordionPrimitive.Trigger
             className={cn(
               "flex w-full cursor-pointer items-start justify-between gap-6 text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset",
-              getTriggerClassName(isEditorial, isOpen)
+              getTriggerClassName(isOpen)
             )}
           >
             <AccordionTriggerLabel
-              isEditorial={isEditorial}
-              isOpen={isOpen}
-              itemNumber={itemNumber}
               reduceMotion={reduceMotion}
               title={item.title}
             />
-            <AccordionTriggerIndicator
-              isEditorial={isEditorial}
-              isOpen={isOpen}
-            />
+            <AccordionTriggerIndicator isOpen={isOpen} />
           </AccordionPrimitive.Trigger>
         </AccordionPrimitive.Header>
 
@@ -330,10 +262,73 @@ function AccordionRow({
           keepMounted={!reduceMotion}
         >
           <AccordionPanelBody
-            isEditorial={isEditorial}
+            copyClassName={getContentCopyClassName()}
             isOpen={isOpen}
             item={item}
+            maskClassName={getContentMaskClassName()}
             reduceMotion={reduceMotion}
+            wrapClassName={getContentWrapClassName()}
+          />
+        </AccordionPrimitive.Panel>
+      </motion.div>
+    </AccordionPrimitive.Item>
+  );
+}
+
+function AccordionQuietRow({
+  index,
+  item,
+  isOpen,
+  reduceMotion,
+}: {
+  index: number;
+  item: AccordionItem;
+  isOpen: boolean;
+  reduceMotion: boolean;
+}) {
+  return (
+    <AccordionPrimitive.Item className="py-3.5" value={item.id}>
+      <motion.div
+        animate={{ opacity: 1, y: 0 }}
+        initial={{ opacity: 0, y: 12 }}
+        transition={{
+          delay: index * 0.05,
+          duration: 0.3,
+          ease: [0.22, 1, 0.36, 1],
+        }}
+      >
+        <AccordionPrimitive.Header className="flex">
+          <AccordionPrimitive.Trigger className="flex w-full cursor-pointer items-baseline gap-4 text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset">
+            <span
+              aria-hidden
+              className={cn(
+                "text-[15px] leading-none transition-colors",
+                isOpen ? "text-foreground" : "text-muted-foreground/60"
+              )}
+            >
+              {isOpen ? "−" : "+"}
+            </span>
+            <span className="font-normal text-[15px] text-foreground leading-6 tracking-[-0.02em] sm:text-base">
+              {item.title}
+            </span>
+          </AccordionPrimitive.Trigger>
+        </AccordionPrimitive.Header>
+
+        <AccordionPrimitive.Panel
+          className={cn(
+            "overflow-hidden",
+            !reduceMotion &&
+              "opacity-100 transition-[opacity] duration-[560ms] will-change-[opacity] data-closed:opacity-[0.999] data-ending-style:opacity-[0.999] data-starting-style:opacity-[0.999]"
+          )}
+          keepMounted={!reduceMotion}
+        >
+          <AccordionPanelBody
+            copyClassName={getQuietContentClassName()}
+            isOpen={isOpen}
+            item={item}
+            maskClassName={getQuietContentMaskClassName()}
+            reduceMotion={reduceMotion}
+            wrapClassName={getQuietContentWrapClassName()}
           />
         </AccordionPrimitive.Panel>
       </motion.div>
@@ -349,7 +344,7 @@ export function Accordion({
   variant = "default",
 }: AccordionProps) {
   const [openItems, setOpenItems] = React.useState<string[]>([]);
-  const isEditorial = variant === "editorial";
+  const isQuiet = variant === "quiet";
   const reduceMotion = useResolvedReducedMotion(reducedMotion);
 
   return (
@@ -360,16 +355,25 @@ export function Accordion({
         onValueChange={setOpenItems}
         value={openItems}
       >
-        {items.map((item, index) => (
-          <AccordionRow
-            index={index}
-            isEditorial={isEditorial}
-            isOpen={openItems.includes(item.id)}
-            item={item}
-            key={item.id}
-            reduceMotion={reduceMotion}
-          />
-        ))}
+        {items.map((item, index) =>
+          isQuiet ? (
+            <AccordionQuietRow
+              index={index}
+              isOpen={openItems.includes(item.id)}
+              item={item}
+              key={item.id}
+              reduceMotion={reduceMotion}
+            />
+          ) : (
+            <AccordionRow
+              index={index}
+              isOpen={openItems.includes(item.id)}
+              item={item}
+              key={item.id}
+              reduceMotion={reduceMotion}
+            />
+          )
+        )}
       </AccordionPrimitive.Root>
     </ReducedMotionConfig>
   );

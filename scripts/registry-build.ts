@@ -111,13 +111,13 @@ const REGISTRY_UI_META: Record<
   accordion: {
     title: "Accordion",
     description:
-      "Accordion with spring height, staggered text, default or editorial disclosure styles, and optional multi-open behavior. Built with Motion.",
+      "Accordion with spring height, staggered text, default or quiet disclosure styles, and optional multi-open behavior. Built with Motion.",
     dependencies: ["@radix-ui/react-accordion", "motion", "lucide-react"],
   },
   "b-accordion": {
     title: "Accordion (Base UI)",
     description:
-      "Accordion with the same Iconiq API layered over Base UI primitives, keeping the editorial and default variants while swapping the underlying headless library.",
+      "Accordion with the same Iconiq API layered over Base UI primitives, keeping the default and quiet variants while swapping the underlying headless library.",
     dependencies: ["@base-ui/react", "motion", "lucide-react"],
   },
   "b-alert-dialog": {

@@ -7,6 +7,7 @@ import {
   type PrimitiveProvider,
   ProviderSwitch,
 } from "@/app/(site)/components/_components/provider-switch";
+import { ComponentDemoCanvas } from "@/components/docs/component-demo-canvas";
 import {
   ComponentDocsPage,
   type DetailItem,
@@ -18,6 +19,8 @@ import { Accordion as RadixAccordion } from "@/registry/r-accordion";
 type ProviderConfig = {
   componentName: "b-accordion" | "r-accordion";
   dependencyLabel: string;
+  installationPreview: ReactNode;
+  installationPreviewCode: string;
   libraryLabel: string;
   notes: string[];
   preview: ReactNode;
@@ -41,7 +44,7 @@ const demoItems: AccordionDemoItem[] = [
     id: "api",
     title: "Does the public API stay the same?",
     content:
-      "Yes. Both registry entries export Accordion and AccordionItem, accept the same items array, support default and editorial variants, and let you opt into multiple open rows with a single prop.",
+      "Yes. Both registry entries export Accordion and AccordionItem, accept the same items array, support default and quiet variants, and let you opt into multiple open rows with a single prop.",
   },
   {
     id: "install",
@@ -52,6 +55,7 @@ const demoItems: AccordionDemoItem[] = [
 ];
 
 const previewAccordionClassName = "w-full max-w-xl";
+const installationPreviewAccordionClassName = "mx-auto w-full max-w-xl";
 
 const breadcrumbs = [
   { label: "Docs", href: "/" },
@@ -73,7 +77,7 @@ const items: AccordionItem[] = [
     id: "api",
     title: "Does the public API stay the same?",
     content:
-      "Yes. Both registry entries export Accordion and AccordionItem, accept the same items array, support default and editorial variants, and let you opt into multiple open rows with a single prop.",
+      "Yes. Both registry entries export Accordion and AccordionItem, accept the same items array, support default and quiet variants, and let you opt into multiple open rows with a single prop.",
   },
   {
     id: "install",
@@ -99,7 +103,7 @@ const items: AccordionItem[] = [
     id: "api",
     title: "Does the public API stay the same?",
     content:
-      "Yes. Both registry entries export Accordion and AccordionItem, accept the same items array, support default and editorial variants, and let you opt into multiple open rows with a single prop.",
+      "Yes. Both registry entries export Accordion and AccordionItem, accept the same items array, support default and quiet variants, and let you opt into multiple open rows with a single prop.",
   },
   {
     id: "install",
@@ -111,6 +115,76 @@ const items: AccordionItem[] = [
 
 export function AccordionPreview() {
   return <Accordion className="${previewAccordionClassName}" items={items} />;
+}`,
+};
+
+const quietUsageCodeByProvider: Record<
+  ProviderConfig["componentName"],
+  string
+> = {
+  "b-accordion": `import { Accordion, type AccordionItem } from "@/components/ui/b-accordion";
+
+const items: AccordionItem[] = [
+  {
+    id: "workflow",
+    title: "How should I use this page?",
+    content:
+      "Switch between Base UI and Radix UI above. The preview, install command, and generated registry files update together so you can compare the same surface on top of two different headless foundations.",
+  },
+  {
+    id: "api",
+    title: "Does the public API stay the same?",
+    content:
+      "Yes. Both registry entries export Accordion and AccordionItem, accept the same items array, support default and quiet variants, and let you opt into multiple open rows with a single prop.",
+  },
+  {
+    id: "install",
+    title: "What changes when I switch providers?",
+    content:
+      "Only the underlying implementation and runtime dependency list. The Base UI version installs the Base UI accordion parts and keeps the same product-facing shape.",
+  },
+];
+
+export function QuietAccordionPreview() {
+  return (
+    <Accordion
+      className="mx-auto w-full max-w-xl"
+      items={items}
+      variant="quiet"
+    />
+  );
+}`,
+  "r-accordion": `import { Accordion, type AccordionItem } from "@/components/ui/r-accordion";
+
+const items: AccordionItem[] = [
+  {
+    id: "workflow",
+    title: "How should I use this page?",
+    content:
+      "Switch between Base UI and Radix UI above. The preview, install command, and generated registry files update together so you can compare the same surface on top of two different headless foundations.",
+  },
+  {
+    id: "api",
+    title: "Does the public API stay the same?",
+    content:
+      "Yes. Both registry entries export Accordion and AccordionItem, accept the same items array, support default and quiet variants, and let you opt into multiple open rows with a single prop.",
+  },
+  {
+    id: "install",
+    title: "What changes when I switch providers?",
+    content:
+      "Only the underlying implementation and runtime dependency list. The Radix version installs the Radix accordion primitive and keeps the same product-facing shape.",
+  },
+];
+
+export function QuietAccordionPreview() {
+  return (
+    <Accordion
+      className="mx-auto w-full max-w-xl"
+      items={items}
+      variant="quiet"
+    />
+  );
 }`,
 };
 
@@ -129,6 +203,14 @@ export default function RadixBaseAccordionPage() {
           "Uses Base UI panel measurement plus motion-backed label and icon polish.",
           "The generated registry file is /r/b-accordion.json.",
         ],
+        installationPreview: (
+          <BaseAccordion
+            className={installationPreviewAccordionClassName}
+            items={demoItems}
+            variant="quiet"
+          />
+        ),
+        installationPreviewCode: quietUsageCodeByProvider["b-accordion"],
         preview: (
           <BaseAccordion
             className={previewAccordionClassName}
@@ -148,6 +230,14 @@ export default function RadixBaseAccordionPage() {
         "Uses the existing Motion + Radix content choreography with animated height, wipe, and copy transitions.",
         "The generated registry file is /r/r-accordion.json.",
       ],
+      installationPreview: (
+        <RadixAccordion
+          className={installationPreviewAccordionClassName}
+          items={demoItems}
+          variant="quiet"
+        />
+      ),
+      installationPreviewCode: quietUsageCodeByProvider["r-accordion"],
       preview: (
         <RadixAccordion
           className={previewAccordionClassName}
@@ -215,10 +305,10 @@ export default function RadixBaseAccordionPage() {
           },
           {
             name: "variant",
-            type: '"default" | "editorial"',
+            type: '"default" | "quiet"',
             defaultValue: '"default"',
             description:
-              "Switches between the standard divided list and the lighter editorial layout with numbered rows and chevron disclosure.",
+              "Switches between the standard divided list and the quieter inline plus/minus treatment.",
           },
           {
             name: "reducedMotion",
@@ -237,6 +327,30 @@ export default function RadixBaseAccordionPage() {
     [provider]
   );
 
+  const extraSections = useMemo(
+    () => [
+      {
+        id: "quiet-variant",
+        title: "Quiet variant",
+        content: (
+          <div className="space-y-3">
+            <p className="text-muted-foreground text-sm">
+              Use <code>variant="quiet"</code> for the lighter inline disclosure
+              style while keeping the same Accordion API.
+            </p>
+            <ComponentDemoCanvas
+              code={provider.installationPreviewCode}
+              componentName={provider.componentName}
+              preview={provider.installationPreview}
+              v0PageCode={provider.installationPreviewCode}
+            />
+          </div>
+        ),
+      },
+    ],
+    [provider]
+  );
+
   return (
     <ComponentDocsPage
       breadcrumbs={breadcrumbs}
@@ -244,6 +358,7 @@ export default function RadixBaseAccordionPage() {
       description="Stacked sections for showing and hiding related content."
       details={details}
       editHref={`${LINK.GITHUB}/edit/main/app/(site)/components/accordion/page.tsx`}
+      extraSections={extraSections}
       headerActions={
         <ProviderSwitch
           onSelect={setSelectedProvider}
@@ -253,6 +368,7 @@ export default function RadixBaseAccordionPage() {
       itemSlug="accordion"
       pageUrl="/components/accordion"
       preview={provider.preview}
+      reducedMotionSectionPosition="after"
       title="Accordion"
       usageCode={provider.usageCode}
       usageDescription="Switch libraries above to update the install command, registry JSON, preview code, and generated file set together."
