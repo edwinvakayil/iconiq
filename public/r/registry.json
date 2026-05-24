@@ -494,6 +494,31 @@
       ]
     },
     {
+      "name": "b-switch",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": ["@base-ui/react", "motion"],
+      "devDependencies": [],
+      "title": "Switch (Base UI)",
+      "description": "Switch with the same Iconiq API layered over Base UI primitives, preserving the original spring thumb travel, pressure-like squash, and foreground fill sweep.",
+      "files": [
+        {
+          "path": "b-switch.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "reduced-motion.tsx",
+          "target": "lib/reduced-motion.tsx",
+          "type": "registry:lib"
+        },
+        {
+          "path": "registry-theme.ts",
+          "target": "lib/registry-theme.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
       "name": "b-toggle",
       "type": "registry:ui",
       "registryDependencies": [],
@@ -1307,6 +1332,31 @@
       "files": [
         {
           "path": "r-slider.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "reduced-motion.tsx",
+          "target": "lib/reduced-motion.tsx",
+          "type": "registry:lib"
+        },
+        {
+          "path": "registry-theme.ts",
+          "target": "lib/registry-theme.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
+      "name": "r-switch",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": ["@radix-ui/react-switch", "motion"],
+      "devDependencies": [],
+      "title": "Switch (Radix UI)",
+      "description": "Switch with the same Iconiq API layered over Radix UI primitives, preserving the original spring thumb travel, pressure-like squash, and foreground fill sweep.",
+      "files": [
+        {
+          "path": "r-switch.tsx",
           "type": "registry:ui"
         },
         {

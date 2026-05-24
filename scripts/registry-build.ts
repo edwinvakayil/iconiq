@@ -187,6 +187,12 @@ const REGISTRY_UI_META: Record<
       "Slider with the same Iconiq API layered over Base UI primitives, preserving the original spring-settled fill, active track height, and thumb scale motion.",
     dependencies: ["@base-ui/react", "motion"],
   },
+  "b-switch": {
+    title: "Switch (Base UI)",
+    description:
+      "Switch with the same Iconiq API layered over Base UI primitives, preserving the original spring thumb travel, pressure-like squash, and foreground fill sweep.",
+    dependencies: ["@base-ui/react", "motion"],
+  },
   "b-tooltip": {
     title: "Tooltip (Base UI)",
     description:
@@ -346,6 +352,12 @@ const REGISTRY_UI_META: Record<
     description:
       "Slider with the same Iconiq API layered over Radix UI primitives, preserving the original spring-settled fill, active track height, and thumb scale motion.",
     dependencies: ["@radix-ui/react-slider", "motion"],
+  },
+  "r-switch": {
+    title: "Switch (Radix UI)",
+    description:
+      "Switch with the same Iconiq API layered over Radix UI primitives, preserving the original spring thumb travel, pressure-like squash, and foreground fill sweep.",
+    dependencies: ["@radix-ui/react-switch", "motion"],
   },
   "r-tooltip": {
     title: "Tooltip (Radix UI)",
