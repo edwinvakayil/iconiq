@@ -87,12 +87,13 @@ export function PageCopyActions({
   return (
     <div className="relative mr-2 inline-flex shrink-0 -space-x-px rounded-full text-sm shadow-none">
       <button
+        aria-label={copied ? "Copied page content" : "Copy page content"}
         className="relative inline-flex h-8 shrink-0 items-center gap-2 whitespace-nowrap rounded-none rounded-l-md bg-transparent px-3 font-medium text-foreground shadow-none transition-colors hover:bg-muted/55 focus-visible:z-10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 dark:border-border/80 dark:border-r dark:bg-[var(--secondary-bg)] dark:hover:bg-[#1d1d1b]"
         onClick={handleCopy}
         type="button"
       >
         <div className="flex items-center gap-2 whitespace-nowrap">
-          <span className="relative inline-flex size-4 items-center justify-center">
+          <span className="relative inline-flex size-4 shrink-0 items-center justify-center">
             <Copy
               className={cn(
                 "absolute size-4 text-muted-foreground transition-all dark:text-[#b5b5b5]",
@@ -117,6 +118,9 @@ export function PageCopyActions({
       <Popover onOpenChange={setOpen} open={open}>
         <PopoverTrigger asChild>
           <button
+            aria-expanded={open}
+            aria-haspopup="menu"
+            aria-label="More page actions"
             className="flex size-8 shrink-0 items-center justify-center rounded-none rounded-r-md bg-transparent text-muted-foreground shadow-none transition-colors hover:bg-muted/55 hover:text-foreground focus-visible:z-10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 dark:bg-[var(--secondary-bg)] dark:hover:bg-[#1d1d1b]"
             type="button"
           >

@@ -1,4 +1,4 @@
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ArrowLeft, ArrowRight, ChevronRight } from "lucide-react";
 import Link from "next/link";
 import type { ReactNode } from "react";
 
@@ -487,31 +487,53 @@ function SectionPager({
     itemSlug
   );
 
-  const baseButtonClassName =
-    "inline-flex size-9 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2";
+  const activeButtonClassName =
+    "inline-flex size-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted/60 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2";
+  const disabledButtonClassName =
+    "inline-flex size-8 cursor-default items-center justify-center rounded-md text-muted-foreground/35";
 
   return (
     <>
       {previousItem ? (
         <Link
           aria-label={`Go to ${previousItem.label}`}
-          className={baseButtonClassName}
+          className={activeButtonClassName}
           href={previousItem.href}
           title={previousItem.label}
         >
-          <ChevronLeft className="size-4" />
+          <ArrowLeft className="size-4" />
         </Link>
-      ) : null}
+      ) : (
+        <button
+          aria-label="No previous page"
+          className={disabledButtonClassName}
+          disabled
+          title="No previous page"
+          type="button"
+        >
+          <ArrowLeft className="size-4" />
+        </button>
+      )}
       {nextItem ? (
         <Link
           aria-label={`Go to ${nextItem.label}`}
-          className={baseButtonClassName}
+          className={activeButtonClassName}
           href={nextItem.href}
           title={nextItem.label}
         >
-          <ChevronRight className="size-4" />
+          <ArrowRight className="size-4" />
         </Link>
-      ) : null}
+      ) : (
+        <button
+          aria-label="No next page"
+          className={disabledButtonClassName}
+          disabled
+          title="No next page"
+          type="button"
+        >
+          <ArrowRight className="size-4" />
+        </button>
+      )}
     </>
   );
 }
@@ -904,7 +926,7 @@ function ComponentDocsPage({
                       </p>
                     </div>
 
-                    <div className="flex items-center gap-2 self-start">
+                    <div className="flex shrink-0 items-center gap-2 self-start">
                       {headerActions}
                       <PageCopyActions
                         componentName={componentName}

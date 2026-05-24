@@ -471,7 +471,7 @@ import { ShimmerSkeleton } from "@/components/ui/skeleton";
 export function SkeletonPreview() {
   return (
     <div className="flex min-h-[300px] w-full items-center justify-center px-4 py-10">
-      <div className="w-full max-w-sm rounded-lg border border-border/80 bg-card p-4">
+      <div className="w-full max-w-sm rounded-lg bg-card p-4">
         <div className="flex items-center gap-3">
           <ShimmerSkeleton className="h-11 w-11" rounded="full" />
           <div className="flex-1 space-y-2">

@@ -1,18 +1,39 @@
 "use client";
 
-import { Check, ChevronDown } from "lucide-react";
-import { useState } from "react";
+import { motion, useReducedMotion } from "motion/react";
+
+import {
+  BaseUILogo,
+  RadixUILogo,
+} from "@/app/(site)/components/_components/primitive-brand-icons";
 import { cn } from "@/lib/utils";
-import { Popover, PopoverContent, PopoverTrigger } from "@/registry/popover";
 
 export type PrimitiveProvider = "base" | "radix";
+
+const slideSpring = {
+  type: "spring" as const,
+  stiffness: 380,
+  damping: 32,
+};
 
 const providerOptions: Array<{
   key: PrimitiveProvider;
   label: "Base UI" | "Radix UI";
+  Logo: typeof BaseUILogo;
+  logoClassName: string;
 }> = [
-  { key: "base", label: "Base UI" },
-  { key: "radix", label: "Radix UI" },
+  {
+    key: "base",
+    label: "Base UI",
+    Logo: BaseUILogo,
+    logoClassName: "h-4 w-auto",
+  },
+  {
+    key: "radix",
+    label: "Radix UI",
+    Logo: RadixUILogo,
+    logoClassName: "size-4",
+  },
 ];
 
 function handleDisabledProviderSelect() {
@@ -23,10 +44,7 @@ export function ProviderSwitch({
   selectedProvider,
   onSelect,
   disabledProviders = [],
-  showSelectionIndicator = true,
-  showActiveBackground = true,
   mutedTrigger = false,
-  muteActiveDisabledOption = false,
 }: {
   disabledProviders?: PrimitiveProvider[];
   selectedProvider: PrimitiveProvider;
@@ -36,85 +54,60 @@ export function ProviderSwitch({
   mutedTrigger?: boolean;
   muteActiveDisabledOption?: boolean;
 }) {
-  const [open, setOpen] = useState(false);
-  const activeOption =
-    providerOptions.find((option) => option.key === selectedProvider) ??
-    providerOptions[0];
+  const reduceMotion = useReducedMotion() ?? false;
+  const activeIndex = Math.max(
+    0,
+    providerOptions.findIndex((option) => option.key === selectedProvider)
+  );
 
   return (
-    <div className="mr-2 inline-flex h-8 shrink-0 items-center gap-3 whitespace-nowrap rounded-md px-3 text-sm">
-      <span className="text-muted-foreground">Primitive</span>
-      <Popover onOpenChange={setOpen} open={open}>
-        <PopoverTrigger asChild>
-          <button
-            aria-expanded={open}
-            aria-haspopup="menu"
+    <div
+      aria-label="Primitive"
+      className="relative mr-2 inline-flex h-8 w-16 shrink-0 overflow-hidden rounded-md bg-transparent dark:bg-[var(--secondary-bg)]"
+      role="radiogroup"
+    >
+      <motion.div
+        animate={{ x: `${activeIndex * 100}%` }}
+        aria-hidden
+        className="absolute inset-y-0 left-0 z-0 h-full w-1/2 bg-background dark:bg-[#1d1d1b]"
+        transition={reduceMotion ? { duration: 0 } : slideSpring}
+      />
+
+      {providerOptions.map((option, index) => {
+        const isActive = option.key === selectedProvider;
+        const isDisabled = disabledProviders.includes(option.key);
+        const Logo = option.Logo;
+
+        return (
+          <motion.button
+            aria-checked={isActive}
+            aria-label={option.label}
             className={cn(
-              "inline-flex items-center gap-1.5 font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
-              mutedTrigger
-                ? "text-muted-foreground hover:text-muted-foreground"
-                : "text-foreground hover:text-foreground/80"
+              "relative z-1 inline-flex h-8 w-8 shrink-0 items-center justify-center bg-transparent transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+              index === 0 && "dark:border-border/80 dark:border-r",
+              isActive ? "text-foreground" : "text-muted-foreground/55",
+              !(isDisabled || isActive) && "hover:text-muted-foreground",
+              isDisabled && "cursor-not-allowed opacity-40",
+              isDisabled && isActive && mutedTrigger && "opacity-55"
             )}
+            disabled={isDisabled}
+            key={option.key}
+            onClick={() => {
+              if (isDisabled) {
+                return;
+              }
+
+              onSelect(option.key);
+            }}
+            role="radio"
+            title={option.label}
             type="button"
+            whileTap={reduceMotion || isDisabled ? undefined : { scale: 0.96 }}
           >
-            <span>{activeOption.label}</span>
-            <ChevronDown
-              className={cn(
-                "size-4 transition-transform",
-                open && "rotate-180"
-              )}
-            />
-          </button>
-        </PopoverTrigger>
-        <PopoverContent
-          align="end"
-          className="z-20 mt-2 w-44 rounded-2xl border border-border/80 bg-background p-1.5 shadow-[0_20px_60px_rgba(15,23,42,0.12)] dark:bg-neutral-950"
-          open={open}
-          side="bottom"
-          sideOffset={8}
-        >
-          {providerOptions.map((option) => {
-            const isActive = option.key === selectedProvider;
-            const isDisabled = disabledProviders.includes(option.key);
-
-            return (
-              <button
-                aria-disabled={isDisabled}
-                className={cn(
-                  "flex w-full items-center justify-between rounded-xl px-3 py-2 text-left text-[14px] text-foreground transition-colors",
-                  !isDisabled && "hover:bg-muted/70",
-                  isActive && showActiveBackground && "bg-muted/55",
-                  isDisabled && "cursor-not-allowed",
-                  isDisabled &&
-                    (!isActive || muteActiveDisabledOption) &&
-                    "text-muted-foreground/70"
-                )}
-                disabled={isDisabled}
-                key={option.key}
-                onClick={() => {
-                  if (isDisabled) {
-                    return;
-                  }
-
-                  onSelect(option.key);
-                  setOpen(false);
-                }}
-                type="button"
-              >
-                <span>{option.label}</span>
-                {showSelectionIndicator ? (
-                  <Check
-                    className={cn(
-                      "size-4 text-emerald-500 transition-opacity",
-                      isActive ? "opacity-100" : "opacity-0"
-                    )}
-                  />
-                ) : null}
-              </button>
-            );
-          })}
-        </PopoverContent>
-      </Popover>
+            <Logo className={option.logoClassName} />
+          </motion.button>
+        );
+      })}
     </div>
   );
 }
@@ -123,7 +116,6 @@ export function SharedPrimitiveProviderSwitch() {
   return (
     <ProviderSwitch
       disabledProviders={["base", "radix"]}
-      muteActiveDisabledOption
       mutedTrigger
       onSelect={handleDisabledProviderSelect}
       selectedProvider="radix"
