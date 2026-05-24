@@ -24,6 +24,7 @@ export const SITE_SECTIONS = [
       { label: "Context Menu", href: "/radix-base-ui/context-menu" },
       { label: "Dialog", href: "/radix-base-ui/dialog" },
       { label: "Drawer", href: "/radix-base-ui/drawer" },
+      { label: "Dropdown", href: "/radix-base-ui/dropdown" },
       { label: "Hover Card", href: "/radix-base-ui/hover-card" },
       { label: "Popover", href: "/radix-base-ui/popover" },
       { label: "Radio Group", href: "/radix-base-ui/radio-group" },

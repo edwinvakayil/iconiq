@@ -341,6 +341,12 @@ const REGISTRY_UI_META: Record<
       "Radio group with the same Iconiq API layered over Radix UI primitives, preserving the original shared highlight, spring-loaded ring and dot, and staggered row entrance.",
     dependencies: ["@radix-ui/react-radio-group", "motion"],
   },
+  "r-dropdown": {
+    title: "Dropdown (Radix UI)",
+    description:
+      "Dropdown with the same Iconiq trigger, grouped rows, action and select variants, and exact panel motion layered over Radix Dropdown Menu primitives.",
+    dependencies: ["@radix-ui/react-dropdown-menu", "motion", "lucide-react"],
+  },
   "r-select": {
     title: "Select (Radix UI)",
     description:

@@ -42,6 +42,8 @@ const componentSummaries: Record<string, string> = {
     "Dialog docs with a provider switch that swaps between Base UI and Radix UI registry entries.",
   "/radix-base-ui/drawer":
     "Drawer docs in the Radix UI + Base UI section, using the core Iconiq drawer implementation to preserve the original controlled API and motion behavior.",
+  "/radix-base-ui/dropdown":
+    "Dropdown docs in the Radix UI + Base UI section, using a Radix Dropdown Menu implementation that preserves the exact Iconiq dropdown shell and motion.",
   "/radix-base-ui/hover-card":
     "Hover card docs with a provider switch that swaps between a Base UI popover-backed install and a Radix Hover Card primitive install.",
   "/radix-base-ui/popover":

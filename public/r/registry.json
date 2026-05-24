@@ -1223,6 +1223,35 @@
       ]
     },
     {
+      "name": "r-dropdown",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": [
+        "@radix-ui/react-dropdown-menu",
+        "motion",
+        "lucide-react"
+      ],
+      "devDependencies": [],
+      "title": "Dropdown (Radix UI)",
+      "description": "Dropdown with the same Iconiq trigger, grouped rows, action and select variants, and exact panel motion layered over Radix Dropdown Menu primitives.",
+      "files": [
+        {
+          "path": "r-dropdown.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "reduced-motion.tsx",
+          "target": "lib/reduced-motion.tsx",
+          "type": "registry:lib"
+        },
+        {
+          "path": "registry-theme.ts",
+          "target": "lib/registry-theme.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
       "name": "r-hover-card",
       "type": "registry:ui",
       "registryDependencies": [],
