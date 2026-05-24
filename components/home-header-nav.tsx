@@ -117,7 +117,7 @@ export function HomeHeaderNav({ className }: { className?: string }) {
           </MotionNavigationMenuContent>
         </MotionNavigationMenuItem>
 
-        <NavTopLevelLink href="/radix-base-ui/accordion">
+        <NavTopLevelLink href="/components/accordion">
           Components
         </NavTopLevelLink>
 

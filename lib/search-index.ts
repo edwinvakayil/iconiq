@@ -20,67 +20,67 @@ const pageSummaries: Record<string, string> = {
 };
 
 const componentSummaries: Record<string, string> = {
-  "/radix-base-ui/accordion":
+  "/components/accordion":
     "Accordion docs with a provider switch that swaps between Base UI and Radix UI registry entries.",
-  "/radix-base-ui/alert":
+  "/components/alert":
     "Alert docs in the Components section, using the shared Iconiq alert install with provider options visible but disabled.",
-  "/radix-base-ui/alert-dialog":
+  "/components/alert-dialog":
     "Alert dialog docs with a provider switch that swaps between Base UI and Radix UI registry entries.",
-  "/radix-base-ui/avatar":
+  "/components/avatar":
     "Avatar docs with a provider switch that swaps between Base UI and Radix UI registry entries.",
-  "/radix-base-ui/breadcrumbs":
+  "/components/breadcrumbs":
     "Breadcrumbs docs in the Components section, using the shared Iconiq breadcrumbs install with provider options visible but disabled.",
-  "/radix-base-ui/button":
+  "/components/button":
     "Base UI button docs in the Components section, preserving the same Iconiq motion and API as the core button.",
-  "/radix-base-ui/button-group":
+  "/components/button-group":
     "Button group docs in the Components section, using the shared Iconiq button group install with provider options visible but disabled.",
-  "/radix-base-ui/calendar":
+  "/components/calendar":
     "Calendar docs in the Components section, using the shared Iconiq calendar install with provider options visible but disabled.",
-  "/radix-base-ui/checkbox":
+  "/components/checkbox":
     "Checkbox docs with a provider switch that swaps between Base UI and Radix UI registry entries.",
-  "/radix-base-ui/checkbox-group":
+  "/components/checkbox-group":
     "Base UI checkbox group docs in the Components section, preserving the same Iconiq row motion and disclosure behavior as the core checkbox group.",
-  "/radix-base-ui/collapsible":
+  "/components/collapsible":
     "Collapsible docs with a provider switch that swaps between Base UI and Radix UI registry entries.",
-  "/radix-base-ui/combobox":
+  "/components/combobox":
     "Base UI combobox docs in the Components section, preserving the same Iconiq filtering, keyboard navigation, and dropdown motion as the core combobox.",
-  "/radix-base-ui/context-menu":
+  "/components/context-menu":
     "Context menu docs with a provider switch that swaps between Base UI and Radix UI registry entries.",
-  "/radix-base-ui/dialog":
+  "/components/dialog":
     "Dialog docs with a provider switch that swaps between Base UI and Radix UI registry entries.",
-  "/radix-base-ui/drawer":
+  "/components/drawer":
     "Drawer docs in the Components section, using the core Iconiq drawer implementation to preserve the original controlled API and motion behavior.",
-  "/radix-base-ui/dropdown":
+  "/components/dropdown":
     "Dropdown docs in the Components section, using a Radix Dropdown Menu implementation that preserves the exact Iconiq dropdown shell and motion.",
-  "/radix-base-ui/file-upload":
+  "/components/file-upload":
     "File upload docs in the Components section, using the shared Iconiq file upload install with provider options visible but disabled.",
-  "/radix-base-ui/hover-card":
+  "/components/hover-card":
     "Hover card docs with a provider switch that swaps between a Base UI popover-backed install and a Radix Hover Card primitive install.",
-  "/radix-base-ui/input-group":
+  "/components/input-group":
     "Input group docs in the Components section, using the shared Iconiq input group install with provider options visible but disabled.",
-  "/radix-base-ui/popover":
+  "/components/popover":
     "Popover docs with a provider switch that swaps between Base UI and Radix UI registry entries.",
-  "/radix-base-ui/radio-group":
+  "/components/radio-group":
     "Radio group docs with a provider switch that swaps between Base UI and Radix UI registry entries.",
-  "/radix-base-ui/select":
+  "/components/select":
     "Select docs with a provider switch that swaps between Base UI and Radix UI registry entries.",
-  "/radix-base-ui/selection-toolbar":
+  "/components/selection-toolbar":
     "Selection toolbar docs with a provider switch that swaps between Base UI and Radix UI registry entries.",
-  "/radix-base-ui/skeleton":
+  "/components/skeleton":
     "Skeleton docs in the Components section, using the shared Iconiq skeleton install with provider options visible but disabled.",
-  "/radix-base-ui/slider":
+  "/components/slider":
     "Slider docs with a provider switch that swaps between Base UI and Radix UI registry entries.",
-  "/radix-base-ui/spinner":
+  "/components/spinner":
     "Spinner docs in the Components section, using the shared Iconiq spinner install with provider options visible but disabled.",
-  "/radix-base-ui/switch":
+  "/components/switch":
     "Switch docs with a provider switch that swaps between Base UI and Radix UI registry entries.",
-  "/radix-base-ui/table":
+  "/components/table":
     "Table docs in the Components section, using the shared Iconiq table install with the provider options visible but disabled.",
-  "/radix-base-ui/tabs":
+  "/components/tabs":
     "Tabs docs with a provider switch that swaps between Base UI and Radix UI registry entries.",
-  "/radix-base-ui/tooltip":
+  "/components/tooltip":
     "Tooltip docs with a provider switch that swaps between Base UI and Radix UI registry entries.",
-  "/radix-base-ui/toggle":
+  "/components/toggle":
     "Compare the same pressed-state toggle API on Radix UI and Base UI, with the same ripple, icon motion, and pressed styling layered over different primitives.",
   "/special-one/icon-bar":
     "Horizontal icon chips that expand on hover to reveal short labels with spring motion.",

@@ -216,7 +216,7 @@ function supportsReducedMotionDocs(componentName: string) {
 function inferDocsPageUrl(sectionLabel: string, itemSlug: string) {
   switch (sectionLabel) {
     case "Components":
-      return `/radix-base-ui/${itemSlug}`;
+      return `/components/${itemSlug}`;
     case "Special One":
       return `/special-one/${itemSlug}`;
     case "Foundation":

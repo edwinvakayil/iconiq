@@ -64,7 +64,7 @@ export function HomeFeaturedShowcaseExtended({
     <>
       <ShowcaseCard
         className="lg:col-span-4"
-        href="/radix-base-ui/calendar"
+        href="/components/calendar"
         title="Calendar"
       >
         <div className="flex w-full justify-center">
@@ -76,7 +76,7 @@ export function HomeFeaturedShowcaseExtended({
       </ShowcaseCard>
 
       <div className="grid gap-4 lg:col-span-8 lg:grid-cols-2">
-        <ShowcaseCard href="/radix-base-ui/tooltip" title="Tooltip">
+        <ShowcaseCard href="/components/tooltip" title="Tooltip">
           <div className="flex min-h-[150px] w-full items-center justify-center px-4">
             <p className="max-w-sm text-center font-sans text-[15px] text-foreground leading-relaxed">
               Hover the{" "}
@@ -99,7 +99,7 @@ export function HomeFeaturedShowcaseExtended({
 
         <ShowcaseCard
           className="lg:col-span-2"
-          href="/radix-base-ui/button"
+          href="/components/button"
           title="Button"
         >
           <div className="flex w-full max-w-[360px] flex-wrap items-center justify-center gap-2.5">
@@ -119,7 +119,7 @@ export function HomeFeaturedShowcaseExtended({
 
       <ShowcaseCard
         className="lg:col-span-6"
-        href="/radix-base-ui/switch"
+        href="/components/switch"
         title="Switch"
       >
         <div className="w-full max-w-[320px] space-y-4">
@@ -146,7 +146,7 @@ export function HomeFeaturedShowcaseExtended({
 
       <ShowcaseCard
         className="lg:col-span-6"
-        href="/radix-base-ui/slider"
+        href="/components/slider"
         title="Slider"
       >
         <div className="w-full max-w-[320px] space-y-4">
@@ -158,7 +158,7 @@ export function HomeFeaturedShowcaseExtended({
 
       <ShowcaseCard
         className="lg:col-span-6"
-        href="/radix-base-ui/radio-group"
+        href="/components/radio-group"
         title="Radio Group"
       >
         <div className="w-full max-w-md">
@@ -174,7 +174,7 @@ export function HomeFeaturedShowcaseExtended({
 
       <ShowcaseCard
         className="lg:col-span-6"
-        href="/radix-base-ui/checkbox-group"
+        href="/components/checkbox-group"
         title="Checkbox Group"
       >
         <div className="w-full max-w-md">

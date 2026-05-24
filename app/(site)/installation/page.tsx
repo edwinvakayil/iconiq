@@ -56,9 +56,9 @@ export default function InstallationPage() {
 
   const featuredComponents = components.filter(({ href }) =>
     [
-      "/radix-base-ui/button",
-      "/radix-base-ui/accordion",
-      "/radix-base-ui/combobox",
+      "/components/button",
+      "/components/accordion",
+      "/components/combobox",
     ].includes(href)
   );
 

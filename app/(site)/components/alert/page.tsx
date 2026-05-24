@@ -1,0 +1,130 @@
+"use client";
+
+import { CheckCircle2 } from "lucide-react";
+import { motion, useReducedMotion } from "motion/react";
+import { useState } from "react";
+
+import { SharedPrimitiveProviderSwitch } from "@/app/(site)/components/_components/provider-switch";
+import { alertApiDetails } from "@/components/docs/component-api";
+import { ComponentDocsPage } from "@/components/docs/page-shell";
+import { LINK } from "@/constants";
+import { cn } from "@/lib/utils";
+import Alert from "@/registry/alert";
+
+const usageCode = `"use client";
+
+import { CheckCircle2 } from "lucide-react";
+import { useState } from "react";
+import Alert from "@/components/ui/alert";
+
+export function AlertPreview() {
+  const [previewKey, setPreviewKey] = useState(0);
+
+  return (
+    <div className="relative flex min-h-[300px] items-center justify-center">
+      <button
+        className="inline-flex items-center rounded-lg bg-neutral-900 px-6 py-3 text-[13px] font-medium text-white dark:bg-neutral-100 dark:text-neutral-900"
+        onClick={() => setPreviewKey((current) => current + 1)}
+        type="button"
+      >
+        Show alert
+      </button>
+
+      {previewKey > 0 ? (
+        <Alert
+          icon={<CheckCircle2 aria-hidden className="size-[18px]" />}
+          key={previewKey}
+          message="Your latest updates are now live for the team."
+          variant="toast"
+          position="top-right"
+          title="Changes saved"
+        />
+      ) : null}
+    </div>
+  );
+}`;
+
+const componentDetailsItems = alertApiDetails;
+
+export default function RadixBaseAlertPage() {
+  const prefersReducedMotion = useReducedMotion();
+  const [previewKey, setPreviewKey] = useState(0);
+
+  return (
+    <ComponentDocsPage
+      breadcrumbs={[
+        { label: "Docs", href: "/" },
+        { label: "Components" },
+        { label: "Alert" },
+      ]}
+      componentName="alert"
+      description="Dismissible notices for inline feedback and toast updates."
+      details={componentDetailsItems}
+      editHref={`${LINK.GITHUB}/edit/main/app/(site)/components/alert/page.tsx`}
+      headerActions={<SharedPrimitiveProviderSwitch />}
+      pageUrl="/components/alert"
+      preview={
+        <div className="relative z-10 flex min-h-[300px] flex-col items-center justify-center pb-2">
+          <motion.button
+            className={cn(
+              "group relative isolate flex items-center gap-2.5 overflow-hidden rounded-lg px-6 py-3",
+              "bg-neutral-900 font-medium text-[13px] text-white",
+              "shadow-[0_1px_0_0_rgba(255,255,255,0.08)_inset,0_2px_10px_0_rgba(0,0,0,0.18)]",
+              "dark:bg-neutral-100 dark:text-neutral-900",
+              "dark:shadow-[0_1px_0_0_rgba(0,0,0,0.06)_inset,0_2px_10px_0_rgba(0,0,0,0.28)]"
+            )}
+            onClick={() => setPreviewKey((k) => k + 1)}
+            transition={{ type: "spring", stiffness: 400, damping: 22 }}
+            type="button"
+            whileHover={prefersReducedMotion ? {} : { scale: 1.03, y: -1 }}
+            whileTap={prefersReducedMotion ? {} : { scale: 0.97, y: 0 }}
+          >
+            <motion.span
+              aria-hidden
+              className="pointer-events-none absolute inset-0 -translate-x-full bg-linear-to-r from-transparent via-white/10 to-transparent"
+              transition={{ duration: 0.45, ease: "easeOut" }}
+              whileHover={prefersReducedMotion ? {} : { translateX: "200%" }}
+            />
+            <motion.span
+              className="relative flex size-[18px] items-center justify-center"
+              transition={{ type: "spring", stiffness: 500, damping: 14 }}
+              whileHover={
+                prefersReducedMotion ? {} : { rotate: [0, -18, 14, -8, 0] }
+              }
+            >
+              <svg fill="none" height="16" viewBox="0 0 16 16" width="16">
+                <path
+                  d="M8 2a4.5 4.5 0 0 0-4.5 4.5c0 2.1-.6 3.3-1.1 4 .5.5 1.4.5 1.6.5h8c.2 0 1.1 0 1.6-.5-.5-.7-1.1-1.9-1.1-4A4.5 4.5 0 0 0 8 2Z"
+                  stroke="currentColor"
+                  strokeLinejoin="round"
+                  strokeWidth="1.3"
+                />
+                <path
+                  d="M6.5 11.5c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5"
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeWidth="1.3"
+                />
+              </svg>
+            </motion.span>
+            <span className="relative">Show alert</span>
+          </motion.button>
+          {previewKey > 0 ? (
+            <Alert
+              icon={<CheckCircle2 aria-hidden className="size-[18px]" />}
+              key={previewKey}
+              message="Your latest updates are now live for the team."
+              position="top-right"
+              title="Changes saved"
+              variant="toast"
+            />
+          ) : null}
+        </div>
+      }
+      previewClassName="overflow-visible lg:col-span-8"
+      title="Alert"
+      usageCode={usageCode}
+      usageDescription="Default export. Start with the inline alert below, then switch to toast mode when you want viewport positioning, timed dismissal, and polite live announcements."
+    />
+  );
+}

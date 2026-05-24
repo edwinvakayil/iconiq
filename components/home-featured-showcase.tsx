@@ -179,7 +179,7 @@ export function HomeFeaturedShowcase() {
 
         <ShowcaseCard
           className="lg:col-span-7"
-          href="/radix-base-ui/accordion"
+          href="/components/accordion"
           title="Accordion"
         >
           <Accordion
@@ -190,7 +190,7 @@ export function HomeFeaturedShowcase() {
 
         <ShowcaseCard
           className="lg:col-span-5"
-          href="/radix-base-ui/skeleton"
+          href="/components/skeleton"
           title="Skeleton"
         >
           <div className="w-full max-w-[360px] p-4">
