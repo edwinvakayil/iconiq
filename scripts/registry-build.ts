@@ -536,15 +536,34 @@ console.log("\n🔨 Building registry components...\n");
 
 const registryItems: Schema[] = [];
 
-function escapeRegExp(value: string) {
-  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-}
-
 function removeImportStatement(content: string, modulePath: string) {
-  return content.replace(
-    new RegExp(`^import[\\s\\S]*?from "${escapeRegExp(modulePath)}";\\n?`, "m"),
-    ""
+  const lines = content.split("\n");
+  const targetLineIndex = lines.findIndex(
+    (line) =>
+      line.includes(`from "${modulePath}"`) ||
+      line.includes(`from '${modulePath}'`)
   );
+
+  if (targetLineIndex === -1) {
+    return content;
+  }
+
+  let importStartIndex = targetLineIndex;
+
+  while (
+    importStartIndex >= 0 &&
+    !lines[importStartIndex].trimStart().startsWith("import ")
+  ) {
+    importStartIndex -= 1;
+  }
+
+  if (importStartIndex === -1) {
+    return content;
+  }
+
+  lines.splice(importStartIndex, targetLineIndex - importStartIndex + 1);
+
+  return lines.join("\n").replace(/\n{3,}/g, "\n\n");
 }
 
 function insertAfterImports(content: string, snippet: string) {
