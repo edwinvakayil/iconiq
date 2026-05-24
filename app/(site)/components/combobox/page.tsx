@@ -115,7 +115,7 @@ export default function RadixBaseComboboxPage() {
     <ComponentDocsPage
       breadcrumbs={breadcrumbs}
       componentName="b-combobox"
-      description="Base UI combobox with the same Iconiq filtering, keyboard search, and dropdown motion."
+      description="Searchable input for filtering and choosing from a list."
       details={details}
       editHref={`${LINK.GITHUB}/edit/main/app/(site)/components/combobox/page.tsx`}
       headerActions={

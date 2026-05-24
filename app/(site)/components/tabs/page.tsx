@@ -330,7 +330,7 @@ export default function RadixBaseTabsPage() {
     <ComponentDocsPage
       breadcrumbs={breadcrumbs}
       componentName={provider.componentName}
-      description="Compare the same tabs API on Radix UI and Base UI."
+      description="Sectioned panels for switching between related views."
       details={details}
       editHref={`${LINK.GITHUB}/edit/main/app/(site)/components/tabs/page.tsx`}
       headerActions={

@@ -270,7 +270,7 @@ export default function RadixBaseHoverCardPage() {
     <ComponentDocsPage
       breadcrumbs={breadcrumbs}
       componentName={provider.componentName}
-      description="Compare the same hover card API on Radix UI and Base UI."
+      description="Hover preview for extra context without leaving the page."
       details={details}
       editHref={`${LINK.GITHUB}/edit/main/app/(site)/components/hover-card/page.tsx`}
       headerActions={

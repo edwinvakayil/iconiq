@@ -284,7 +284,7 @@ export default function RadixBaseAvatarPage() {
     <ComponentDocsPage
       breadcrumbs={breadcrumbs}
       componentName={provider.componentName}
-      description="Compare the same avatar API on Radix UI and Base UI."
+      description="Profile images with graceful fallbacks for people and teams."
       details={details}
       editHref={`${LINK.GITHUB}/edit/main/app/(site)/components/avatar/page.tsx`}
       headerActions={

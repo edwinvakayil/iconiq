@@ -205,7 +205,7 @@ export default function RadixBaseSliderPage() {
     <ComponentDocsPage
       breadcrumbs={breadcrumbs}
       componentName={provider.componentName}
-      description="Compare the same slider API on Radix UI and Base UI."
+      description="Drag control for adjusting a value within a range."
       details={details}
       editHref={`${LINK.GITHUB}/edit/main/app/(site)/components/slider/page.tsx`}
       headerActions={

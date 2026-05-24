@@ -197,7 +197,7 @@ export default function RadixBaseTogglePage() {
     <ComponentDocsPage
       breadcrumbs={breadcrumbs}
       componentName={provider.componentName}
-      description="Compare the same toggle API on Radix UI and Base UI."
+      description="Pressable control for turning a state on or off."
       details={details}
       editHref={`${LINK.GITHUB}/edit/main/app/(site)/components/toggle/page.tsx`}
       headerActions={

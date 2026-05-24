@@ -899,7 +899,7 @@ function ComponentDocsPage({
                       <h1 className="scroll-m-20 font-semibold text-3xl text-foreground tracking-tighter">
                         {title}
                       </h1>
-                      <p className="max-w-3xl text-base text-muted-foreground">
+                      <p className="max-w-3xl text-[15px] text-muted-foreground">
                         {description}
                       </p>
                     </div>

@@ -182,7 +182,7 @@ export default function RadixBaseCheckboxPage() {
     <ComponentDocsPage
       breadcrumbs={breadcrumbs}
       componentName={provider.componentName}
-      description="Compare the same checkbox API on Radix UI and Base UI."
+      description="Single-choice control for binary selections and consent."
       details={details}
       editHref={`${LINK.GITHUB}/edit/main/app/(site)/components/checkbox/page.tsx`}
       headerActions={

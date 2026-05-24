@@ -165,7 +165,7 @@ export default function RadixBaseCheckboxGroupPage() {
     <ComponentDocsPage
       breadcrumbs={breadcrumbs}
       componentName="b-checkbox-group"
-      description="Base UI checkbox group with the same Iconiq row motion and disclosure behavior."
+      description="Grouped checkboxes for selecting multiple related options."
       details={details}
       editHref={`${LINK.GITHUB}/edit/main/app/(site)/components/checkbox-group/page.tsx`}
       headerActions={

@@ -235,7 +235,7 @@ export default function RadixBaseRadioGroupPage() {
     <ComponentDocsPage
       breadcrumbs={breadcrumbs}
       componentName={provider.componentName}
-      description="Compare the same radio group API on Radix UI and Base UI."
+      description="Single-select option group for mutually exclusive choices."
       details={details}
       editHref={`${LINK.GITHUB}/edit/main/app/(site)/components/radio-group/page.tsx`}
       headerActions={

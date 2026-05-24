@@ -65,7 +65,7 @@ export default function RadixBaseButtonPage() {
     <ComponentDocsPage
       breadcrumbs={breadcrumbs}
       componentName="b-button"
-      description="Base UI button with the same Iconiq motion, variants, and sizing API."
+      description="Action button for primary, secondary, and inline interactions."
       details={details}
       editHref={`${LINK.GITHUB}/edit/main/app/(site)/components/button/page.tsx`}
       headerActions={

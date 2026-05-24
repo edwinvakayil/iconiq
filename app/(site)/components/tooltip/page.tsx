@@ -293,7 +293,7 @@ export default function RadixBaseTooltipPage() {
     <ComponentDocsPage
       breadcrumbs={breadcrumbs}
       componentName={provider.componentName}
-      description="Compare the same tooltip API on Radix UI and Base UI."
+      description="Small hint surface for labels, shortcuts, and extra context."
       details={details}
       editHref={`${LINK.GITHUB}/edit/main/app/(site)/components/tooltip/page.tsx`}
       headerActions={

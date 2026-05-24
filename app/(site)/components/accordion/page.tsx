@@ -233,7 +233,7 @@ export default function RadixBaseAccordionPage() {
     <ComponentDocsPage
       breadcrumbs={breadcrumbs}
       componentName={provider.componentName}
-      description="Compare the same accordion API on Radix UI and Base UI."
+      description="Stacked sections for showing and hiding related content."
       details={details}
       editHref={`${LINK.GITHUB}/edit/main/app/(site)/components/accordion/page.tsx`}
       headerActions={

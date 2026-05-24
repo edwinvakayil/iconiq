@@ -141,7 +141,7 @@ export default function RadixBaseDrawerPage() {
     <ComponentDocsPage
       breadcrumbs={breadcrumbs}
       componentName="b-drawer"
-      description="Drawer in the Base section with the same controlled API, side-based entry, and layered motion as the core Iconiq drawer."
+      description="Slide-in panel for secondary flows and mobile-friendly tasks."
       details={details}
       editHref={`${LINK.GITHUB}/edit/main/app/(site)/components/drawer/page.tsx`}
       headerActions={

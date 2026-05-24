@@ -214,7 +214,7 @@ export default function RadixBaseDropdownPage() {
     <ComponentDocsPage
       breadcrumbs={breadcrumbs}
       componentName="r-dropdown"
-      description="Radix UI dropdown with the exact same Iconiq shell, motion, and two-variant API as the core dropdown."
+      description="Compact menu for actions, overflow controls, and quick commands."
       details={details}
       editHref={`${LINK.GITHUB}/edit/main/app/(site)/components/dropdown/page.tsx`}
       headerActions={

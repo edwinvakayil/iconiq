@@ -240,7 +240,7 @@ export default function RadixBaseContextMenuPage() {
     <ComponentDocsPage
       breadcrumbs={breadcrumbs}
       componentName={provider.componentName}
-      description="Compare the same context menu API on Radix UI and Base UI."
+      description="Right-click menu for contextual actions and shortcuts."
       details={details}
       editHref={`${LINK.GITHUB}/edit/main/app/(site)/components/context-menu/page.tsx`}
       headerActions={

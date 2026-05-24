@@ -390,7 +390,7 @@ export default function RadixBaseTablePage() {
     <ComponentDocsPage
       breadcrumbs={breadcrumbs}
       componentName="table"
-      description="Composable table primitives for structured data and sortable views, surfaced in the Components section without a provider-specific wrapper."
+      description="Structured data table for rows, columns, and comparisons."
       details={details}
       editHref={`${LINK.GITHUB}/edit/main/app/(site)/components/table/page.tsx`}
       headerActions={<SharedPrimitiveProviderSwitch />}

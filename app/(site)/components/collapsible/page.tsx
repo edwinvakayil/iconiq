@@ -309,7 +309,7 @@ export default function RadixBaseCollapsiblePage() {
     <ComponentDocsPage
       breadcrumbs={breadcrumbs}
       componentName={provider.componentName}
-      description="Compare the same collapsible API on Radix UI and Base UI."
+      description="Simple disclosure for showing and hiding supporting content."
       details={details}
       editHref={`${LINK.GITHUB}/edit/main/app/(site)/components/collapsible/page.tsx`}
       headerActions={

@@ -252,7 +252,7 @@ export default function RadixBaseAlertDialogPage() {
     <ComponentDocsPage
       breadcrumbs={breadcrumbs}
       componentName={provider.componentName}
-      description="Compare the same alert dialog API on Radix UI and Base UI."
+      description="Confirmation dialog for destructive or high-stakes actions."
       details={details}
       editHref={`${LINK.GITHUB}/edit/main/app/(site)/components/alert-dialog/page.tsx`}
       headerActions={

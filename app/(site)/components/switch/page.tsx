@@ -178,7 +178,7 @@ export default function RadixBaseSwitchPage() {
     <ComponentDocsPage
       breadcrumbs={breadcrumbs}
       componentName={provider.componentName}
-      description="Compare the same switch API on Radix UI and Base UI."
+      description="On/off control for settings, preferences, and feature states."
       details={details}
       editHref={`${LINK.GITHUB}/edit/main/app/(site)/components/switch/page.tsx`}
       headerActions={

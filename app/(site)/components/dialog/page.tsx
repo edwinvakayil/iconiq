@@ -361,7 +361,7 @@ export default function RadixBaseDialogPage() {
     <ComponentDocsPage
       breadcrumbs={breadcrumbs}
       componentName={provider.componentName}
-      description="Compare the same dialog API on Radix UI and Base UI."
+      description="Modal surface for focused tasks, forms, and decisions."
       details={details}
       editHref={`${LINK.GITHUB}/edit/main/app/(site)/components/dialog/page.tsx`}
       headerActions={

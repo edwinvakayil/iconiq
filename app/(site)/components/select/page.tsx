@@ -213,7 +213,7 @@ export default function RadixBaseSelectPage() {
     <ComponentDocsPage
       breadcrumbs={breadcrumbs}
       componentName={provider.componentName}
-      description="Compare the same select API on Radix UI and Base UI."
+      description="Single-select menu for choosing from a structured list."
       details={details}
       editHref={`${LINK.GITHUB}/edit/main/app/(site)/components/select/page.tsx`}
       headerActions={

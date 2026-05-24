@@ -280,7 +280,7 @@ export default function RadixBaseSelectionToolbarPage() {
     <ComponentDocsPage
       breadcrumbs={breadcrumbs}
       componentName={provider.componentName}
-      description="Compare the same floating text-selection toolbar on Radix UI and Base UI."
+      description="Floating toolbar for text selection actions and formatting."
       details={details}
       editHref={`${LINK.GITHUB}/edit/main/app/(site)/components/selection-toolbar/page.tsx`}
       headerActions={
