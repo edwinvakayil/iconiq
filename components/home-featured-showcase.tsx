@@ -136,12 +136,12 @@ export function HomeFeaturedShowcase() {
       className="mt-24 sm:mt-32"
     >
       <div className="sm:text-center">
-        <h2
-          className="font-medium text-[1.95rem] text-foreground tracking-[-0.07em] sm:text-[2.9rem]"
+        <h3
+          className="font-light text-[1.95rem] text-foreground tracking-[-0.07em] sm:text-[2.9rem]"
           id="home-featured-showcase-heading"
         >
           Built to be explored, not just documented.
-        </h2>
+        </h3>
       </div>
 
       <div className="mt-8 grid gap-4 sm:mt-10 lg:grid-cols-12">
