@@ -15,7 +15,7 @@ const demoItems: FaqProItem[] = [
     id: "install-iconiq",
     question: "How do I install an Iconiq component?",
     answer:
-      "Install components with shadcn using commands like npx shadcn@latest add @iconiq/button, or use a direct registry URL from iconiqui.com/r/button.json.",
+      "Install components with shadcn using commands like npx shadcn@latest add @iconiq/b-button, or use a direct registry URL from iconiqui.com/r/b-button.json.",
   },
   {
     id: "iconiq-free",

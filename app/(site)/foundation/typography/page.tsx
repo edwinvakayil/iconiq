@@ -10,6 +10,7 @@ import {
   DocsBreadcrumbs,
 } from "@/components/docs/page-shell";
 import { LINK } from "@/constants";
+import { buildV0Page } from "@/lib/component-v0-pages";
 import {
   TYPOGRAPHY_GROUPS,
   TYPOGRAPHY_SAMPLE_TEXT,
@@ -162,6 +163,24 @@ export default function TypographyPage() {
       "",
     ]),
   ].join("\n");
+  const v0PageCode =
+    buildV0Page(`import { Typography } from "@/components/ui/typography";
+
+export function TypographyPreview() {
+  return (
+    <div className="mx-auto flex min-h-svh w-full max-w-3xl flex-col justify-center gap-5 p-8">
+      <Typography variant="h2">Build with one type system.</Typography>
+      <Typography variant="p1" className="max-w-2xl text-muted-foreground">
+        Keep headlines, paragraphs, labels, and supporting copy aligned with a single variant-driven primitive.
+      </Typography>
+      <div className="flex flex-col gap-2">
+        <Typography variant="label">Label</Typography>
+        <Typography variant="subheading">Subheading</Typography>
+        <Typography variant="p2">Body copy for forms, panels, and secondary documentation notes.</Typography>
+      </div>
+    </div>
+  );
+}`);
 
   return (
     <div className="mx-auto w-full min-w-0 max-w-[1600px] px-4 py-8 sm:px-6 sm:py-10 lg:px-10">
@@ -188,6 +207,7 @@ export default function TypographyPage() {
                       pageContent={pageContent}
                       pageUrl="/foundation/typography"
                       title="Typography"
+                      v0PageCode={v0PageCode}
                     />
                   </div>
                 </div>

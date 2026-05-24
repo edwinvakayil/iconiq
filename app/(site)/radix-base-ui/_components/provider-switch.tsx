@@ -15,14 +15,26 @@ const providerOptions: Array<{
   { key: "radix", label: "Radix UI" },
 ];
 
+function handleDisabledProviderSelect() {
+  return undefined;
+}
+
 export function ProviderSwitch({
   selectedProvider,
   onSelect,
   disabledProviders = [],
+  showSelectionIndicator = true,
+  showActiveBackground = true,
+  mutedTrigger = false,
+  muteActiveDisabledOption = false,
 }: {
   disabledProviders?: PrimitiveProvider[];
   selectedProvider: PrimitiveProvider;
   onSelect: (provider: PrimitiveProvider) => void;
+  showSelectionIndicator?: boolean;
+  showActiveBackground?: boolean;
+  mutedTrigger?: boolean;
+  muteActiveDisabledOption?: boolean;
 }) {
   const [open, setOpen] = useState(false);
   const activeOption =
@@ -37,7 +49,12 @@ export function ProviderSwitch({
           <button
             aria-expanded={open}
             aria-haspopup="menu"
-            className="inline-flex items-center gap-1.5 font-medium text-foreground transition-colors hover:text-foreground/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+            className={cn(
+              "inline-flex items-center gap-1.5 font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+              mutedTrigger
+                ? "text-muted-foreground hover:text-muted-foreground"
+                : "text-foreground hover:text-foreground/80"
+            )}
             type="button"
           >
             <span>{activeOption.label}</span>
@@ -66,8 +83,11 @@ export function ProviderSwitch({
                 className={cn(
                   "flex w-full items-center justify-between rounded-xl px-3 py-2 text-left text-[14px] text-foreground transition-colors",
                   !isDisabled && "hover:bg-muted/70",
-                  isActive && "bg-muted/55",
-                  isDisabled && "cursor-not-allowed text-muted-foreground/70"
+                  isActive && showActiveBackground && "bg-muted/55",
+                  isDisabled && "cursor-not-allowed",
+                  isDisabled &&
+                    (!isActive || muteActiveDisabledOption) &&
+                    "text-muted-foreground/70"
                 )}
                 disabled={isDisabled}
                 key={option.key}
@@ -82,17 +102,33 @@ export function ProviderSwitch({
                 type="button"
               >
                 <span>{option.label}</span>
-                <Check
-                  className={cn(
-                    "size-4 text-emerald-500 transition-opacity",
-                    isActive ? "opacity-100" : "opacity-0"
-                  )}
-                />
+                {showSelectionIndicator ? (
+                  <Check
+                    className={cn(
+                      "size-4 text-emerald-500 transition-opacity",
+                      isActive ? "opacity-100" : "opacity-0"
+                    )}
+                  />
+                ) : null}
               </button>
             );
           })}
         </PopoverContent>
       </Popover>
     </div>
+  );
+}
+
+export function SharedPrimitiveProviderSwitch() {
+  return (
+    <ProviderSwitch
+      disabledProviders={["base", "radix"]}
+      muteActiveDisabledOption
+      mutedTrigger
+      onSelect={handleDisabledProviderSelect}
+      selectedProvider="radix"
+      showActiveBackground={false}
+      showSelectionIndicator={false}
+    />
   );
 }

@@ -60,7 +60,7 @@ const demoProfiles: DemoProfile[] = [
 
 const breadcrumbs = [
   { label: "Docs", href: "/" },
-  { label: "Radix UI + Base UI" },
+  { label: "Components" },
   { label: "Avatar" },
 ];
 

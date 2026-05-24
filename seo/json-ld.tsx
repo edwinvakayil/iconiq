@@ -1,14 +1,19 @@
 import type { ReactNode } from "react";
 import type { DetailItem } from "@/components/docs/page-shell";
 import { LINK, SITE } from "@/constants";
-import { AI_DISCOVERY_LINKS } from "@/lib/geo";
+import { AI_DISCOVERY_LINKS } from "@/lib/ai-discovery-links";
 import { compactWhitespace, nodeToText } from "@/lib/node-to-text";
 import { SITE_SECTIONS } from "@/lib/site-nav";
 import { getSocialImageUrl, openGraphImagePath } from "@/seo/og-image";
 
-const COMPONENT_ITEMS =
-  SITE_SECTIONS.find((section) => section.label === "Components")?.children ??
-  [];
+type SiteSectionItem = {
+  href: string;
+  label: string;
+};
+
+const COMPONENT_ITEMS: SiteSectionItem[] = SITE_SECTIONS.flatMap((section) =>
+  section.children.map(({ href, label }) => ({ href, label }))
+);
 
 const componentCount = COMPONENT_ITEMS.length;
 
@@ -159,7 +164,7 @@ const FAQJsonLd = () => {
     },
     {
       question: "How do I install an Iconiq component?",
-      answer: `Install components with shadcn using commands like npx shadcn@latest add @iconiq/button, or use a direct registry URL from ${SITE.URL}/r/button.json.`,
+      answer: `Install components with shadcn using commands like npx shadcn@latest add @iconiq/b-button, or use a direct registry URL from ${SITE.URL}/r/b-button.json.`,
     },
     {
       question: "Is Iconiq free to use?",
@@ -248,11 +253,13 @@ const ComponentDocJsonLd = ({
   componentName,
   description,
   details,
+  pageUrl,
   title,
 }: {
   componentName: string;
   description: ReactNode;
   details: DetailItem[];
+  pageUrl: string;
   title: string;
 }) => {
   const primarySections = details.filter((item) => item.id !== "registry");
@@ -271,8 +278,8 @@ const ComponentDocJsonLd = ({
     name: `${title} component`,
     description: componentDescription,
     abstract: componentSummary || componentDescription,
-    url: `${SITE.URL}/components/${componentName}`,
-    mainEntityOfPage: `${SITE.URL}/components/${componentName}`,
+    url: `${SITE.URL}${pageUrl}`,
+    mainEntityOfPage: `${SITE.URL}${pageUrl}`,
     about: {
       "@type": "SoftwareSourceCode",
       name: title,
@@ -285,7 +292,7 @@ const ComponentDocJsonLd = ({
     isPartOf: {
       "@type": "CollectionPage",
       name: `${SITE.NAME} component documentation`,
-      url: `${SITE.URL}/components/${componentName}`,
+      url: `${SITE.URL}${pageUrl}`,
     },
     hasPart: primarySections.map((section) => ({
       "@type": "WebPageElement",

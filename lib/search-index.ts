@@ -22,30 +22,42 @@ const pageSummaries: Record<string, string> = {
 const componentSummaries: Record<string, string> = {
   "/radix-base-ui/accordion":
     "Accordion docs with a provider switch that swaps between Base UI and Radix UI registry entries.",
+  "/radix-base-ui/alert":
+    "Alert docs in the Components section, using the shared Iconiq alert install with provider options visible but disabled.",
   "/radix-base-ui/alert-dialog":
     "Alert dialog docs with a provider switch that swaps between Base UI and Radix UI registry entries.",
   "/radix-base-ui/avatar":
     "Avatar docs with a provider switch that swaps between Base UI and Radix UI registry entries.",
+  "/radix-base-ui/breadcrumbs":
+    "Breadcrumbs docs in the Components section, using the shared Iconiq breadcrumbs install with provider options visible but disabled.",
   "/radix-base-ui/button":
-    "Base UI button docs in the Radix UI + Base UI section, preserving the same Iconiq motion and API as the core button.",
+    "Base UI button docs in the Components section, preserving the same Iconiq motion and API as the core button.",
+  "/radix-base-ui/button-group":
+    "Button group docs in the Components section, using the shared Iconiq button group install with provider options visible but disabled.",
+  "/radix-base-ui/calendar":
+    "Calendar docs in the Components section, using the shared Iconiq calendar install with provider options visible but disabled.",
   "/radix-base-ui/checkbox":
     "Checkbox docs with a provider switch that swaps between Base UI and Radix UI registry entries.",
   "/radix-base-ui/checkbox-group":
-    "Base UI checkbox group docs in the Radix UI + Base UI section, preserving the same Iconiq row motion and disclosure behavior as the core checkbox group.",
+    "Base UI checkbox group docs in the Components section, preserving the same Iconiq row motion and disclosure behavior as the core checkbox group.",
   "/radix-base-ui/collapsible":
     "Collapsible docs with a provider switch that swaps between Base UI and Radix UI registry entries.",
   "/radix-base-ui/combobox":
-    "Base UI combobox docs in the Radix UI + Base UI section, preserving the same Iconiq filtering, keyboard navigation, and dropdown motion as the core combobox.",
+    "Base UI combobox docs in the Components section, preserving the same Iconiq filtering, keyboard navigation, and dropdown motion as the core combobox.",
   "/radix-base-ui/context-menu":
     "Context menu docs with a provider switch that swaps between Base UI and Radix UI registry entries.",
   "/radix-base-ui/dialog":
     "Dialog docs with a provider switch that swaps between Base UI and Radix UI registry entries.",
   "/radix-base-ui/drawer":
-    "Drawer docs in the Radix UI + Base UI section, using the core Iconiq drawer implementation to preserve the original controlled API and motion behavior.",
+    "Drawer docs in the Components section, using the core Iconiq drawer implementation to preserve the original controlled API and motion behavior.",
   "/radix-base-ui/dropdown":
-    "Dropdown docs in the Radix UI + Base UI section, using a Radix Dropdown Menu implementation that preserves the exact Iconiq dropdown shell and motion.",
+    "Dropdown docs in the Components section, using a Radix Dropdown Menu implementation that preserves the exact Iconiq dropdown shell and motion.",
+  "/radix-base-ui/file-upload":
+    "File upload docs in the Components section, using the shared Iconiq file upload install with provider options visible but disabled.",
   "/radix-base-ui/hover-card":
     "Hover card docs with a provider switch that swaps between a Base UI popover-backed install and a Radix Hover Card primitive install.",
+  "/radix-base-ui/input-group":
+    "Input group docs in the Components section, using the shared Iconiq input group install with provider options visible but disabled.",
   "/radix-base-ui/popover":
     "Popover docs with a provider switch that swaps between Base UI and Radix UI registry entries.",
   "/radix-base-ui/radio-group":
@@ -54,73 +66,20 @@ const componentSummaries: Record<string, string> = {
     "Select docs with a provider switch that swaps between Base UI and Radix UI registry entries.",
   "/radix-base-ui/selection-toolbar":
     "Selection toolbar docs with a provider switch that swaps between Base UI and Radix UI registry entries.",
+  "/radix-base-ui/skeleton":
+    "Skeleton docs in the Components section, using the shared Iconiq skeleton install with provider options visible but disabled.",
   "/radix-base-ui/slider":
     "Slider docs with a provider switch that swaps between Base UI and Radix UI registry entries.",
+  "/radix-base-ui/spinner":
+    "Spinner docs in the Components section, using the shared Iconiq spinner install with provider options visible but disabled.",
   "/radix-base-ui/switch":
     "Switch docs with a provider switch that swaps between Base UI and Radix UI registry entries.",
+  "/radix-base-ui/table":
+    "Table docs in the Components section, using the shared Iconiq table install with the provider options visible but disabled.",
   "/radix-base-ui/tabs":
     "Tabs docs with a provider switch that swaps between Base UI and Radix UI registry entries.",
   "/radix-base-ui/tooltip":
     "Tooltip docs with a provider switch that swaps between Base UI and Radix UI registry entries.",
-  "/components/alert":
-    "Dismissible alert banner with motion-aware entrance and close behavior.",
-  "/components/avatar":
-    "Motion-aware avatar with immediate fallback initials, image crossfade, and a 44px circular frame.",
-  "/components/badge":
-    "Compact badge component with animated accent treatment.",
-  "/components/breadcrumbs":
-    "Breadcrumb navigation with smooth separators and current-page treatment.",
-  "/components/button":
-    "Button primitives with variants, sizes, and motion-aware interaction states.",
-  "/components/button-group":
-    "Grouped action buttons, segmented button rows, and a string-based segmented control with motion-driven selection.",
-  "/components/calendar":
-    "Compact animated calendar for date selection and month navigation.",
-  "/components/checkbox":
-    "Animated single checkbox with controlled or uncontrolled state and a line-drawn checkmark.",
-  "/components/checkbox-group":
-    "Checkbox group for multiple selections with animated row states.",
-  "/components/combobox":
-    "Searchable combobox with inline filtering and keyboard navigation.",
-  "/components/context-menu":
-    "Context menu with right-click actions, shortcuts, and smooth hover behavior.",
-  "/components/dialog":
-    "Modal dialog surface with overlay, content animation, and close controls.",
-  "/components/drawer":
-    "Side or bottom drawer for layered workflows and compact task flows.",
-  "/components/dropdown":
-    "Dropdown primitives for select-style choices or immediate action menus.",
-  "/components/file-upload":
-    "File upload surface with drag and drop, previews, and queued item states.",
-  "/components/hover-card":
-    "Hover card for richer inline profile or detail previews.",
-  "/components/input-group":
-    "Floating-label input group with prefix and suffix slots, inline errors, and stacked form-field layouts.",
-  "/components/accordion":
-    "Accordion component with spring-driven expansion and structured content sections.",
-  "/components/popover":
-    "Popover surface for compact floating content and contextual details.",
-  "/components/radiogroup":
-    "Radio group for single-choice options with animated selection treatment.",
-  "/components/select": "Animated select control for single-choice selections.",
-  "/components/selectiontoolbar":
-    "Floating text-selection toolbar for inline bold, italic, and underline formatting inside editable content.",
-  "/components/skeleton":
-    "Shimmer skeleton placeholder for loading states, lines, avatars, and content blocks.",
-  "/components/slider":
-    "Slider control for range selection with motion-aware thumb and track states.",
-  "/components/spinner":
-    "Loading spinner for pending states and background actions.",
-  "/components/switch":
-    "Animated switch control for binary settings with thumb travel and track-fill motion.",
-  "/components/table":
-    "Composable table primitives with aligned rows, sort helpers, and empty states.",
-  "/components/tabs":
-    "Tabs primitives with a measured underline, spring-smoothed panel resizing, and softened content transitions.",
-  "/components/toggle":
-    "Pressed-state toggle built on Radix with pointer-origin ripple, icon motion, larger hit targets, and text or icon-only formats.",
-  "/components/tooltip":
-    "Tooltip component for compact hover or focus explanations.",
   "/radix-base-ui/toggle":
     "Compare the same pressed-state toggle API on Radix UI and Base UI, with the same ripple, icon motion, and pressed styling layered over different primitives.",
   "/special-one/icon-bar":

@@ -56,9 +56,9 @@ export default function InstallationPage() {
 
   const featuredComponents = components.filter(({ href }) =>
     [
-      "/components/button",
-      "/components/accordion",
-      "/components/combobox",
+      "/radix-base-ui/button",
+      "/radix-base-ui/accordion",
+      "/radix-base-ui/combobox",
     ].includes(href)
   );
 
@@ -74,13 +74,13 @@ Install editable, fluid motion-powered React components directly into your app.
 
 Example command:
 
-pnpm dlx shadcn@latest add @iconiq/button
+pnpm dlx shadcn@latest add @iconiq/b-button
 
 ## Registry URL
 
 If you want to reference the registry JSON directly, you can also install from:
 
-pnpm dlx shadcn@latest add ${SITE.URL}/r/button.json
+pnpm dlx shadcn@latest add ${SITE.URL}/r/b-button.json
 
 ## Sample entries
 

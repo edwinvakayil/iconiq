@@ -182,7 +182,6 @@ export function DocsPageRail({
 }
 
 export function ComponentPageRail({
-  componentName,
   editHref,
   sections,
 }: {
@@ -190,13 +189,13 @@ export function ComponentPageRail({
   editHref?: string;
   sections: RailSection[];
 }) {
-  return (
-    <DocsPageRail
-      editHref={
-        editHref ??
-        `${LINK.GITHUB}/edit/main/app/components/${componentName}/page.tsx`
-      }
-      sections={sections}
-    />
-  );
+  const resolvedEditHref =
+    editHref ??
+    `${LINK.GITHUB}/edit/main/app/(site)${
+      typeof window !== "undefined" && window.location.pathname !== "/"
+        ? `${window.location.pathname}/page.tsx`
+        : "/page.tsx"
+    }`;
+
+  return <DocsPageRail editHref={resolvedEditHref} sections={sections} />;
 }

@@ -1,10 +1,11 @@
 "use client";
 
 import { Loader } from "lucide-react";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { toast } from "sonner";
 import { openComponentInV0Action } from "@/actions/open-component-in-v0";
 import { capturePostHogEvent } from "@/lib/posthog";
+import { sectionFromDocsHref } from "@/lib/posthog-event-name";
 import { POSTHOG_EVENTS } from "@/lib/posthog-events";
 import { cn } from "@/lib/utils";
 
@@ -37,6 +38,13 @@ export function OpenInV0Button({
   variant?: "canvas" | "menu";
 }) {
   const [state, setState] = useState<ActionState>("idle");
+  const docsSection = useMemo(() => {
+    if (typeof window === "undefined") {
+      return "docs";
+    }
+
+    return sectionFromDocsHref(window.location.pathname) ?? "docs";
+  }, []);
 
   const handleOpenInV0 = async () => {
     if (state !== "idle") {
@@ -47,7 +55,7 @@ export function OpenInV0Button({
       setState("loading");
       capturePostHogEvent(POSTHOG_EVENTS.DOCS_OPEN_IN_V0_CLICKED, {
         component_slug: name,
-        section: "components",
+        section: docsSection,
         ui_variant: variant,
         source: variant === "menu" ? "component_header" : "component_canvas",
       });

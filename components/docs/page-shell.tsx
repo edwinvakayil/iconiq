@@ -213,6 +213,21 @@ function supportsReducedMotionDocs(componentName: string) {
   );
 }
 
+function inferDocsPageUrl(sectionLabel: string, itemSlug: string) {
+  switch (sectionLabel) {
+    case "Components":
+      return `/radix-base-ui/${itemSlug}`;
+    case "Special One":
+      return `/special-one/${itemSlug}`;
+    case "Foundation":
+      return `/foundation/${itemSlug}`;
+    case "Texts":
+      return `/texts/${itemSlug}`;
+    default:
+      return `/${itemSlug}`;
+  }
+}
+
 function withReducedMotionDetail(details: DetailItem[]) {
   if (
     details.some((item) =>
@@ -983,7 +998,9 @@ function ComponentDocsPage({
     (getComponentV0Page(componentName, demoCode) ||
       getComponentV0Page(componentName));
   const resolvedPageUrl =
-    pageUrl ?? breadcrumbs.at(-1)?.href ?? `/components/${componentName}`;
+    pageUrl ??
+    breadcrumbs.at(-1)?.href ??
+    inferDocsPageUrl(sectionLabel, resolvedItemSlug);
 
   return (
     <>
@@ -991,6 +1008,7 @@ function ComponentDocsPage({
         componentName={componentName}
         description={description}
         details={resolvedDetails}
+        pageUrl={resolvedPageUrl}
         title={title}
       />
       <div className="mx-auto w-full min-w-0 max-w-[1600px] px-4 py-8 sm:px-6 sm:py-10 lg:px-10">

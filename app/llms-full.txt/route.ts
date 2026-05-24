@@ -1,9 +1,6 @@
 import { SITE } from "@/constants";
-import {
-  AI_DISCOVERY_LINKS,
-  COMPONENT_CATALOG,
-  GUIDE_CATALOG,
-} from "@/lib/geo";
+import { AI_DISCOVERY_LINKS } from "@/lib/ai-discovery-links";
+import { COMPONENT_CATALOG, GUIDE_CATALOG } from "@/lib/geo";
 
 export function GET() {
   const guideSection = GUIDE_CATALOG.map(

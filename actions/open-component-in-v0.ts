@@ -8,6 +8,14 @@ export async function openComponentInV0Action(
   pageContent?: string
 ) {
   try {
+    const v0ApiKey = process.env.V0_API_KEY;
+
+    if (!v0ApiKey) {
+      throw new Error(
+        "Missing V0_API_KEY. Configure it before using Open in v0."
+      );
+    }
+
     const template = await getComponentForV0(name, pageContent);
 
     if (!template) {
@@ -35,7 +43,7 @@ export async function openComponentInV0Action(
         template: payload,
       }),
       headers: {
-        "x-v0-edit-secret": process.env.V0_API_KEY ?? "",
+        "x-v0-edit-secret": v0ApiKey,
         "Content-Type": "application/json",
       },
     });

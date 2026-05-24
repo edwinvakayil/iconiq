@@ -1,3 +1,7 @@
+import "server-only";
+
+import fs from "node:fs";
+
 import {
   accordionApiDetails,
   alertApiDetails,
@@ -36,6 +40,7 @@ import {
 } from "@/components/docs/component-api";
 import type { DetailItem } from "@/components/docs/page-shell";
 import { SITE } from "@/constants";
+import { AI_DISCOVERY_LINKS as AI_DISCOVERY_LINKS_SOURCE } from "@/lib/ai-discovery-links";
 import { compactWhitespace, nodeToText } from "@/lib/node-to-text";
 import { BASE_LINKS, SITE_SECTIONS } from "@/lib/site-nav";
 
@@ -78,6 +83,43 @@ type GeoComponent = {
 };
 
 const TRAILING_PERIOD_PATTERN = /\.$/;
+const REGISTRY_JSON_SUFFIX_PATTERN = /\.json$/;
+const REGISTRY_DIRECTORY = `${process.cwd()}/public/r`;
+
+const DOCS_COMPONENT_NAME_BY_HREF: Record<string, string> = {
+  "/radix-base-ui/accordion": "b-accordion",
+  "/radix-base-ui/alert-dialog": "b-alert-dialog",
+  "/radix-base-ui/avatar": "b-avatar",
+  "/radix-base-ui/button": "b-button",
+  "/radix-base-ui/checkbox": "b-checkbox",
+  "/radix-base-ui/checkbox-group": "b-checkbox-group",
+  "/radix-base-ui/collapsible": "b-collapsible",
+  "/radix-base-ui/combobox": "b-combobox",
+  "/radix-base-ui/context-menu": "b-context-menu",
+  "/radix-base-ui/dialog": "b-dialog",
+  "/radix-base-ui/drawer": "b-drawer",
+  "/radix-base-ui/dropdown": "r-dropdown",
+  "/radix-base-ui/hover-card": "b-hover-card",
+  "/radix-base-ui/popover": "b-popover",
+  "/radix-base-ui/radio-group": "b-radio-group",
+  "/radix-base-ui/select": "b-select",
+  "/radix-base-ui/selection-toolbar": "b-selection-toolbar",
+  "/radix-base-ui/slider": "b-slider",
+  "/radix-base-ui/switch": "b-switch",
+  "/radix-base-ui/tabs": "b-tabs",
+  "/radix-base-ui/toggle": "b-toggle",
+  "/radix-base-ui/tooltip": "b-tooltip",
+};
+
+const DETAILS_KEY_BY_SLUG: Record<string, string> = {
+  "radio-group": "radiogroup",
+  "selection-toolbar": "selectiontoolbar",
+};
+
+type RegistryCatalogItem = {
+  dependencies?: string[];
+  description?: string;
+};
 
 const GUIDE_SUMMARIES: Record<string, string> = {
   "/": "Homepage with the full live component playground and the primary installation path for the registry.",
@@ -126,12 +168,6 @@ const COMPONENT_API_DETAILS: Record<string, DetailItem[]> = {
   tooltip: tooltipApiDetails,
 };
 
-const AI_DISCOVERY_LINKS = {
-  indexJson: `${SITE.URL}/ai-index.json`,
-  llmsFull: `${SITE.URL}/llms-full.txt`,
-  llmsOverview: `${SITE.URL}/llms.txt`,
-} as const;
-
 function serializeDetailItem(item: DetailItem): GeoApiSection {
   return {
     id: item.id,
@@ -169,35 +205,58 @@ function readRegistryDependencies(sections: GeoApiSection[]) {
     .filter(Boolean);
 }
 
+function readRegistryCatalogItem(componentName: string): RegistryCatalogItem {
+  const registryFilePath = `${REGISTRY_DIRECTORY}/${componentName}.json`;
+
+  try {
+    return JSON.parse(fs.readFileSync(registryFilePath, "utf8")) as {
+      dependencies?: string[];
+      description?: string;
+    };
+  } catch {
+    return {};
+  }
+}
+
 function buildComponentCatalog(): GeoComponent[] {
   return SITE_SECTIONS.flatMap((section) =>
     section.children.map((item) => {
-      const slug = item.href.split("/").pop() ?? item.href;
-      const sections = (COMPONENT_API_DETAILS[slug] ?? []).map(
+      const routeSlug = item.href.split("/").pop() ?? item.href;
+      const componentName = DOCS_COMPONENT_NAME_BY_HREF[item.href] ?? routeSlug;
+      const detailsKey = DETAILS_KEY_BY_SLUG[routeSlug] ?? routeSlug;
+      const sections = (COMPONENT_API_DETAILS[detailsKey] ?? []).map(
         serializeDetailItem
       );
       const documentedSections = sections.filter(
         (sectionEntry) => sectionEntry.id !== "registry"
       );
-      const registryPath =
-        sections.find((sectionEntry) => sectionEntry.registryPath)
-          ?.registryPath ?? `${slug}.json`;
+      const registryData = readRegistryCatalogItem(componentName);
+      const registryPath = `${componentName}.json`;
       const summary =
         documentedSections.find((sectionEntry) => sectionEntry.summary)
-          ?.summary ?? `${item.label} component documentation.`;
+          ?.summary ??
+        registryData.description ??
+        `${item.label} component documentation.`;
+      const installPackage = `@iconiq/${registryPath.replace(
+        REGISTRY_JSON_SUFFIX_PATTERN,
+        ""
+      )}`;
+      const dependencies =
+        registryData.dependencies?.filter(Boolean) ??
+        readRegistryDependencies(sections);
 
       return {
-        slug,
+        slug: componentName,
         name: item.label,
         href: item.href,
         url: `${SITE.URL}${item.href}`,
-        installPackage: `@iconiq/${slug}`,
-        installCommand: `npx shadcn@latest add @iconiq/${slug}`,
+        installPackage,
+        installCommand: `npx shadcn@latest add ${installPackage}`,
         registryPath,
         registryUrl: `${SITE.URL}/r/${registryPath}`,
         summary,
         apiSections: documentedSections,
-        dependencies: readRegistryDependencies(sections),
+        dependencies,
       };
     })
   );
@@ -211,10 +270,11 @@ const GUIDE_CATALOG: GeoGuide[] = BASE_LINKS.map((link) => ({
 }));
 
 const COMPONENT_CATALOG = buildComponentCatalog();
+const AI_DISCOVERY_LINKS = AI_DISCOVERY_LINKS_SOURCE;
 
 export {
-  AI_DISCOVERY_LINKS,
   COMPONENT_API_DETAILS,
+  AI_DISCOVERY_LINKS,
   COMPONENT_CATALOG,
   GUIDE_CATALOG,
   serializeDetailItem,

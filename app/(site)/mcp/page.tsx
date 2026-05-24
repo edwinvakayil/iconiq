@@ -53,7 +53,7 @@ const registryConfig = `{
   }
 }`;
 
-const promptExamples = `Add the @iconiq/button component to this page.
+const promptExamples = `Add the @iconiq/b-button component to this page.
 Install the @iconiq/accordion component and keep the generated files editable.
 Show me all available components in the iconiq registry.
 Create a feature section using Iconiq components and keep the generated files local.`;
@@ -93,7 +93,7 @@ ${registryConfig}
 
 ## Example prompts
 
-- Add the @iconiq/button component to this page.
+- Add the @iconiq/b-button component to this page.
 - Install the @iconiq/accordion component and keep the generated files editable.
 - Show me all available components in the iconiq registry.
 - Create a feature section using Iconiq components and keep the generated files local.`;
@@ -141,7 +141,7 @@ export default function McpPage() {
                         <Link
                           aria-label="Go to Components"
                           className={pagerButtonClassName}
-                          href="/components/accordion"
+                          href="/radix-base-ui/accordion"
                           title="Components"
                         >
                           <ChevronRight className="size-4" />
@@ -262,7 +262,7 @@ export default function McpPage() {
                       </li>
                       <li>
                         The <code>{"{name}"}</code> token lets shadcn resolve
-                        registry entries like <code>@iconiq/button</code> and{" "}
+                        registry entries like <code>@iconiq/b-button</code> and{" "}
                         <code>@iconiq/accordion</code>.
                       </li>
                       <li>
@@ -358,7 +358,7 @@ export default function McpPage() {
                   </Link>
                   <Link
                     className="group flex max-w-40 flex-col items-end gap-1 text-right text-muted-foreground text-sm transition-colors hover:text-foreground"
-                    href="/components/accordion"
+                    href="/radix-base-ui/accordion"
                   >
                     <span className="text-muted-foreground/75 transition-colors group-hover:text-muted-foreground">
                       Next

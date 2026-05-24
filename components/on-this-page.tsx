@@ -220,7 +220,7 @@ export function OnThisPage() {
         <h2 className="mb-3 font-sans font-semibold text-[11px] text-neutral-500 uppercase tracking-wider dark:text-neutral-400">
           On this page
         </h2>
-        {PAGE_SECTIONS[pathname]?.length && pathname.startsWith("/components/")
+        {PAGE_SECTIONS[pathname]?.length
           ? renderPageSectionNav(pathname, sectionLinkClass)
           : renderDefaultNav(toc, pathname, linkClass, sectionLinkClass)}
       </nav>
