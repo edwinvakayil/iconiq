@@ -29,7 +29,7 @@ function isProductionHostname(hostname: string): boolean {
 }
 
 /** True when custom events should be sent (production, or localhost in dev). */
-export function isPostHogCaptureEnabled(): boolean {
+function isPostHogCaptureEnabled(): boolean {
   if (typeof window === "undefined") {
     return false;
   }
@@ -41,11 +41,6 @@ export function isPostHogCaptureEnabled(): boolean {
   }
 
   return isProductionHostname(hostname);
-}
-
-/** @deprecated Use `isPostHogCaptureEnabled`. */
-export function isPostHogEnabled(): boolean {
-  return isPostHogCaptureEnabled();
 }
 
 let hasInitialized = false;
@@ -69,7 +64,7 @@ export function initPostHogIfNeeded(): boolean {
   return true;
 }
 
-export function getPostHogBaseContext(): Record<string, string> {
+function getPostHogBaseContext(): Record<string, string> {
   if (typeof window === "undefined") {
     return {};
   }

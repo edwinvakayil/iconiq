@@ -599,10 +599,4 @@ function HighlightItem({
   );
 }
 
-export {
-  Highlight,
-  HighlightItem,
-  useHighlight,
-  type HighlightProps,
-  type HighlightItemProps,
-};
+export { Highlight, HighlightItem };

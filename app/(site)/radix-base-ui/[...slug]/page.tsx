@@ -1,10 +1,10 @@
 import { redirect } from "next/navigation";
 
-export default function LegacyRadixBaseUiCatchAllPage({
+export default async function LegacyRadixBaseUiCatchAllPage({
   params,
 }: {
-  params: { slug: string[] };
+  params: Promise<{ slug: string[] }>;
 }) {
-  const { slug } = params;
+  const { slug } = await params;
   redirect(`/components/${slug.join("/")}`);
 }

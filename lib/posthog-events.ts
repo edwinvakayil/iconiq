@@ -7,7 +7,6 @@ export const POSTHOG_EVENTS = {
   DOCS_REGISTRY_JSON_VIEWED: "docs_registry_json_viewed",
   SEARCH_OPENED: "search_opened",
   SEARCH_RESULT_SELECTED: "search_result_selected",
-  SETTINGS_PACKAGE_MANAGER_CHANGED: "settings_package_manager_changed",
   SPONSOR_PAGE_VIEWED: "sponsor_page_viewed",
 } as const;
 

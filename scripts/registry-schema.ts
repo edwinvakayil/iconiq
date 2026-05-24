@@ -1,4 +1,4 @@
-export type RegistryType =
+type RegistryType =
   | "registry:block"
   | "registry:component"
   | "registry:lib"
@@ -10,18 +10,18 @@ export type RegistryType =
   | "registry:theme"
   | "registry:item";
 
-export interface RegistryFile {
+interface RegistryFile {
   path: string;
   content?: string;
   type: RegistryType;
   target?: string;
 }
 
-export interface TailwindConfig {
+interface TailwindConfig {
   config?: Record<string, object>;
 }
 
-export interface CssVars {
+interface CssVars {
   theme?: Record<string, string>;
   light?: Record<string, string>;
   dark?: Record<string, string>;

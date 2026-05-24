@@ -772,21 +772,6 @@ function MotionNavigationMenuViewport({
 const motionNavigationMenuLinkClassName =
   "flex min-h-11 w-full items-center rounded-xl px-4 py-2.5 text-left text-sm outline-none transition-colors hover:text-foreground focus:text-foreground focus-visible:outline-1 focus-visible:ring-[3px] focus-visible:ring-ring/50 data-[active=true]:text-foreground [&_svg:not([class*='size-'])]:size-4 [&_svg:not([class*='text-'])]:text-muted-foreground";
 
-function MotionNavigationMenuLink({
-  className,
-  ...props
-}: React.ComponentPropsWithRef<"a">) {
-  return (
-    <HighlightItem asChild>
-      <a
-        className={cn(motionNavigationMenuLinkClassName, className)}
-        data-slot="navigation-menu-link"
-        {...props}
-      />
-    </HighlightItem>
-  );
-}
-
 function MotionNavigationMenuNextLink({
   className,
   href,
@@ -821,35 +806,12 @@ function MotionNavigationMenuTopLink({
   );
 }
 
-function MotionNavigationMenuIndicator({
-  className,
-  ...props
-}: React.ComponentPropsWithRef<"div">) {
-  return (
-    <div
-      className={cn(
-        "pointer-events-none top-full z-1 flex h-1.5 items-end justify-center overflow-hidden",
-        className
-      )}
-      data-slot="navigation-menu-indicator"
-      {...props}
-    >
-      <div className="relative top-[60%] h-2 w-2 rotate-45 rounded-tl-sm bg-border shadow-md" />
-    </div>
-  );
-}
-
 export {
   MotionNavigationMenu,
   MotionNavigationMenuList,
   MotionNavigationMenuItem,
   MotionNavigationMenuContent,
   MotionNavigationMenuTrigger,
-  MotionNavigationMenuLink,
   MotionNavigationMenuNextLink,
   MotionNavigationMenuTopLink,
-  MotionNavigationMenuViewport,
-  MotionNavigationMenuIndicator,
-  motionNavigationMenuTriggerStyle,
-  motionNavigationMenuLinkClassName,
 };

@@ -13,7 +13,7 @@ type SkillFrontmatter = {
   description: string;
 };
 
-export type AgentSkillsIndex = {
+type AgentSkillsIndex = {
   skills: Array<{
     name: string;
     description: string;
@@ -44,9 +44,7 @@ function parseFoldedBlockScalar(lines: string[], startIndex: number) {
   };
 }
 
-export function parseSkillFrontmatter(
-  content: string
-): SkillFrontmatter | null {
+function parseSkillFrontmatter(content: string): SkillFrontmatter | null {
   const match = content.match(FRONTMATTER_REGEX);
   if (!match) {
     return null;

@@ -6,11 +6,6 @@ import { ComponentDemoCanvas } from "@/components/docs/component-demo-canvas";
 import { ComponentInstallationTabs } from "@/components/docs/component-installation-tabs";
 import { ComponentPageRail } from "@/components/docs/component-page-rail";
 import { PageCopyActions } from "@/components/docs/page-copy-actions";
-import {
-  PageReveal,
-  PageStagger,
-  PageStaggerItem,
-} from "@/components/page-reveal";
 import { Separator } from "@/components/ui/separator";
 import { getComponentV0Page } from "@/lib/component-v0-pages";
 import { nodeToText } from "@/lib/node-to-text";
@@ -24,11 +19,6 @@ type BreadcrumbItem = {
   label: string;
   href?: string;
   hideOnDesktop?: boolean;
-};
-
-type HeroMetaItem = {
-  label: string;
-  value: ReactNode;
 };
 
 type DetailField = {
@@ -457,44 +447,6 @@ function DocsBreadcrumbs({
   );
 }
 
-function DocsHero({
-  eyebrow,
-  title,
-  description,
-  actions,
-}: {
-  eyebrow: string;
-  title: string;
-  description: ReactNode;
-  meta?: HeroMetaItem[];
-  actions?: ReactNode;
-}) {
-  return (
-    <section className="space-y-6 pt-2">
-      <div className="flex flex-col gap-8 lg:flex-row lg:items-start lg:justify-between">
-        <div className="max-w-4xl space-y-4">
-          {eyebrow ? (
-            <p className="font-mono text-[11px] text-muted-foreground uppercase tracking-[0.32em]">
-              {eyebrow}
-            </p>
-          ) : null}
-          <h1 className="text-4xl text-foreground tracking-[-0.08em] sm:text-5xl lg:text-[3.6rem]">
-            {title}
-          </h1>
-          <p className="max-w-3xl text-[15px] text-secondary leading-7 sm:text-[17px] sm:leading-8">
-            {description}
-          </p>
-        </div>
-        {actions ? (
-          <div className="flex shrink-0 items-center gap-2 self-start lg:pt-10">
-            {actions}
-          </div>
-        ) : null}
-      </div>
-    </section>
-  );
-}
-
 function getSectionNavItems(sectionLabel: string) {
   return (
     SITE_SECTIONS.find(
@@ -609,91 +561,6 @@ function SectionPrevNextNav({
         <div />
       )}
     </nav>
-  );
-}
-
-function DocsSection({
-  title,
-  description,
-  className,
-  children,
-}: {
-  index?: string;
-  title: string;
-  description?: ReactNode;
-  className?: string;
-  children: ReactNode;
-}) {
-  return (
-    <PageReveal className={className} inView>
-      <section className="relative min-w-0 px-0 py-0">
-        <div className="space-y-5">
-          <Separator />
-          <div className="space-y-2">
-            <h2 className="text-foreground text-xl tracking-[-0.04em] sm:text-2xl">
-              {title}
-            </h2>
-            {description ? (
-              <p className="max-w-3xl text-[14px] text-secondary leading-6">
-                {description}
-              </p>
-            ) : null}
-          </div>
-          <div>{children}</div>
-        </div>
-      </section>
-    </PageReveal>
-  );
-}
-
-function DocsPageShell({
-  breadcrumbs,
-  eyebrow,
-  title,
-  description,
-  meta,
-  heroActions,
-  children,
-  className,
-}: {
-  breadcrumbs: BreadcrumbItem[];
-  eyebrow: string;
-  title: string;
-  description: ReactNode;
-  meta?: HeroMetaItem[];
-  heroActions?: ReactNode;
-  children: ReactNode;
-  className?: string;
-}) {
-  return (
-    <main className="min-w-0 flex-1">
-      <BreadcrumbJsonLdClient items={breadcrumbs} />
-      <PageStagger
-        className={cn(
-          "mx-auto w-full min-w-0 max-w-[1480px] px-4 py-10 sm:px-6 sm:py-12 lg:px-10",
-          className
-        )}
-        delayChildren={0.04}
-      >
-        <PageStaggerItem>
-          <DocsBreadcrumbs items={breadcrumbs} />
-        </PageStaggerItem>
-        <PageStaggerItem>
-          <DocsHero
-            actions={heroActions}
-            description={description}
-            eyebrow={eyebrow}
-            meta={meta}
-            title={title}
-          />
-        </PageStaggerItem>
-        <PageStaggerItem>
-          <div className="mt-10 grid min-w-0 gap-5 lg:grid-cols-12">
-            {children}
-          </div>
-        </PageStaggerItem>
-      </PageStagger>
-    </main>
   );
 }
 
@@ -1107,12 +974,9 @@ function ComponentDocsPage({
 
 export {
   DocsBreadcrumbs,
-  DocsHero,
-  DocsPageShell,
-  DocsSection,
   ComponentDocsPage,
   DetailLedger,
   SectionPager,
   SectionPrevNextNav,
 };
-export type { BreadcrumbItem, DetailField, DetailItem, HeroMetaItem };
+export type { BreadcrumbItem, DetailField, DetailItem };

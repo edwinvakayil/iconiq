@@ -1,7 +1,7 @@
 <wizard-report>
 # PostHog post-wizard report
 
-The wizard has completed a deep integration of PostHog analytics into the Iconiq documentation site. PostHog is initialized via `instrumentation-client.ts` (the recommended Next.js 15.3+ approach) with a reverse proxy through `/ingest` to improve ad-blocker resilience. A `skipTrailingSlashRedirect` flag and three rewrite rules were added to `next.config.ts`. Environment variables are stored in `.env.local`. Ten distinct events are now captured across seven files, covering the most valuable user interactions: copying docs/components, opening components in v0, searching, installing components, switching package managers, and visiting the sponsorship page.
+The wizard has completed a deep integration of PostHog analytics into the Iconiq documentation site. PostHog is initialized via `instrumentation-client.ts` (the recommended Next.js 15.3+ approach) with a reverse proxy through `/ingest` to improve ad-blocker resilience. A `skipTrailingSlashRedirect` flag and three rewrite rules were added to `next.config.ts`. Environment variables are stored in `.env.local`. Eight distinct events are now captured across six files, covering the most valuable user interactions: copying docs/components, opening components in v0, searching, installing components, and visiting the sponsorship page.
 
 | Event | Description | File |
 |-------|-------------|------|
@@ -11,7 +11,6 @@ The wizard has completed a deep integration of PostHog analytics into the Iconiq
 | `search_opened` | User opens the search/command menu | `components/command-menu.tsx` |
 | `search_item_selected` | User selects a result from the search menu | `components/command-menu.tsx` |
 | `install_command_copied` | User copies an install command (includes `package_manager` property) | `components/install-command-terminal.tsx` |
-| `package_manager_changed` | User switches their active package manager | `components/package-manager-switcher.tsx` |
 | `sponsorship_page_viewed` | User views the sponsorship page | `app/(site)/sponsorship/page.tsx` |
 | `ask_chatgpt_clicked` | User clicks "Ask ChatGPT" from the docs copy actions menu | `components/docs/docs-copy-actions.tsx`, `components/docs/page-copy-actions.tsx` |
 | `view_registry_json_clicked` | User clicks "View registry JSON" from the component page menu | `components/docs/page-copy-actions.tsx` |

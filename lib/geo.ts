@@ -40,7 +40,6 @@ import {
 } from "@/components/docs/component-api";
 import type { DetailItem } from "@/components/docs/page-shell";
 import { SITE } from "@/constants";
-import { AI_DISCOVERY_LINKS as AI_DISCOVERY_LINKS_SOURCE } from "@/lib/ai-discovery-links";
 import { compactWhitespace, nodeToText } from "@/lib/node-to-text";
 import { BASE_LINKS, SITE_SECTIONS } from "@/lib/site-nav";
 
@@ -270,13 +269,5 @@ const GUIDE_CATALOG: GeoGuide[] = BASE_LINKS.map((link) => ({
 }));
 
 const COMPONENT_CATALOG = buildComponentCatalog();
-const AI_DISCOVERY_LINKS = AI_DISCOVERY_LINKS_SOURCE;
 
-export {
-  COMPONENT_API_DETAILS,
-  AI_DISCOVERY_LINKS,
-  COMPONENT_CATALOG,
-  GUIDE_CATALOG,
-  serializeDetailItem,
-};
-export type { GeoApiField, GeoApiSection, GeoComponent, GeoGuide };
+export { COMPONENT_CATALOG, GUIDE_CATALOG };

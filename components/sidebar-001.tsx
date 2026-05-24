@@ -1,6 +1,5 @@
 "use client";
 
-import { ChevronRight } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import Link from "next/link";
 import type * as React from "react";
@@ -10,15 +9,12 @@ import {
   useCallback,
   useContext,
   useEffect,
-  useId,
   useMemo,
   useRef,
   useState,
 } from "react";
 
 import { cn } from "@/lib/utils";
-
-const MotionChevron = motion.create(ChevronRight);
 
 const EFFECTS_KEY = "sidebar-001-effects";
 const SIDEBAR_BOTTOM_FADE_MASK =
@@ -66,10 +62,6 @@ function EffectsProvider({
   return (
     <EffectsContext.Provider value={value}>{children}</EffectsContext.Provider>
   );
-}
-
-export function useSidebar001Effects() {
-  return useContext(EffectsContext);
 }
 
 interface HoverRect {
@@ -185,7 +177,7 @@ function HoverHighlight() {
   );
 }
 
-export interface Sidebar001ItemProps {
+interface Sidebar001ItemProps {
   href: string;
   label: React.ReactNode;
   isActive: boolean;
@@ -278,7 +270,7 @@ export const Sidebar001Item = memo(function Sidebar001Item({
   );
 });
 
-export function Sidebar001Separator({
+function Sidebar001Separator({
   children,
   className,
 }: {
@@ -293,108 +285,6 @@ export function Sidebar001Separator({
       )}
     >
       {children}
-    </div>
-  );
-}
-
-export interface Sidebar001GroupProps {
-  label: React.ReactNode;
-  children: React.ReactNode;
-  defaultOpen?: boolean;
-  icon?: React.ReactNode;
-  className?: string;
-}
-
-export function Sidebar001Group({
-  label,
-  children,
-  defaultOpen = false,
-  icon,
-  className,
-}: Sidebar001GroupProps) {
-  const [isOpen, setIsOpen] = useState(defaultOpen);
-  const id = useId();
-  const { setHovered, containerRef } = useContext(HoverContext);
-  const buttonRef = useRef<HTMLButtonElement>(null);
-
-  const handleMouseEnter = useCallback(() => {
-    const el = buttonRef.current;
-    const container = containerRef.current;
-
-    if (el && container) {
-      const elRect = el.getBoundingClientRect();
-      const containerRect = container.getBoundingClientRect();
-
-      setHovered(id, {
-        top: elRect.top - containerRect.top,
-        height: elRect.height,
-        left: 0,
-      });
-    } else {
-      setHovered(id);
-    }
-  }, [containerRef, id, setHovered]);
-
-  const handleMouseLeave = useCallback(() => {
-    setHovered(null);
-  }, [setHovered]);
-
-  return (
-    <div className={cn("flex flex-col", className)}>
-      <button
-        aria-expanded={isOpen}
-        className="group relative z-1 flex w-full select-none items-center gap-1.5 py-1.5 pr-2 text-left"
-        onClick={() => setIsOpen((v) => !v)}
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
-        ref={buttonRef}
-        type="button"
-      >
-        {icon ? (
-          <>
-            <span className="shrink-0 text-foreground/35 [&_svg]:size-3.5">
-              {icon}
-            </span>
-            <span className="flex-1 text-foreground/45 text-sm transition-colors duration-150 group-hover:text-foreground/70">
-              {label}
-            </span>
-            <MotionChevron
-              animate={{ rotate: isOpen ? 90 : 0 }}
-              className="mr-1 shrink-0 text-foreground/25"
-              size={14}
-              strokeWidth={2.5}
-              transition={{ type: "spring", stiffness: 500, damping: 30 }}
-            />
-          </>
-        ) : (
-          <>
-            <MotionChevron
-              animate={{ rotate: isOpen ? 90 : 0 }}
-              className="shrink-0 text-foreground/35"
-              size={11}
-              strokeWidth={2.5}
-              transition={{ type: "spring", stiffness: 500, damping: 30 }}
-            />
-            <span className="text-foreground/45 text-sm transition-colors duration-150 group-hover:text-foreground/70">
-              {label}
-            </span>
-          </>
-        )}
-      </button>
-
-      <AnimatePresence initial={false}>
-        {isOpen ? (
-          <motion.div
-            animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            initial={{ height: 0, opacity: 0 }}
-            style={{ overflow: "hidden" }}
-            transition={{ type: "spring", stiffness: 420, damping: 34 }}
-          >
-            <div className="flex flex-col pl-3">{children}</div>
-          </motion.div>
-        ) : null}
-      </AnimatePresence>
     </div>
   );
 }
@@ -448,7 +338,7 @@ export function Sidebar001Content({
   );
 }
 
-export interface Sidebar001Props {
+interface Sidebar001Props {
   children: React.ReactNode;
   className?: string;
   defaultEffectsEnabled?: boolean;
@@ -524,36 +414,5 @@ export function Sidebar001({
         </aside>
       </HoverProvider>
     </EffectsProvider>
-  );
-}
-
-export function Sidebar001Header({
-  children,
-  className,
-}: {
-  children?: React.ReactNode;
-  className?: string;
-}) {
-  return (
-    <div className={cn("shrink-0 px-3 pt-4 pb-2", className)}>{children}</div>
-  );
-}
-
-export function Sidebar001Footer({
-  children,
-  className,
-}: {
-  children?: React.ReactNode;
-  className?: string;
-}) {
-  return (
-    <div
-      className={cn(
-        "shrink-0 border-border/50 border-t px-3 pt-2 pb-4",
-        className
-      )}
-    >
-      {children}
-    </div>
   );
 }

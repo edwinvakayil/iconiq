@@ -508,9 +508,3 @@ export function getComponentV0Page(
 
   return buildV0Page(source);
 }
-
-/** @deprecated Use buildV0Page */
-export const usageToV0Page = buildV0Page;
-
-/** @deprecated Use skeletonPreviewCode */
-export const skeletonV0Page = buildV0Page(skeletonPreviewCode);

@@ -35,5 +35,4 @@ export {
   openGraphImageMetadata,
   openGraphImagePath,
   twitterImageMetadata,
-  twitterImagePath,
 };

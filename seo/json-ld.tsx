@@ -107,55 +107,6 @@ const OrganizationJsonLd = () => {
   );
 };
 
-const BreadcrumbJsonLd = ({
-  items,
-}: {
-  items: { name: string; url: string }[];
-}) => {
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    itemListElement: items.map((item, index) => ({
-      "@type": "ListItem",
-      position: index + 1,
-      name: item.name,
-      item: item.url,
-    })),
-  };
-
-  return (
-    <script
-      // biome-ignore lint/security/noDangerouslySetInnerHtml: JSON-LD script payload
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      type="application/ld+json"
-    />
-  );
-};
-
-const ComponentItemListJsonLd = () => {
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "ItemList",
-    name: `${SITE.NAME} components`,
-    itemListOrder: "https://schema.org/ItemListOrderAscending",
-    numberOfItems: COMPONENT_ITEMS.length,
-    itemListElement: COMPONENT_ITEMS.map((item, index) => ({
-      "@type": "ListItem",
-      position: index + 1,
-      name: item.label,
-      url: `${SITE.URL}${item.href}`,
-    })),
-  };
-
-  return (
-    <script
-      // biome-ignore lint/security/noDangerouslySetInnerHtml: JSON-LD script payload
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      type="application/ld+json"
-    />
-  );
-};
-
 const FAQJsonLd = () => {
   const faqs = [
     {
@@ -330,14 +281,4 @@ const JsonLdScripts = () => {
   );
 };
 
-export {
-  AiCatalogJsonLd,
-  BreadcrumbJsonLd,
-  ComponentDocJsonLd,
-  ComponentItemListJsonLd,
-  FAQJsonLd,
-  JsonLdScripts,
-  OrganizationJsonLd,
-  SoftwareSourceCodeJsonLd,
-  WebsiteJsonLd,
-};
+export { ComponentDocJsonLd, JsonLdScripts };

@@ -1,6 +1,6 @@
 import { BASE_LINKS, SITE_SECTIONS } from "@/lib/site-nav";
 
-export type SearchItem = {
+type SearchItem = {
   href: string;
   keywords: string[];
   label: string;

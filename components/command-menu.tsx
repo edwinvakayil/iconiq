@@ -17,7 +17,7 @@ import { cn } from "@/lib/utils";
 
 const QUERY_SPLIT_REGEX = /\s+/;
 
-export type CommandMenuItemDef = {
+type CommandMenuItemDef = {
   label: string;
   icon?: React.ComponentType<{ className?: string }>;
   href?: string;
@@ -31,14 +31,14 @@ export type CommandMenuGroupDef = {
   items: CommandMenuItemDef[];
 };
 
-export interface CommandMenuTriggerProps
+interface CommandMenuTriggerProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   label?: string;
   shortcut?: string;
   showShortcut?: boolean;
 }
 
-export interface CommandMenuProps {
+interface CommandMenuProps {
   groups?: CommandMenuGroupDef[];
   showThemeGroup?: boolean;
   placeholder?: string;
@@ -553,4 +553,4 @@ function CommandMenu({
   );
 }
 
-export { CommandMenu, CommandMenuTrigger };
+export { CommandMenu };
