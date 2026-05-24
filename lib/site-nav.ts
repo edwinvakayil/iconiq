@@ -34,6 +34,7 @@ export const SITE_SECTIONS = [
       },
       { label: "Slider", href: "/radix-base-ui/slider" },
       { label: "Switch", href: "/radix-base-ui/switch" },
+      { label: "Tabs", href: "/radix-base-ui/tabs" },
       { label: "Toggle", href: "/radix-base-ui/toggle" },
       { label: "Tooltip", href: "/radix-base-ui/tooltip" },
     ],

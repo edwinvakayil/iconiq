@@ -193,6 +193,12 @@ const REGISTRY_UI_META: Record<
       "Switch with the same Iconiq API layered over Base UI primitives, preserving the original spring thumb travel, pressure-like squash, and foreground fill sweep.",
     dependencies: ["@base-ui/react", "motion"],
   },
+  "b-tabs": {
+    title: "Tabs (Base UI)",
+    description:
+      "Tabs with the same Iconiq API layered over Base UI primitives, preserving the measured underline, keyboard flow, and motion-smoothed panel shell from the core tabs component.",
+    dependencies: ["@base-ui/react", "motion"],
+  },
   "b-tooltip": {
     title: "Tooltip (Base UI)",
     description:
@@ -358,6 +364,12 @@ const REGISTRY_UI_META: Record<
     description:
       "Switch with the same Iconiq API layered over Radix UI primitives, preserving the original spring thumb travel, pressure-like squash, and foreground fill sweep.",
     dependencies: ["@radix-ui/react-switch", "motion"],
+  },
+  "r-tabs": {
+    title: "Tabs (Radix UI)",
+    description:
+      "Tabs with the same Iconiq API layered over Radix UI primitives, preserving the measured underline, keyboard flow, and motion-smoothed panel shell from the core tabs component.",
+    dependencies: ["@radix-ui/react-tabs", "motion"],
   },
   "r-tooltip": {
     title: "Tooltip (Radix UI)",
