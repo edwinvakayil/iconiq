@@ -15,16 +15,6 @@
         {
           "path": "accordion.tsx",
           "type": "registry:ui"
-        },
-        {
-          "path": "reduced-motion.tsx",
-          "target": "lib/reduced-motion.tsx",
-          "type": "registry:lib"
-        },
-        {
-          "path": "registry-theme.ts",
-          "target": "lib/registry-theme.ts",
-          "type": "registry:lib"
         }
       ]
     },
@@ -40,11 +30,6 @@
         {
           "path": "alert.tsx",
           "type": "registry:ui"
-        },
-        {
-          "path": "registry-theme.ts",
-          "target": "lib/registry-theme.ts",
-          "type": "registry:lib"
         }
       ]
     },
@@ -60,11 +45,6 @@
         {
           "path": "avatar.tsx",
           "type": "registry:ui"
-        },
-        {
-          "path": "registry-theme.ts",
-          "target": "lib/registry-theme.ts",
-          "type": "registry:lib"
         }
       ]
     },
@@ -80,16 +60,6 @@
         {
           "path": "b-accordion.tsx",
           "type": "registry:ui"
-        },
-        {
-          "path": "reduced-motion.tsx",
-          "target": "lib/reduced-motion.tsx",
-          "type": "registry:lib"
-        },
-        {
-          "path": "registry-theme.ts",
-          "target": "lib/registry-theme.ts",
-          "type": "registry:lib"
         }
       ]
     },
@@ -105,16 +75,6 @@
         {
           "path": "b-alert-dialog.tsx",
           "type": "registry:ui"
-        },
-        {
-          "path": "reduced-motion.tsx",
-          "target": "lib/reduced-motion.tsx",
-          "type": "registry:lib"
-        },
-        {
-          "path": "registry-theme.ts",
-          "target": "lib/registry-theme.ts",
-          "type": "registry:lib"
         }
       ]
     },
@@ -130,16 +90,6 @@
         {
           "path": "b-avatar.tsx",
           "type": "registry:ui"
-        },
-        {
-          "path": "reduced-motion.tsx",
-          "target": "lib/reduced-motion.tsx",
-          "type": "registry:lib"
-        },
-        {
-          "path": "registry-theme.ts",
-          "target": "lib/registry-theme.ts",
-          "type": "registry:lib"
         }
       ]
     },
@@ -155,16 +105,6 @@
         {
           "path": "b-button.tsx",
           "type": "registry:ui"
-        },
-        {
-          "path": "reduced-motion.tsx",
-          "target": "lib/reduced-motion.tsx",
-          "type": "registry:lib"
-        },
-        {
-          "path": "registry-theme.ts",
-          "target": "lib/registry-theme.ts",
-          "type": "registry:lib"
         }
       ]
     },
@@ -180,16 +120,6 @@
         {
           "path": "b-checkbox-group.tsx",
           "type": "registry:ui"
-        },
-        {
-          "path": "reduced-motion.tsx",
-          "target": "lib/reduced-motion.tsx",
-          "type": "registry:lib"
-        },
-        {
-          "path": "registry-theme.ts",
-          "target": "lib/registry-theme.ts",
-          "type": "registry:lib"
         }
       ]
     },
@@ -205,16 +135,6 @@
         {
           "path": "b-checkbox.tsx",
           "type": "registry:ui"
-        },
-        {
-          "path": "reduced-motion.tsx",
-          "target": "lib/reduced-motion.tsx",
-          "type": "registry:lib"
-        },
-        {
-          "path": "registry-theme.ts",
-          "target": "lib/registry-theme.ts",
-          "type": "registry:lib"
         }
       ]
     },
@@ -230,16 +150,6 @@
         {
           "path": "b-collapsible.tsx",
           "type": "registry:ui"
-        },
-        {
-          "path": "reduced-motion.tsx",
-          "target": "lib/reduced-motion.tsx",
-          "type": "registry:lib"
-        },
-        {
-          "path": "registry-theme.ts",
-          "target": "lib/registry-theme.ts",
-          "type": "registry:lib"
         }
       ]
     },
@@ -255,16 +165,6 @@
         {
           "path": "b-combobox.tsx",
           "type": "registry:ui"
-        },
-        {
-          "path": "reduced-motion.tsx",
-          "target": "lib/reduced-motion.tsx",
-          "type": "registry:lib"
-        },
-        {
-          "path": "registry-theme.ts",
-          "target": "lib/registry-theme.ts",
-          "type": "registry:lib"
         }
       ]
     },
@@ -280,16 +180,6 @@
         {
           "path": "b-context-menu.tsx",
           "type": "registry:ui"
-        },
-        {
-          "path": "reduced-motion.tsx",
-          "target": "lib/reduced-motion.tsx",
-          "type": "registry:lib"
-        },
-        {
-          "path": "registry-theme.ts",
-          "target": "lib/registry-theme.ts",
-          "type": "registry:lib"
         }
       ]
     },
@@ -310,16 +200,6 @@
         {
           "path": "b-dialog.tsx",
           "type": "registry:ui"
-        },
-        {
-          "path": "reduced-motion.tsx",
-          "target": "lib/reduced-motion.tsx",
-          "type": "registry:lib"
-        },
-        {
-          "path": "registry-theme.ts",
-          "target": "lib/registry-theme.ts",
-          "type": "registry:lib"
         }
       ]
     },
@@ -335,16 +215,6 @@
         {
           "path": "b-drawer.tsx",
           "type": "registry:ui"
-        },
-        {
-          "path": "reduced-motion.tsx",
-          "target": "lib/reduced-motion.tsx",
-          "type": "registry:lib"
-        },
-        {
-          "path": "registry-theme.ts",
-          "target": "lib/registry-theme.ts",
-          "type": "registry:lib"
         }
       ]
     },
@@ -360,16 +230,6 @@
         {
           "path": "b-hover-card.tsx",
           "type": "registry:ui"
-        },
-        {
-          "path": "reduced-motion.tsx",
-          "target": "lib/reduced-motion.tsx",
-          "type": "registry:lib"
-        },
-        {
-          "path": "registry-theme.ts",
-          "target": "lib/registry-theme.ts",
-          "type": "registry:lib"
         }
       ]
     },
@@ -385,16 +245,6 @@
         {
           "path": "b-popover.tsx",
           "type": "registry:ui"
-        },
-        {
-          "path": "reduced-motion.tsx",
-          "target": "lib/reduced-motion.tsx",
-          "type": "registry:lib"
-        },
-        {
-          "path": "registry-theme.ts",
-          "target": "lib/registry-theme.ts",
-          "type": "registry:lib"
         }
       ]
     },
@@ -410,16 +260,6 @@
         {
           "path": "b-radio-group.tsx",
           "type": "registry:ui"
-        },
-        {
-          "path": "reduced-motion.tsx",
-          "target": "lib/reduced-motion.tsx",
-          "type": "registry:lib"
-        },
-        {
-          "path": "registry-theme.ts",
-          "target": "lib/registry-theme.ts",
-          "type": "registry:lib"
         }
       ]
     },
@@ -435,16 +275,6 @@
         {
           "path": "b-select.tsx",
           "type": "registry:ui"
-        },
-        {
-          "path": "reduced-motion.tsx",
-          "target": "lib/reduced-motion.tsx",
-          "type": "registry:lib"
-        },
-        {
-          "path": "registry-theme.ts",
-          "target": "lib/registry-theme.ts",
-          "type": "registry:lib"
         }
       ]
     },
@@ -460,11 +290,6 @@
         {
           "path": "b-selection-toolbar.tsx",
           "type": "registry:ui"
-        },
-        {
-          "path": "reduced-motion.tsx",
-          "target": "lib/reduced-motion.tsx",
-          "type": "registry:lib"
         }
       ]
     },
@@ -480,16 +305,6 @@
         {
           "path": "b-slider.tsx",
           "type": "registry:ui"
-        },
-        {
-          "path": "reduced-motion.tsx",
-          "target": "lib/reduced-motion.tsx",
-          "type": "registry:lib"
-        },
-        {
-          "path": "registry-theme.ts",
-          "target": "lib/registry-theme.ts",
-          "type": "registry:lib"
         }
       ]
     },
@@ -505,16 +320,6 @@
         {
           "path": "b-switch.tsx",
           "type": "registry:ui"
-        },
-        {
-          "path": "reduced-motion.tsx",
-          "target": "lib/reduced-motion.tsx",
-          "type": "registry:lib"
-        },
-        {
-          "path": "registry-theme.ts",
-          "target": "lib/registry-theme.ts",
-          "type": "registry:lib"
         }
       ]
     },
@@ -530,16 +335,6 @@
         {
           "path": "b-tabs.tsx",
           "type": "registry:ui"
-        },
-        {
-          "path": "reduced-motion.tsx",
-          "target": "lib/reduced-motion.tsx",
-          "type": "registry:lib"
-        },
-        {
-          "path": "registry-theme.ts",
-          "target": "lib/registry-theme.ts",
-          "type": "registry:lib"
         }
       ]
     },
@@ -555,16 +350,6 @@
         {
           "path": "b-toggle.tsx",
           "type": "registry:ui"
-        },
-        {
-          "path": "reduced-motion.tsx",
-          "target": "lib/reduced-motion.tsx",
-          "type": "registry:lib"
-        },
-        {
-          "path": "registry-theme.ts",
-          "target": "lib/registry-theme.ts",
-          "type": "registry:lib"
         }
       ]
     },
@@ -580,16 +365,6 @@
         {
           "path": "b-tooltip.tsx",
           "type": "registry:ui"
-        },
-        {
-          "path": "reduced-motion.tsx",
-          "target": "lib/reduced-motion.tsx",
-          "type": "registry:lib"
-        },
-        {
-          "path": "registry-theme.ts",
-          "target": "lib/registry-theme.ts",
-          "type": "registry:lib"
         }
       ]
     },
@@ -605,16 +380,6 @@
         {
           "path": "badge.tsx",
           "type": "registry:ui"
-        },
-        {
-          "path": "reduced-motion.tsx",
-          "target": "lib/reduced-motion.tsx",
-          "type": "registry:lib"
-        },
-        {
-          "path": "registry-theme.ts",
-          "target": "lib/registry-theme.ts",
-          "type": "registry:lib"
         }
       ]
     },
@@ -630,11 +395,6 @@
         {
           "path": "breadcrumbs.tsx",
           "type": "registry:ui"
-        },
-        {
-          "path": "registry-theme.ts",
-          "target": "lib/registry-theme.ts",
-          "type": "registry:lib"
         }
       ]
     },
@@ -650,16 +410,6 @@
         {
           "path": "button-group.tsx",
           "type": "registry:ui"
-        },
-        {
-          "path": "reduced-motion.tsx",
-          "target": "lib/reduced-motion.tsx",
-          "type": "registry:lib"
-        },
-        {
-          "path": "registry-theme.ts",
-          "target": "lib/registry-theme.ts",
-          "type": "registry:lib"
         }
       ]
     },
@@ -675,16 +425,6 @@
         {
           "path": "button.tsx",
           "type": "registry:ui"
-        },
-        {
-          "path": "reduced-motion.tsx",
-          "target": "lib/reduced-motion.tsx",
-          "type": "registry:lib"
-        },
-        {
-          "path": "registry-theme.ts",
-          "target": "lib/registry-theme.ts",
-          "type": "registry:lib"
         }
       ]
     },
@@ -715,11 +455,6 @@
         {
           "path": "checkbox-group.tsx",
           "type": "registry:ui"
-        },
-        {
-          "path": "registry-theme.ts",
-          "target": "lib/registry-theme.ts",
-          "type": "registry:lib"
         }
       ]
     },
@@ -735,11 +470,6 @@
         {
           "path": "checkbox.tsx",
           "type": "registry:ui"
-        },
-        {
-          "path": "registry-theme.ts",
-          "target": "lib/registry-theme.ts",
-          "type": "registry:lib"
         }
       ]
     },
@@ -755,16 +485,6 @@
         {
           "path": "combobox.tsx",
           "type": "registry:ui"
-        },
-        {
-          "path": "reduced-motion.tsx",
-          "target": "lib/reduced-motion.tsx",
-          "type": "registry:lib"
-        },
-        {
-          "path": "registry-theme.ts",
-          "target": "lib/registry-theme.ts",
-          "type": "registry:lib"
         }
       ]
     },
@@ -780,16 +500,6 @@
         {
           "path": "context-menu.tsx",
           "type": "registry:ui"
-        },
-        {
-          "path": "reduced-motion.tsx",
-          "target": "lib/reduced-motion.tsx",
-          "type": "registry:lib"
-        },
-        {
-          "path": "registry-theme.ts",
-          "target": "lib/registry-theme.ts",
-          "type": "registry:lib"
         }
       ]
     },
@@ -805,11 +515,6 @@
         {
           "path": "dia-text.tsx",
           "type": "registry:ui"
-        },
-        {
-          "path": "registry-theme.ts",
-          "target": "lib/registry-theme.ts",
-          "type": "registry:lib"
         }
       ]
     },
@@ -825,16 +530,6 @@
         {
           "path": "dialog.tsx",
           "type": "registry:ui"
-        },
-        {
-          "path": "reduced-motion.tsx",
-          "target": "lib/reduced-motion.tsx",
-          "type": "registry:lib"
-        },
-        {
-          "path": "registry-theme.ts",
-          "target": "lib/registry-theme.ts",
-          "type": "registry:lib"
         }
       ]
     },
@@ -850,16 +545,6 @@
         {
           "path": "drawer.tsx",
           "type": "registry:ui"
-        },
-        {
-          "path": "reduced-motion.tsx",
-          "target": "lib/reduced-motion.tsx",
-          "type": "registry:lib"
-        },
-        {
-          "path": "registry-theme.ts",
-          "target": "lib/registry-theme.ts",
-          "type": "registry:lib"
         }
       ]
     },
@@ -875,16 +560,6 @@
         {
           "path": "dropdown.tsx",
           "type": "registry:ui"
-        },
-        {
-          "path": "reduced-motion.tsx",
-          "target": "lib/reduced-motion.tsx",
-          "type": "registry:lib"
-        },
-        {
-          "path": "registry-theme.ts",
-          "target": "lib/registry-theme.ts",
-          "type": "registry:lib"
         }
       ]
     },
@@ -900,11 +575,6 @@
         {
           "path": "faq-pro.tsx",
           "type": "registry:ui"
-        },
-        {
-          "path": "registry-theme.ts",
-          "target": "lib/registry-theme.ts",
-          "type": "registry:lib"
         }
       ]
     },
@@ -920,11 +590,6 @@
         {
           "path": "file-upload.tsx",
           "type": "registry:ui"
-        },
-        {
-          "path": "registry-theme.ts",
-          "target": "lib/registry-theme.ts",
-          "type": "registry:lib"
         }
       ]
     },
@@ -944,16 +609,6 @@
         {
           "path": "hover-card.tsx",
           "type": "registry:ui"
-        },
-        {
-          "path": "reduced-motion.tsx",
-          "target": "lib/reduced-motion.tsx",
-          "type": "registry:lib"
-        },
-        {
-          "path": "registry-theme.ts",
-          "target": "lib/registry-theme.ts",
-          "type": "registry:lib"
         }
       ]
     },
@@ -969,11 +624,6 @@
         {
           "path": "icon-bar.tsx",
           "type": "registry:ui"
-        },
-        {
-          "path": "registry-theme.ts",
-          "target": "lib/registry-theme.ts",
-          "type": "registry:lib"
         }
       ]
     },
@@ -989,16 +639,6 @@
         {
           "path": "input-group.tsx",
           "type": "registry:ui"
-        },
-        {
-          "path": "reduced-motion.tsx",
-          "target": "lib/reduced-motion.tsx",
-          "type": "registry:lib"
-        },
-        {
-          "path": "registry-theme.ts",
-          "target": "lib/registry-theme.ts",
-          "type": "registry:lib"
         }
       ]
     },
@@ -1014,11 +654,6 @@
         {
           "path": "origin-button.tsx",
           "type": "registry:ui"
-        },
-        {
-          "path": "registry-theme.ts",
-          "target": "lib/registry-theme.ts",
-          "type": "registry:lib"
         }
       ]
     },
@@ -1034,16 +669,6 @@
         {
           "path": "popover.tsx",
           "type": "registry:ui"
-        },
-        {
-          "path": "reduced-motion.tsx",
-          "target": "lib/reduced-motion.tsx",
-          "type": "registry:lib"
-        },
-        {
-          "path": "registry-theme.ts",
-          "target": "lib/registry-theme.ts",
-          "type": "registry:lib"
         }
       ]
     },
@@ -1059,16 +684,6 @@
         {
           "path": "r-accordion.tsx",
           "type": "registry:ui"
-        },
-        {
-          "path": "reduced-motion.tsx",
-          "target": "lib/reduced-motion.tsx",
-          "type": "registry:lib"
-        },
-        {
-          "path": "registry-theme.ts",
-          "target": "lib/registry-theme.ts",
-          "type": "registry:lib"
         }
       ]
     },
@@ -1084,16 +699,6 @@
         {
           "path": "r-alert-dialog.tsx",
           "type": "registry:ui"
-        },
-        {
-          "path": "reduced-motion.tsx",
-          "target": "lib/reduced-motion.tsx",
-          "type": "registry:lib"
-        },
-        {
-          "path": "registry-theme.ts",
-          "target": "lib/registry-theme.ts",
-          "type": "registry:lib"
         }
       ]
     },
@@ -1109,16 +714,6 @@
         {
           "path": "r-avatar.tsx",
           "type": "registry:ui"
-        },
-        {
-          "path": "reduced-motion.tsx",
-          "target": "lib/reduced-motion.tsx",
-          "type": "registry:lib"
-        },
-        {
-          "path": "registry-theme.ts",
-          "target": "lib/registry-theme.ts",
-          "type": "registry:lib"
         }
       ]
     },
@@ -1134,16 +729,6 @@
         {
           "path": "r-checkbox.tsx",
           "type": "registry:ui"
-        },
-        {
-          "path": "reduced-motion.tsx",
-          "target": "lib/reduced-motion.tsx",
-          "type": "registry:lib"
-        },
-        {
-          "path": "registry-theme.ts",
-          "target": "lib/registry-theme.ts",
-          "type": "registry:lib"
         }
       ]
     },
@@ -1159,16 +744,6 @@
         {
           "path": "r-collapsible.tsx",
           "type": "registry:ui"
-        },
-        {
-          "path": "reduced-motion.tsx",
-          "target": "lib/reduced-motion.tsx",
-          "type": "registry:lib"
-        },
-        {
-          "path": "registry-theme.ts",
-          "target": "lib/registry-theme.ts",
-          "type": "registry:lib"
         }
       ]
     },
@@ -1184,16 +759,6 @@
         {
           "path": "r-context-menu.tsx",
           "type": "registry:ui"
-        },
-        {
-          "path": "reduced-motion.tsx",
-          "target": "lib/reduced-motion.tsx",
-          "type": "registry:lib"
-        },
-        {
-          "path": "registry-theme.ts",
-          "target": "lib/registry-theme.ts",
-          "type": "registry:lib"
         }
       ]
     },
@@ -1209,16 +774,6 @@
         {
           "path": "r-dialog.tsx",
           "type": "registry:ui"
-        },
-        {
-          "path": "reduced-motion.tsx",
-          "target": "lib/reduced-motion.tsx",
-          "type": "registry:lib"
-        },
-        {
-          "path": "registry-theme.ts",
-          "target": "lib/registry-theme.ts",
-          "type": "registry:lib"
         }
       ]
     },
@@ -1238,16 +793,6 @@
         {
           "path": "r-dropdown.tsx",
           "type": "registry:ui"
-        },
-        {
-          "path": "reduced-motion.tsx",
-          "target": "lib/reduced-motion.tsx",
-          "type": "registry:lib"
-        },
-        {
-          "path": "registry-theme.ts",
-          "target": "lib/registry-theme.ts",
-          "type": "registry:lib"
         }
       ]
     },
@@ -1267,16 +812,6 @@
         {
           "path": "r-hover-card.tsx",
           "type": "registry:ui"
-        },
-        {
-          "path": "reduced-motion.tsx",
-          "target": "lib/reduced-motion.tsx",
-          "type": "registry:lib"
-        },
-        {
-          "path": "registry-theme.ts",
-          "target": "lib/registry-theme.ts",
-          "type": "registry:lib"
         }
       ]
     },
@@ -1292,16 +827,6 @@
         {
           "path": "r-popover.tsx",
           "type": "registry:ui"
-        },
-        {
-          "path": "reduced-motion.tsx",
-          "target": "lib/reduced-motion.tsx",
-          "type": "registry:lib"
-        },
-        {
-          "path": "registry-theme.ts",
-          "target": "lib/registry-theme.ts",
-          "type": "registry:lib"
         }
       ]
     },
@@ -1317,16 +842,6 @@
         {
           "path": "r-radio-group.tsx",
           "type": "registry:ui"
-        },
-        {
-          "path": "reduced-motion.tsx",
-          "target": "lib/reduced-motion.tsx",
-          "type": "registry:lib"
-        },
-        {
-          "path": "registry-theme.ts",
-          "target": "lib/registry-theme.ts",
-          "type": "registry:lib"
         }
       ]
     },
@@ -1342,16 +857,6 @@
         {
           "path": "r-select.tsx",
           "type": "registry:ui"
-        },
-        {
-          "path": "reduced-motion.tsx",
-          "target": "lib/reduced-motion.tsx",
-          "type": "registry:lib"
-        },
-        {
-          "path": "registry-theme.ts",
-          "target": "lib/registry-theme.ts",
-          "type": "registry:lib"
         }
       ]
     },
@@ -1367,11 +872,6 @@
         {
           "path": "r-selection-toolbar.tsx",
           "type": "registry:ui"
-        },
-        {
-          "path": "reduced-motion.tsx",
-          "target": "lib/reduced-motion.tsx",
-          "type": "registry:lib"
         }
       ]
     },
@@ -1387,16 +887,6 @@
         {
           "path": "r-slider.tsx",
           "type": "registry:ui"
-        },
-        {
-          "path": "reduced-motion.tsx",
-          "target": "lib/reduced-motion.tsx",
-          "type": "registry:lib"
-        },
-        {
-          "path": "registry-theme.ts",
-          "target": "lib/registry-theme.ts",
-          "type": "registry:lib"
         }
       ]
     },
@@ -1412,16 +902,6 @@
         {
           "path": "r-switch.tsx",
           "type": "registry:ui"
-        },
-        {
-          "path": "reduced-motion.tsx",
-          "target": "lib/reduced-motion.tsx",
-          "type": "registry:lib"
-        },
-        {
-          "path": "registry-theme.ts",
-          "target": "lib/registry-theme.ts",
-          "type": "registry:lib"
         }
       ]
     },
@@ -1437,16 +917,6 @@
         {
           "path": "r-tabs.tsx",
           "type": "registry:ui"
-        },
-        {
-          "path": "reduced-motion.tsx",
-          "target": "lib/reduced-motion.tsx",
-          "type": "registry:lib"
-        },
-        {
-          "path": "registry-theme.ts",
-          "target": "lib/registry-theme.ts",
-          "type": "registry:lib"
         }
       ]
     },
@@ -1466,16 +936,6 @@
         {
           "path": "r-toggle.tsx",
           "type": "registry:ui"
-        },
-        {
-          "path": "reduced-motion.tsx",
-          "target": "lib/reduced-motion.tsx",
-          "type": "registry:lib"
-        },
-        {
-          "path": "registry-theme.ts",
-          "target": "lib/registry-theme.ts",
-          "type": "registry:lib"
         }
       ]
     },
@@ -1495,16 +955,6 @@
         {
           "path": "r-tooltip.tsx",
           "type": "registry:ui"
-        },
-        {
-          "path": "reduced-motion.tsx",
-          "target": "lib/reduced-motion.tsx",
-          "type": "registry:lib"
-        },
-        {
-          "path": "registry-theme.ts",
-          "target": "lib/registry-theme.ts",
-          "type": "registry:lib"
         }
       ]
     },
@@ -1520,11 +970,6 @@
         {
           "path": "radiogroup.tsx",
           "type": "registry:ui"
-        },
-        {
-          "path": "registry-theme.ts",
-          "target": "lib/registry-theme.ts",
-          "type": "registry:lib"
         }
       ]
     },
@@ -1540,16 +985,6 @@
         {
           "path": "select.tsx",
           "type": "registry:ui"
-        },
-        {
-          "path": "reduced-motion.tsx",
-          "target": "lib/reduced-motion.tsx",
-          "type": "registry:lib"
-        },
-        {
-          "path": "registry-theme.ts",
-          "target": "lib/registry-theme.ts",
-          "type": "registry:lib"
         }
       ]
     },
@@ -1595,11 +1030,6 @@
         {
           "path": "skeleton.tsx",
           "type": "registry:ui"
-        },
-        {
-          "path": "registry-theme.ts",
-          "target": "lib/registry-theme.ts",
-          "type": "registry:lib"
         }
       ]
     },
@@ -1615,16 +1045,6 @@
         {
           "path": "slider.tsx",
           "type": "registry:ui"
-        },
-        {
-          "path": "reduced-motion.tsx",
-          "target": "lib/reduced-motion.tsx",
-          "type": "registry:lib"
-        },
-        {
-          "path": "registry-theme.ts",
-          "target": "lib/registry-theme.ts",
-          "type": "registry:lib"
         }
       ]
     },
@@ -1640,11 +1060,6 @@
         {
           "path": "spinner.tsx",
           "type": "registry:ui"
-        },
-        {
-          "path": "registry-theme.ts",
-          "target": "lib/registry-theme.ts",
-          "type": "registry:lib"
         }
       ]
     },
@@ -1660,16 +1075,6 @@
         {
           "path": "switch.tsx",
           "type": "registry:ui"
-        },
-        {
-          "path": "reduced-motion.tsx",
-          "target": "lib/reduced-motion.tsx",
-          "type": "registry:lib"
-        },
-        {
-          "path": "registry-theme.ts",
-          "target": "lib/registry-theme.ts",
-          "type": "registry:lib"
         }
       ]
     },
@@ -1685,11 +1090,6 @@
         {
           "path": "table.tsx",
           "type": "registry:ui"
-        },
-        {
-          "path": "registry-theme.ts",
-          "target": "lib/registry-theme.ts",
-          "type": "registry:lib"
         }
       ]
     },
@@ -1705,16 +1105,6 @@
         {
           "path": "tabs.tsx",
           "type": "registry:ui"
-        },
-        {
-          "path": "reduced-motion.tsx",
-          "target": "lib/reduced-motion.tsx",
-          "type": "registry:lib"
-        },
-        {
-          "path": "registry-theme.ts",
-          "target": "lib/registry-theme.ts",
-          "type": "registry:lib"
         }
       ]
     },
@@ -1734,16 +1124,6 @@
         {
           "path": "toggle.tsx",
           "type": "registry:ui"
-        },
-        {
-          "path": "reduced-motion.tsx",
-          "target": "lib/reduced-motion.tsx",
-          "type": "registry:lib"
-        },
-        {
-          "path": "registry-theme.ts",
-          "target": "lib/registry-theme.ts",
-          "type": "registry:lib"
         }
       ]
     },
@@ -1763,16 +1143,6 @@
         {
           "path": "tooltip.tsx",
           "type": "registry:ui"
-        },
-        {
-          "path": "reduced-motion.tsx",
-          "target": "lib/reduced-motion.tsx",
-          "type": "registry:lib"
-        },
-        {
-          "path": "registry-theme.ts",
-          "target": "lib/registry-theme.ts",
-          "type": "registry:lib"
         }
       ]
     },
@@ -1788,11 +1158,6 @@
         {
           "path": "typography.tsx",
           "type": "registry:ui"
-        },
-        {
-          "path": "registry-theme.ts",
-          "target": "lib/registry-theme.ts",
-          "type": "registry:lib"
         }
       ]
     }

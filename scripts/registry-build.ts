@@ -10,16 +10,50 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const registryComponents = path.join(__dirname, "../public/r");
 const registryIndexPath = path.join(__dirname, "../public/r/registry.json");
 const registryRootPath = path.join(__dirname, "../registry.json");
-const reducedMotionHelperPath = path.join(
-  __dirname,
-  "../lib/reduced-motion.tsx"
-);
 const registryThemeHelperPath = path.join(
   __dirname,
   "../lib/registry-theme.ts"
 );
 const reducedMotionImport = 'from "@/lib/reduced-motion"';
 const registryThemeImport = 'from "@/lib/registry-theme"';
+const reducedMotionModulePath = "@/lib/reduced-motion";
+const registryThemeModulePath = "@/lib/registry-theme";
+const reactContextImport = 'import { createContext, useContext } from "react";';
+const motionReducedMotionImport =
+  'import { MotionConfig, useReducedMotion } from "motion/react";';
+const reducedMotionInlineSource = `interface ReducedMotionProp {
+  reducedMotion?: boolean;
+}
+
+const ReducedMotionOverrideContext = createContext(false);
+
+function useResolvedReducedMotion(reducedMotion?: boolean) {
+  const reducedMotionOverride = useContext(ReducedMotionOverrideContext);
+  const prefersReducedMotion = useReducedMotion() ?? false;
+
+  return Boolean(
+    reducedMotion || reducedMotionOverride || prefersReducedMotion
+  );
+}
+
+function ReducedMotionConfig({
+  children,
+  reducedMotion,
+}: ReducedMotionProp & {
+  children: import("react").ReactNode;
+}) {
+  const resolvedReducedMotion = useResolvedReducedMotion(reducedMotion);
+
+  return (
+    <MotionConfig reducedMotion={resolvedReducedMotion ? "always" : "user"}>
+      {children}
+    </MotionConfig>
+  );
+}`;
+const registryThemeInlineSource = fs
+  .readFileSync(registryThemeHelperPath, "utf8")
+  .replace(/^export\s+/m, "")
+  .trim();
 
 /** Optional title, description, and dependencies for registry UI components. */
 const REGISTRY_UI_META: Record<
@@ -502,6 +536,72 @@ console.log("\n🔨 Building registry components...\n");
 
 const registryItems: Schema[] = [];
 
+function escapeRegExp(value: string) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function removeImportStatement(content: string, modulePath: string) {
+  return content.replace(
+    new RegExp(`^import[\\s\\S]*?from "${escapeRegExp(modulePath)}";\\n?`, "m"),
+    ""
+  );
+}
+
+function insertAfterImports(content: string, snippet: string) {
+  const importMatches = [...content.matchAll(/^import[\s\S]*?;\n?/gm)];
+  const lastImport = importMatches.at(-1);
+
+  if (!lastImport || lastImport.index === undefined) {
+    return `${snippet}\n\n${content}`;
+  }
+
+  const insertionIndex = lastImport.index + lastImport[0].length;
+
+  return `${content.slice(0, insertionIndex)}\n${snippet}\n${content.slice(
+    insertionIndex
+  )}`;
+}
+
+function inlineRegistryHelpers(content: string) {
+  const needsReducedMotion = content.includes(reducedMotionImport);
+  const needsRegistryTheme = content.includes(registryThemeImport);
+
+  if (!(needsReducedMotion || needsRegistryTheme)) {
+    return content;
+  }
+
+  let nextContent = content;
+
+  if (needsReducedMotion) {
+    nextContent = removeImportStatement(nextContent, reducedMotionModulePath);
+  }
+
+  if (needsRegistryTheme) {
+    nextContent = removeImportStatement(nextContent, registryThemeModulePath);
+  }
+
+  const injectedParts: string[] = [];
+
+  if (needsReducedMotion) {
+    injectedParts.push(motionReducedMotionImport, reactContextImport);
+  }
+
+  const inlineHelpers: string[] = [];
+
+  if (needsReducedMotion) {
+    inlineHelpers.push(reducedMotionInlineSource);
+  }
+
+  if (needsRegistryTheme) {
+    inlineHelpers.push(registryThemeInlineSource);
+  }
+
+  return insertAfterImports(
+    nextContent,
+    `${injectedParts.join("\n")}\n\n${inlineHelpers.join("\n\n")}`.trim()
+  );
+}
+
 function buildAndWrite(schema: Schema) {
   fs.writeFileSync(
     path.join(registryComponents, `${schema.name}.json`),
@@ -518,7 +618,9 @@ function buildAndWrite(schema: Schema) {
 }
 
 for (const component of components) {
-  const content = fs.readFileSync(component.path, "utf8");
+  const content = inlineRegistryHelpers(
+    fs.readFileSync(component.path, "utf8")
+  );
   const files: Schema["files"] = [
     {
       path: `${component.name}.tsx`,
@@ -526,24 +628,6 @@ for (const component of components) {
       type: "registry:ui",
     },
   ];
-
-  if (content.includes(reducedMotionImport)) {
-    files.push({
-      path: "reduced-motion.tsx",
-      content: fs.readFileSync(reducedMotionHelperPath, "utf8"),
-      target: "lib/reduced-motion.tsx",
-      type: "registry:lib",
-    });
-  }
-
-  if (content.includes(registryThemeImport)) {
-    files.push({
-      path: "registry-theme.ts",
-      content: fs.readFileSync(registryThemeHelperPath, "utf8"),
-      target: "lib/registry-theme.ts",
-      type: "registry:lib",
-    });
-  }
 
   const schema: Schema = {
     $schema: "https://ui.shadcn.com/schema/registry-item.json",

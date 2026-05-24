@@ -241,10 +241,6 @@ function RegistrySourceCode({ componentName }: { componentName: string }) {
   const activeFile =
     files.find((file, index) => getFileId(file, index) === activeFileId) ??
     files[0];
-  const helperFiles = files.filter((file) => file.target);
-  const hasRegistryThemeHelper = helperFiles.some(
-    (file) => file.target === "lib/registry-theme.ts"
-  );
   const fileLabel = (file: RegistryFile, index: number) =>
     file.target ?? file.path ?? `${componentName}-${index + 1}`;
 
@@ -258,21 +254,20 @@ function RegistrySourceCode({ componentName }: { componentName: string }) {
             </span>
           </div>
           <p className="text-muted-foreground text-sm leading-6">
-            <span className="text-foreground">shadcn add</span> adds the
-            component source along with any supporting files required by this
-            registry entry.
+            {files.length === 1 ? (
+              <>
+                <span className="text-foreground">shadcn add</span> installs a
+                self-contained component file for this registry entry.
+              </>
+            ) : (
+              <>
+                <span className="text-foreground">shadcn add</span> adds the
+                component source along with any supporting files declared by
+                this registry entry.
+              </>
+            )}
           </p>
         </div>
-        {hasRegistryThemeHelper ? (
-          <p className="mt-3 text-muted-foreground text-sm leading-6">
-            When needed, the registry also installs{" "}
-            <code>lib/registry-theme.ts</code>, so imports like{" "}
-            <code>
-              import {"{ registryTheme }"} from "@/lib/registry-theme";
-            </code>{" "}
-            work without any extra setup.
-          </p>
-        ) : null}
       </div>
 
       {files.length > 1 ? (
