@@ -28,6 +28,8 @@ const componentSummaries: Record<string, string> = {
     "Alert dialog docs with a provider switch that swaps between Base UI and Radix UI registry entries.",
   "/components/avatar":
     "Avatar docs with a provider switch that swaps between Base UI and Radix UI registry entries.",
+  "/components/badge":
+    "Badge docs in the Components section, using the shared Iconiq badge install with provider options visible but disabled.",
   "/components/breadcrumbs":
     "Breadcrumbs docs in the Components section, using the shared Iconiq breadcrumbs install with provider options visible but disabled.",
   "/components/button":

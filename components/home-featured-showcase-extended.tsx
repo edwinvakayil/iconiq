@@ -3,6 +3,7 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 
+import { Badge } from "@/registry/badge";
 import { Button } from "@/registry/button";
 import { Calendar } from "@/registry/calendar";
 import {
@@ -94,6 +95,12 @@ export function HomeFeaturedShowcaseExtended({
               </Tooltip>{" "}
               to preview the floating label.
             </p>
+          </div>
+        </ShowcaseCard>
+
+        <ShowcaseCard href="/components/badge" title="Badge">
+          <div className="flex min-h-[150px] w-full items-center justify-center px-4">
+            <Badge color="indigo">Early Access</Badge>
           </div>
         </ShowcaseCard>
 

@@ -17,6 +17,7 @@ export const SITE_SECTIONS = [
       { label: "Alert", href: "/components/alert" },
       { label: "Alert Dialog", href: "/components/alert-dialog" },
       { label: "Avatar", href: "/components/avatar" },
+      { label: "Badge", href: "/components/badge" },
       { label: "Breadcrumbs", href: "/components/breadcrumbs" },
       { label: "Button", href: "/components/button" },
       { label: "Button Group", href: "/components/button-group" },
