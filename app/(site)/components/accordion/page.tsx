@@ -51,6 +51,8 @@ const demoItems: AccordionDemoItem[] = [
   },
 ];
 
+const previewAccordionClassName = "w-full max-w-xl";
+
 const breadcrumbs = [
   { label: "Docs", href: "/" },
   { label: "Components" },
@@ -82,7 +84,7 @@ const items: AccordionItem[] = [
 ];
 
 export function AccordionPreview() {
-  return <Accordion className="w-full max-w-none" items={items} />;
+  return <Accordion className="w-full max-w-xl" items={items} />;
 }`,
   "r-accordion": `import { Accordion, type AccordionItem } from "@/components/ui/r-accordion";
 
@@ -108,7 +110,7 @@ const items: AccordionItem[] = [
 ];
 
 export function AccordionPreview() {
-  return <Accordion className="w-full max-w-none" items={items} />;
+  return <Accordion className="${previewAccordionClassName}" items={items} />;
 }`,
 };
 
@@ -128,7 +130,10 @@ export default function RadixBaseAccordionPage() {
           "The generated registry file is /r/b-accordion.json.",
         ],
         preview: (
-          <BaseAccordion className="w-full max-w-none" items={demoItems} />
+          <BaseAccordion
+            className={previewAccordionClassName}
+            items={demoItems}
+          />
         ),
         usageCode: usageCodeByProvider["b-accordion"],
       };
@@ -144,7 +149,10 @@ export default function RadixBaseAccordionPage() {
         "The generated registry file is /r/r-accordion.json.",
       ],
       preview: (
-        <RadixAccordion className="w-full max-w-none" items={demoItems} />
+        <RadixAccordion
+          className={previewAccordionClassName}
+          items={demoItems}
+        />
       ),
       usageCode: usageCodeByProvider["r-accordion"],
     };
