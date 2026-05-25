@@ -2,7 +2,7 @@
 
 import { Toggle as TogglePrimitive } from "@base-ui/react/toggle";
 import { ToggleGroup as ToggleGroupPrimitive } from "@base-ui/react/toggle-group";
-import { motion } from "motion/react";
+import { motion, useAnimationControls } from "motion/react";
 import * as React from "react";
 
 import {
@@ -13,7 +13,55 @@ import {
 import { registryTheme } from "@/lib/registry-theme";
 import { cn } from "@/lib/utils";
 
-const fillEase = [0.22, 1, 0.36, 1] as const;
+const settleEase = [0.32, 0.72, 0, 1] as const;
+
+function runSelectionMotion(
+  controls: {
+    fill: ReturnType<typeof useAnimationControls>;
+    label: ReturnType<typeof useAnimationControls>;
+  },
+  selected: boolean,
+  reduceMotion: boolean
+) {
+  if (reduceMotion) {
+    controls.fill.start({
+      opacity: selected ? 1 : 0,
+      scale: 1,
+      transition: { duration: 0.12 },
+    });
+    controls.label.start({
+      scale: 1,
+      y: 0,
+      transition: { duration: 0.12 },
+    });
+    return;
+  }
+
+  if (selected) {
+    controls.fill.start({
+      opacity: 1,
+      scale: [0.94, 1.02, 1],
+      transition: { duration: 0.38, ease: settleEase },
+    });
+    controls.label.start({
+      scale: [0.98, 1.03, 1],
+      y: [0.5, -1, 0],
+      transition: { duration: 0.38, ease: settleEase },
+    });
+    return;
+  }
+
+  controls.fill.start({
+    opacity: 0,
+    scale: 0.94,
+    transition: { duration: 0.26, ease: settleEase },
+  });
+  controls.label.start({
+    scale: [1, 0.985, 1],
+    y: [0, 0.35, 0],
+    transition: { duration: 0.28, ease: settleEase },
+  });
+}
 
 export interface ToggleGroupItem {
   ariaLabel?: string;
@@ -127,10 +175,6 @@ function setRef<T>(ref: React.Ref<T> | undefined, value: T | null) {
   }
 }
 
-function getFillTransition(reduceMotion: boolean) {
-  return reduceMotion ? { duration: 0.12 } : { duration: 0.22, ease: fillEase };
-}
-
 type ToggleGroupSeparatorProps = {
   orientation: NonNullable<ToggleGroupSharedProps["orientation"]>;
 };
@@ -185,83 +229,106 @@ function resolveBaseButtonRenderProps(rootProps: BaseToggleRenderProps) {
   };
 }
 
-function ToggleGroupActiveFill({
-  reduceMotion,
-  selected,
-}: Pick<ToggleGroupButtonProps, "reduceMotion" | "selected">) {
-  return (
-    <motion.span
-      animate={
-        selected ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.94 }
-      }
-      aria-hidden
-      className="pointer-events-none absolute inset-0 z-0 rounded-[inherit] bg-accent"
-      initial={false}
-      transition={getFillTransition(reduceMotion)}
-    />
-  );
-}
+type ToggleGroupButtonViewProps = ToggleGroupButtonProps & {
+  rootProps: BaseToggleRenderProps;
+};
 
-function ToggleGroupButtonContent({
-  item,
-  selected,
-}: Pick<ToggleGroupButtonProps, "item" | "selected">) {
-  return (
-    <span
-      className={cn(
-        "relative z-10 inline-flex items-center gap-1.5 transition-colors duration-200",
-        selected ? "text-accent-foreground" : "text-muted-foreground"
-      )}
-    >
-      {item.icon ? (
-        <span className="inline-flex items-center justify-center [&_svg]:shrink-0">
-          {item.icon}
-        </span>
-      ) : null}
-      <span className="inline-flex items-center">{item.label}</span>
-    </span>
-  );
-}
-
-function ToggleGroupButton({
+function ToggleGroupButtonView({
   disabled,
   item,
   itemClassName,
   orientation,
   reduceMotion,
+  rootProps,
   selected,
   size,
-}: ToggleGroupButtonProps) {
-  return (rootProps: BaseToggleRenderProps) => {
-    const { resolvedRootProps, rootClassName, rootRef, style } =
-      resolveBaseButtonRenderProps(rootProps);
-    const canAnimate = !(disabled || item.disabled || reduceMotion);
+}: ToggleGroupButtonViewProps) {
+  const { resolvedRootProps, rootClassName, rootRef, style } =
+    resolveBaseButtonRenderProps(rootProps);
+  const resolvedDisabled = disabled || item.disabled;
+  const canAnimate = !(resolvedDisabled || reduceMotion);
+  const fillControls = useAnimationControls();
+  const labelControls = useAnimationControls();
+  const hasMountedRef = React.useRef(false);
 
-    return (
-      <motion.button
-        {...resolvedRootProps}
-        aria-label={item.ariaLabel}
-        className={cn(
-          "relative inline-flex shrink-0 touch-manipulation select-none items-center justify-center whitespace-nowrap border-0 bg-transparent font-medium leading-none outline-none transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-ring/30 focus-visible:ring-offset-0 disabled:pointer-events-none disabled:opacity-30",
-          getItemSizeClasses(size),
-          orientation === "vertical" && "w-full justify-start",
-          !selected && "hover:text-foreground",
-          rootClassName,
-          itemClassName
-        )}
-        ref={(node) => setRef(rootRef, node)}
-        style={style}
-        type={resolvedRootProps.type ?? "button"}
-        whileTap={canAnimate ? { scale: 0.97 } : undefined}
-      >
-        <ToggleGroupActiveFill
-          reduceMotion={reduceMotion}
-          selected={selected}
-        />
-        <ToggleGroupButtonContent item={item} selected={selected} />
-      </motion.button>
+  React.useEffect(() => {
+    if (!hasMountedRef.current) {
+      hasMountedRef.current = true;
+      fillControls.set({
+        opacity: selected ? 1 : 0,
+        scale: 1,
+      });
+      labelControls.set({ scale: 1, y: 0 });
+      return;
+    }
+
+    runSelectionMotion(
+      { fill: fillControls, label: labelControls },
+      selected,
+      reduceMotion || Boolean(resolvedDisabled)
     );
-  };
+  }, [fillControls, labelControls, reduceMotion, resolvedDisabled, selected]);
+
+  return (
+    <motion.button
+      {...resolvedRootProps}
+      aria-label={item.ariaLabel}
+      className={cn(
+        "relative inline-flex shrink-0 touch-manipulation select-none items-center justify-center whitespace-nowrap border-0 bg-transparent font-medium leading-none outline-none focus-visible:ring-2 focus-visible:ring-ring/30 focus-visible:ring-offset-0 disabled:pointer-events-none disabled:opacity-30",
+        getItemSizeClasses(size),
+        orientation === "vertical" && "w-full justify-start",
+        !selected && "hover:text-foreground",
+        rootClassName,
+        itemClassName
+      )}
+      ref={(node) => setRef(rootRef, node)}
+      style={style}
+      type={resolvedRootProps.type ?? "button"}
+      whileHover={
+        canAnimate && !selected
+          ? { scale: 1.015, transition: { duration: 0.22, ease: settleEase } }
+          : undefined
+      }
+      whileTap={
+        canAnimate
+          ? {
+              scale: [1, 0.975, 1.01, 1],
+              transition: { duration: 0.32, ease: settleEase },
+            }
+          : undefined
+      }
+    >
+      <motion.span
+        animate={fillControls}
+        aria-hidden
+        className="pointer-events-none absolute inset-0 z-0 rounded-[inherit] bg-accent"
+        initial={false}
+        style={{ transformOrigin: "center" }}
+      />
+      <motion.span
+        animate={labelControls}
+        className={cn(
+          "relative z-10 inline-flex items-center gap-1.5",
+          selected ? "text-accent-foreground" : "text-muted-foreground"
+        )}
+        initial={false}
+        style={{ transformOrigin: "center" }}
+      >
+        {item.icon ? (
+          <span className="inline-flex items-center justify-center [&_svg]:shrink-0">
+            {item.icon}
+          </span>
+        ) : null}
+        <span className="inline-flex items-center">{item.label}</span>
+      </motion.span>
+    </motion.button>
+  );
+}
+
+function ToggleGroupButton(props: ToggleGroupButtonProps) {
+  return (rootProps: BaseToggleRenderProps) => (
+    <ToggleGroupButtonView {...props} rootProps={rootProps} />
+  );
 }
 
 type ToggleGroupItemsProps = {

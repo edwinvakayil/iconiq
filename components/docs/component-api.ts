@@ -3579,7 +3579,7 @@ const toggleGroupApiDetails: DetailItem[] = [
     notes: [
       "Each pressed item fades in a local bg-accent surface instead of a shared track, underline, or sliding chip.",
       "Multiple-selection mode can light up several items at once, which suits formatting-style toolbars.",
-      "Reduced motion suppresses the spring travel, hover lift, and tap compression while preserving the same keyboard flow and selected-state semantics.",
+      "Toggling runs a short accent fill bloom and label pop (same settle curve as Toggle); reduced motion falls back to instant fades.",
       "Both provider-backed installs keep the underlying roving-focus and arrow-key behavior from their headless primitives.",
     ],
   },
