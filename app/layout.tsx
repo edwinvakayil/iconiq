@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
   display: "swap",
 });
 
-const geist = Geist({
+const geistSans = Geist({
   subsets: ["latin"],
   variable: "--font-sans",
   display: "swap",
@@ -40,7 +40,7 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      className={`${geistMono.variable} ${geist.variable}`}
+      className={`${geistMono.variable} ${geistSans.variable}`}
       lang="en"
       suppressHydrationWarning
     >
@@ -65,7 +65,7 @@ export default function RootLayout({
         />
         <JsonLdScripts />
       </head>
-      <body className={`${geist.className} relative bg-background antialiased`}>
+      <body className="relative bg-background font-sans antialiased">
         <ThemeProvider>
           <MotionTierProvider>
             <PackageNameProvider>{children}</PackageNameProvider>
