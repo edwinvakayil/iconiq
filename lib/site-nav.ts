@@ -48,6 +48,7 @@ export const SITE_SECTIONS = [
       { label: "Table", href: "/components/table" },
       { label: "Tabs", href: "/components/tabs" },
       { label: "Toggle", href: "/components/toggle" },
+      { label: "Toggle Group", href: "/components/toggle-group" },
       { label: "Tooltip", href: "/components/tooltip" },
     ],
   },

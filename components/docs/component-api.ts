@@ -3436,6 +3436,156 @@ const toggleApiDetails: DetailItem[] = [
   ]),
 ];
 
+const toggleGroupApiDetails: DetailItem[] = [
+  {
+    id: "toggle-group-item",
+    title: "ToggleGroupItem",
+    summary:
+      "Each toggle is described by a plain object so both provider-backed installs keep the same display and selection contract.",
+    fields: [
+      field({
+        name: "value",
+        type: "string",
+        required: true,
+        description:
+          "Stable identifier used for selection state and forwarded to the underlying toggle primitive item.",
+      }),
+      field({
+        name: "label",
+        type: "ReactNode",
+        required: true,
+        description:
+          "Visible item content rendered inside each segmented button. This can be plain text or richer inline content.",
+      }),
+      field({
+        name: "icon",
+        type: "ReactNode",
+        description:
+          "Optional leading visual rendered before the label inside the button surface.",
+      }),
+      field({
+        name: "disabled",
+        type: "boolean",
+        description:
+          "Disables that item while keeping the rest of the group interactive.",
+      }),
+      field({
+        name: "ariaLabel",
+        type: "string",
+        description:
+          "Accessible item name for icon-only buttons or abbreviated visual labels.",
+      }),
+    ],
+  },
+  {
+    id: "toggle-group",
+    title: "ToggleGroup",
+    summary:
+      "Segmented toggle group with a shared API for single and multiple selection states.",
+    fields: [
+      field({
+        name: "items",
+        type: "ToggleGroupItem[]",
+        required: true,
+        description: "Buttons to render in display order.",
+      }),
+      field({
+        name: "type",
+        type: '"single" | "multiple"',
+        defaultValue: '"multiple"',
+        description:
+          'Defaults to multiple selection. Pass type="single" for a one-of-many picker.',
+      }),
+      field({
+        name: "value",
+        type: "string | string[]",
+        description:
+          "Controlled selection state. Use a string for single mode or an array for multiple mode.",
+      }),
+      field({
+        name: "defaultValue",
+        type: "string | string[]",
+        description:
+          "Initial selection state for uncontrolled usage, following the same single versus multiple shape as value.",
+      }),
+      field({
+        name: "onValueChange",
+        type: "((value: string | undefined) => void) | ((value: string[]) => void)",
+        description:
+          "Called with the next selected value in single mode or the next ordered selected values array in multiple mode.",
+      }),
+      field({
+        name: "size",
+        type: '"default" | "sm"',
+        defaultValue: '"default"',
+        description:
+          "Adjusts the item height, minimum width, and label sizing while keeping the same motion profile.",
+      }),
+      field({
+        name: "orientation",
+        type: '"horizontal" | "vertical"',
+        defaultValue: '"horizontal"',
+        description:
+          "Changes both the visual layout and the underlying keyboard navigation axis.",
+      }),
+      field({
+        name: "disabled",
+        type: "boolean",
+        description:
+          "Disables the whole group and prevents hover, tap, and selection changes.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description:
+          "Merged onto the segmented group shell for width, spacing, or placement overrides.",
+      }),
+      field({
+        name: "itemClassName",
+        type: "string",
+        description:
+          "Merged onto every toggle item so you can tune button sizing or local visual treatment without rewriting the structure.",
+      }),
+      field({
+        name: "reducedMotion",
+        type: "boolean",
+        description:
+          "Forces the quieter motion path while still respecting OS-level reduced motion preferences.",
+      }),
+      field({
+        name: "aria-label",
+        type: "string",
+        description:
+          "Accessible name for the group when no external label element is connected.",
+      }),
+      field({
+        name: "aria-labelledby",
+        type: "string",
+        description:
+          "References external text that labels the whole group, which takes precedence over aria-label.",
+      }),
+    ],
+    notes: [
+      "Multiple mode is the default and normalizes outgoing values back into the original item order, so the callback shape stays stable even if users toggle items out of sequence.",
+      'Pass type="single" when only one item should stay pressed at a time. Single mode starts with no implicit selection unless you provide value or defaultValue.',
+      "Icon-only items should provide ariaLabel so every button still has a clear accessible name.",
+    ],
+  },
+  {
+    id: "toggle-group-motion",
+    title: "Motion and selection behavior",
+    summary:
+      "Active items use the same accent fill language as Toggle and IconBar, with hairline separators between controls.",
+    notes: [
+      "Each pressed item fades in a local bg-accent surface instead of a shared track, underline, or sliding chip.",
+      "Multiple-selection mode can light up several items at once, which suits formatting-style toolbars.",
+      "Reduced motion suppresses the spring travel, hover lift, and tap compression while preserving the same keyboard flow and selected-state semantics.",
+      "Both provider-backed installs keep the underlying roving-focus and arrow-key behavior from their headless primitives.",
+    ],
+  },
+  registryItem("togglegroup.json", ["motion"]),
+];
+
 const switchApiDetails: DetailItem[] = [
   {
     id: "switch",
@@ -3845,5 +3995,6 @@ export {
   tabsApiDetails,
   typographyApiDetails,
   toggleApiDetails,
+  toggleGroupApiDetails,
   tooltipApiDetails,
 };

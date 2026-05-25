@@ -86,6 +86,8 @@ const componentSummaries: Record<string, string> = {
     "Tooltip docs with a provider switch that swaps between Base UI and Radix UI registry entries.",
   "/components/toggle":
     "Compare the same pressed-state toggle API on Radix UI and Base UI, with the same ripple, icon motion, and pressed styling layered over different primitives.",
+  "/components/toggle-group":
+    "Toggle group docs with a provider switch that swaps between Base UI and Radix UI registry entries.",
   "/special-one/icon-bar":
     "Horizontal icon chips that expand on hover to reveal short labels with spring motion.",
   "/special-one/origin-button":
@@ -147,6 +149,15 @@ const componentItems: SearchItem[] = SITE_SECTIONS.flatMap((section) =>
     }
     if (slug === "progress") {
       labelKeywords.push("progress bar", "loading bar", "meter");
+    }
+    if (slug === "toggle-group") {
+      labelKeywords.push(
+        "toggle group",
+        "togglegroup",
+        "segmented control",
+        "segmented",
+        "view switch"
+      );
     }
     if (slug === "dia-text") {
       labelKeywords.push("text", "text reveal", "animated text");

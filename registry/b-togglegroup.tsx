@@ -1,0 +1,451 @@
+"use client";
+
+import { Toggle as TogglePrimitive } from "@base-ui/react/toggle";
+import { ToggleGroup as ToggleGroupPrimitive } from "@base-ui/react/toggle-group";
+import { motion } from "motion/react";
+import * as React from "react";
+
+import {
+  ReducedMotionConfig,
+  type ReducedMotionProp,
+  useResolvedReducedMotion,
+} from "@/lib/reduced-motion";
+import { registryTheme } from "@/lib/registry-theme";
+import { cn } from "@/lib/utils";
+
+const fillEase = [0.22, 1, 0.36, 1] as const;
+
+export interface ToggleGroupItem {
+  ariaLabel?: string;
+  disabled?: boolean;
+  icon?: React.ReactNode;
+  label: React.ReactNode;
+  value: string;
+}
+
+type ToggleGroupSharedProps = ReducedMotionProp & {
+  "aria-label"?: string;
+  "aria-labelledby"?: string;
+  className?: string;
+  disabled?: boolean;
+  itemClassName?: string;
+  items: ToggleGroupItem[];
+  orientation?: "horizontal" | "vertical";
+  size?: "default" | "sm";
+};
+
+type MultipleToggleGroupProps = ToggleGroupSharedProps & {
+  defaultValue?: string[];
+  onValueChange?: (value: string[]) => void;
+  type?: "multiple";
+  value?: string[];
+};
+
+type SingleToggleGroupProps = ToggleGroupSharedProps & {
+  defaultValue?: string;
+  onValueChange?: (value: string | undefined) => void;
+  type: "single";
+  value?: string;
+};
+
+export type ToggleGroupProps =
+  | MultipleToggleGroupProps
+  | SingleToggleGroupProps;
+
+type BaseToggleRenderProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
+  children?: React.ReactNode;
+  className?: string;
+  ref?: React.Ref<HTMLButtonElement>;
+  style?: React.CSSProperties;
+};
+
+function arraysEqual(a: string[], b: string[]) {
+  return a.length === b.length && a.every((value, index) => value === b[index]);
+}
+
+function getResolvedGroupLabel(ariaLabel?: string, ariaLabelledBy?: string) {
+  if (ariaLabelledBy) {
+    return undefined;
+  }
+
+  return ariaLabel ?? "Toggle group";
+}
+
+function getGroupClasses(
+  orientation: NonNullable<ToggleGroupSharedProps["orientation"]>,
+  size: NonNullable<ToggleGroupSharedProps["size"]>
+) {
+  return cn(
+    "inline-flex",
+    size === "sm" ? "gap-0.5" : "gap-1",
+    orientation === "vertical"
+      ? "w-full flex-col items-stretch"
+      : "w-fit flex-row items-center"
+  );
+}
+
+function getItemSizeClasses(size: ToggleGroupSharedProps["size"]) {
+  if (size === "sm") {
+    return "h-8 min-w-8 rounded-md px-2.5 text-xs [&_svg]:size-3.5";
+  }
+
+  return "h-9 min-w-9 rounded-md px-3 text-sm [&_svg]:size-4";
+}
+
+function normalizeMultipleValue(
+  items: ToggleGroupItem[],
+  candidate?: readonly string[]
+) {
+  if (!(candidate && candidate.length > 0)) {
+    return [];
+  }
+
+  const validValues = new Set(items.map((item) => item.value));
+  const candidateSet = new Set(candidate);
+
+  return items
+    .map((item) => item.value)
+    .filter((value) => validValues.has(value) && candidateSet.has(value));
+}
+
+function normalizeSingleValue(items: ToggleGroupItem[], candidate?: string) {
+  if (candidate === undefined) {
+    return undefined;
+  }
+
+  return items.some((item) => item.value === candidate) ? candidate : undefined;
+}
+
+function setRef<T>(ref: React.Ref<T> | undefined, value: T | null) {
+  if (typeof ref === "function") {
+    ref(value);
+    return;
+  }
+
+  if (ref) {
+    (ref as React.MutableRefObject<T | null>).current = value;
+  }
+}
+
+function getFillTransition(reduceMotion: boolean) {
+  return reduceMotion ? { duration: 0.12 } : { duration: 0.22, ease: fillEase };
+}
+
+type ToggleGroupSeparatorProps = {
+  orientation: NonNullable<ToggleGroupSharedProps["orientation"]>;
+};
+
+function ToggleGroupSeparator({ orientation }: ToggleGroupSeparatorProps) {
+  return (
+    <span
+      aria-hidden
+      className={cn(
+        "shrink-0 bg-border/70",
+        orientation === "vertical" ? "mx-2 h-px w-auto" : "h-4 w-px"
+      )}
+    />
+  );
+}
+
+type ToggleGroupButtonProps = {
+  disabled?: boolean;
+  item: ToggleGroupItem;
+  itemClassName?: string;
+  orientation: NonNullable<ToggleGroupSharedProps["orientation"]>;
+  reduceMotion: boolean;
+  selected: boolean;
+  size: NonNullable<ToggleGroupSharedProps["size"]>;
+};
+
+function resolveBaseButtonRenderProps(rootProps: BaseToggleRenderProps) {
+  const {
+    children: _children,
+    className: rootClassName,
+    onAnimationEnd: _onAnimationEnd,
+    onAnimationIteration: _onAnimationIteration,
+    onAnimationStart: _onAnimationStart,
+    onDrag: _onDrag,
+    onDragEnd: _onDragEnd,
+    onDragEnter: _onDragEnter,
+    onDragExit: _onDragExit,
+    onDragLeave: _onDragLeave,
+    onDragOver: _onDragOver,
+    onDragStart: _onDragStart,
+    onDrop: _onDrop,
+    ref: rootRef,
+    style,
+    ...resolvedRootProps
+  } = rootProps;
+
+  return {
+    resolvedRootProps,
+    rootClassName,
+    rootRef,
+    style,
+  };
+}
+
+function ToggleGroupActiveFill({
+  reduceMotion,
+  selected,
+}: Pick<ToggleGroupButtonProps, "reduceMotion" | "selected">) {
+  return (
+    <motion.span
+      animate={
+        selected ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.94 }
+      }
+      aria-hidden
+      className="pointer-events-none absolute inset-0 z-0 rounded-[inherit] bg-accent"
+      initial={false}
+      transition={getFillTransition(reduceMotion)}
+    />
+  );
+}
+
+function ToggleGroupButtonContent({
+  item,
+  selected,
+}: Pick<ToggleGroupButtonProps, "item" | "selected">) {
+  return (
+    <span
+      className={cn(
+        "relative z-10 inline-flex items-center gap-1.5 transition-colors duration-200",
+        selected ? "text-accent-foreground" : "text-muted-foreground"
+      )}
+    >
+      {item.icon ? (
+        <span className="inline-flex items-center justify-center [&_svg]:shrink-0">
+          {item.icon}
+        </span>
+      ) : null}
+      <span className="inline-flex items-center">{item.label}</span>
+    </span>
+  );
+}
+
+function ToggleGroupButton({
+  disabled,
+  item,
+  itemClassName,
+  orientation,
+  reduceMotion,
+  selected,
+  size,
+}: ToggleGroupButtonProps) {
+  return (rootProps: BaseToggleRenderProps) => {
+    const { resolvedRootProps, rootClassName, rootRef, style } =
+      resolveBaseButtonRenderProps(rootProps);
+    const canAnimate = !(disabled || item.disabled || reduceMotion);
+
+    return (
+      <motion.button
+        {...resolvedRootProps}
+        aria-label={item.ariaLabel}
+        className={cn(
+          "relative inline-flex shrink-0 touch-manipulation select-none items-center justify-center whitespace-nowrap border-0 bg-transparent font-medium leading-none outline-none transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-ring/30 focus-visible:ring-offset-0 disabled:pointer-events-none disabled:opacity-30",
+          getItemSizeClasses(size),
+          orientation === "vertical" && "w-full justify-start",
+          !selected && "hover:text-foreground",
+          rootClassName,
+          itemClassName
+        )}
+        ref={(node) => setRef(rootRef, node)}
+        style={style}
+        type={resolvedRootProps.type ?? "button"}
+        whileTap={canAnimate ? { scale: 0.97 } : undefined}
+      >
+        <ToggleGroupActiveFill
+          reduceMotion={reduceMotion}
+          selected={selected}
+        />
+        <ToggleGroupButtonContent item={item} selected={selected} />
+      </motion.button>
+    );
+  };
+}
+
+type ToggleGroupItemsProps = {
+  disabled?: boolean;
+  itemClassName?: string;
+  items: ToggleGroupItem[];
+  orientation: NonNullable<ToggleGroupSharedProps["orientation"]>;
+  reduceMotion: boolean;
+  selectedValues: Set<string>;
+  size: NonNullable<ToggleGroupSharedProps["size"]>;
+};
+
+function ToggleGroupItems({
+  disabled,
+  itemClassName,
+  items,
+  orientation,
+  reduceMotion,
+  selectedValues,
+  size,
+}: ToggleGroupItemsProps) {
+  return items.map((item, index) => (
+    <React.Fragment key={item.value}>
+      {index > 0 ? <ToggleGroupSeparator orientation={orientation} /> : null}
+      <TogglePrimitive
+        disabled={disabled || item.disabled}
+        render={ToggleGroupButton({
+          disabled,
+          item,
+          itemClassName,
+          orientation,
+          reduceMotion,
+          selected: selectedValues.has(item.value),
+          size,
+        })}
+        value={item.value}
+      />
+    </React.Fragment>
+  ));
+}
+
+const ToggleGroup = React.forwardRef<HTMLDivElement, ToggleGroupProps>(
+  (
+    {
+      "aria-label": ariaLabel,
+      "aria-labelledby": ariaLabelledBy,
+      className,
+      defaultValue,
+      disabled,
+      itemClassName,
+      items,
+      onValueChange,
+      orientation = "horizontal",
+      reducedMotion,
+      size = "default",
+      type,
+      value,
+    },
+    ref
+  ) => {
+    const reduceMotion = useResolvedReducedMotion(reducedMotion);
+    const isMultiple = type !== "single";
+    const isControlled = value !== undefined;
+    const normalizedControlledSingleValue = normalizeSingleValue(
+      items,
+      typeof value === "string" ? value : undefined
+    );
+    const normalizedControlledMultipleValue = normalizeMultipleValue(
+      items,
+      Array.isArray(value) ? value : undefined
+    );
+    const [uncontrolledSingleValue, setUncontrolledSingleValue] =
+      React.useState<string | undefined>(() =>
+        normalizeSingleValue(
+          items,
+          typeof defaultValue === "string" ? defaultValue : undefined
+        )
+      );
+    const [uncontrolledMultipleValue, setUncontrolledMultipleValue] =
+      React.useState<string[]>(() =>
+        normalizeMultipleValue(
+          items,
+          Array.isArray(defaultValue) ? defaultValue : undefined
+        )
+      );
+
+    React.useEffect(() => {
+      if (isControlled) {
+        return;
+      }
+
+      if (isMultiple) {
+        setUncontrolledMultipleValue((current) => {
+          const normalized = normalizeMultipleValue(items, current);
+          return arraysEqual(current, normalized) ? current : normalized;
+        });
+        return;
+      }
+
+      setUncontrolledSingleValue((current) =>
+        normalizeSingleValue(items, current)
+      );
+    }, [isControlled, isMultiple, items]);
+
+    const selectedSingleValue = isControlled
+      ? normalizedControlledSingleValue
+      : uncontrolledSingleValue;
+    const selectedMultipleValue = isControlled
+      ? normalizedControlledMultipleValue
+      : uncontrolledMultipleValue;
+    const selectedValues = React.useMemo(
+      () =>
+        new Set(
+          isMultiple
+            ? selectedMultipleValue
+            : selectedSingleValue
+              ? [selectedSingleValue]
+              : []
+        ),
+      [isMultiple, selectedMultipleValue, selectedSingleValue]
+    );
+    const handleMultipleValueChange =
+      onValueChange as MultipleToggleGroupProps["onValueChange"];
+    const handleSingleValueChange =
+      onValueChange as SingleToggleGroupProps["onValueChange"];
+    const itemsProps = {
+      disabled,
+      itemClassName,
+      items,
+      orientation,
+      reduceMotion,
+      selectedValues,
+      size,
+    };
+
+    return (
+      <ReducedMotionConfig reducedMotion={reducedMotion}>
+        <ToggleGroupPrimitive
+          aria-label={getResolvedGroupLabel(ariaLabel, ariaLabelledBy)}
+          aria-labelledby={ariaLabelledBy}
+          className={cn(
+            registryTheme,
+            getGroupClasses(orientation, size),
+            className
+          )}
+          disabled={disabled}
+          multiple={isMultiple}
+          onValueChange={(nextValue) => {
+            const normalized = normalizeMultipleValue(items, nextValue);
+
+            if (isMultiple) {
+              if (!isControlled) {
+                setUncontrolledMultipleValue(normalized);
+              }
+
+              handleMultipleValueChange?.(normalized);
+              return;
+            }
+
+            const nextSingleValue = normalized[0];
+
+            if (!isControlled) {
+              setUncontrolledSingleValue(nextSingleValue);
+            }
+
+            handleSingleValueChange?.(nextSingleValue);
+          }}
+          orientation={orientation}
+          ref={ref}
+          value={
+            isMultiple
+              ? selectedMultipleValue
+              : selectedSingleValue
+                ? [selectedSingleValue]
+                : []
+          }
+        >
+          <ToggleGroupItems {...itemsProps} />
+        </ToggleGroupPrimitive>
+      </ReducedMotionConfig>
+    );
+  }
+);
+
+ToggleGroup.displayName = "ToggleGroup";
+
+export { ToggleGroup };

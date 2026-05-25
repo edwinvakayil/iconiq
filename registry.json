@@ -369,6 +369,21 @@
       ]
     },
     {
+      "name": "b-togglegroup",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": ["@base-ui/react", "motion"],
+      "devDependencies": [],
+      "title": "Toggle Group (Base UI)",
+      "description": "Minimal toggle group with the same Iconiq API layered over Base UI primitives, preserving the animated underline, stable multi-select ordering, and soft press motion.",
+      "files": [
+        {
+          "path": "b-togglegroup.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "b-tooltip",
       "type": "registry:ui",
       "registryDependencies": [],
@@ -965,6 +980,21 @@
       "files": [
         {
           "path": "r-toggle.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "r-togglegroup",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": ["@radix-ui/react-toggle-group", "motion"],
+      "devDependencies": [],
+      "title": "Toggle Group (Radix UI)",
+      "description": "Minimal toggle group with the same Iconiq API layered over Radix UI primitives, preserving the animated underline, stable multi-select ordering, and soft press motion.",
+      "files": [
+        {
+          "path": "r-togglegroup.tsx",
           "type": "registry:ui"
         }
       ]

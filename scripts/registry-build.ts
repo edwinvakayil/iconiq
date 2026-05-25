@@ -251,6 +251,12 @@ const REGISTRY_UI_META: Record<
       "Pressed-state toggle with the same Iconiq ripple, icon motion, and size and variant shell layered over the Base UI toggle primitive.",
     dependencies: ["@base-ui/react", "class-variance-authority", "motion"],
   },
+  "b-togglegroup": {
+    title: "Toggle Group (Base UI)",
+    description:
+      "Minimal toggle group with the same Iconiq API layered over Base UI primitives, preserving the animated underline, stable multi-select ordering, and soft press motion.",
+    dependencies: ["@base-ui/react", "motion"],
+  },
   alert: {
     title: "Alert",
     description:
@@ -438,6 +444,12 @@ const REGISTRY_UI_META: Record<
       "class-variance-authority",
       "motion",
     ],
+  },
+  "r-togglegroup": {
+    title: "Toggle Group (Radix UI)",
+    description:
+      "Minimal toggle group with the same Iconiq API layered over Radix UI primitives, preserving the animated underline, stable multi-select ordering, and soft press motion.",
+    dependencies: ["@radix-ui/react-toggle-group", "motion"],
   },
   "faq-pro": {
     title: "FAQ Pro",

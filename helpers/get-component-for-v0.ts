@@ -240,6 +240,32 @@ export function ProgressPreview() {
     />
   );
 }`),
+  "b-togglegroup": buildV0Page(`"use client";
+
+import { useState } from "react";
+import {
+  ToggleGroup,
+  type ToggleGroupItem,
+} from "@/components/ui/b-togglegroup";
+
+const items: ToggleGroupItem[] = [
+  { value: "overview", label: "Overview" },
+  { value: "members", label: "Members" },
+  { value: "activity", label: "Activity" },
+];
+
+export function ToggleGroupPreview() {
+  const [value, setValue] = useState(["overview", "members"]);
+
+  return (
+    <ToggleGroup
+      aria-label="Project sections"
+      items={items}
+      onValueChange={setValue}
+      value={value}
+    />
+  );
+}`),
   drawer:
     '"use client";\n\n' +
     `import { useState } from "react"\n` +
@@ -424,6 +450,32 @@ export function ProgressPreview() {
       className="w-full max-w-sm"
       label="Registry sync"
       value={frames[frameIndex]}
+    />
+  );
+}`),
+  "r-togglegroup": buildV0Page(`"use client";
+
+import { useState } from "react";
+import {
+  ToggleGroup,
+  type ToggleGroupItem,
+} from "@/components/ui/r-togglegroup";
+
+const items: ToggleGroupItem[] = [
+  { value: "overview", label: "Overview" },
+  { value: "members", label: "Members" },
+  { value: "activity", label: "Activity" },
+];
+
+export function ToggleGroupPreview() {
+  const [value, setValue] = useState(["overview", "members"]);
+
+  return (
+    <ToggleGroup
+      aria-label="Project sections"
+      items={items}
+      onValueChange={setValue}
+      value={value}
     />
   );
 }`),
