@@ -214,6 +214,32 @@ export function AccordionPreview() {
     "    </div>\n" +
     "  )\n" +
     "}\n",
+  "b-progress": buildV0Page(`"use client";
+
+import { useEffect, useState } from "react";
+import { Progress } from "@/components/ui/b-progress";
+
+const frames = [22, 41, 58, 76, 92, 100];
+
+export function ProgressPreview() {
+  const [frameIndex, setFrameIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = window.setInterval(() => {
+      setFrameIndex((current) => (current + 1) % frames.length);
+    }, 1400);
+
+    return () => window.clearInterval(interval);
+  }, []);
+
+  return (
+    <Progress
+      className="w-full max-w-sm"
+      label="Registry sync"
+      value={frames[frameIndex]}
+    />
+  );
+}`),
   drawer:
     '"use client";\n\n' +
     `import { useState } from "react"\n` +
@@ -375,6 +401,32 @@ export function AccordionPreview() {
     "    </div>\n" +
     "  )\n" +
     "}\n",
+  "r-progress": buildV0Page(`"use client";
+
+import { useEffect, useState } from "react";
+import { Progress } from "@/components/ui/r-progress";
+
+const frames = [22, 41, 58, 76, 92, 100];
+
+export function ProgressPreview() {
+  const [frameIndex, setFrameIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = window.setInterval(() => {
+      setFrameIndex((current) => (current + 1) % frames.length);
+    }, 1400);
+
+    return () => window.clearInterval(interval);
+  }, []);
+
+  return (
+    <Progress
+      className="w-full max-w-sm"
+      label="Registry sync"
+      value={frames[frameIndex]}
+    />
+  );
+}`),
   slider:
     '"use client";\n\n' +
     `import { Slider } from "@/components/ui/slider"\n` +

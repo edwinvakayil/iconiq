@@ -249,6 +249,21 @@
       ]
     },
     {
+      "name": "b-progress",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": ["@base-ui/react", "motion"],
+      "devDependencies": [],
+      "title": "Progress (Base UI)",
+      "description": "Progress bar with the same Iconiq API layered over Base UI primitives, preserving the spring-smoothed fill, restrained inline readout, and quiet indeterminate motion.",
+      "files": [
+        {
+          "path": "b-progress.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "b-radio-group",
       "type": "registry:ui",
       "registryDependencies": [],
@@ -826,6 +841,21 @@
       "files": [
         {
           "path": "r-popover.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "r-progress",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": ["@radix-ui/react-progress", "motion"],
+      "devDependencies": [],
+      "title": "Progress (Radix UI)",
+      "description": "Progress bar with the same Iconiq API layered over Radix UI primitives, preserving the spring-smoothed fill, restrained inline readout, and quiet indeterminate motion.",
+      "files": [
+        {
+          "path": "r-progress.tsx",
           "type": "registry:ui"
         }
       ]

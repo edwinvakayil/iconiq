@@ -185,6 +185,12 @@ const REGISTRY_UI_META: Record<
       "Popover with the same Iconiq API layered over Base UI popover primitives, preserving side-aware panel motion, optional anchor support, and size-aware content transitions.",
     dependencies: ["@base-ui/react", "motion"],
   },
+  "b-progress": {
+    title: "Progress (Base UI)",
+    description:
+      "Progress bar with the same Iconiq API layered over Base UI primitives, preserving the spring-smoothed fill, restrained inline readout, and quiet indeterminate motion.",
+    dependencies: ["@base-ui/react", "motion"],
+  },
   "b-checkbox": {
     title: "Checkbox (Base UI)",
     description:
@@ -368,6 +374,12 @@ const REGISTRY_UI_META: Record<
     description:
       "Popover with the same Iconiq API layered over Radix UI popover primitives, preserving side-aware panel motion, optional anchor support, and size-aware content transitions.",
     dependencies: ["@radix-ui/react-popover", "motion"],
+  },
+  "r-progress": {
+    title: "Progress (Radix UI)",
+    description:
+      "Progress bar with the same Iconiq API layered over Radix UI primitives, preserving the spring-smoothed fill, restrained inline readout, and quiet indeterminate motion.",
+    dependencies: ["@radix-ui/react-progress", "motion"],
   },
   "r-radio-group": {
     title: "Radio Group (Radix UI)",

@@ -62,6 +62,8 @@ const componentSummaries: Record<string, string> = {
     "Input group docs in the Components section, using the shared Iconiq input group install with provider options visible but disabled.",
   "/components/popover":
     "Popover docs with a provider switch that swaps between Base UI and Radix UI registry entries.",
+  "/components/progress":
+    "Progress docs with a provider switch that swaps between Base UI and Radix UI registry entries.",
   "/components/radio-group":
     "Radio group docs with a provider switch that swaps between Base UI and Radix UI registry entries.",
   "/components/select":
@@ -142,6 +144,9 @@ const componentItems: SearchItem[] = SITE_SECTIONS.flatMap((section) =>
     }
     if (slug === "file-upload") {
       labelKeywords.push("upload");
+    }
+    if (slug === "progress") {
+      labelKeywords.push("progress bar", "loading bar", "meter");
     }
     if (slug === "dia-text") {
       labelKeywords.push("text", "text reveal", "animated text");

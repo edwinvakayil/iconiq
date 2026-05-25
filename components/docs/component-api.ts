@@ -2191,6 +2191,105 @@ const accordionApiDetails: DetailItem[] = [
   registryItem("accordion.json", ["motion", "lucide-react"]),
 ];
 
+const progressApiDetails: DetailItem[] = [
+  {
+    id: "progress",
+    title: "Progress",
+    summary:
+      "Motion-smoothed progress bar for determinate and indeterminate task states.",
+    fields: [
+      field({
+        name: "value",
+        type: "number | null",
+        defaultValue: "64",
+        description:
+          "Current progress value. Pass null to switch into the indeterminate motion state instead of rendering a measured fill width.",
+      }),
+      field({
+        name: "min",
+        type: "number",
+        defaultValue: "0",
+        description:
+          "Lower bound used to normalize the fill width and the visible value text.",
+      }),
+      field({
+        name: "max",
+        type: "number",
+        defaultValue: "100",
+        description:
+          "Upper bound used to normalize the fill width and the visible value text.",
+      }),
+      field({
+        name: "label",
+        type: "string",
+        description:
+          "Optional title rendered above the bar and linked to the progress semantics when present.",
+      }),
+      field({
+        name: "helper",
+        type: "string",
+        description:
+          "Optional supporting copy rendered near the label for extra task context. When omitted, the header collapses down to just the label and trailing value readout.",
+      }),
+      field({
+        name: "showValue",
+        type: "boolean",
+        defaultValue: "true",
+        description:
+          "Controls whether the trailing inline readout with the live formatted value or indeterminate label is shown.",
+      }),
+      field({
+        name: "formatValue",
+        type: "(value: number, percent: number) => string",
+        description:
+          "Optional formatter for the visible value readout. Receives the current normalized value and percent so you can render units, fractions, or custom labels.",
+      }),
+      field({
+        name: "getValueLabel",
+        type: "(value: number, percent: number) => string",
+        description:
+          "Optional formatter for screen-reader announcements when the accessible text should be more explicit than the visible readout.",
+      }),
+      field({
+        name: "indeterminateLabel",
+        type: "string",
+        defaultValue: '"In progress"',
+        description:
+          "Text used for the visible value readout and accessible status when value is null.",
+      }),
+      field({
+        name: "ariaLabel",
+        type: "string",
+        description:
+          "Accessible name used when no visible label is rendered. When omitted, unlabeled installs fall back to a generic Progress label.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description:
+          "Merged onto the root wrapper so you can control width, spacing, or placement in your layout.",
+      }),
+    ],
+    notes: [
+      "The component clamps numeric values into the min/max range before calculating the fill width.",
+      "The visible value readout animates from the same motion value as the fill width, so the text and the bar stay visually locked together while values change.",
+      "There is no controlled versus uncontrolled split here; value is simply rendered as the current state of the task.",
+    ],
+  },
+  {
+    id: "progress-motion",
+    title: "Motion and semantics",
+    summary:
+      "Headless progress semantics from the provider primitive with a spring-smoothed fill and restrained indeterminate motion layered on top.",
+    notes: [
+      "Determinate mode uses a spring-smoothed width animation instead of a hard width jump, which keeps status updates feeling more fluid when values change rapidly.",
+      "Indeterminate mode uses one minimal left-to-right flow band with a soft fade at the start and end of each pass, so the restart stays visually quiet.",
+      "Reduced motion disables the looping movement and spring settling while keeping the same value formatting, layout, and accessible semantics.",
+    ],
+  },
+  registryItem("progress.json", ["motion"]),
+];
+
 const radioGroupApiDetails: DetailItem[] = [
   {
     id: "radio-option",
@@ -3733,6 +3832,7 @@ export {
   popoverApiDetails,
   inputGroupApiDetails,
   accordionApiDetails,
+  progressApiDetails,
   radioGroupApiDetails,
   shimmerTextApiDetails,
   skeletonApiDetails,
