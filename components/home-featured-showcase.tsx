@@ -4,11 +4,10 @@ import { Building2, Cloud, GraduationCap, Sun } from "lucide-react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { type ReactNode, startTransition, useEffect, useState } from "react";
-
-import { Accordion, type AccordionItem } from "@/registry/r-accordion";
 import type { CheckboxGroupOption } from "@/registry/b-checkbox-group";
 import { DiaText } from "@/registry/dia-text";
 import { IconBar, IconBarItem } from "@/registry/icon-bar";
+import { Accordion, type AccordionItem } from "@/registry/r-accordion";
 import type { RadioOption } from "@/registry/r-radio-group";
 import { ShimmerSkeleton } from "@/registry/skeleton";
 

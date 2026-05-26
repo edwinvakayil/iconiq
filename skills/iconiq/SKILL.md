@@ -71,7 +71,7 @@ Work in order; skip steps only when they do not apply.
 
 - **Scope**: One focused change; avoid unrelated refactors.
 - **Motion**: Subtle, intentional animation; respect reduced motion (`lib/reduced-motion.tsx`).
-- **Registry theme**: Shared tokens/helpers in `lib/registry-theme.ts` when styling installable files.
+- **Registry theme**: Components that use theme tokens declare `@iconiq/iconiq-theme` as a registry dependency so `lib/registry-theme.ts` is installed alongside the component.
 - **Generated files**: Never hand-edit `public/r/`; always rebuild.
 - **Docs copy**: Document real behavior, not placeholder text.
 - **PRs**: Note `pnpm gen-cli` when generated files change; add screenshots for UI.

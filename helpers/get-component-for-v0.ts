@@ -11,7 +11,6 @@ import {
   skeletonPreviewCode,
 } from "@/lib/component-v0-pages";
 
-/** Example app/page.tsx snippets for v0 templates (registry name → content). */
 const COMPONENT_EXAMPLE: Record<string, string> = {
   alert:
     '"use client";\n\n' +
@@ -757,6 +756,57 @@ export function StatusLine() {
 }`),
 };
 
+type RegistryFile = {
+  content: string;
+  path: string;
+  target?: string;
+  type?: string;
+};
+
+function parseRegistryDependencyName(dep: string) {
+  if (dep.startsWith("@iconiq/")) {
+    return dep.slice("@iconiq/".length);
+  }
+
+  return dep;
+}
+
+function mapRegistryFileForV0(file: RegistryFile, fallbackTarget: string) {
+  return {
+    path: file.path,
+    content: file.content,
+    type: file.type === "registry:ui" ? "registry:component" : file.type,
+    target: file.target ?? fallbackTarget,
+  };
+}
+
+async function loadRegistryDependencyFiles(registryDependencies: string[]) {
+  const dependencyFiles: ReturnType<typeof mapRegistryFileForV0>[] = [];
+
+  for (const dep of registryDependencies) {
+    const depName = parseRegistryDependencyName(dep);
+    const depFilePath = path.join(
+      process.cwd(),
+      "public",
+      "r",
+      `${depName}.json`
+    );
+
+    try {
+      const depFile = await fs.readFile(depFilePath, "utf8");
+      const depData = JSON.parse(depFile);
+
+      for (const file of (depData.files ?? []) as RegistryFile[]) {
+        dependencyFiles.push(mapRegistryFileForV0(file, file.path));
+      }
+    } catch (error) {
+      console.warn(`Could not load registry dependency ${dep}:`, error);
+    }
+  }
+
+  return dependencyFiles;
+}
+
 const getComponentForV0 = async (
   name: string,
   pageContentOverride?: string
@@ -796,18 +846,11 @@ const getComponentForV0 = async (
 
     const description =
       registryData.description ?? `${name} component from Iconiq`;
-    const registryFiles = (registryData.files ?? []).map(
-      (file: {
-        content: string;
-        path: string;
-        target?: string;
-        type?: string;
-      }) => ({
-        path: file.path,
-        content: file.content,
-        type: file.type === "registry:ui" ? "registry:component" : file.type,
-        target: file.target ?? `components/ui/${name}.tsx`,
-      })
+    const registryFiles = (registryData.files ?? []).map((file: RegistryFile) =>
+      mapRegistryFileForV0(file, `components/ui/${name}.tsx`)
+    );
+    const dependencyFiles = await loadRegistryDependencyFiles(
+      registryData.registryDependencies || []
     );
 
     const template = {
@@ -859,6 +902,7 @@ export default function RootLayout({
           type: "registry:page",
           target: "app/layout.tsx",
         },
+        ...dependencyFiles,
         ...registryFiles,
       ],
     };

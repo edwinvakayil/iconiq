@@ -17,7 +17,7 @@ const registryThemeHelperPath = path.join(
 const reducedMotionImport = 'from "@/lib/reduced-motion"';
 const registryThemeImport = 'from "@/lib/registry-theme"';
 const reducedMotionModulePath = "@/lib/reduced-motion";
-const registryThemeModulePath = "@/lib/registry-theme";
+const iconiqThemeDependency = "@iconiq/iconiq-theme";
 const reactContextImport = 'import { createContext, useContext } from "react";';
 const motionReducedMotionImport =
   'import { MotionConfig, useReducedMotion } from "motion/react";';
@@ -50,10 +50,27 @@ function ReducedMotionConfig({
     </MotionConfig>
   );
 }`;
-const registryThemeInlineSource = fs
-  .readFileSync(registryThemeHelperPath, "utf8")
-  .replace(/^export\s+/m, "")
-  .trim();
+function buildIconiqThemeSchema(): Schema {
+  return {
+    $schema: "https://ui.shadcn.com/schema/registry-item.json",
+    name: "iconiq-theme",
+    type: "registry:lib",
+    title: "Iconiq theme tokens",
+    description:
+      "Shared Tailwind arbitrary property tokens used by Iconiq registry components.",
+    registryDependencies: [],
+    dependencies: [],
+    devDependencies: [],
+    categories: ["lib"],
+    files: [
+      {
+        path: "lib/registry-theme.ts",
+        content: fs.readFileSync(registryThemeHelperPath, "utf8"),
+        type: "registry:lib",
+      },
+    ],
+  };
+}
 
 /** Optional title, description, and dependencies for registry UI components. */
 const REGISTRY_UI_META: Record<
@@ -607,42 +624,33 @@ function insertAfterImports(content: string, snippet: string) {
 
 function inlineRegistryHelpers(content: string) {
   const needsReducedMotion = content.includes(reducedMotionImport);
-  const needsRegistryTheme = content.includes(registryThemeImport);
 
-  if (!(needsReducedMotion || needsRegistryTheme)) {
+  if (!needsReducedMotion) {
     return content;
   }
 
-  let nextContent = content;
-
-  if (needsReducedMotion) {
-    nextContent = removeImportStatement(nextContent, reducedMotionModulePath);
-  }
-
-  if (needsRegistryTheme) {
-    nextContent = removeImportStatement(nextContent, registryThemeModulePath);
-  }
-
-  const injectedParts: string[] = [];
-
-  if (needsReducedMotion) {
-    injectedParts.push(motionReducedMotionImport, reactContextImport);
-  }
-
-  const inlineHelpers: string[] = [];
-
-  if (needsReducedMotion) {
-    inlineHelpers.push(reducedMotionInlineSource);
-  }
-
-  if (needsRegistryTheme) {
-    inlineHelpers.push(registryThemeInlineSource);
-  }
+  const nextContent = removeImportStatement(content, reducedMotionModulePath);
 
   return insertAfterImports(
     nextContent,
-    `${injectedParts.join("\n")}\n\n${inlineHelpers.join("\n\n")}`.trim()
+    `${motionReducedMotionImport}\n${reactContextImport}\n\n${reducedMotionInlineSource}`.trim()
   );
+}
+
+function getRegistryDependencies(
+  sourceContent: string,
+  baseDependencies: string[]
+) {
+  const registryDependencies = [...baseDependencies];
+
+  if (
+    sourceContent.includes(registryThemeImport) &&
+    !registryDependencies.includes(iconiqThemeDependency)
+  ) {
+    registryDependencies.push(iconiqThemeDependency);
+  }
+
+  return registryDependencies;
 }
 
 function buildAndWrite(schema: Schema) {
@@ -661,9 +669,8 @@ function buildAndWrite(schema: Schema) {
 }
 
 for (const component of components) {
-  const content = inlineRegistryHelpers(
-    fs.readFileSync(component.path, "utf8")
-  );
+  const sourceContent = fs.readFileSync(component.path, "utf8");
+  const content = inlineRegistryHelpers(sourceContent);
   const files: Schema["files"] = [
     {
       path: `${component.name}.tsx`,
@@ -676,7 +683,10 @@ for (const component of components) {
     $schema: "https://ui.shadcn.com/schema/registry-item.json",
     name: component.name,
     type: "registry:ui",
-    registryDependencies: component.registryDependencies || [],
+    registryDependencies: getRegistryDependencies(
+      sourceContent,
+      component.registryDependencies || []
+    ),
     dependencies: component.dependencies || [],
     devDependencies: component.devDependencies || [],
     files,
@@ -702,6 +712,8 @@ for (const component of components) {
   buildAndWrite(schema);
 }
 
+buildAndWrite(buildIconiqThemeSchema());
+
 const registryIndex = {
   $schema: "https://ui.shadcn.com/schema/registry.json",
   name: SITE.NAME,
@@ -713,5 +725,7 @@ const registryIndexJson = JSON.stringify(registryIndex, null, 2);
 fs.writeFileSync(registryIndexPath, registryIndexJson);
 fs.writeFileSync(registryRootPath, registryIndexJson);
 
-console.log(`✅ Built ${components.length} registry components`);
+console.log(
+  `✅ Built ${components.length} registry components and iconiq-theme`
+);
 console.log("✅ Updated registry.json\n");
