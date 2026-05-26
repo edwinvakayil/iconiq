@@ -2,7 +2,7 @@
   "$schema": "https://ui.shadcn.com/schema/registry-item.json",
   "name": "b-checkbox-group",
   "type": "registry:ui",
-  "registryDependencies": ["iconiq-theme", "iconiq-motion"],
+  "registryDependencies": ["@iconiq/iconiq-theme", "@iconiq/iconiq-motion"],
   "dependencies": ["@base-ui/react", "motion", "lucide-react"],
   "devDependencies": [],
   "files": [

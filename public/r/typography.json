@@ -2,7 +2,7 @@
   "$schema": "https://ui.shadcn.com/schema/registry-item.json",
   "name": "typography",
   "type": "registry:ui",
-  "registryDependencies": ["iconiq-theme"],
+  "registryDependencies": ["@iconiq/iconiq-theme"],
   "dependencies": ["class-variance-authority"],
   "devDependencies": [],
   "files": [

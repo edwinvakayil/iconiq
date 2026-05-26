@@ -27,7 +27,7 @@ Use this skill in **consumer apps** that install from [iconiqui.com](https://ico
 1. User names an exact slug, e.g. `@iconiq/b-dialog` — never guess alternate names.
 2. MCP fetches `https://iconiqui.com/r/<slug>.json` (lean payload; shared libs are separate items).
 3. shadcn installs component source into the project (editable files, not npm packages).
-4. If the item lists `registryDependencies`, install those first: `iconiq-theme`, `iconiq-motion`.
+4. If the item lists `registryDependencies`, install those first (namespaced): `@iconiq/iconiq-theme`, `@iconiq/iconiq-motion`.
 
 **Do**
 
@@ -55,8 +55,8 @@ Pick **one** provider line per feature. Default recommendation for new work: **B
 
 | Slug | Installs | When needed |
 |------|----------|-------------|
-| `iconiq-theme` | `lib/registry-theme.ts` | Components using `registryTheme` token classes |
-| `iconiq-motion` | `lib/reduced-motion.tsx` | Components using `ReducedMotionConfig` / `useResolvedReducedMotion` |
+| `@iconiq/iconiq-theme` | `lib/registry-theme.ts` | Components using `registryTheme` token classes |
+| `@iconiq/iconiq-motion` | `lib/reduced-motion.tsx` | Components using `ReducedMotionConfig` / `useResolvedReducedMotion` |
 
 shadcn resolves these via `registryDependencies` on each component — you usually do not install them manually.
 

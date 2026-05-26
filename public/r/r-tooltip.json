@@ -2,7 +2,7 @@
   "$schema": "https://ui.shadcn.com/schema/registry-item.json",
   "name": "r-tooltip",
   "type": "registry:ui",
-  "registryDependencies": ["iconiq-theme", "iconiq-motion"],
+  "registryDependencies": ["@iconiq/iconiq-theme", "@iconiq/iconiq-motion"],
   "dependencies": ["@radix-ui/react-tooltip", "@radix-ui/react-slot", "motion"],
   "devDependencies": [],
   "files": [

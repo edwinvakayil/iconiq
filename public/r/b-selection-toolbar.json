@@ -2,7 +2,7 @@
   "$schema": "https://ui.shadcn.com/schema/registry-item.json",
   "name": "b-selection-toolbar",
   "type": "registry:ui",
-  "registryDependencies": ["iconiq-motion"],
+  "registryDependencies": ["@iconiq/iconiq-motion"],
   "dependencies": ["@base-ui/react", "lucide-react"],
   "devDependencies": [],
   "files": [

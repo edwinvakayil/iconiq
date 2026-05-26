@@ -2,7 +2,7 @@
   "$schema": "https://ui.shadcn.com/schema/registry-item.json",
   "name": "switch",
   "type": "registry:ui",
-  "registryDependencies": ["iconiq-theme", "iconiq-motion"],
+  "registryDependencies": ["@iconiq/iconiq-theme", "@iconiq/iconiq-motion"],
   "dependencies": ["@radix-ui/react-switch", "motion"],
   "devDependencies": [],
   "files": [

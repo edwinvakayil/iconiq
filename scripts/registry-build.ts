@@ -67,14 +67,27 @@ function resolveRegistryDependencies(content: string): string[] {
   const dependencies: string[] = [];
 
   if (content.includes(registryThemeModulePath)) {
-    dependencies.push("iconiq-theme");
+    dependencies.push("@iconiq/iconiq-theme");
   }
 
   if (content.includes(reducedMotionModulePath)) {
-    dependencies.push("iconiq-motion");
+    dependencies.push("@iconiq/iconiq-motion");
   }
 
   return dependencies;
+}
+
+/** Normalize legacy or manual deps to namespaced @iconiq slugs for the CLI. */
+function normalizeRegistryDependencies(deps: string[]): string[] {
+  return deps.map((dep) => {
+    if (dep.startsWith("@")) {
+      return dep;
+    }
+    if (dep.startsWith("http://") || dep.startsWith("https://")) {
+      return dep;
+    }
+    return `@iconiq/${dep}`;
+  });
 }
 
 /** Optional title, description, and dependencies for registry UI components. */
@@ -624,10 +637,12 @@ for (const component of components) {
   const content = fs.readFileSync(component.path, "utf8");
   const inferredDependencies = resolveRegistryDependencies(content);
   const registryDependencies = [
-    ...new Set([
-      ...(component.registryDependencies || []),
-      ...inferredDependencies,
-    ]),
+    ...new Set(
+      normalizeRegistryDependencies([
+        ...(component.registryDependencies || []),
+        ...inferredDependencies,
+      ])
+    ),
   ];
   const files: Schema["files"] = [
     {
