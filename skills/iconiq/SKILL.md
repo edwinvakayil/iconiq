@@ -31,6 +31,7 @@ description: Work on the Iconiq (iconiqui.com) shadcn registry and docs site—r
 | v0 snippets | `helpers/get-component-for-v0.ts` | Tooling examples |
 | Registry build | `scripts/registry-build.ts` | `REGISTRY_UI_META`, generates payloads |
 | Generated output | `public/r/`, `registry.json` | **Do not edit by hand** |
+| Shared registry libs | `iconiq-theme`, `iconiq-motion` | Built as `registry:lib`; linked via `registryDependencies` |
 
 Reference pattern: `registry/calendar.tsx`, `app/(site)/components/calendar/page.tsx`, calendar section in `component-api.ts`.
 
@@ -73,6 +74,8 @@ Work in order; skip steps only when they do not apply.
 - **Motion**: Subtle, intentional animation; respect reduced motion (`lib/reduced-motion.tsx`).
 - **Registry theme**: Shared tokens/helpers in `lib/registry-theme.ts` when styling installable files.
 - **Generated files**: Never hand-edit `public/r/`; always rebuild.
+- **Registry libs**: `registry-build.ts` publishes `iconiq-theme` and `iconiq-motion` as separate items—do not inline them into UI payloads.
+- **MCP**: Consumer guidance lives in `skills/iconiq-shadcn/` and `/mcp`.
 - **Docs copy**: Document real behavior, not placeholder text.
 - **PRs**: Note `pnpm gen-cli` when generated files change; add screenshots for UI.
 

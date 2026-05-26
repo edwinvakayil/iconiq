@@ -1,7 +1,9 @@
-import { readFile } from "node:fs/promises";
+import { readdir, readFile } from "node:fs/promises";
 import path from "node:path";
 
-const SKILL_MD_PATH = path.join(process.cwd(), "skills", "iconiq", "SKILL.md");
+const SKILLS_DIR = path.join(process.cwd(), "skills");
+/** Default skill served at /SKILL.md for consumers installing from iconiqui.com */
+export const DEFAULT_PUBLIC_SKILL_NAME = "iconiq-shadcn";
 const CRLF_REGEX = /\r?\n/;
 const FRONTMATTER_REGEX = /^---\r?\n([\s\S]*?)\r?\n---/;
 const INDENTED_LINE_REGEX = /^\s+/;
@@ -87,31 +89,54 @@ function parseSkillFrontmatter(content: string): SkillFrontmatter | null {
   return { name, description };
 }
 
-export function readProjectSkillMd() {
-  return readFile(SKILL_MD_PATH, "utf8");
+function skillMdPath(skillName: string) {
+  return path.join(SKILLS_DIR, skillName, "SKILL.md");
+}
+
+function readSkillFile(skillName: string) {
+  return readFile(skillMdPath(skillName), "utf8");
+}
+
+async function listSkillNames() {
+  const entries = await readdir(SKILLS_DIR, { withFileTypes: true });
+  return entries
+    .filter((entry) => entry.isDirectory())
+    .map((entry) => entry.name)
+    .sort();
+}
+
+export function readProjectSkillMd(skillName = DEFAULT_PUBLIC_SKILL_NAME) {
+  return readSkillFile(skillName);
 }
 
 export async function getAgentSkillsIndex(): Promise<AgentSkillsIndex | null> {
-  const content = await readProjectSkillMd();
-  const frontmatter = parseSkillFrontmatter(content);
+  const skillNames = await listSkillNames();
+  const skills: AgentSkillsIndex["skills"] = [];
 
-  if (!frontmatter) {
+  for (const skillName of skillNames) {
+    const content = await readSkillFile(skillName);
+    const frontmatter = parseSkillFrontmatter(content);
+
+    if (!frontmatter) {
+      continue;
+    }
+
+    skills.push({
+      name: frontmatter.name,
+      description: frontmatter.description,
+      files: ["SKILL.md"],
+    });
+  }
+
+  if (skills.length === 0) {
     return null;
   }
 
-  return {
-    skills: [
-      {
-        name: frontmatter.name,
-        description: frontmatter.description,
-        files: ["SKILL.md"],
-      },
-    ],
-  };
+  return { skills };
 }
 
 export async function getProjectSkillForName(skillName: string) {
-  const content = await readProjectSkillMd();
+  const content = await readSkillFile(skillName);
   const frontmatter = parseSkillFrontmatter(content);
 
   if (!frontmatter || frontmatter.name !== skillName) {

@@ -13,5 +13,6 @@
     }
   ],
   "title": "Selection Toolbar",
-  "description": "Floating inline formatting toolbar for editable text selections with bold, italic, and underline actions."
+  "description": "Floating inline formatting toolbar for editable text selections with bold, italic, and underline actions.",
+  "categories": ["components"]
 }

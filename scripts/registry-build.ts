@@ -10,50 +10,72 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const registryComponents = path.join(__dirname, "../public/r");
 const registryIndexPath = path.join(__dirname, "../public/r/registry.json");
 const registryRootPath = path.join(__dirname, "../registry.json");
-const registryThemeHelperPath = path.join(
-  __dirname,
-  "../lib/registry-theme.ts"
-);
-const reducedMotionImport = 'from "@/lib/reduced-motion"';
-const registryThemeImport = 'from "@/lib/registry-theme"';
 const reducedMotionModulePath = "@/lib/reduced-motion";
 const registryThemeModulePath = "@/lib/registry-theme";
-const reactContextImport = 'import { createContext, useContext } from "react";';
-const motionReducedMotionImport =
-  'import { MotionConfig, useReducedMotion } from "motion/react";';
-const reducedMotionInlineSource = `interface ReducedMotionProp {
-  reducedMotion?: boolean;
+
+const REGISTRY_LIBS = [
+  {
+    name: "iconiq-theme",
+    title: "Iconiq theme tokens",
+    description:
+      "Shared Tailwind arbitrary property tokens used by Iconiq registry components.",
+    sourcePath: path.join(__dirname, "../lib/registry-theme.ts"),
+    installPath: "lib/registry-theme.ts",
+    dependencies: [] as string[],
+  },
+  {
+    name: "iconiq-motion",
+    title: "Iconiq reduced motion",
+    description:
+      "MotionConfig helpers that respect prefers-reduced-motion across Iconiq components.",
+    sourcePath: path.join(__dirname, "../lib/reduced-motion.tsx"),
+    installPath: "lib/reduced-motion.tsx",
+    dependencies: ["motion"],
+  },
+] as const;
+
+const SPECIAL_ONE_COMPONENTS = new Set([
+  "icon-bar",
+  "origin-button",
+  "faq-pro",
+]);
+const TEXT_COMPONENTS = new Set(["dia-text", "shimmer-text"]);
+const FOUNDATION_COMPONENTS = new Set(["typography"]);
+
+function inferRegistryCategories(name: string): string[] {
+  if (FOUNDATION_COMPONENTS.has(name)) {
+    return ["foundation"];
+  }
+  if (TEXT_COMPONENTS.has(name)) {
+    return ["texts"];
+  }
+  if (SPECIAL_ONE_COMPONENTS.has(name)) {
+    return ["special-one"];
+  }
+
+  const categories = ["components"];
+  if (name.startsWith("b-")) {
+    categories.push("base-ui");
+  } else if (name.startsWith("r-")) {
+    categories.push("radix-ui");
+  }
+
+  return categories;
 }
 
-const ReducedMotionOverrideContext = createContext(false);
+function resolveRegistryDependencies(content: string): string[] {
+  const dependencies: string[] = [];
 
-function useResolvedReducedMotion(reducedMotion?: boolean) {
-  const reducedMotionOverride = useContext(ReducedMotionOverrideContext);
-  const prefersReducedMotion = useReducedMotion() ?? false;
+  if (content.includes(registryThemeModulePath)) {
+    dependencies.push("iconiq-theme");
+  }
 
-  return Boolean(
-    reducedMotion || reducedMotionOverride || prefersReducedMotion
-  );
+  if (content.includes(reducedMotionModulePath)) {
+    dependencies.push("iconiq-motion");
+  }
+
+  return dependencies;
 }
-
-function ReducedMotionConfig({
-  children,
-  reducedMotion,
-}: ReducedMotionProp & {
-  children: import("react").ReactNode;
-}) {
-  const resolvedReducedMotion = useResolvedReducedMotion(reducedMotion);
-
-  return (
-    <MotionConfig reducedMotion={resolvedReducedMotion ? "always" : "user"}>
-      {children}
-    </MotionConfig>
-  );
-}`;
-const registryThemeInlineSource = fs
-  .readFileSync(registryThemeHelperPath, "utf8")
-  .replace(/^export\s+/m, "")
-  .trim();
 
 /** Optional title, description, and dependencies for registry UI components. */
 const REGISTRY_UI_META: Record<
@@ -560,91 +582,6 @@ console.log("\n🔨 Building registry components...\n");
 
 const registryItems: Schema[] = [];
 
-function removeImportStatement(content: string, modulePath: string) {
-  const lines = content.split("\n");
-  const targetLineIndex = lines.findIndex(
-    (line) =>
-      line.includes(`from "${modulePath}"`) ||
-      line.includes(`from '${modulePath}'`)
-  );
-
-  if (targetLineIndex === -1) {
-    return content;
-  }
-
-  let importStartIndex = targetLineIndex;
-
-  while (
-    importStartIndex >= 0 &&
-    !lines[importStartIndex].trimStart().startsWith("import ")
-  ) {
-    importStartIndex -= 1;
-  }
-
-  if (importStartIndex === -1) {
-    return content;
-  }
-
-  lines.splice(importStartIndex, targetLineIndex - importStartIndex + 1);
-
-  return lines.join("\n").replace(/\n{3,}/g, "\n\n");
-}
-
-function insertAfterImports(content: string, snippet: string) {
-  const importMatches = [...content.matchAll(/^import[\s\S]*?;\n?/gm)];
-  const lastImport = importMatches.at(-1);
-
-  if (!lastImport || lastImport.index === undefined) {
-    return `${snippet}\n\n${content}`;
-  }
-
-  const insertionIndex = lastImport.index + lastImport[0].length;
-
-  return `${content.slice(0, insertionIndex)}\n${snippet}\n${content.slice(
-    insertionIndex
-  )}`;
-}
-
-function inlineRegistryHelpers(content: string) {
-  const needsReducedMotion = content.includes(reducedMotionImport);
-  const needsRegistryTheme = content.includes(registryThemeImport);
-
-  if (!(needsReducedMotion || needsRegistryTheme)) {
-    return content;
-  }
-
-  let nextContent = content;
-
-  if (needsReducedMotion) {
-    nextContent = removeImportStatement(nextContent, reducedMotionModulePath);
-  }
-
-  if (needsRegistryTheme) {
-    nextContent = removeImportStatement(nextContent, registryThemeModulePath);
-  }
-
-  const injectedParts: string[] = [];
-
-  if (needsReducedMotion) {
-    injectedParts.push(motionReducedMotionImport, reactContextImport);
-  }
-
-  const inlineHelpers: string[] = [];
-
-  if (needsReducedMotion) {
-    inlineHelpers.push(reducedMotionInlineSource);
-  }
-
-  if (needsRegistryTheme) {
-    inlineHelpers.push(registryThemeInlineSource);
-  }
-
-  return insertAfterImports(
-    nextContent,
-    `${injectedParts.join("\n")}\n\n${inlineHelpers.join("\n\n")}`.trim()
-  );
-}
-
 function buildAndWrite(schema: Schema) {
   fs.writeFileSync(
     path.join(registryComponents, `${schema.name}.json`),
@@ -660,10 +597,38 @@ function buildAndWrite(schema: Schema) {
   });
 }
 
+for (const lib of REGISTRY_LIBS) {
+  const libSchema: Schema = {
+    $schema: "https://ui.shadcn.com/schema/registry-item.json",
+    name: lib.name,
+    type: "registry:lib",
+    title: lib.title,
+    description: lib.description,
+    registryDependencies: [],
+    dependencies: [...lib.dependencies],
+    devDependencies: [],
+    categories: ["lib"],
+    files: [
+      {
+        path: lib.installPath,
+        content: fs.readFileSync(lib.sourcePath, "utf8"),
+        type: "registry:lib",
+      },
+    ],
+  };
+
+  buildAndWrite(libSchema);
+}
+
 for (const component of components) {
-  const content = inlineRegistryHelpers(
-    fs.readFileSync(component.path, "utf8")
-  );
+  const content = fs.readFileSync(component.path, "utf8");
+  const inferredDependencies = resolveRegistryDependencies(content);
+  const registryDependencies = [
+    ...new Set([
+      ...(component.registryDependencies || []),
+      ...inferredDependencies,
+    ]),
+  ];
   const files: Schema["files"] = [
     {
       path: `${component.name}.tsx`,
@@ -676,7 +641,7 @@ for (const component of components) {
     $schema: "https://ui.shadcn.com/schema/registry-item.json",
     name: component.name,
     type: "registry:ui",
-    registryDependencies: component.registryDependencies || [],
+    registryDependencies,
     dependencies: component.dependencies || [],
     devDependencies: component.devDependencies || [],
     files,
@@ -696,7 +661,11 @@ for (const component of components) {
   if (component.css) schema.css = component.css;
   if (component.envVars) schema.envVars = component.envVars;
   if (component.docs) schema.docs = component.docs;
-  if (component.categories) schema.categories = component.categories;
+  if (component.categories) {
+    schema.categories = component.categories;
+  } else {
+    schema.categories = inferRegistryCategories(component.name);
+  }
   if (component.meta) schema.meta = component.meta;
 
   buildAndWrite(schema);
@@ -713,5 +682,7 @@ const registryIndexJson = JSON.stringify(registryIndex, null, 2);
 fs.writeFileSync(registryIndexPath, registryIndexJson);
 fs.writeFileSync(registryRootPath, registryIndexJson);
 
-console.log(`✅ Built ${components.length} registry components`);
+console.log(
+  `✅ Built ${REGISTRY_LIBS.length} registry libs and ${components.length} registry components`
+);
 console.log("✅ Updated registry.json\n");

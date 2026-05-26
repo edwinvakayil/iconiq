@@ -4,7 +4,7 @@
     {
       "title": "Iconiq",
       "description": "Agent guidance for the Iconiq shadcn registry and docs site.",
-      "skills": ["iconiq"]
+      "skills": ["iconiq-shadcn", "iconiq"]
     }
   ]
 }

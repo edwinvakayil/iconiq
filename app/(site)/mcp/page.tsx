@@ -5,6 +5,7 @@ import Link from "next/link";
 import { DocsPageRail } from "@/components/docs/component-page-rail";
 import { DocsCopyActions } from "@/components/docs/docs-copy-actions";
 import { DocsBreadcrumbs } from "@/components/docs/page-shell";
+import { McpAgentSkillBlock } from "@/components/mcp-agent-skill-block";
 import { McpAutoConfigTabs } from "@/components/mcp-auto-config-tabs";
 import { McpManualConfigTabs } from "@/components/mcp-manual-config-tabs";
 import {
@@ -14,6 +15,13 @@ import {
 } from "@/components/page-reveal";
 import { ShadcnDevDependencyBlock } from "@/components/shadcn-dev-dependency-block";
 import { LINK, SITE } from "@/constants";
+import {
+  ICONIQ_REGISTRY_CONFIG,
+  MCP_AVOID_PROMPTS,
+  MCP_EFFICIENT_PROMPTS,
+  MCP_PROVIDER_ROWS,
+  MCP_SHARED_LIBS,
+} from "@/lib/mcp-docs";
 import { BreadcrumbJsonLdClient } from "@/seo/breadcrumb-json-ld-client";
 import { createMetadata } from "@/seo/metadata";
 
@@ -40,23 +48,15 @@ const sections = [
   { id: "automatic-configuration", label: "Automatic configuration" },
   { id: "manual-configuration", label: "Manual configuration" },
   { id: "registry-configuration", label: "Registry configuration" },
-  { id: "usage-examples", label: "Example prompts" },
+  { id: "agent-skill", label: "Agent skill" },
+  { id: "shared-libs", label: "Shared registry libs" },
+  { id: "provider-variants", label: "Provider variants" },
+  { id: "efficient-prompts", label: "Efficient prompts" },
   { id: "troubleshooting", label: "Troubleshooting" },
 ];
 
 const pagerButtonClassName =
   "inline-flex size-9 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2";
-
-const registryConfig = `{
-  "registries": {
-    "@iconiq": "https://iconiqui.com/r/{name}.json"
-  }
-}`;
-
-const promptExamples = `Add the @iconiq/b-button component to this page.
-Install the @iconiq/accordion component and keep the generated files editable.
-Show me all available components in the iconiq registry.
-Create a feature section using Iconiq components and keep the generated files local.`;
 
 const officialDocsHref = "https://ui.shadcn.com/docs/mcp";
 
@@ -64,39 +64,25 @@ const pageCopyContent = `# MCP
 
 Connect Iconiq to shadcn MCP so AI coding tools can discover the registry and add components directly into your project.
 
+Pair MCP with the iconiq-shadcn agent skill for consistent installs and naming.
+
 ## Automatic configuration
 
-Run the shadcn MCP init command for your client, such as:
-
-pnpm dlx shadcn@latest mcp init --client claude
-
-## Manual configuration
-
-Install shadcn as a dev dependency:
-
-pnpm add -D shadcn@latest
-
-Then configure your editor:
-
-- Claude Code: .mcp.json
-- Cursor: .cursor/mcp.json
-- VS Code: .vscode/mcp.json
-- Codex: ~/.codex/config.toml
+pnpm dlx shadcn@latest mcp init --client cursor
 
 ## Registry configuration
 
-Add this to components.json:
-
 \`\`\`json
-${registryConfig}
+${ICONIQ_REGISTRY_CONFIG}
 \`\`\`
 
-## Example prompts
+## Agent skill
 
-- Add the @iconiq/b-button component to this page.
-- Install the @iconiq/accordion component and keep the generated files editable.
-- Show me all available components in the iconiq registry.
-- Create a feature section using Iconiq components and keep the generated files local.`;
+npx skills add https://iconiqui.com --skill iconiq-shadcn -y
+
+## Efficient prompts
+
+${MCP_EFFICIENT_PROMPTS}`;
 
 export default function McpPage() {
   return (
@@ -117,9 +103,10 @@ export default function McpPage() {
                           MCP
                         </h1>
                         <p className="max-w-3xl text-base text-muted-foreground">
-                          Connect {SITE.NAME} to shadcn MCP so AI coding tools
-                          can discover the registry, add components by name, and
-                          keep everything editable in your own codebase.
+                          Connect {SITE.NAME} to shadcn MCP for fast registry
+                          installs, then add the agent skill so assistants
+                          follow Iconiq naming, motion, and provider
+                          conventions.
                         </p>
                       </div>
 
@@ -251,7 +238,7 @@ export default function McpPage() {
                       </div>
                       <pre className="overflow-x-auto px-4 py-3 dark:bg-[#0F0F0F]">
                         <code className="font-mono text-[#032F62] text-sm dark:text-[#9ECBFF]">
-                          {registryConfig}
+                          {ICONIQ_REGISTRY_CONFIG}
                         </code>
                       </pre>
                     </div>
@@ -274,36 +261,173 @@ export default function McpPage() {
                 </PageReveal>
 
                 <PageReveal inView>
-                  <section
-                    className="scroll-mt-28 space-y-5"
-                    id="usage-examples"
-                  >
+                  <section className="scroll-mt-28 space-y-5" id="agent-skill">
                     <h2 className="text-2xl text-foreground tracking-tight">
-                      Example prompts
+                      Agent skill
                     </h2>
                     <p>
-                      With MCP enabled and the registry configured, you can ask
-                      your coding assistant to work with {SITE.NAME} in plain
-                      language. These prompts map well to the registry workflow:
+                      MCP installs components; the <code>iconiq-shadcn</code>{" "}
+                      skill teaches assistants how Iconiq projects are
+                      structured—exact slugs, provider prefixes, shared libs,
+                      and motion rules. Install it once per machine or project:
+                    </p>
+                    <McpAgentSkillBlock className="max-w-[720px]" />
+                    <ul className="list-disc space-y-2 pl-6 text-foreground/90 marker:text-muted-foreground">
+                      <li>
+                        Served at{" "}
+                        <a
+                          className="text-foreground underline underline-offset-4"
+                          href={`${SITE.URL}/.well-known/skills/iconiq-shadcn/SKILL.md`}
+                        >
+                          /.well-known/skills/iconiq-shadcn/SKILL.md
+                        </a>
+                      </li>
+                      <li>
+                        Index:{" "}
+                        <a
+                          className="text-foreground underline underline-offset-4"
+                          href={`${SITE.URL}/.well-known/skills/index.json`}
+                        >
+                          /.well-known/skills/index.json
+                        </a>
+                      </li>
+                    </ul>
+                  </section>
+                </PageReveal>
+
+                <PageReveal inView>
+                  <section className="scroll-mt-28 space-y-5" id="shared-libs">
+                    <h2 className="text-2xl text-foreground tracking-tight">
+                      Shared registry libs
+                    </h2>
+                    <p>
+                      Theme tokens and reduced-motion helpers ship as separate
+                      registry items instead of being duplicated inside every
+                      component JSON. MCP installs them automatically when a
+                      component declares <code>registryDependencies</code>.
+                    </p>
+                    <div className="max-w-[720px] overflow-x-auto rounded-md border border-border/80">
+                      <table className="w-full min-w-[520px] text-left text-sm">
+                        <thead className="border-border/80 border-b bg-muted/30">
+                          <tr>
+                            <th className="px-4 py-2.5 font-medium">Slug</th>
+                            <th className="px-4 py-2.5 font-medium">File</th>
+                            <th className="px-4 py-2.5 font-medium">Role</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {MCP_SHARED_LIBS.map((lib) => (
+                            <tr
+                              className="border-border/60 border-b last:border-b-0"
+                              key={lib.slug}
+                            >
+                              <td className="px-4 py-3 font-mono text-foreground">
+                                @iconiq/{lib.slug}
+                              </td>
+                              <td className="px-4 py-3 font-mono text-muted-foreground">
+                                {lib.path}
+                              </td>
+                              <td className="px-4 py-3 text-foreground/90">
+                                {lib.description}
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </section>
+                </PageReveal>
+
+                <PageReveal inView>
+                  <section
+                    className="scroll-mt-28 space-y-5"
+                    id="provider-variants"
+                  >
+                    <h2 className="text-2xl text-foreground tracking-tight">
+                      Provider variants
+                    </h2>
+                    <p>
+                      Pick one headless line per feature so MCP does not install
+                      multiple variants of the same control.
+                    </p>
+                    <div className="max-w-[720px] overflow-x-auto rounded-md border border-border/80">
+                      <table className="w-full min-w-[560px] text-left text-sm">
+                        <thead className="border-border/80 border-b bg-muted/30">
+                          <tr>
+                            <th className="px-4 py-2.5 font-medium">Prefix</th>
+                            <th className="px-4 py-2.5 font-medium">Library</th>
+                            <th className="px-4 py-2.5 font-medium">Example</th>
+                            <th className="px-4 py-2.5 font-medium">Note</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {MCP_PROVIDER_ROWS.map((row) => (
+                            <tr
+                              className="border-border/60 border-b last:border-b-0"
+                              key={row.prefix}
+                            >
+                              <td className="px-4 py-3 font-mono text-foreground">
+                                {row.prefix}
+                              </td>
+                              <td className="px-4 py-3 text-foreground/90">
+                                {row.library}
+                              </td>
+                              <td className="px-4 py-3 font-mono text-[13px] text-muted-foreground">
+                                {row.example}
+                              </td>
+                              <td className="px-4 py-3 text-foreground/90">
+                                {row.note}
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </section>
+                </PageReveal>
+
+                <PageReveal inView>
+                  <section
+                    className="scroll-mt-28 space-y-5"
+                    id="efficient-prompts"
+                  >
+                    <h2 className="text-2xl text-foreground tracking-tight">
+                      Efficient prompts
+                    </h2>
+                    <p>
+                      Name exact registry slugs and target files. Browse{" "}
+                      <a
+                        className="text-foreground underline underline-offset-4"
+                        href="/components/accordion"
+                      >
+                        the docs
+                      </a>{" "}
+                      for discovery instead of asking MCP to list every item.
                     </p>
                     <div className="max-w-[720px] overflow-hidden rounded-md border border-border/80 bg-background">
                       <div className="border-border/80 border-b bg-muted/30 px-4 py-2.5">
                         <p className="font-mono text-[11px] text-muted-foreground uppercase tracking-[0.18em]">
-                          Prompt examples
+                          Do
                         </p>
                       </div>
                       <pre className="overflow-x-auto whitespace-pre-wrap px-4 py-3 dark:bg-[#0F0F0F]">
                         <code className="font-mono text-[#032F62] text-sm dark:text-[#9ECBFF]">
-                          {promptExamples}
+                          {MCP_EFFICIENT_PROMPTS}
                         </code>
                       </pre>
                     </div>
-                    <p>
-                      The important part is that the assistant should still use
-                      the registry install flow rather than inventing a fresh
-                      component from scratch when an Iconiq version already
-                      exists.
-                    </p>
+                    <div className="max-w-[720px] overflow-hidden rounded-md border border-border/80 bg-background">
+                      <div className="border-border/80 border-b bg-muted/30 px-4 py-2.5">
+                        <p className="font-mono text-[11px] text-muted-foreground uppercase tracking-[0.18em]">
+                          Avoid
+                        </p>
+                      </div>
+                      <pre className="overflow-x-auto whitespace-pre-wrap px-4 py-3 dark:bg-[#0F0F0F]">
+                        <code className="font-mono text-muted-foreground text-sm">
+                          {MCP_AVOID_PROMPTS}
+                        </code>
+                      </pre>
+                    </div>
                   </section>
                 </PageReveal>
 
@@ -337,6 +461,17 @@ export default function McpPage() {
                         Verify the Iconiq registry URL is reachable and the{" "}
                         <code>@iconiq</code> namespace is spelled correctly in
                         your prompt or install request.
+                      </li>
+                      <li>
+                        If theme or motion helpers are missing after install,
+                        add <code>@iconiq/iconiq-theme</code> and{" "}
+                        <code>@iconiq/iconiq-motion</code> or reinstall the
+                        component so <code>registryDependencies</code> resolve.
+                      </li>
+                      <li>
+                        Install the <code>iconiq-shadcn</code> skill when the
+                        assistant keeps guessing component names or rewriting
+                        registry source from scratch.
                       </li>
                     </ul>
                   </section>

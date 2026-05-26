@@ -19,8 +19,10 @@
     "lint:check": "npx ultracite check",
     "build-registry": "tsx scripts/registry-build.ts",
     "gen-cli": "pnpm run build-registry && pnpm lint",
-    "skills:install": "npx skills add https://iconiqui.com --skill iconiq -y",
-    "skills:install:local": "npx skills add . --skill iconiq -y"
+    "skills:install": "npx skills add https://iconiqui.com --skill iconiq-shadcn -y",
+    "skills:install:contributor": "npx skills add https://iconiqui.com --skill iconiq -y",
+    "skills:install:local": "npx skills add . --skill iconiq-shadcn -y",
+    "skills:install:local:contributor": "npx skills add . --skill iconiq -y"
   },
   "dependencies": {
     "@base-ui/react": "^1.4.1",
