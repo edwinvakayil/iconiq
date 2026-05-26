@@ -6,7 +6,7 @@ const Footer = () => {
           Built by{" "}
           <a
             className="font-medium text-foreground underline underline-offset-4 transition-colors hover:text-neutral-600 dark:hover:text-neutral-300"
-            href="https://edwinvakayil.info"
+            href="https://x.com/edwinvakayil"
             rel="noopener noreferrer"
             target="_blank"
           >
