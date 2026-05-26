@@ -5,11 +5,11 @@ import dynamic from "next/dynamic";
 import Link from "next/link";
 import { type ReactNode, startTransition, useEffect, useState } from "react";
 
-import { Accordion, type AccordionItem } from "@/registry/accordion";
-import type { CheckboxGroupOption } from "@/registry/checkbox-group";
+import { Accordion, type AccordionItem } from "@/registry/r-accordion";
+import type { CheckboxGroupOption } from "@/registry/b-checkbox-group";
 import { DiaText } from "@/registry/dia-text";
 import { IconBar, IconBarItem } from "@/registry/icon-bar";
-import type { RadioOption } from "@/registry/radiogroup";
+import type { RadioOption } from "@/registry/r-radio-group";
 import { ShimmerSkeleton } from "@/registry/skeleton";
 
 const HomeFeaturedShowcaseExtended = dynamic(
@@ -140,7 +140,7 @@ export function HomeFeaturedShowcase() {
           className="font-light text-[1.95rem] text-foreground tracking-[-0.07em] sm:text-[2.9rem]"
           id="home-featured-showcase-heading"
         >
-          Built to be explored, not just documented.
+          Every component, live and ready to explore.
         </h3>
       </div>
 

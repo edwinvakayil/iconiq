@@ -9,8 +9,8 @@ import { Calendar } from "@/registry/calendar";
 import {
   CheckboxGroup,
   type CheckboxGroupOption,
-} from "@/registry/checkbox-group";
-import { RadioGroup, type RadioOption } from "@/registry/radiogroup";
+} from "@/registry/b-checkbox-group";
+import { RadioGroup, type RadioOption } from "@/registry/r-radio-group";
 import { Slider } from "@/registry/slider";
 import { Switch } from "@/registry/switch";
 import { Tooltip } from "@/registry/tooltip";
