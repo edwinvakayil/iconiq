@@ -13,6 +13,5 @@
     }
   ],
   "title": "Calendar",
-  "description": "Compact monthly calendar with animated month transitions, selectable days, and date-fns-powered grid generation.",
-  "categories": ["components"]
+  "description": "Compact monthly calendar with animated month transitions, selectable days, and date-fns-powered grid generation."
 }

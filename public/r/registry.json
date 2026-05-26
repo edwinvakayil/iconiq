@@ -4,46 +4,13 @@
   "homepage": "https://iconiqui.com",
   "items": [
     {
-      "name": "iconiq-theme",
-      "type": "registry:lib",
-      "title": "Iconiq theme tokens",
-      "description": "Shared Tailwind arbitrary property tokens used by Iconiq registry components.",
-      "registryDependencies": [],
-      "dependencies": [],
-      "devDependencies": [],
-      "categories": ["lib"],
-      "files": [
-        {
-          "path": "lib/registry-theme.ts",
-          "type": "registry:lib"
-        }
-      ]
-    },
-    {
-      "name": "iconiq-motion",
-      "type": "registry:lib",
-      "title": "Iconiq reduced motion",
-      "description": "MotionConfig helpers that respect prefers-reduced-motion across Iconiq components.",
-      "registryDependencies": [],
-      "dependencies": ["motion"],
-      "devDependencies": [],
-      "categories": ["lib"],
-      "files": [
-        {
-          "path": "lib/reduced-motion.tsx",
-          "type": "registry:lib"
-        }
-      ]
-    },
-    {
       "name": "accordion",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme", "@iconiq/iconiq-motion"],
+      "registryDependencies": [],
       "dependencies": ["@radix-ui/react-accordion", "motion", "lucide-react"],
       "devDependencies": [],
       "title": "Accordion",
       "description": "Accordion with spring height, staggered text, default or quiet disclosure styles, and optional multi-open behavior. Built with Motion.",
-      "categories": ["components"],
       "files": [
         {
           "path": "accordion.tsx",
@@ -54,12 +21,11 @@
     {
       "name": "alert",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme"],
+      "registryDependencies": [],
       "dependencies": ["motion"],
       "devDependencies": [],
       "title": "Alert",
       "description": "Dismissible alert with an optional leading icon, action slot, polite live announcements, paused auto-dismiss on interaction, and inline or toast layout behavior.",
-      "categories": ["components"],
       "files": [
         {
           "path": "alert.tsx",
@@ -70,12 +36,11 @@
     {
       "name": "avatar",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme"],
+      "registryDependencies": [],
       "dependencies": ["motion"],
       "devDependencies": [],
       "title": "Avatar",
       "description": "Circular avatar with immediate fallback initials, a quiet image crossfade, and a 44×44 frame. Motion.",
-      "categories": ["components"],
       "files": [
         {
           "path": "avatar.tsx",
@@ -86,12 +51,11 @@
     {
       "name": "b-accordion",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme", "@iconiq/iconiq-motion"],
+      "registryDependencies": [],
       "dependencies": ["@base-ui/react", "motion", "lucide-react"],
       "devDependencies": [],
       "title": "Accordion (Base UI)",
       "description": "Accordion with the same Iconiq API layered over Base UI primitives, keeping the default and quiet variants while swapping the underlying headless library.",
-      "categories": ["components", "base-ui"],
       "files": [
         {
           "path": "b-accordion.tsx",
@@ -102,12 +66,11 @@
     {
       "name": "b-alert-dialog",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme", "@iconiq/iconiq-motion"],
+      "registryDependencies": [],
       "dependencies": ["@base-ui/react", "motion"],
       "devDependencies": [],
       "title": "Alert Dialog (Base UI)",
       "description": "Alert dialog with a shared Iconiq trigger, content, cancel, and action API layered over Base UI primitives, plus Motion-backed confirm-state transitions.",
-      "categories": ["components", "base-ui"],
       "files": [
         {
           "path": "b-alert-dialog.tsx",
@@ -118,12 +81,11 @@
     {
       "name": "b-avatar",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme", "@iconiq/iconiq-motion"],
+      "registryDependencies": [],
       "dependencies": ["@base-ui/react", "motion"],
       "devDependencies": [],
       "title": "Avatar (Base UI)",
       "description": "Avatar with the same single Iconiq API layered over Base UI primitives, keeping immediate fallback initials and a quiet image crossfade.",
-      "categories": ["components", "base-ui"],
       "files": [
         {
           "path": "b-avatar.tsx",
@@ -134,12 +96,11 @@
     {
       "name": "b-button",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme", "@iconiq/iconiq-motion"],
+      "registryDependencies": [],
       "dependencies": ["@base-ui/react", "motion", "class-variance-authority"],
       "devDependencies": [],
       "title": "Button (Base UI)",
       "description": "Button with the same Iconiq API layered over the Base UI button primitive, preserving the original ripple, press spring, hover lift, and intrinsic-width animation.",
-      "categories": ["components", "base-ui"],
       "files": [
         {
           "path": "b-button.tsx",
@@ -150,12 +111,11 @@
     {
       "name": "b-checkbox-group",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme", "@iconiq/iconiq-motion"],
+      "registryDependencies": [],
       "dependencies": ["@base-ui/react", "motion", "lucide-react"],
       "devDependencies": [],
       "title": "Checkbox Group (Base UI)",
       "description": "Checkbox group with the same Iconiq API layered over Base UI primitives, preserving the original row hover, tap spring, check icon entrance, and disclosure behavior.",
-      "categories": ["components", "base-ui"],
       "files": [
         {
           "path": "b-checkbox-group.tsx",
@@ -166,12 +126,11 @@
     {
       "name": "b-checkbox",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme", "@iconiq/iconiq-motion"],
+      "registryDependencies": [],
       "dependencies": ["@base-ui/react", "motion"],
       "devDependencies": [],
       "title": "Checkbox (Base UI)",
       "description": "Checkbox with the same Iconiq API layered over Base UI primitives, preserving the original fill spring, press scale, checkmark draw, and label fade.",
-      "categories": ["components", "base-ui"],
       "files": [
         {
           "path": "b-checkbox.tsx",
@@ -182,12 +141,11 @@
     {
       "name": "b-collapsible",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme", "@iconiq/iconiq-motion"],
+      "registryDependencies": [],
       "dependencies": ["@base-ui/react", "motion", "lucide-react"],
       "devDependencies": [],
       "title": "Collapsible (Base UI)",
       "description": "Collapsible with the same Iconiq API layered over Base UI primitives, preserving the same height, icon, and content transitions as the Radix version.",
-      "categories": ["components", "base-ui"],
       "files": [
         {
           "path": "b-collapsible.tsx",
@@ -198,12 +156,11 @@
     {
       "name": "b-combobox",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme", "@iconiq/iconiq-motion"],
+      "registryDependencies": [],
       "dependencies": ["@base-ui/react", "motion", "lucide-react"],
       "devDependencies": [],
       "title": "Combobox (Base UI)",
       "description": "Combobox with the same Iconiq API layered over Base UI primitives, preserving the original filtering rules, keyboard search, clear action, and dropdown motion.",
-      "categories": ["components", "base-ui"],
       "files": [
         {
           "path": "b-combobox.tsx",
@@ -214,12 +171,11 @@
     {
       "name": "b-context-menu",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme", "@iconiq/iconiq-motion"],
+      "registryDependencies": [],
       "dependencies": ["@base-ui/react", "motion"],
       "devDependencies": [],
       "title": "Context Menu (Base UI)",
       "description": "Context menu with the same Iconiq API layered over Base UI primitives, preserving the original panel spring, row entrance, active highlight, and shortcut layout.",
-      "categories": ["components", "base-ui"],
       "files": [
         {
           "path": "b-context-menu.tsx",
@@ -230,7 +186,7 @@
     {
       "name": "b-dialog",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme", "@iconiq/iconiq-motion"],
+      "registryDependencies": [],
       "dependencies": [
         "@base-ui/react",
         "@radix-ui/react-slot",
@@ -240,7 +196,6 @@
       "devDependencies": [],
       "title": "Dialog (Base UI)",
       "description": "Dialog with the same exported Iconiq parts layered over Base UI primitives, preserving the original dialog springs while using the softer alert-dialog card styling and overlay treatment.",
-      "categories": ["components", "base-ui"],
       "files": [
         {
           "path": "b-dialog.tsx",
@@ -251,12 +206,11 @@
     {
       "name": "b-drawer",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme", "@iconiq/iconiq-motion"],
+      "registryDependencies": [],
       "dependencies": ["@base-ui/react", "motion", "lucide-react"],
       "devDependencies": [],
       "title": "Drawer (Base UI)",
       "description": "Drawer in the Base section that keeps the Iconiq motion shell while layering it over Base UI drawer primitives for controlled state and close actions.",
-      "categories": ["components", "base-ui"],
       "files": [
         {
           "path": "b-drawer.tsx",
@@ -267,12 +221,11 @@
     {
       "name": "b-hover-card",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme", "@iconiq/iconiq-motion"],
+      "registryDependencies": [],
       "dependencies": ["@base-ui/react", "motion"],
       "devDependencies": [],
       "title": "Hover Card (Base UI)",
       "description": "Hover card with the same Iconiq API layered over Base UI popover primitives, preserving delayed hover reveal, instant focus open, collision-aware placement, and spring-driven content motion.",
-      "categories": ["components", "base-ui"],
       "files": [
         {
           "path": "b-hover-card.tsx",
@@ -283,12 +236,11 @@
     {
       "name": "b-popover",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme", "@iconiq/iconiq-motion"],
+      "registryDependencies": [],
       "dependencies": ["@base-ui/react", "motion"],
       "devDependencies": [],
       "title": "Popover (Base UI)",
       "description": "Popover with the same Iconiq API layered over Base UI popover primitives, preserving side-aware panel motion, optional anchor support, and size-aware content transitions.",
-      "categories": ["components", "base-ui"],
       "files": [
         {
           "path": "b-popover.tsx",
@@ -299,12 +251,11 @@
     {
       "name": "b-progress",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme", "@iconiq/iconiq-motion"],
+      "registryDependencies": [],
       "dependencies": ["@base-ui/react", "motion"],
       "devDependencies": [],
       "title": "Progress (Base UI)",
       "description": "Progress bar with the same Iconiq API layered over Base UI primitives, preserving the spring-smoothed fill, restrained inline readout, and quiet indeterminate motion.",
-      "categories": ["components", "base-ui"],
       "files": [
         {
           "path": "b-progress.tsx",
@@ -315,12 +266,11 @@
     {
       "name": "b-radio-group",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme", "@iconiq/iconiq-motion"],
+      "registryDependencies": [],
       "dependencies": ["@base-ui/react", "motion"],
       "devDependencies": [],
       "title": "Radio Group (Base UI)",
       "description": "Radio group with the same Iconiq API layered over Base UI primitives, preserving the original shared highlight, spring-loaded ring and dot, and staggered row entrance.",
-      "categories": ["components", "base-ui"],
       "files": [
         {
           "path": "b-radio-group.tsx",
@@ -331,12 +281,11 @@
     {
       "name": "b-select",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme", "@iconiq/iconiq-motion"],
+      "registryDependencies": [],
       "dependencies": ["@base-ui/react", "motion", "lucide-react"],
       "devDependencies": [],
       "title": "Select (Base UI)",
       "description": "Select with the same Iconiq API layered over Base UI primitives, preserving the original trigger press, chevron rotation, grouped rows, and panel motion.",
-      "categories": ["components", "base-ui"],
       "files": [
         {
           "path": "b-select.tsx",
@@ -347,12 +296,11 @@
     {
       "name": "b-selection-toolbar",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-motion"],
+      "registryDependencies": [],
       "dependencies": ["@base-ui/react", "lucide-react"],
       "devDependencies": [],
       "title": "Selection Toolbar (Base UI)",
       "description": "Floating selection toolbar with the same Iconiq API layered over Base UI toolbar primitives, preserving the original inline formatting shell, fixed-position reveal, and editable-surface selection tracking.",
-      "categories": ["components", "base-ui"],
       "files": [
         {
           "path": "b-selection-toolbar.tsx",
@@ -363,12 +311,11 @@
     {
       "name": "b-slider",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme", "@iconiq/iconiq-motion"],
+      "registryDependencies": [],
       "dependencies": ["@base-ui/react", "motion"],
       "devDependencies": [],
       "title": "Slider (Base UI)",
       "description": "Slider with the same Iconiq API layered over Base UI primitives, preserving the original spring-settled fill, active track height, and thumb scale motion.",
-      "categories": ["components", "base-ui"],
       "files": [
         {
           "path": "b-slider.tsx",
@@ -379,12 +326,11 @@
     {
       "name": "b-switch",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme", "@iconiq/iconiq-motion"],
+      "registryDependencies": [],
       "dependencies": ["@base-ui/react", "motion"],
       "devDependencies": [],
       "title": "Switch (Base UI)",
       "description": "Switch with the same Iconiq API layered over Base UI primitives, preserving the original spring thumb travel, pressure-like squash, and foreground fill sweep.",
-      "categories": ["components", "base-ui"],
       "files": [
         {
           "path": "b-switch.tsx",
@@ -395,12 +341,11 @@
     {
       "name": "b-tabs",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme", "@iconiq/iconiq-motion"],
+      "registryDependencies": [],
       "dependencies": ["@base-ui/react", "motion"],
       "devDependencies": [],
       "title": "Tabs (Base UI)",
       "description": "Tabs with the same Iconiq API layered over Base UI primitives, preserving the measured underline, keyboard flow, and motion-smoothed panel shell from the core tabs component.",
-      "categories": ["components", "base-ui"],
       "files": [
         {
           "path": "b-tabs.tsx",
@@ -411,12 +356,11 @@
     {
       "name": "b-toggle",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme", "@iconiq/iconiq-motion"],
+      "registryDependencies": [],
       "dependencies": ["@base-ui/react", "class-variance-authority", "motion"],
       "devDependencies": [],
       "title": "Toggle (Base UI)",
       "description": "Pressed-state toggle with the same Iconiq ripple, icon motion, and size and variant shell layered over the Base UI toggle primitive.",
-      "categories": ["components", "base-ui"],
       "files": [
         {
           "path": "b-toggle.tsx",
@@ -427,12 +371,11 @@
     {
       "name": "b-togglegroup",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme", "@iconiq/iconiq-motion"],
+      "registryDependencies": [],
       "dependencies": ["@base-ui/react", "motion"],
       "devDependencies": [],
       "title": "Toggle Group (Base UI)",
       "description": "Minimal toggle group with the same Iconiq API layered over Base UI primitives, preserving the animated underline, stable multi-select ordering, and soft press motion.",
-      "categories": ["components", "base-ui"],
       "files": [
         {
           "path": "b-togglegroup.tsx",
@@ -443,12 +386,11 @@
     {
       "name": "b-tooltip",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme", "@iconiq/iconiq-motion"],
+      "registryDependencies": [],
       "dependencies": ["@base-ui/react", "motion"],
       "devDependencies": [],
       "title": "Tooltip (Base UI)",
       "description": "Tooltip with the same Iconiq API layered over Base UI primitives, preserving the original controlled delay timing, bubble shell, rotated-square arrow, and spring entrance motion.",
-      "categories": ["components", "base-ui"],
       "files": [
         {
           "path": "b-tooltip.tsx",
@@ -459,12 +401,11 @@
     {
       "name": "badge",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme", "@iconiq/iconiq-motion"],
+      "registryDependencies": [],
       "dependencies": ["motion", "class-variance-authority"],
       "devDependencies": [],
       "title": "Badge",
       "description": "Preset-color badge with an animated default fill, a quieter dot variant, and compact size controls. Motion + CVA.",
-      "categories": ["components"],
       "files": [
         {
           "path": "badge.tsx",
@@ -475,12 +416,11 @@
     {
       "name": "breadcrumbs",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme"],
+      "registryDependencies": [],
       "dependencies": ["motion", "lucide-react"],
       "devDependencies": [],
       "title": "Breadcrumbs",
       "description": "Breadcrumb trail with subtle easing, stronger focus states, and a dedicated current-page treatment. Built with Motion.",
-      "categories": ["components"],
       "files": [
         {
           "path": "breadcrumbs.tsx",
@@ -491,12 +431,11 @@
     {
       "name": "button-group",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme", "@iconiq/iconiq-motion"],
+      "registryDependencies": [],
       "dependencies": ["motion"],
       "devDependencies": [],
       "title": "Button Group",
       "description": "Grouped action buttons, segmented button rows, and a selectable segmented control with spring-driven hover and active motion.",
-      "categories": ["components"],
       "files": [
         {
           "path": "button-group.tsx",
@@ -507,12 +446,11 @@
     {
       "name": "button",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme", "@iconiq/iconiq-motion"],
+      "registryDependencies": [],
       "dependencies": ["motion", "class-variance-authority"],
       "devDependencies": [],
       "title": "Button",
       "description": "Primary action control with larger default hit targets, spring press feedback, optional intrinsic width animation, and Motion ripples. Forwards ref and native button props.",
-      "categories": ["components"],
       "files": [
         {
           "path": "button.tsx",
@@ -528,7 +466,6 @@
       "devDependencies": [],
       "title": "Calendar",
       "description": "Compact monthly calendar with animated month transitions, selectable days, and date-fns-powered grid generation.",
-      "categories": ["components"],
       "files": [
         {
           "path": "calendar.tsx",
@@ -539,12 +476,11 @@
     {
       "name": "checkbox-group",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme"],
+      "registryDependencies": [],
       "dependencies": ["motion", "lucide-react"],
       "devDependencies": [],
       "title": "Checkbox group",
       "description": "Multi-select option list with bordered empty state and a primary tick only when checked, plus hover/tap motion on each row. Motion + Lucide.",
-      "categories": ["components"],
       "files": [
         {
           "path": "checkbox-group.tsx",
@@ -555,12 +491,11 @@
     {
       "name": "checkbox",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme"],
+      "registryDependencies": [],
       "dependencies": ["motion"],
       "devDependencies": [],
       "title": "Checkbox",
       "description": "Single checkbox with spring-pressed feedback, a line-drawn checkmark, and an optional inline label. Motion only.",
-      "categories": ["components"],
       "files": [
         {
           "path": "checkbox.tsx",
@@ -571,12 +506,11 @@
     {
       "name": "combobox",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme", "@iconiq/iconiq-motion"],
+      "registryDependencies": [],
       "dependencies": ["motion", "lucide-react"],
       "devDependencies": [],
       "title": "Combobox",
       "description": "Searchable single-select input with inline filtering, arrow-key navigation, animated dropdown motion, and an optional clear action.",
-      "categories": ["components"],
       "files": [
         {
           "path": "combobox.tsx",
@@ -587,12 +521,11 @@
     {
       "name": "context-menu",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme", "@iconiq/iconiq-motion"],
+      "registryDependencies": [],
       "dependencies": ["motion"],
       "devDependencies": [],
       "title": "Context Menu",
       "description": "Native-feeling context menu with fixed-position viewport-aware placement, per-item icons and shortcuts, and spring entrance motion.",
-      "categories": ["components"],
       "files": [
         {
           "path": "context-menu.tsx",
@@ -603,12 +536,11 @@
     {
       "name": "dia-text",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme"],
+      "registryDependencies": [],
       "dependencies": ["motion"],
       "devDependencies": [],
       "title": "Dia Text",
       "description": "Animated inline text reveal with a sweeping gradient band, repeat controls, and optional fixed-width rotation for motion-driven typography.",
-      "categories": ["texts"],
       "files": [
         {
           "path": "dia-text.tsx",
@@ -619,12 +551,11 @@
     {
       "name": "dialog",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme", "@iconiq/iconiq-motion"],
+      "registryDependencies": [],
       "dependencies": ["@radix-ui/react-dialog", "motion", "lucide-react"],
       "devDependencies": [],
       "title": "Dialog",
       "description": "Modal dialog on Radix Dialog with Motion overlay and content springs, staggered children, and an animated close control. Pass the same open boolean to DialogContent as the Dialog root for AnimatePresence.",
-      "categories": ["components"],
       "files": [
         {
           "path": "dialog.tsx",
@@ -635,12 +566,11 @@
     {
       "name": "drawer",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme", "@iconiq/iconiq-motion"],
+      "registryDependencies": [],
       "dependencies": ["motion", "lucide-react"],
       "devDependencies": [],
       "title": "Drawer",
       "description": "Controlled overlay drawer with faster slide timing, focus-trapped dialog behavior, safe-area-aware mobile ergonomics, and an optional sticky footer.",
-      "categories": ["components"],
       "files": [
         {
           "path": "drawer.tsx",
@@ -651,12 +581,11 @@
     {
       "name": "dropdown",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme", "@iconiq/iconiq-motion"],
+      "registryDependencies": [],
       "dependencies": ["motion", "lucide-react"],
       "devDependencies": [],
       "title": "Dropdown",
       "description": "Animated dropdown with a selectable value mode and an action-menu mode, plus chevron rotation and spring-driven menu entry.",
-      "categories": ["components"],
       "files": [
         {
           "path": "dropdown.tsx",
@@ -667,12 +596,11 @@
     {
       "name": "faq-pro",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme"],
+      "registryDependencies": [],
       "dependencies": ["motion", "lucide-react"],
       "devDependencies": [],
       "title": "FAQ Pro",
       "description": "Searchable FAQ accordion with rounded cards, animated panels, automatic match expansion, and inline query highlighting. Built with Motion and Lucide.",
-      "categories": ["special-one"],
       "files": [
         {
           "path": "faq-pro.tsx",
@@ -683,12 +611,11 @@
     {
       "name": "file-upload",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme"],
+      "registryDependencies": [],
       "dependencies": ["motion", "lucide-react"],
       "devDependencies": [],
       "title": "File Upload",
       "description": "Drag-and-drop file uploader with click-to-browse fallback, queued file rows, image previews, built-in progress states, and optional change callbacks.",
-      "categories": ["components"],
       "files": [
         {
           "path": "file-upload.tsx",
@@ -699,7 +626,7 @@
     {
       "name": "hover-card",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme", "@iconiq/iconiq-motion"],
+      "registryDependencies": [],
       "dependencies": [
         "@radix-ui/react-popover",
         "@radix-ui/react-slot",
@@ -708,7 +635,6 @@
       "devDependencies": [],
       "title": "Hover Card",
       "description": "Inline hover card with hover-only timing delays, instant focus reveal, collision-aware Popover positioning, Slot-based custom triggers, and a spring-driven content panel.",
-      "categories": ["components"],
       "files": [
         {
           "path": "hover-card.tsx",
@@ -719,12 +645,11 @@
     {
       "name": "icon-bar",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme"],
+      "registryDependencies": [],
       "dependencies": ["motion", "lucide-react"],
       "devDependencies": [],
       "title": "Icon Bar",
       "description": "Row of compact icon chips that expand on hover or focus and stay open when selected. Built with Motion and Lucide.",
-      "categories": ["special-one"],
       "files": [
         {
           "path": "icon-bar.tsx",
@@ -735,12 +660,11 @@
     {
       "name": "input-group",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme", "@iconiq/iconiq-motion"],
+      "registryDependencies": [],
       "dependencies": ["motion"],
       "devDependencies": [],
       "title": "Input Group",
       "description": "Floating-label input field with optional prefix and suffix slots, inline error copy, and a matching vertical stack wrapper for grouped forms.",
-      "categories": ["components"],
       "files": [
         {
           "path": "input-group.tsx",
@@ -751,12 +675,11 @@
     {
       "name": "origin-button",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme"],
+      "registryDependencies": [],
       "dependencies": ["motion"],
       "devDependencies": [],
       "title": "Origin Button",
       "description": "Rounded action button with a pointer-origin foreground fill that spreads on hover or focus-visible. Built with Motion.",
-      "categories": ["special-one"],
       "files": [
         {
           "path": "origin-button.tsx",
@@ -767,12 +690,11 @@
     {
       "name": "popover",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme", "@iconiq/iconiq-motion"],
+      "registryDependencies": [],
       "dependencies": ["@radix-ui/react-popover", "motion"],
       "devDependencies": [],
       "title": "Popover",
       "description": "Popover built on Radix with portal-based positioning, optional anchor support, side-aware motion, and smooth size changes while content updates.",
-      "categories": ["components"],
       "files": [
         {
           "path": "popover.tsx",
@@ -783,12 +705,11 @@
     {
       "name": "r-accordion",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme", "@iconiq/iconiq-motion"],
+      "registryDependencies": [],
       "dependencies": ["@radix-ui/react-accordion", "motion", "lucide-react"],
       "devDependencies": [],
       "title": "Accordion (Radix UI)",
       "description": "Accordion with the same Iconiq API layered over Radix UI primitives, preserving the existing Motion-heavy panel choreography and install surface.",
-      "categories": ["components", "radix-ui"],
       "files": [
         {
           "path": "r-accordion.tsx",
@@ -799,12 +720,11 @@
     {
       "name": "r-alert-dialog",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme", "@iconiq/iconiq-motion"],
+      "registryDependencies": [],
       "dependencies": ["@radix-ui/react-alert-dialog", "motion"],
       "devDependencies": [],
       "title": "Alert Dialog (Radix UI)",
       "description": "Alert dialog with a shared Iconiq trigger, content, cancel, and action API layered over Radix UI primitives, plus Motion-backed confirm-state transitions.",
-      "categories": ["components", "radix-ui"],
       "files": [
         {
           "path": "r-alert-dialog.tsx",
@@ -815,12 +735,11 @@
     {
       "name": "r-avatar",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme", "@iconiq/iconiq-motion"],
+      "registryDependencies": [],
       "dependencies": ["@radix-ui/react-avatar", "motion"],
       "devDependencies": [],
       "title": "Avatar (Radix UI)",
       "description": "Avatar with the same single Iconiq API layered over Radix UI primitives, preserving immediate fallback initials and the quiet image reveal.",
-      "categories": ["components", "radix-ui"],
       "files": [
         {
           "path": "r-avatar.tsx",
@@ -831,12 +750,11 @@
     {
       "name": "r-checkbox",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme", "@iconiq/iconiq-motion"],
+      "registryDependencies": [],
       "dependencies": ["@radix-ui/react-checkbox", "motion"],
       "devDependencies": [],
       "title": "Checkbox (Radix UI)",
       "description": "Checkbox with the same Iconiq API layered over Radix UI primitives, preserving the original fill spring, press scale, checkmark draw, and label fade.",
-      "categories": ["components", "radix-ui"],
       "files": [
         {
           "path": "r-checkbox.tsx",
@@ -847,12 +765,11 @@
     {
       "name": "r-collapsible",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme", "@iconiq/iconiq-motion"],
+      "registryDependencies": [],
       "dependencies": ["@radix-ui/react-collapsible", "motion", "lucide-react"],
       "devDependencies": [],
       "title": "Collapsible (Radix UI)",
       "description": "Collapsible with the same Iconiq API layered over Radix UI primitives, preserving the same height, icon, and content transitions as the Base UI version.",
-      "categories": ["components", "radix-ui"],
       "files": [
         {
           "path": "r-collapsible.tsx",
@@ -863,12 +780,11 @@
     {
       "name": "r-context-menu",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme", "@iconiq/iconiq-motion"],
+      "registryDependencies": [],
       "dependencies": ["@radix-ui/react-context-menu", "motion"],
       "devDependencies": [],
       "title": "Context Menu (Radix UI)",
       "description": "Context menu with the same Iconiq API layered over Radix UI primitives, preserving the original panel spring, row entrance, active highlight, and shortcut layout.",
-      "categories": ["components", "radix-ui"],
       "files": [
         {
           "path": "r-context-menu.tsx",
@@ -879,12 +795,11 @@
     {
       "name": "r-dialog",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme", "@iconiq/iconiq-motion"],
+      "registryDependencies": [],
       "dependencies": ["@radix-ui/react-dialog", "motion", "lucide-react"],
       "devDependencies": [],
       "title": "Dialog (Radix UI)",
       "description": "Dialog with the same exported Iconiq parts layered over Radix UI primitives, preserving the original dialog springs while using the softer alert-dialog card styling and overlay treatment.",
-      "categories": ["components", "radix-ui"],
       "files": [
         {
           "path": "r-dialog.tsx",
@@ -895,7 +810,7 @@
     {
       "name": "r-dropdown",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme", "@iconiq/iconiq-motion"],
+      "registryDependencies": [],
       "dependencies": [
         "@radix-ui/react-dropdown-menu",
         "motion",
@@ -904,7 +819,6 @@
       "devDependencies": [],
       "title": "Dropdown (Radix UI)",
       "description": "Dropdown with the same Iconiq trigger, grouped rows, action and select variants, and exact panel motion layered over Radix Dropdown Menu primitives.",
-      "categories": ["components", "radix-ui"],
       "files": [
         {
           "path": "r-dropdown.tsx",
@@ -915,7 +829,7 @@
     {
       "name": "r-hover-card",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme", "@iconiq/iconiq-motion"],
+      "registryDependencies": [],
       "dependencies": [
         "@radix-ui/react-hover-card",
         "@radix-ui/react-slot",
@@ -924,7 +838,6 @@
       "devDependencies": [],
       "title": "Hover Card (Radix UI)",
       "description": "Hover card with the same Iconiq API layered over the dedicated Radix Hover Card primitive, preserving delayed hover reveal, instant focus open, collision-aware placement, and spring-driven content motion.",
-      "categories": ["components", "radix-ui"],
       "files": [
         {
           "path": "r-hover-card.tsx",
@@ -935,12 +848,11 @@
     {
       "name": "r-popover",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme", "@iconiq/iconiq-motion"],
+      "registryDependencies": [],
       "dependencies": ["@radix-ui/react-popover", "motion"],
       "devDependencies": [],
       "title": "Popover (Radix UI)",
       "description": "Popover with the same Iconiq API layered over Radix UI popover primitives, preserving side-aware panel motion, optional anchor support, and size-aware content transitions.",
-      "categories": ["components", "radix-ui"],
       "files": [
         {
           "path": "r-popover.tsx",
@@ -951,12 +863,11 @@
     {
       "name": "r-progress",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme", "@iconiq/iconiq-motion"],
+      "registryDependencies": [],
       "dependencies": ["@radix-ui/react-progress", "motion"],
       "devDependencies": [],
       "title": "Progress (Radix UI)",
       "description": "Progress bar with the same Iconiq API layered over Radix UI primitives, preserving the spring-smoothed fill, restrained inline readout, and quiet indeterminate motion.",
-      "categories": ["components", "radix-ui"],
       "files": [
         {
           "path": "r-progress.tsx",
@@ -967,12 +878,11 @@
     {
       "name": "r-radio-group",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme", "@iconiq/iconiq-motion"],
+      "registryDependencies": [],
       "dependencies": ["@radix-ui/react-radio-group", "motion"],
       "devDependencies": [],
       "title": "Radio Group (Radix UI)",
       "description": "Radio group with the same Iconiq API layered over Radix UI primitives, preserving the original shared highlight, spring-loaded ring and dot, and staggered row entrance.",
-      "categories": ["components", "radix-ui"],
       "files": [
         {
           "path": "r-radio-group.tsx",
@@ -983,12 +893,11 @@
     {
       "name": "r-select",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme", "@iconiq/iconiq-motion"],
+      "registryDependencies": [],
       "dependencies": ["@radix-ui/react-select", "motion", "lucide-react"],
       "devDependencies": [],
       "title": "Select (Radix UI)",
       "description": "Select with the same Iconiq API layered over Radix UI primitives, preserving the original trigger press, chevron rotation, grouped rows, and panel motion.",
-      "categories": ["components", "radix-ui"],
       "files": [
         {
           "path": "r-select.tsx",
@@ -999,12 +908,11 @@
     {
       "name": "r-selection-toolbar",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-motion"],
+      "registryDependencies": [],
       "dependencies": ["@radix-ui/react-toolbar", "lucide-react"],
       "devDependencies": [],
       "title": "Selection Toolbar (Radix UI)",
       "description": "Floating selection toolbar with the same Iconiq API layered over Radix UI toolbar primitives, preserving the original inline formatting shell, fixed-position reveal, and editable-surface selection tracking.",
-      "categories": ["components", "radix-ui"],
       "files": [
         {
           "path": "r-selection-toolbar.tsx",
@@ -1015,12 +923,11 @@
     {
       "name": "r-slider",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme", "@iconiq/iconiq-motion"],
+      "registryDependencies": [],
       "dependencies": ["@radix-ui/react-slider", "motion"],
       "devDependencies": [],
       "title": "Slider (Radix UI)",
       "description": "Slider with the same Iconiq API layered over Radix UI primitives, preserving the original spring-settled fill, active track height, and thumb scale motion.",
-      "categories": ["components", "radix-ui"],
       "files": [
         {
           "path": "r-slider.tsx",
@@ -1031,12 +938,11 @@
     {
       "name": "r-switch",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme", "@iconiq/iconiq-motion"],
+      "registryDependencies": [],
       "dependencies": ["@radix-ui/react-switch", "motion"],
       "devDependencies": [],
       "title": "Switch (Radix UI)",
       "description": "Switch with the same Iconiq API layered over Radix UI primitives, preserving the original spring thumb travel, pressure-like squash, and foreground fill sweep.",
-      "categories": ["components", "radix-ui"],
       "files": [
         {
           "path": "r-switch.tsx",
@@ -1047,12 +953,11 @@
     {
       "name": "r-tabs",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme", "@iconiq/iconiq-motion"],
+      "registryDependencies": [],
       "dependencies": ["@radix-ui/react-tabs", "motion"],
       "devDependencies": [],
       "title": "Tabs (Radix UI)",
       "description": "Tabs with the same Iconiq API layered over Radix UI primitives, preserving the measured underline, keyboard flow, and motion-smoothed panel shell from the core tabs component.",
-      "categories": ["components", "radix-ui"],
       "files": [
         {
           "path": "r-tabs.tsx",
@@ -1063,7 +968,7 @@
     {
       "name": "r-toggle",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme", "@iconiq/iconiq-motion"],
+      "registryDependencies": [],
       "dependencies": [
         "@radix-ui/react-toggle",
         "class-variance-authority",
@@ -1072,7 +977,6 @@
       "devDependencies": [],
       "title": "Toggle (Radix UI)",
       "description": "Pressed-state toggle with the same Iconiq ripple, icon motion, and size and variant shell layered over the Radix toggle primitive.",
-      "categories": ["components", "radix-ui"],
       "files": [
         {
           "path": "r-toggle.tsx",
@@ -1083,12 +987,11 @@
     {
       "name": "r-togglegroup",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme", "@iconiq/iconiq-motion"],
+      "registryDependencies": [],
       "dependencies": ["@radix-ui/react-toggle-group", "motion"],
       "devDependencies": [],
       "title": "Toggle Group (Radix UI)",
       "description": "Minimal toggle group with the same Iconiq API layered over Radix UI primitives, preserving the animated underline, stable multi-select ordering, and soft press motion.",
-      "categories": ["components", "radix-ui"],
       "files": [
         {
           "path": "r-togglegroup.tsx",
@@ -1099,7 +1002,7 @@
     {
       "name": "r-tooltip",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme", "@iconiq/iconiq-motion"],
+      "registryDependencies": [],
       "dependencies": [
         "@radix-ui/react-tooltip",
         "@radix-ui/react-slot",
@@ -1108,7 +1011,6 @@
       "devDependencies": [],
       "title": "Tooltip (Radix UI)",
       "description": "Tooltip with the same Iconiq API layered over Radix Tooltip primitives, preserving the original controlled delay timing, bubble shell, rotated-square arrow, and spring entrance motion.",
-      "categories": ["components", "radix-ui"],
       "files": [
         {
           "path": "r-tooltip.tsx",
@@ -1119,12 +1021,11 @@
     {
       "name": "radiogroup",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme"],
+      "registryDependencies": [],
       "dependencies": ["motion"],
       "devDependencies": [],
       "title": "Radio group",
       "description": "Single-select option list with shared layoutId highlight, spring ring/dot on the control, staggered row entrance, and optional descriptions. Motion only — native button radios with role=radiogroup.",
-      "categories": ["components"],
       "files": [
         {
           "path": "radiogroup.tsx",
@@ -1135,12 +1036,11 @@
     {
       "name": "select",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme", "@iconiq/iconiq-motion"],
+      "registryDependencies": [],
       "dependencies": ["motion", "lucide-react"],
       "devDependencies": [],
       "title": "Select",
       "description": "Animated single-select dropdown with staggered options, chevron rotation, scaleY panel, row hover slide, and check mark on the active item. Motion + Lucide.",
-      "categories": ["components"],
       "files": [
         {
           "path": "select.tsx",
@@ -1156,7 +1056,6 @@
       "devDependencies": [],
       "title": "Selection Toolbar",
       "description": "Floating inline formatting toolbar for editable text selections with bold, italic, and underline actions.",
-      "categories": ["components"],
       "files": [
         {
           "path": "selectiontoolbar.tsx",
@@ -1172,7 +1071,6 @@
       "devDependencies": [],
       "title": "Shimmer Text",
       "description": "Animated shimmer text with a sweeping highlight band, adjustable spread, and configurable loop speed for emphasis-heavy copy.",
-      "categories": ["texts"],
       "files": [
         {
           "path": "shimmer-text.tsx",
@@ -1183,12 +1081,11 @@
     {
       "name": "skeleton",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme"],
+      "registryDependencies": [],
       "dependencies": [],
       "devDependencies": [],
       "title": "Skeleton",
       "description": "Shimmer loading placeholder with configurable radius, optional animation, and zero runtime dependencies.",
-      "categories": ["components"],
       "files": [
         {
           "path": "skeleton.tsx",
@@ -1199,12 +1096,11 @@
     {
       "name": "slider",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme", "@iconiq/iconiq-motion"],
+      "registryDependencies": [],
       "dependencies": ["motion"],
       "devDependencies": [],
       "title": "Slider",
       "description": "Range control with spring-animated track and thumb, full-width pointer drag, and optional label and live value. Motion.",
-      "categories": ["components"],
       "files": [
         {
           "path": "slider.tsx",
@@ -1215,12 +1111,11 @@
     {
       "name": "spinner",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme"],
+      "registryDependencies": [],
       "dependencies": ["motion"],
       "devDependencies": [],
       "title": "Spinner",
       "description": "Loading indicator with an animated ring or bouncing dots. Motion; uses primary and muted theme tokens.",
-      "categories": ["components"],
       "files": [
         {
           "path": "spinner.tsx",
@@ -1231,12 +1126,11 @@
     {
       "name": "switch",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme", "@iconiq/iconiq-motion"],
+      "registryDependencies": [],
       "dependencies": ["@radix-ui/react-switch", "motion"],
       "devDependencies": [],
       "title": "Switch",
       "description": "Animated Radix switch with spring thumb travel, pressure-like thumb squash, foreground track fill, and optional inline label.",
-      "categories": ["components"],
       "files": [
         {
           "path": "switch.tsx",
@@ -1247,12 +1141,11 @@
     {
       "name": "table",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme"],
+      "registryDependencies": [],
       "dependencies": ["motion", "lucide-react"],
       "devDependencies": [],
       "title": "Table",
       "description": "Composable table primitives with grid-aligned rows, optional animated sort buttons, and layout-preserving row transitions.",
-      "categories": ["components"],
       "files": [
         {
           "path": "table.tsx",
@@ -1263,12 +1156,11 @@
     {
       "name": "tabs",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme", "@iconiq/iconiq-motion"],
+      "registryDependencies": [],
       "dependencies": ["@base-ui/react"],
       "devDependencies": [],
       "title": "Tabs",
       "description": "Clean segmented tabs with active-state surfaces, keyboard navigation, and straightforward panel switching.",
-      "categories": ["components"],
       "files": [
         {
           "path": "tabs.tsx",
@@ -1279,7 +1171,7 @@
     {
       "name": "toggle",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme", "@iconiq/iconiq-motion"],
+      "registryDependencies": [],
       "dependencies": [
         "@radix-ui/react-toggle",
         "class-variance-authority",
@@ -1288,7 +1180,6 @@
       "devDependencies": [],
       "title": "Toggle",
       "description": "Pressed-state toggle built on Radix with button squash, icon motion, pointer-origin ripple, and larger shadcn-style size and outline variants.",
-      "categories": ["components"],
       "files": [
         {
           "path": "toggle.tsx",
@@ -1299,7 +1190,7 @@
     {
       "name": "tooltip",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme", "@iconiq/iconiq-motion"],
+      "registryDependencies": [],
       "dependencies": [
         "@radix-ui/react-popover",
         "@radix-ui/react-slot",
@@ -1308,7 +1199,6 @@
       "devDependencies": [],
       "title": "Tooltip",
       "description": "Animated hover/focus tooltip with collision-aware portaled positioning, Slot-based triggers, short-string content, and optional delay and side placement. Built with Motion and Radix Popover.",
-      "categories": ["components"],
       "files": [
         {
           "path": "tooltip.tsx",
@@ -1319,12 +1209,11 @@
     {
       "name": "typography",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme"],
+      "registryDependencies": [],
       "dependencies": ["class-variance-authority"],
       "devDependencies": [],
       "title": "Typography",
       "description": "Single typography primitive that maps the full heading, label, paragraph, subheading, and documentation scale through one variant prop.",
-      "categories": ["foundation"],
       "files": [
         {
           "path": "typography.tsx",

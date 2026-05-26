@@ -10,21 +10,11 @@ Visit https://iconiqui.com/installation to view the documentation.
 
 To access MCP server Visit https://iconiqui.com/mcp .
 
-## Agent skills
-
-**Building with Iconiq (MCP + consumer apps):**
-
-```bash
-npx skills add https://iconiqui.com --skill iconiq-shadcn
-```
-
-**Contributing to this registry / docs site:**
+## Agent skill
 
 ```bash
 npx skills add https://iconiqui.com --skill iconiq
 ```
-
-[MCP setup](https://iconiqui.com/mcp) · [shadcn MCP docs](https://ui.shadcn.com/docs/mcp)
 
 ## Contributing
 
