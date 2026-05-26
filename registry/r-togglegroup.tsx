@@ -156,6 +156,30 @@ function normalizeSingleValue(items: ToggleGroupItem[], candidate?: string) {
   return items.some((item) => item.value === candidate) ? candidate : undefined;
 }
 
+const EMPTY_SELECTION: string[] = [];
+
+function getInitialMultipleValue(
+  items: ToggleGroupItem[],
+  defaultValue: string | string[] | undefined
+) {
+  if (Array.isArray(defaultValue)) {
+    return normalizeMultipleValue(items, defaultValue);
+  }
+
+  return EMPTY_SELECTION;
+}
+
+function getInitialSingleValue(
+  items: ToggleGroupItem[],
+  defaultValue: string | string[] | undefined
+) {
+  if (typeof defaultValue === "string") {
+    return normalizeSingleValue(items, defaultValue);
+  }
+
+  return undefined;
+}
+
 type ToggleGroupSeparatorProps = {
   orientation: NonNullable<ToggleGroupSharedProps["orientation"]>;
 };
@@ -377,17 +401,11 @@ const ToggleGroup = React.forwardRef<HTMLDivElement, ToggleGroupProps>(
     );
     const [uncontrolledSingleValue, setUncontrolledSingleValue] =
       React.useState<string | undefined>(() =>
-        normalizeSingleValue(
-          items,
-          typeof defaultValue === "string" ? defaultValue : undefined
-        )
+        getInitialSingleValue(items, defaultValue)
       );
     const [uncontrolledMultipleValue, setUncontrolledMultipleValue] =
       React.useState<string[]>(() =>
-        normalizeMultipleValue(
-          items,
-          Array.isArray(defaultValue) ? defaultValue : undefined
-        )
+        getInitialMultipleValue(items, defaultValue)
       );
 
     React.useEffect(() => {
@@ -464,7 +482,9 @@ const ToggleGroup = React.forwardRef<HTMLDivElement, ToggleGroupProps>(
             orientation={orientation}
             ref={ref}
             type="multiple"
-            value={selectedMultipleValue}
+            {...(isControlled
+              ? { value: selectedMultipleValue }
+              : { defaultValue: selectedMultipleValue })}
           >
             <ToggleGroupItems {...itemsProps} />
           </ToggleGroupPrimitive.Root>
@@ -497,7 +517,9 @@ const ToggleGroup = React.forwardRef<HTMLDivElement, ToggleGroupProps>(
           orientation={orientation}
           ref={ref}
           type="single"
-          value={selectedSingleValue}
+          {...(isControlled
+            ? { value: selectedSingleValue }
+            : { defaultValue: selectedSingleValue })}
         >
           <ToggleGroupItems {...itemsProps} />
         </ToggleGroupPrimitive.Root>

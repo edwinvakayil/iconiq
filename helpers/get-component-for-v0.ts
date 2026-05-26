@@ -255,7 +255,7 @@ const items: ToggleGroupItem[] = [
 ];
 
 export function ToggleGroupPreview() {
-  const [value, setValue] = useState(["overview", "members"]);
+  const [value, setValue] = useState<string[]>([]);
 
   return (
     <ToggleGroup
@@ -468,7 +468,7 @@ const items: ToggleGroupItem[] = [
 ];
 
 export function ToggleGroupPreview() {
-  const [value, setValue] = useState(["overview", "members"]);
+  const [value, setValue] = useState<string[]>([]);
 
   return (
     <ToggleGroup

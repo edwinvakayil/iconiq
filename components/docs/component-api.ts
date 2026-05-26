@@ -3566,7 +3566,8 @@ const toggleGroupApiDetails: DetailItem[] = [
       }),
     ],
     notes: [
-      "Multiple mode is the default and normalizes outgoing values back into the original item order, so the callback shape stays stable even if users toggle items out of sequence.",
+      "Multiple mode is the default and starts with no items selected unless you pass defaultValue or a controlled value array.",
+      "Multiple mode normalizes outgoing values back into the original item order, so the callback shape stays stable even if users toggle items out of sequence.",
       'Pass type="single" when only one item should stay pressed at a time. Single mode starts with no implicit selection unless you provide value or defaultValue.',
       "Icon-only items should provide ariaLabel so every button still has a clear accessible name.",
     ],

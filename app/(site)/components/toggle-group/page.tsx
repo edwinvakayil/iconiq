@@ -80,7 +80,7 @@ const items: ToggleGroupItem[] = [
 ];
 
 export function ToggleGroupPreview() {
-  const [value, setValue] = useState(["bold", "italic", "underline"]);
+  const [value, setValue] = useState<string[]>([]);
 
   return (
     <ToggleGroup
@@ -110,7 +110,7 @@ const items: ToggleGroupItem[] = [
 ];
 
 export function ToggleGroupPreview() {
-  const [value, setValue] = useState(["bold", "italic", "underline"]);
+  const [value, setValue] = useState<string[]>([]);
 
   return (
     <ToggleGroup
@@ -125,7 +125,7 @@ export function ToggleGroupPreview() {
 
 function ToggleGroupPreview({ ui }: { ui: ToggleGroupModule }) {
   const { ToggleGroup } = ui;
-  const [value, setValue] = useState<string[]>(["bold", "italic", "underline"]);
+  const [value, setValue] = useState<string[]>([]);
 
   return (
     <div className="flex w-full items-center justify-center py-10">
