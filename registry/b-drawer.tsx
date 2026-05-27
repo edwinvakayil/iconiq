@@ -308,15 +308,7 @@ export function Drawer({
   const drawerContent = (
     <AnimatePresence>
       {open && (
-        <DrawerPrimitive.Root
-          defaultOpen
-          modal={false}
-          onOpenChange={(nextOpen) => {
-            if (!nextOpen) {
-              onClose();
-            }
-          }}
-        >
+        <DrawerPrimitive.Root defaultOpen modal={false}>
           <div className={cn(registryTheme, "fixed inset-0 z-[2147483647]")}>
             <motion.div
               animate={{ opacity: 1, backdropFilter: "blur(6px)" }}
@@ -379,6 +371,7 @@ export function Drawer({
                   <DrawerPrimitive.Close
                     aria-label="Close drawer"
                     className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl text-muted-foreground transition-colors duration-150 hover:bg-muted/70 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                    onClick={onClose}
                     ref={closeButtonRef}
                     render={<motion.button variants={itemFade} />}
                     type="button"
