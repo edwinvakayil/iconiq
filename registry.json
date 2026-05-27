@@ -474,6 +474,21 @@
       ]
     },
     {
+      "name": "card",
+      "type": "registry:ui",
+      "registryDependencies": ["@iconiq/iconiq-theme"],
+      "dependencies": ["motion"],
+      "devDependencies": [],
+      "title": "Card",
+      "description": "Compound card surface with optional interactive lift, Motion-smoothed layout transitions, and shared header, action, content, and footer slots.",
+      "files": [
+        {
+          "path": "card.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "checkbox-group",
       "type": "registry:ui",
       "registryDependencies": ["@iconiq/iconiq-theme"],

@@ -304,6 +304,12 @@ const REGISTRY_UI_META: Record<
       "Compact monthly calendar with animated month transitions, selectable days, and date-fns-powered grid generation.",
     dependencies: ["motion", "lucide-react", "date-fns"],
   },
+  card: {
+    title: "Card",
+    description:
+      "Compound card surface with optional interactive lift, Motion-smoothed layout transitions, and shared header, action, content, and footer slots.",
+    dependencies: ["motion"],
+  },
   checkbox: {
     title: "Checkbox",
     description:

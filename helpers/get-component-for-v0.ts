@@ -6,6 +6,7 @@ import {
   avatarPreviewCode,
   badgePreviewCode,
   buildV0Page,
+  cardPreviewCode,
   ensureV0Page,
   getComponentV0Page,
   skeletonPreviewCode,
@@ -91,6 +92,7 @@ export function AccordionPreview() {
     "    </div>\n" +
     "  )\n" +
     "}\n",
+  card: buildV0Page(cardPreviewCode),
   "button-group":
     '"use client";\n\n' +
     `import { Bell, Grid2x2, List, Table2 } from "lucide-react"\n` +

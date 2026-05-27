@@ -38,6 +38,8 @@ const componentSummaries: Record<string, string> = {
     "Button group docs in the Components section, using the shared Iconiq button group install with provider options visible but disabled.",
   "/components/calendar":
     "Calendar docs in the Components section, using the shared Iconiq calendar install with provider options visible but disabled.",
+  "/components/card":
+    "Card docs in the Components section, using the shared Iconiq card install with provider options visible but disabled because there is no Radix UI or Base UI variant.",
   "/components/checkbox":
     "Checkbox docs with a provider switch that swaps between Base UI and Radix UI registry entries.",
   "/components/checkbox-group":
@@ -102,6 +104,32 @@ const componentSummaries: Record<string, string> = {
     "Animated shimmer text with a moving highlight band, adjustable speed, and spread-based emphasis.",
 };
 
+const extraComponentKeywordsBySlug: Record<string, string[]> = {
+  card: ["panel", "surface", "container"],
+  "dia-text": ["text", "text reveal", "animated text"],
+  "file-upload": ["upload"],
+  progress: ["progress bar", "loading bar", "meter"],
+  "radio-group": ["radio group", "radiogroup"],
+  radiogroup: ["radio group", "radiogroup"],
+  "shimmer-text": ["text", "shimmer", "text shimmer", "animated text"],
+  skeleton: ["loading", "placeholder", "shimmer"],
+  "toggle-group": [
+    "toggle group",
+    "togglegroup",
+    "segmented control",
+    "segmented",
+    "view switch",
+  ],
+  typography: [
+    "type scale",
+    "heading",
+    "label",
+    "paragraph",
+    "subheading",
+    "foundation",
+  ],
+};
+
 const TOKEN_SPLIT_REGEX = /[\s/-]+/;
 
 function tokenize(value: string) {
@@ -138,46 +166,12 @@ const pageItems: SearchItem[] = BASE_LINKS.map((item) => ({
 const componentItems: SearchItem[] = SITE_SECTIONS.flatMap((section) =>
   section.children.map((item) => {
     const slug = item.href.split("/").pop() ?? item.href;
-    const labelKeywords = [item.label, slug, section.label];
-
-    if (slug === "radiogroup" || slug === "radio-group") {
-      labelKeywords.push("radio group");
-      labelKeywords.push("radiogroup");
-    }
-    if (slug === "file-upload") {
-      labelKeywords.push("upload");
-    }
-    if (slug === "progress") {
-      labelKeywords.push("progress bar", "loading bar", "meter");
-    }
-    if (slug === "toggle-group") {
-      labelKeywords.push(
-        "toggle group",
-        "togglegroup",
-        "segmented control",
-        "segmented",
-        "view switch"
-      );
-    }
-    if (slug === "dia-text") {
-      labelKeywords.push("text", "text reveal", "animated text");
-    }
-    if (slug === "shimmer-text") {
-      labelKeywords.push("text", "shimmer", "text shimmer", "animated text");
-    }
-    if (slug === "skeleton") {
-      labelKeywords.push("loading", "placeholder", "shimmer");
-    }
-    if (slug === "typography") {
-      labelKeywords.push(
-        "type scale",
-        "heading",
-        "label",
-        "paragraph",
-        "subheading",
-        "foundation"
-      );
-    }
+    const labelKeywords = [
+      item.label,
+      slug,
+      section.label,
+      ...(extraComponentKeywordsBySlug[slug] ?? []),
+    ];
 
     return {
       href: item.href,

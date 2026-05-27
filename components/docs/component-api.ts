@@ -341,6 +341,71 @@ const calendarApiDetails: DetailItem[] = [
   registryItem("calendar.json", ["motion", "lucide-react", "date-fns"]),
 ];
 
+const cardApiDetails: DetailItem[] = [
+  {
+    id: "card",
+    title: "Card",
+    summary:
+      "Compound card surface with slot-based sections, optional interactive lift, and layout-aware motion between content states.",
+    fields: [
+      field({
+        name: "children",
+        type: "ReactNode",
+        required: true,
+        description:
+          "Compose CardHeader, CardContent, CardFooter, media, or custom blocks inside the shared card shell.",
+      }),
+      field({
+        name: "interactive",
+        type: "boolean",
+        defaultValue: "false",
+        description:
+          "Enables the restrained hover lift and stronger surface response intended for clickable or focusable cards.",
+      }),
+      field({
+        name: "reducedMotion",
+        type: "boolean",
+        description:
+          "Forces the calmer motion path immediately while still honoring a user's system-level reduced motion preference.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description:
+          "Merged onto the root card surface for local spacing, border, or layout adjustments without replacing the slot API.",
+      }),
+    ],
+    notes: [
+      "The root forwards standard div props, so you can attach ids, aria attributes, data attributes, and event handlers directly.",
+      "Cards with a direct leading image automatically remove top padding and inherit the root radius on the first and last image edges.",
+      "Footer-aware padding is handled by the card itself, so adding CardFooter trims the bottom padding without extra wrapper logic.",
+    ],
+  },
+  {
+    id: "card-slots",
+    title: "Compound slots",
+    summary:
+      "The card keeps its API intentionally small by exposing lightweight structural parts instead of many styling props.",
+    notes: [
+      "CardHeader arranges the title, description, and optional CardAction in a compact grid so status pills and actions align naturally without extra wrappers.",
+      "CardTitle and CardDescription stay neutral div-based slots, which makes them easy to pair with links, badges, metrics, or richer inline content.",
+      "CardContent is the flexible middle section for body copy, media, stats, and custom layouts, while CardFooter adds a quieter separated surface for supporting actions or context.",
+    ],
+  },
+  {
+    id: "card-motion",
+    title: "Motion and interaction model",
+    summary:
+      "Layout changes are animated through Motion so expanding or swapping card content feels fluid rather than abrupt.",
+    notes: [
+      "When interactive is enabled, hover drives a spring-smoothed motion value so lift, scale, and shadow ease in and out as one fluid surface; compound slots only animate layout when content changes.",
+      "interactive only changes the visible surface response: border, shadow, and a very small hover lift. The component does not add button semantics on its own.",
+      "Reduced motion disables the hover lift and asks Motion to use its calmer accessibility path for layout changes.",
+    ],
+  },
+  registryItem("card.json", ["motion"]),
+];
+
 const breadcrumbsApiDetails: DetailItem[] = [
   {
     id: "breadcrumb-item",
@@ -3964,6 +4029,7 @@ export {
   avatarApiDetails,
   badgeApiDetails,
   calendarApiDetails,
+  cardApiDetails,
   breadcrumbsApiDetails,
   buttonApiDetails,
   buttonGroupApiDetails,

@@ -463,6 +463,109 @@ export function BadgePreview() {
   );
 }`;
 
+export const cardPreviewCode = `"use client";
+
+import Image from "next/image";
+import { useEffect, useState } from "react";
+import { Avatar } from "@/components/ui/avatar";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardTitle,
+} from "@/components/ui/card";
+
+const artworkSrc = "/assets/gradient.png";
+const currentDateFormatter = new Intl.DateTimeFormat("en-US", {
+  month: "long",
+  day: "numeric",
+  year: "numeric",
+});
+
+const tagClassName =
+  "inline-flex items-center rounded-md bg-muted px-2.5 py-1 font-medium text-[12px] text-foreground";
+
+function formatCurrentDate() {
+  return currentDateFormatter.format(new Date());
+}
+
+export function CardPreview() {
+  const [currentDate, setCurrentDate] = useState("");
+
+  useEffect(() => {
+    const updateDate = () => {
+      setCurrentDate(formatCurrentDate());
+    };
+
+    updateDate();
+    const intervalId = window.setInterval(updateDate, 60_000);
+
+    return () => {
+      window.clearInterval(intervalId);
+    };
+  }, []);
+
+  return (
+    <Card
+      className="mx-auto w-full max-w-[21rem] overflow-hidden rounded-[1.1rem] border border-border/80 bg-background pt-0 shadow-[0_24px_70px_-46px_rgba(15,23,42,0.24)] sm:max-w-[23rem]"
+      interactive
+    >
+      <div className="px-[1.5px] pt-[1.5px]">
+        <Image
+          alt="Red and purple gradient artwork"
+          className="aspect-[4/2.2] w-full rounded-[0.85rem] object-cover"
+          height={4000}
+          sizes="(max-width: 640px) 100vw, 23rem"
+          src={artworkSrc}
+          width={6000}
+        />
+      </div>
+
+      <CardContent className="space-y-3 px-3.5 pt-3 pb-0 sm:px-4 sm:pt-3.5">
+        <div className="flex items-center justify-between gap-3">
+          <Avatar
+            alt=""
+            className="size-8 shrink-0 ring-1 ring-black/5"
+            loading="lazy"
+            src={artworkSrc}
+          />
+          <p className="text-right text-[12px] text-muted-foreground sm:text-[13px]">
+            {currentDate}
+          </p>
+        </div>
+
+        <div className="space-y-2.5">
+          <CardTitle className="whitespace-nowrap text-[1rem] font-normal leading-[1.08] tracking-[-0.05em] sm:text-[1.08rem]">
+            Design Systems That Age Gracefully
+          </CardTitle>
+          <CardDescription className="w-full text-pretty text-[12px] leading-5 text-muted-foreground sm:text-[13px] sm:leading-6">
+            Lasting interfaces come from steady patterns, resilient
+            foundations, and decisions that remain coherent as products grow.
+          </CardDescription>
+        </div>
+
+        <button
+          className="inline-flex h-8 w-fit items-center justify-center rounded-md border border-border px-3.5 font-medium text-[12px] text-foreground transition-colors hover:bg-muted/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+          type="button"
+        >
+          Read more
+        </button>
+      </CardContent>
+
+      <CardFooter className="items-center justify-between gap-2.5 border-t-0 bg-transparent px-3.5 pt-4 pb-3.5 sm:px-4 sm:pb-4">
+        <span className="text-[12px] text-muted-foreground sm:text-[13px]">
+          Categories
+        </span>
+        <div className="flex flex-wrap justify-end gap-1.5">
+          <span className={tagClassName}>Marketing</span>
+          <span className={tagClassName}>UI Design</span>
+        </div>
+      </CardFooter>
+    </Card>
+  );
+}`;
+
 /** Skeleton docs preview uses ShimmerSkeleton (registry export name). */
 export const skeletonPreviewCode = `"use client";
 
@@ -492,6 +595,7 @@ export function SkeletonPreview() {
 const COMPONENT_PREVIEW_OVERRIDES: Record<string, string> = {
   avatar: avatarPreviewCode,
   badge: badgePreviewCode,
+  card: cardPreviewCode,
   skeleton: skeletonPreviewCode,
 };
 
