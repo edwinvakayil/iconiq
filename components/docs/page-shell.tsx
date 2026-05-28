@@ -76,6 +76,7 @@ const REDUCED_MOTION_COMPONENTS = new Set([
   "badge",
   "button",
   "button-group",
+  "charts",
   "combobox",
   "context-menu",
   "dialog",

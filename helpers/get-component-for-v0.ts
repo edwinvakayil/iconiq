@@ -7,6 +7,7 @@ import {
   badgePreviewCode,
   buildV0Page,
   cardPreviewCode,
+  chartsPreviewCode,
   ensureV0Page,
   getComponentV0Page,
   skeletonPreviewCode,
@@ -93,6 +94,7 @@ export function AccordionPreview() {
     "  )\n" +
     "}\n",
   card: buildV0Page(cardPreviewCode),
+  charts: buildV0Page(chartsPreviewCode),
   "button-group":
     '"use client";\n\n' +
     `import { Bell, Grid2x2, List, Table2 } from "lucide-react"\n` +

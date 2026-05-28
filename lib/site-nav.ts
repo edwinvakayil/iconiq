@@ -23,6 +23,7 @@ export const SITE_SECTIONS = [
       { label: "Button Group", href: "/components/button-group" },
       { label: "Card", href: "/components/card" },
       { label: "Calendar", href: "/components/calendar" },
+      { label: "Charts", href: "/components/charts" },
       { label: "Checkbox", href: "/components/checkbox" },
       { label: "Checkbox Group", href: "/components/checkbox-group" },
       { label: "Collapsible", href: "/components/collapsible" },

@@ -310,6 +310,12 @@ const REGISTRY_UI_META: Record<
       "Compound card surface with optional interactive lift, Motion-smoothed layout transitions, and shared header, action, content, and footer slots.",
     dependencies: ["motion"],
   },
+  charts: {
+    title: "Charts",
+    description:
+      "Recharts shell with registry chart tokens, ease-out bar growth, and spring-smoothed tooltip and legend transitions.",
+    dependencies: ["recharts", "motion"],
+  },
   checkbox: {
     title: "Checkbox",
     description:

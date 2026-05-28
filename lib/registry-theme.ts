@@ -19,6 +19,11 @@ const lightTokens = [
   "[--brand:#0ea5e9]",
   "[--brand-soft:#bae6fd]",
   "[--shadow-soft:0_18px_38px_-24px_rgba(15,23,42,0.35)]",
+  "[--chart-1:oklch(0.52_0.19_254)]",
+  "[--chart-2:oklch(0.74_0.11_232)]",
+  "[--chart-3:oklch(0.42_0.16_262)]",
+  "[--chart-4:oklch(0.84_0.07_228)]",
+  "[--chart-5:oklch(0.62_0.14_240)]",
 ];
 
 const aliasTokens = [
@@ -40,6 +45,11 @@ const aliasTokens = [
   "[--color-popover-foreground:var(--popover-foreground)]",
   "[--color-brand:var(--brand)]",
   "[--color-brand-soft:var(--brand-soft)]",
+  "[--color-chart-1:var(--chart-1)]",
+  "[--color-chart-2:var(--chart-2)]",
+  "[--color-chart-3:var(--chart-3)]",
+  "[--color-chart-4:var(--chart-4)]",
+  "[--color-chart-5:var(--chart-5)]",
 ];
 
 const darkTokens = [
@@ -63,6 +73,11 @@ const darkTokens = [
   "dark:[--brand:#38bdf8]",
   "dark:[--brand-soft:#0c4a6e]",
   "dark:[--shadow-soft:0_20px_44px_-28px_rgba(0,0,0,0.6)]",
+  "dark:[--chart-1:oklch(0.68_0.17_250)]",
+  "dark:[--chart-2:oklch(0.82_0.09_225)]",
+  "dark:[--chart-3:oklch(0.58_0.15_260)]",
+  "dark:[--chart-4:oklch(0.75_0.12_235)]",
+  "dark:[--chart-5:oklch(0.88_0.06_220)]",
 ];
 
 export const registryTheme = [

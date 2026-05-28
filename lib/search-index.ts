@@ -38,6 +38,8 @@ const componentSummaries: Record<string, string> = {
     "Button group docs in the Components section, using the shared Iconiq button group install with provider options visible but disabled.",
   "/components/calendar":
     "Calendar docs in the Components section, using the shared Iconiq calendar install with provider options visible but disabled.",
+  "/components/charts":
+    "Charts docs in the Components section, using the shared Iconiq Recharts shell with provider options visible but disabled because there is no Radix UI or Base UI variant.",
   "/components/card":
     "Card docs in the Components section, using the shared Iconiq card install with provider options visible but disabled because there is no Radix UI or Base UI variant.",
   "/components/checkbox":
@@ -106,6 +108,7 @@ const componentSummaries: Record<string, string> = {
 
 const extraComponentKeywordsBySlug: Record<string, string[]> = {
   card: ["panel", "surface", "container"],
+  charts: ["chart", "recharts", "bar chart", "data visualization", "graph"],
   "dia-text": ["text", "text reveal", "animated text"],
   "file-upload": ["upload"],
   progress: ["progress bar", "loading bar", "meter"],

@@ -341,6 +341,152 @@ const calendarApiDetails: DetailItem[] = [
   registryItem("calendar.json", ["motion", "lucide-react", "date-fns"]),
 ];
 
+const chartsApiDetails: DetailItem[] = [
+  {
+    id: "chart-container",
+    title: "ChartContainer",
+    summary:
+      "Theme-aware Recharts shell that maps ChartConfig tokens to CSS variables, applies registry chart colors, and eases the surface in with fluid motion.",
+    fields: [
+      field({
+        name: "config",
+        type: "ChartConfig",
+        required: true,
+        description:
+          "Series labels and colors. Use var(--chart-1) style tokens or per-key theme overrides; ChartStyle writes --color-{key} variables scoped to this chart instance.",
+      }),
+      field({
+        name: "children",
+        type: "ReactNode",
+        required: true,
+        description:
+          "Recharts chart markup, usually a BarChart, LineChart, or AreaChart wrapped by ResponsiveContainer through this container.",
+      }),
+      field({
+        name: "id",
+        type: "string",
+        description:
+          "Optional stable id for the generated data-chart attribute and scoped CSS variables.",
+      }),
+      field({
+        name: "initialDimension",
+        type: "{ width: number; height: number }",
+        description:
+          "Optional fallback size for ResponsiveContainer before the first measure. By default the chart fills its parent (100% width/height) with a debounced resize handler.",
+      }),
+      field({
+        name: "reducedMotion",
+        type: "boolean",
+        description:
+          "Forces the calmer motion path for the surface reveal, tooltip, legend, and ChartBar timing while still honoring system reduced-motion preferences when unset.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description:
+          "Merged onto the chart shell alongside registry theme tokens.",
+      }),
+    ],
+    notes: [
+      "Install @iconiq/iconiq-theme alongside charts so --chart-1 through --chart-5 are available through registryTheme.",
+      "Pair ChartContainer with Recharts primitives and ChartTooltip / ChartLegend helpers rather than Radix UI or Base UI wrappers.",
+    ],
+  },
+  {
+    id: "chart-bar",
+    title: "ChartBar",
+    summary:
+      "Thin Recharts Bar wrapper with restrained ease-out growth timing tuned for the Iconiq motion profile.",
+    fields: [
+      field({
+        name: "seriesIndex",
+        type: "number",
+        defaultValue: "0",
+        description:
+          "Offsets bar growth start time for multi-series charts so each series eases in with a short stagger.",
+      }),
+      field({
+        name: "...props",
+        type: "Recharts Bar props",
+        description:
+          "Forwards the full Bar API. animationDuration (~480ms), ease-out easing, and isAnimationActive inherit calm defaults unless you override them.",
+      }),
+    ],
+    notes: [
+      'Use fill="var(--color-desktop)" (or your config key) so bars pick up ChartConfig colors.',
+      "Bar growth runs once on first paint; resize uses a debounced container and skips repeat bar animations so narrowing the viewport stays stable.",
+      "When reduced motion is active, bar growth animation is disabled automatically.",
+    ],
+  },
+  {
+    id: "chart-tooltip",
+    title: "ChartTooltip & ChartTooltipContent",
+    summary:
+      "Recharts tooltip primitive plus a styled content shell with a soft spring entrance and dashed, dot, or line indicators.",
+    fields: [
+      field({
+        name: "indicator",
+        type: '"dot" | "line" | "dashed"',
+        defaultValue: '"dot"',
+        description: "Marker style rendered beside each tooltip row.",
+      }),
+      field({
+        name: "hideLabel",
+        type: "boolean",
+        defaultValue: "false",
+        description:
+          "Suppresses the formatted label block above the value rows.",
+      }),
+      field({
+        name: "hideIndicator",
+        type: "boolean",
+        defaultValue: "false",
+        description: "Hides the color marker when you only want text values.",
+      }),
+      field({
+        name: "labelFormatter",
+        type: "(value, payload) => ReactNode",
+        description: "Custom formatter for the tooltip label row.",
+      }),
+      field({
+        name: "formatter",
+        type: "Recharts formatter",
+        description:
+          "Optional per-row formatter; when omitted, the default label and value layout is used.",
+      }),
+    ],
+  },
+  {
+    id: "chart-legend",
+    title: "ChartLegend & ChartLegendContent",
+    summary:
+      "Legend primitive with a quiet fade-and-rise entrance that matches the chart surface motion.",
+    fields: [
+      field({
+        name: "hideIcon",
+        type: "boolean",
+        defaultValue: "false",
+        description:
+          "Hides config icons and falls back to the color swatch derived from the series color.",
+      }),
+      field({
+        name: "verticalAlign",
+        type: '"top" | "bottom"',
+        defaultValue: '"bottom"',
+        description: "Adjusts legend spacing relative to the chart.",
+      }),
+    ],
+  },
+  registryItem(
+    "charts.json",
+    ["recharts", "motion"],
+    [
+      "This install is a Recharts + Motion shell only. It does not ship Radix UI or Base UI variants.",
+      "Chart colors come from @iconiq/iconiq-theme (--chart-1 … --chart-5) and per-series --color-{key} variables generated from ChartConfig.",
+    ]
+  ),
+];
+
 const cardApiDetails: DetailItem[] = [
   {
     id: "card",
@@ -4030,6 +4176,7 @@ export {
   badgeApiDetails,
   calendarApiDetails,
   cardApiDetails,
+  chartsApiDetails,
   breadcrumbsApiDetails,
   buttonApiDetails,
   buttonGroupApiDetails,

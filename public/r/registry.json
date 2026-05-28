@@ -489,6 +489,21 @@
       ]
     },
     {
+      "name": "charts",
+      "type": "registry:ui",
+      "registryDependencies": ["@iconiq/iconiq-theme"],
+      "dependencies": ["recharts", "motion"],
+      "devDependencies": [],
+      "title": "Charts",
+      "description": "Recharts shell with registry chart tokens, ease-out bar growth, and spring-smoothed tooltip and legend transitions.",
+      "files": [
+        {
+          "path": "charts.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "checkbox-group",
       "type": "registry:ui",
       "registryDependencies": ["@iconiq/iconiq-theme"],
