@@ -1,0 +1,17 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "infiniteribbon",
+  "type": "registry:ui",
+  "registryDependencies": [],
+  "dependencies": [],
+  "devDependencies": [],
+  "files": [
+    {
+      "path": "infiniteribbon.tsx",
+      "content": "import type * as React from \"react\";\n\nimport { cn } from \"@/lib/utils\";\n\nexport interface InfiniteRibbonProps {\n  repeat?: number;\n  duration?: number;\n  reverse?: boolean;\n  rotation?: number;\n  children: React.ReactNode;\n  className?: string;\n}\n\nconst ribbonAnimationStyles = `\n@keyframes iconiq-infinite-ribbon {\n  from {\n    transform: translateX(0);\n  }\n  to {\n    transform: translateX(-50%);\n  }\n}\n\n@keyframes iconiq-infinite-ribbon-reverse {\n  from {\n    transform: translateX(-50%);\n  }\n  to {\n    transform: translateX(0);\n  }\n}\n\n@media (prefers-reduced-motion: reduce) {\n  .iconiq-infinite-ribbon-track {\n    animation-duration: 1ms !important;\n    animation-iteration-count: 1 !important;\n  }\n}\n`;\n\nexport function InfiniteRibbon({\n  repeat = 5,\n  duration = 10,\n  reverse = false,\n  rotation = 0,\n  children,\n  className,\n}: InfiniteRibbonProps) {\n  const repeatCount = Math.max(1, Math.floor(repeat));\n  const animationName = reverse\n    ? \"iconiq-infinite-ribbon-reverse\"\n    : \"iconiq-infinite-ribbon\";\n\n  return (\n    <div\n      className={cn(\n        \"w-full max-w-full overflow-hidden bg-yellow-400 py-1 text-black text-lg dark:bg-yellow-500 dark:text-black\",\n        className\n      )}\n      style={{ transform: `rotate(${rotation}deg)` }}\n    >\n      <span className=\"sr-only\">{children}</span>\n      <div\n        aria-hidden=\"true\"\n        className=\"iconiq-infinite-ribbon-track flex w-max whitespace-nowrap\"\n        style={\n          {\n            \"--ribbon-duration\": `${Math.max(0.1, duration)}s`,\n            animation: `${animationName} var(--ribbon-duration) linear infinite`,\n          } as React.CSSProperties\n        }\n      >\n        {Array.from({ length: repeatCount * 2 }, (_, index) => (\n          <span className=\"mr-8 inline-block select-none\" key={index}>\n            {children}\n          </span>\n        ))}\n      </div>\n      <style>{ribbonAnimationStyles}</style>\n    </div>\n  );\n}\n",
+      "type": "registry:ui"
+    }
+  ],
+  "title": "Infinite Ribbon",
+  "description": "Full-width looping announcement ribbon with repeated content, optional reverse direction, and diagonal rotation controls."
+}

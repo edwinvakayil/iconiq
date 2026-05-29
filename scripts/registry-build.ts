@@ -346,6 +346,11 @@ const REGISTRY_UI_META: Record<
       "Row of compact icon chips that expand on hover or focus and stay open when selected. Built with Motion and Lucide.",
     dependencies: ["motion", "lucide-react"],
   },
+  infiniteribbon: {
+    title: "Infinite Ribbon",
+    description:
+      "Full-width looping announcement ribbon with repeated content, optional reverse direction, and diagonal rotation controls.",
+  },
   "origin-button": {
     title: "Origin Button",
     description:

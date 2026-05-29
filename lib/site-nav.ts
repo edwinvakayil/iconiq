@@ -58,6 +58,7 @@ export const SITE_SECTIONS = [
     label: "Special One",
     children: [
       { label: "Icon Bar", href: "/special-one/icon-bar" },
+      { label: "Infinite Ribbon", href: "/special-one/infiniteribbon" },
       { label: "Origin Button", href: "/special-one/origin-button" },
       { label: "FAQ Pro", href: "/special-one/faq-pro" },
     ],

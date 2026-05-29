@@ -688,6 +688,21 @@
       ]
     },
     {
+      "name": "infiniteribbon",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": [],
+      "devDependencies": [],
+      "title": "Infinite Ribbon",
+      "description": "Full-width looping announcement ribbon with repeated content, optional reverse direction, and diagonal rotation controls.",
+      "files": [
+        {
+          "path": "infiniteribbon.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "input-group",
       "type": "registry:ui",
       "registryDependencies": ["@iconiq/iconiq-theme"],

@@ -9,12 +9,15 @@ function registryItem(
   dependencies: string[],
   notes: string[] = []
 ): DetailItem {
+  const dependencySummary =
+    dependencies.length > 0 ? dependencies.join(", ") : "none";
+
   return {
     id: "registry",
     title: "Registry bundle",
     summary:
       "Install the exact registry entry shown on the right when you want the component file and its declared runtime dependencies together.",
-    notes: [`Dependencies: ${dependencies.join(", ")}.`, ...notes],
+    notes: [`Dependencies: ${dependencySummary}.`, ...notes],
     registryPath,
   };
 }
@@ -2824,6 +2827,65 @@ const iconBarApiDetails: DetailItem[] = [
   registryItem("icon-bar.json", ["motion", "lucide-react"]),
 ];
 
+const infiniteRibbonApiDetails: DetailItem[] = [
+  {
+    id: "infiniteribbon",
+    title: "InfiniteRibbon",
+    summary:
+      "Full-width looping ribbon that duplicates its children into a continuous marquee track and optionally rotates the whole strip.",
+    fields: [
+      field({
+        name: "children",
+        type: "React.ReactNode",
+        required: true,
+        description:
+          "Content repeated across the moving ribbon. Short announcement copy works best because it stays legible while scrolling.",
+      }),
+      field({
+        name: "repeat",
+        type: "number",
+        defaultValue: "5",
+        description:
+          "Number of copies rendered per half of the seamless track. Higher values keep wider ribbons filled with repeated content.",
+      }),
+      field({
+        name: "duration",
+        type: "number",
+        defaultValue: "10",
+        description:
+          "Loop duration in seconds. Lower values move the ribbon faster; values below 0.1 are clamped.",
+      }),
+      field({
+        name: "reverse",
+        type: "boolean",
+        defaultValue: "false",
+        description:
+          "Runs the marquee from left to right instead of the default right-to-left movement.",
+      }),
+      field({
+        name: "rotation",
+        type: "number",
+        defaultValue: "0",
+        description:
+          "Degrees applied to the root strip with CSS transform, useful for diagonal banner layouts.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description:
+          "Optional class names merged onto the root ribbon for positioning, colors, spacing, or typography.",
+      }),
+    ],
+    notes: [
+      "The animated track is marked aria-hidden and a single screen-reader-only copy of children is rendered before it.",
+      "The component ships its own keyframes, so no global Tailwind animation extension is required.",
+      "Reduced-motion users receive a single near-instant pass instead of a continuously looping marquee.",
+      "Because rotation is applied as an inline transform, wrap the ribbon when you need additional transform utilities on the same element.",
+    ],
+  },
+  registryItem("infiniteribbon.json", []),
+];
+
 const originButtonApiDetails: DetailItem[] = [
   {
     id: "origin-button",
@@ -4191,6 +4253,7 @@ export {
   fileUploadApiDetails,
   hoverCardApiDetails,
   iconBarApiDetails,
+  infiniteRibbonApiDetails,
   originButtonApiDetails,
   faqProApiDetails,
   popoverApiDetails,

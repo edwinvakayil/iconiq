@@ -10,6 +10,7 @@ import {
   chartsPreviewCode,
   ensureV0Page,
   getComponentV0Page,
+  infiniteRibbonPreviewCode,
   skeletonPreviewCode,
 } from "@/lib/component-v0-pages";
 
@@ -95,6 +96,7 @@ export function AccordionPreview() {
     "}\n",
   card: buildV0Page(cardPreviewCode),
   charts: buildV0Page(chartsPreviewCode),
+  infiniteribbon: buildV0Page(infiniteRibbonPreviewCode),
   "button-group":
     '"use client";\n\n' +
     `import { Bell, Grid2x2, List, Table2 } from "lucide-react"\n` +

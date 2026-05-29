@@ -94,6 +94,8 @@ const componentSummaries: Record<string, string> = {
     "Toggle group docs with a provider switch that swaps between Base UI and Radix UI registry entries.",
   "/special-one/icon-bar":
     "Horizontal icon chips that expand on hover to reveal short labels with spring motion.",
+  "/special-one/infiniteribbon":
+    "Looping announcement ribbon that repeats text into a full-width marquee with optional reverse direction and rotation.",
   "/special-one/origin-button":
     "Rounded action button with a pointer-origin fill that spreads on hover and inverts the label.",
   "/special-one/faq-pro":
@@ -111,6 +113,13 @@ const extraComponentKeywordsBySlug: Record<string, string[]> = {
   charts: ["chart", "recharts", "bar chart", "data visualization", "graph"],
   "dia-text": ["text", "text reveal", "animated text"],
   "file-upload": ["upload"],
+  infiniteribbon: [
+    "infinite ribbon",
+    "marquee",
+    "ticker",
+    "scrolling text",
+    "announcement bar",
+  ],
   progress: ["progress bar", "loading bar", "meter"],
   "radio-group": ["radio group", "radiogroup"],
   radiogroup: ["radio group", "radiogroup"],
