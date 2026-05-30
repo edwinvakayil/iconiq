@@ -1,87 +1,87 @@
 "use client";
 
-import { Grid2x2, List, MoreHorizontal, Table2 } from "lucide-react";
+import { MoreHorizontalIcon } from "lucide-react";
 
 import { SharedPrimitiveProviderSwitch } from "@/app/(site)/components/_components/provider-switch";
 import { buttonGroupApiDetails } from "@/components/docs/component-api";
 import { ComponentDocsPage } from "@/components/docs/page-shell";
 import { LINK } from "@/constants";
-import { ButtonGroupItems, IconButton } from "@/registry/button-group";
+import { Button } from "@/registry/b-button";
+import { ButtonGroup } from "@/registry/button-group";
+import {
+  Dropdown,
+  DropdownContent,
+  DropdownGroup,
+  DropdownItem,
+  DropdownTrigger,
+} from "@/registry/r-dropdown";
 
-const usageCode = `import { Grid2x2, List, MoreHorizontal, Table2 } from "lucide-react";
-import { ButtonGroupItems, IconButton } from "@/components/ui/button-group";
+const previewWrapClassName =
+  "mx-auto flex max-w-full flex-wrap justify-center gap-2";
+const previewStackClassName =
+  "mx-auto flex max-w-full flex-col items-center gap-3";
+const buttonClassName =
+  "border-border bg-background px-3 shadow-none hover:bg-muted hover:text-foreground";
+const dropdownTriggerClassName =
+  "h-7 min-h-7 w-7 justify-center rounded-[min(var(--radius-md),12px)] border border-border bg-background p-0 text-muted-foreground shadow-none hover:bg-muted hover:text-foreground [&>span:first-child]:flex-none [&_svg]:size-3.5";
 
-export function ButtonGroupPreview() {
+const usageCode = `"use client";
+
+import { MoreHorizontalIcon } from "lucide-react";
+
+import { Button } from "@/components/ui/b-button";
+import { ButtonGroup } from "@/components/ui/button-group";
+import {
+  Dropdown,
+  DropdownContent,
+  DropdownGroup,
+  DropdownItem,
+  DropdownTrigger,
+} from "@/components/ui/r-dropdown";
+
+const previewWrapClassName =
+  "mx-auto flex max-w-full flex-wrap justify-center gap-2";
+const previewStackClassName =
+  "mx-auto flex max-w-full flex-col items-center gap-3";
+const buttonClassName =
+  "border-border bg-background px-3 shadow-none hover:bg-muted hover:text-foreground";
+const dropdownTriggerClassName =
+  "h-7 min-h-7 w-7 justify-center rounded-[min(var(--radius-md),12px)] border border-border bg-background p-0 text-muted-foreground shadow-none hover:bg-muted hover:text-foreground [&>span:first-child]:flex-none [&_svg]:size-3.5";
+
+export function ButtonGroupDemo() {
   return (
-    <div className="mx-auto flex w-full max-w-2xl flex-col gap-10 px-2">
-      <div className="space-y-3">
-        <div className="space-y-1 text-left">
-          <p className="font-medium text-foreground text-sm">
-            Divided compact row
-          </p>
-          <p className="text-muted-foreground text-sm">
-            Use this when each adjacent action still benefits from a visible
-            split.
-          </p>
-        </div>
-        <div className="flex flex-wrap items-center gap-2">
-          <ButtonGroupItems size="sm">
-            <button type="button">
-              <List className="size-4" />
-              List
-            </button>
-            <button type="button">
-              <Grid2x2 className="size-4" />
-              Board
-            </button>
-            <button type="button">
-              <Table2 className="size-4" />
-              Table
-            </button>
-          </ButtonGroupItems>
-
-          <IconButton aria-label="More options" size="sm" type="button">
-            <MoreHorizontal className="size-4" />
-          </IconButton>
-        </div>
-      </div>
-
-      <div className="space-y-3">
-        <div className="space-y-1 text-left">
-          <p className="font-medium text-foreground text-sm">
-            Quiet toolbar row
-          </p>
-          <p className="text-muted-foreground text-sm">
-            Use this when you want a softer grouped control with less visual
-            chrome and a smoother traveling hover state.
-          </p>
-        </div>
-        <div className="flex flex-wrap items-center gap-2">
-          <ButtonGroupItems disableRipple showDividers={false} size="sm">
-            <button type="button">
-              <List className="size-4" />
-              List
-            </button>
-            <button type="button">
-              <Grid2x2 className="size-4" />
-              Board
-            </button>
-            <button type="button">
-              <Table2 className="size-4" />
-              Table
-            </button>
-          </ButtonGroupItems>
-
-          <IconButton
-            aria-label="More options"
-            disableRipple
-            showBorder={false}
-            size="sm"
-            type="button"
+    <div className={previewStackClassName}>
+      <p className="text-center text-muted-foreground text-sm">
+        Review the latest project changes before sharing them with your team.
+      </p>
+      <div className={previewWrapClassName}>
+        <ButtonGroup>
+          <Button className={buttonClassName} size="sm" variant="outline">
+            Edit
+          </Button>
+          <Button className={buttonClassName} size="sm" variant="outline">
+            Preview
+          </Button>
+          <Button className={buttonClassName} size="sm" variant="outline">
+            Publish
+          </Button>
+        </ButtonGroup>
+        <Dropdown className="inline-flex" variant="action">
+          <DropdownTrigger
+            aria-label="More project actions"
+            className={dropdownTriggerClassName}
+            showChevron={false}
           >
-            <MoreHorizontal className="size-4" />
-          </IconButton>
-        </div>
+            <MoreHorizontalIcon />
+          </DropdownTrigger>
+          <DropdownContent align="end" className="w-36">
+            <DropdownGroup>
+              <DropdownItem>Duplicate</DropdownItem>
+              <DropdownItem>Rename</DropdownItem>
+              <DropdownItem>Remove</DropdownItem>
+            </DropdownGroup>
+          </DropdownContent>
+        </Dropdown>
       </div>
     </div>
   );
@@ -89,75 +89,38 @@ export function ButtonGroupPreview() {
 
 function ButtonGroupPreview() {
   return (
-    <div className="mx-auto flex w-full max-w-2xl flex-col gap-10 px-2">
-      <div className="space-y-3">
-        <div className="space-y-1 text-left">
-          <p className="font-medium text-foreground text-sm">
-            Divided compact row
-          </p>
-          <p className="text-muted-foreground text-sm">
-            Use this when each adjacent action still benefits from a visible
-            split.
-          </p>
-        </div>
-        <div className="flex flex-wrap items-center gap-2">
-          <ButtonGroupItems size="sm">
-            <button type="button">
-              <List className="size-4" />
-              List
-            </button>
-            <button type="button">
-              <Grid2x2 className="size-4" />
-              Board
-            </button>
-            <button type="button">
-              <Table2 className="size-4" />
-              Table
-            </button>
-          </ButtonGroupItems>
-
-          <IconButton aria-label="More options" size="sm" type="button">
-            <MoreHorizontal className="size-4" />
-          </IconButton>
-        </div>
-      </div>
-
-      <div className="space-y-3">
-        <div className="space-y-1 text-left">
-          <p className="font-medium text-foreground text-sm">
-            Quiet toolbar row
-          </p>
-          <p className="text-muted-foreground text-sm">
-            Use this when you want a softer grouped control with less visual
-            chrome and a smoother traveling hover state.
-          </p>
-        </div>
-        <div className="flex flex-wrap items-center gap-2">
-          <ButtonGroupItems disableRipple showDividers={false} size="sm">
-            <button type="button">
-              <List className="size-4" />
-              List
-            </button>
-            <button type="button">
-              <Grid2x2 className="size-4" />
-              Board
-            </button>
-            <button type="button">
-              <Table2 className="size-4" />
-              Table
-            </button>
-          </ButtonGroupItems>
-
-          <IconButton
-            aria-label="More options"
-            disableRipple
-            showBorder={false}
-            size="sm"
-            type="button"
+    <div className={previewStackClassName}>
+      <p className="text-center text-muted-foreground text-sm">
+        Review the latest project changes before sharing them with your team.
+      </p>
+      <div className={previewWrapClassName}>
+        <ButtonGroup>
+          <Button className={buttonClassName} size="sm" variant="outline">
+            Edit
+          </Button>
+          <Button className={buttonClassName} size="sm" variant="outline">
+            Preview
+          </Button>
+          <Button className={buttonClassName} size="sm" variant="outline">
+            Publish
+          </Button>
+        </ButtonGroup>
+        <Dropdown className="inline-flex" variant="action">
+          <DropdownTrigger
+            aria-label="More project actions"
+            className={dropdownTriggerClassName}
+            showChevron={false}
           >
-            <MoreHorizontal className="size-4" />
-          </IconButton>
-        </div>
+            <MoreHorizontalIcon />
+          </DropdownTrigger>
+          <DropdownContent align="end" className="w-36">
+            <DropdownGroup>
+              <DropdownItem>Duplicate</DropdownItem>
+              <DropdownItem>Rename</DropdownItem>
+              <DropdownItem>Remove</DropdownItem>
+            </DropdownGroup>
+          </DropdownContent>
+        </Dropdown>
       </div>
     </div>
   );
@@ -178,14 +141,15 @@ export default function RadixBaseButtonGroupPage() {
       headerActions={<SharedPrimitiveProviderSwitch />}
       pageUrl="/components/button-group"
       preview={<ButtonGroupPreview />}
-      previewDescription="Compare a more defined divided row against a quieter toolbar-style variant with a smoother traveling hover treatment."
+      previewClassName="min-h-[8rem] overflow-visible"
+      previewDescription="A minimal connected button group rendered directly, without a card or toolbar shell."
       railNotes={[
-        "Use the default divided row when adjacent actions should still read as separate choices.",
-        "Use the quiet variant when you want the group to feel closer to a compact desktop toolbar with a fluid hover sweep.",
+        "Use the group itself as the visual surface when documenting button rendering.",
+        "Keep labels short so the connected control remains compact across viewport sizes.",
       ]}
       title="Button Group"
       usageCode={usageCode}
-      usageDescription="Start with the divided row for clearer boundaries, then remove dividers and ripple when you want a softer toolbar treatment with fluid hover motion."
+      usageDescription="Compose ButtonGroup with registry buttons and a small overflow menu for a minimal connected action set."
     />
   );
 }

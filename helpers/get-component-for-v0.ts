@@ -106,37 +106,67 @@ export function AccordionPreview() {
   card: buildV0Page(cardPreviewCode),
   charts: buildV0Page(chartsPreviewCode),
   infiniteribbon: buildV0Page(infiniteRibbonPreviewCode),
-  "button-group":
-    '"use client";\n\n' +
-    `import { Bell, Grid2x2, List, Table2 } from "lucide-react"\n` +
-    "import {\n" +
-    "  ButtonGroupItems,\n" +
-    "  IconButton,\n" +
-    `} from "@/components/ui/button-group"\n\n` +
-    "export default function Page() {\n" +
-    "  return (\n" +
-    '    <div className="mx-auto flex min-h-svh w-full max-w-2xl flex-col items-center justify-center gap-8 p-8">\n' +
-    "      <ButtonGroupItems>\n" +
-    '        <button type="button">\n' +
-    '          <List className="size-4" />\n' +
-    "          List\n" +
-    "        </button>\n" +
-    '        <button type="button">\n' +
-    '          <Grid2x2 className="size-4" />\n' +
-    "          Board\n" +
-    "        </button>\n" +
-    '        <button type="button">\n' +
-    '          <Table2 className="size-4" />\n' +
-    "          Table\n" +
-    "        </button>\n" +
-    "      </ButtonGroupItems>\n" +
-    "\n" +
-    '      <IconButton aria-label="Notifications" type="button">\n' +
-    '        <Bell className="size-4" />\n' +
-    "      </IconButton>\n" +
-    "    </div>\n" +
-    "  )\n" +
-    "}\n",
+  "button-group": buildV0Page(`"use client";
+
+import { MoreHorizontalIcon } from "lucide-react";
+
+import { Button } from "@/components/ui/b-button";
+import { ButtonGroup } from "@/components/ui/button-group";
+import {
+  Dropdown,
+  DropdownContent,
+  DropdownGroup,
+  DropdownItem,
+  DropdownTrigger,
+} from "@/components/ui/r-dropdown";
+
+const previewWrapClassName =
+  "mx-auto flex max-w-full flex-wrap justify-center gap-2";
+const previewStackClassName =
+  "mx-auto flex max-w-full flex-col items-center gap-3";
+const buttonClassName =
+  "border-border bg-background px-3 shadow-none hover:bg-muted hover:text-foreground";
+const dropdownTriggerClassName =
+  "h-7 min-h-7 w-7 justify-center rounded-[min(var(--radius-md),12px)] border border-border bg-background p-0 text-muted-foreground shadow-none hover:bg-muted hover:text-foreground [&>span:first-child]:flex-none [&_svg]:size-3.5";
+
+export function ButtonGroupDemo() {
+  return (
+    <div className={previewStackClassName}>
+      <p className="text-center text-muted-foreground text-sm">
+        Review the latest project changes before sharing them with your team.
+      </p>
+      <div className={previewWrapClassName}>
+        <ButtonGroup>
+          <Button className={buttonClassName} size="sm" variant="outline">
+            Edit
+          </Button>
+          <Button className={buttonClassName} size="sm" variant="outline">
+            Preview
+          </Button>
+          <Button className={buttonClassName} size="sm" variant="outline">
+            Publish
+          </Button>
+        </ButtonGroup>
+        <Dropdown className="inline-flex" variant="action">
+          <DropdownTrigger
+            aria-label="More project actions"
+            className={dropdownTriggerClassName}
+            showChevron={false}
+          >
+            <MoreHorizontalIcon />
+          </DropdownTrigger>
+          <DropdownContent align="end" className="w-36">
+            <DropdownGroup>
+              <DropdownItem>Duplicate</DropdownItem>
+              <DropdownItem>Rename</DropdownItem>
+              <DropdownItem>Remove</DropdownItem>
+            </DropdownGroup>
+          </DropdownContent>
+        </Dropdown>
+      </div>
+    </div>
+  );
+}`),
   calendar:
     '"use client";\n\n' +
     `import { Calendar } from "@/components/ui/calendar"\n\n` +

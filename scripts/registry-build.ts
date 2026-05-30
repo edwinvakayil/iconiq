@@ -313,8 +313,8 @@ const REGISTRY_UI_META: Record<
   "button-group": {
     title: "Button Group",
     description:
-      "Grouped action buttons, segmented button rows, and a selectable segmented control with spring-driven hover and active motion.",
-    dependencies: ["motion"],
+      "Grouped action buttons, text segments, separators, segmented button rows, and a selectable segmented control with spring-driven hover and active motion.",
+    dependencies: ["@base-ui/react", "motion", "class-variance-authority"],
   },
   calendar: {
     title: "Calendar",

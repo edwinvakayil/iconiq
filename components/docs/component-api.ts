@@ -1071,20 +1071,75 @@ const buttonGroupApiDetails: DetailItem[] = [
     id: "button-group-layout",
     title: "ButtonGroup",
     summary:
-      "Simple flex wrapper for arranging several button surfaces in one row with shared staggered entrance motion.",
+      "Slot-aware flex wrapper for arranging adjacent controls with horizontal or vertical rounding rules.",
     fields: [
       field({
         name: "children",
         type: "ReactNode",
         required: true,
         description:
-          "Buttons, icon buttons, or any other inline controls you want to keep in the same row.",
+          "Buttons, icon buttons, ButtonGroupText, ButtonGroupSeparator, ButtonGroupItems, or any other data-slot controls you want to keep together.",
+      }),
+      field({
+        name: "orientation",
+        type: '"horizontal" | "vertical"',
+        defaultValue: '"horizontal"',
+        description:
+          "Chooses the grouped rounding and shared-border direction used by buttonGroupVariants.",
       }),
       field({
         name: "className",
         type: "string",
         description:
-          "Merged onto the outer motion div. The base layout already applies a horizontal flex row with a small gap.",
+          "Merged onto the outer group. Use it for wrapping, alignment, or local spacing overrides.",
+      }),
+    ],
+  },
+  {
+    id: "button-group-text",
+    title: "ButtonGroupText",
+    summary:
+      "Non-interactive text segment for labeling a group without leaving the shared button-group surface.",
+    fields: [
+      field({
+        name: "children",
+        type: "ReactNode",
+        required: true,
+        description:
+          "Short label or inline content rendered inside the grouped text segment.",
+      }),
+      field({
+        name: "render",
+        type: "useRender render prop",
+        description:
+          "Optional Base UI render override when you need a different element while keeping the same merged props.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description:
+          "Merged with the default muted bordered text segment classes.",
+      }),
+    ],
+  },
+  {
+    id: "button-group-separator",
+    title: "ButtonGroupSeparator",
+    summary:
+      "Separator segment for splitting labels, buttons, inputs, and grouped actions inside ButtonGroup.",
+    fields: [
+      field({
+        name: "orientation",
+        type: '"horizontal" | "vertical"',
+        defaultValue: '"vertical"',
+        description:
+          "Controls the separator axis. Vertical separators are the default for horizontal button groups.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description:
+          "Merged with the self-stretching separator classes for custom color or spacing.",
       }),
     ],
   },
@@ -1193,11 +1248,16 @@ const buttonGroupApiDetails: DetailItem[] = [
       "Each export keeps the same tactile feel, but the default presentation is now much more compact and toolbar-like.",
     notes: [
       "Button, IconButton, and ButtonGroupItems all default to muted text that darkens on hover, which better matches compact shadcn-style controls.",
+      "The ButtonGroup wrapper uses the exported buttonGroupVariants CVA recipe, while existing motion-powered controls keep their ripple and shared-hover behavior.",
       "Ripple feedback can now be turned off per surface, which is useful when you want a quieter desktop toolbar feel.",
       "SegmentedControl keeps motion focused on selection changes rather than entrance effects, so the control feels faster and less oversized.",
     ],
   },
-  registryItem("button-group.json", ["motion"]),
+  registryItem("button-group.json", [
+    "@base-ui/react",
+    "motion",
+    "class-variance-authority",
+  ]),
 ];
 
 const checkboxGroupApiDetails: DetailItem[] = [

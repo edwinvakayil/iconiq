@@ -447,10 +447,10 @@
       "name": "button-group",
       "type": "registry:ui",
       "registryDependencies": [],
-      "dependencies": ["motion"],
+      "dependencies": ["@base-ui/react", "motion", "class-variance-authority"],
       "devDependencies": [],
       "title": "Button Group",
-      "description": "Grouped action buttons, segmented button rows, and a selectable segmented control with spring-driven hover and active motion.",
+      "description": "Grouped action buttons, text segments, separators, segmented button rows, and a selectable segmented control with spring-driven hover and active motion.",
       "files": [
         {
           "path": "button-group.tsx",
