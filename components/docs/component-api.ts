@@ -161,64 +161,203 @@ const avatarApiDetails: DetailItem[] = [
     id: "avatar",
     title: "Avatar",
     summary:
-      "Compact motion avatar with a canonical Avatar export, immediate fallback initials, and optional image loading behavior.",
+      "Base UI avatar root with shared sizing and an optional tooltip for hover or focus status hints.",
     fields: [
       field({
-        name: "src",
-        type: "string",
+        name: "children",
+        type: "ReactNode",
         description:
-          "Image URL rendered into a framework-agnostic img element. When present, the image fades over the fallback initials once loading completes.",
+          "Compose AvatarImage, AvatarFallback, and an optional AvatarBadge inside the root.",
       }),
       field({
-        name: "fallback",
-        type: "string",
-        defaultValue: "?",
+        name: "size",
+        type: '"default" | "sm" | "lg"',
+        defaultValue: '"default"',
         description:
-          "Optional source text for the fallback initials. The component trims and condenses this into a short 1 to 2 character label.",
+          "Controls the root size and drives badge/fallback sizing through data-size selectors.",
       }),
       field({
-        name: "name",
+        name: "tooltip",
         type: "string",
         description:
-          "Optional display name used to derive fallback initials and a more descriptive image alt value when alt is not provided.",
+          "Optional short label shown in the Iconiq tooltip surface when the entire avatar is hovered or focused.",
       }),
       field({
-        name: "alt",
+        name: "tooltipSide",
+        type: '"top" | "bottom" | "left" | "right"',
+        defaultValue: '"right"',
+        description:
+          "Preferred side for the avatar tooltip bubble. The default collision order is right, left, top, then bottom.",
+      }),
+      field({
+        name: "tooltipDelay",
+        type: "number",
+        defaultValue: "0.15",
+        description: "Delay in seconds before the avatar tooltip opens.",
+      }),
+      field({
+        name: "tooltipClassName",
         type: "string",
         description:
-          "Optional image alt text. Pass an empty string for decorative use, or omit it to fall back to the name prop and then a generic Avatar label.",
+          "Merged onto the tooltip bubble when the avatar tooltip is enabled.",
       }),
       field({
-        name: "loading",
-        type: '"eager" | "lazy"',
-        defaultValue: '"eager"',
+        name: "reducedMotion",
+        type: "boolean",
         description:
-          "Controls the image loading strategy. The default eager behavior favors faster identity recognition above the fold.",
+          "Forces the avatar tooltip onto its calmer motion path while still respecting system reduced-motion preferences when unset.",
       }),
       field({
         name: "className",
         type: "string",
         description:
-          "Merged onto the root motion.div. The base component fixes the frame to 44x44 and keeps the circular overflow mask.",
+          "Merged onto the Base UI avatar root. Use it for local radius, ring, or size overrides.",
       }),
     ],
     notes: [
-      "The component forwards refs and standard div props, so aria attributes, data attributes, and wrappers can be added without forking the file.",
-      "The root stays a neutral motion.div rather than pretending to be a button or link. Wrap it in an interactive parent when it needs click or navigation behavior.",
+      'The root renders data-slot="avatar" and data-size so grouped stacks and badges can respond to the selected size.',
+      "The root keeps a circular border overlay with dark/light blend handling and accepts the full Base UI Root props surface.",
     ],
   },
   {
-    id: "avatar-image-motion",
-    title: "Image and motion behavior",
+    id: "avatar-image",
+    title: "AvatarImage",
     summary:
-      "The component keeps the same two rendering paths: immediate fallback initials plus a quiet image crossfade once loading completes.",
-    notes: [
-      "Fallback initials render immediately, so the avatar still communicates identity while a remote image is loading or if the image request fails.",
-      "The image path uses a short crossfade instead of blur, clip-path, or hover-driven motion, which keeps the feedback quiet for a high-frequency UI element.",
-      "The frame is fixed at 44 by 44 pixels to align with a more forgiving baseline target size.",
+      "Image slot for the compound avatar, backed by Base UI's image loading behavior.",
+    fields: [
+      field({
+        name: "src",
+        type: "string",
+        required: true,
+        description:
+          "Image URL passed to the underlying Base UI image primitive.",
+      }),
+      field({
+        name: "alt",
+        type: "string",
+        required: true,
+        description:
+          "Accessible text for the image. Pass an empty string only when the avatar is decorative.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description: "Merged with the full-size rounded image classes.",
+      }),
     ],
   },
-  registryItem("avatar.json", ["motion"]),
+  {
+    id: "avatar-fallback",
+    title: "AvatarFallback",
+    summary:
+      "Fallback slot shown by Base UI while the image is loading, missing, or failed.",
+    fields: [
+      field({
+        name: "children",
+        type: "ReactNode",
+        required: true,
+        description:
+          "Initials, icon, or other compact fallback content centered inside the avatar.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description: "Merged with the muted circular fallback classes.",
+      }),
+    ],
+  },
+  {
+    id: "avatar-badge",
+    title: "AvatarBadge",
+    summary:
+      "Absolute green status badge that scales with the root Avatar size. Add tooltip to Avatar when the whole avatar should expose the status hint.",
+    fields: [
+      field({
+        name: "children",
+        type: "ReactNode",
+        description:
+          "Optional icon or status mark. Small avatars hide nested SVGs automatically.",
+      }),
+      field({
+        name: "tooltip",
+        type: "string",
+        description:
+          "Optional short label shown in the Iconiq tooltip surface when only the badge should be the trigger.",
+      }),
+      field({
+        name: "tooltipSide",
+        type: '"top" | "bottom" | "left" | "right"',
+        defaultValue: '"right"',
+        description:
+          "Preferred side for the tooltip bubble. The default collision order is right, left, top, then bottom.",
+      }),
+      field({
+        name: "tooltipDelay",
+        type: "number",
+        defaultValue: "0.15",
+        description: "Delay in seconds before the tooltip opens.",
+      }),
+      field({
+        name: "tooltipClassName",
+        type: "string",
+        description:
+          "Merged onto the tooltip bubble when the badge tooltip is enabled.",
+      }),
+      field({
+        name: "reducedMotion",
+        type: "boolean",
+        description:
+          "Forces the badge tooltip onto its calmer motion path while still respecting system reduced-motion preferences when unset.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description:
+          "Merged with the green status badge background, foreground, and ring classes.",
+      }),
+    ],
+  },
+  {
+    id: "avatar-group",
+    title: "AvatarGroup",
+    summary:
+      "Stack wrapper for overlapping avatars and matching overflow count chips.",
+    fields: [
+      field({
+        name: "children",
+        type: "ReactNode",
+        required: true,
+        description:
+          "Avatar and AvatarGroupCount children rendered in an overlapping row.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description:
+          "Merged with the negative-space group classes and child avatar rings.",
+      }),
+    ],
+  },
+  {
+    id: "avatar-group-count",
+    title: "AvatarGroupCount",
+    summary:
+      "Overflow count part that follows the largest avatar size used in the group.",
+    fields: [
+      field({
+        name: "children",
+        type: "ReactNode",
+        required: true,
+        description: "Count label or icon shown after the visible avatars.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description: "Merged with the muted circular count chip classes.",
+      }),
+    ],
+  },
+  registryItem("avatar.json", ["@base-ui/react", "motion"]),
 ];
 
 const badgeApiDetails: DetailItem[] = [

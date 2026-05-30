@@ -37,10 +37,10 @@
       "name": "avatar",
       "type": "registry:ui",
       "registryDependencies": ["@iconiq/iconiq-theme"],
-      "dependencies": ["motion"],
+      "dependencies": ["@base-ui/react", "motion"],
       "devDependencies": [],
       "title": "Avatar",
-      "description": "Circular avatar with immediate fallback initials, a quiet image crossfade, and a 44×44 frame. Motion.",
+      "description": "Compound Base UI avatar with image, fallback, green tooltip-enabled badge, grouped stack, overflow count, and responsive sizes.",
       "files": [
         {
           "path": "avatar.tsx",

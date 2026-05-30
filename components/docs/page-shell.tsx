@@ -72,7 +72,6 @@ const REDUCED_MOTION_COMPONENTS = new Set([
   "b-switch",
   "b-tabs",
   "b-toggle",
-  "avatar",
   "badge",
   "button",
   "button-group",

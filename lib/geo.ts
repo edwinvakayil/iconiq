@@ -91,7 +91,7 @@ const REGISTRY_DIRECTORY = `${process.cwd()}/public/r`;
 const DOCS_COMPONENT_NAME_BY_HREF: Record<string, string> = {
   "/components/accordion": "b-accordion",
   "/components/alert-dialog": "b-alert-dialog",
-  "/components/avatar": "b-avatar",
+  "/components/avatar": "avatar",
   "/components/button": "b-button",
   "/components/checkbox": "b-checkbox",
   "/components/checkbox-group": "b-checkbox-group",

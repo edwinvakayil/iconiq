@@ -8,7 +8,7 @@ import { cardApiDetails } from "@/components/docs/component-api";
 import { ComponentDocsPage } from "@/components/docs/page-shell";
 import { LINK } from "@/constants";
 import { cardPreviewCode } from "@/lib/component-v0-pages";
-import { Avatar } from "@/registry/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/registry/avatar";
 import {
   Card,
   CardContent,
@@ -82,12 +82,10 @@ function CardPreview() {
 
         <CardContent className="space-y-3 px-3.5 pt-3 pb-0 sm:px-4 sm:pt-3.5">
           <div className="flex items-center justify-between gap-3">
-            <Avatar
-              alt=""
-              className="size-8 shrink-0 ring-1 ring-black/5"
-              loading="lazy"
-              src={artworkSrc}
-            />
+            <Avatar className="size-8 shrink-0 ring-1 ring-black/5">
+              <AvatarImage alt="" loading="lazy" src={artworkSrc} />
+              <AvatarFallback>DS</AvatarFallback>
+            </Avatar>
             <p className="text-right text-[12px] text-muted-foreground sm:text-[13px]">
               {currentDate}
             </p>

@@ -377,33 +377,21 @@ export function ensureV0Page(source: string): string {
   return buildV0Page(code);
 }
 
-/** Avatar docs preview — matches usageCode with shadcn image + link. */
-export const avatarPreviewCode = `import { Avatar } from "@/components/ui/avatar";
-import Link from "next/link";
-
-const imageSrc = "/assets/shadcn.jpg";
+/** Avatar docs preview — matches the compound Avatar usageCode. */
+export const avatarPreviewCode = `import {
+  Avatar,
+  AvatarBadge,
+  AvatarFallback,
+  AvatarImage,
+} from "@/components/ui/avatar";
 
 export function AvatarPreview() {
   return (
-    <div className="flex flex-col items-center gap-6 px-2 py-4">
-      <Link
-        aria-label="Open shadcn/ui"
-        className="inline-flex rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-        href="https://ui.shadcn.com/"
-        rel="noopener noreferrer"
-        target="_blank"
-      >
-        <Avatar alt="shadcn/ui" name="shadcn/ui" src={imageSrc} />
-      </Link>
-
-      <p className="max-w-md text-center text-[13px] leading-relaxed">
-        <span className="text-emerald-600 dark:text-emerald-400">44px frame</span>
-        <span className="text-neutral-400 dark:text-neutral-500"> · </span>
-        <span className="text-sky-600 dark:text-sky-400">Fallback appears first</span>
-        <span className="text-neutral-400 dark:text-neutral-500"> · </span>
-        <span className="text-violet-600 dark:text-violet-400">Image crossfades in</span>
-      </p>
-    </div>
+    <Avatar size="lg" tooltip="online">
+      <AvatarImage src="/assets/shadcn.jpg" alt="shadcn/ui" />
+      <AvatarFallback>SU</AvatarFallback>
+      <AvatarBadge />
+    </Avatar>
   );
 }`;
 
@@ -625,7 +613,7 @@ export const cardPreviewCode = `"use client";
 
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { Avatar } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   Card,
   CardContent,
@@ -682,12 +670,10 @@ export function CardPreview() {
 
       <CardContent className="space-y-3 px-3.5 pt-3 pb-0 sm:px-4 sm:pt-3.5">
         <div className="flex items-center justify-between gap-3">
-          <Avatar
-            alt=""
-            className="size-8 shrink-0 ring-1 ring-black/5"
-            loading="lazy"
-            src={artworkSrc}
-          />
+          <Avatar className="size-8 shrink-0 ring-1 ring-black/5">
+            <AvatarImage alt="" loading="lazy" src={artworkSrc} />
+            <AvatarFallback>DS</AvatarFallback>
+          </Avatar>
           <p className="text-right text-[12px] text-muted-foreground sm:text-[13px]">
             {currentDate}
           </p>

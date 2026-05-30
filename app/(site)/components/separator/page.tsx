@@ -12,7 +12,7 @@ import {
   type DetailItem,
 } from "@/components/docs/page-shell";
 import { LINK } from "@/constants";
-import { Avatar } from "@/registry/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/registry/avatar";
 import * as BaseSeparator from "@/registry/b-separator";
 import { Badge } from "@/registry/badge";
 import * as RadixSeparator from "@/registry/r-separator";
@@ -42,14 +42,14 @@ const breadcrumbs = [
 ];
 
 const usageCodeByProvider: Record<ProviderConfig["componentName"], string> = {
-  "b-separator": `import { Avatar } from "@/components/ui/avatar";
+  "b-separator": `import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/b-separator";
 
 const members = [
-  { name: "Maya", src: "/assets/av1.png" },
-  { name: "Noah", src: "/assets/av2.png" },
-  { name: "Ari", src: "/assets/av3.png" },
+  { fallback: "MA", name: "Maya", src: "/assets/av1.png" },
+  { fallback: "NO", name: "Noah", src: "/assets/av2.png" },
+  { fallback: "AR", name: "Ari", src: "/assets/av3.png" },
 ];
 
 export function SeparatorPreview() {
@@ -60,12 +60,12 @@ export function SeparatorPreview() {
           <div className="flex -space-x-3">
             {members.map((member) => (
               <Avatar
-                alt={member.name}
                 className="size-10 border-2 border-background"
                 key={member.name}
-                name={member.name}
-                src={member.src}
-              />
+              >
+                <AvatarImage alt={member.name} src={member.src} />
+                <AvatarFallback>{member.fallback}</AvatarFallback>
+              </Avatar>
             ))}
           </div>
           <div>
@@ -112,14 +112,14 @@ export function SeparatorPreview() {
     </div>
   );
 }`,
-  "r-separator": `import { Avatar } from "@/components/ui/avatar";
+  "r-separator": `import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/r-separator";
 
 const members = [
-  { name: "Maya", src: "/assets/av1.png" },
-  { name: "Noah", src: "/assets/av2.png" },
-  { name: "Ari", src: "/assets/av3.png" },
+  { fallback: "MA", name: "Maya", src: "/assets/av1.png" },
+  { fallback: "NO", name: "Noah", src: "/assets/av2.png" },
+  { fallback: "AR", name: "Ari", src: "/assets/av3.png" },
 ];
 
 export function SeparatorPreview() {
@@ -130,12 +130,12 @@ export function SeparatorPreview() {
           <div className="flex -space-x-3">
             {members.map((member) => (
               <Avatar
-                alt={member.name}
                 className="size-10 border-2 border-background"
                 key={member.name}
-                name={member.name}
-                src={member.src}
-              />
+              >
+                <AvatarImage alt={member.name} src={member.src} />
+                <AvatarFallback>{member.fallback}</AvatarFallback>
+              </Avatar>
             ))}
           </div>
           <div>
@@ -201,12 +201,14 @@ function SeparatorPreview({ ui }: { ui: SeparatorModule }) {
             <div className="flex shrink-0 -space-x-3">
               {previewMembers.map((member) => (
                 <Avatar
-                  alt={member.name}
                   className="size-10 border-2 border-background"
                   key={member.name}
-                  name={member.name}
-                  src={member.src}
-                />
+                >
+                  <AvatarImage alt={member.name} src={member.src} />
+                  <AvatarFallback>
+                    {member.name.slice(0, 2).toUpperCase()}
+                  </AvatarFallback>
+                </Avatar>
               ))}
             </div>
             <div className="min-w-0">

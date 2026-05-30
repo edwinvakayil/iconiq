@@ -605,8 +605,8 @@ const REGISTRY_UI_META: Record<
   avatar: {
     title: "Avatar",
     description:
-      "Circular avatar with immediate fallback initials, a quiet image crossfade, and a 44×44 frame. Motion.",
-    dependencies: ["motion"],
+      "Compound Base UI avatar with image, fallback, green tooltip-enabled badge, grouped stack, overflow count, and responsive sizes.",
+    dependencies: ["@base-ui/react", "motion"],
   },
 };
 
