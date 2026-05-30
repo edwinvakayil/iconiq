@@ -45,7 +45,7 @@ function getDetails(): DetailItem[] {
     return {
       ...item,
       notes: [
-        "Dependencies: @base-ui/react, motion, class-variance-authority.",
+        "Dependencies: @base-ui/react, motion, class-variance-authority, @iconiq/iconiq-theme.",
         "This page documents the Base UI install only, because Radix UI does not ship a separate button primitive.",
         "The generated registry file is /r/b-button.json.",
       ],

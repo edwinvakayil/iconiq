@@ -23,61 +23,45 @@ import {
 import { registryTheme } from "@/lib/registry-theme";
 import { cn } from "@/lib/utils";
 
-const buttonVariantStyles = {
-  default: "bg-primary text-background hover:bg-primary/90",
-  destructive: "bg-red-600 text-white hover:bg-red-600/90",
-  outline:
-    "border border-input bg-background text-foreground hover:bg-accent hover:text-accent-foreground",
-  secondary:
-    "bg-neutral-200 text-neutral-900 hover:bg-neutral-300 dark:bg-neutral-600 dark:text-neutral-50 dark:hover:bg-neutral-500",
-  ghost: "text-foreground hover:bg-accent hover:text-accent-foreground",
-  link: "text-primary underline-offset-4 hover:underline",
-} as const;
-
-const buttonSizeStyles = {
-  sm: "min-h-11 px-3.5 text-xs",
-  md: "min-h-11 px-5 text-sm",
-  lg: "min-h-12 px-8 text-base",
-  unstyled: "min-h-11 min-w-11 px-0 py-0 text-sm",
-} as const;
-
 const buttonVariants = cva(
-  "relative inline-flex cursor-pointer touch-manipulation select-none items-center justify-center overflow-hidden rounded-lg font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+  "group/button relative inline-flex shrink-0 cursor-pointer touch-manipulation select-none items-center justify-center overflow-hidden whitespace-nowrap rounded-lg border border-transparent bg-clip-padding font-medium text-sm outline-none transition-all focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0",
   {
     variants: {
-      variant: buttonVariantStyles,
-      size: buttonSizeStyles,
+      variant: {
+        default: "bg-primary text-primary-foreground hover:bg-primary/80",
+        outline:
+          "border-border bg-background hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:border-input dark:bg-input/30 dark:hover:bg-input/50",
+        secondary:
+          "bg-secondary text-secondary-foreground hover:bg-[color-mix(in_oklch,var(--secondary),var(--foreground)_5%)] aria-expanded:bg-secondary aria-expanded:text-secondary-foreground",
+        ghost:
+          "hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50",
+        destructive:
+          "bg-destructive/10 text-destructive hover:bg-destructive/20 focus-visible:border-destructive/40 focus-visible:ring-destructive/20 dark:bg-destructive/20 dark:focus-visible:ring-destructive/40 dark:hover:bg-destructive/30",
+        link: "text-primary underline-offset-4 hover:underline",
+      },
+      size: {
+        default:
+          "h-8 gap-1.5 px-2.5 has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2",
+        xs: "h-6 gap-1 in-data-[slot=button-group]:rounded-lg rounded-[min(var(--radius-md),10px)] px-2 text-xs has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 [&_svg:not([class*='size-'])]:size-3",
+        sm: "h-7 gap-1 in-data-[slot=button-group]:rounded-lg rounded-[min(var(--radius-md),12px)] px-2.5 text-[0.8rem] has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 [&_svg:not([class*='size-'])]:size-3.5",
+        lg: "h-9 gap-1.5 px-2.5 has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2",
+        icon: "size-8",
+        "icon-xs":
+          "size-6 in-data-[slot=button-group]:rounded-lg rounded-[min(var(--radius-md),10px)] [&_svg:not([class*='size-'])]:size-3",
+        "icon-sm":
+          "size-7 in-data-[slot=button-group]:rounded-lg rounded-[min(var(--radius-md),12px)]",
+        "icon-lg": "size-9",
+      },
     },
     defaultVariants: {
       variant: "default",
-      size: "md",
+      size: "default",
     },
   }
 );
 
-const buttonRootVariants = cva(
-  "relative inline-flex cursor-pointer touch-manipulation select-none items-center justify-center overflow-hidden rounded-lg font-medium transition-[background-color,color,filter] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[pressed=true]:brightness-95",
-  {
-    variants: {
-      variant: buttonVariantStyles,
-    },
-    defaultVariants: {
-      variant: "default",
-    },
-  }
-);
-
-const buttonContentVariants = cva(
-  "relative z-10 inline-flex items-center justify-center gap-2 whitespace-nowrap text-inherit [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
-  {
-    variants: {
-      size: buttonSizeStyles,
-    },
-    defaultVariants: {
-      size: "md",
-    },
-  }
-);
+const buttonContentClassName =
+  "relative z-10 inline-flex items-center justify-center [gap:inherit] whitespace-nowrap text-inherit";
 
 type Ripple = { id: string; x: number; y: number; size: number };
 
@@ -290,7 +274,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       null
     );
     const [contentRef, bounds] = useMeasure<HTMLSpanElement>();
-    const [borderWidth, setBorderWidth] = useState(0);
+    const [horizontalInset, setHorizontalInset] = useState(0);
     const [isPressed, setIsPressed] = useState(false);
     const [ripples, setRipples] = useState<Ripple[]>([]);
     const resolvedReducedMotion = useResolvedReducedMotion(reducedMotion);
@@ -301,7 +285,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       animateSize && !resolvedReducedMotion && style?.width == null;
     const animatedWidth =
       shouldAnimateSize && bounds.width > 0
-        ? Math.ceil(bounds.width + borderWidth)
+        ? Math.ceil(bounds.width + horizontalInset)
         : undefined;
 
     const setButtonRef = useCallback(
@@ -320,9 +304,11 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       const styles = window.getComputedStyle(buttonNode);
       const next =
         (Number.parseFloat(styles.borderLeftWidth) || 0) +
-        (Number.parseFloat(styles.borderRightWidth) || 0);
+        (Number.parseFloat(styles.borderRightWidth) || 0) +
+        (Number.parseFloat(styles.paddingLeft) || 0) +
+        (Number.parseFloat(styles.paddingRight) || 0);
 
-      setBorderWidth((current) => (current === next ? current : next));
+      setHorizontalInset((current) => (current === next ? current : next));
     });
 
     useEffect(() => {
@@ -402,7 +388,11 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     };
 
     const renderedIcon = icon ? (
-      <span aria-hidden className="inline-flex shrink-0 items-center">
+      <span
+        aria-hidden
+        className="inline-flex shrink-0 items-center"
+        data-icon={iconPosition === "end" ? "inline-end" : "inline-start"}
+      >
         {icon}
       </span>
     ) : null;
@@ -412,9 +402,9 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         <ButtonPrimitive
           className={cn(
             registryTheme,
-            buttonRootVariants({ variant }),
-            className
+            buttonVariants({ className, size, variant })
           )}
+          data-slot="button"
           disabled={disabled}
           onBlur={(e) => {
             onBlur?.(e);
@@ -453,7 +443,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
               >
                 <RippleLayer ripples={ripples} setRipples={setRipples} />
                 <span
-                  className={buttonContentVariants({ size })}
+                  className={buttonContentClassName}
                   ref={shouldAnimateSize ? contentRef : undefined}
                 >
                   {iconPosition === "start" ? renderedIcon : null}

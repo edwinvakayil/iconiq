@@ -1,6 +1,7 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 @plugin "@toolwind/corner-shape";
+@source "../registry";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -8,7 +9,9 @@
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
   --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
   --color-border: var(--border);
   --color-card: var(--card);
   --color-card-foreground: var(--card-foreground);
@@ -16,6 +19,9 @@
   --color-muted-foreground: var(--muted-foreground);
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-destructive: var(--destructive);
   --color-accent-pro: var(--accent-pro);
   --color-sidebar-accent: var(--sidebar-accent);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -35,7 +41,9 @@
   --background: #ffffff;
   --foreground: #111111;
   --primary: #111111;
+  --primary-foreground: #ffffff;
   --secondary: #646b75;
+  --secondary-foreground: #ffffff;
   --surface-border: #e9edf2;
   --border: #e3e7ec;
   --card: #ffffff;
@@ -44,6 +52,9 @@
   --muted-foreground: #6d7480;
   --accent: #f3f5f8;
   --accent-foreground: #111111;
+  --input: #e3e7ec;
+  --ring: rgba(17, 17, 17, 0.16);
+  --destructive: #dc2626;
   --accent-pro: #0ea5e9;
   --sidebar-accent: #f5f7fa;
   --sidebar-accent-foreground: #111111;
@@ -60,7 +71,9 @@
   --foreground: #f6f3ec;
   --secondary-bg: #171716;
   --secondary: #cbc6bb;
+  --secondary-foreground: #111111;
   --primary: #f6f3ec;
+  --primary-foreground: #111111;
   --surface-border: #2a2a25;
   --border: #2b2a25;
   --card: #111111;
@@ -69,6 +82,9 @@
   --muted-foreground: #9a958a;
   --accent: #1a1a18;
   --accent-foreground: #f6f3ec;
+  --input: #2b2a25;
+  --ring: rgba(246, 243, 236, 0.18);
+  --destructive: #f87171;
   --accent-pro: #38bdf8;
   --sidebar-accent: #262626;
   --sidebar-accent-foreground: #fff;

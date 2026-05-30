@@ -884,7 +884,7 @@ const buttonApiDetails: DetailItem[] = [
     id: "button",
     title: "Button",
     summary:
-      "Ref-forwarding motion button with larger default hit targets, spring press feedback, optional intrinsic width animation, and CVA-powered variant styling.",
+      "Base UI button with the shadcn-style variant recipe, spring press feedback, optional intrinsic width animation, and Motion ripple layer.",
     fields: [
       field({
         name: "variant",
@@ -895,10 +895,10 @@ const buttonApiDetails: DetailItem[] = [
       }),
       field({
         name: "size",
-        type: '"sm" | "md" | "lg" | "unstyled"',
-        defaultValue: "md",
+        type: '"default" | "xs" | "sm" | "lg" | "icon" | "icon-xs" | "icon-sm" | "icon-lg"',
+        defaultValue: "default",
         description:
-          "Controls the inner padding and text size. sm and md now keep a 44px minimum hit target, lg lands slightly larger, and unstyled preserves the larger minimum target while leaving spacing to your own classes.",
+          "Controls the shadcn-style height, padding, gap, radius, and icon sizing for text and icon-only buttons.",
       }),
       field({
         name: "animateSize",
@@ -957,9 +957,9 @@ const buttonApiDetails: DetailItem[] = [
       "Standard button attributes such as onClick, aria-*, name, form, and data-* are forwarded to the underlying motion.button.",
       "The local pointer-down handler calls your onPointerDown first, then respects e.defaultPrevented before deciding whether to enter the pressed state or spawn a ripple.",
       "Pointer, keyboard, and blur handlers keep the pressed state in sync so Space and Enter get the same immediate feedback as pointer input.",
-      "Reduced-motion users still get the larger target and visual state changes, but spring motion and ripples are skipped.",
+      "Reduced-motion users still get the static visual state changes, but spring motion and ripples are skipped.",
       "animateSize works best on intrinsically sized buttons rather than width-constrained layouts such as w-full.",
-      "When you render an icon-only button with icon and no visible text, add an aria-label so assistive tech still gets an accessible name.",
+      "When you render an icon-only button, add an aria-label so assistive tech still gets an accessible name.",
     ],
   },
   {
@@ -968,11 +968,16 @@ const buttonApiDetails: DetailItem[] = [
     summary:
       "The CVA recipe is exported alongside the component so matching button classes can be reused on links or custom wrappers.",
     notes: [
-      "Variants ship with six visual states and four size tokens.",
+      "Variants ship with six visual states and eight size tokens, including icon-only sizes.",
       "Because buttonVariants is a plain CVA export, you can compose it independently from the Button component when you do not want a motion.button element.",
     ],
   },
-  registryItem("button.json", ["motion", "class-variance-authority"]),
+  registryItem("b-button.json", [
+    "@base-ui/react",
+    "motion",
+    "class-variance-authority",
+    "@iconiq/iconiq-theme",
+  ]),
 ];
 
 const buttonGroupApiDetails: DetailItem[] = [
