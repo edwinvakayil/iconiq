@@ -110,24 +110,20 @@ export function AccordionPreview() {
 
 import { MoreHorizontalIcon } from "lucide-react";
 
-import { Button } from "@/components/ui/b-button";
-import { ButtonGroup } from "@/components/ui/button-group";
 import {
-  Dropdown,
-  DropdownContent,
-  DropdownGroup,
-  DropdownItem,
-  DropdownTrigger,
-} from "@/components/ui/r-dropdown";
+  Button,
+  ButtonGroup,
+  IconButton,
+} from "@/components/ui/button-group";
 
 const previewWrapClassName =
   "mx-auto flex max-w-full flex-wrap justify-center gap-2";
 const previewStackClassName =
   "mx-auto flex max-w-full flex-col items-center gap-3";
 const buttonClassName =
-  "border-border bg-background px-3 shadow-none hover:bg-muted hover:text-foreground";
-const dropdownTriggerClassName =
-  "h-7 min-h-7 w-7 justify-center rounded-[min(var(--radius-md),12px)] border border-border bg-background p-0 text-muted-foreground shadow-none hover:bg-muted hover:text-foreground [&>span:first-child]:flex-none [&_svg]:size-3.5";
+  "border-border bg-background px-3 hover:bg-muted hover:text-foreground";
+const iconButtonClassName =
+  "border-border bg-background p-0 text-muted-foreground hover:bg-muted hover:text-foreground [&_svg]:size-3.5";
 
 export function ButtonGroupDemo() {
   return (
@@ -137,32 +133,23 @@ export function ButtonGroupDemo() {
       </p>
       <div className={previewWrapClassName}>
         <ButtonGroup>
-          <Button className={buttonClassName} size="sm" variant="outline">
+          <Button className={buttonClassName} size="sm">
             Edit
           </Button>
-          <Button className={buttonClassName} size="sm" variant="outline">
+          <Button className={buttonClassName} size="sm">
             Preview
           </Button>
-          <Button className={buttonClassName} size="sm" variant="outline">
+          <Button className={buttonClassName} size="sm">
             Publish
           </Button>
-        </ButtonGroup>
-        <Dropdown className="inline-flex" variant="action">
-          <DropdownTrigger
+          <IconButton
             aria-label="More project actions"
-            className={dropdownTriggerClassName}
-            showChevron={false}
+            className={iconButtonClassName}
+            size="sm"
           >
             <MoreHorizontalIcon />
-          </DropdownTrigger>
-          <DropdownContent align="end" className="w-36">
-            <DropdownGroup>
-              <DropdownItem>Duplicate</DropdownItem>
-              <DropdownItem>Rename</DropdownItem>
-              <DropdownItem>Remove</DropdownItem>
-            </DropdownGroup>
-          </DropdownContent>
-        </Dropdown>
+          </IconButton>
+        </ButtonGroup>
       </div>
     </div>
   );
