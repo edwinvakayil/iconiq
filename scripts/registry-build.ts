@@ -301,8 +301,8 @@ const REGISTRY_UI_META: Record<
   breadcrumbs: {
     title: "Breadcrumbs",
     description:
-      "Breadcrumb trail with subtle easing, stronger focus states, and a dedicated current-page treatment. Built with Motion.",
-    dependencies: ["motion", "lucide-react"],
+      "Compound breadcrumb trail with Base UI render composition, subtle Motion transitions, and dedicated current-page and separator parts.",
+    dependencies: ["@base-ui/react", "motion", "lucide-react"],
   },
   button: {
     title: "Button",

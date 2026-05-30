@@ -431,11 +431,11 @@
     {
       "name": "breadcrumbs",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme"],
-      "dependencies": ["motion", "lucide-react"],
+      "registryDependencies": [],
+      "dependencies": ["@base-ui/react", "motion", "lucide-react"],
       "devDependencies": [],
       "title": "Breadcrumbs",
-      "description": "Breadcrumb trail with subtle easing, stronger focus states, and a dedicated current-page treatment. Built with Motion.",
+      "description": "Compound breadcrumb trail with Base UI render composition, subtle Motion transitions, and dedicated current-page and separator parts.",
       "files": [
         {
           "path": "breadcrumbs.tsx",

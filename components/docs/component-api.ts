@@ -741,69 +741,142 @@ const cardApiDetails: DetailItem[] = [
 
 const breadcrumbsApiDetails: DetailItem[] = [
   {
-    id: "breadcrumb-item",
-    title: "BreadcrumbItem",
-    summary:
-      "Each breadcrumb segment is described by a small object consumed by the Breadcrumbs component.",
+    id: "breadcrumb",
+    title: "Breadcrumb",
+    summary: "Root semantic navigation wrapper for a breadcrumb trail.",
     fields: [
       field({
-        name: "label",
-        type: "string",
-        required: true,
-        description:
-          "Visible label and React key for the item. Labels should therefore be unique inside a single breadcrumb trail.",
-      }),
-      field({
-        name: "href",
+        name: "className",
         type: "string",
         description:
-          "Link destination used for non-current breadcrumb items. If it is omitted, the segment renders as static text.",
+          "Merged onto the nav element for placement inside headers, toolbars, and page shells.",
       }),
+    ],
+    notes: [
+      'The root nav always uses aria-label="breadcrumb".',
+      "Compose BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbPage, and BreadcrumbSeparator inside the root.",
+    ],
+  },
+  {
+    id: "breadcrumb-list",
+    title: "BreadcrumbList",
+    summary:
+      "Animated ordered list that lays out breadcrumb segments and separators.",
+    fields: [
       field({
-        name: "icon",
-        type: "ReactNode",
+        name: "className",
+        type: "string",
         description:
-          "Optional icon shown before the label, typically a Lucide icon or any other inline React node.",
+          "Merged with the default flex wrapping, spacing, and muted text styles.",
+      }),
+    ],
+    notes: [
+      "Layout changes are animated with Motion, and AnimatePresence uses popLayout so inserted or removed items keep the trail fluid.",
+    ],
+  },
+  {
+    id: "breadcrumb-item",
+    title: "BreadcrumbItem",
+    summary: "Animated list item wrapper for each breadcrumb segment.",
+    fields: [
+      field({
+        name: "className",
+        type: "string",
+        description:
+          "Merged with the inline-flex item layout. Dynamic items should receive stable React keys when rendered from arrays.",
       }),
     ],
   },
   {
-    id: "breadcrumbs",
-    title: "Breadcrumbs",
+    id: "breadcrumb-link",
+    title: "BreadcrumbLink",
     summary:
-      "Animated breadcrumb trail with subtle easing and a dedicated current-page treatment for the last entry.",
+      "Base UI render-compatible link for navigable breadcrumb segments.",
     fields: [
       field({
-        name: "items",
-        type: "BreadcrumbItem[]",
-        required: true,
+        name: "href",
+        type: "string",
         description:
-          "Ordered list of segments. Linked items receive subtle hover and tap feedback, while the last item is rendered as the current page.",
+          "Destination for the linked segment. You can also compose a router link with the render prop.",
+      }),
+      field({
+        name: "render",
+        type: "ReactElement | render function",
+        description:
+          "Optional Base UI render override for composing with framework-specific links while preserving merged props.",
       }),
       field({
         name: "className",
         type: "string",
         description:
-          "Merged onto the root nav wrapper so you can place the trail inside your own header layout.",
+          "Merged with the default color transition and hover foreground treatment.",
       }),
     ],
-    notes: [
-      "The final item renders as static text with aria-current='page', so the trail does not expose a fake link target for the current location.",
-      "Separators only render after the first item, are hidden from assistive tech, and use the built-in ChevronRight icon from lucide-react.",
+  },
+  {
+    id: "breadcrumb-page",
+    title: "BreadcrumbPage",
+    summary:
+      "Current page segment rendered as disabled link-like text with aria-current.",
+    fields: [
+      field({
+        name: "className",
+        type: "string",
+        description:
+          "Merged with the default foreground current-page text style.",
+      }),
+    ],
+  },
+  {
+    id: "breadcrumb-separator",
+    title: "BreadcrumbSeparator",
+    summary:
+      "Animated visual separator between breadcrumb items, defaulting to a chevron icon.",
+    fields: [
+      field({
+        name: "children",
+        type: "ReactNode",
+        description:
+          "Optional custom separator content. When omitted, ChevronRightIcon is rendered.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description:
+          "Merged with the default icon sizing class for separator icons.",
+      }),
+    ],
+    notes: ["Separators render with role='presentation' and aria-hidden."],
+  },
+  {
+    id: "breadcrumb-ellipsis",
+    title: "BreadcrumbEllipsis",
+    summary: "Compact overflow marker for collapsed breadcrumb paths.",
+    fields: [
+      field({
+        name: "className",
+        type: "string",
+        description:
+          "Merged with the default 20px square centered icon layout.",
+      }),
     ],
   },
   {
     id: "breadcrumbs-a11y",
     title: "Accessibility and motion",
     summary:
-      "The component keeps semantic breadcrumb structure while layering Motion on top.",
+      "The compound API keeps semantic breadcrumb structure while layering Motion on top.",
     notes: [
-      'The root nav uses aria-label="breadcrumb" and wraps items in an ordered list.',
-      "AnimatePresence runs in popLayout mode so reordering or changing the trail keeps the transitions coherent.",
-      "The final breadcrumb item is marked with aria-current='page' and rendered as non-interactive content.",
+      "BreadcrumbList wraps the trail in an ordered list.",
+      "BreadcrumbItem, BreadcrumbSeparator, and BreadcrumbEllipsis keep the same subtle fade, slide, and layout transitions from the previous implementation.",
+      "BreadcrumbPage marks the final segment with aria-current='page'.",
     ],
   },
-  registryItem("breadcrumbs.json", ["motion", "lucide-react"]),
+  registryItem("breadcrumbs.json", [
+    "@base-ui/react",
+    "motion",
+    "lucide-react",
+  ]),
 ];
 
 const buttonApiDetails: DetailItem[] = [

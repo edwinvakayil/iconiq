@@ -1,29 +1,14 @@
 "use client";
 
-import { ChevronRight } from "lucide-react";
+import { mergeProps } from "@base-ui/react/merge-props";
+import { useRender } from "@base-ui/react/use-render";
+import { ChevronRightIcon, MoreHorizontalIcon } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
-import type { ReactNode } from "react";
-import { registryTheme } from "@/lib/registry-theme";
+import type * as React from "react";
+
 import { cn } from "@/lib/utils";
 
-export interface BreadcrumbItem {
-  label: string;
-  href?: string;
-  icon?: ReactNode;
-}
-
-export interface BreadcrumbsProps {
-  items: BreadcrumbItem[];
-  className?: string;
-}
-
 const subtleEase = [0.22, 1, 0.36, 1] as const;
-
-const separatorVariants = {
-  initial: { opacity: 0, x: -4 },
-  animate: { opacity: 1, x: 0 },
-  exit: { opacity: 0, x: 4 },
-};
 
 const itemVariants = {
   initial: { opacity: 0, x: -6 },
@@ -31,80 +16,153 @@ const itemVariants = {
   exit: { opacity: 0, x: 6 },
 };
 
-export function Breadcrumbs({ items, className }: BreadcrumbsProps) {
+const separatorVariants = {
+  initial: { opacity: 0, x: -4 },
+  animate: { opacity: 1, x: 0 },
+  exit: { opacity: 0, x: 4 },
+};
+
+type MotionOlProps = React.ComponentProps<typeof motion.ol>;
+type MotionLiProps = React.ComponentProps<typeof motion.li>;
+type MotionSpanProps = React.ComponentProps<typeof motion.span>;
+
+function Breadcrumb({ className, ...props }: React.ComponentProps<"nav">) {
   return (
     <nav
       aria-label="breadcrumb"
-      className={cn(registryTheme, "inline-flex", className)}
-    >
-      <ol className="flex items-center gap-1">
-        <AnimatePresence mode="popLayout">
-          {items.map((item, index) => {
-            const isLast = index === items.length - 1;
-            const isInteractive = Boolean(item.href) && !isLast;
-            const key = item.href
-              ? `${item.label}-${item.href}`
-              : `${item.label}-${index}`;
-            const content = (
-              <>
-                {item.icon && (
-                  <motion.span
-                    animate={{ opacity: 1, x: 0 }}
-                    initial={{ opacity: 0, x: -4 }}
-                    transition={{ duration: 0.18, ease: subtleEase }}
-                  >
-                    {item.icon}
-                  </motion.span>
-                )}
-                <span>{item.label}</span>
-              </>
-            );
-
-            return (
-              <motion.li
-                animate="animate"
-                className="flex items-center gap-1"
-                exit="exit"
-                initial="initial"
-                key={key}
-                layout
-                transition={{ duration: 0.18, ease: subtleEase }}
-                variants={itemVariants}
-              >
-                {index > 0 && (
-                  <motion.span
-                    aria-hidden="true"
-                    className="mx-0.5 text-muted-foreground"
-                    transition={{ duration: 0.18, ease: subtleEase }}
-                    variants={separatorVariants}
-                  >
-                    <ChevronRight className="h-3.5 w-3.5" />
-                  </motion.span>
-                )}
-                {isInteractive ? (
-                  <motion.a
-                    className="inline-flex min-h-10 touch-manipulation items-center gap-1.5 rounded-lg px-3 py-2 font-medium text-muted-foreground text-sm transition-colors hover:text-foreground focus-visible:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-                    href={item.href}
-                    transition={{ duration: 0.16, ease: "easeOut" }}
-                  >
-                    {content}
-                  </motion.a>
-                ) : (
-                  <span
-                    aria-current={isLast ? "page" : undefined}
-                    className={cn(
-                      "inline-flex min-h-10 items-center gap-1.5 rounded-lg px-3 py-2 font-medium text-sm",
-                      isLast ? "text-foreground" : "text-muted-foreground"
-                    )}
-                  >
-                    {content}
-                  </span>
-                )}
-              </motion.li>
-            );
-          })}
-        </AnimatePresence>
-      </ol>
-    </nav>
+      className={cn(className)}
+      data-slot="breadcrumb"
+      {...props}
+    />
   );
 }
+
+function BreadcrumbList({
+  children,
+  className,
+  ...props
+}: React.ComponentProps<"ol">) {
+  return (
+    <motion.ol
+      className={cn(
+        "wrap-break-word flex flex-wrap items-center gap-1.5 text-muted-foreground text-sm",
+        className
+      )}
+      data-slot="breadcrumb-list"
+      layout
+      transition={{ duration: 0.18, ease: subtleEase }}
+      {...(props as MotionOlProps)}
+    >
+      <AnimatePresence mode="popLayout">{children}</AnimatePresence>
+    </motion.ol>
+  );
+}
+
+function BreadcrumbItem({ className, ...props }: React.ComponentProps<"li">) {
+  return (
+    <motion.li
+      animate="animate"
+      className={cn("inline-flex items-center gap-1", className)}
+      data-slot="breadcrumb-item"
+      exit="exit"
+      initial="initial"
+      layout
+      transition={{ duration: 0.18, ease: subtleEase }}
+      variants={itemVariants}
+      {...(props as MotionLiProps)}
+    />
+  );
+}
+
+function BreadcrumbLink({
+  className,
+  render,
+  ...props
+}: useRender.ComponentProps<"a">) {
+  return useRender({
+    defaultTagName: "a",
+    props: mergeProps<"a">(
+      {
+        className: cn("transition-colors hover:text-foreground", className),
+      },
+      props
+    ),
+    render,
+    state: {
+      slot: "breadcrumb-link",
+    },
+  });
+}
+
+function BreadcrumbPage({ className, ...props }: React.ComponentProps<"span">) {
+  return (
+    <span
+      aria-current="page"
+      aria-disabled="true"
+      className={cn("font-medium text-foreground", className)}
+      data-slot="breadcrumb-page"
+      {...props}
+    />
+  );
+}
+
+function BreadcrumbSeparator({
+  children,
+  className,
+  ...props
+}: React.ComponentProps<"li">) {
+  return (
+    <motion.li
+      animate="animate"
+      aria-hidden="true"
+      className={cn("[&>svg]:size-3.5", className)}
+      data-slot="breadcrumb-separator"
+      exit="exit"
+      initial="initial"
+      layout
+      role="presentation"
+      transition={{ duration: 0.18, ease: subtleEase }}
+      variants={separatorVariants}
+      {...(props as MotionLiProps)}
+    >
+      {children ?? <ChevronRightIcon className="cn-rtl-flip" />}
+    </motion.li>
+  );
+}
+
+function BreadcrumbEllipsis({
+  className,
+  ...props
+}: React.ComponentProps<"span">) {
+  return (
+    <motion.span
+      animate="animate"
+      aria-hidden="true"
+      className={cn(
+        "flex size-5 items-center justify-center [&>svg]:size-4",
+        className
+      )}
+      data-slot="breadcrumb-ellipsis"
+      exit="exit"
+      initial="initial"
+      layout
+      role="presentation"
+      transition={{ duration: 0.18, ease: subtleEase }}
+      variants={separatorVariants}
+      {...(props as MotionSpanProps)}
+    >
+      <MoreHorizontalIcon />
+      <span className="sr-only">More</span>
+    </motion.span>
+  );
+}
+
+export {
+  Breadcrumb,
+  BreadcrumbList,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+  BreadcrumbEllipsis,
+};

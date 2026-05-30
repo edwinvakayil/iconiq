@@ -6,33 +6,46 @@ import { SharedPrimitiveProviderSwitch } from "@/app/(site)/components/_componen
 import { breadcrumbsApiDetails } from "@/components/docs/component-api";
 import { ComponentDocsPage } from "@/components/docs/page-shell";
 import { LINK } from "@/constants";
-import { type BreadcrumbItem, Breadcrumbs } from "@/registry/breadcrumbs";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/registry/breadcrumbs";
 
-const demoItems: BreadcrumbItem[] = [
-  {
-    label: "Home",
-    href: "/",
-    icon: <Home className="size-3.5" />,
-  },
-  { label: "Components", href: "/components/breadcrumbs" },
-  { label: "Breadcrumbs" },
-];
-
-const usageCode = `import { Breadcrumbs, type BreadcrumbItem } from "@/components/ui/breadcrumbs";
+const usageCode = `import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumbs";
 import { Home } from "lucide-react";
 
-const items: BreadcrumbItem[] = [
-  {
-    label: "Home",
-    href: "/",
-    icon: <Home className="size-3.5" />,
-  },
-  { label: "Components", href: "/components/breadcrumbs" },
-  { label: "Breadcrumbs" },
-];
-
 export function BreadcrumbsPreview() {
-  return <Breadcrumbs items={items} />;
+  return (
+    <Breadcrumb>
+      <BreadcrumbList>
+        <BreadcrumbItem>
+          <BreadcrumbLink className="inline-flex items-center gap-1.5" href="/">
+            <Home className="size-3.5" />
+            Home
+          </BreadcrumbLink>
+        </BreadcrumbItem>
+        <BreadcrumbSeparator />
+        <BreadcrumbItem>
+          <BreadcrumbLink href="/components">Components</BreadcrumbLink>
+        </BreadcrumbItem>
+        <BreadcrumbSeparator />
+        <BreadcrumbItem>
+          <BreadcrumbPage>Breadcrumbs</BreadcrumbPage>
+        </BreadcrumbItem>
+      </BreadcrumbList>
+    </Breadcrumb>
+  );
 }`;
 
 const componentDetailsItems = breadcrumbsApiDetails;
@@ -48,18 +61,38 @@ export default function RadixBaseBreadcrumbsPage() {
       componentName="breadcrumbs"
       description="Clear path navigation for nested pages and flows."
       details={componentDetailsItems}
-      detailsDescription="Each item expands into the segment contract, current-state behavior, and the motion details that affect usage."
+      detailsDescription="The compound parts cover root semantics, linked segments, current-page state, separators, ellipsis, and the Motion transitions layered across the trail."
       editHref={`${LINK.GITHUB}/edit/main/app/(site)/components/breadcrumbs/page.tsx`}
       headerActions={<SharedPrimitiveProviderSwitch />}
       pageUrl="/components/breadcrumbs"
       preview={
         <div className="flex min-h-[280px] items-center justify-center">
-          <Breadcrumbs items={demoItems} />
+          <Breadcrumb>
+            <BreadcrumbList>
+              <BreadcrumbItem>
+                <BreadcrumbLink
+                  className="inline-flex items-center gap-1.5"
+                  href="/"
+                >
+                  <Home className="size-3.5" />
+                  Home
+                </BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                <BreadcrumbLink href="/components">Components</BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                <BreadcrumbPage>Breadcrumbs</BreadcrumbPage>
+              </BreadcrumbItem>
+            </BreadcrumbList>
+          </Breadcrumb>
         </div>
       }
       title="Breadcrumbs"
       usageCode={usageCode}
-      usageDescription="Use the minimal trail below as the baseline, then expand into icons, current-state styling, and custom separators through the API details."
+      usageDescription="Use the minimal trail below as the baseline, then expand into icons, current-state styling, ellipsis markers, and custom separators through the compound parts."
     />
   );
 }

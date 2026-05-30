@@ -31,7 +31,7 @@ const componentSummaries: Record<string, string> = {
   "/components/badge":
     "Badge docs in the Components section, using the shared Iconiq badge install with provider options visible but disabled.",
   "/components/breadcrumbs":
-    "Breadcrumbs docs in the Components section, using the shared Iconiq breadcrumbs install with provider options visible but disabled.",
+    "Breadcrumbs docs for the compound Base UI render-compatible trail with animated items, separators, current page, and ellipsis parts.",
   "/components/button":
     "Base UI button docs in the Components section, preserving the same Iconiq motion and API as the core button.",
   "/components/button-group":
