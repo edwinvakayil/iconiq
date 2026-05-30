@@ -382,16 +382,34 @@ export const avatarPreviewCode = `import {
   Avatar,
   AvatarBadge,
   AvatarFallback,
+  AvatarGroup,
   AvatarImage,
 } from "@/components/ui/avatar";
 
 export function AvatarPreview() {
   return (
-    <Avatar size="lg" tooltip="online">
-      <AvatarImage src="/assets/shadcn.jpg" alt="shadcn/ui" />
-      <AvatarFallback>SU</AvatarFallback>
-      <AvatarBadge />
-    </Avatar>
+    <div className="flex items-center gap-10">
+      <Avatar size="lg" tooltip="online">
+        <AvatarImage src="/assets/shadcn.jpg" alt="shadcn/ui" />
+        <AvatarFallback>SU</AvatarFallback>
+        <AvatarBadge />
+      </Avatar>
+
+      <AvatarGroup>
+        <Avatar size="lg">
+          <AvatarImage src="/assets/av1.png" alt="Avatar 1" />
+          <AvatarFallback>A1</AvatarFallback>
+        </Avatar>
+        <Avatar size="lg">
+          <AvatarImage src="/assets/av3.png" alt="Avatar 3" />
+          <AvatarFallback>A3</AvatarFallback>
+        </Avatar>
+        <Avatar size="lg">
+          <AvatarImage src="/assets/av2.png" alt="Avatar 2" />
+          <AvatarFallback>A2</AvatarFallback>
+        </Avatar>
+      </AvatarGroup>
+    </div>
   );
 }`;
 
