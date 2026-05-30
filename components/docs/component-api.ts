@@ -571,11 +571,11 @@ const chartsApiDetails: DetailItem[] = [
         name: "className",
         type: "string",
         description:
-          "Merged onto the chart shell alongside registry theme tokens.",
+          "Merged onto the chart shell alongside the chart component's local theme tokens.",
       }),
     ],
     notes: [
-      "Install @iconiq/iconiq-theme alongside charts so --chart-1 through --chart-5 are available through registryTheme.",
+      "ChartContainer ships its own local --chart-1 through --chart-5 defaults, so chart installs do not need a shared theme helper.",
       "Pair ChartContainer with Recharts primitives and ChartTooltip / ChartLegend helpers rather than Radix UI or Base UI wrappers.",
     ],
   },
@@ -669,7 +669,7 @@ const chartsApiDetails: DetailItem[] = [
     ["recharts", "motion"],
     [
       "This install is a Recharts + Motion shell only. It does not ship Radix UI or Base UI variants.",
-      "Chart colors come from @iconiq/iconiq-theme (--chart-1 … --chart-5) and per-series --color-{key} variables generated from ChartConfig.",
+      "Chart colors come from local --chart-1 through --chart-5 defaults and per-series --color-{key} variables generated from ChartConfig.",
     ]
   ),
 ];
@@ -976,7 +976,6 @@ const buttonApiDetails: DetailItem[] = [
     "@base-ui/react",
     "motion",
     "class-variance-authority",
-    "@iconiq/iconiq-theme",
   ]),
 ];
 

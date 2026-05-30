@@ -78,7 +78,7 @@ const details = chartsApiDetails.map((item) => {
   return {
     ...item,
     notes: [
-      "Dependencies: recharts, motion, @iconiq/iconiq-theme.",
+      "Dependencies: recharts, motion.",
       "This page lives in the Components section, but the install is the shared Iconiq charts shell rather than a Radix UI or Base UI wrapper.",
       "The provider switch is shown for section consistency, but both Radix UI and Base UI options are disabled because Charts does not ship primitive-specific variants.",
       "The generated registry file is /r/charts.json.",
@@ -255,10 +255,10 @@ export default function ChartsPage() {
       preview={<ChartsPreview />}
       previewClassName="min-h-0 !p-0"
       previewCode={chartsPreviewCode}
-      previewDescription="Swipe through bar and line examples in a carousel with prev/next controls, dot indicators, and shared registry chart tokens."
+      previewDescription="Swipe through bar and line examples in a carousel with prev/next controls, dot indicators, and local chart tokens."
       title="Charts"
       usageCode={chartsPreviewCode}
-      usageDescription="Compose ChartContainer with Recharts primitives. Use ChartBar for the default fluid bar timing, map series colors through ChartConfig, and install @iconiq/iconiq-theme for --chart-1 … --chart-5 tokens."
+      usageDescription="Compose ChartContainer with Recharts primitives. Use ChartBar for the default fluid bar timing, and map series colors through ChartConfig or the local --chart-1 through --chart-5 defaults."
     />
   );
 }

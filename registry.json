@@ -6,7 +6,7 @@
     {
       "name": "accordion",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme"],
+      "registryDependencies": [],
       "dependencies": ["@radix-ui/react-accordion", "motion", "lucide-react"],
       "devDependencies": [],
       "title": "Accordion",
@@ -21,7 +21,7 @@
     {
       "name": "alert",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme"],
+      "registryDependencies": [],
       "dependencies": ["motion"],
       "devDependencies": [],
       "title": "Alert",
@@ -36,7 +36,7 @@
     {
       "name": "avatar",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme"],
+      "registryDependencies": [],
       "dependencies": ["@base-ui/react", "motion"],
       "devDependencies": [],
       "title": "Avatar",
@@ -51,7 +51,7 @@
     {
       "name": "b-accordion",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme"],
+      "registryDependencies": [],
       "dependencies": ["@base-ui/react", "motion", "lucide-react"],
       "devDependencies": [],
       "title": "Accordion (Base UI)",
@@ -66,7 +66,7 @@
     {
       "name": "b-alert-dialog",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme"],
+      "registryDependencies": [],
       "dependencies": ["@base-ui/react", "motion"],
       "devDependencies": [],
       "title": "Alert Dialog (Base UI)",
@@ -81,7 +81,7 @@
     {
       "name": "b-avatar",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme"],
+      "registryDependencies": [],
       "dependencies": ["@base-ui/react", "motion"],
       "devDependencies": [],
       "title": "Avatar (Base UI)",
@@ -96,7 +96,7 @@
     {
       "name": "b-button",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme"],
+      "registryDependencies": [],
       "dependencies": ["@base-ui/react", "motion", "class-variance-authority"],
       "devDependencies": [],
       "title": "Button (Base UI)",
@@ -111,7 +111,7 @@
     {
       "name": "b-checkbox-group",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme"],
+      "registryDependencies": [],
       "dependencies": ["@base-ui/react", "motion", "lucide-react"],
       "devDependencies": [],
       "title": "Checkbox Group (Base UI)",
@@ -126,7 +126,7 @@
     {
       "name": "b-checkbox",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme"],
+      "registryDependencies": [],
       "dependencies": ["@base-ui/react", "motion"],
       "devDependencies": [],
       "title": "Checkbox (Base UI)",
@@ -141,7 +141,7 @@
     {
       "name": "b-collapsible",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme"],
+      "registryDependencies": [],
       "dependencies": ["@base-ui/react", "motion", "lucide-react"],
       "devDependencies": [],
       "title": "Collapsible (Base UI)",
@@ -156,7 +156,7 @@
     {
       "name": "b-combobox",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme"],
+      "registryDependencies": [],
       "dependencies": ["@base-ui/react", "motion", "lucide-react"],
       "devDependencies": [],
       "title": "Combobox (Base UI)",
@@ -171,7 +171,7 @@
     {
       "name": "b-context-menu",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme"],
+      "registryDependencies": [],
       "dependencies": ["@base-ui/react", "motion"],
       "devDependencies": [],
       "title": "Context Menu (Base UI)",
@@ -186,7 +186,7 @@
     {
       "name": "b-dialog",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme"],
+      "registryDependencies": [],
       "dependencies": [
         "@base-ui/react",
         "@radix-ui/react-slot",
@@ -206,7 +206,7 @@
     {
       "name": "b-drawer",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme"],
+      "registryDependencies": [],
       "dependencies": ["@base-ui/react", "motion", "lucide-react"],
       "devDependencies": [],
       "title": "Drawer (Base UI)",
@@ -221,7 +221,7 @@
     {
       "name": "b-hover-card",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme"],
+      "registryDependencies": [],
       "dependencies": ["@base-ui/react", "motion"],
       "devDependencies": [],
       "title": "Hover Card (Base UI)",
@@ -236,7 +236,7 @@
     {
       "name": "b-popover",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme"],
+      "registryDependencies": [],
       "dependencies": ["@base-ui/react", "motion"],
       "devDependencies": [],
       "title": "Popover (Base UI)",
@@ -251,7 +251,7 @@
     {
       "name": "b-progress",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme"],
+      "registryDependencies": [],
       "dependencies": ["@base-ui/react", "motion"],
       "devDependencies": [],
       "title": "Progress (Base UI)",
@@ -266,7 +266,7 @@
     {
       "name": "b-radio-group",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme"],
+      "registryDependencies": [],
       "dependencies": ["@base-ui/react", "motion"],
       "devDependencies": [],
       "title": "Radio Group (Base UI)",
@@ -281,7 +281,7 @@
     {
       "name": "b-select",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme"],
+      "registryDependencies": [],
       "dependencies": ["@base-ui/react", "motion", "lucide-react"],
       "devDependencies": [],
       "title": "Select (Base UI)",
@@ -311,7 +311,7 @@
     {
       "name": "b-separator",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme"],
+      "registryDependencies": [],
       "dependencies": ["@base-ui/react"],
       "devDependencies": [],
       "title": "Separator (Base UI)",
@@ -326,7 +326,7 @@
     {
       "name": "b-slider",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme"],
+      "registryDependencies": [],
       "dependencies": ["@base-ui/react", "motion"],
       "devDependencies": [],
       "title": "Slider (Base UI)",
@@ -341,7 +341,7 @@
     {
       "name": "b-switch",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme"],
+      "registryDependencies": [],
       "dependencies": ["@base-ui/react", "motion"],
       "devDependencies": [],
       "title": "Switch (Base UI)",
@@ -356,7 +356,7 @@
     {
       "name": "b-tabs",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme"],
+      "registryDependencies": [],
       "dependencies": ["@base-ui/react", "motion"],
       "devDependencies": [],
       "title": "Tabs (Base UI)",
@@ -371,7 +371,7 @@
     {
       "name": "b-toggle",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme"],
+      "registryDependencies": [],
       "dependencies": ["@base-ui/react", "class-variance-authority", "motion"],
       "devDependencies": [],
       "title": "Toggle (Base UI)",
@@ -386,7 +386,7 @@
     {
       "name": "b-togglegroup",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme"],
+      "registryDependencies": [],
       "dependencies": ["@base-ui/react", "motion"],
       "devDependencies": [],
       "title": "Toggle Group (Base UI)",
@@ -401,7 +401,7 @@
     {
       "name": "b-tooltip",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme"],
+      "registryDependencies": [],
       "dependencies": ["@base-ui/react", "motion"],
       "devDependencies": [],
       "title": "Tooltip (Base UI)",
@@ -416,7 +416,7 @@
     {
       "name": "badge",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme"],
+      "registryDependencies": [],
       "dependencies": ["motion", "class-variance-authority"],
       "devDependencies": [],
       "title": "Badge",
@@ -446,7 +446,7 @@
     {
       "name": "button-group",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme"],
+      "registryDependencies": [],
       "dependencies": ["motion"],
       "devDependencies": [],
       "title": "Button Group",
@@ -461,7 +461,7 @@
     {
       "name": "button",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme"],
+      "registryDependencies": [],
       "dependencies": ["motion", "class-variance-authority"],
       "devDependencies": [],
       "title": "Button",
@@ -491,7 +491,7 @@
     {
       "name": "card",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme"],
+      "registryDependencies": [],
       "dependencies": ["motion"],
       "devDependencies": [],
       "title": "Card",
@@ -506,7 +506,7 @@
     {
       "name": "charts",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme"],
+      "registryDependencies": [],
       "dependencies": ["recharts", "motion"],
       "devDependencies": [],
       "title": "Charts",
@@ -521,7 +521,7 @@
     {
       "name": "checkbox-group",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme"],
+      "registryDependencies": [],
       "dependencies": ["motion", "lucide-react"],
       "devDependencies": [],
       "title": "Checkbox group",
@@ -536,7 +536,7 @@
     {
       "name": "checkbox",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme"],
+      "registryDependencies": [],
       "dependencies": ["motion"],
       "devDependencies": [],
       "title": "Checkbox",
@@ -551,7 +551,7 @@
     {
       "name": "combobox",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme"],
+      "registryDependencies": [],
       "dependencies": ["motion", "lucide-react"],
       "devDependencies": [],
       "title": "Combobox",
@@ -566,7 +566,7 @@
     {
       "name": "context-menu",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme"],
+      "registryDependencies": [],
       "dependencies": ["motion"],
       "devDependencies": [],
       "title": "Context Menu",
@@ -581,7 +581,7 @@
     {
       "name": "dia-text",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme"],
+      "registryDependencies": [],
       "dependencies": ["motion"],
       "devDependencies": [],
       "title": "Dia Text",
@@ -596,7 +596,7 @@
     {
       "name": "dialog",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme"],
+      "registryDependencies": [],
       "dependencies": ["@radix-ui/react-dialog", "motion", "lucide-react"],
       "devDependencies": [],
       "title": "Dialog",
@@ -611,7 +611,7 @@
     {
       "name": "drawer",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme"],
+      "registryDependencies": [],
       "dependencies": ["motion", "lucide-react"],
       "devDependencies": [],
       "title": "Drawer",
@@ -626,7 +626,7 @@
     {
       "name": "dropdown",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme"],
+      "registryDependencies": [],
       "dependencies": ["motion", "lucide-react"],
       "devDependencies": [],
       "title": "Dropdown",
@@ -641,7 +641,7 @@
     {
       "name": "faq-pro",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme"],
+      "registryDependencies": [],
       "dependencies": ["motion", "lucide-react"],
       "devDependencies": [],
       "title": "FAQ Pro",
@@ -656,7 +656,7 @@
     {
       "name": "file-upload",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme"],
+      "registryDependencies": [],
       "dependencies": ["motion", "lucide-react"],
       "devDependencies": [],
       "title": "File Upload",
@@ -671,7 +671,7 @@
     {
       "name": "hover-card",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme"],
+      "registryDependencies": [],
       "dependencies": [
         "@radix-ui/react-popover",
         "@radix-ui/react-slot",
@@ -690,7 +690,7 @@
     {
       "name": "icon-bar",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme"],
+      "registryDependencies": [],
       "dependencies": ["motion", "lucide-react"],
       "devDependencies": [],
       "title": "Icon Bar",
@@ -720,7 +720,7 @@
     {
       "name": "input-group",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme"],
+      "registryDependencies": [],
       "dependencies": ["motion"],
       "devDependencies": [],
       "title": "Input Group",
@@ -735,7 +735,7 @@
     {
       "name": "origin-button",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme"],
+      "registryDependencies": [],
       "dependencies": ["motion"],
       "devDependencies": [],
       "title": "Origin Button",
@@ -750,7 +750,7 @@
     {
       "name": "popover",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme"],
+      "registryDependencies": [],
       "dependencies": ["@radix-ui/react-popover", "motion"],
       "devDependencies": [],
       "title": "Popover",
@@ -765,7 +765,7 @@
     {
       "name": "r-accordion",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme"],
+      "registryDependencies": [],
       "dependencies": ["@radix-ui/react-accordion", "motion", "lucide-react"],
       "devDependencies": [],
       "title": "Accordion (Radix UI)",
@@ -780,7 +780,7 @@
     {
       "name": "r-alert-dialog",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme"],
+      "registryDependencies": [],
       "dependencies": ["@radix-ui/react-alert-dialog", "motion"],
       "devDependencies": [],
       "title": "Alert Dialog (Radix UI)",
@@ -795,7 +795,7 @@
     {
       "name": "r-avatar",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme"],
+      "registryDependencies": [],
       "dependencies": ["@radix-ui/react-avatar", "motion"],
       "devDependencies": [],
       "title": "Avatar (Radix UI)",
@@ -810,7 +810,7 @@
     {
       "name": "r-checkbox",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme"],
+      "registryDependencies": [],
       "dependencies": ["@radix-ui/react-checkbox", "motion"],
       "devDependencies": [],
       "title": "Checkbox (Radix UI)",
@@ -825,7 +825,7 @@
     {
       "name": "r-collapsible",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme"],
+      "registryDependencies": [],
       "dependencies": ["@radix-ui/react-collapsible", "motion", "lucide-react"],
       "devDependencies": [],
       "title": "Collapsible (Radix UI)",
@@ -840,7 +840,7 @@
     {
       "name": "r-context-menu",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme"],
+      "registryDependencies": [],
       "dependencies": ["@radix-ui/react-context-menu", "motion"],
       "devDependencies": [],
       "title": "Context Menu (Radix UI)",
@@ -855,7 +855,7 @@
     {
       "name": "r-dialog",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme"],
+      "registryDependencies": [],
       "dependencies": ["@radix-ui/react-dialog", "motion", "lucide-react"],
       "devDependencies": [],
       "title": "Dialog (Radix UI)",
@@ -870,7 +870,7 @@
     {
       "name": "r-dropdown",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme"],
+      "registryDependencies": [],
       "dependencies": [
         "@radix-ui/react-dropdown-menu",
         "motion",
@@ -889,7 +889,7 @@
     {
       "name": "r-hover-card",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme"],
+      "registryDependencies": [],
       "dependencies": [
         "@radix-ui/react-hover-card",
         "@radix-ui/react-slot",
@@ -908,7 +908,7 @@
     {
       "name": "r-popover",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme"],
+      "registryDependencies": [],
       "dependencies": ["@radix-ui/react-popover", "motion"],
       "devDependencies": [],
       "title": "Popover (Radix UI)",
@@ -923,7 +923,7 @@
     {
       "name": "r-progress",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme"],
+      "registryDependencies": [],
       "dependencies": ["@radix-ui/react-progress", "motion"],
       "devDependencies": [],
       "title": "Progress (Radix UI)",
@@ -938,7 +938,7 @@
     {
       "name": "r-radio-group",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme"],
+      "registryDependencies": [],
       "dependencies": ["@radix-ui/react-radio-group", "motion"],
       "devDependencies": [],
       "title": "Radio Group (Radix UI)",
@@ -953,7 +953,7 @@
     {
       "name": "r-select",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme"],
+      "registryDependencies": [],
       "dependencies": ["@radix-ui/react-select", "motion", "lucide-react"],
       "devDependencies": [],
       "title": "Select (Radix UI)",
@@ -983,7 +983,7 @@
     {
       "name": "r-separator",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme"],
+      "registryDependencies": [],
       "dependencies": ["@radix-ui/react-separator"],
       "devDependencies": [],
       "title": "Separator (Radix UI)",
@@ -998,7 +998,7 @@
     {
       "name": "r-slider",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme"],
+      "registryDependencies": [],
       "dependencies": ["@radix-ui/react-slider", "motion"],
       "devDependencies": [],
       "title": "Slider (Radix UI)",
@@ -1013,7 +1013,7 @@
     {
       "name": "r-switch",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme"],
+      "registryDependencies": [],
       "dependencies": ["@radix-ui/react-switch", "motion"],
       "devDependencies": [],
       "title": "Switch (Radix UI)",
@@ -1028,7 +1028,7 @@
     {
       "name": "r-tabs",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme"],
+      "registryDependencies": [],
       "dependencies": ["@radix-ui/react-tabs", "motion"],
       "devDependencies": [],
       "title": "Tabs (Radix UI)",
@@ -1043,7 +1043,7 @@
     {
       "name": "r-toggle",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme"],
+      "registryDependencies": [],
       "dependencies": [
         "@radix-ui/react-toggle",
         "class-variance-authority",
@@ -1062,7 +1062,7 @@
     {
       "name": "r-togglegroup",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme"],
+      "registryDependencies": [],
       "dependencies": ["@radix-ui/react-toggle-group", "motion"],
       "devDependencies": [],
       "title": "Toggle Group (Radix UI)",
@@ -1077,7 +1077,7 @@
     {
       "name": "r-tooltip",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme"],
+      "registryDependencies": [],
       "dependencies": [
         "@radix-ui/react-tooltip",
         "@radix-ui/react-slot",
@@ -1096,7 +1096,7 @@
     {
       "name": "radiogroup",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme"],
+      "registryDependencies": [],
       "dependencies": ["motion"],
       "devDependencies": [],
       "title": "Radio group",
@@ -1111,7 +1111,7 @@
     {
       "name": "select",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme"],
+      "registryDependencies": [],
       "dependencies": ["motion", "lucide-react"],
       "devDependencies": [],
       "title": "Select",
@@ -1156,7 +1156,7 @@
     {
       "name": "skeleton",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme"],
+      "registryDependencies": [],
       "dependencies": [],
       "devDependencies": [],
       "title": "Skeleton",
@@ -1171,7 +1171,7 @@
     {
       "name": "slider",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme"],
+      "registryDependencies": [],
       "dependencies": ["motion"],
       "devDependencies": [],
       "title": "Slider",
@@ -1186,7 +1186,7 @@
     {
       "name": "spinner",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme"],
+      "registryDependencies": [],
       "dependencies": ["motion"],
       "devDependencies": [],
       "title": "Spinner",
@@ -1201,7 +1201,7 @@
     {
       "name": "switch",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme"],
+      "registryDependencies": [],
       "dependencies": ["@radix-ui/react-switch", "motion"],
       "devDependencies": [],
       "title": "Switch",
@@ -1216,7 +1216,7 @@
     {
       "name": "table",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme"],
+      "registryDependencies": [],
       "dependencies": ["motion", "lucide-react"],
       "devDependencies": [],
       "title": "Table",
@@ -1231,7 +1231,7 @@
     {
       "name": "tabs",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme"],
+      "registryDependencies": [],
       "dependencies": ["@base-ui/react"],
       "devDependencies": [],
       "title": "Tabs",
@@ -1261,7 +1261,7 @@
     {
       "name": "toggle",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme"],
+      "registryDependencies": [],
       "dependencies": [
         "@radix-ui/react-toggle",
         "class-variance-authority",
@@ -1280,7 +1280,7 @@
     {
       "name": "tooltip",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme"],
+      "registryDependencies": [],
       "dependencies": [
         "@radix-ui/react-popover",
         "@radix-ui/react-slot",
@@ -1314,7 +1314,7 @@
     {
       "name": "typography",
       "type": "registry:ui",
-      "registryDependencies": ["@iconiq/iconiq-theme"],
+      "registryDependencies": [],
       "dependencies": ["class-variance-authority"],
       "devDependencies": [],
       "title": "Typography",
