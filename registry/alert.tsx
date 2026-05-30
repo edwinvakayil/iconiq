@@ -2,9 +2,15 @@
 
 import { AnimatePresence, motion, type Variants } from "motion/react";
 import {
+  Children,
+  type ComponentPropsWithoutRef,
+  createContext,
   type FocusEvent,
+  forwardRef,
+  isValidElement,
   type ReactNode,
   useCallback,
+  useContext,
   useEffect,
   useId,
   useRef,
@@ -25,11 +31,21 @@ export type AlertPosition =
 
 export type AlertVariant = "inline" | "toast";
 
-export interface AlertProps {
+type AlertContextValue = {
+  descriptionId: string;
+  titleId: string;
+};
+
+const AlertContext = createContext<AlertContextValue | null>(null);
+
+type MotionDivProps = ComponentPropsWithoutRef<typeof motion.div>;
+
+export interface AlertProps extends Omit<MotionDivProps, "title"> {
+  children?: ReactNode;
   /** Leading graphic (e.g. a Lucide icon). You control markup and sizing. */
   icon?: ReactNode;
-  title: ReactNode;
-  message: ReactNode;
+  title?: ReactNode;
+  message?: ReactNode;
   /** Optional action row rendered below the message. */
   action?: ReactNode;
   dismissible?: boolean;
@@ -39,6 +55,14 @@ export interface AlertProps {
   /** Auto-dismiss after this many milliseconds. Defaults to 10 000. Pass 0 to disable. */
   timeout?: number;
   onDismiss?: () => void;
+}
+
+export interface AlertTitleProps extends MotionDivProps {
+  children?: ReactNode;
+}
+
+export interface AlertDescriptionProps extends MotionDivProps {
+  children?: ReactNode;
 }
 
 const DEFAULT_TOAST_POSITION: AlertPosition = "top-right";
@@ -109,38 +133,94 @@ const iconVariants: Variants = {
   },
 };
 
-export const Alert = ({
-  icon,
-  title,
-  message,
-  action,
-  dismissible = true,
-  variant,
-  position,
-  timeout = 10_000,
-  onDismiss,
-}: AlertProps) => {
+const AlertTitle = forwardRef<HTMLDivElement, AlertTitleProps>(
+  ({ children, className, id, ...props }, ref) => {
+    const context = useContext(AlertContext);
+
+    return (
+      <motion.div
+        className={cn(
+          "font-medium text-foreground text-sm leading-5 tracking-[-0.01em]",
+          className
+        )}
+        data-slot="alert-title"
+        id={id ?? context?.titleId}
+        ref={ref}
+        variants={childVariants}
+        {...props}
+      >
+        {children}
+      </motion.div>
+    );
+  }
+);
+
+AlertTitle.displayName = "AlertTitle";
+
+const AlertDescription = forwardRef<HTMLDivElement, AlertDescriptionProps>(
+  ({ children, className, id, ...props }, ref) => {
+    const context = useContext(AlertContext);
+
+    return (
+      <motion.div
+        className={cn(
+          "mt-1 text-[13px] text-foreground/65 leading-5",
+          className
+        )}
+        data-slot="alert-description"
+        id={id ?? context?.descriptionId}
+        ref={ref}
+        variants={childVariants}
+        {...props}
+      >
+        {children}
+      </motion.div>
+    );
+  }
+);
+
+AlertDescription.displayName = "AlertDescription";
+
+function isAlertTitleChild(child: ReactNode) {
+  return isValidElement(child) && child.type === AlertTitle;
+}
+
+function isAlertDescriptionChild(child: ReactNode) {
+  return isValidElement(child) && child.type === AlertDescription;
+}
+
+function isAlertTextChild(child: ReactNode) {
+  return isAlertTitleChild(child) || isAlertDescriptionChild(child);
+}
+
+function splitAlertChildren(children: ReactNode) {
+  const childArray = Children.toArray(children);
+  const [firstChild, ...remainingChildren] = childArray;
+
+  if (firstChild && !isAlertTextChild(firstChild)) {
+    return {
+      contentChildren: remainingChildren,
+      leadingIcon: firstChild,
+    };
+  }
+
+  return {
+    contentChildren: childArray,
+    leadingIcon: null,
+  };
+}
+
+function useAlertLifecycle(timeout: number, onDismiss?: () => void) {
   const [visible, setVisible] = useState(true);
   const [mounted, setMounted] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [isFocusWithin, setIsFocusWithin] = useState(false);
   const [isDocumentHidden, setIsDocumentHidden] = useState(false);
-
-  const titleId = useId();
-  const messageId = useId();
   const timeoutIdRef = useRef<number | null>(null);
   const remainingTimeRef = useRef(timeout);
   const timerStartedAtRef = useRef<number | null>(null);
   const dismissalRequestedRef = useRef(false);
   const previousTimeoutRef = useRef(timeout);
-
-  const resolvedVariant: AlertVariant = position
-    ? "toast"
-    : (variant ?? "inline");
-  const resolvedPosition =
-    resolvedVariant === "toast"
-      ? (position ?? DEFAULT_TOAST_POSITION)
-      : undefined;
 
   useEffect(() => setMounted(true), []);
 
@@ -270,6 +350,289 @@ export const Alert = ({
     onDismiss?.();
   }, [onDismiss]);
 
+  return {
+    handleBlurCapture,
+    handleExitComplete,
+    mounted,
+    requestDismiss,
+    setIsFocusWithin,
+    setIsHovered,
+    visible,
+  };
+}
+
+function AlertIcon({ children }: { children: ReactNode }) {
+  if (!children) {
+    return null;
+  }
+
+  return (
+    <motion.div
+      className="mt-0.5 shrink-0 text-black dark:text-white [&_svg]:h-[18px] [&_svg]:w-[18px]"
+      variants={iconVariants}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
+function AlertDismissButton({
+  onDismiss,
+  show,
+}: {
+  onDismiss: () => void;
+  show: boolean;
+}) {
+  if (!show) {
+    return null;
+  }
+
+  return (
+    <motion.button
+      aria-label="Dismiss alert"
+      className="relative -my-2 -mr-2 inline-flex size-10 shrink-0 items-center justify-center self-start rounded-md text-foreground/35 transition-colors hover:bg-foreground/5 hover:text-foreground/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+      onClick={onDismiss}
+      type="button"
+      variants={childVariants}
+    >
+      <svg fill="none" height="14" viewBox="0 0 14 14" width="14">
+        <path
+          d="M3.5 3.5L10.5 10.5M10.5 3.5L3.5 10.5"
+          stroke="currentColor"
+          strokeLinecap="round"
+          strokeWidth="1.2"
+        />
+      </svg>
+    </motion.button>
+  );
+}
+
+function AlertCard({
+  className,
+  content,
+  contextValue,
+  descriptionId,
+  hasDescription,
+  hasTitle,
+  icon,
+  motionProps,
+  onBlurCapture,
+  onDismiss,
+  onExitComplete,
+  onFocusCapture,
+  onPointerEnter,
+  onPointerLeave,
+  position,
+  showDismiss,
+  titleId,
+  variants,
+  variant,
+  visible,
+}: {
+  className?: MotionDivProps["className"];
+  content: ReactNode;
+  contextValue: AlertContextValue;
+  descriptionId: string;
+  hasDescription: boolean;
+  hasTitle: boolean;
+  icon: ReactNode;
+  motionProps: MotionDivProps;
+  onBlurCapture: (event: FocusEvent<HTMLDivElement>) => void;
+  onDismiss: () => void;
+  onExitComplete: () => void;
+  onFocusCapture: () => void;
+  onPointerEnter: () => void;
+  onPointerLeave: () => void;
+  position?: AlertPosition;
+  showDismiss: boolean;
+  titleId: string;
+  variants: Variants;
+  variant: AlertVariant;
+  visible: boolean;
+}) {
+  return (
+    <AnimatePresence onExitComplete={onExitComplete}>
+      {visible ? (
+        <AlertContext.Provider value={contextValue}>
+          <motion.div
+            {...motionProps}
+            animate="visible"
+            aria-atomic={true}
+            aria-describedby={hasDescription ? descriptionId : undefined}
+            aria-labelledby={hasTitle ? titleId : undefined}
+            aria-live="polite"
+            className={cn(
+              registryTheme,
+              "relative flex items-start gap-3 overflow-hidden rounded-lg border border-foreground/8 bg-card px-3.5 shadow-[0_2px_14px_0_rgba(0,0,0,0.07)]",
+              variant === "toast"
+                ? "py-3 sm:max-w-sm sm:py-2.5"
+                : "w-full max-w-sm py-3",
+              position ? positionClasses[position] : undefined,
+              position && "z-300",
+              className
+            )}
+            exit="exit"
+            initial="hidden"
+            onBlurCapture={onBlurCapture}
+            onFocusCapture={onFocusCapture}
+            onPointerEnter={onPointerEnter}
+            onPointerLeave={onPointerLeave}
+            role="status"
+            variants={variants}
+          >
+            <AlertIcon>{icon}</AlertIcon>
+            <div className="min-w-0 flex-1">{content}</div>
+            <AlertDismissButton onDismiss={onDismiss} show={showDismiss} />
+          </motion.div>
+        </AlertContext.Provider>
+      ) : null}
+    </AnimatePresence>
+  );
+}
+
+function getAlertConfig({
+  dismissible,
+  hasCompoundChildren,
+  position,
+  timeout,
+  variant,
+}: {
+  dismissible?: boolean;
+  hasCompoundChildren: boolean;
+  position?: AlertPosition;
+  timeout?: number;
+  variant?: AlertVariant;
+}) {
+  const resolvedVariant: AlertVariant = position
+    ? "toast"
+    : (variant ?? "inline");
+
+  return {
+    resolvedDismissible:
+      dismissible ?? (hasCompoundChildren ? resolvedVariant === "toast" : true),
+    resolvedPosition:
+      resolvedVariant === "toast"
+        ? (position ?? DEFAULT_TOAST_POSITION)
+        : undefined,
+    resolvedTimeout:
+      timeout ??
+      (hasCompoundChildren && resolvedVariant === "inline" ? 0 : 10_000),
+    resolvedVariant,
+  };
+}
+
+function getAlertAction(action?: ReactNode) {
+  if (!action) {
+    return null;
+  }
+
+  return (
+    <motion.div
+      className="mt-2 flex flex-wrap items-center gap-2"
+      variants={childVariants}
+    >
+      {action}
+    </motion.div>
+  );
+}
+
+function getLegacyAlertContent({
+  action,
+  message,
+  title,
+}: {
+  action?: ReactNode;
+  message?: ReactNode;
+  title?: ReactNode;
+}) {
+  return (
+    <>
+      {title ? <AlertTitle>{title}</AlertTitle> : null}
+      {message ? <AlertDescription>{message}</AlertDescription> : null}
+      {getAlertAction(action)}
+    </>
+  );
+}
+
+function getAlertContent({
+  action,
+  children,
+  hasCompoundChildren,
+  icon,
+  message,
+  title,
+}: {
+  action?: ReactNode;
+  children?: ReactNode;
+  hasCompoundChildren: boolean;
+  icon?: ReactNode;
+  message?: ReactNode;
+  title?: ReactNode;
+}) {
+  if (hasCompoundChildren) {
+    const { contentChildren, leadingIcon } = splitAlertChildren(children);
+
+    return {
+      hasDescription: contentChildren.some(isAlertDescriptionChild),
+      hasTitle: contentChildren.some(isAlertTitleChild),
+      renderedContent: (
+        <>
+          {contentChildren}
+          {getAlertAction(action)}
+        </>
+      ),
+      renderedIcon: icon ?? leadingIcon,
+    };
+  }
+
+  return {
+    hasDescription: Boolean(message),
+    hasTitle: Boolean(title),
+    renderedContent: getLegacyAlertContent({ action, message, title }),
+    renderedIcon: icon,
+  };
+}
+
+export const Alert = ({
+  children,
+  className,
+  icon,
+  title,
+  message,
+  action,
+  dismissible,
+  variant,
+  position,
+  timeout,
+  onDismiss,
+  ...props
+}: AlertProps) => {
+  const hasCompoundChildren = Children.count(children) > 0;
+  const {
+    resolvedDismissible,
+    resolvedPosition,
+    resolvedTimeout,
+    resolvedVariant,
+  } = getAlertConfig({
+    dismissible,
+    hasCompoundChildren,
+    position,
+    timeout,
+    variant,
+  });
+  const {
+    handleBlurCapture,
+    handleExitComplete,
+    mounted,
+    requestDismiss,
+    setIsFocusWithin,
+    setIsHovered,
+    visible,
+  } = useAlertLifecycle(resolvedTimeout, onDismiss);
+
+  const titleId = useId();
+  const messageId = useId();
+
   const dy = resolvedPosition ? entryY[resolvedPosition] : -8;
 
   const containerVariants: Variants = {
@@ -296,89 +659,39 @@ export const Alert = ({
       transition: { duration: 0.18, ease: EASE_IN },
     },
   };
+  const { hasDescription, hasTitle, renderedContent, renderedIcon } =
+    getAlertContent({
+      action,
+      children,
+      hasCompoundChildren,
+      icon,
+      message,
+      title,
+    });
 
   const card = (
-    <AnimatePresence onExitComplete={handleExitComplete}>
-      {visible && (
-        <motion.div
-          animate="visible"
-          aria-atomic={true}
-          aria-describedby={messageId}
-          aria-labelledby={titleId}
-          aria-live="polite"
-          className={cn(
-            registryTheme,
-            "relative flex items-start gap-3 overflow-hidden rounded-lg border border-foreground/8 bg-card px-3.5 shadow-[0_2px_14px_0_rgba(0,0,0,0.07)]",
-            resolvedVariant === "toast"
-              ? "py-3 sm:max-w-sm sm:py-2.5"
-              : "w-full max-w-sm py-3",
-            resolvedPosition ? positionClasses[resolvedPosition] : undefined,
-            resolvedPosition && "z-300"
-          )}
-          exit="exit"
-          initial="hidden"
-          onBlurCapture={handleBlurCapture}
-          onFocusCapture={() => setIsFocusWithin(true)}
-          onPointerEnter={() => setIsHovered(true)}
-          onPointerLeave={() => setIsHovered(false)}
-          role="status"
-          variants={containerVariants}
-        >
-          {icon ? (
-            <motion.div
-              className="mt-0.5 shrink-0 text-black dark:text-white [&_svg]:h-[18px] [&_svg]:w-[18px]"
-              variants={iconVariants}
-            >
-              {icon}
-            </motion.div>
-          ) : null}
-
-          <div className="min-w-0 flex-1">
-            <motion.div
-              className="font-medium text-foreground text-sm leading-5 tracking-[-0.01em]"
-              id={titleId}
-              variants={childVariants}
-            >
-              {title}
-            </motion.div>
-            <motion.div
-              className="mt-1 text-[13px] text-foreground/65 leading-5"
-              id={messageId}
-              variants={childVariants}
-            >
-              {message}
-            </motion.div>
-            {action ? (
-              <motion.div
-                className="mt-2 flex flex-wrap items-center gap-2"
-                variants={childVariants}
-              >
-                {action}
-              </motion.div>
-            ) : null}
-          </div>
-
-          {dismissible && (
-            <motion.button
-              aria-label="Dismiss alert"
-              className="relative -my-2 -mr-2 inline-flex size-10 shrink-0 items-center justify-center self-start rounded-md text-foreground/35 transition-colors hover:bg-foreground/5 hover:text-foreground/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-              onClick={requestDismiss}
-              type="button"
-              variants={childVariants}
-            >
-              <svg fill="none" height="14" viewBox="0 0 14 14" width="14">
-                <path
-                  d="M3.5 3.5L10.5 10.5M10.5 3.5L3.5 10.5"
-                  stroke="currentColor"
-                  strokeLinecap="round"
-                  strokeWidth="1.2"
-                />
-              </svg>
-            </motion.button>
-          )}
-        </motion.div>
-      )}
-    </AnimatePresence>
+    <AlertCard
+      className={className}
+      content={renderedContent}
+      contextValue={{ descriptionId: messageId, titleId }}
+      descriptionId={messageId}
+      hasDescription={hasDescription}
+      hasTitle={hasTitle}
+      icon={renderedIcon}
+      motionProps={props}
+      onBlurCapture={handleBlurCapture}
+      onDismiss={requestDismiss}
+      onExitComplete={handleExitComplete}
+      onFocusCapture={() => setIsFocusWithin(true)}
+      onPointerEnter={() => setIsHovered(true)}
+      onPointerLeave={() => setIsHovered(false)}
+      position={resolvedPosition}
+      showDismiss={resolvedDismissible}
+      titleId={titleId}
+      variant={resolvedVariant}
+      variants={containerVariants}
+      visible={visible}
+    />
   );
 
   /**
@@ -395,3 +708,4 @@ export const Alert = ({
 };
 
 export default Alert;
+export { AlertDescription, AlertTitle };

@@ -27,27 +27,31 @@ const alertApiDetails: DetailItem[] = [
     id: "alert",
     title: "Alert",
     summary:
-      "Default export for a single dismissible notice. It can render inline with surrounding content or behave like a toast when you set variant to toast or provide a position.",
+      "Root container for a single notice. It accepts compound children for static inline alerts while preserving the older icon, title, and message prop API for existing installs.",
     fields: [
+      field({
+        name: "children",
+        type: "ReactNode",
+        description:
+          "Preferred compound API. Pass an optional leading icon followed by AlertTitle and AlertDescription.",
+      }),
       field({
         name: "icon",
         type: "ReactNode",
         description:
-          "Optional leading visual passed into the icon slot. The wrapper applies fallback sizing to nested SVGs so Lucide icons land around 18px without extra setup.",
+          "Legacy leading visual prop. Compound children can also provide the leading icon as the first child.",
       }),
       field({
         name: "title",
         type: "ReactNode",
-        required: true,
         description:
-          "Primary line rendered in the stronger label style. Keeping it to short copy works best, but the slot also accepts small inline formatting when needed.",
+          "Legacy title prop rendered with the same AlertTitle styling. Prefer AlertTitle for new code.",
       }),
       field({
         name: "message",
         type: "ReactNode",
-        required: true,
         description:
-          "Secondary copy rendered below the title. Strings still work, but you can also pass short fragments, links, or small grouped copy when a single sentence feels cramped.",
+          "Legacy description prop rendered with the same AlertDescription styling. Prefer AlertDescription for new code.",
       }),
       field({
         name: "action",
@@ -58,9 +62,9 @@ const alertApiDetails: DetailItem[] = [
       field({
         name: "dismissible",
         type: "boolean",
-        defaultValue: "true",
+        defaultValue: "legacy: true; compound inline: false",
         description:
-          "Controls whether the close button is rendered. Disabling it removes manual dismissal only; timeout still applies unless it is set to 0.",
+          "Controls whether the close button is rendered. Compound inline alerts are static by default; toast and legacy prop alerts remain dismissible unless you opt out.",
       }),
       field({
         name: "variant",
@@ -78,9 +82,9 @@ const alertApiDetails: DetailItem[] = [
       field({
         name: "timeout",
         type: "number",
-        defaultValue: "10000",
+        defaultValue: "legacy/toast: 10000; compound inline: 0",
         description:
-          "Auto-dismiss delay in milliseconds. Passing 0 disables the timer and removes the progress-bar countdown.",
+          "Auto-dismiss delay in milliseconds. Passing 0 disables the timer; compound inline alerts default to no timer so static notices stay visible.",
       }),
       field({
         name: "onDismiss",
@@ -92,8 +96,49 @@ const alertApiDetails: DetailItem[] = [
     notes: [
       "Every positioned alert snaps to a full-width top placement on small screens, then switches to the requested corner at the sm breakpoint.",
       "The root announces itself as a polite live region and keeps title and message linked with aria-labelledby and aria-describedby.",
-      "The alert keeps its own visible state internally, so it is designed for fire-and-forget notifications rather than parent-controlled open state.",
+      "The alert keeps its own visible state internally when dismissal is enabled, so toast usage is designed for fire-and-forget notifications rather than parent-controlled open state.",
       "Hovering or focusing the alert pauses auto-dismiss, which gives people more time to read and makes the close target less stressful to hit.",
+    ],
+  },
+  {
+    id: "alert-title",
+    title: "AlertTitle",
+    summary:
+      "Primary line for the compound alert API, rendered with the same motion and text treatment as the legacy title prop.",
+    fields: [
+      field({
+        name: "children",
+        type: "ReactNode",
+        required: true,
+        description: "Short title or inline formatted heading content.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description:
+          "Merged with the title typography classes for one-off styling.",
+      }),
+    ],
+  },
+  {
+    id: "alert-description",
+    title: "AlertDescription",
+    summary:
+      "Secondary line for the compound alert API, linked to the root with aria-describedby.",
+    fields: [
+      field({
+        name: "children",
+        type: "ReactNode",
+        required: true,
+        description:
+          "Supporting message content. Keep it concise for compact inline notices and toast updates.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description:
+          "Merged with the description typography classes for one-off styling.",
+      }),
     ],
   },
   {

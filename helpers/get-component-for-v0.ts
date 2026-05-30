@@ -17,16 +17,25 @@ import {
 const COMPONENT_EXAMPLE: Record<string, string> = {
   alert:
     '"use client";\n\n' +
-    `import Alert from "@/components/ui/alert"\n` +
-    `import { CheckCircle2 } from "lucide-react"\n\n` +
+    "import {\n" +
+    "  Alert,\n" +
+    "  AlertDescription,\n" +
+    "  AlertTitle,\n" +
+    `} from "@/components/ui/alert"\n` +
+    `import { CheckCircle2Icon } from "lucide-react"\n\n` +
     "export default function Page() {\n" +
     "  return (\n" +
     '    <div className="flex min-h-svh items-center justify-center p-8">\n' +
-    "      <Alert\n" +
-    '        icon={<CheckCircle2 aria-hidden className="size-[18px]" />}\n' +
-    '        message="Your workspace was updated."\n' +
-    '        title="All set"\n' +
-    "      />\n" +
+    '      <div className="grid w-full max-w-md items-start gap-4">\n' +
+    "        <Alert>\n" +
+    "          <CheckCircle2Icon />\n" +
+    "          <AlertTitle>Changes saved</AlertTitle>\n" +
+    "          <AlertDescription>\n" +
+    "            Your workspace has been updated. The latest version is now available\n" +
+    "            to everyone on your team.\n" +
+    "          </AlertDescription>\n" +
+    "        </Alert>\n" +
+    "      </div>\n" +
     "    </div>\n" +
     "  )\n" +
     "}\n",

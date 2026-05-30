@@ -295,7 +295,7 @@ const REGISTRY_UI_META: Record<
   alert: {
     title: "Alert",
     description:
-      "Dismissible alert with an optional leading icon, action slot, polite live announcements, paused auto-dismiss on interaction, and inline or toast layout behavior.",
+      "Compound Alert, AlertTitle, and AlertDescription parts with optional icons, legacy prop support, polite live announcements, and inline or toast behavior.",
     dependencies: ["motion"],
   },
   breadcrumbs: {

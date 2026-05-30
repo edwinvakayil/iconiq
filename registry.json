@@ -25,7 +25,7 @@
       "dependencies": ["motion"],
       "devDependencies": [],
       "title": "Alert",
-      "description": "Dismissible alert with an optional leading icon, action slot, polite live announcements, paused auto-dismiss on interaction, and inline or toast layout behavior.",
+      "description": "Compound Alert, AlertTitle, and AlertDescription parts with optional icons, legacy prop support, polite live announcements, and inline or toast behavior.",
       "files": [
         {
           "path": "alert.tsx",
