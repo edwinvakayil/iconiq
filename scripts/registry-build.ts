@@ -146,7 +146,7 @@ const REGISTRY_UI_META: Record<
   "b-accordion": {
     title: "Accordion (Base UI)",
     description:
-      "Accordion with the same Iconiq API layered over Base UI primitives, keeping the default and quiet variants while swapping the underlying headless library.",
+      "Compound Accordion, AccordionItem, AccordionTrigger, and AccordionContent parts layered over Base UI primitives with default and quiet variants.",
     dependencies: ["@base-ui/react", "motion", "lucide-react"],
   },
   "b-alert-dialog": {
@@ -378,7 +378,7 @@ const REGISTRY_UI_META: Record<
   "r-accordion": {
     title: "Accordion (Radix UI)",
     description:
-      "Accordion with the same Iconiq API layered over Radix UI primitives, preserving the existing Motion-heavy panel choreography and install surface.",
+      "Compound Accordion, AccordionItem, AccordionTrigger, and AccordionContent parts layered over Radix UI primitives with Motion-heavy panel choreography.",
     dependencies: ["@radix-ui/react-accordion", "motion", "lucide-react"],
   },
   "r-alert-dialog": {

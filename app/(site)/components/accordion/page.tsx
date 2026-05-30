@@ -13,8 +13,18 @@ import {
   type DetailItem,
 } from "@/components/docs/page-shell";
 import { LINK } from "@/constants";
-import { Accordion as BaseAccordion } from "@/registry/b-accordion";
-import { Accordion as RadixAccordion } from "@/registry/r-accordion";
+import {
+  Accordion as BaseAccordion,
+  AccordionContent as BaseAccordionContent,
+  AccordionItem as BaseAccordionItem,
+  AccordionTrigger as BaseAccordionTrigger,
+} from "@/registry/b-accordion";
+import {
+  Accordion as RadixAccordion,
+  AccordionContent as RadixAccordionContent,
+  AccordionItem as RadixAccordionItem,
+  AccordionTrigger as RadixAccordionTrigger,
+} from "@/registry/r-accordion";
 
 type ProviderConfig = {
   componentName: "b-accordion" | "r-accordion";
@@ -44,7 +54,7 @@ const demoItems: AccordionDemoItem[] = [
     id: "api",
     title: "Does the public API stay the same?",
     content:
-      "Yes. Both registry entries export Accordion and AccordionItem, accept the same items array, support default and quiet variants, and let you opt into multiple open rows with a single prop.",
+      "Yes. Both registry entries export Accordion, AccordionItem, AccordionTrigger, and AccordionContent with the same compound API, default and quiet variants, and optional multi-open behavior.",
   },
   {
     id: "install",
@@ -63,58 +73,90 @@ const breadcrumbs = [
   { label: "Accordion" },
 ];
 
+function getBaseAccordionRows() {
+  return demoItems.map((item) => (
+    <BaseAccordionItem key={item.id} value={item.id}>
+      <BaseAccordionTrigger>{item.title}</BaseAccordionTrigger>
+      <BaseAccordionContent>{item.content}</BaseAccordionContent>
+    </BaseAccordionItem>
+  ));
+}
+
+function getRadixAccordionRows() {
+  return demoItems.map((item) => (
+    <RadixAccordionItem key={item.id} value={item.id}>
+      <RadixAccordionTrigger>{item.title}</RadixAccordionTrigger>
+      <RadixAccordionContent>{item.content}</RadixAccordionContent>
+    </RadixAccordionItem>
+  ));
+}
+
 const usageCodeByProvider: Record<ProviderConfig["componentName"], string> = {
-  "b-accordion": `import { Accordion, type AccordionItem } from "@/components/ui/b-accordion";
-
-const items: AccordionItem[] = [
-  {
-    id: "workflow",
-    title: "How should I use this page?",
-    content:
-      "Switch between Base UI and Radix UI above. The preview, install command, and generated registry files update together so you can compare the same surface on top of two different headless foundations.",
-  },
-  {
-    id: "api",
-    title: "Does the public API stay the same?",
-    content:
-      "Yes. Both registry entries export Accordion and AccordionItem, accept the same items array, support default and quiet variants, and let you opt into multiple open rows with a single prop.",
-  },
-  {
-    id: "install",
-    title: "What changes when I switch providers?",
-    content:
-      "Only the underlying implementation and runtime dependency list. The Base UI version installs the Base UI accordion parts and keeps the same product-facing shape.",
-  },
-];
+  "b-accordion": `import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/b-accordion";
 
 export function AccordionPreview() {
-  return <Accordion className="w-full max-w-xl" items={items} />;
+  return (
+    <Accordion defaultValue={["workflow"]} className="w-full max-w-xl">
+      <AccordionItem value="workflow">
+        <AccordionTrigger>How should I use this page?</AccordionTrigger>
+        <AccordionContent>
+          Switch between Base UI and Radix UI above. The preview, install
+          command, and generated registry files update together.
+        </AccordionContent>
+      </AccordionItem>
+      <AccordionItem value="api">
+        <AccordionTrigger>Does the public API stay the same?</AccordionTrigger>
+        <AccordionContent>
+          Yes. Both registry entries export the same compound parts, variants,
+          and optional multi-open behavior.
+        </AccordionContent>
+      </AccordionItem>
+      <AccordionItem value="install">
+        <AccordionTrigger>What changes when I switch providers?</AccordionTrigger>
+        <AccordionContent>
+          Only the underlying implementation and runtime dependency list.
+        </AccordionContent>
+      </AccordionItem>
+    </Accordion>
+  );
 }`,
-  "r-accordion": `import { Accordion, type AccordionItem } from "@/components/ui/r-accordion";
-
-const items: AccordionItem[] = [
-  {
-    id: "workflow",
-    title: "How should I use this page?",
-    content:
-      "Switch between Base UI and Radix UI above. The preview, install command, and generated registry files update together so you can compare the same surface on top of two different headless foundations.",
-  },
-  {
-    id: "api",
-    title: "Does the public API stay the same?",
-    content:
-      "Yes. Both registry entries export Accordion and AccordionItem, accept the same items array, support default and quiet variants, and let you opt into multiple open rows with a single prop.",
-  },
-  {
-    id: "install",
-    title: "What changes when I switch providers?",
-    content:
-      "Only the underlying implementation and runtime dependency list. The Radix version installs the Radix accordion primitive and keeps the same product-facing shape.",
-  },
-];
+  "r-accordion": `import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/r-accordion";
 
 export function AccordionPreview() {
-  return <Accordion className="${previewAccordionClassName}" items={items} />;
+  return (
+    <Accordion defaultValue={["workflow"]} className="${previewAccordionClassName}">
+      <AccordionItem value="workflow">
+        <AccordionTrigger>How should I use this page?</AccordionTrigger>
+        <AccordionContent>
+          Switch between Base UI and Radix UI above. The preview, install
+          command, and generated registry files update together.
+        </AccordionContent>
+      </AccordionItem>
+      <AccordionItem value="api">
+        <AccordionTrigger>Does the public API stay the same?</AccordionTrigger>
+        <AccordionContent>
+          Yes. Both registry entries export the same compound parts, variants,
+          and optional multi-open behavior.
+        </AccordionContent>
+      </AccordionItem>
+      <AccordionItem value="install">
+        <AccordionTrigger>What changes when I switch providers?</AccordionTrigger>
+        <AccordionContent>
+          Only the underlying implementation and runtime dependency list.
+        </AccordionContent>
+      </AccordionItem>
+    </Accordion>
+  );
 }`,
 };
 
@@ -122,68 +164,78 @@ const quietUsageCodeByProvider: Record<
   ProviderConfig["componentName"],
   string
 > = {
-  "b-accordion": `import { Accordion, type AccordionItem } from "@/components/ui/b-accordion";
-
-const items: AccordionItem[] = [
-  {
-    id: "workflow",
-    title: "How should I use this page?",
-    content:
-      "Switch between Base UI and Radix UI above. The preview, install command, and generated registry files update together so you can compare the same surface on top of two different headless foundations.",
-  },
-  {
-    id: "api",
-    title: "Does the public API stay the same?",
-    content:
-      "Yes. Both registry entries export Accordion and AccordionItem, accept the same items array, support default and quiet variants, and let you opt into multiple open rows with a single prop.",
-  },
-  {
-    id: "install",
-    title: "What changes when I switch providers?",
-    content:
-      "Only the underlying implementation and runtime dependency list. The Base UI version installs the Base UI accordion parts and keeps the same product-facing shape.",
-  },
-];
+  "b-accordion": `import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/b-accordion";
 
 export function QuietAccordionPreview() {
   return (
     <Accordion
       className="mx-auto w-full max-w-xl"
-      items={items}
+      defaultValue={["workflow"]}
       variant="quiet"
-    />
+    >
+      <AccordionItem value="workflow">
+        <AccordionTrigger>How should I use this page?</AccordionTrigger>
+        <AccordionContent>
+          Switch between Base UI and Radix UI above. The preview, install
+          command, and generated registry files update together.
+        </AccordionContent>
+      </AccordionItem>
+      <AccordionItem value="api">
+        <AccordionTrigger>Does the public API stay the same?</AccordionTrigger>
+        <AccordionContent>
+          Yes. Both registry entries export the same compound parts, variants,
+          and optional multi-open behavior.
+        </AccordionContent>
+      </AccordionItem>
+      <AccordionItem value="install">
+        <AccordionTrigger>What changes when I switch providers?</AccordionTrigger>
+        <AccordionContent>
+          Only the underlying implementation and runtime dependency list.
+        </AccordionContent>
+      </AccordionItem>
+    </Accordion>
   );
 }`,
-  "r-accordion": `import { Accordion, type AccordionItem } from "@/components/ui/r-accordion";
-
-const items: AccordionItem[] = [
-  {
-    id: "workflow",
-    title: "How should I use this page?",
-    content:
-      "Switch between Base UI and Radix UI above. The preview, install command, and generated registry files update together so you can compare the same surface on top of two different headless foundations.",
-  },
-  {
-    id: "api",
-    title: "Does the public API stay the same?",
-    content:
-      "Yes. Both registry entries export Accordion and AccordionItem, accept the same items array, support default and quiet variants, and let you opt into multiple open rows with a single prop.",
-  },
-  {
-    id: "install",
-    title: "What changes when I switch providers?",
-    content:
-      "Only the underlying implementation and runtime dependency list. The Radix version installs the Radix accordion primitive and keeps the same product-facing shape.",
-  },
-];
+  "r-accordion": `import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/r-accordion";
 
 export function QuietAccordionPreview() {
   return (
     <Accordion
       className="mx-auto w-full max-w-xl"
-      items={items}
+      defaultValue={["workflow"]}
       variant="quiet"
-    />
+    >
+      <AccordionItem value="workflow">
+        <AccordionTrigger>How should I use this page?</AccordionTrigger>
+        <AccordionContent>
+          Switch between Base UI and Radix UI above. The preview, install
+          command, and generated registry files update together.
+        </AccordionContent>
+      </AccordionItem>
+      <AccordionItem value="api">
+        <AccordionTrigger>Does the public API stay the same?</AccordionTrigger>
+        <AccordionContent>
+          Yes. Both registry entries export the same compound parts, variants,
+          and optional multi-open behavior.
+        </AccordionContent>
+      </AccordionItem>
+      <AccordionItem value="install">
+        <AccordionTrigger>What changes when I switch providers?</AccordionTrigger>
+        <AccordionContent>
+          Only the underlying implementation and runtime dependency list.
+        </AccordionContent>
+      </AccordionItem>
+    </Accordion>
   );
 }`,
 };
@@ -199,23 +251,27 @@ export default function RadixBaseAccordionPage() {
         dependencyLabel: "@base-ui/react, motion, lucide-react",
         libraryLabel: "Base UI",
         notes: [
-          "Installs the Base UI accordion parts under the same product-facing Accordion API.",
+          "Installs the Base UI accordion parts under the same compound Accordion API.",
           "Uses Base UI panel measurement plus motion-backed label and icon polish.",
           "The generated registry file is /r/b-accordion.json.",
         ],
         installationPreview: (
           <BaseAccordion
             className={installationPreviewAccordionClassName}
-            items={demoItems}
+            defaultValue={["workflow"]}
             variant="quiet"
-          />
+          >
+            {getBaseAccordionRows()}
+          </BaseAccordion>
         ),
         installationPreviewCode: quietUsageCodeByProvider["b-accordion"],
         preview: (
           <BaseAccordion
             className={previewAccordionClassName}
-            items={demoItems}
-          />
+            defaultValue={["workflow"]}
+          >
+            {getBaseAccordionRows()}
+          </BaseAccordion>
         ),
         usageCode: usageCodeByProvider["b-accordion"],
       };
@@ -226,23 +282,27 @@ export default function RadixBaseAccordionPage() {
       dependencyLabel: "@radix-ui/react-accordion, motion, lucide-react",
       libraryLabel: "Radix UI",
       notes: [
-        "Installs the Radix accordion primitive under the same product-facing Accordion API.",
+        "Installs the Radix accordion primitive under the same compound Accordion API.",
         "Uses the existing Motion + Radix content choreography with animated height, wipe, and copy transitions.",
         "The generated registry file is /r/r-accordion.json.",
       ],
       installationPreview: (
         <RadixAccordion
           className={installationPreviewAccordionClassName}
-          items={demoItems}
+          defaultValue={["workflow"]}
           variant="quiet"
-        />
+        >
+          {getRadixAccordionRows()}
+        </RadixAccordion>
       ),
       installationPreviewCode: quietUsageCodeByProvider["r-accordion"],
       preview: (
         <RadixAccordion
           className={previewAccordionClassName}
-          items={demoItems}
-        />
+          defaultValue={["workflow"]}
+        >
+          {getRadixAccordionRows()}
+        </RadixAccordion>
       ),
       usageCode: usageCodeByProvider["r-accordion"],
     };
@@ -254,27 +314,68 @@ export default function RadixBaseAccordionPage() {
         id: "accordion-item",
         title: "AccordionItem",
         summary:
-          "Each row is described by a plain object so both provider-backed installs expose the same content contract.",
+          "Groups one trigger and one content panel under the value used for open-state tracking.",
         fields: [
           {
-            name: "id",
+            name: "value",
             type: "string",
             required: true,
             description:
-              "Stable identifier used for open-state tracking and the underlying primitive value.",
+              "Stable identifier used by defaultValue, value, and the underlying primitive.",
           },
           {
-            name: "title",
-            type: "string",
-            required: true,
-            description: "Text rendered in the trigger row.",
-          },
-          {
-            name: "content",
+            name: "children",
             type: "ReactNode",
             required: true,
             description:
-              "Any body content rendered inside the expanded panel, including paragraphs, lists, links, or richer fragments.",
+              "Usually an AccordionTrigger followed by AccordionContent.",
+          },
+          {
+            name: "className",
+            type: "string",
+            description:
+              "Merged onto the primitive item while preserving the default or quiet row styling.",
+          },
+        ],
+      },
+      {
+        id: "accordion-trigger",
+        title: "AccordionTrigger",
+        summary:
+          "Renders the clickable row label with the active variant's indicator treatment.",
+        fields: [
+          {
+            name: "children",
+            type: "ReactNode",
+            required: true,
+            description: "Trigger text or inline content.",
+          },
+          {
+            name: "className",
+            type: "string",
+            description:
+              "Merged onto the trigger button after the variant's layout and focus classes.",
+          },
+        ],
+      },
+      {
+        id: "accordion-content",
+        title: "AccordionContent",
+        summary:
+          "Renders the animated panel body for the active item and keeps rich text styling intact.",
+        fields: [
+          {
+            name: "children",
+            type: "ReactNode",
+            required: true,
+            description:
+              "Panel content, including paragraphs, lists, links, or richer fragments.",
+          },
+          {
+            name: "className",
+            type: "string",
+            description:
+              "Merged onto the inner copy wrapper so text and rich content can be styled per panel.",
           },
         ],
       },
@@ -285,10 +386,29 @@ export default function RadixBaseAccordionPage() {
           "Provider-switchable accordion surface with the same exported API regardless of whether you install the Base UI or Radix UI registry entry.",
         fields: [
           {
-            name: "items",
-            type: "AccordionItem[]",
+            name: "children",
+            type: "ReactNode",
             required: true,
-            description: "Rows to render in display order.",
+            description:
+              "AccordionItem children rendered in display order. The legacy items prop remains supported for older installs.",
+          },
+          {
+            name: "defaultValue",
+            type: "string[]",
+            description:
+              "Uncontrolled list of item values that should be open on first render.",
+          },
+          {
+            name: "value",
+            type: "string[]",
+            description:
+              "Controlled list of open item values. Pair with onValueChange.",
+          },
+          {
+            name: "onValueChange",
+            type: "(value: string[]) => void",
+            description:
+              "Called with the next open-value array for both Base UI and Radix UI variants.",
           },
           {
             name: "className",
@@ -320,6 +440,7 @@ export default function RadixBaseAccordionPage() {
         notes: [
           `Current install target: ${provider.libraryLabel}.`,
           `Dependencies declared by this registry entry: ${provider.dependencyLabel}.`,
+          "The old items array shortcut still works, but the documented API now mirrors the shadcn-style compound parts.",
           ...provider.notes,
         ],
       },
@@ -336,7 +457,7 @@ export default function RadixBaseAccordionPage() {
           <div className="space-y-3">
             <p className="text-muted-foreground text-sm">
               Use <code>variant="quiet"</code> for the lighter inline disclosure
-              style while keeping the same Accordion API.
+              style while keeping the same compound Accordion API.
             </p>
             <ComponentDemoCanvas
               code={provider.installationPreviewCode}
@@ -371,7 +492,7 @@ export default function RadixBaseAccordionPage() {
       reducedMotionSectionPosition="after"
       title="Accordion"
       usageCode={provider.usageCode}
-      usageDescription="Switch libraries above to update the install command, registry JSON, preview code, and generated file set together."
+      usageDescription="Use the compound parts directly. Switch libraries above to update the install command, registry JSON, preview code, and generated file set together."
       v0PageCode={provider.usageCode}
     />
   );

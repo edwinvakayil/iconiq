@@ -55,7 +55,7 @@
       "dependencies": ["@base-ui/react", "motion", "lucide-react"],
       "devDependencies": [],
       "title": "Accordion (Base UI)",
-      "description": "Accordion with the same Iconiq API layered over Base UI primitives, keeping the default and quiet variants while swapping the underlying headless library.",
+      "description": "Compound Accordion, AccordionItem, AccordionTrigger, and AccordionContent parts layered over Base UI primitives with default and quiet variants.",
       "files": [
         {
           "path": "b-accordion.tsx",
@@ -769,7 +769,7 @@
       "dependencies": ["@radix-ui/react-accordion", "motion", "lucide-react"],
       "devDependencies": [],
       "title": "Accordion (Radix UI)",
-      "description": "Accordion with the same Iconiq API layered over Radix UI primitives, preserving the existing Motion-heavy panel choreography and install surface.",
+      "description": "Compound Accordion, AccordionItem, AccordionTrigger, and AccordionContent parts layered over Radix UI primitives with Motion-heavy panel choreography.",
       "files": [
         {
           "path": "r-accordion.tsx",

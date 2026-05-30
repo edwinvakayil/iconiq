@@ -1,7 +1,13 @@
 "use client";
 
+import type {
+  AccordionContentProps as RadixAccordionContentPrimitiveProps,
+  AccordionItemProps as RadixAccordionItemPrimitiveProps,
+  AccordionSingleProps as RadixAccordionRootPrimitiveProps,
+  AccordionTriggerProps as RadixAccordionTriggerPrimitiveProps,
+} from "@radix-ui/react-accordion";
 import * as AccordionPrimitive from "@radix-ui/react-accordion";
-import { AnimatePresence, motion, type Transition } from "motion/react";
+import { motion, type Transition } from "motion/react";
 import * as React from "react";
 
 import {
@@ -20,12 +26,66 @@ export interface AccordionItem {
 
 export type AccordionVariant = "default" | "quiet";
 
-export interface AccordionProps extends ReducedMotionProp {
-  items: AccordionItem[];
+type AccordionValue = string[];
+
+type AccordionRootPropsBase = Omit<
+  RadixAccordionRootPrimitiveProps,
+  | "children"
+  | "className"
+  | "collapsible"
+  | "defaultValue"
+  | "onValueChange"
+  | "type"
+  | "value"
+>;
+
+export interface AccordionProps
+  extends AccordionRootPropsBase,
+    ReducedMotionProp {
+  children?: React.ReactNode;
   className?: string;
+  collapsible?: boolean;
+  defaultValue?: AccordionValue;
+  items?: AccordionItem[];
   multiple?: boolean;
+  onValueChange?: (value: AccordionValue) => void;
+  value?: AccordionValue;
   variant?: AccordionVariant;
 }
+
+interface AccordionItemProps
+  extends Omit<RadixAccordionItemPrimitiveProps, "className"> {
+  __index?: number;
+  className?: string;
+}
+
+interface AccordionTriggerProps
+  extends Omit<RadixAccordionTriggerPrimitiveProps, "className"> {
+  className?: string;
+}
+
+interface AccordionContentProps
+  extends Omit<RadixAccordionContentPrimitiveProps, "className"> {
+  className?: string;
+}
+
+type AccordionRootContextValue = {
+  openItems: AccordionValue;
+  reduceMotion: boolean;
+  variant: AccordionVariant;
+};
+
+type AccordionItemContextValue = {
+  index: number;
+  isOpen: boolean;
+  value: string;
+};
+
+const AccordionRootContext =
+  React.createContext<AccordionRootContextValue | null>(null);
+
+const AccordionItemContext =
+  React.createContext<AccordionItemContextValue | null>(null);
 
 const contentShellTransition: Transition = {
   height: {
@@ -65,15 +125,40 @@ const contentCopyTransition: Transition = {
   },
 };
 
-type AccordionRowProps = {
-  item: AccordionItem;
-  index: number;
-  isOpen: boolean;
-  reduceMotion: boolean;
-};
+function normalizeAccordionValue(value: AccordionValue | undefined) {
+  return value ?? [];
+}
 
-function getRowClassName(index: number) {
-  return cn("group", index !== 0 && "border-border/80 border-t");
+function getSingleOrMultipleValue(value: AccordionValue, multiple: boolean) {
+  return multiple ? value : value.slice(0, 1);
+}
+
+function useAccordionRootContext(componentName: string) {
+  const context = React.useContext(AccordionRootContext);
+
+  if (!context) {
+    throw new Error(`${componentName} must be used inside Accordion.`);
+  }
+
+  return context;
+}
+
+function useAccordionItemContext(componentName: string) {
+  const context = React.useContext(AccordionItemContext);
+
+  if (!context) {
+    throw new Error(`${componentName} must be used inside AccordionItem.`);
+  }
+
+  return context;
+}
+
+function getItemClassName(variant: AccordionVariant) {
+  if (variant === "quiet") {
+    return "py-3.5";
+  }
+
+  return "group [&:not(:first-child)]:border-border/80 [&:not(:first-child)]:border-t";
 }
 
 function getTriggerClassName(isOpen: boolean) {
@@ -104,88 +189,82 @@ function getQuietContentMaskClassName() {
   return "overflow-hidden";
 }
 
-function AccordionContent({
-  contentCopy,
+function AccordionPanelBody({
+  children,
+  copyClassName,
   isOpen,
   maskClassName,
   reduceMotion,
   wrapClassName,
 }: {
-  contentCopy: React.ReactNode;
+  children: React.ReactNode;
+  copyClassName: string;
   isOpen: boolean;
   maskClassName: string;
   reduceMotion: boolean;
   wrapClassName: string;
 }) {
+  if (reduceMotion) {
+    return (
+      <div className={wrapClassName}>
+        <div className={maskClassName}>
+          <div className={copyClassName}>{children}</div>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <AnimatePresence initial={false}>
-      {isOpen ? (
-        reduceMotion ? (
-          <AccordionPrimitive.Content forceMount>
-            <div className={wrapClassName}>
-              <div className={maskClassName}>{contentCopy}</div>
-            </div>
-          </AccordionPrimitive.Content>
-        ) : (
-          <AccordionPrimitive.Content asChild forceMount>
-            <motion.div
-              animate={{
-                height: "auto",
-                opacity: 1,
-                clipPath: "inset(0% 0% 0% 0%)",
-              }}
-              className="overflow-hidden"
-              exit={{
-                height: 0,
-                opacity: 0,
-                clipPath: "inset(0% 0% 100% 0%)",
-              }}
-              initial={{
-                height: 0,
-                opacity: 0,
-                clipPath: "inset(0% 0% 100% 0%)",
-              }}
-              transition={contentShellTransition}
-            >
-              <div className={wrapClassName}>
-                <motion.div
-                  animate={{
-                    clipPath: "inset(0% 0% 0% 0%)",
-                    opacity: 1,
-                  }}
-                  className={maskClassName}
-                  exit={{
-                    clipPath: "inset(0% 100% 0% 0%)",
-                    opacity: 0.68,
-                  }}
-                  initial={{
-                    clipPath: "inset(0% 100% 0% 0%)",
-                    opacity: 0.68,
-                  }}
-                  transition={contentMaskTransition}
-                >
-                  {contentCopy}
-                </motion.div>
-              </div>
-            </motion.div>
-          </AccordionPrimitive.Content>
-        )
-      ) : null}
-    </AnimatePresence>
+    <motion.div
+      animate={{
+        height: isOpen ? "auto" : 0,
+        opacity: isOpen ? 1 : 0,
+        clipPath: isOpen ? "inset(0% 0% 0% 0%)" : "inset(0% 0% 100% 0%)",
+      }}
+      className="overflow-hidden"
+      initial={false}
+      transition={contentShellTransition}
+    >
+      <div className={wrapClassName}>
+        <motion.div
+          animate={{
+            clipPath: isOpen ? "inset(0% 0% 0% 0%)" : "inset(0% 100% 0% 0%)",
+            opacity: isOpen ? 1 : 0.68,
+          }}
+          className={maskClassName}
+          initial={false}
+          transition={contentMaskTransition}
+        >
+          <motion.div
+            animate={{
+              opacity: isOpen ? 1 : 0,
+              y: isOpen ? 0 : -2,
+              scale: isOpen ? 1 : 0.996,
+              filter: isOpen ? "blur(0px)" : "blur(1.5px)",
+            }}
+            className={copyClassName}
+            initial={false}
+            transition={contentCopyTransition}
+          >
+            {children}
+          </motion.div>
+        </motion.div>
+      </div>
+    </motion.div>
   );
 }
 
 function AccordionTriggerLabel({
+  children,
   reduceMotion,
-  title,
 }: {
+  children: React.ReactNode;
   reduceMotion: boolean;
-  title: string;
 }) {
   if (reduceMotion) {
     return (
       <span className="pr-4 font-medium text-[15px] text-foreground leading-6 tracking-[-0.02em] sm:text-base">
-        {title}
+        {children}
       </span>
     );
   }
@@ -196,7 +275,7 @@ function AccordionTriggerLabel({
       className="pr-4 font-medium text-[15px] text-foreground leading-6 tracking-[-0.02em] sm:text-base"
       transition={{ type: "spring", stiffness: 300, damping: 28 }}
     >
-      {title}
+      {children}
     </motion.span>
   );
 }
@@ -227,215 +306,248 @@ function AccordionTriggerIndicator({ isOpen }: { isOpen: boolean }) {
   );
 }
 
-function AccordionRow({
-  item,
-  index,
-  isOpen,
-  reduceMotion,
-}: AccordionRowProps) {
-  const contentCopy = reduceMotion ? (
-    <div className={getContentCopyClassName()}>{item.content}</div>
-  ) : (
-    <motion.div
-      animate={{
-        opacity: 1,
-        y: 0,
-        scale: 1,
-        filter: "blur(0px)",
-      }}
-      className={getContentCopyClassName()}
-      exit={{
-        opacity: 0,
-        y: -2,
-        scale: 0.996,
-        filter: "blur(1.5px)",
-      }}
-      initial={{
-        opacity: 0,
-        y: 7,
-        scale: 0.998,
-        filter: "blur(3px)",
-      }}
-      transition={contentCopyTransition}
-    >
-      {item.content}
-    </motion.div>
-  );
+function withIndexedAccordionChildren(children: React.ReactNode) {
+  return React.Children.map(children, (child, index) => {
+    if (!React.isValidElement(child)) {
+      return child;
+    }
 
-  return (
-    <AccordionPrimitive.Item className={getRowClassName(index)} value={item.id}>
-      <motion.div
-        animate={{ opacity: 1, y: 0 }}
-        initial={{ opacity: 0, y: 12 }}
-        transition={{
-          delay: index * 0.05,
-          duration: 0.3,
-          ease: [0.22, 1, 0.36, 1],
-        }}
-      >
-        <AccordionPrimitive.Header className="flex">
-          <AccordionPrimitive.Trigger
+    return React.cloneElement(
+      child as React.ReactElement<{ __index?: number }>,
+      { __index: index }
+    );
+  });
+}
+
+const AccordionItem = React.forwardRef<HTMLDivElement, AccordionItemProps>(
+  ({ __index = 0, children, className, value, ...props }, ref) => {
+    const { openItems, variant } = useAccordionRootContext("AccordionItem");
+    const isOpen = openItems.includes(value);
+    const itemContext = React.useMemo(
+      () => ({ index: __index, isOpen, value }),
+      [__index, isOpen, value]
+    );
+
+    return (
+      <AccordionItemContext.Provider value={itemContext}>
+        <AccordionPrimitive.Item
+          className={cn(getItemClassName(variant), className)}
+          ref={ref}
+          value={value}
+          {...props}
+        >
+          <motion.div
+            animate={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, y: 12 }}
+            transition={{
+              delay: __index * 0.05,
+              duration: 0.3,
+              ease: [0.22, 1, 0.36, 1],
+            }}
+          >
+            {children}
+          </motion.div>
+        </AccordionPrimitive.Item>
+      </AccordionItemContext.Provider>
+    );
+  }
+);
+
+AccordionItem.displayName = "AccordionItem";
+
+const AccordionTrigger = React.forwardRef<
+  HTMLButtonElement,
+  AccordionTriggerProps
+>(({ children, className, ...props }, ref) => {
+  const { reduceMotion, variant } = useAccordionRootContext("AccordionTrigger");
+  const { isOpen } = useAccordionItemContext("AccordionTrigger");
+
+  if (variant === "quiet") {
+    return (
+      <AccordionPrimitive.Header className="flex">
+        <AccordionPrimitive.Trigger
+          className={cn(
+            "flex w-full cursor-pointer items-baseline gap-4 text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset",
+            className
+          )}
+          ref={ref}
+          {...props}
+        >
+          <span
+            aria-hidden
             className={cn(
-              "flex w-full cursor-pointer items-start justify-between gap-6 text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset",
-              getTriggerClassName(isOpen)
+              "text-[15px] leading-none transition-colors",
+              isOpen ? "text-foreground" : "text-muted-foreground/60"
             )}
           >
-            <AccordionTriggerLabel
-              reduceMotion={reduceMotion}
-              title={item.title}
-            />
-            <AccordionTriggerIndicator isOpen={isOpen} />
-          </AccordionPrimitive.Trigger>
-        </AccordionPrimitive.Header>
-
-        <AccordionContent
-          contentCopy={contentCopy}
-          isOpen={isOpen}
-          maskClassName={getContentMaskClassName()}
-          reduceMotion={reduceMotion}
-          wrapClassName={getContentWrapClassName()}
-        />
-      </motion.div>
-    </AccordionPrimitive.Item>
-  );
-}
-
-function AccordionQuietRow({
-  index,
-  item,
-  isOpen,
-  reduceMotion,
-}: {
-  index: number;
-  item: AccordionItem;
-  isOpen: boolean;
-  reduceMotion: boolean;
-}) {
-  const contentCopy = reduceMotion ? (
-    <div className={getQuietContentClassName()}>{item.content}</div>
-  ) : (
-    <motion.div
-      animate={{
-        opacity: 1,
-        y: 0,
-        scale: 1,
-        filter: "blur(0px)",
-      }}
-      className={getQuietContentClassName()}
-      exit={{
-        opacity: 0,
-        y: -2,
-        scale: 0.996,
-        filter: "blur(1.5px)",
-      }}
-      initial={{
-        opacity: 0,
-        y: 7,
-        scale: 0.998,
-        filter: "blur(3px)",
-      }}
-      transition={contentCopyTransition}
-    >
-      {item.content}
-    </motion.div>
-  );
-
-  return (
-    <AccordionPrimitive.Item className="py-3.5" value={item.id}>
-      <motion.div
-        animate={{ opacity: 1, y: 0 }}
-        initial={{ opacity: 0, y: 12 }}
-        transition={{
-          delay: index * 0.05,
-          duration: 0.3,
-          ease: [0.22, 1, 0.36, 1],
-        }}
-      >
-        <AccordionPrimitive.Header className="flex">
-          <AccordionPrimitive.Trigger className="flex w-full cursor-pointer items-baseline gap-4 text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset">
-            <span
-              aria-hidden
-              className={cn(
-                "text-[15px] leading-none transition-colors",
-                isOpen ? "text-foreground" : "text-muted-foreground/60"
-              )}
-            >
-              {isOpen ? "−" : "+"}
-            </span>
-            <span className="font-normal text-[15px] text-foreground leading-6 tracking-[-0.02em] sm:text-base">
-              {item.title}
-            </span>
-          </AccordionPrimitive.Trigger>
-        </AccordionPrimitive.Header>
-
-        <AccordionContent
-          contentCopy={contentCopy}
-          isOpen={isOpen}
-          maskClassName={getQuietContentMaskClassName()}
-          reduceMotion={reduceMotion}
-          wrapClassName={getQuietContentWrapClassName()}
-        />
-      </motion.div>
-    </AccordionPrimitive.Item>
-  );
-}
-
-export function Accordion({
-  items,
-  className,
-  multiple = false,
-  reducedMotion,
-  variant = "default",
-}: AccordionProps) {
-  const [openItems, setOpenItems] = React.useState<string[]>([]);
-  const isQuiet = variant === "quiet";
-  const reduceMotion = useResolvedReducedMotion(reducedMotion);
-  const rows = items.map((item, index) =>
-    isQuiet ? (
-      <AccordionQuietRow
-        index={index}
-        isOpen={openItems.includes(item.id)}
-        item={item}
-        key={item.id}
-        reduceMotion={reduceMotion}
-      />
-    ) : (
-      <AccordionRow
-        index={index}
-        isOpen={openItems.includes(item.id)}
-        item={item}
-        key={item.id}
-        reduceMotion={reduceMotion}
-      />
-    )
-  );
-
-  if (multiple) {
-    return (
-      <ReducedMotionConfig reducedMotion={reducedMotion}>
-        <AccordionPrimitive.Root
-          className={cn(registryTheme, "mx-auto w-full max-w-2xl", className)}
-          onValueChange={setOpenItems}
-          type="multiple"
-          value={openItems}
-        >
-          {rows}
-        </AccordionPrimitive.Root>
-      </ReducedMotionConfig>
+            {isOpen ? "−" : "+"}
+          </span>
+          <span className="font-normal text-[15px] text-foreground leading-6 tracking-[-0.02em] sm:text-base">
+            {children}
+          </span>
+        </AccordionPrimitive.Trigger>
+      </AccordionPrimitive.Header>
     );
   }
 
   return (
-    <ReducedMotionConfig reducedMotion={reducedMotion}>
-      <AccordionPrimitive.Root
-        className={cn(registryTheme, "mx-auto w-full max-w-2xl", className)}
-        collapsible
-        onValueChange={(value) => setOpenItems(value ? [value] : [])}
-        type="single"
-        value={openItems[0]}
+    <AccordionPrimitive.Header className="flex">
+      <AccordionPrimitive.Trigger
+        className={cn(
+          "flex w-full cursor-pointer items-start justify-between gap-6 text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset",
+          getTriggerClassName(isOpen),
+          className
+        )}
+        ref={ref}
+        {...props}
       >
-        {rows}
-      </AccordionPrimitive.Root>
-    </ReducedMotionConfig>
+        <AccordionTriggerLabel reduceMotion={reduceMotion}>
+          {children}
+        </AccordionTriggerLabel>
+        <AccordionTriggerIndicator isOpen={isOpen} />
+      </AccordionPrimitive.Trigger>
+    </AccordionPrimitive.Header>
   );
-}
+});
+
+AccordionTrigger.displayName = "AccordionTrigger";
+
+const AccordionContent = React.forwardRef<
+  HTMLDivElement,
+  AccordionContentProps
+>(({ children, className, forceMount, ...props }, ref) => {
+  const { reduceMotion, variant } = useAccordionRootContext("AccordionContent");
+  const { isOpen } = useAccordionItemContext("AccordionContent");
+  const isQuiet = variant === "quiet";
+
+  return (
+    <AccordionPrimitive.Content
+      forceMount={forceMount || !reduceMotion ? true : undefined}
+      ref={ref}
+      {...props}
+    >
+      <AccordionPanelBody
+        copyClassName={cn(
+          isQuiet ? getQuietContentClassName() : getContentCopyClassName(),
+          className
+        )}
+        isOpen={isOpen}
+        maskClassName={
+          isQuiet ? getQuietContentMaskClassName() : getContentMaskClassName()
+        }
+        reduceMotion={reduceMotion}
+        wrapClassName={
+          isQuiet ? getQuietContentWrapClassName() : getContentWrapClassName()
+        }
+      >
+        {children}
+      </AccordionPanelBody>
+    </AccordionPrimitive.Content>
+  );
+});
+
+AccordionContent.displayName = "AccordionContent";
+
+const Accordion = React.forwardRef<HTMLDivElement, AccordionProps>(
+  (
+    {
+      children,
+      className,
+      collapsible = true,
+      defaultValue,
+      items,
+      multiple = false,
+      onValueChange,
+      reducedMotion,
+      value,
+      variant = "default",
+      ...props
+    },
+    ref
+  ) => {
+    const reduceMotion = useResolvedReducedMotion(reducedMotion);
+    const [uncontrolledValue, setUncontrolledValue] =
+      React.useState<AccordionValue>(() =>
+        getSingleOrMultipleValue(
+          normalizeAccordionValue(defaultValue),
+          multiple
+        )
+      );
+    const openItems = getSingleOrMultipleValue(
+      normalizeAccordionValue(value ?? uncontrolledValue),
+      multiple
+    );
+
+    const handleValueChange = React.useCallback(
+      (nextValue: AccordionValue) => {
+        const normalizedValue = getSingleOrMultipleValue(nextValue, multiple);
+
+        if (value === undefined) {
+          setUncontrolledValue(normalizedValue);
+        }
+
+        onValueChange?.(normalizedValue);
+      },
+      [multiple, onValueChange, value]
+    );
+
+    const rootContext = React.useMemo(
+      () => ({ openItems, reduceMotion, variant }),
+      [openItems, reduceMotion, variant]
+    );
+
+    const accordionChildren = items
+      ? items.map((item, index) => (
+          <AccordionItem __index={index} key={item.id} value={item.id}>
+            <AccordionTrigger>{item.title}</AccordionTrigger>
+            <AccordionContent>{item.content}</AccordionContent>
+          </AccordionItem>
+        ))
+      : withIndexedAccordionChildren(children);
+
+    return (
+      <ReducedMotionConfig reducedMotion={reducedMotion}>
+        <AccordionRootContext.Provider value={rootContext}>
+          {multiple ? (
+            <AccordionPrimitive.Root
+              className={cn(
+                registryTheme,
+                "mx-auto w-full max-w-2xl",
+                className
+              )}
+              onValueChange={handleValueChange}
+              ref={ref}
+              type="multiple"
+              value={openItems}
+              {...props}
+            >
+              {accordionChildren}
+            </AccordionPrimitive.Root>
+          ) : (
+            <AccordionPrimitive.Root
+              className={cn(
+                registryTheme,
+                "mx-auto w-full max-w-2xl",
+                className
+              )}
+              collapsible={collapsible}
+              onValueChange={(nextValue) =>
+                handleValueChange(nextValue ? [nextValue] : [])
+              }
+              ref={ref}
+              type="single"
+              value={openItems[0] ?? ""}
+              {...props}
+            >
+              {accordionChildren}
+            </AccordionPrimitive.Root>
+          )}
+        </AccordionRootContext.Provider>
+      </ReducedMotionConfig>
+    );
+  }
+);
+
+Accordion.displayName = "Accordion";
+
+export { Accordion, AccordionContent, AccordionItem, AccordionTrigger };
