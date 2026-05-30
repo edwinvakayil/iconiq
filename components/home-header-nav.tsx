@@ -103,7 +103,10 @@ function NavGettingStartedGrid({ entries }: { entries: NavEntry[] }) {
 
 export function HomeHeaderNav({ className }: { className?: string }) {
   return (
-    <MotionNavigationMenu className={cn("ml-3 justify-start", className)}>
+    <MotionNavigationMenu
+      className={cn("ml-3 justify-start", className)}
+      viewportClassName="bg-white dark:bg-black"
+    >
       <MotionNavigationMenuList className="gap-0.5">
         <MotionNavigationMenuItem value="getting-started">
           <MotionNavigationMenuTrigger>
@@ -111,6 +114,7 @@ export function HomeHeaderNav({ className }: { className?: string }) {
           </MotionNavigationMenuTrigger>
           <MotionNavigationMenuContent
             className="w-[min(100vw-2rem,40rem)]"
+            highlightClassName="bg-black/[0.035] dark:bg-white/[0.08]"
             innerClassName="p-0"
           >
             <NavGettingStartedGrid entries={gettingStartedEntries} />
