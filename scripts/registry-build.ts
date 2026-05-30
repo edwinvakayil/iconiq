@@ -107,6 +107,18 @@ const REGISTRY_UI_META: Record<
       "Animated shimmer text with a sweeping highlight band, adjustable spread, and configurable loop speed for emphasis-heavy copy.",
     dependencies: ["motion"],
   },
+  "text-inertia": {
+    title: "Text Inertia",
+    description:
+      "Pointer-reactive word treatment that maps cursor velocity into Motion-powered spring movement.",
+    dependencies: ["motion"],
+  },
+  typewriter: {
+    title: "Typewriter",
+    description:
+      "Looping typewriter text effect with brief glitch substitutions, a blinking cursor, and reduced-motion fallback.",
+    dependencies: ["motion"],
+  },
   drawer: {
     title: "Drawer",
     description:

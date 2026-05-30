@@ -4090,6 +4090,107 @@ const shimmerTextApiDetails: DetailItem[] = [
   registryItem("shimmer-text.json", ["motion"]),
 ];
 
+const textInertiaApiDetails: DetailItem[] = [
+  {
+    id: "text-inertia",
+    title: "TextInertia",
+    summary:
+      "Pointer-reactive word treatment that tracks local cursor velocity, applies that momentum to the hovered word, and springs the word back into place.",
+    fields: [
+      field({
+        name: "text",
+        type: "string",
+        defaultValue: '"Interfaces remember momentum"',
+        description:
+          "The phrase to render. The component splits it into words and keeps those word wrappers stable for hover-driven motion.",
+      }),
+      field({
+        name: "intensity",
+        type: "number",
+        defaultValue: "1",
+        description:
+          "Scales how strongly cursor velocity affects each hovered word. Values just above 1 feel more kinetic; lower values stay calmer.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description:
+          "Merged onto the root word group for typography, color, alignment, and layout overrides.",
+      }),
+      field({
+        name: "wordClassName",
+        type: "string",
+        description:
+          "Merged onto each animated word span when you need per-word styling without changing the root layout.",
+      }),
+    ],
+    notes: [
+      "The component forwards standard div props except children; the rendered words always come from the text prop.",
+      "The root receives an aria-label with the full text, while individual animated word spans are hidden from assistive technology.",
+      "When reduced motion is requested, pointer hovers keep the words static.",
+    ],
+  },
+  {
+    id: "text-inertia-motion",
+    title: "Pointer velocity behavior",
+    summary:
+      "Text Inertia uses Motion values and spring animations instead of a runtime DOM-splitting animation plugin.",
+    notes: [
+      "Pointer movement over the root records x/y velocity, and entering a word maps that velocity to x, y, and rotation offsets.",
+      "Each word immediately settles back to x=0, y=0, and rotate=0 with a spring, which creates the inertial feel with only Motion.",
+      "The text is split with React during render, so there is no document query or third-party DOM splitting step.",
+    ],
+  },
+  registryItem("text-inertia.json", ["motion"]),
+];
+
+const typewriterApiDetails: DetailItem[] = [
+  {
+    id: "typewriter",
+    title: "TextTypewriter",
+    summary:
+      "Looping typewriter text effect that types a string character by character, briefly swaps in glitch characters, and finishes each pass with a blinking cursor.",
+    fields: [
+      field({
+        name: "children",
+        type: "string",
+        required: true,
+        description:
+          "The text content to type. The component expects a single string because the animation advances through each character in order.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description:
+          "Merged onto the root wrapper for local typography, color, spacing, or alignment classes.",
+      }),
+      field({
+        name: "duration",
+        type: "number",
+        defaultValue: "3",
+        description:
+          "Scales the scheduled typing and glitch delays. Lower values make each pass faster; higher values slow the sequence down.",
+      }),
+    ],
+    notes: [
+      "The rendered text is announced with aria-live=polite so updates can be surfaced without replacing surrounding content.",
+      "When reduced motion is requested, the component renders the final text immediately and hides the cursor.",
+    ],
+  },
+  {
+    id: "typewriter-motion",
+    title: "Typing and glitch behavior",
+    summary:
+      "The animation schedules a small sequence of per-character timeouts, occasionally inserts a wrong character, removes it, then types the intended character before continuing.",
+    notes: [
+      "After the full string is typed, the cursor briefly returns and the sequence starts again from an empty string.",
+      "Spaces are typed directly without the wrong-character substitution, which keeps word breaks stable during the effect.",
+      "Unmount cleanup clears every pending timeout, so remounting the preview or leaving the page does not leave animation work behind.",
+    ],
+  },
+  registryItem("typewriter.json", ["motion"]),
+];
+
 const typographyApiDetails: DetailItem[] = [
   {
     id: "typography",
@@ -4270,6 +4371,8 @@ export {
   switchApiDetails,
   tableApiDetails,
   tabsApiDetails,
+  textInertiaApiDetails,
+  typewriterApiDetails,
   typographyApiDetails,
   toggleApiDetails,
   toggleGroupApiDetails,

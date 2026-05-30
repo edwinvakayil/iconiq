@@ -1214,6 +1214,21 @@
       ]
     },
     {
+      "name": "text-inertia",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": ["motion"],
+      "devDependencies": [],
+      "title": "Text Inertia",
+      "description": "Pointer-reactive word treatment that maps cursor velocity into Motion-powered spring movement.",
+      "files": [
+        {
+          "path": "text-inertia.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "toggle",
       "type": "registry:ui",
       "registryDependencies": ["@iconiq/iconiq-theme"],
@@ -1247,6 +1262,21 @@
       "files": [
         {
           "path": "tooltip.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "typewriter",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": ["motion"],
+      "devDependencies": [],
+      "title": "Typewriter",
+      "description": "Looping typewriter text effect with brief glitch substitutions, a blinking cursor, and reduced-motion fallback.",
+      "files": [
+        {
+          "path": "typewriter.tsx",
           "type": "registry:ui"
         }
       ]

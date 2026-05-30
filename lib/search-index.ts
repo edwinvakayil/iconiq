@@ -106,6 +106,10 @@ const componentSummaries: Record<string, string> = {
     "Animated text reveal with a sweeping gradient band, repeat controls, and optional fixed-width rotation.",
   "/texts/shimmer-text":
     "Animated shimmer text with a moving highlight band, adjustable speed, and spread-based emphasis.",
+  "/texts/text-inertia":
+    "Pointer-reactive word effect that maps cursor velocity into Motion-powered x, y, and rotation spring movement.",
+  "/texts/typewriter":
+    "Animated typewriter text with glitch substitutions, a blinking cursor, looping playback, and reduced-motion fallback.",
 };
 
 const extraComponentKeywordsBySlug: Record<string, string[]> = {
@@ -125,6 +129,14 @@ const extraComponentKeywordsBySlug: Record<string, string[]> = {
   radiogroup: ["radio group", "radiogroup"],
   "shimmer-text": ["text", "shimmer", "text shimmer", "animated text"],
   skeleton: ["loading", "placeholder", "shimmer"],
+  "text-inertia": [
+    "text",
+    "inertia",
+    "pointer reactive text",
+    "cursor velocity",
+    "animated words",
+    "motion text",
+  ],
   "toggle-group": [
     "toggle group",
     "togglegroup",
@@ -139,6 +151,13 @@ const extraComponentKeywordsBySlug: Record<string, string[]> = {
     "paragraph",
     "subheading",
     "foundation",
+  ],
+  typewriter: [
+    "text",
+    "typewriter",
+    "typing animation",
+    "glitch text",
+    "animated text",
   ],
 };
 

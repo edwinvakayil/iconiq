@@ -760,6 +760,33 @@ export function StatusLine() {
     </TextShimmer>
   );
 }`),
+  "text-inertia": buildV0Page(`"use client";
+
+import TextInertia from "@/components/ui/text-inertia";
+
+export function KineticHeadline() {
+  return (
+    <TextInertia
+      className="w-full max-w-4xl justify-start text-left text-lg leading-relaxed sm:text-xl"
+      intensity={0.3}
+      text="Crafting refined, pixel-perfect web experiences that balance design clarity with technical excellence. Every interaction should feel responsive, intentional, and calm enough to disappear into the work. Motion adds a quiet layer of feedback, helping people sense where they are and what just changed."
+    />
+  );
+}`),
+  typewriter: buildV0Page(`"use client";
+
+import TextTypewriter from "@/components/ui/typewriter";
+
+export function TerminalHeadline() {
+  return (
+    <TextTypewriter
+      className="font-mono text-2xl text-foreground sm:text-4xl"
+      duration={2.6}
+    >
+      Deploying interface motion
+    </TextTypewriter>
+  );
+}`),
 };
 
 type RegistryFile = {

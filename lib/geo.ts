@@ -35,8 +35,10 @@ import {
   switchApiDetails,
   tableApiDetails,
   tabsApiDetails,
+  textInertiaApiDetails,
   toggleApiDetails,
   tooltipApiDetails,
+  typewriterApiDetails,
   typographyApiDetails,
 } from "@/components/docs/component-api";
 import type { DetailItem } from "@/components/docs/page-shell";
@@ -164,7 +166,9 @@ const COMPONENT_API_DETAILS: Record<string, DetailItem[]> = {
   switch: switchApiDetails,
   table: tableApiDetails,
   tabs: tabsApiDetails,
+  "text-inertia": textInertiaApiDetails,
   typography: typographyApiDetails,
+  typewriter: typewriterApiDetails,
   toggle: toggleApiDetails,
   tooltip: tooltipApiDetails,
 };
