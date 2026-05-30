@@ -1,0 +1,17 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "b-separator",
+  "type": "registry:ui",
+  "registryDependencies": ["@iconiq/iconiq-theme"],
+  "dependencies": ["@base-ui/react"],
+  "devDependencies": [],
+  "files": [
+    {
+      "path": "b-separator.tsx",
+      "content": "\"use client\";\n\nimport { Separator as SeparatorPrimitive } from \"@base-ui/react/separator\";\nimport * as React from \"react\";\n\nimport { registryTheme } from \"@/lib/registry-theme\";\nimport { cn } from \"@/lib/utils\";\n\ntype SeparatorVariant = \"line\" | \"dashed\" | \"dotted\";\n\nexport interface SeparatorProps\n  extends Omit<\n    React.ComponentPropsWithoutRef<typeof SeparatorPrimitive>,\n    \"className\"\n  > {\n  className?: string;\n  decorative?: boolean;\n  variant?: SeparatorVariant;\n}\n\nconst separatorVariants: Record<\n  NonNullable<SeparatorProps[\"orientation\"]>,\n  Record<SeparatorVariant, string>\n> = {\n  horizontal: {\n    line: \"h-px w-full bg-border\",\n    dashed:\n      \"h-px w-full bg-[length:8px_1px] bg-[linear-gradient(90deg,var(--border)_0,var(--border)_58%,transparent_58%,transparent_100%)] bg-repeat-x\",\n    dotted: \"h-0 w-full border-border border-t border-dotted bg-transparent\",\n  },\n  vertical: {\n    line: \"h-full min-h-4 w-px bg-border\",\n    dashed:\n      \"h-full min-h-4 w-px bg-[length:1px_8px] bg-[linear-gradient(180deg,var(--border)_0,var(--border)_58%,transparent_58%,transparent_100%)] bg-repeat-y\",\n    dotted:\n      \"h-full min-h-4 w-0 border-border border-l border-dotted bg-transparent\",\n  },\n};\n\nconst Separator = React.forwardRef<HTMLDivElement, SeparatorProps>(\n  (\n    {\n      className,\n      decorative = true,\n      orientation = \"horizontal\",\n      variant = \"line\",\n      ...props\n    },\n    ref\n  ) => (\n    <SeparatorPrimitive\n      aria-hidden={decorative || undefined}\n      aria-orientation={decorative ? undefined : orientation}\n      className={cn(\n        registryTheme,\n        \"shrink-0\",\n        separatorVariants[orientation][variant],\n        className\n      )}\n      orientation={orientation}\n      ref={ref}\n      role={decorative ? \"presentation\" : \"separator\"}\n      {...props}\n    />\n  )\n);\n\nSeparator.displayName = \"Separator\";\n\nexport { Separator };\nexport type { SeparatorVariant };\n",
+      "type": "registry:ui"
+    }
+  ],
+  "title": "Separator (Base UI)",
+  "description": "Separator with line, dashed, and dotted variants layered over the Base UI primitive, supporting horizontal and vertical orientation with a decorative default."
+}

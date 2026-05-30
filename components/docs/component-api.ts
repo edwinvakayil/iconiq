@@ -2701,6 +2701,59 @@ const selectApiDetails: DetailItem[] = [
   registryItem("select.json", ["motion", "lucide-react"]),
 ];
 
+const separatorApiDetails: DetailItem[] = [
+  {
+    id: "separator",
+    title: "Separator",
+    summary:
+      "Horizontal or vertical divider with a solid line by default plus dashed and dotted variants.",
+    fields: [
+      field({
+        name: "orientation",
+        type: '"horizontal" | "vertical"',
+        defaultValue: '"horizontal"',
+        description:
+          "Controls whether the divider spans across the inline axis or separates items inside a fixed-height row.",
+      }),
+      field({
+        name: "variant",
+        type: '"line" | "dashed" | "dotted"',
+        defaultValue: '"line"',
+        description:
+          "Chooses the visual treatment. The default line variant renders a solid border-token rule, dashed repeats the token as short strokes, and dotted uses native dotted border rendering.",
+      }),
+      field({
+        name: "decorative",
+        type: "boolean",
+        defaultValue: "true",
+        description:
+          "Removes the separator from the accessibility tree when true. Set it to false only when the divider communicates structure that needs to be announced.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description:
+          "Merged onto the primitive root so local width, height, margin, color, or placement can be adjusted without changing the component file.",
+      }),
+    ],
+    notes: [
+      "Vertical separators rely on their parent for height, so place them inside a row with an explicit height or pass a height class.",
+      "The dashed variant uses background gradients so horizontal and vertical strokes keep the same dash rhythm. The dotted variant uses border rendering to keep dots crisp at one pixel.",
+    ],
+  },
+  {
+    id: "separator-semantics",
+    title: "Semantics",
+    summary:
+      "The component defaults to decorative presentation, but both primitive versions can opt into separator semantics.",
+    notes: [
+      "Pass decorative=false when the divider is meaningful enough to be announced by assistive technology.",
+      "Additional primitive props and data attributes are forwarded to the root element for composition with layout or menu surfaces.",
+    ],
+  },
+  registryItem("separator.json", ["@radix-ui/react-separator"]),
+];
+
 const selectionToolbarApiDetails: DetailItem[] = [
   {
     id: "selectiontoolbar",
@@ -4365,6 +4418,7 @@ export {
   shimmerTextApiDetails,
   skeletonApiDetails,
   selectApiDetails,
+  separatorApiDetails,
   selectionToolbarApiDetails,
   sliderApiDetails,
   spinnerApiDetails,

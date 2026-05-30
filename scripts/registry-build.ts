@@ -244,6 +244,12 @@ const REGISTRY_UI_META: Record<
       "Select with the same Iconiq API layered over Base UI primitives, preserving the original trigger press, chevron rotation, grouped rows, and panel motion.",
     dependencies: ["@base-ui/react", "motion", "lucide-react"],
   },
+  "b-separator": {
+    title: "Separator (Base UI)",
+    description:
+      "Separator with line, dashed, and dotted variants layered over the Base UI primitive, supporting horizontal and vertical orientation with a decorative default.",
+    dependencies: ["@base-ui/react"],
+  },
   "b-selection-toolbar": {
     title: "Selection Toolbar (Base UI)",
     description:
@@ -450,6 +456,12 @@ const REGISTRY_UI_META: Record<
     description:
       "Select with the same Iconiq API layered over Radix UI primitives, preserving the original trigger press, chevron rotation, grouped rows, and panel motion.",
     dependencies: ["@radix-ui/react-select", "motion", "lucide-react"],
+  },
+  "r-separator": {
+    title: "Separator (Radix UI)",
+    description:
+      "Separator with line, dashed, and dotted variants layered over the Radix UI primitive, supporting horizontal and vertical orientation with a decorative default.",
+    dependencies: ["@radix-ui/react-separator"],
   },
   "r-selection-toolbar": {
     title: "Selection Toolbar (Radix UI)",

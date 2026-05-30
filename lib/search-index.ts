@@ -72,6 +72,8 @@ const componentSummaries: Record<string, string> = {
     "Radio group docs with a provider switch that swaps between Base UI and Radix UI registry entries.",
   "/components/select":
     "Select docs with a provider switch that swaps between Base UI and Radix UI registry entries.",
+  "/components/separator":
+    "Separator docs with a provider switch that swaps between Base UI and Radix UI registry entries, plus line, dashed, and dotted variants.",
   "/components/selection-toolbar":
     "Selection toolbar docs with a provider switch that swaps between Base UI and Radix UI registry entries.",
   "/components/skeleton":
@@ -127,6 +129,15 @@ const extraComponentKeywordsBySlug: Record<string, string[]> = {
   progress: ["progress bar", "loading bar", "meter"],
   "radio-group": ["radio group", "radiogroup"],
   radiogroup: ["radio group", "radiogroup"],
+  separator: [
+    "divider",
+    "rule",
+    "line",
+    "dashed",
+    "dotted",
+    "horizontal",
+    "vertical",
+  ],
   "shimmer-text": ["text", "shimmer", "text shimmer", "animated text"],
   skeleton: ["loading", "placeholder", "shimmer"],
   "text-inertia": [

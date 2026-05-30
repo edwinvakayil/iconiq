@@ -39,6 +39,7 @@ export const SITE_SECTIONS = [
       { label: "Progress", href: "/components/progress" },
       { label: "Radio Group", href: "/components/radio-group" },
       { label: "Select", href: "/components/select" },
+      { label: "Separator", href: "/components/separator" },
       {
         label: "Selection Toolbar",
         href: "/components/selection-toolbar",

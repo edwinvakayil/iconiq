@@ -458,6 +458,146 @@ export function ProgressPreview() {
     />
   );
 }`),
+  "b-separator": buildV0Page(`import { Avatar } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/b-separator";
+
+const members = [
+  { name: "Maya", src: "/assets/av1.png" },
+  { name: "Noah", src: "/assets/av2.png" },
+  { name: "Ari", src: "/assets/av3.png" },
+];
+
+export function SeparatorPreview() {
+  return (
+    <div className="w-full max-w-md space-y-5">
+      <div className="flex items-center justify-between gap-5">
+        <div className="flex items-center gap-3">
+          <div className="flex -space-x-3">
+            {members.map((member) => (
+              <Avatar
+                alt={member.name}
+                className="size-10 border-2 border-background"
+                key={member.name}
+                name={member.name}
+                src={member.src}
+              />
+            ))}
+          </div>
+          <div>
+            <h3 className="font-medium text-sm">Design sync</h3>
+            <p className="text-muted-foreground text-sm">3 people active now</p>
+          </div>
+        </div>
+        <Badge color="emerald" size="sm" variant="dot">
+          Live
+        </Badge>
+      </div>
+
+      <Separator />
+
+      <div className="grid h-14 grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)_auto_minmax(0,1fr)] items-center text-sm">
+        <div className="min-w-0 text-center">
+          <p className="font-medium">12</p>
+          <p className="whitespace-nowrap text-muted-foreground text-xs">Tasks</p>
+        </div>
+        <Separator className="h-9" orientation="vertical" />
+        <div className="min-w-0 text-center">
+          <p className="font-medium">98%</p>
+          <p className="whitespace-nowrap text-muted-foreground text-xs">Ready</p>
+        </div>
+        <Separator className="h-9" orientation="vertical" />
+        <div className="min-w-0 text-center">
+          <p className="font-medium">4m</p>
+          <p className="whitespace-nowrap text-muted-foreground text-xs">Avg reply</p>
+        </div>
+      </div>
+
+      <Separator variant="dotted" />
+
+      <div className="grid gap-3 text-sm">
+        <div className="flex items-center justify-between gap-4">
+          <span className="text-muted-foreground">Maya moved wireframes</span>
+          <span className="font-medium">Now</span>
+        </div>
+        <div className="flex items-center justify-between gap-4">
+          <span className="text-muted-foreground">Noah resolved comments</span>
+          <span className="font-medium">2m ago</span>
+        </div>
+      </div>
+    </div>
+  );
+}`),
+  "r-separator": buildV0Page(`import { Avatar } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/r-separator";
+
+const members = [
+  { name: "Maya", src: "/assets/av1.png" },
+  { name: "Noah", src: "/assets/av2.png" },
+  { name: "Ari", src: "/assets/av3.png" },
+];
+
+export function SeparatorPreview() {
+  return (
+    <div className="w-full max-w-md space-y-5">
+      <div className="flex items-center justify-between gap-5">
+        <div className="flex items-center gap-3">
+          <div className="flex -space-x-3">
+            {members.map((member) => (
+              <Avatar
+                alt={member.name}
+                className="size-10 border-2 border-background"
+                key={member.name}
+                name={member.name}
+                src={member.src}
+              />
+            ))}
+          </div>
+          <div>
+            <h3 className="font-medium text-sm">Design sync</h3>
+            <p className="text-muted-foreground text-sm">3 people active now</p>
+          </div>
+        </div>
+        <Badge color="emerald" size="sm" variant="dot">
+          Live
+        </Badge>
+      </div>
+
+      <Separator />
+
+      <div className="grid h-14 grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)_auto_minmax(0,1fr)] items-center text-sm">
+        <div className="min-w-0 text-center">
+          <p className="font-medium">12</p>
+          <p className="whitespace-nowrap text-muted-foreground text-xs">Tasks</p>
+        </div>
+        <Separator className="h-9" orientation="vertical" />
+        <div className="min-w-0 text-center">
+          <p className="font-medium">98%</p>
+          <p className="whitespace-nowrap text-muted-foreground text-xs">Ready</p>
+        </div>
+        <Separator className="h-9" orientation="vertical" />
+        <div className="min-w-0 text-center">
+          <p className="font-medium">4m</p>
+          <p className="whitespace-nowrap text-muted-foreground text-xs">Avg reply</p>
+        </div>
+      </div>
+
+      <Separator variant="dotted" />
+
+      <div className="grid gap-3 text-sm">
+        <div className="flex items-center justify-between gap-4">
+          <span className="text-muted-foreground">Maya moved wireframes</span>
+          <span className="font-medium">Now</span>
+        </div>
+        <div className="flex items-center justify-between gap-4">
+          <span className="text-muted-foreground">Noah resolved comments</span>
+          <span className="font-medium">2m ago</span>
+        </div>
+      </div>
+    </div>
+  );
+}`),
   "r-togglegroup": buildV0Page(`"use client";
 
 import { useState } from "react";

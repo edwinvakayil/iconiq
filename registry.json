@@ -309,6 +309,21 @@
       ]
     },
     {
+      "name": "b-separator",
+      "type": "registry:ui",
+      "registryDependencies": ["@iconiq/iconiq-theme"],
+      "dependencies": ["@base-ui/react"],
+      "devDependencies": [],
+      "title": "Separator (Base UI)",
+      "description": "Separator with line, dashed, and dotted variants layered over the Base UI primitive, supporting horizontal and vertical orientation with a decorative default.",
+      "files": [
+        {
+          "path": "b-separator.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "b-slider",
       "type": "registry:ui",
       "registryDependencies": ["@iconiq/iconiq-theme"],
@@ -961,6 +976,21 @@
       "files": [
         {
           "path": "r-selection-toolbar.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "r-separator",
+      "type": "registry:ui",
+      "registryDependencies": ["@iconiq/iconiq-theme"],
+      "dependencies": ["@radix-ui/react-separator"],
+      "devDependencies": [],
+      "title": "Separator (Radix UI)",
+      "description": "Separator with line, dashed, and dotted variants layered over the Radix UI primitive, supporting horizontal and vertical orientation with a decorative default.",
+      "files": [
+        {
+          "path": "r-separator.tsx",
           "type": "registry:ui"
         }
       ]
