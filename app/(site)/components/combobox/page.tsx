@@ -9,9 +9,22 @@ import {
   type DetailItem,
 } from "@/components/docs/page-shell";
 import { LINK } from "@/constants";
-import { Combobox, type ComboboxOption } from "@/registry/b-combobox";
+import {
+  Combobox,
+  ComboboxContent,
+  ComboboxEmpty,
+  ComboboxInput,
+  ComboboxItem,
+  ComboboxList,
+} from "@/registry/b-combobox";
 
-const demoOptions: ComboboxOption[] = [
+type RouteOption = {
+  value: string;
+  label: string;
+  description: string;
+};
+
+const demoOptions: RouteOption[] = [
   {
     value: "scout",
     label: "Scout pass",
@@ -34,12 +47,61 @@ const demoOptions: ComboboxOption[] = [
   },
 ];
 
+function RouteCombobox({
+  onValueChange,
+  value,
+}: {
+  onValueChange: (value: RouteOption | null) => void;
+  value: RouteOption | null;
+}) {
+  return (
+    <Combobox
+      items={demoOptions}
+      itemToStringLabel={(item) => item.label}
+      itemToStringValue={(item) => item.value}
+      onValueChange={onValueChange}
+      value={value}
+    >
+      <ComboboxInput placeholder="Pick a route..." />
+      <ComboboxContent>
+        <ComboboxList>
+          {(option: RouteOption, index: number) => (
+            <ComboboxItem
+              description={option.description}
+              index={index}
+              key={option.value}
+              value={option}
+            >
+              {option.label}
+            </ComboboxItem>
+          )}
+        </ComboboxList>
+        <ComboboxEmpty>No route matches that query.</ComboboxEmpty>
+      </ComboboxContent>
+    </Combobox>
+  );
+}
+
 const usageCode = `"use client";
 
 import { useState } from "react";
-import { Combobox, type ComboboxOption } from "@/components/ui/b-combobox";
 
-const options: ComboboxOption[] = [
+import {
+  Combobox,
+  ComboboxContent,
+  ComboboxEmpty,
+  ComboboxInput,
+  ComboboxItem,
+  ComboboxList,
+} from "@/components/ui/b-combobox";
+
+type RouteOption = {
+  value: string;
+  label: string;
+  description: string;
+};
+
+const options: RouteOption[] = [
   {
     value: "scout",
     label: "Scout pass",
@@ -63,18 +125,34 @@ const options: ComboboxOption[] = [
 ];
 
 export function ComboboxPreview() {
-  const [value, setValue] = useState("transit");
+  const [value, setValue] = useState<RouteOption | null>(options[1]);
 
   return (
     <div className="w-full max-w-xl">
       <Combobox
-        className="w-full"
-        emptyMessage="No route matches that query."
-        onChange={setValue}
-        options={options}
-        placeholder="Pick a route..."
+        itemToStringLabel={(item) => item.label}
+        itemToStringValue={(item) => item.value}
+        items={options}
+        onValueChange={setValue}
         value={value}
-      />
+      >
+        <ComboboxInput placeholder="Pick a route..." />
+        <ComboboxContent>
+          <ComboboxList>
+            {(option: RouteOption, index: number) => (
+              <ComboboxItem
+                description={option.description}
+                index={index}
+                key={option.value}
+                value={option}
+              >
+                {option.label}
+              </ComboboxItem>
+            )}
+          </ComboboxList>
+          <ComboboxEmpty>No route matches that query.</ComboboxEmpty>
+        </ComboboxContent>
+      </Combobox>
     </div>
   );
 }`;
@@ -108,7 +186,7 @@ function handleProviderSelect() {
 }
 
 export default function RadixBaseComboboxPage() {
-  const [value, setValue] = useState("transit");
+  const [value, setValue] = useState<RouteOption | null>(demoOptions[1]);
   const details = useMemo(() => getDetails(), []);
 
   return (
@@ -130,20 +208,13 @@ export default function RadixBaseComboboxPage() {
       preview={
         <div className="flex min-h-[280px] w-full items-center justify-center">
           <div className="w-full max-w-xl">
-            <Combobox
-              className="w-full"
-              emptyMessage="No route matches that query."
-              onChange={setValue}
-              options={demoOptions}
-              placeholder="Pick a route..."
-              value={value}
-            />
+            <RouteCombobox onValueChange={setValue} value={value} />
           </div>
         </div>
       }
       title="Combobox"
       usageCode={usageCode}
-      usageDescription="This Base UI install keeps the same public option shape, filtering rules, keyboard model, clear action, and dropdown motion as the core Iconiq combobox."
+      usageDescription="This Base UI install exposes compound combobox parts while keeping the same input styling, filtering, clear action, keyboard model, and dropdown motion as the prior Iconiq combobox."
       v0PageCode={usageCode}
     />
   );

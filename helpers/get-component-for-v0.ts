@@ -201,25 +201,48 @@ export function ButtonGroupDemo() {
     "}\n",
   combobox:
     '"use client";\n\n' +
-    `import { Combobox, type ComboboxOption } from "@/components/ui/combobox"\n` +
     `import { useState } from "react"\n\n` +
-    "const options: ComboboxOption[] = [\n" +
+    "import {\n" +
+    "  Combobox,\n" +
+    "  ComboboxContent,\n" +
+    "  ComboboxEmpty,\n" +
+    "  ComboboxInput,\n" +
+    "  ComboboxItem,\n" +
+    "  ComboboxList,\n" +
+    `} from "@/components/ui/combobox"\n\n` +
+    "type RouteOption = {\n" +
+    "  value: string\n" +
+    "  label: string\n" +
+    "  description: string\n" +
+    "}\n\n" +
+    "const options: RouteOption[] = [\n" +
     '  { value: "scout", label: "Scout pass", description: "First scan before the sprint" },\n' +
     '  { value: "transit", label: "Transit window", description: "Tighter route through midfield" },\n' +
     '  { value: "deep", label: "Deep field", description: "Longer view with less traffic" },\n' +
     "]\n\n" +
     "export default function Page() {\n" +
-    '  const [value, setValue] = useState("transit")\n' +
+    "  const [value, setValue] = useState<RouteOption | null>(options[1])\n" +
     "  return (\n" +
     '    <div className="mx-auto flex min-h-svh w-full max-w-md items-center justify-center p-8">\n' +
     "      <Combobox\n" +
-    '        className="w-full"\n' +
-    '        emptyMessage="No route matches that query."\n' +
-    "        onChange={setValue}\n" +
-    "        options={options}\n" +
-    '        placeholder="Pick a route..."\n' +
+    "        itemToStringLabel={(item) => item.label}\n" +
+    "        itemToStringValue={(item) => item.value}\n" +
+    "        items={options}\n" +
+    "        onValueChange={setValue}\n" +
     "        value={value}\n" +
-    "      />\n" +
+    "      >\n" +
+    '        <ComboboxInput placeholder="Pick a route..." />\n' +
+    "        <ComboboxContent>\n" +
+    "          <ComboboxList>\n" +
+    "            {(option: RouteOption, index: number) => (\n" +
+    "              <ComboboxItem description={option.description} index={index} key={option.value} value={option}>\n" +
+    "                {option.label}\n" +
+    "              </ComboboxItem>\n" +
+    "            )}\n" +
+    "          </ComboboxList>\n" +
+    "          <ComboboxEmpty>No route matches that query.</ComboboxEmpty>\n" +
+    "        </ComboboxContent>\n" +
+    "      </Combobox>\n" +
     "    </div>\n" +
     "  )\n" +
     "}\n",

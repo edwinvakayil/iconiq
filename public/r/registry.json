@@ -160,7 +160,7 @@
       "dependencies": ["@base-ui/react", "motion", "lucide-react"],
       "devDependencies": [],
       "title": "Combobox (Base UI)",
-      "description": "Combobox with the same Iconiq API layered over Base UI primitives, preserving the original filtering rules, keyboard search, clear action, and dropdown motion.",
+      "description": "Compound Combobox parts layered over Base UI primitives, preserving the original input shell, clear action, item highlight, checkmark, and dropdown motion.",
       "files": [
         {
           "path": "b-combobox.tsx",

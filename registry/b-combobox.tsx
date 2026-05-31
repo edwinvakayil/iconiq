@@ -15,28 +15,19 @@ import { cn } from "@/lib/utils";
 const componentThemeClassName =
   "[--background:#ffffff] [--foreground:#111111] [--primary:#111111] [--secondary:#646b75] [--surface-border:#e9edf2] [--border:#e3e7ec] [--card:#ffffff] [--card-foreground:#111111] [--muted:#f5f7fa] [--muted-foreground:#6d7480] [--accent:#f3f5f8] [--accent-foreground:#111111] [--input:#e3e7ec] [--ring:rgba(17,17,17,0.16)] [--destructive:#dc2626] [--paper:#fcfcfd] [--popover-foreground:#111111] [--brand:#0ea5e9] [--brand-soft:#bae6fd] [--shadow-soft:0_18px_38px_-24px_rgba(15,23,42,0.35)] [--chart-1:oklch(0.52_0.19_254)] [--chart-2:oklch(0.74_0.11_232)] [--chart-3:oklch(0.42_0.16_262)] [--chart-4:oklch(0.84_0.07_228)] [--chart-5:oklch(0.62_0.14_240)] [--color-background:var(--background)] [--color-foreground:var(--foreground)] [--color-primary:var(--primary)] [--color-secondary:var(--secondary)] [--color-border:var(--border)] [--color-card:var(--card)] [--color-card-foreground:var(--card-foreground)] [--color-muted:var(--muted)] [--color-muted-foreground:var(--muted-foreground)] [--color-accent:var(--accent)] [--color-accent-foreground:var(--accent-foreground)] [--color-input:var(--input)] [--color-ring:var(--ring)] [--color-destructive:var(--destructive)] [--color-paper:var(--paper)] [--color-popover-foreground:var(--popover-foreground)] [--color-brand:var(--brand)] [--color-brand-soft:var(--brand-soft)] [--color-chart-1:var(--chart-1)] [--color-chart-2:var(--chart-2)] [--color-chart-3:var(--chart-3)] [--color-chart-4:var(--chart-4)] [--color-chart-5:var(--chart-5)] dark:[--background:#111111] dark:[--foreground:#f6f3ec] dark:[--primary:#f6f3ec] dark:[--secondary:#cbc6bb] dark:[--surface-border:#2a2a25] dark:[--border:#2b2a25] dark:[--card:#111111] dark:[--card-foreground:#f6f3ec] dark:[--muted:#171716] dark:[--muted-foreground:#9a958a] dark:[--accent:#1a1a18] dark:[--accent-foreground:#f6f3ec] dark:[--input:#2b2a25] dark:[--ring:rgba(246,243,236,0.18)] dark:[--destructive:#f87171] dark:[--paper:#171716] dark:[--popover-foreground:#f6f3ec] dark:[--brand:#38bdf8] dark:[--brand-soft:#0c4a6e] dark:[--shadow-soft:0_20px_44px_-28px_rgba(0,0,0,0.6)] dark:[--chart-1:oklch(0.68_0.17_250)] dark:[--chart-2:oklch(0.82_0.09_225)] dark:[--chart-3:oklch(0.58_0.15_260)] dark:[--chart-4:oklch(0.75_0.12_235)] dark:[--chart-5:oklch(0.88_0.06_220)]";
 
-export type ComboboxOption = {
-  value: string;
-  label: string;
-  description?: string;
-};
+type ComboboxRootProps<
+  Value,
+  Multiple extends boolean | undefined = false,
+> = ComboboxPrimitive.Root.Props<Value, Multiple> & ReducedMotionProp;
 
-export interface ComboboxProps extends ReducedMotionProp {
-  options: ComboboxOption[];
-  value?: string;
-  onChange?: (value: string) => void;
-  placeholder?: string;
-  emptyMessage?: string;
-  className?: string;
-  disabled?: boolean;
-  clearable?: boolean;
-  openOnFocus?: boolean;
-}
-
-type SearchParts = {
-  normalized: string;
-  compact: string;
-  tokens: string[];
+type ComboboxContextValue = {
+  actionsRef: React.RefObject<ComboboxPrimitive.Root.Actions | null>;
+  activeHighlightId: string;
+  activeValue: unknown;
+  open: boolean;
+  reduceMotion: boolean;
+  setActiveValue: React.Dispatch<React.SetStateAction<unknown>>;
+  setOpen: (open: boolean) => void;
 };
 
 type DivRenderProps = React.HTMLAttributes<HTMLDivElement> & {
@@ -46,52 +37,47 @@ type DivRenderProps = React.HTMLAttributes<HTMLDivElement> & {
   style?: React.CSSProperties;
 };
 
-function getSearchParts(value: string): SearchParts {
-  const normalized = value
-    .normalize("NFKD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .toLowerCase()
-    .replace(/[_-]+/g, " ")
-    .replace(/\s+/g, " ")
-    .trim();
+const ComboboxContext = React.createContext<ComboboxContextValue | null>(null);
 
-  return {
-    normalized,
-    compact: normalized.replace(/\s+/g, ""),
-    tokens: normalized.split(" ").filter(Boolean),
-  };
+function useComboboxContext(componentName: string) {
+  const context = React.useContext(ComboboxContext);
+
+  if (!context) {
+    throw new Error(`${componentName} must be used inside Combobox`);
+  }
+
+  return context;
 }
 
-function matchesSearch(
-  candidate: string | undefined,
-  { normalized, compact, tokens }: SearchParts
-) {
-  if (!candidate) return false;
-
-  const candidateParts = getSearchParts(candidate);
-
-  if (candidateParts.normalized.includes(normalized)) return true;
-  if (compact && candidateParts.compact.includes(compact)) return true;
-
-  return (
-    tokens.length > 0 &&
-    tokens.every(
-      (token) =>
-        candidateParts.normalized.includes(token) ||
-        candidateParts.compact.includes(token)
-    )
-  );
-}
-
-function setRef<T>(ref: React.Ref<T> | undefined, value: T) {
+function setRef<T>(ref: React.Ref<T> | undefined, value: T | null) {
   if (typeof ref === "function") {
     ref(value);
     return;
   }
 
   if (ref) {
-    (ref as React.MutableRefObject<T>).current = value;
+    (ref as React.MutableRefObject<T | null>).current = value;
   }
+}
+
+function composeEventHandlers<Event extends React.SyntheticEvent>(
+  originalEventHandler: ((event: Event) => void) | undefined,
+  eventHandler: (event: Event) => void
+) {
+  return (event: Event) => {
+    originalEventHandler?.(event);
+
+    if (!event.defaultPrevented) {
+      eventHandler(event);
+    }
+  };
+}
+
+function resolveStateClassName<State>(
+  className: string | ((state: State) => string | undefined) | undefined,
+  state: State
+) {
+  return typeof className === "function" ? className(state) : className;
 }
 
 function resolvePopupProps(popupProps: DivRenderProps) {
@@ -150,70 +136,52 @@ function resolveItemProps(itemProps: DivRenderProps) {
   };
 }
 
-export function Combobox({
-  options,
-  value,
-  onChange,
-  placeholder = "Select an option...",
-  emptyMessage = "No results found.",
-  className,
-  disabled = false,
-  clearable = true,
-  openOnFocus = false,
-  reducedMotion,
-}: ComboboxProps) {
-  const reduceMotion = useResolvedReducedMotion(reducedMotion);
-  const actionsRef = React.useRef<ComboboxPrimitive.Root.Actions | null>(null);
-  const inputRef = React.useRef<HTMLInputElement>(null);
-  const [open, setOpen] = React.useState(false);
-  const [query, setQuery] = React.useState("");
-  const [isEditingQuery, setIsEditingQuery] = React.useState(false);
-  const [hoveredValue, setHoveredValue] = React.useState<string | undefined>();
+function getChevronTransition(reduceMotion: boolean) {
+  return reduceMotion
+    ? { duration: 0.12, ease: "easeOut" as const }
+    : { type: "spring" as const, stiffness: 300, damping: 22 };
+}
 
-  const selected = React.useMemo(
-    () => options.find((option) => option.value === value),
-    [options, value]
+function Combobox<Value, Multiple extends boolean | undefined = false>({
+  actionsRef: actionsRefProp,
+  autoComplete = "none",
+  children,
+  defaultOpen = false,
+  highlightItemOnHover = true,
+  modal = false,
+  onOpenChange,
+  open: openProp,
+  openOnInputClick = false,
+  reducedMotion,
+  ...props
+}: ComboboxRootProps<Value, Multiple>) {
+  const reduceMotion = useResolvedReducedMotion(reducedMotion);
+  const internalActionsRef =
+    React.useRef<ComboboxPrimitive.Root.Actions | null>(null);
+  const actionsRef = actionsRefProp ?? internalActionsRef;
+  const isOpenControlled = openProp !== undefined;
+  const [uncontrolledOpen, setUncontrolledOpen] = React.useState(defaultOpen);
+  const [activeValue, setActiveValue] = React.useState<unknown>();
+  const open = isOpenControlled ? openProp : uncontrolledOpen;
+  const activeHighlightId = React.useId();
+
+  const setOpen = React.useCallback(
+    (nextOpen: boolean) => {
+      if (!isOpenControlled) {
+        setUncontrolledOpen(nextOpen);
+      }
+
+      if (!nextOpen) {
+        setActiveValue(undefined);
+      }
+    },
+    [isOpenControlled]
   );
 
-  const filtered = React.useMemo(() => {
-    const search = getSearchParts(query);
-    if (!search.normalized) return options;
-
-    return options.filter(
-      (option) =>
-        matchesSearch(option.label, search) ||
-        matchesSearch(option.value, search) ||
-        matchesSearch(option.description, search)
-    );
-  }, [options, query]);
-
-  React.useEffect(() => {
-    if (open) {
-      setHoveredValue(undefined);
-      return;
-    }
-
-    setQuery("");
-    setIsEditingQuery(false);
-    setHoveredValue(undefined);
-  }, [open]);
-
-  const selectDisplayedValue = React.useCallback(() => {
-    if (!selected?.label || query || isEditingQuery) return;
-
-    requestAnimationFrame(() => {
-      const input = inputRef.current;
-      if (input && document.activeElement === input) {
-        input.select();
-      }
-    });
-  }, [isEditingQuery, query, selected?.label]);
-
-  const handleOpenChange = React.useCallback(
-    (
-      nextOpen: boolean,
-      eventDetails: ComboboxPrimitive.Root.ChangeEventDetails
-    ) => {
+  const handleOpenChange = React.useCallback<
+    NonNullable<ComboboxPrimitive.Root.Props<Value, Multiple>["onOpenChange"]>
+  >(
+    (nextOpen, eventDetails) => {
       if (!nextOpen && reduceMotion) {
         requestAnimationFrame(() => {
           actionsRef.current?.unmount();
@@ -223,299 +191,481 @@ export function Combobox({
       if (!eventDetails.isCanceled) {
         setOpen(nextOpen);
       }
+
+      onOpenChange?.(nextOpen, eventDetails);
     },
-    [reduceMotion]
+    [actionsRef, onOpenChange, reduceMotion, setOpen]
   );
-
-  const handleInputValueChange = React.useCallback(
-    (
-      nextInputValue: string,
-      eventDetails: ComboboxPrimitive.Root.ChangeEventDetails
-    ) => {
-      if (
-        eventDetails.reason === "input-change" ||
-        eventDetails.reason === "input-clear"
-      ) {
-        if (!open) {
-          setOpen(true);
-        }
-
-        setIsEditingQuery(true);
-        setQuery(nextInputValue);
-        return;
-      }
-
-      if (eventDetails.reason === "clear-press") {
-        setQuery("");
-        setIsEditingQuery(open);
-      }
-    },
-    [open]
-  );
-
-  const displayValue = open
-    ? isEditingQuery
-      ? query
-      : (selected?.label ?? query)
-    : (selected?.label ?? "");
 
   return (
     <ReducedMotionConfig reducedMotion={reducedMotion}>
-      <div
-        className={cn(componentThemeClassName, "relative w-full", className)}
+      <ComboboxContext.Provider
+        value={{
+          actionsRef,
+          activeHighlightId,
+          activeValue,
+          open,
+          reduceMotion,
+          setActiveValue,
+          setOpen,
+        }}
       >
         <ComboboxPrimitive.Root
+          {...props}
           actionsRef={actionsRef}
-          autoComplete="none"
-          disabled={disabled}
-          filter={null}
-          filteredItems={filtered}
-          highlightItemOnHover
-          inputValue={displayValue}
-          isItemEqualToValue={(item, nextValue) =>
-            item.value === nextValue.value
-          }
-          items={options}
-          itemToStringLabel={(item) => item.label}
-          itemToStringValue={(item) => item.value}
-          modal={false}
-          onInputValueChange={handleInputValueChange}
+          autoComplete={autoComplete}
+          defaultOpen={defaultOpen}
+          highlightItemOnHover={highlightItemOnHover}
+          modal={modal}
           onOpenChange={handleOpenChange}
-          onValueChange={(nextOption) => {
-            onChange?.(nextOption?.value ?? "");
-            setOpen(false);
-            inputRef.current?.blur();
-          }}
           open={open}
-          openOnInputClick={false}
-          value={selected ?? null}
+          openOnInputClick={openOnInputClick}
         >
-          <ComboboxPrimitive.InputGroup
-            className={cn(
-              "group flex h-11 w-full items-center gap-2 rounded-lg border border-input bg-background px-3.5 text-base shadow-sm transition-all sm:text-sm",
-              "hover:border-ring/40 hover:shadow",
-              "focus-within:border-ring focus-within:ring-2 focus-within:ring-ring/30",
-              disabled && "cursor-not-allowed opacity-50",
-              open && "border-ring ring-2 ring-ring/30"
-            )}
-            onClick={() => {
-              if (disabled) return;
-
-              setOpen(true);
-              inputRef.current?.focus();
-              selectDisplayedValue();
-            }}
-          >
-            <ComboboxPrimitive.Input
-              className="h-full w-full flex-1 bg-transparent text-[16px] text-foreground placeholder:text-muted-foreground focus:outline-none disabled:cursor-not-allowed sm:text-sm"
-              disabled={disabled}
-              onFocus={() => {
-                selectDisplayedValue();
-                if (openOnFocus) {
-                  setOpen(true);
-                }
-              }}
-              onKeyDown={(event) => {
-                if (event.key === "Tab") {
-                  setOpen(false);
-                }
-              }}
-              placeholder={placeholder}
-              ref={inputRef}
-            />
-
-            {clearable && selected && !disabled ? (
-              <ComboboxPrimitive.Clear
-                aria-label="Clear selection"
-                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg text-muted-foreground opacity-70 transition hover:bg-muted hover:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/30"
-                keepMounted={false}
-                onClick={() => {
-                  setQuery("");
-                  setIsEditingQuery(open);
-                  requestAnimationFrame(() => {
-                    inputRef.current?.focus();
-                  });
-                }}
-              >
-                <X className="h-3.5 w-3.5" />
-              </ComboboxPrimitive.Clear>
-            ) : null}
-
-            <motion.span
-              animate={{ rotate: open ? 180 : 0 }}
-              className="text-muted-foreground"
-              transition={{ type: "spring", stiffness: 300, damping: 22 }}
-            >
-              <ChevronsUpDown className="h-4 w-4" />
-            </motion.span>
-          </ComboboxPrimitive.InputGroup>
-
-          <ComboboxPrimitive.Portal keepMounted>
-            <ComboboxPrimitive.Positioner
-              align="start"
-              className="z-[9999] outline-none"
-              sideOffset={4}
-            >
-              <ComboboxPrimitive.Popup
-                initialFocus={false}
-                render={(popupProps, popupState) => {
-                  const {
-                    popupClassName,
-                    popupRef,
-                    popupStyle,
-                    resolvedPopupProps,
-                  } = resolvePopupProps(popupProps);
-
-                  return (
-                    <motion.div
-                      {...resolvedPopupProps}
-                      animate={
-                        popupState.open
-                          ? { opacity: 1, y: 0 }
-                          : { opacity: 0, y: -4 }
-                      }
-                      className={cn(
-                        componentThemeClassName,
-                        "w-[var(--anchor-width)] max-w-[var(--available-width)] overflow-hidden rounded-lg border border-neutral-200 bg-white text-neutral-900 shadow-lg dark:border-neutral-700 dark:bg-neutral-950 dark:text-neutral-100",
-                        popupClassName
-                      )}
-                      initial={
-                        popupState.transitionStatus === "starting"
-                          ? { opacity: 0, y: -6 }
-                          : false
-                      }
-                      onAnimationComplete={() => {
-                        if (!popupState.open) {
-                          actionsRef.current?.unmount();
-                        }
-                      }}
-                      ref={(node) => {
-                        setRef(popupRef, node);
-                      }}
-                      role="presentation"
-                      style={popupStyle}
-                      transition={{
-                        duration: 0.16,
-                        ease: [0.22, 1, 0.36, 1],
-                      }}
-                    >
-                      <ComboboxPrimitive.List
-                        className="max-h-64 overflow-y-auto p-1"
-                        onPointerLeave={() => {
-                          setHoveredValue(undefined);
-                        }}
-                      >
-                        <ComboboxPrimitive.Empty className="text-center text-muted-foreground text-sm">
-                          <motion.span
-                            animate={{ opacity: 1 }}
-                            className="block px-3 py-6"
-                            initial={{ opacity: 0 }}
-                          >
-                            {emptyMessage}
-                          </motion.span>
-                        </ComboboxPrimitive.Empty>
-
-                        {filtered.map((option, index) => {
-                          return (
-                            <ComboboxPrimitive.Item
-                              index={index}
-                              key={option.value}
-                              render={(itemProps, itemState) => {
-                                const {
-                                  itemClassName,
-                                  itemRef,
-                                  itemStyle,
-                                  resolvedItemProps,
-                                } = resolveItemProps(itemProps);
-                                const isHovered = hoveredValue === option.value;
-
-                                return (
-                                  <motion.div
-                                    {...resolvedItemProps}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    className={cn(
-                                      "relative flex cursor-pointer select-none items-start gap-2 rounded-lg px-2.5 py-2 text-foreground text-sm transition-colors",
-                                      itemClassName
-                                    )}
-                                    initial={{ opacity: 0, y: 2 }}
-                                    onMouseEnter={() => {
-                                      setHoveredValue(option.value);
-                                    }}
-                                    onPointerMove={() => {
-                                      setHoveredValue(option.value);
-                                    }}
-                                    ref={(node) => {
-                                      setRef(itemRef, node);
-                                    }}
-                                    style={itemStyle}
-                                    transition={{
-                                      duration: 0.12,
-                                      ease: "easeOut",
-                                    }}
-                                  >
-                                    {isHovered ? (
-                                      <motion.div
-                                        className="absolute inset-0 rounded-lg bg-accent"
-                                        layoutId="combobox-active"
-                                        transition={{
-                                          type: "spring",
-                                          stiffness: 600,
-                                          damping: 38,
-                                        }}
-                                      />
-                                    ) : null}
-
-                                    <span className="relative z-10 mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center">
-                                      <AnimatePresence>
-                                        {itemState.selected ? (
-                                          <motion.span
-                                            animate={{ scale: 1, rotate: 0 }}
-                                            className="text-primary"
-                                            exit={{ scale: 0, rotate: 90 }}
-                                            initial={{ scale: 0, rotate: -90 }}
-                                            transition={{
-                                              type: "spring",
-                                              stiffness: 500,
-                                              damping: 22,
-                                            }}
-                                          >
-                                            <Check
-                                              className="h-4 w-4"
-                                              strokeWidth={3}
-                                            />
-                                          </motion.span>
-                                        ) : null}
-                                      </AnimatePresence>
-                                    </span>
-
-                                    <span className="relative z-10 flex flex-col">
-                                      <span className="font-medium leading-tight">
-                                        {option.label}
-                                      </span>
-                                      {option.description ? (
-                                        <span className="text-muted-foreground text-xs">
-                                          {option.description}
-                                        </span>
-                                      ) : null}
-                                    </span>
-                                  </motion.div>
-                                );
-                              }}
-                              value={option}
-                            />
-                          );
-                        })}
-                      </ComboboxPrimitive.List>
-                    </motion.div>
-                  );
-                }}
-              />
-            </ComboboxPrimitive.Positioner>
-          </ComboboxPrimitive.Portal>
+          {children}
         </ComboboxPrimitive.Root>
-      </div>
+      </ComboboxContext.Provider>
     </ReducedMotionConfig>
   );
 }
 
-export { Combobox as combobox };
+function ComboboxValue({ ...props }: ComboboxPrimitive.Value.Props) {
+  return <ComboboxPrimitive.Value data-slot="combobox-value" {...props} />;
+}
+
+function ComboboxTrigger({
+  className,
+  children,
+  ...props
+}: ComboboxPrimitive.Trigger.Props) {
+  const { open, reduceMotion } = useComboboxContext("ComboboxTrigger");
+
+  return (
+    <ComboboxPrimitive.Trigger
+      className={cn(
+        "flex shrink-0 items-center justify-center text-muted-foreground transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/30 disabled:cursor-not-allowed disabled:opacity-50",
+        className
+      )}
+      data-slot="combobox-trigger"
+      type="button"
+      {...props}
+    >
+      {children}
+      <motion.span
+        animate={{ rotate: open ? 180 : 0 }}
+        transition={getChevronTransition(reduceMotion)}
+      >
+        <ChevronsUpDown className="h-4 w-4" />
+      </motion.span>
+    </ComboboxPrimitive.Trigger>
+  );
+}
+
+function ComboboxClear({ className, ...props }: ComboboxPrimitive.Clear.Props) {
+  return (
+    <ComboboxPrimitive.Clear
+      aria-label="Clear selection"
+      className={cn(
+        "flex h-10 w-10 shrink-0 items-center justify-center rounded-lg text-muted-foreground opacity-70 transition hover:bg-muted hover:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/30",
+        className
+      )}
+      data-slot="combobox-clear"
+      keepMounted={false}
+      {...props}
+    >
+      <X className="h-3.5 w-3.5" />
+    </ComboboxPrimitive.Clear>
+  );
+}
+
+function ComboboxInput({
+  className,
+  children,
+  disabled = false,
+  showClear = true,
+  showTrigger = true,
+  ...props
+}: ComboboxPrimitive.Input.Props & {
+  showClear?: boolean;
+  showTrigger?: boolean;
+}) {
+  const { open, setOpen } = useComboboxContext("ComboboxInput");
+  const inputRef = React.useRef<HTMLInputElement | null>(null);
+
+  return (
+    <ComboboxPrimitive.InputGroup
+      className={cn(
+        componentThemeClassName,
+        "group flex h-11 w-full items-center gap-2 rounded-lg border border-input bg-background px-3.5 text-base transition-all sm:text-sm",
+        "hover:border-ring/40",
+        "focus-within:border-ring focus-within:ring-1 focus-within:ring-ring/25",
+        disabled && "cursor-not-allowed opacity-50",
+        open && "border-ring ring-1 ring-ring/25",
+        className
+      )}
+      data-slot="combobox-input"
+      onClick={() => {
+        if (disabled) return;
+
+        setOpen(true);
+        inputRef.current?.focus();
+      }}
+    >
+      <ComboboxPrimitive.Input
+        className="h-full w-full flex-1 bg-transparent text-[16px] text-foreground placeholder:text-muted-foreground focus:outline-none disabled:cursor-not-allowed sm:text-sm"
+        disabled={disabled}
+        onKeyDown={composeEventHandlers(props.onKeyDown, (event) => {
+          if (event.key === "Tab") {
+            setOpen(false);
+          }
+        })}
+        ref={inputRef}
+        {...props}
+      />
+      {showClear ? <ComboboxClear disabled={disabled} /> : null}
+      {showTrigger ? <ComboboxTrigger disabled={disabled} /> : null}
+      {children}
+    </ComboboxPrimitive.InputGroup>
+  );
+}
+
+function ComboboxContent({
+  align = "start",
+  alignOffset = 0,
+  anchor,
+  children,
+  className,
+  side = "bottom",
+  sideOffset = 6,
+  ...props
+}: ComboboxPrimitive.Popup.Props &
+  Pick<
+    ComboboxPrimitive.Positioner.Props,
+    "align" | "alignOffset" | "anchor" | "side" | "sideOffset"
+  >) {
+  const { actionsRef, reduceMotion } = useComboboxContext("ComboboxContent");
+
+  return (
+    <ComboboxPrimitive.Portal keepMounted>
+      <ComboboxPrimitive.Positioner
+        align={align}
+        alignOffset={alignOffset}
+        anchor={anchor}
+        className="z-[9999] outline-none"
+        side={side}
+        sideOffset={sideOffset}
+      >
+        <ComboboxPrimitive.Popup
+          data-slot="combobox-content"
+          initialFocus={false}
+          {...props}
+          render={(popupProps, popupState) => {
+            const { popupClassName, popupRef, popupStyle, resolvedPopupProps } =
+              resolvePopupProps(popupProps as DivRenderProps);
+
+            return (
+              <motion.div
+                {...resolvedPopupProps}
+                animate={
+                  popupState.open
+                    ? { opacity: 1, y: 0 }
+                    : { opacity: 0, y: reduceMotion ? 0 : -4 }
+                }
+                className={cn(
+                  componentThemeClassName,
+                  "w-[var(--anchor-width)] max-w-[var(--available-width)] overflow-hidden rounded-lg border border-neutral-200/60 bg-white text-neutral-900 shadow-none dark:border-neutral-700/60 dark:bg-neutral-950 dark:text-neutral-100",
+                  popupClassName,
+                  resolveStateClassName(className, popupState)
+                )}
+                initial={
+                  popupState.transitionStatus === "starting"
+                    ? { opacity: 0, y: reduceMotion ? 0 : -6 }
+                    : false
+                }
+                onAnimationComplete={() => {
+                  if (!popupState.open) {
+                    actionsRef.current?.unmount();
+                  }
+                }}
+                ref={(node) => {
+                  setRef(popupRef, node);
+                }}
+                role="presentation"
+                style={popupStyle}
+                transition={{
+                  duration: reduceMotion ? 0.1 : 0.16,
+                  ease: [0.22, 1, 0.36, 1],
+                }}
+              >
+                {children}
+              </motion.div>
+            );
+          }}
+        />
+      </ComboboxPrimitive.Positioner>
+    </ComboboxPrimitive.Portal>
+  );
+}
+
+function ComboboxList({
+  className,
+  onPointerLeave,
+  ...props
+}: ComboboxPrimitive.List.Props) {
+  const { setActiveValue } = useComboboxContext("ComboboxList");
+
+  return (
+    <ComboboxPrimitive.List
+      className={cn("max-h-64 overflow-y-auto p-1", className)}
+      data-slot="combobox-list"
+      onPointerLeave={composeEventHandlers(onPointerLeave, () => {
+        setActiveValue(undefined);
+      })}
+      {...props}
+    />
+  );
+}
+
+function ComboboxItem({
+  className,
+  children,
+  description,
+  value,
+  ...props
+}: ComboboxPrimitive.Item.Props & {
+  description?: React.ReactNode;
+}) {
+  const { activeHighlightId, activeValue, reduceMotion, setActiveValue } =
+    useComboboxContext("ComboboxItem");
+
+  return (
+    <ComboboxPrimitive.Item
+      data-slot="combobox-item"
+      value={value}
+      {...props}
+      render={(itemProps, itemState) => {
+        const { itemClassName, itemRef, itemStyle, resolvedItemProps } =
+          resolveItemProps(itemProps as DivRenderProps);
+        const isHovered = Object.is(activeValue, value);
+
+        return (
+          <motion.div
+            {...resolvedItemProps}
+            animate={{ opacity: 1, y: 0 }}
+            className={cn(
+              "relative flex cursor-pointer select-none items-start gap-2 rounded-lg px-2.5 py-2 text-foreground text-sm transition-colors",
+              itemClassName,
+              resolveStateClassName(className, itemState)
+            )}
+            initial={{ opacity: 0, y: reduceMotion ? 0 : 2 }}
+            onMouseEnter={composeEventHandlers(
+              resolvedItemProps.onMouseEnter,
+              () => {
+                setActiveValue(value);
+              }
+            )}
+            onPointerMove={composeEventHandlers(
+              resolvedItemProps.onPointerMove,
+              () => {
+                setActiveValue(value);
+              }
+            )}
+            ref={(node) => {
+              setRef(itemRef, node);
+            }}
+            style={itemStyle}
+            transition={{
+              duration: reduceMotion ? 0.1 : 0.12,
+              ease: "easeOut",
+            }}
+          >
+            {isHovered ? (
+              <motion.div
+                className="absolute inset-0 rounded-lg bg-accent"
+                layoutId={activeHighlightId}
+                transition={{
+                  type: "spring",
+                  stiffness: 600,
+                  damping: 38,
+                }}
+              />
+            ) : null}
+
+            <span className="relative z-10 mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center">
+              <AnimatePresence>
+                {itemState.selected ? (
+                  <motion.span
+                    animate={{ scale: 1, rotate: 0 }}
+                    className="text-primary"
+                    exit={{ scale: 0, rotate: 90 }}
+                    initial={{ scale: 0, rotate: -90 }}
+                    transition={{
+                      type: "spring",
+                      stiffness: 500,
+                      damping: 22,
+                    }}
+                  >
+                    <Check className="h-4 w-4" strokeWidth={3} />
+                  </motion.span>
+                ) : null}
+              </AnimatePresence>
+            </span>
+
+            <span className="relative z-10 flex flex-col">
+              <span className="font-medium leading-tight">{children}</span>
+              {description ? (
+                <span className="text-muted-foreground text-xs">
+                  {description}
+                </span>
+              ) : null}
+            </span>
+          </motion.div>
+        );
+      }}
+    />
+  );
+}
+
+function ComboboxGroup({ className, ...props }: ComboboxPrimitive.Group.Props) {
+  return (
+    <ComboboxPrimitive.Group
+      className={cn(className)}
+      data-slot="combobox-group"
+      {...props}
+    />
+  );
+}
+
+function ComboboxLabel({
+  className,
+  ...props
+}: ComboboxPrimitive.GroupLabel.Props) {
+  return (
+    <ComboboxPrimitive.GroupLabel
+      className={cn("px-2 py-1.5 text-muted-foreground text-xs", className)}
+      data-slot="combobox-label"
+      {...props}
+    />
+  );
+}
+
+function ComboboxCollection({ ...props }: ComboboxPrimitive.Collection.Props) {
+  return (
+    <ComboboxPrimitive.Collection data-slot="combobox-collection" {...props} />
+  );
+}
+
+function ComboboxEmpty({
+  className,
+  children = "No results found.",
+  ...props
+}: ComboboxPrimitive.Empty.Props) {
+  return (
+    <ComboboxPrimitive.Empty
+      className={cn("text-center text-muted-foreground text-sm", className)}
+      data-slot="combobox-empty"
+      {...props}
+    >
+      <motion.span animate={{ opacity: 1 }} className="block px-3 py-6">
+        {children}
+      </motion.span>
+    </ComboboxPrimitive.Empty>
+  );
+}
+
+function ComboboxSeparator({
+  className,
+  ...props
+}: ComboboxPrimitive.Separator.Props) {
+  return (
+    <ComboboxPrimitive.Separator
+      className={cn("-mx-1 my-1 h-px bg-border", className)}
+      data-slot="combobox-separator"
+      {...props}
+    />
+  );
+}
+
+function ComboboxChips({
+  className,
+  ...props
+}: React.ComponentPropsWithRef<typeof ComboboxPrimitive.Chips> &
+  ComboboxPrimitive.Chips.Props) {
+  return (
+    <ComboboxPrimitive.Chips
+      className={cn(
+        componentThemeClassName,
+        "flex min-h-8 flex-wrap items-center gap-1 rounded-lg border border-input bg-transparent bg-clip-padding px-2.5 py-1 text-sm transition-colors focus-within:border-ring focus-within:ring-3 focus-within:ring-ring/50 has-aria-invalid:border-destructive has-data-[slot=combobox-chip]:px-1 has-aria-invalid:ring-3 has-aria-invalid:ring-destructive/20 dark:bg-input/30 dark:has-aria-invalid:border-destructive/50 dark:has-aria-invalid:ring-destructive/40",
+        className
+      )}
+      data-slot="combobox-chips"
+      {...props}
+    />
+  );
+}
+
+function ComboboxChip({
+  className,
+  children,
+  showRemove = true,
+  ...props
+}: ComboboxPrimitive.Chip.Props & {
+  showRemove?: boolean;
+}) {
+  return (
+    <ComboboxPrimitive.Chip
+      className={cn(
+        "flex h-[calc(var(--spacing)*5.25)] w-fit items-center justify-center gap-1 whitespace-nowrap rounded-sm bg-muted px-1.5 font-medium text-foreground text-xs has-disabled:pointer-events-none has-disabled:cursor-not-allowed has-data-[slot=combobox-chip-remove]:pr-0 has-disabled:opacity-50",
+        className
+      )}
+      data-slot="combobox-chip"
+      {...props}
+    >
+      {children}
+      {showRemove ? (
+        <ComboboxPrimitive.ChipRemove
+          className="-ml-1 flex size-5 items-center justify-center rounded-sm opacity-50 transition hover:bg-muted hover:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/30"
+          data-slot="combobox-chip-remove"
+        >
+          <X className="pointer-events-none size-3" />
+        </ComboboxPrimitive.ChipRemove>
+      ) : null}
+    </ComboboxPrimitive.Chip>
+  );
+}
+
+function ComboboxChipsInput({
+  className,
+  ...props
+}: ComboboxPrimitive.Input.Props) {
+  return (
+    <ComboboxPrimitive.Input
+      className={cn("min-w-16 flex-1 outline-none", className)}
+      data-slot="combobox-chip-input"
+      {...props}
+    />
+  );
+}
+
+function useComboboxAnchor() {
+  return React.useRef<HTMLDivElement | null>(null);
+}
+
+export {
+  Combobox,
+  ComboboxChips,
+  ComboboxChip,
+  ComboboxChipsInput,
+  ComboboxClear,
+  ComboboxCollection,
+  ComboboxContent,
+  ComboboxEmpty,
+  ComboboxGroup,
+  ComboboxInput,
+  ComboboxItem,
+  ComboboxLabel,
+  ComboboxList,
+  ComboboxSeparator,
+  ComboboxTrigger,
+  ComboboxValue,
+  useComboboxAnchor,
+};

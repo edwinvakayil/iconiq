@@ -176,7 +176,7 @@ const REGISTRY_UI_META: Record<
   "b-combobox": {
     title: "Combobox (Base UI)",
     description:
-      "Combobox with the same Iconiq API layered over Base UI primitives, preserving the original filtering rules, keyboard search, clear action, and dropdown motion.",
+      "Compound Combobox parts layered over Base UI primitives, preserving the original input shell, clear action, item highlight, checkmark, and dropdown motion.",
     dependencies: ["@base-ui/react", "motion", "lucide-react"],
   },
   "b-context-menu": {

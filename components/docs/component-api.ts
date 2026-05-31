@@ -1454,116 +1454,168 @@ const checkboxApiDetails: DetailItem[] = [
 
 const comboboxApiDetails: DetailItem[] = [
   {
-    id: "combobox-option",
-    title: "ComboboxOption",
-    summary:
-      "Each selectable row is described by a plain object and can optionally include a secondary description line.",
-    fields: [
-      field({
-        name: "value",
-        type: "string",
-        required: true,
-        description:
-          "Stable identifier used for the selected state and returned through onChange.",
-      }),
-      field({
-        name: "label",
-        type: "string",
-        required: true,
-        description:
-          "Primary text shown in the closed field and inside the dropdown row.",
-      }),
-      field({
-        name: "description",
-        type: "string",
-        description:
-          "Optional helper copy rendered under the label inside the dropdown list.",
-      }),
-    ],
-  },
-  {
     id: "combobox",
     title: "Combobox",
     summary:
-      "Searchable single-select field that owns open state, search query, and active row internally, while the selected value stays parent-driven.",
+      "Root combobox controller. Compose ComboboxInput, ComboboxContent, ComboboxList, and ComboboxItem inside it.",
     fields: [
       field({
-        name: "options",
-        type: "ComboboxOption[]",
-        required: true,
+        name: "items",
+        type: "readonly Item[]",
         description:
-          "Available rows rendered in display order and used as the filtering source.",
+          "Optional item collection used by Base UI for filtering and render-function lists.",
       }),
       field({
         name: "value",
-        type: "string",
+        type: "Item | Item[] | null",
         description:
-          "Currently selected option value. The component derives the visible label from this prop when closed, and keeps showing that label on focus until the user starts editing the query.",
+          "Controlled selected value. Use an array when multiple is true.",
       }),
       field({
-        name: "onChange",
-        type: "(value: string) => void",
-        description:
-          "Called when a row is selected and also when the clear action resets the field to an empty string.",
+        name: "defaultValue",
+        type: "Item | Item[] | null",
+        description: "Initial selected value for uncontrolled usage.",
       }),
+      field({
+        name: "onValueChange",
+        type: "(value: Item | Item[] | null) => void",
+        description:
+          "Called when an item is selected, a chip is removed, or the clear action resets the selection.",
+      }),
+      field({
+        name: "itemToStringLabel",
+        type: "(item: Item) => string",
+        description:
+          "Maps object values to the label shown in the input and used for text filtering.",
+      }),
+      field({
+        name: "itemToStringValue",
+        type: "(item: Item) => string",
+        description: "Maps object values to the hidden form value.",
+      }),
+      field({
+        name: "inputValue",
+        type: "string",
+        description:
+          "Controlled search text. Leave uncontrolled for Base UI to manage query state.",
+      }),
+      field({
+        name: "open",
+        type: "boolean",
+        description: "Controlled popup state. Pair with onOpenChange.",
+      }),
+      field({
+        name: "reducedMotion",
+        type: "boolean",
+        description: "Forces the Iconiq motion layer into reduced-motion mode.",
+      }),
+    ],
+    notes: [
+      "The root wraps Base UI's combobox primitive in the same Iconiq reduced-motion config used by the previous wrapper.",
+      "Filtering, selection, typeahead, keyboard navigation, and clear behavior are delegated to Base UI while the visual treatment stays Iconiq.",
+    ],
+  },
+  {
+    id: "combobox-input",
+    title: "ComboboxInput",
+    summary:
+      "Styled input shell with the previous border, focus ring, clear button, and rotating trigger icon.",
+    fields: [
       field({
         name: "placeholder",
         type: "string",
-        defaultValue: '"Select an option..."',
-        description:
-          "Shown when no value is selected, and again while the field is open with an empty query.",
+        description: "Shown when no item is selected and the input is empty.",
       }),
       field({
-        name: "emptyMessage",
-        type: "string",
-        defaultValue: '"No results found."',
+        name: "showClear",
+        type: "boolean",
+        defaultValue: "true",
+        description: "Controls whether ComboboxClear is rendered in the input.",
+      }),
+      field({
+        name: "showTrigger",
+        type: "boolean",
+        defaultValue: "true",
         description:
-          "Fallback copy rendered when filtering produces no matching options.",
+          "Controls whether the rotating trigger icon is rendered in the input.",
       }),
       field({
         name: "className",
         type: "string",
         description:
-          "Merged onto the outer relative wrapper so width or placement can be adjusted externally.",
+          "Merged onto the input shell so width and local layout can be adjusted.",
       }),
       field({
         name: "disabled",
         type: "boolean",
         defaultValue: "false",
         description:
-          "Disables the input, blocks opening, and applies a reduced-opacity presentation.",
+          "Disables the input, clear button, and trigger while applying the previous reduced-opacity presentation.",
       }),
-      field({
-        name: "clearable",
-        type: "boolean",
-        defaultValue: "true",
-        description:
-          "Controls whether the clear button appears once a value has been selected.",
-      }),
-      field({
-        name: "openOnFocus",
-        type: "boolean",
-        defaultValue: "false",
-        description:
-          "Opens the listbox as soon as the input receives focus. When false, focus alone keeps the current selection visible and waits for typing, click, or arrow-key navigation.",
-      }),
-    ],
-    notes: [
-      "This is effectively controlled for selection. If the parent does not feed the next onChange result back into value, the checkmark and closed-field label do not update.",
-      "Closing the popover resets the live query string, so reopening the field starts from the full option list again.",
-      "The selected label stays visible on focus, but the input text is selected so the first keystroke replaces it cleanly.",
     ],
   },
   {
-    id: "combobox-filtering",
-    title: "Filtering, keyboard, and layout behavior",
+    id: "combobox-content",
+    title: "ComboboxContent",
     summary:
-      "The dropdown is portaled to document.body, positioned from the field bounds, and supports a stronger keyboard model than the simpler select component.",
+      "Portaled dropdown surface with the previous white/dark panel, border, shadow, and fade-slide motion.",
+    fields: [
+      field({
+        name: "side",
+        type: '"top" | "right" | "bottom" | "left" | "inline-start" | "inline-end"',
+        defaultValue: '"bottom"',
+        description: "Preferred side for the popup.",
+      }),
+      field({
+        name: "align",
+        type: '"start" | "center" | "end"',
+        defaultValue: '"start"',
+        description: "Popup alignment relative to the input anchor.",
+      }),
+      field({
+        name: "sideOffset",
+        type: "number",
+        defaultValue: "4",
+        description: "Gap between the input shell and dropdown.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description: "Merged onto the animated popup panel.",
+      }),
+    ],
     notes: [
-      "Filtering normalizes case, accents, spaces, and hyphens, then matches across label, value, and description.",
-      "ArrowUp, ArrowDown, Home, End, Enter, Escape, and Tab are all handled directly on the input to drive the internal activeIndex and open state.",
-      "The clear button is keyboard reachable and sized as a larger hit target instead of a tiny icon-only affordance.",
-      "Because the list is rendered in a portal with fixed positioning, overflow-hidden ancestors do not clip it. Placement is recalculated from the trigger rect while it is open, and outside-click checks treat the portaled menu as part of the component.",
+      "The popup remains mounted while closing so the motion exit can complete before Base UI unmounts it.",
+      "The panel width matches the input anchor and the list scrolls at the same max height as before.",
+    ],
+  },
+  {
+    id: "combobox-list-item",
+    title: "ComboboxList and ComboboxItem",
+    summary:
+      "Scrollable item list and animated rows with the previous active highlight, description layout, and selected checkmark spring.",
+    fields: [
+      field({
+        name: "ComboboxList.children",
+        type: "ReactNode | ((item, index) => ReactNode)",
+        description:
+          "Render explicit children or a render function when using the root items prop.",
+      }),
+      field({
+        name: "ComboboxItem.value",
+        type: "Item",
+        description: "Stable value used by Base UI for selection.",
+      }),
+      field({
+        name: "ComboboxItem.description",
+        type: "ReactNode",
+        description:
+          "Optional secondary line rendered below the item label, matching the prior option description UI.",
+      }),
+    ],
+    notes: [
+      "ComboboxEmpty, ComboboxGroup, ComboboxLabel, ComboboxSeparator, ComboboxCollection, and chip helpers are exported for larger compositions.",
+      "Keyboard navigation and filtering are handled by Base UI; the visual hover highlight and checkmark animation stay Iconiq.",
     ],
   },
   registryItem("combobox.json", ["motion", "lucide-react"]),
