@@ -129,16 +129,16 @@ export default function IntroductionPage() {
                       Philosophy
                     </h2>
                     <p>
-                      Great component libraries do more than save time. They
-                      set a baseline — how much visual noise is acceptable,
-                      how interactions should feel, and whether the product
-                      stays coherent as it grows.
+                      Great component libraries do more than save time. They set
+                      a baseline — how much visual noise is acceptable, how
+                      interactions should feel, and whether the product stays
+                      coherent as it grows.
                     </p>
                     <p>
                       {SITE.NAME} is intentionally minimal. Motion is present,
-                      but never decorative. Every transition confirms an
-                      action, orients the user, or preserves spatial context —
-                      not performs. That restraint keeps interfaces feeling
+                      but never decorative. Every transition confirms an action,
+                      orients the user, or preserves spatial context — not
+                      performs. That restraint keeps interfaces feeling
                       standard: predictable, calm, and aligned with patterns
                       people already know from well-made products.
                     </p>
@@ -161,11 +161,11 @@ export default function IntroductionPage() {
                       </li>
                     </ul>
                     <p>
-                      {SITE.NAME} is built around a simple answer: quality
-                      lives in clarity, not complexity. Components arrive as
-                      local files, so motion, styling, structure, and
-                      accessibility can evolve inside your own codebase instead
-                      of behind a package boundary.
+                      {SITE.NAME} is built around a simple answer: quality lives
+                      in clarity, not complexity. Components arrive as local
+                      files, so motion, styling, structure, and accessibility
+                      can evolve inside your own codebase instead of behind a
+                      package boundary.
                     </p>
                     <p>
                       That approach keeps adoption practical. You can review the

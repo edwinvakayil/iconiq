@@ -417,51 +417,121 @@ export function ToggleGroupPreview() {
   skeleton: buildV0Page(skeletonPreviewCode),
   select:
     '"use client";\n\n' +
-    "import {\n" +
-    "  CalendarDays,\n" +
-    "  MessageSquareText,\n" +
-    "  Palette,\n" +
-    "  Rocket,\n" +
-    "  ShieldCheck,\n" +
-    `} from "lucide-react"\n\n` +
-    "import {\n" +
-    "  Select,\n" +
-    "  SelectContent,\n" +
-    "  SelectGroup,\n" +
-    "  SelectItem,\n" +
-    "  SelectTrigger,\n" +
-    "  SelectValue,\n" +
-    `} from "@/components/ui/select"\n\n` +
+    'import { useState } from "react";\n\n' +
+    `import { Select, type SelectOption } from "@/components/ui/select"\n\n` +
+    "const options: SelectOption[] = [\n" +
+    '  { value: "launch", label: "Launch plan" },\n' +
+    '  { value: "design", label: "Design pass" },\n' +
+    '  { value: "review", label: "Review notes" },\n' +
+    "]\n\n" +
     "export default function Page() {\n" +
+    "  const [value, setValue] = useState<string | undefined>()\n" +
     "  return (\n" +
     '    <div className="flex min-h-svh items-center justify-center p-8">\n' +
-    "      <Select>\n" +
-    '        <SelectTrigger className="w-full max-w-72">\n' +
-    '          <SelectValue placeholder="Choose workflow" />\n' +
-    "        </SelectTrigger>\n" +
-    "        <SelectContent>\n" +
-    "          <SelectGroup>\n" +
-    '            <SelectItem icon={<Rocket className="size-4 text-muted-foreground" />} value="launch">\n' +
-    "              Launch plan\n" +
-    "            </SelectItem>\n" +
-    '            <SelectItem icon={<Palette className="size-4 text-muted-foreground" />} value="design">\n' +
-    "              Design pass\n" +
-    "            </SelectItem>\n" +
-    '            <SelectItem icon={<MessageSquareText className="size-4 text-muted-foreground" />} value="review">\n' +
-    "              Review notes\n" +
-    "            </SelectItem>\n" +
-    '            <SelectItem icon={<CalendarDays className="size-4 text-muted-foreground" />} value="schedule">\n' +
-    "              Schedule\n" +
-    "            </SelectItem>\n" +
-    '            <SelectItem icon={<ShieldCheck className="size-4 text-muted-foreground" />} value="approve">\n' +
-    "              Approvals\n" +
-    "            </SelectItem>\n" +
-    "          </SelectGroup>\n" +
-    "        </SelectContent>\n" +
-    "      </Select>\n" +
+    "      <Select\n" +
+    '        className="w-full max-w-72"\n' +
+    "        onChange={setValue}\n" +
+    "        options={options}\n" +
+    '        placeholder="Choose workflow"\n' +
+    "        value={value}\n" +
+    "      />\n" +
     "    </div>\n" +
     "  )\n" +
     "}\n",
+  "b-select": buildV0Page(`"use client";
+
+import {
+  CalendarDays,
+  MessageSquareText,
+  Palette,
+  Rocket,
+  ShieldCheck,
+} from "lucide-react";
+
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/b-select";
+
+export function SelectDemo() {
+  return (
+    <Select>
+      <SelectTrigger className="w-full max-w-72">
+        <SelectValue placeholder="Choose workflow" />
+      </SelectTrigger>
+      <SelectContent>
+        <SelectGroup>
+          <SelectItem icon={<Rocket className="size-4 text-muted-foreground" />} value="launch">
+            Launch plan
+          </SelectItem>
+          <SelectItem icon={<Palette className="size-4 text-muted-foreground" />} value="design">
+            Design pass
+          </SelectItem>
+          <SelectItem icon={<MessageSquareText className="size-4 text-muted-foreground" />} value="review">
+            Review notes
+          </SelectItem>
+          <SelectItem icon={<CalendarDays className="size-4 text-muted-foreground" />} value="schedule">
+            Schedule
+          </SelectItem>
+          <SelectItem icon={<ShieldCheck className="size-4 text-muted-foreground" />} value="approve">
+            Approvals
+          </SelectItem>
+        </SelectGroup>
+      </SelectContent>
+    </Select>
+  );
+}`),
+  "r-select": buildV0Page(`"use client";
+
+import {
+  CalendarDays,
+  MessageSquareText,
+  Palette,
+  Rocket,
+  ShieldCheck,
+} from "lucide-react";
+
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/r-select";
+
+export function SelectDemo() {
+  return (
+    <Select>
+      <SelectTrigger className="w-full max-w-72">
+        <SelectValue placeholder="Choose workflow" />
+      </SelectTrigger>
+      <SelectContent>
+        <SelectGroup>
+          <SelectItem icon={<Rocket className="size-4 text-muted-foreground" />} value="launch">
+            Launch plan
+          </SelectItem>
+          <SelectItem icon={<Palette className="size-4 text-muted-foreground" />} value="design">
+            Design pass
+          </SelectItem>
+          <SelectItem icon={<MessageSquareText className="size-4 text-muted-foreground" />} value="review">
+            Review notes
+          </SelectItem>
+          <SelectItem icon={<CalendarDays className="size-4 text-muted-foreground" />} value="schedule">
+            Schedule
+          </SelectItem>
+          <SelectItem icon={<ShieldCheck className="size-4 text-muted-foreground" />} value="approve">
+            Approvals
+          </SelectItem>
+        </SelectGroup>
+      </SelectContent>
+    </Select>
+  );
+}`),
   dialog:
     '"use client";\n\n' +
     "import {\n" +
@@ -1118,6 +1188,7 @@ const getComponentForV0 = async (
       name,
       type: "registry:component",
       title: registryData.title ?? name,
+      dependencies: registryData.dependencies || [],
       source: {
         title: SITE.NAME,
         url: SITE.URL,

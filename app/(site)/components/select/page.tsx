@@ -51,7 +51,7 @@ const breadcrumbs = [
   { label: "Select" },
 ];
 
-const selectUsageCode = `"use client";
+const selectUsageCodeTemplate = (importPath: string) => `"use client";
 
 import {
   CalendarDays,
@@ -68,7 +68,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "${importPath}";
 
 export function SelectDemo() {
   return (
@@ -115,8 +115,8 @@ export function SelectDemo() {
 }`;
 
 const usageCodeByProvider: Record<ProviderConfig["componentName"], string> = {
-  "b-select": selectUsageCode,
-  "r-select": selectUsageCode,
+  "b-select": selectUsageCodeTemplate("@/components/ui/b-select"),
+  "r-select": selectUsageCodeTemplate("@/components/ui/r-select"),
 };
 
 function SelectPreview({ ui }: { ui: SelectModule }) {

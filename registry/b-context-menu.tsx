@@ -17,6 +17,11 @@ const componentThemeClassName =
 
 const ITEM_HEIGHT = 44;
 
+const contextMenuPanelShellClassName =
+  "z-50 min-w-[232px] overflow-y-auto overflow-x-hidden rounded-lg border border-border/60 p-1.5 text-popover-foreground shadow-2xl dark:border-neutral-800";
+
+const contextMenuPanelSurfaceClassName = "bg-white dark:bg-[#111111]";
+
 type DivRenderProps = React.HTMLAttributes<HTMLDivElement> & {
   children?: React.ReactNode;
   className?: string;
@@ -191,20 +196,17 @@ function renderMotionPanel({
       {...(resolvedPopupProps as React.ComponentPropsWithoutRef<
         typeof motion.div
       >)}
-      animate={
-        popupState.open
-          ? { opacity: 1, scale: 1, y: 0 }
-          : { opacity: 0, scale: 0.96, y: -2 }
-      }
+      animate={popupState.open ? { scale: 1, y: 0 } : { scale: 0.96, y: -2 }}
       className={cn(
         componentThemeClassName,
-        "z-50 min-w-[232px] overflow-y-auto overflow-x-hidden rounded-lg border border-border/60 bg-white p-1.5 text-popover-foreground shadow-2xl dark:border-neutral-800 dark:bg-black",
+        contextMenuPanelShellClassName,
         className,
-        popupClassName
+        popupClassName,
+        contextMenuPanelSurfaceClassName
       )}
       initial={
         popupState.transitionStatus === "starting"
-          ? { opacity: 0, scale: 0.94, y: -4 }
+          ? { scale: 0.94, y: -4 }
           : false
       }
       onAnimationComplete={() => {

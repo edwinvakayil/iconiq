@@ -17,6 +17,11 @@ const componentThemeClassName =
 
 const ITEM_HEIGHT = 44;
 
+const contextMenuPanelShellClassName =
+  "z-50 min-w-[232px] overflow-y-auto overflow-x-hidden rounded-lg border border-border/60 p-1.5 text-popover-foreground shadow-2xl dark:border-neutral-800";
+
+const contextMenuPanelSurfaceClassName = "bg-white dark:bg-[#111111]";
+
 type ContextMenuContextValue = {
   contentId: string;
   hoveredItemId: string | undefined;
@@ -221,14 +226,15 @@ const ContextMenuContentBody = React.forwardRef<
       {...props}
     >
       <motion.div
-        animate={{ opacity: 1, scale: 1, y: 0 }}
+        animate={{ scale: 1, y: 0 }}
         className={cn(
           componentThemeClassName,
-          "z-50 min-w-[232px] overflow-y-auto overflow-x-hidden rounded-lg border border-border/60 bg-white p-1.5 text-popover-foreground shadow-2xl dark:border-neutral-800 dark:bg-black",
-          className
+          contextMenuPanelShellClassName,
+          className,
+          contextMenuPanelSurfaceClassName
         )}
-        exit={{ opacity: 0, scale: 0.96, y: -2 }}
-        initial={{ opacity: 0, scale: 0.94, y: -4 }}
+        exit={{ scale: 0.96, y: -2 }}
+        initial={{ scale: 0.94, y: -4 }}
         onPointerLeave={() => {
           setHoveredItemId(undefined);
         }}
@@ -403,8 +409,10 @@ const ContextMenuSubContent = React.forwardRef<
     <ContextMenuPrimitive.SubContent
       className={cn(
         componentThemeClassName,
-        "z-50 min-w-[232px] overflow-hidden rounded-lg border border-border/60 bg-white p-1.5 text-popover-foreground shadow-2xl dark:border-neutral-800 dark:bg-black",
-        className
+        contextMenuPanelShellClassName,
+        "overflow-hidden",
+        className,
+        contextMenuPanelSurfaceClassName
       )}
       ref={ref}
       {...props}
