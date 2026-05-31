@@ -11,8 +11,11 @@ import {
 } from "@/lib/reduced-motion";
 import { cn } from "@/lib/utils";
 
-const componentThemeClassName =
-  "[--background:#ffffff] [--foreground:#111111] [--primary:#111111] [--secondary:#646b75] [--surface-border:#e9edf2] [--border:#e3e7ec] [--card:#ffffff] [--card-foreground:#111111] [--muted:#f5f7fa] [--muted-foreground:#6d7480] [--accent:#f3f5f8] [--accent-foreground:#111111] [--input:#e3e7ec] [--ring:rgba(17,17,17,0.16)] [--destructive:#dc2626] [--paper:#fcfcfd] [--popover-foreground:#111111] [--brand:#0ea5e9] [--brand-soft:#bae6fd] [--shadow-soft:0_18px_38px_-24px_rgba(15,23,42,0.35)] [--chart-1:oklch(0.52_0.19_254)] [--chart-2:oklch(0.74_0.11_232)] [--chart-3:oklch(0.42_0.16_262)] [--chart-4:oklch(0.84_0.07_228)] [--chart-5:oklch(0.62_0.14_240)] [--color-background:var(--background)] [--color-foreground:var(--foreground)] [--color-primary:var(--primary)] [--color-secondary:var(--secondary)] [--color-border:var(--border)] [--color-card:var(--card)] [--color-card-foreground:var(--card-foreground)] [--color-muted:var(--muted)] [--color-muted-foreground:var(--muted-foreground)] [--color-accent:var(--accent)] [--color-accent-foreground:var(--accent-foreground)] [--color-input:var(--input)] [--color-ring:var(--ring)] [--color-destructive:var(--destructive)] [--color-paper:var(--paper)] [--color-popover-foreground:var(--popover-foreground)] [--color-brand:var(--brand)] [--color-brand-soft:var(--brand-soft)] [--color-chart-1:var(--chart-1)] [--color-chart-2:var(--chart-2)] [--color-chart-3:var(--chart-3)] [--color-chart-4:var(--chart-4)] [--color-chart-5:var(--chart-5)] dark:[--background:#111111] dark:[--foreground:#f6f3ec] dark:[--primary:#f6f3ec] dark:[--secondary:#cbc6bb] dark:[--surface-border:#2a2a25] dark:[--border:#2b2a25] dark:[--card:#111111] dark:[--card-foreground:#f6f3ec] dark:[--muted:#171716] dark:[--muted-foreground:#9a958a] dark:[--accent:#1a1a18] dark:[--accent-foreground:#f6f3ec] dark:[--input:#2b2a25] dark:[--ring:rgba(246,243,236,0.18)] dark:[--destructive:#f87171] dark:[--paper:#171716] dark:[--popover-foreground:#f6f3ec] dark:[--brand:#38bdf8] dark:[--brand-soft:#0c4a6e] dark:[--shadow-soft:0_20px_44px_-28px_rgba(0,0,0,0.6)] dark:[--chart-1:oklch(0.68_0.17_250)] dark:[--chart-2:oklch(0.82_0.09_225)] dark:[--chart-3:oklch(0.58_0.15_260)] dark:[--chart-4:oklch(0.75_0.12_235)] dark:[--chart-5:oklch(0.88_0.06_220)]";
+const alertDialogThemeClassName =
+  "[--adlg-surface:#ffffff] [--adlg-foreground:#111111] [--adlg-border:#e3e7ec] [--adlg-ring:rgba(17,17,17,0.16)] [--adlg-muted-foreground:#6d7480] [--adlg-muted:#f5f7fa] [--adlg-action-surface:#111111] [--adlg-action-foreground:#ffffff] dark:[--adlg-surface:#0a0a0a] dark:[--adlg-foreground:#f6f3ec] dark:[--adlg-border:#2b2a25] dark:[--adlg-ring:rgba(246,243,236,0.18)] dark:[--adlg-muted-foreground:#9a958a] dark:[--adlg-muted:#1a1a18] dark:[--adlg-action-surface:#f6f3ec] dark:[--adlg-action-foreground:#111111]";
+
+const alertDialogContentClassName =
+  "relative flex w-[min(100%,34rem)] max-w-xl flex-col gap-5 rounded-[12px] border border-[color:color-mix(in_oklch,var(--adlg-border),transparent_25%)] bg-[color:color-mix(in_oklch,var(--adlg-surface),transparent_4%)] p-6 text-[color:var(--adlg-foreground)] shadow-[0_32px_120px_rgba(15,23,42,0.18)] outline-none supports-[backdrop-filter]:bg-[color:color-mix(in_oklch,var(--adlg-surface),transparent_8%)] sm:p-7";
 
 type AlertDialogContextValue = {
   actionsRef: React.RefObject<AlertDialogPrimitive.Root.Actions | null>;
@@ -30,13 +33,13 @@ const overlayTransition = {
 } as const;
 
 const triggerClassName =
-  "inline-flex min-h-11 items-center justify-center rounded-md bg-foreground px-4 py-2.5 font-medium text-[14px] text-background tracking-[-0.01em] transition-[transform,background-color] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-px hover:bg-foreground/90 active:translate-y-0 active:bg-foreground/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50";
+  "inline-flex min-h-11 items-center justify-center rounded-md bg-[color:var(--adlg-action-surface)] px-4 py-2.5 font-medium text-[14px] text-[color:var(--adlg-action-foreground)] tracking-[-0.01em] transition-[transform,background-color] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-px hover:bg-[color:color-mix(in_oklch,var(--adlg-action-surface),transparent_10%)] active:translate-y-0 active:bg-[color:color-mix(in_oklch,var(--adlg-action-surface),transparent_20%)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:color-mix(in_oklch,var(--adlg-ring),transparent_50%)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--adlg-surface)] disabled:pointer-events-none disabled:opacity-50";
 
 const actionClassName =
   "inline-flex min-h-11 items-center justify-center rounded-md bg-rose-600 px-4 py-2.5 font-medium text-[14px] text-white tracking-[-0.01em] transition-[transform,filter] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-px hover:brightness-95 active:translate-y-0 active:brightness-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-500 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50";
 
 const cancelClassName =
-  "inline-flex min-h-11 items-center justify-center rounded-md bg-muted/55 px-4 py-2.5 font-medium text-[14px] text-muted-foreground tracking-[-0.01em] transition-colors duration-150 hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50";
+  "inline-flex min-h-11 items-center justify-center rounded-md bg-[color:color-mix(in_oklch,var(--adlg-muted),transparent_45%)] px-4 py-2.5 font-medium text-[14px] text-[color:var(--adlg-muted-foreground)] tracking-[-0.01em] transition-colors duration-150 hover:bg-[color:var(--adlg-muted)] hover:text-[color:var(--adlg-foreground)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:color-mix(in_oklch,var(--adlg-ring),transparent_50%)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--adlg-surface)] disabled:pointer-events-none disabled:opacity-50";
 
 function setRef<T>(ref: React.Ref<T> | undefined, value: T) {
   if (typeof ref === "function") {
@@ -205,7 +208,7 @@ const AlertDialogTrigger = React.forwardRef<
 >(({ className, type = "button", ...props }, ref) => {
   return (
     <AlertDialogPrimitive.Trigger
-      className={cn(componentThemeClassName, triggerClassName, className)}
+      className={cn(alertDialogThemeClassName, triggerClassName, className)}
       ref={ref}
       type={type}
       {...props}
@@ -287,8 +290,8 @@ const AlertDialogContent = React.forwardRef<
                 animate={popupState.open ? "visible" : "exit"}
                 className={cn(
                   popupClassName,
-                  componentThemeClassName,
-                  "relative flex w-[min(100%,34rem)] max-w-xl flex-col gap-5 rounded-[12px] border border-border/75 bg-background/96 p-6 text-foreground shadow-[0_32px_120px_rgba(15,23,42,0.18)] outline-none supports-[backdrop-filter]:bg-background/92 sm:p-7 dark:bg-neutral-950/94"
+                  alertDialogThemeClassName,
+                  alertDialogContentClassName
                 )}
                 initial={
                   popupState.transitionStatus === "starting" ? "hidden" : false
@@ -356,7 +359,7 @@ const AlertDialogTitle = React.forwardRef<
   return (
     <AlertDialogPrimitive.Title
       className={cn(
-        "font-semibold text-[1.35rem] text-foreground leading-tight tracking-[-0.03em]",
+        "font-semibold text-[1.35rem] text-[color:var(--adlg-foreground)] leading-tight tracking-[-0.03em]",
         className
       )}
       ref={ref}
@@ -373,7 +376,7 @@ const AlertDialogDescription = React.forwardRef<
   return (
     <AlertDialogPrimitive.Description
       className={cn(
-        "max-w-[46ch] text-[15px] text-muted-foreground leading-6",
+        "max-w-[46ch] text-[15px] text-[color:var(--adlg-muted-foreground)] leading-6",
         className
       )}
       ref={ref}

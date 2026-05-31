@@ -12,15 +12,28 @@ import {
 } from "@/lib/reduced-motion";
 import { cn } from "@/lib/utils";
 
-const componentThemeClassName =
-  "[--background:#ffffff] [--foreground:#111111] [--primary:#111111] [--secondary:#646b75] [--surface-border:#e9edf2] [--border:#e3e7ec] [--card:#ffffff] [--card-foreground:#111111] [--muted:#f5f7fa] [--muted-foreground:#6d7480] [--accent:#f3f5f8] [--accent-foreground:#111111] [--input:#e3e7ec] [--ring:rgba(17,17,17,0.16)] [--destructive:#dc2626] [--paper:#fcfcfd] [--popover-foreground:#111111] [--brand:#0ea5e9] [--brand-soft:#bae6fd] [--shadow-soft:0_18px_38px_-24px_rgba(15,23,42,0.35)] [--chart-1:oklch(0.52_0.19_254)] [--chart-2:oklch(0.74_0.11_232)] [--chart-3:oklch(0.42_0.16_262)] [--chart-4:oklch(0.84_0.07_228)] [--chart-5:oklch(0.62_0.14_240)] [--color-background:var(--background)] [--color-foreground:var(--foreground)] [--color-primary:var(--primary)] [--color-secondary:var(--secondary)] [--color-border:var(--border)] [--color-card:var(--card)] [--color-card-foreground:var(--card-foreground)] [--color-muted:var(--muted)] [--color-muted-foreground:var(--muted-foreground)] [--color-accent:var(--accent)] [--color-accent-foreground:var(--accent-foreground)] [--color-input:var(--input)] [--color-ring:var(--ring)] [--color-destructive:var(--destructive)] [--color-paper:var(--paper)] [--color-popover-foreground:var(--popover-foreground)] [--color-brand:var(--brand)] [--color-brand-soft:var(--brand-soft)] [--color-chart-1:var(--chart-1)] [--color-chart-2:var(--chart-2)] [--color-chart-3:var(--chart-3)] [--color-chart-4:var(--chart-4)] [--color-chart-5:var(--chart-5)] dark:[--background:#111111] dark:[--foreground:#f6f3ec] dark:[--primary:#f6f3ec] dark:[--secondary:#cbc6bb] dark:[--surface-border:#2a2a25] dark:[--border:#2b2a25] dark:[--card:#111111] dark:[--card-foreground:#f6f3ec] dark:[--muted:#171716] dark:[--muted-foreground:#9a958a] dark:[--accent:#1a1a18] dark:[--accent-foreground:#f6f3ec] dark:[--input:#2b2a25] dark:[--ring:rgba(246,243,236,0.18)] dark:[--destructive:#f87171] dark:[--paper:#171716] dark:[--popover-foreground:#f6f3ec] dark:[--brand:#38bdf8] dark:[--brand-soft:#0c4a6e] dark:[--shadow-soft:0_20px_44px_-28px_rgba(0,0,0,0.6)] dark:[--chart-1:oklch(0.68_0.17_250)] dark:[--chart-2:oklch(0.82_0.09_225)] dark:[--chart-3:oklch(0.58_0.15_260)] dark:[--chart-4:oklch(0.75_0.12_235)] dark:[--chart-5:oklch(0.88_0.06_220)]";
+const contextMenuThemeClassName =
+  "[--cm-surface:#ffffff] [--cm-foreground:#111111] [--cm-border:#e3e7ec] [--cm-muted-foreground:#6d7480] [--cm-accent:#f3f5f8] [--cm-accent-foreground:#111111] [--cm-destructive:#dc2626] [--cm-ring:rgba(17,17,17,0.16)] dark:[--cm-surface:#111111] dark:[--cm-foreground:#f6f3ec] dark:[--cm-border:#2b2a25] dark:[--cm-muted-foreground:#9a958a] dark:[--cm-accent:#1a1a18] dark:[--cm-accent-foreground:#f6f3ec] dark:[--cm-destructive:#f87171] dark:[--cm-ring:rgba(246,243,236,0.18)]";
 
 const ITEM_HEIGHT = 44;
 
 const contextMenuPanelShellClassName =
-  "z-50 min-w-[232px] overflow-y-auto overflow-x-hidden rounded-lg border border-border/60 p-1.5 text-popover-foreground shadow-2xl dark:border-neutral-800";
+  "z-50 min-w-[232px] overflow-y-auto overflow-x-hidden rounded-lg border border-[color:color-mix(in_oklch,var(--cm-border),transparent_40%)] bg-[color:var(--cm-surface)] p-1.5 text-[color:var(--cm-foreground)] shadow-2xl";
 
-const contextMenuPanelSurfaceClassName = "bg-white dark:bg-[#111111]";
+const contextMenuTriggerClassName =
+  "select-none outline-none focus-visible:ring-2 focus-visible:ring-[color:color-mix(in_oklch,var(--cm-ring),transparent_50%)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--cm-surface)]";
+
+const contextMenuItemHighlightClassName =
+  "absolute inset-0 rounded-lg bg-[color:var(--cm-accent)]";
+
+const contextMenuItemDefaultClassName =
+  "text-[color:color-mix(in_oklch,var(--cm-foreground),transparent_15%)] hover:bg-[color:color-mix(in_oklch,var(--cm-accent),transparent_30%)]";
+
+const contextMenuItemDestructiveClassName =
+  "text-[color:var(--cm-destructive)] hover:bg-[color:color-mix(in_oklch,var(--cm-accent),transparent_30%)]";
+
+const contextMenuSubTriggerOpenClassName =
+  "data-[state=open]:bg-[color:var(--cm-accent)] data-[state=open]:text-[color:var(--cm-accent-foreground)]";
 
 type ContextMenuContextValue = {
   contentId: string;
@@ -158,8 +171,8 @@ const ContextMenuTrigger = React.forwardRef<
     <ContextMenuPrimitive.Trigger
       asChild={asChild}
       className={cn(
-        componentThemeClassName,
-        "select-none outline-none focus-visible:ring-2 focus-visible:ring-ring/50 focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+        contextMenuThemeClassName,
+        contextMenuTriggerClassName,
         className
       )}
       data-slot="context-menu-trigger"
@@ -228,10 +241,9 @@ const ContextMenuContentBody = React.forwardRef<
       <motion.div
         animate={{ scale: 1, y: 0 }}
         className={cn(
-          componentThemeClassName,
+          contextMenuThemeClassName,
           contextMenuPanelShellClassName,
-          className,
-          contextMenuPanelSurfaceClassName
+          className
         )}
         exit={{ scale: 0.96, y: -2 }}
         initial={{ scale: 0.94, y: -4 }}
@@ -298,8 +310,8 @@ const ContextMenuItem = React.forwardRef<
             "group/context-menu-item relative flex w-full cursor-pointer items-center gap-2.5 rounded-lg px-3 py-2.5 text-left font-medium text-sm outline-none transition-colors",
             "disabled:cursor-not-allowed disabled:opacity-40",
             isDestructive
-              ? "text-destructive hover:bg-accent/70"
-              : "text-foreground/85 hover:bg-accent/70",
+              ? contextMenuItemDestructiveClassName
+              : contextMenuItemDefaultClassName,
             inset && "pl-7",
             className
           )}
@@ -328,7 +340,7 @@ const ContextMenuItem = React.forwardRef<
         >
           {isHovered && !disabled ? (
             <motion.div
-              className="absolute inset-0 rounded-lg bg-accent"
+              className={contextMenuItemHighlightClassName}
               layoutId={`${contentId}-context-menu-active`}
               transition={getActiveHighlightTransition(reduceMotion)}
             />
@@ -364,7 +376,8 @@ const ContextMenuSubTrigger = React.forwardRef<
         animate={{ opacity: 1, x: 0 }}
         className={cn(
           "relative flex w-full cursor-pointer items-center gap-2.5 rounded-lg px-3 py-2.5 text-left font-medium text-sm outline-none transition-colors",
-          "text-foreground/85 hover:bg-accent/70 data-[state=open]:bg-accent data-[state=open]:text-accent-foreground",
+          contextMenuItemDefaultClassName,
+          contextMenuSubTriggerOpenClassName,
           inset && "pl-7",
           className
         )}
@@ -386,7 +399,7 @@ const ContextMenuSubTrigger = React.forwardRef<
       >
         {isHovered ? (
           <motion.div
-            className="absolute inset-0 rounded-lg bg-accent"
+            className={contextMenuItemHighlightClassName}
             layoutId={`${contentId}-context-menu-active`}
             transition={getActiveHighlightTransition(reduceMotion)}
           />
@@ -408,11 +421,10 @@ const ContextMenuSubContent = React.forwardRef<
   return (
     <ContextMenuPrimitive.SubContent
       className={cn(
-        componentThemeClassName,
+        contextMenuThemeClassName,
         contextMenuPanelShellClassName,
         "overflow-hidden",
-        className,
-        contextMenuPanelSurfaceClassName
+        className
       )}
       ref={ref}
       {...props}
@@ -450,7 +462,7 @@ const ContextMenuCheckboxItem = React.forwardRef<
         animate={{ opacity: disabled ? 0.5 : 1, x: 0 }}
         className={cn(
           "relative flex w-full cursor-pointer items-center gap-2.5 rounded-lg py-2.5 pr-8 pl-3 text-left font-medium text-sm outline-none transition-colors",
-          "text-foreground/85 hover:bg-accent/70",
+          contextMenuItemDefaultClassName,
           "disabled:cursor-not-allowed data-[disabled]:pointer-events-none",
           inset && "pl-7",
           className
@@ -481,7 +493,7 @@ const ContextMenuCheckboxItem = React.forwardRef<
       >
         {isHovered && !disabled ? (
           <motion.div
-            className="absolute inset-0 rounded-lg bg-accent"
+            className={contextMenuItemHighlightClassName}
             layoutId={`${contentId}-context-menu-active`}
             transition={getActiveHighlightTransition(reduceMotion)}
           />
@@ -526,7 +538,7 @@ const ContextMenuRadioItem = React.forwardRef<
         animate={{ opacity: 1, x: 0 }}
         className={cn(
           "relative flex w-full cursor-pointer items-center gap-2.5 rounded-lg py-2.5 pr-8 pl-3 text-left font-medium text-sm outline-none transition-colors",
-          "text-foreground/85 hover:bg-accent/70",
+          contextMenuItemDefaultClassName,
           "disabled:cursor-not-allowed disabled:opacity-40",
           inset && "pl-7",
           className
@@ -555,7 +567,7 @@ const ContextMenuRadioItem = React.forwardRef<
       >
         {isHovered && !disabled ? (
           <motion.div
-            className="absolute inset-0 rounded-lg bg-accent"
+            className={contextMenuItemHighlightClassName}
             layoutId={`${contentId}-context-menu-active`}
             transition={getActiveHighlightTransition(reduceMotion)}
           />
@@ -588,7 +600,7 @@ function ContextMenuLabel({
   return (
     <ContextMenuPrimitive.Label
       className={cn(
-        "px-3 py-1 font-medium text-muted-foreground text-xs",
+        "px-3 py-1 font-medium text-[color:var(--cm-muted-foreground)] text-xs",
         inset && "pl-7",
         className
       )}
@@ -606,7 +618,10 @@ function ContextMenuSeparator({
 }: React.ComponentProps<typeof ContextMenuPrimitive.Separator>) {
   return (
     <ContextMenuPrimitive.Separator
-      className={cn("my-1 h-px bg-border/60", className)}
+      className={cn(
+        "my-1 h-px bg-[color:color-mix(in_oklch,var(--cm-border),transparent_40%)]",
+        className
+      )}
       data-slot="context-menu-separator"
       {...props}
     />
@@ -621,7 +636,7 @@ function ContextMenuShortcut({
   return (
     <span
       className={cn(
-        "relative z-10 ml-auto text-muted-foreground/70 text-xs tracking-widest",
+        "relative z-10 ml-auto text-[color:color-mix(in_oklch,var(--cm-muted-foreground),transparent_30%)] text-xs tracking-widest",
         className
       )}
       data-slot="context-menu-shortcut"

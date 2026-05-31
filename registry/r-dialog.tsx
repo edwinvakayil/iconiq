@@ -12,8 +12,14 @@ import {
 } from "@/lib/reduced-motion";
 import { cn } from "@/lib/utils";
 
-const componentThemeClassName =
-  "[--background:#ffffff] [--foreground:#111111] [--primary:#111111] [--secondary:#646b75] [--surface-border:#e9edf2] [--border:#e3e7ec] [--card:#ffffff] [--card-foreground:#111111] [--muted:#f5f7fa] [--muted-foreground:#6d7480] [--accent:#f3f5f8] [--accent-foreground:#111111] [--input:#e3e7ec] [--ring:rgba(17,17,17,0.16)] [--destructive:#dc2626] [--paper:#fcfcfd] [--popover-foreground:#111111] [--brand:#0ea5e9] [--brand-soft:#bae6fd] [--shadow-soft:0_18px_38px_-24px_rgba(15,23,42,0.35)] [--chart-1:oklch(0.52_0.19_254)] [--chart-2:oklch(0.74_0.11_232)] [--chart-3:oklch(0.42_0.16_262)] [--chart-4:oklch(0.84_0.07_228)] [--chart-5:oklch(0.62_0.14_240)] [--color-background:var(--background)] [--color-foreground:var(--foreground)] [--color-primary:var(--primary)] [--color-secondary:var(--secondary)] [--color-border:var(--border)] [--color-card:var(--card)] [--color-card-foreground:var(--card-foreground)] [--color-muted:var(--muted)] [--color-muted-foreground:var(--muted-foreground)] [--color-accent:var(--accent)] [--color-accent-foreground:var(--accent-foreground)] [--color-input:var(--input)] [--color-ring:var(--ring)] [--color-destructive:var(--destructive)] [--color-paper:var(--paper)] [--color-popover-foreground:var(--popover-foreground)] [--color-brand:var(--brand)] [--color-brand-soft:var(--brand-soft)] [--color-chart-1:var(--chart-1)] [--color-chart-2:var(--chart-2)] [--color-chart-3:var(--chart-3)] [--color-chart-4:var(--chart-4)] [--color-chart-5:var(--chart-5)] dark:[--background:#111111] dark:[--foreground:#f6f3ec] dark:[--primary:#f6f3ec] dark:[--secondary:#cbc6bb] dark:[--surface-border:#2a2a25] dark:[--border:#2b2a25] dark:[--card:#111111] dark:[--card-foreground:#f6f3ec] dark:[--muted:#171716] dark:[--muted-foreground:#9a958a] dark:[--accent:#1a1a18] dark:[--accent-foreground:#f6f3ec] dark:[--input:#2b2a25] dark:[--ring:rgba(246,243,236,0.18)] dark:[--destructive:#f87171] dark:[--paper:#171716] dark:[--popover-foreground:#f6f3ec] dark:[--brand:#38bdf8] dark:[--brand-soft:#0c4a6e] dark:[--shadow-soft:0_20px_44px_-28px_rgba(0,0,0,0.6)] dark:[--chart-1:oklch(0.68_0.17_250)] dark:[--chart-2:oklch(0.82_0.09_225)] dark:[--chart-3:oklch(0.58_0.15_260)] dark:[--chart-4:oklch(0.75_0.12_235)] dark:[--chart-5:oklch(0.88_0.06_220)]";
+const dialogThemeClassName =
+  "[--dlg-surface:#ffffff] [--dlg-foreground:#111111] [--dlg-border:#e3e7ec] [--dlg-ring:rgba(17,17,17,0.16)] [--dlg-muted-foreground:#6d7480] [--dlg-muted:#f5f7fa] dark:[--dlg-surface:#0a0a0a] dark:[--dlg-foreground:#f6f3ec] dark:[--dlg-border:#2b2a25] dark:[--dlg-ring:rgba(246,243,236,0.18)] dark:[--dlg-muted-foreground:#9a958a] dark:[--dlg-muted:#1a1a18]";
+
+const dialogContentClassName =
+  "relative flex w-[min(100%,34rem)] max-w-xl flex-col gap-5 rounded-[12px] border border-[color:color-mix(in_oklch,var(--dlg-border),transparent_25%)] bg-[color:color-mix(in_oklch,var(--dlg-surface),transparent_4%)] p-6 text-[color:var(--dlg-foreground)] shadow-[0_32px_120px_rgba(15,23,42,0.18)] outline-none supports-[backdrop-filter]:bg-[color:color-mix(in_oklch,var(--dlg-surface),transparent_8%)] sm:p-7";
+
+const dialogCloseClassName =
+  "absolute top-4 right-4 inline-flex h-9 w-9 items-center justify-center rounded-md text-[color:var(--dlg-muted-foreground)] transition-colors hover:bg-[color:color-mix(in_oklch,var(--dlg-muted),transparent_30%)] hover:text-[color:var(--dlg-foreground)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:color-mix(in_oklch,var(--dlg-ring),transparent_50%)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--dlg-surface)]";
 
 const overlayVariants = {
   hidden: { opacity: 0 },
@@ -207,8 +213,8 @@ const DialogContent = React.forwardRef<HTMLDivElement, DialogContentProps>(
                 <motion.div
                   animate="visible"
                   className={cn(
-                    componentThemeClassName,
-                    "relative flex w-[min(100%,34rem)] max-w-xl flex-col gap-5 rounded-[12px] border border-border/75 bg-background/96 p-6 text-foreground shadow-[0_32px_120px_rgba(15,23,42,0.18)] supports-[backdrop-filter]:bg-background/92 sm:p-7 dark:bg-neutral-950/94",
+                    dialogThemeClassName,
+                    dialogContentClassName,
                     className
                   )}
                   exit="exit"
@@ -221,11 +227,7 @@ const DialogContent = React.forwardRef<HTMLDivElement, DialogContentProps>(
                     )
                   )}
                   <DialogPrimitive.Close
-                    className={cn(
-                      "absolute top-4 right-4 inline-flex h-9 w-9 items-center justify-center rounded-md text-muted-foreground transition-colors",
-                      "hover:bg-muted/70 hover:text-foreground",
-                      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                    )}
+                    className={cn(dialogCloseClassName)}
                     type="button"
                   >
                     <X className="h-4 w-4" />
@@ -276,7 +278,7 @@ const DialogTitle = React.forwardRef<
   return (
     <DialogPrimitive.Title
       className={cn(
-        "font-semibold text-[1.35rem] text-foreground leading-tight tracking-[-0.03em]",
+        "font-semibold text-[1.35rem] text-[color:var(--dlg-foreground)] leading-tight tracking-[-0.03em]",
         className
       )}
       ref={ref}
@@ -293,7 +295,7 @@ const DialogDescription = React.forwardRef<
   return (
     <DialogPrimitive.Description
       className={cn(
-        "max-w-[46ch] text-[15px] text-muted-foreground leading-6",
+        "max-w-[46ch] text-[15px] text-[color:var(--dlg-muted-foreground)] leading-6",
         className
       )}
       ref={ref}

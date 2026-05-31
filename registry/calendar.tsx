@@ -28,6 +28,11 @@ import {
   useState,
 } from "react";
 
+import { cn } from "@/lib/utils";
+
+const componentThemeClassName =
+  "[--ic-background:#ffffff] [--ic-foreground:#111111] [--ic-primary:#111111] [--ic-secondary:#646b75] [--ic-surface-border:#e9edf2] [--ic-border:#e3e7ec] [--ic-card:#ffffff] [--ic-card-foreground:#111111] [--ic-muted:#f5f7fa] [--ic-muted-foreground:#6d7480] [--ic-accent:#f3f5f8] [--ic-accent-foreground:#111111] [--ic-input:#e3e7ec] [--ic-ring:rgba(17,17,17,0.16)] [--ic-destructive:#dc2626] [--ic-paper:#fcfcfd] [--ic-popover-foreground:#111111] [--ic-brand:#0ea5e9] [--ic-brand-soft:#bae6fd] [--ic-primary-foreground:#ffffff] [--ic-shadow-soft:0_18px_38px_-24px_rgba(15,23,42,0.35)] [--ic-chart-1:oklch(0.52_0.19_254)] [--ic-chart-2:oklch(0.74_0.11_232)] [--ic-chart-3:oklch(0.42_0.16_262)] [--ic-chart-4:oklch(0.84_0.07_228)] [--ic-chart-5:oklch(0.62_0.14_240)] [--color-background:var(--ic-background)] [--color-foreground:var(--ic-foreground)] [--color-primary:var(--ic-primary)] [--color-primary-foreground:var(--ic-primary-foreground)] [--color-secondary:var(--ic-secondary)] [--color-border:var(--ic-border)] [--color-card:var(--ic-card)] [--color-card-foreground:var(--ic-card-foreground)] [--color-muted:var(--ic-muted)] [--color-muted-foreground:var(--ic-muted-foreground)] [--color-accent:var(--ic-accent)] [--color-accent-foreground:var(--ic-accent-foreground)] [--color-input:var(--ic-input)] [--color-ring:var(--ic-ring)] [--color-destructive:var(--ic-destructive)] [--color-paper:var(--ic-paper)] [--color-popover-foreground:var(--ic-popover-foreground)] [--color-brand:var(--ic-brand)] [--color-brand-soft:var(--ic-brand-soft)] [--color-chart-1:var(--ic-chart-1)] [--color-chart-2:var(--ic-chart-2)] [--color-chart-3:var(--ic-chart-3)] [--color-chart-4:var(--ic-chart-4)] [--color-chart-5:var(--ic-chart-5)] dark:[--ic-background:#111111] dark:[--ic-foreground:#f6f3ec] dark:[--ic-primary:#f6f3ec] dark:[--ic-primary-foreground:#111111] dark:[--ic-secondary:#cbc6bb] dark:[--ic-surface-border:#2a2a25] dark:[--ic-border:#2b2a25] dark:[--ic-card:#111111] dark:[--ic-card-foreground:#f6f3ec] dark:[--ic-muted:#171716] dark:[--ic-muted-foreground:#9a958a] dark:[--ic-accent:#1a1a18] dark:[--ic-accent-foreground:#f6f3ec] dark:[--ic-input:#2b2a25] dark:[--ic-ring:rgba(246,243,236,0.18)] dark:[--ic-destructive:#f87171] dark:[--ic-paper:#171716] dark:[--ic-popover-foreground:#f6f3ec] dark:[--ic-brand:#38bdf8] dark:[--ic-brand-soft:#0c4a6e] dark:[--ic-shadow-soft:0_20px_44px_-28px_rgba(0,0,0,0.6)] dark:[--ic-chart-1:oklch(0.68_0.17_250)] dark:[--ic-chart-2:oklch(0.82_0.09_225)] dark:[--ic-chart-3:oklch(0.58_0.15_260)] dark:[--ic-chart-4:oklch(0.75_0.12_235)] dark:[--ic-chart-5:oklch(0.88_0.06_220)]";
+
 const SPRING_EASE: [number, number, number, number] = [0.34, 1.56, 0.64, 1];
 const SMOOTH_EASE: [number, number, number, number] = [0.4, 0, 0.2, 1];
 const WEEK_LENGTH = 7;
@@ -62,6 +67,7 @@ export interface CalendarProps {
   weekStartsOn?: WeekStartsOn;
   minYear?: number;
   maxYear?: number;
+  className?: string;
 }
 
 type CalendarPalette = {
@@ -282,6 +288,7 @@ export const Calendar = ({
   weekStartsOn,
   minYear,
   maxYear,
+  className,
 }: CalendarProps) => {
   const calendarMotionId = useId();
   const headingId = `${calendarMotionId}-heading`;
@@ -332,48 +339,48 @@ export const Calendar = ({
 
   const palette: CalendarPalette = isDark
     ? {
-        cardBackground: "var(--card, #111111)",
-        cardBorder: "1px solid var(--border, #2b2a25)",
+        cardBackground: "var(--ic-card, #111111)",
+        cardBorder: "1px solid var(--ic-border, #2b2a25)",
         cardShadow: "none",
-        textPrimary: "var(--foreground, #f6f3ec)",
-        textMuted: "var(--muted-foreground, #9a958a)",
+        textPrimary: "var(--ic-foreground, #f6f3ec)",
+        textMuted: "var(--ic-muted-foreground, #9a958a)",
         textDim:
-          "color-mix(in srgb, var(--muted-foreground, #9a958a) 68%, transparent)",
-        titleColor: "var(--foreground, #f6f3ec)",
+          "color-mix(in srgb, var(--ic-muted-foreground, #9a958a) 68%, transparent)",
+        titleColor: "var(--ic-foreground, #f6f3ec)",
         navBackground: "transparent",
-        navForeground: "var(--foreground, #f6f3ec)",
-        navHoverBackground: "var(--accent, #1a1a18)",
-        dayHoverBackground: "var(--accent, #1a1a18)",
-        selectedGradient: "var(--primary, #f6f3ec)",
-        selectedForeground: "var(--primary-foreground, #111111)",
-        todayBackground: "var(--muted, #171716)",
-        focusRing: "var(--ring, rgba(246, 243, 236, 0.18))",
-        popoverBackground: "var(--card, #111111)",
-        popoverBorder: "1px solid var(--border, #2b2a25)",
+        navForeground: "var(--ic-foreground, #f6f3ec)",
+        navHoverBackground: "var(--ic-accent, #1a1a18)",
+        dayHoverBackground: "var(--ic-accent, #1a1a18)",
+        selectedGradient: "var(--ic-primary, #f6f3ec)",
+        selectedForeground: "var(--ic-primary-foreground, #111111)",
+        todayBackground: "var(--ic-muted, #171716)",
+        focusRing: "var(--ic-ring, rgba(246, 243, 236, 0.18))",
+        popoverBackground: "var(--ic-card, #111111)",
+        popoverBorder: "1px solid var(--ic-border, #2b2a25)",
         popoverShadow: "0 12px 32px -18px rgba(0, 0, 0, 0.6)",
-        pickerHoverBackground: "var(--accent, #1a1a18)",
+        pickerHoverBackground: "var(--ic-accent, #1a1a18)",
       }
     : {
-        cardBackground: "var(--card, #ffffff)",
-        cardBorder: "1px solid var(--border, #e4e4e7)",
+        cardBackground: "var(--ic-card, #ffffff)",
+        cardBorder: "1px solid var(--ic-border, #e4e4e7)",
         cardShadow: "none",
-        textPrimary: "var(--foreground, #111111)",
-        textMuted: "var(--muted-foreground, #6d7480)",
+        textPrimary: "var(--ic-foreground, #111111)",
+        textMuted: "var(--ic-muted-foreground, #6d7480)",
         textDim:
-          "color-mix(in srgb, var(--muted-foreground, #6d7480) 68%, transparent)",
-        titleColor: "var(--foreground, #111111)",
+          "color-mix(in srgb, var(--ic-muted-foreground, #6d7480) 68%, transparent)",
+        titleColor: "var(--ic-foreground, #111111)",
         navBackground: "transparent",
-        navForeground: "var(--foreground, #111111)",
-        navHoverBackground: "var(--accent, #f3f5f8)",
-        dayHoverBackground: "var(--accent, #f3f5f8)",
-        selectedGradient: "var(--primary, #111111)",
-        selectedForeground: "var(--primary-foreground, #ffffff)",
-        todayBackground: "var(--muted, #f5f7fa)",
-        focusRing: "var(--ring, rgba(17, 17, 17, 0.16))",
-        popoverBackground: "var(--card, #ffffff)",
-        popoverBorder: "1px solid var(--border, #e3e7ec)",
+        navForeground: "var(--ic-foreground, #111111)",
+        navHoverBackground: "var(--ic-accent, #f3f5f8)",
+        dayHoverBackground: "var(--ic-accent, #f3f5f8)",
+        selectedGradient: "var(--ic-primary, #111111)",
+        selectedForeground: "var(--ic-primary-foreground, #ffffff)",
+        todayBackground: "var(--ic-muted, #f5f7fa)",
+        focusRing: "var(--ic-ring, rgba(17, 17, 17, 0.16))",
+        popoverBackground: "var(--ic-card, #ffffff)",
+        popoverBorder: "1px solid var(--ic-border, #e3e7ec)",
         popoverShadow: "0 12px 32px -18px rgba(15, 23, 42, 0.28)",
-        pickerHoverBackground: "var(--accent, #f3f5f8)",
+        pickerHoverBackground: "var(--ic-accent, #f3f5f8)",
       };
 
   // Theme observer
@@ -614,6 +621,7 @@ export const Calendar = ({
       animate={{ opacity: 1, y: 0, scale: 1 }}
       aria-describedby={selectedInfoId}
       aria-labelledby={headingId}
+      className={cn(componentThemeClassName, className)}
       initial={{ opacity: 0, y: 30, scale: 0.95 }}
       role="group"
       style={{
