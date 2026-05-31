@@ -433,7 +433,7 @@ const calendarApiDetails: DetailItem[] = [
     id: "calendar",
     title: "Calendar",
     summary:
-      "Animated monthly calendar card that now supports both controlled and uncontrolled month and selection state.",
+      "shadcn-style animated monthly calendar with controlled/uncontrolled month state, day selection, and direct month/year picking.",
     fields: [
       field({
         name: "selected",
@@ -451,13 +451,13 @@ const calendarApiDetails: DetailItem[] = [
         name: "onSelect",
         type: "(date: Date) => void",
         description:
-          "Called when the user picks an interactive day in the current month.",
+          "Called when the user picks any interactive day, including visible outside-month days.",
       }),
       field({
         name: "month",
         type: "Date",
         description:
-          "Controlled visible month. Prev/next navigation requests flow through onMonthChange.",
+          "Controlled visible month. Prev/next, outside-day, and month/year picker navigation requests flow through onMonthChange.",
       }),
       field({
         name: "defaultMonth",
@@ -469,7 +469,7 @@ const calendarApiDetails: DetailItem[] = [
         name: "onMonthChange",
         type: "(month: Date) => void",
         description:
-          "Called whenever the user navigates to a previous or next month.",
+          "Called whenever the user navigates with prev/next, an outside day, or the month/year picker.",
       }),
       field({
         name: "disabled",
@@ -487,7 +487,7 @@ const calendarApiDetails: DetailItem[] = [
         name: "size",
         type: '"sm" | "md" | "lg"',
         description:
-          "Controls the overall calendar scale, including the card width, spacing, nav controls, weekday row, and day cell sizing. Defaults to md.",
+          "Controls the overall calendar scale, including the card width, spacing, nav controls, weekday row, and day cell sizing. Defaults to sm.",
       }),
       field({
         name: "weekStartsOn",
@@ -495,11 +495,24 @@ const calendarApiDetails: DetailItem[] = [
         description:
           "Overrides the first day of the week for both the weekday header and rendered month grid.",
       }),
+      field({
+        name: "minYear",
+        type: "number",
+        description:
+          "Optional lower bound for selectable years in the year picker.",
+      }),
+      field({
+        name: "maxYear",
+        type: "number",
+        description:
+          "Optional upper bound for selectable years in the year picker.",
+      }),
     ],
     notes: [
       "Controlled mode: pass selected/month and respond to onSelect/onMonthChange.",
       "Uncontrolled mode: omit selected/month and optionally seed with defaultSelected/defaultMonth.",
-      "When no defaults are provided, the visible month starts from today and the footer stays empty until the user selects a date.",
+      "The month and year labels open overlay pickers, so users can jump without losing the existing date-grid motion.",
+      "When no defaults are provided, the visible month starts from today and selection stays empty until the user picks a date.",
     ],
   },
   {
@@ -517,9 +530,10 @@ const calendarApiDetails: DetailItem[] = [
     id: "calendar-motion-a11y",
     title: "Motion and interaction model",
     summary:
-      "Month transitions, selected-day changes, and the footer summary each animate independently.",
+      "Month transitions, selected-day changes, and the live selection summary each animate independently.",
     notes: [
       "Prev and next controls are real buttons with aria-label values, and each in-month day is rendered as a button with hover and tap motion.",
+      "Month/year picker overlays use the same smooth easing as the date grid, while directional grid changes keep the existing staggered day entrance.",
       "The selected day highlight uses a shared layoutId of selected-day so the active surface glides between dates instead of remounting abruptly.",
       "Keyboard users can move through the month with arrow keys, Home/End, and PageUp/PageDown, while the calendar exposes clearer spoken date labels and a live selected-date summary.",
       "This is still not a full calendar input primitive: there is no range or multi-select mode.",

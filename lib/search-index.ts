@@ -37,7 +37,7 @@ const componentSummaries: Record<string, string> = {
   "/components/button-group":
     "Button group docs in the Components section, using the shared Iconiq button group install with provider options visible but disabled.",
   "/components/calendar":
-    "Calendar docs in the Components section, using the shared Iconiq calendar install with provider options visible but disabled.",
+    "Calendar docs in the Components section, using the shared Iconiq calendar install with month/year picking, fluid date-grid motion, and provider options visible but disabled.",
   "/components/charts":
     "Charts docs in the Components section, using the shared Iconiq Recharts shell with provider options visible but disabled because there is no Radix UI or Base UI variant.",
   "/components/card":

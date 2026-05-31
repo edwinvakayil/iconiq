@@ -480,7 +480,7 @@
       "dependencies": ["motion", "lucide-react", "date-fns"],
       "devDependencies": [],
       "title": "Calendar",
-      "description": "Compact monthly calendar with animated month transitions, selectable days, and date-fns-powered grid generation.",
+      "description": "shadcn-style monthly calendar with animated month/year transitions, selectable days, and date-fns-powered grid generation.",
       "files": [
         {
           "path": "calendar.tsx",

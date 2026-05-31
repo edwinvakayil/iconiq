@@ -15,9 +15,10 @@ import {
   startOfWeek,
   subMonths,
 } from "date-fns";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import {
+  type CSSProperties,
   type KeyboardEvent,
   type ReactNode,
   useEffect,
@@ -31,6 +32,19 @@ const SPRING_EASE: [number, number, number, number] = [0.34, 1.56, 0.64, 1];
 const SMOOTH_EASE: [number, number, number, number] = [0.4, 0, 0.2, 1];
 const WEEK_LENGTH = 7;
 const YEAR_GRID_SIZE = 12; // 3 cols x 4 rows
+const MONTH_GRID_VARIANTS = {
+  center: { opacity: 1, scale: 1, x: 0 },
+  enter: (direction: number) => ({
+    opacity: 0,
+    scale: 0.985,
+    x: direction === 0 ? 0 : direction * 14,
+  }),
+  exit: (direction: number) => ({
+    opacity: 0,
+    scale: 0.985,
+    x: direction === 0 ? 0 : direction * -14,
+  }),
+};
 
 type CalendarSize = "sm" | "md" | "lg";
 type WeekStartsOn = 0 | 1 | 2 | 3 | 4 | 5 | 6;
@@ -62,11 +76,9 @@ type CalendarPalette = {
   navForeground: string;
   navHoverBackground: string;
   dayHoverBackground: string;
-  dayHoverShadow: string;
   selectedGradient: string;
   selectedForeground: string;
-  todayDot: string;
-  footerBorder: string;
+  todayBackground: string;
   focusRing: string;
   popoverBackground: string;
   popoverBorder: string;
@@ -80,11 +92,6 @@ type CalendarDimensions = {
   dayCellFontSize: number;
   dayCellMinHeight: number;
   dayCellRadius: number;
-  dayDotBottom: number;
-  dayDotSize: number;
-  footerLabelFontSize: number;
-  footerSpacingTop: number;
-  footerValueFontSize: number;
   headerGap: number;
   monthFontSize: number;
   monthTopMargin: number;
@@ -94,79 +101,64 @@ type CalendarDimensions = {
   tableCellPadding: number;
   tableHeaderFontSize: number;
   tableHeaderPaddingBottom: number;
-  yearFontSize: number;
+  weekRowGap: number;
   maxWidth: number;
 };
 
 const CALENDAR_DIMENSIONS: Record<CalendarSize, CalendarDimensions> = {
   sm: {
-    cardPadding: 12,
-    cardRadius: 14,
-    dayCellFontSize: 11,
-    dayCellMinHeight: 30,
-    dayCellRadius: 7,
-    dayDotBottom: 3,
-    dayDotSize: 3,
-    footerLabelFontSize: 8,
-    footerSpacingTop: 10,
-    footerValueFontSize: 11,
-    headerGap: 10,
-    maxWidth: 248,
-    monthFontSize: 15,
-    monthTopMargin: 3,
+    cardPadding: 8,
+    cardRadius: 12,
+    dayCellFontSize: 14,
+    dayCellMinHeight: 28,
+    dayCellRadius: 6,
+    headerGap: 16,
+    maxWidth: 212,
+    monthFontSize: 14,
+    monthTopMargin: 0,
     navButtonSize: 28,
     navGap: 4,
-    navIconSize: 11,
-    tableCellPadding: 1,
-    tableHeaderFontSize: 9,
-    tableHeaderPaddingBottom: 6,
-    yearFontSize: 9,
+    navIconSize: 16,
+    tableCellPadding: 0,
+    tableHeaderFontSize: 12,
+    tableHeaderPaddingBottom: 0,
+    weekRowGap: 8,
   },
   md: {
-    cardPadding: 14,
-    cardRadius: 16,
-    dayCellFontSize: 12,
-    dayCellMinHeight: 34,
-    dayCellRadius: 8,
-    dayDotBottom: 4,
-    dayDotSize: 4,
-    footerLabelFontSize: 9,
-    footerSpacingTop: 12,
-    footerValueFontSize: 12,
-    headerGap: 12,
-    maxWidth: 280,
-    monthFontSize: 16,
-    monthTopMargin: 4,
+    cardPadding: 8,
+    cardRadius: 12,
+    dayCellFontSize: 15,
+    dayCellMinHeight: 32,
+    dayCellRadius: 7,
+    headerGap: 16,
+    maxWidth: 240,
+    monthFontSize: 15,
+    monthTopMargin: 0,
     navButtonSize: 32,
     navGap: 6,
-    navIconSize: 12,
-    tableCellPadding: 2,
-    tableHeaderFontSize: 10,
-    tableHeaderPaddingBottom: 8,
-    yearFontSize: 10,
+    navIconSize: 16,
+    tableCellPadding: 0,
+    tableHeaderFontSize: 13,
+    tableHeaderPaddingBottom: 0,
+    weekRowGap: 8,
   },
   lg: {
-    cardPadding: 16,
-    cardRadius: 18,
-    dayCellFontSize: 14,
-    dayCellMinHeight: 42,
-    dayCellRadius: 10,
-    dayDotBottom: 5,
-    dayDotSize: 5,
-    footerLabelFontSize: 10,
-    footerSpacingTop: 14,
-    footerValueFontSize: 13,
-    headerGap: 14,
-    maxWidth: 336,
-    monthFontSize: 18,
-    monthTopMargin: 6,
-    navButtonSize: 36,
+    cardPadding: 10,
+    cardRadius: 14,
+    dayCellFontSize: 16,
+    dayCellMinHeight: 38,
+    dayCellRadius: 8,
+    headerGap: 16,
+    maxWidth: 282,
+    monthFontSize: 16,
+    monthTopMargin: 0,
+    navButtonSize: 38,
     navGap: 8,
-    navIconSize: 14,
-    tableCellPadding: 3,
-    tableHeaderFontSize: 11,
-    tableHeaderPaddingBottom: 10,
-    yearFontSize: 11,
+    navIconSize: 18,
+    tableCellPadding: 0,
+    tableHeaderFontSize: 14,
+    tableHeaderPaddingBottom: 0,
+    weekRowGap: 8,
   },
 };
 
@@ -286,7 +278,7 @@ export const Calendar = ({
   onMonthChange,
   disabled,
   locale,
-  size = "md",
+  size = "sm",
   weekStartsOn,
   minYear,
   maxYear,
@@ -325,8 +317,10 @@ export const Calendar = ({
     () =>
       Math.floor(initialMonth.getFullYear() / YEAR_GRID_SIZE) * YEAR_GRID_SIZE
   );
+  const [monthMotionDirection, setMonthMotionDirection] = useState(0);
   const dayButtonRefs = useRef(new Map<string, HTMLButtonElement>());
   const pickerRef = useRef<HTMLDivElement | null>(null);
+  const pickerTriggerRef = useRef<HTMLDivElement | null>(null);
 
   const currentMonth = startOfMonth(month ?? internalMonth);
   const selectedDate = selected === undefined ? internalSelected : selected;
@@ -338,52 +332,48 @@ export const Calendar = ({
 
   const palette: CalendarPalette = isDark
     ? {
-        cardBackground: "linear-gradient(135deg, #000000 0%, #0f0f0f 100%)",
-        cardBorder: "1px solid rgba(255, 255, 255, 0.12)",
+        cardBackground: "var(--card, #111111)",
+        cardBorder: "1px solid var(--border, #2b2a25)",
         cardShadow: "none",
-        textPrimary: "#f5f5f5",
-        textMuted: "#a3a3a3",
-        textDim: "rgba(255, 255, 255, 0.35)",
-        titleColor: "#f5f5f5",
-        navBackground: "#171717",
-        navForeground: "#f5f5f5",
-        navHoverBackground: "rgba(255, 255, 255, 0.14)",
-        dayHoverBackground: "#1a1a1a",
-        dayHoverShadow:
-          "0 12px 22px -18px rgba(255, 255, 255, 0.18), inset 0 0 0 1px rgba(255, 255, 255, 0.08)",
-        selectedGradient: "linear-gradient(135deg, #f5f5f5, #a3a3a3)",
-        selectedForeground: "#000000",
-        todayDot: "#f5f5f5",
-        footerBorder: "1px solid rgba(255, 255, 255, 0.14)",
-        focusRing: "rgba(245, 245, 245, 0.45)",
-        popoverBackground: "linear-gradient(135deg, #0a0a0a 0%, #161616 100%)",
-        popoverBorder: "1px solid rgba(255, 255, 255, 0.14)",
-        popoverShadow: "0 24px 60px -20px rgba(0, 0, 0, 0.65)",
-        pickerHoverBackground: "rgba(255, 255, 255, 0.08)",
+        textPrimary: "var(--foreground, #f6f3ec)",
+        textMuted: "var(--muted-foreground, #9a958a)",
+        textDim:
+          "color-mix(in srgb, var(--muted-foreground, #9a958a) 68%, transparent)",
+        titleColor: "var(--foreground, #f6f3ec)",
+        navBackground: "transparent",
+        navForeground: "var(--foreground, #f6f3ec)",
+        navHoverBackground: "var(--accent, #1a1a18)",
+        dayHoverBackground: "var(--accent, #1a1a18)",
+        selectedGradient: "var(--primary, #f6f3ec)",
+        selectedForeground: "var(--primary-foreground, #111111)",
+        todayBackground: "var(--muted, #171716)",
+        focusRing: "var(--ring, rgba(246, 243, 236, 0.18))",
+        popoverBackground: "var(--card, #111111)",
+        popoverBorder: "1px solid var(--border, #2b2a25)",
+        popoverShadow: "0 12px 32px -18px rgba(0, 0, 0, 0.6)",
+        pickerHoverBackground: "var(--accent, #1a1a18)",
       }
     : {
-        cardBackground: "linear-gradient(135deg, #ffffff 0%, #f4f4f5 100%)",
-        cardBorder: "1px solid rgba(0, 0, 0, 0.08)",
+        cardBackground: "var(--card, #ffffff)",
+        cardBorder: "1px solid var(--border, #e4e4e7)",
         cardShadow: "none",
-        textPrimary: "#0a0a0a",
-        textMuted: "#737373",
-        textDim: "rgba(0, 0, 0, 0.25)",
-        titleColor: "#0a0a0a",
-        navBackground: "#f4f4f5",
-        navForeground: "#0a0a0a",
-        navHoverBackground: "rgba(20, 20, 20, 0.1)",
-        dayHoverBackground: "#f4f4f5",
-        dayHoverShadow:
-          "0 12px 22px -18px rgba(15, 23, 42, 0.16), inset 0 0 0 1px rgba(10, 10, 10, 0.05)",
-        selectedGradient: "linear-gradient(135deg, #141414, #4a4a4a)",
-        selectedForeground: "#ffffff",
-        todayDot: "#0a0a0a",
-        footerBorder: "1px solid rgba(0, 0, 0, 0.08)",
-        focusRing: "rgba(10, 10, 10, 0.2)",
-        popoverBackground: "linear-gradient(135deg, #ffffff 0%, #f7f7f8 100%)",
-        popoverBorder: "1px solid rgba(0, 0, 0, 0.1)",
-        popoverShadow: "0 24px 60px -20px rgba(15, 23, 42, 0.25)",
-        pickerHoverBackground: "rgba(10, 10, 10, 0.06)",
+        textPrimary: "var(--foreground, #111111)",
+        textMuted: "var(--muted-foreground, #6d7480)",
+        textDim:
+          "color-mix(in srgb, var(--muted-foreground, #6d7480) 68%, transparent)",
+        titleColor: "var(--foreground, #111111)",
+        navBackground: "transparent",
+        navForeground: "var(--foreground, #111111)",
+        navHoverBackground: "var(--accent, #f3f5f8)",
+        dayHoverBackground: "var(--accent, #f3f5f8)",
+        selectedGradient: "var(--primary, #111111)",
+        selectedForeground: "var(--primary-foreground, #ffffff)",
+        todayBackground: "var(--muted, #f5f7fa)",
+        focusRing: "var(--ring, rgba(17, 17, 17, 0.16))",
+        popoverBackground: "var(--card, #ffffff)",
+        popoverBorder: "1px solid var(--border, #e3e7ec)",
+        popoverShadow: "0 12px 32px -18px rgba(15, 23, 42, 0.28)",
+        pickerHoverBackground: "var(--accent, #f3f5f8)",
       };
 
   // Theme observer
@@ -453,9 +443,14 @@ export const Calendar = ({
   useEffect(() => {
     if (picker === "none") return;
     const onDown = (e: MouseEvent) => {
-      if (pickerRef.current && !pickerRef.current.contains(e.target as Node)) {
-        setPicker("none");
+      const target = e.target as Node;
+      if (
+        pickerRef.current?.contains(target) ||
+        pickerTriggerRef.current?.contains(target)
+      ) {
+        return;
       }
+      setPicker("none");
     };
     const onKey = (e: globalThis.KeyboardEvent) => {
       if (e.key === "Escape") setPicker("none");
@@ -470,6 +465,11 @@ export const Calendar = ({
 
   const setMonthValue = (nextMonth: Date) => {
     const normalized = startOfMonth(nextMonth);
+    const monthOffset =
+      (normalized.getFullYear() - currentMonth.getFullYear()) * 12 +
+      normalized.getMonth() -
+      currentMonth.getMonth();
+    setMonthMotionDirection(Math.sign(monthOffset));
     if (month === undefined) setInternalMonth(normalized);
     onMonthChange?.(normalized);
   };
@@ -624,9 +624,7 @@ export const Calendar = ({
         background: palette.cardBackground,
         border: palette.cardBorder,
         boxShadow: palette.cardShadow,
-        backdropFilter: "blur(20px)",
-        fontFamily:
-          "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+        fontFamily: "inherit",
         color: palette.textPrimary,
         boxSizing: "border-box",
         position: "relative",
@@ -636,18 +634,29 @@ export const Calendar = ({
       {/* Header */}
       <div
         style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
+          position: "relative",
+          height: dimensions.navButtonSize,
           marginBottom: dimensions.headerGap,
-          gap: 8,
         }}
       >
-        <div aria-live="polite" style={{ flexShrink: 0, minWidth: 0 }}>
+        <div
+          aria-live="polite"
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            height: "100%",
+            minWidth: 0,
+            paddingLeft: dimensions.navButtonSize,
+            paddingRight: dimensions.navButtonSize,
+            textAlign: "center",
+          }}
+        >
           <div
+            ref={pickerTriggerRef}
             style={{
               display: "inline-flex",
-              alignItems: "baseline",
+              alignItems: "center",
               gap: 2,
               width: "fit-content",
             }}
@@ -658,12 +667,13 @@ export const Calendar = ({
               color={palette.titleColor}
               focusRing={palette.focusRing}
               fontSize={dimensions.monthFontSize}
-              fontWeight={700}
+              fontWeight={500}
               onClick={() => togglePicker("month")}
-              padding="2px 4px 2px 0"
+              padding="2px 3px"
+              showIndicator
             >
               <span id={headingId}>
-                {format(currentMonth, "MMMM", { locale })}
+                {format(currentMonth, "MMM", { locale })}
               </span>
             </HeaderPickerButton>
             <HeaderPickerButton
@@ -671,10 +681,11 @@ export const Calendar = ({
               ariaLabel="Choose year"
               color={palette.textMuted}
               focusRing={palette.focusRing}
-              fontSize={dimensions.monthFontSize - 2}
+              fontSize={dimensions.monthFontSize}
               fontWeight={500}
               onClick={() => togglePicker("year")}
-              padding="2px 0 2px 4px"
+              padding="2px 3px"
+              showIndicator
             >
               {format(currentMonth, "yyyy", { locale })}
             </HeaderPickerButton>
@@ -683,9 +694,13 @@ export const Calendar = ({
 
         <div
           style={{
+            position: "absolute",
+            inset: 0,
             display: "flex",
             gap: dimensions.navGap,
             alignItems: "center",
+            justifyContent: "space-between",
+            pointerEvents: "none",
           }}
         >
           <NavButton
@@ -693,6 +708,7 @@ export const Calendar = ({
             dimensions={dimensions}
             onClick={handlePrev}
             palette={palette}
+            style={{ pointerEvents: "auto" }}
           >
             <ChevronLeft
               style={{
@@ -706,6 +722,7 @@ export const Calendar = ({
             dimensions={dimensions}
             onClick={handleNext}
             palette={palette}
+            style={{ pointerEvents: "auto" }}
           >
             <ChevronRight
               style={{
@@ -725,79 +742,95 @@ export const Calendar = ({
           marginTop: dimensions.monthTopMargin,
         }}
       >
-        <div key={monthKey}>
-          <table
-            aria-labelledby={headingId}
-            style={{
-              width: "100%",
-              tableLayout: "fixed",
-              borderCollapse: "separate",
-              borderSpacing: 0,
-            }}
+        <AnimatePresence
+          custom={monthMotionDirection}
+          initial={false}
+          mode="popLayout"
+        >
+          <motion.div
+            animate="center"
+            custom={monthMotionDirection}
+            exit="exit"
+            initial="enter"
+            key={monthKey}
+            style={{ position: "relative" }}
+            transition={{ duration: 0.22, ease: SMOOTH_EASE }}
+            variants={MONTH_GRID_VARIANTS}
           >
-            <thead>
-              <tr>
-                {weekdayHeaders.map((day) => (
-                  <th
-                    aria-label={day.fullLabel}
-                    key={day.key}
-                    scope="col"
-                    style={{
-                      textAlign: "center",
-                      fontSize: dimensions.tableHeaderFontSize,
-                      fontWeight: 600,
-                      color: palette.textMuted,
-                      textTransform: "uppercase",
-                      letterSpacing: "0.08em",
-                      padding: `0 ${dimensions.tableCellPadding}px ${dimensions.tableHeaderPaddingBottom}px`,
-                    }}
-                  >
-                    {day.shortLabel}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {weeks.map((week, weekIndex) => (
-                <tr key={`${monthKey}-week-${weekIndex}`}>
-                  {week.map((day, dayIndex) => (
-                    <td
-                      key={getDateKey(day)}
+            <table
+              aria-labelledby={headingId}
+              style={{
+                width: "100%",
+                tableLayout: "fixed",
+                borderCollapse: "separate",
+                borderSpacing: 0,
+              }}
+            >
+              <thead>
+                <tr>
+                  {weekdayHeaders.map((day) => (
+                    <th
+                      aria-label={day.fullLabel}
+                      key={day.key}
+                      scope="col"
                       style={{
-                        padding: dimensions.tableCellPadding,
-                        verticalAlign: "middle",
+                        textAlign: "center",
+                        fontSize: dimensions.tableHeaderFontSize,
+                        fontWeight: 400,
+                        color: palette.textMuted,
+                        textTransform: "none",
+                        letterSpacing: 0,
+                        lineHeight: 1.5,
+                        padding: `0 ${dimensions.tableCellPadding}px ${dimensions.tableHeaderPaddingBottom}px`,
                       }}
                     >
-                      <DayCell
-                        calendarMotionId={calendarMotionId}
-                        currentMonth={currentMonth}
-                        day={day}
-                        dimensions={dimensions}
-                        disabled={disabled}
-                        index={weekIndex * WEEK_LENGTH + dayIndex}
-                        isFocused={isSameDay(day, focusedDate)}
-                        locale={locale}
-                        onDayFocus={setFocusedDate}
-                        onDayKeyDown={handleDayKeyDown}
-                        onSelectDay={handleDaySelect}
-                        palette={palette}
-                        registerDayButton={(buttonDay, node, interactive) => {
-                          const key = getDateKey(buttonDay);
-                          if (!(interactive && node)) {
-                            dayButtonRefs.current.delete(key);
-                            return;
-                          }
-                          dayButtonRefs.current.set(key, node);
-                        }}
-                        selectedDate={selectedDate}
-                      />
-                    </td>
+                      {day.shortLabel}
+                    </th>
                   ))}
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody>
+                {weeks.map((week, weekIndex) => (
+                  <tr key={`${monthKey}-week-${weekIndex}`}>
+                    {week.map((day, dayIndex) => (
+                      <td
+                        key={getDateKey(day)}
+                        style={{
+                          padding: `${dimensions.weekRowGap}px ${dimensions.tableCellPadding}px 0`,
+                          verticalAlign: "middle",
+                        }}
+                      >
+                        <DayCell
+                          calendarMotionId={calendarMotionId}
+                          currentMonth={currentMonth}
+                          day={day}
+                          dimensions={dimensions}
+                          disabled={disabled}
+                          index={weekIndex * WEEK_LENGTH + dayIndex}
+                          isFocused={isSameDay(day, focusedDate)}
+                          locale={locale}
+                          onDayFocus={setFocusedDate}
+                          onDayKeyDown={handleDayKeyDown}
+                          onSelectDay={handleDaySelect}
+                          palette={palette}
+                          registerDayButton={(buttonDay, node, interactive) => {
+                            const key = getDateKey(buttonDay);
+                            if (!(interactive && node)) {
+                              dayButtonRefs.current.delete(key);
+                              return;
+                            }
+                            dayButtonRefs.current.set(key, node);
+                          }}
+                          selectedDate={selectedDate}
+                        />
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </motion.div>
+        </AnimatePresence>
 
         {/* Month / Year picker overlay */}
         <AnimatePresence>
@@ -861,24 +894,18 @@ export const Calendar = ({
         id={selectedInfoId}
         initial={{ opacity: 0 }}
         style={{
-          marginTop: dimensions.footerSpacingTop,
-          paddingTop: dimensions.footerSpacingTop,
-          borderTop: palette.footerBorder,
+          position: "absolute",
+          width: 1,
+          height: 1,
+          padding: 0,
+          margin: -1,
+          overflow: "hidden",
+          clip: "rect(0, 0, 0, 0)",
+          whiteSpace: "nowrap",
+          border: 0,
         }}
         transition={{ delay: 0.3 }}
       >
-        <p
-          style={{
-            fontSize: dimensions.footerLabelFontSize,
-            color: palette.textMuted,
-            textTransform: "uppercase",
-            letterSpacing: "0.08em",
-            marginBottom: 2,
-            margin: 0,
-          }}
-        >
-          Selected
-        </p>
         <AnimatePresence mode="wait">
           <motion.p
             animate={{ opacity: 1, y: 0 }}
@@ -887,11 +914,7 @@ export const Calendar = ({
             initial={{ opacity: 0, y: 8 }}
             key={selectedDate ? getDateKey(selectedDate) : "no-selection"}
             style={{
-              fontSize: dimensions.footerValueFontSize,
-              fontWeight: selectedDate ? 600 : 500,
-              color: selectedDate ? palette.textPrimary : palette.textMuted,
               margin: 0,
-              marginTop: 2,
             }}
             transition={{ duration: 0.25 }}
           >
@@ -917,6 +940,7 @@ const HeaderPickerButton = ({
   color,
   focusRing,
   padding = "2px 4px",
+  showIndicator = false,
 }: {
   children: ReactNode;
   onClick: () => void;
@@ -927,6 +951,7 @@ const HeaderPickerButton = ({
   color: string;
   focusRing: string;
   padding?: string;
+  showIndicator?: boolean;
 }) => (
   <motion.button
     aria-expanded={ariaExpanded}
@@ -937,10 +962,11 @@ const HeaderPickerButton = ({
       display: "inline-flex",
       alignItems: "center",
       justifyContent: "center",
+      gap: showIndicator ? 2 : 0,
       fontSize,
       fontWeight,
       color,
-      letterSpacing: "-0.02em",
+      letterSpacing: 0,
       lineHeight: 1.1,
       border: "none",
       background: "transparent",
@@ -958,6 +984,19 @@ const HeaderPickerButton = ({
     whileTap={{ scale: 0.97 }}
   >
     {children}
+    {showIndicator && (
+      <motion.span
+        animate={{ rotate: ariaExpanded ? 180 : 0 }}
+        aria-hidden="true"
+        style={{
+          display: "inline-flex",
+          opacity: 0.55,
+        }}
+        transition={{ duration: 0.16, ease: SMOOTH_EASE }}
+      >
+        <ChevronDown style={{ height: 14, width: 14 }} />
+      </motion.span>
+    )}
   </motion.button>
 );
 
@@ -980,9 +1019,9 @@ const MonthPicker = ({
     style={{
       display: "grid",
       gridTemplateColumns: "repeat(3, 1fr)",
-      gap: 6,
+      gap: 4,
       flex: 1,
-      alignContent: "center",
+      alignContent: "space-evenly",
     }}
   >
     {monthLabels.map((m) => {
@@ -994,17 +1033,18 @@ const MonthPicker = ({
           key={m.index}
           onClick={() => onSelect(m.index)}
           style={{
-            padding: "10px 6px",
+            minHeight: dimensions.dayCellMinHeight,
+            padding: "0 6px",
             borderRadius: dimensions.dayCellRadius,
             border: "none",
             background: active ? palette.selectedGradient : "transparent",
             color: active ? palette.selectedForeground : palette.textPrimary,
-            fontWeight: active ? 700 : 500,
-            fontSize: dimensions.dayCellFontSize + 1,
+            fontWeight: 500,
+            fontSize: dimensions.dayCellFontSize,
             cursor: "pointer",
             fontFamily: "inherit",
             outline: "none",
-            letterSpacing: "0.02em",
+            letterSpacing: 0,
           }}
           transition={{ duration: 0.15 }}
           type="button"
@@ -1053,7 +1093,8 @@ const YearPickerCell = ({
       disabled={outOfRange}
       onClick={() => onSelect(year)}
       style={{
-        padding: "7px 4px",
+        minHeight: dimensions.dayCellMinHeight,
+        padding: "0 4px",
         borderRadius: dimensions.dayCellRadius,
         border: "none",
         background: active ? palette.selectedGradient : "transparent",
@@ -1062,7 +1103,7 @@ const YearPickerCell = ({
           : outOfRange
             ? palette.textDim
             : palette.textPrimary,
-        fontWeight: active ? 700 : 500,
+        fontWeight: 500,
         fontSize: dimensions.dayCellFontSize,
         lineHeight: 1.2,
         cursor: outOfRange ? "default" : "pointer",
@@ -1119,7 +1160,7 @@ const YearPicker = ({
     <div
       aria-label="Select year"
       role="dialog"
-      style={{ display: "flex", flexDirection: "column", gap: 4 }}
+      style={{ display: "flex", flexDirection: "column", gap: 6 }}
     >
       <div
         style={{
@@ -1132,7 +1173,8 @@ const YearPicker = ({
         <NavButton
           aria-label="Previous years"
           dimensions={dimensions}
-          onClick={() => canPrev && onPageChange(pageStart - YEAR_GRID_SIZE)}
+          disabled={!canPrev}
+          onClick={() => onPageChange(pageStart - YEAR_GRID_SIZE)}
           palette={palette}
         >
           <ChevronLeft
@@ -1145,9 +1187,9 @@ const YearPicker = ({
         <span
           style={{
             fontSize: dimensions.tableHeaderFontSize,
-            fontWeight: 600,
+            fontWeight: 500,
             color: palette.textMuted,
-            letterSpacing: "0.06em",
+            letterSpacing: 0,
           }}
         >
           {pageStart} – {pageEnd}
@@ -1155,7 +1197,8 @@ const YearPicker = ({
         <NavButton
           aria-label="Next years"
           dimensions={dimensions}
-          onClick={() => canNext && onPageChange(pageStart + YEAR_GRID_SIZE)}
+          disabled={!canNext}
+          onClick={() => onPageChange(pageStart + YEAR_GRID_SIZE)}
           palette={palette}
         >
           <ChevronRight
@@ -1247,11 +1290,7 @@ const DayCell = ({
   let whileFocus: { boxShadow: string } | undefined;
   if (status.isSelectable) {
     whileFocus = { boxShadow: `0 0 0 2px ${palette.focusRing}` };
-    whileHover.scale = 1.04;
-    whileHover.y = -1.5;
     whileHover.backgroundColor = palette.dayHoverBackground;
-    whileHover.boxShadow = palette.dayHoverShadow;
-    whileTap.scale = 0.96;
   }
 
   const handleClick = () => {
@@ -1286,7 +1325,7 @@ const DayCell = ({
         width: "100%",
         minHeight: dimensions.dayCellMinHeight,
         fontSize: dimensions.dayCellFontSize,
-        fontWeight: status.today && !status.isSelected ? 700 : 500,
+        fontWeight: 400,
         borderRadius: dimensions.dayCellRadius,
         border: "none",
         background: "transparent",
@@ -1304,6 +1343,17 @@ const DayCell = ({
       whileHover={whileHover}
       whileTap={whileTap}
     >
+      {status.showTodayIndicator && (
+        <motion.div
+          layoutId={`${calendarMotionId}-today-dot`}
+          style={{
+            position: "absolute",
+            inset: 0,
+            borderRadius: dimensions.dayCellRadius,
+            background: palette.todayBackground,
+          }}
+        />
+      )}
       {status.isSelectedInMonth && (
         <motion.div
           layoutId={`${calendarMotionId}-selected-day`}
@@ -1312,7 +1362,7 @@ const DayCell = ({
             inset: 0,
             borderRadius: dimensions.dayCellRadius,
             background: palette.selectedGradient,
-            boxShadow: "0 8px 28px -12px rgba(0, 0, 0, 0.34)",
+            boxShadow: "none",
           }}
           transition={{ type: "spring", stiffness: 400, damping: 30 }}
         />
@@ -1329,42 +1379,34 @@ const DayCell = ({
       >
         {format(day, "d")}
       </span>
-      {status.showTodayIndicator && (
-        <motion.span
-          layoutId={`${calendarMotionId}-today-dot`}
-          style={{
-            position: "absolute",
-            bottom: dimensions.dayDotBottom,
-            height: dimensions.dayDotSize,
-            width: dimensions.dayDotSize,
-            borderRadius: "50%",
-            backgroundColor: palette.todayDot,
-          }}
-        />
-      )}
     </motion.button>
   );
 };
 
 type NavButtonProps = {
   children: ReactNode;
+  disabled?: boolean;
   dimensions: CalendarDimensions;
   onClick?: () => void;
   "aria-label"?: string;
   palette: CalendarPalette;
+  style?: CSSProperties;
 };
 
 const NavButton = ({
   children,
+  disabled = false,
   dimensions,
   onClick,
   palette,
+  style,
   ...rest
 }: NavButtonProps) => {
   const [hovered, setHovered] = useState(false);
 
   return (
     <button
+      disabled={disabled}
       onClick={onClick}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
@@ -1374,15 +1416,24 @@ const NavButton = ({
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        borderRadius: "50%",
-        backgroundColor: "transparent",
-        color: hovered ? palette.textPrimary : palette.textMuted,
+        borderRadius: dimensions.dayCellRadius,
+        backgroundColor:
+          hovered && !disabled
+            ? palette.navHoverBackground
+            : palette.navBackground,
+        color: disabled
+          ? palette.textDim
+          : hovered
+            ? palette.navForeground
+            : palette.textMuted,
         border: "none",
-        cursor: "pointer",
+        cursor: disabled ? "default" : "pointer",
+        opacity: disabled ? 0.5 : 1,
         padding: 0,
         outline: "none",
         WebkitTapHighlightColor: "transparent",
-        transition: "color 0.15s ease",
+        transition: "background-color 0.15s ease, color 0.15s ease",
+        ...style,
       }}
       type="button"
       {...rest}

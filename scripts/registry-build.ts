@@ -319,7 +319,7 @@ const REGISTRY_UI_META: Record<
   calendar: {
     title: "Calendar",
     description:
-      "Compact monthly calendar with animated month transitions, selectable days, and date-fns-powered grid generation.",
+      "shadcn-style monthly calendar with animated month/year transitions, selectable days, and date-fns-powered grid generation.",
     dependencies: ["motion", "lucide-react", "date-fns"],
   },
   card: {

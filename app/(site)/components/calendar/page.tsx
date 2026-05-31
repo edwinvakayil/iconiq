@@ -21,7 +21,6 @@ export function CalendarPreview() {
       defaultMonth={selected}
       onSelect={setSelected}
       selected={selected}
-      size="sm"
     />
   );
 }`;
@@ -35,7 +34,6 @@ function CalendarPreview() {
         defaultMonth={selected}
         onSelect={setSelected}
         selected={selected}
-        size="sm"
       />
     </div>
   );
@@ -50,16 +48,16 @@ export default function RadixBaseCalendarPage() {
         { label: "Calendar" },
       ]}
       componentName="calendar"
-      description="Compact date picking for month browsing and day selection."
+      description="shadcn-style date picking for month/year browsing and day selection."
       details={calendarApiDetails}
       editHref={`${LINK.GITHUB}/edit/main/app/(site)/components/calendar/page.tsx`}
       headerActions={<SharedPrimitiveProviderSwitch />}
       pageUrl="/components/calendar"
       preview={<CalendarPreview />}
-      previewDescription="Move between months, choose a day, and test the controlled selected/onSelect API while keeping the same card visuals and transitions."
+      previewDescription="Move between months, open the month/year labels, choose a day, and test the controlled selected/onSelect API while keeping the same compact calendar visuals and transitions."
       title="Calendar"
       usageCode={usageCode}
-      usageDescription="Use controlled or uncontrolled props depending on your form flow. The visual shell and animation behavior stay the same either way."
+      usageDescription="Use controlled or uncontrolled props depending on your form flow. Month/year picking, grid shifts, and selected-day motion share the same visual shell either way."
     />
   );
 }
