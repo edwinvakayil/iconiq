@@ -12,7 +12,7 @@ import {
 import { cn } from "@/lib/utils";
 
 const contextMenuThemeClassName =
-  "[--cm-surface:#ffffff] [--cm-foreground:#111111] [--cm-border:#e3e7ec] [--cm-muted-foreground:#6d7480] [--cm-accent:#f3f5f8] [--cm-accent-foreground:#111111] [--cm-destructive:#dc2626] [--cm-ring:rgba(17,17,17,0.16)] dark:[--cm-surface:#111111] dark:[--cm-foreground:#f6f3ec] dark:[--cm-border:#2b2a25] dark:[--cm-muted-foreground:#9a958a] dark:[--cm-accent:#1a1a18] dark:[--cm-accent-foreground:#f6f3ec] dark:[--cm-destructive:#f87171] dark:[--cm-ring:rgba(246,243,236,0.18)]";
+  "[--cm-surface:#ffffff] [--cm-foreground:#111111] [--cm-border:#e3e7ec] [--cm-muted-foreground:#6d7480] [--cm-accent:#f3f5f8] [--color-accent:var(--cm-accent)] [--color-accent-foreground:var(--cm-accent-foreground)] [--cm-accent-foreground:#111111] [--cm-destructive:#dc2626] [--cm-ring:rgba(17,17,17,0.16)] dark:[--cm-surface:#111111] dark:[--cm-foreground:#f6f3ec] dark:[--cm-border:#2b2a25] dark:[--cm-muted-foreground:#9a958a] dark:[--cm-accent:#1a1a18] [--color-accent:var(--cm-accent)] [--color-accent-foreground:var(--cm-accent-foreground)] dark:[--cm-accent-foreground:#f6f3ec] dark:[--cm-destructive:#f87171] dark:[--cm-ring:rgba(246,243,236,0.18)]";
 
 const contextMenuPanelClassName =
   "rounded-lg border border-[color:color-mix(in_oklch,var(--cm-border),transparent_40%)] bg-[color:var(--cm-surface)] p-1.5 text-[color:var(--cm-foreground)] shadow-2xl";
@@ -24,10 +24,10 @@ const contextMenuItemHighlightClassName =
   "absolute inset-0 rounded-lg bg-[color:var(--cm-accent)]";
 
 const contextMenuItemDefaultClassName =
-  "text-[color:color-mix(in_oklch,var(--cm-foreground),transparent_15%)] hover:bg-[color:color-mix(in_oklch,var(--cm-accent),transparent_30%)]";
+  "text-[color:color-mix(in_oklch,var(--cm-foreground),transparent_15%)] hover:bg-accent/60";
 
 const contextMenuItemDestructiveClassName =
-  "text-[color:var(--cm-destructive)] hover:bg-[color:color-mix(in_oklch,var(--cm-accent),transparent_30%)]";
+  "text-[color:var(--cm-destructive)] hover:bg-accent/60";
 
 export type ContextMenuItem = {
   label: string;

@@ -11,13 +11,13 @@ import {
 import { cn } from "@/lib/utils";
 
 const dialogThemeClassName =
-  "[--dlg-surface:#ffffff] [--dlg-foreground:#111111] [--dlg-border:#e3e7ec] [--dlg-muted:#f5f7fa] [--dlg-muted-foreground:#6d7480] dark:[--dlg-surface:#171717] dark:[--dlg-foreground:#f6f3ec] dark:[--dlg-border:#2b2a25] dark:[--dlg-muted:#1a1a18] dark:[--dlg-muted-foreground:#9a958a]";
+  "[--dlg-surface:#ffffff] [--dlg-foreground:#111111] [--dlg-border:#e3e7ec] [--dlg-muted:#f5f7fa] [--color-accent:var(--dlg-muted)] [--color-accent-foreground:var(--dlg-foreground)] [--dlg-muted-foreground:#6d7480] dark:[--dlg-surface:#171717] dark:[--dlg-foreground:#f6f3ec] dark:[--dlg-border:#2b2a25] dark:[--dlg-muted:#1a1a18] dark:[--dlg-muted-foreground:#9a958a]";
 
 const dialogContentClassName =
   "relative flex w-[min(100%,32rem)] max-w-lg flex-col gap-4 overflow-y-auto rounded-lg border border-[color:var(--dlg-border)] bg-[color:var(--dlg-surface)] p-6 text-[color:var(--dlg-foreground)] shadow-2xl";
 
 const dialogCloseClassName =
-  "absolute top-4 right-4 rounded-lg p-1.5 text-[color:var(--dlg-foreground)] opacity-70 transition-colors hover:bg-[color:color-mix(in_oklch,var(--dlg-muted),transparent_30%)] hover:opacity-100 focus:outline-none disabled:pointer-events-none";
+  "absolute top-4 right-4 rounded-lg p-1.5 text-[color:var(--dlg-foreground)] opacity-70 transition-colors hover:bg-accent/60 hover:opacity-100 focus:outline-none disabled:pointer-events-none";
 
 const Dialog = DialogPrimitive.Root;
 const DialogTrigger = DialogPrimitive.Trigger;

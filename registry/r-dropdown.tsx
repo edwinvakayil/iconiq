@@ -13,10 +13,10 @@ import {
 import { cn } from "@/lib/utils";
 
 const dropdownThemeClassName =
-  "[--dd-surface:#ffffff] [--dd-foreground:#111111] [--dd-border:#e3e7ec] [--dd-ring:rgba(17,17,17,0.16)] [--dd-muted-foreground:#6d7480] [--dd-accent:#f3f5f8] dark:[--dd-surface:#111111] dark:[--dd-foreground:#f6f3ec] dark:[--dd-border:#2b2a25] dark:[--dd-ring:rgba(246,243,236,0.18)] dark:[--dd-muted-foreground:#9a958a] dark:[--dd-accent:#1a1a18]";
+  "[--dd-surface:#ffffff] [--dd-foreground:#111111] [--dd-border:#e3e7ec] [--dd-ring:rgba(17,17,17,0.16)] [--dd-muted-foreground:#6d7480] [--dd-accent:#f3f5f8] [--color-accent:var(--dd-accent)] [--color-accent-foreground:var(--dd-foreground)] dark:[--dd-surface:#111111] dark:[--dd-foreground:#f6f3ec] dark:[--dd-border:#2b2a25] dark:[--dd-ring:rgba(246,243,236,0.18)] dark:[--dd-muted-foreground:#9a958a] dark:[--dd-accent:#1a1a18] [--color-accent:var(--dd-accent)] [--color-accent-foreground:var(--dd-foreground)]";
 
 const dropdownTriggerClassName =
-  "flex min-h-11 w-full items-center justify-between gap-2 rounded-lg border border-[color:var(--dd-border)] bg-[color:var(--dd-surface)] px-4 py-3 text-left font-medium text-[color:var(--dd-foreground)] text-sm transition-colors hover:bg-[color:color-mix(in_oklch,var(--dd-accent),transparent_30%)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[color:color-mix(in_oklch,var(--dd-ring),transparent_50%)]";
+  "flex min-h-11 w-full items-center justify-between gap-2 rounded-lg border border-[color:var(--dd-border)] bg-[color:var(--dd-surface)] px-4 py-3 text-left font-medium text-[color:var(--dd-foreground)] text-sm transition-colors hover:bg-accent/60 focus:outline-none focus-visible:ring-2 focus-visible:ring-[color:color-mix(in_oklch,var(--dd-ring),transparent_50%)]";
 
 const dropdownPanelClassName =
   "z-[300] min-w-[12rem] max-w-[calc(100vw-1.5rem)] overflow-hidden rounded-xl border border-[color:color-mix(in_oklch,var(--dd-border),transparent_40%)] bg-[color:var(--dd-surface)] shadow-[0_14px_34px_-22px_color-mix(in_oklch,var(--dd-foreground),transparent_72%)] outline-none";
