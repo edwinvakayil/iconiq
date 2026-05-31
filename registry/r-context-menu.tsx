@@ -439,16 +439,18 @@ const ContextMenuCheckboxItem = React.forwardRef<
       {...props}
     >
       <motion.button
-        animate={{ opacity: 1, x: 0 }}
+        animate={{ opacity: disabled ? 0.5 : 1, x: 0 }}
         className={cn(
           "relative flex w-full cursor-pointer items-center gap-2.5 rounded-lg py-2.5 pr-8 pl-3 text-left font-medium text-sm outline-none transition-colors",
           "text-foreground/85 hover:bg-accent/70",
-          "disabled:cursor-not-allowed disabled:opacity-40",
+          "disabled:cursor-not-allowed data-[disabled]:pointer-events-none",
           inset && "pl-7",
           className
         )}
+        data-disabled={disabled ? "" : undefined}
         data-inset={inset ? "" : undefined}
         data-slot="context-menu-checkbox-item"
+        disabled={disabled}
         initial={{ opacity: 0, x: -4 }}
         onFocus={() => {
           if (!disabled) {
