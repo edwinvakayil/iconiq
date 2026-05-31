@@ -285,7 +285,7 @@
       "dependencies": ["@base-ui/react", "motion", "lucide-react"],
       "devDependencies": [],
       "title": "Select (Base UI)",
-      "description": "Select with the same Iconiq API layered over Base UI primitives, preserving the original trigger press, chevron rotation, grouped rows, and panel motion.",
+      "description": "Compound Select parts layered over Base UI primitives, preserving the original trigger press, chevron rotation, grouped rows, and panel motion.",
       "files": [
         {
           "path": "b-select.tsx",
@@ -957,7 +957,7 @@
       "dependencies": ["@radix-ui/react-select", "motion", "lucide-react"],
       "devDependencies": [],
       "title": "Select (Radix UI)",
-      "description": "Select with the same Iconiq API layered over Radix UI primitives, preserving the original trigger press, chevron rotation, grouped rows, and panel motion.",
+      "description": "Compound Select parts layered over Radix UI primitives, preserving the original trigger press, chevron rotation, grouped rows, and panel motion.",
       "files": [
         {
           "path": "r-select.tsx",

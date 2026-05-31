@@ -1,7 +1,7 @@
 "use client";
 
 import * as SelectPrimitive from "@radix-ui/react-select";
-import { Check, ChevronDown } from "lucide-react";
+import { CheckIcon, ChevronDownIcon, ChevronUpIcon } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import * as React from "react";
 
@@ -31,69 +31,53 @@ const PRESS_SPRING = {
   mass: 0.48,
 } as const;
 
-export interface SelectOption {
-  value: string;
-  label: string;
-  icon?: React.ReactNode;
-  group?: string;
-}
+type SelectRootProps = React.ComponentPropsWithoutRef<
+  typeof SelectPrimitive.Root
+>;
 
-export interface SelectProps extends ReducedMotionProp {
-  options: SelectOption[];
-  value?: string;
-  onChange?: (value: string) => void;
-  placeholder?: string;
-  className?: string;
-}
+type SelectProps = Omit<
+  SelectRootProps,
+  | "children"
+  | "defaultOpen"
+  | "defaultValue"
+  | "onOpenChange"
+  | "onValueChange"
+  | "open"
+  | "value"
+> &
+  ReducedMotionProp & {
+    children?: React.ReactNode;
+    defaultOpen?: SelectRootProps["defaultOpen"];
+    defaultValue?: SelectRootProps["defaultValue"];
+    onOpenChange?: SelectRootProps["onOpenChange"];
+    onValueChange?: SelectRootProps["onValueChange"];
+    open?: SelectRootProps["open"];
+    value?: SelectRootProps["value"];
+  };
 
-type SelectSection = {
-  items: Array<{
-    index: number;
-    option: SelectOption;
-  }>;
-  key: string;
-  label?: string;
-};
-
-type SelectItemRowProps = {
+type SelectContextValue = {
   activeHighlightId: string;
-  index: number;
-  isHovered: boolean;
-  isSelected: boolean;
+  activeValue?: string;
+  getItemIndex: () => number;
+  itemLabelsRef: React.RefObject<Record<string, React.ReactNode>>;
   itemVariants: ReturnType<typeof getItemVariants>;
-  option: SelectOption;
+  open: boolean;
+  registerItemLabel: (value: string, label: React.ReactNode) => void;
   reduceMotion: boolean;
-  setHoveredValue: React.Dispatch<React.SetStateAction<string | undefined>>;
+  selectedValue?: string;
+  setActiveValue: React.Dispatch<React.SetStateAction<string | undefined>>;
 };
 
-function getSelectSections(options: SelectOption[]) {
-  const nextSections: SelectSection[] = [];
+const SelectContext = React.createContext<SelectContextValue | null>(null);
 
-  options.forEach((option, index) => {
-    const groupLabel = option.group?.trim();
-    const previousSection = nextSections.at(-1);
+function useSelectContext(componentName: string) {
+  const context = React.useContext(SelectContext);
 
-    if (groupLabel) {
-      if (previousSection?.label === groupLabel) {
-        previousSection.items.push({ index, option });
-        return;
-      }
+  if (!context) {
+    throw new Error(`${componentName} must be used inside Select`);
+  }
 
-      nextSections.push({
-        items: [{ index, option }],
-        key: `${groupLabel}-${nextSections.length}`,
-        label: groupLabel,
-      });
-      return;
-    }
-
-    nextSections.push({
-      items: [{ index, option }],
-      key: `ungrouped-${index}`,
-    });
-  });
-
-  return nextSections;
+  return context;
 }
 
 function getItemVariants(reduceMotion: boolean) {
@@ -123,64 +107,391 @@ function getItemVariants(reduceMotion: boolean) {
   };
 }
 
-function SelectItemRow({
-  activeHighlightId,
-  index,
-  isHovered,
-  isSelected,
-  itemVariants,
-  option,
-  reduceMotion,
-  setHoveredValue,
-}: SelectItemRowProps) {
-  const pressTransition = reduceMotion
+function getPressTransition(reduceMotion: boolean) {
+  return reduceMotion
     ? { duration: 0.12, ease: "easeOut" as const }
     : PRESS_SPRING;
-  const hoverTransition = reduceMotion
+}
+
+function getPanelTransition(reduceMotion: boolean) {
+  return reduceMotion
+    ? { duration: 0.14, ease: "easeOut" as const }
+    : { duration: 0.22, ease: SOFT_EASE };
+}
+
+function getChevronTransition(reduceMotion: boolean) {
+  return reduceMotion
     ? { duration: 0.12, ease: "easeOut" as const }
-    : { type: "spring" as const, stiffness: 600, damping: 38 };
-  const checkTransition = reduceMotion
+    : { duration: 0.2, ease: SOFT_EASE };
+}
+
+function getCheckTransition(reduceMotion: boolean) {
+  return reduceMotion
     ? { duration: 0.12, ease: "easeOut" as const }
     : CHECK_SPRING;
+}
+
+function getHighlightTransition(reduceMotion: boolean) {
+  return reduceMotion
+    ? { duration: 0.12, ease: "easeOut" as const }
+    : { type: "spring" as const, stiffness: 600, damping: 38 };
+}
+
+function composeEventHandlers<Event extends React.SyntheticEvent>(
+  originalEventHandler: ((event: Event) => void) | undefined,
+  eventHandler: (event: Event) => void
+) {
+  return (event: Event) => {
+    originalEventHandler?.(event);
+    eventHandler(event);
+  };
+}
+
+function Select({
+  children,
+  defaultOpen = false,
+  defaultValue,
+  onOpenChange,
+  onValueChange,
+  open: openProp,
+  reducedMotion,
+  value: valueProp,
+  ...props
+}: SelectProps) {
+  const reduceMotion = useResolvedReducedMotion(reducedMotion);
+  const isOpenControlled = openProp !== undefined;
+  const isValueControlled = valueProp !== undefined;
+  const [uncontrolledOpen, setUncontrolledOpen] = React.useState(defaultOpen);
+  const [uncontrolledValue, setUncontrolledValue] =
+    React.useState<SelectRootProps["value"]>(defaultValue);
+  const [activeValue, setActiveValue] = React.useState<string | undefined>();
+  const itemLabelsRef = React.useRef<Record<string, React.ReactNode>>({});
+  const nextItemIndexRef = React.useRef(0);
+  const open = isOpenControlled ? openProp : uncontrolledOpen;
+  const selectedValue = isValueControlled ? valueProp : uncontrolledValue;
+  const activeHighlightId = React.useId();
+  const itemVariants = React.useMemo(
+    () => getItemVariants(reduceMotion),
+    [reduceMotion]
+  );
+
+  const handleOpenChange = React.useCallback<
+    NonNullable<SelectRootProps["onOpenChange"]>
+  >(
+    (nextOpen) => {
+      if (!isOpenControlled) {
+        setUncontrolledOpen(nextOpen);
+      }
+
+      if (!nextOpen) {
+        setActiveValue(undefined);
+      }
+
+      onOpenChange?.(nextOpen);
+    },
+    [isOpenControlled, onOpenChange]
+  );
+
+  const handleValueChange = React.useCallback<
+    NonNullable<SelectRootProps["onValueChange"]>
+  >(
+    (nextValue) => {
+      if (!isValueControlled) {
+        setUncontrolledValue(nextValue);
+      }
+
+      onValueChange?.(nextValue);
+    },
+    [isValueControlled, onValueChange]
+  );
+
+  const registerItemLabel = React.useCallback(
+    (itemValue: string, itemLabel: React.ReactNode) => {
+      itemLabelsRef.current[itemValue] = itemLabel;
+    },
+    []
+  );
+  const getItemIndex = React.useCallback(() => {
+    const itemIndex = nextItemIndexRef.current;
+    nextItemIndexRef.current += 1;
+    return itemIndex;
+  }, []);
+
+  React.useEffect(() => {
+    if (!open) {
+      nextItemIndexRef.current = 0;
+    }
+  }, [open]);
 
   return (
-    <SelectPrimitive.Item asChild textValue={option.label} value={option.value}>
+    <ReducedMotionConfig reducedMotion={reducedMotion}>
+      <SelectContext.Provider
+        value={{
+          activeHighlightId,
+          activeValue,
+          getItemIndex,
+          itemLabelsRef,
+          itemVariants,
+          open,
+          registerItemLabel,
+          reduceMotion,
+          selectedValue,
+          setActiveValue,
+        }}
+      >
+        <SelectPrimitive.Root
+          {...props}
+          onOpenChange={handleOpenChange}
+          onValueChange={handleValueChange}
+          open={open}
+          value={selectedValue}
+        >
+          {children}
+        </SelectPrimitive.Root>
+      </SelectContext.Provider>
+    </ReducedMotionConfig>
+  );
+}
+
+function SelectGroup({
+  className,
+  ...props
+}: React.ComponentPropsWithoutRef<typeof SelectPrimitive.Group>) {
+  return (
+    <SelectPrimitive.Group
+      className={cn("space-y-1 pt-2 first:pt-0", className)}
+      data-slot="select-group"
+      {...props}
+    />
+  );
+}
+
+function SelectValue({
+  children,
+  className,
+  placeholder,
+  ...props
+}: React.ComponentPropsWithoutRef<typeof SelectPrimitive.Value>) {
+  const { itemLabelsRef, selectedValue } = useSelectContext("SelectValue");
+  const hasValue = Boolean(selectedValue);
+  const selectedLabel = selectedValue
+    ? itemLabelsRef.current[selectedValue]
+    : undefined;
+  const valueChildren = hasValue
+    ? (children ?? selectedLabel ?? selectedValue)
+    : placeholder;
+  const { asChild: _asChild, ...valueProps } = props;
+
+  return (
+    <span
+      className={cn(
+        "flex min-w-0 flex-1 items-center gap-2 truncate text-left [&_svg]:shrink-0",
+        className
+      )}
+      data-placeholder={hasValue ? undefined : ""}
+      data-slot="select-value"
+      {...valueProps}
+    >
+      {valueChildren}
+    </span>
+  );
+}
+
+function SelectTrigger({
+  children,
+  className,
+  size = "default",
+  ...props
+}: React.ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger> & {
+  size?: "sm" | "default";
+}) {
+  const { open, reduceMotion } = useSelectContext("SelectTrigger");
+
+  return (
+    <SelectPrimitive.Trigger asChild {...props}>
+      <motion.button
+        className={cn(
+          componentThemeClassName,
+          "flex min-h-11 w-full touch-manipulation items-center justify-between gap-2 rounded-lg border border-border bg-card px-4 py-3 text-left font-medium text-foreground text-sm transition-colors hover:bg-accent focus:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 data-placeholder:text-muted-foreground",
+          className
+        )}
+        data-size={size}
+        data-slot="select-trigger"
+        transition={getPressTransition(reduceMotion)}
+        type="button"
+        whileTap={reduceMotion ? undefined : { scale: 0.985 }}
+      >
+        {children}
+        <SelectPrimitive.Icon asChild>
+          <motion.span
+            animate={{ rotate: open ? 180 : 0 }}
+            className="shrink-0"
+            transition={getChevronTransition(reduceMotion)}
+          >
+            <ChevronDownIcon className="h-4 w-4 text-muted-foreground" />
+          </motion.span>
+        </SelectPrimitive.Icon>
+      </motion.button>
+    </SelectPrimitive.Trigger>
+  );
+}
+
+function SelectContent({
+  align = "start",
+  avoidCollisions = false,
+  children,
+  className,
+  collisionPadding = 12,
+  position = "popper",
+  side = "bottom",
+  sideOffset = 8,
+  style,
+  ...props
+}: React.ComponentPropsWithoutRef<typeof SelectPrimitive.Content>) {
+  const { open, reduceMotion, setActiveValue } =
+    useSelectContext("SelectContent");
+
+  return (
+    <AnimatePresence>
+      {open ? (
+        <SelectPrimitive.Portal>
+          <SelectPrimitive.Content
+            align={align}
+            asChild
+            avoidCollisions={avoidCollisions}
+            collisionPadding={collisionPadding}
+            position={position}
+            side={side}
+            sideOffset={sideOffset}
+            {...props}
+          >
+            <motion.div
+              animate={{ opacity: 1, y: 0 }}
+              className={cn(
+                componentThemeClassName,
+                "z-[300] overflow-hidden rounded-lg border border-border bg-card shadow-lg",
+                className
+              )}
+              data-slot="select-content"
+              exit={{ opacity: 0, y: reduceMotion ? 0 : -4 }}
+              initial={{ opacity: 0, y: reduceMotion ? 0 : -4 }}
+              key="select-dropdown"
+              style={{
+                transformOrigin: "var(--radix-select-content-transform-origin)",
+                width: "var(--radix-select-trigger-width)",
+                ...style,
+              }}
+              transition={getPanelTransition(reduceMotion)}
+            >
+              <SelectScrollUpButton />
+              <SelectPrimitive.Viewport
+                className="overflow-y-auto overscroll-contain p-1.5 outline-none"
+                onPointerLeave={() => {
+                  setActiveValue(undefined);
+                }}
+                style={{
+                  maxHeight: `min(var(--radix-select-content-available-height), ${MAX_MENU_HEIGHT}px)`,
+                }}
+              >
+                {children}
+              </SelectPrimitive.Viewport>
+              <SelectScrollDownButton />
+            </motion.div>
+          </SelectPrimitive.Content>
+        </SelectPrimitive.Portal>
+      ) : null}
+    </AnimatePresence>
+  );
+}
+
+function SelectLabel({
+  className,
+  ...props
+}: React.ComponentPropsWithoutRef<typeof SelectPrimitive.Label>) {
+  return (
+    <SelectPrimitive.Label
+      className={cn(
+        "px-3 pb-1.5 font-medium text-[10px] text-muted-foreground uppercase tracking-[0.16em]",
+        className
+      )}
+      data-slot="select-label"
+      {...props}
+    />
+  );
+}
+
+function SelectItem({
+  children,
+  className,
+  icon,
+  value,
+  ...props
+}: React.ComponentPropsWithoutRef<typeof SelectPrimitive.Item> & {
+  icon?: React.ReactNode;
+}) {
+  const {
+    activeHighlightId,
+    activeValue,
+    getItemIndex,
+    itemVariants,
+    registerItemLabel,
+    reduceMotion,
+    selectedValue,
+    setActiveValue,
+  } = useSelectContext("SelectItem");
+  const isActive = value === activeValue;
+  const isSelected = value === selectedValue;
+  const itemContent = icon ? (
+    <>
+      {icon}
+      {children}
+    </>
+  ) : (
+    children
+  );
+  const itemIndexRef = React.useRef<number | null>(null);
+
+  if (itemIndexRef.current === null) {
+    itemIndexRef.current = getItemIndex();
+  }
+
+  registerItemLabel(value, itemContent);
+
+  return (
+    <SelectPrimitive.Item asChild value={value} {...props}>
       <motion.div
         animate="visible"
         className={cn(
-          "relative flex min-h-11 cursor-pointer touch-manipulation select-none items-center gap-3 rounded-lg px-3 py-2.5 text-foreground text-sm outline-none transition-colors"
+          "group relative isolate flex min-h-11 cursor-pointer touch-manipulation select-none items-center gap-3 rounded-lg py-2.5 pr-8 pl-3 text-foreground text-sm outline-none transition-colors",
+          !isActive && "hover:bg-accent/60",
+          className
         )}
-        custom={index}
+        custom={itemIndexRef.current}
         exit="exit"
         initial="hidden"
-        onMouseEnter={() => {
-          setHoveredValue(option.value);
-        }}
-        onPointerMove={() => {
-          setHoveredValue(option.value);
-        }}
-        transition={pressTransition}
+        onMouseEnter={composeEventHandlers(props.onMouseEnter, () => {
+          setActiveValue(value);
+        })}
+        onPointerMove={composeEventHandlers(props.onPointerMove, () => {
+          setActiveValue(value);
+        })}
+        transition={getPressTransition(reduceMotion)}
         variants={itemVariants}
         whileTap={reduceMotion ? undefined : { scale: 0.985 }}
       >
-        {isHovered ? (
+        {isActive ? (
           <motion.span
-            className="absolute inset-0 rounded-lg bg-accent"
+            className="absolute inset-0 -z-10 rounded-lg bg-accent/70"
             layoutId={activeHighlightId}
-            transition={hoverTransition}
+            transition={getHighlightTransition(reduceMotion)}
           />
         ) : null}
-        {option.icon ? (
-          <span className="relative z-10 flex h-4 w-4 shrink-0 items-center justify-center text-muted-foreground">
-            {option.icon}
+        <SelectPrimitive.ItemText asChild>
+          <span className="relative z-10 flex min-w-0 flex-1 items-center gap-2 truncate text-left [&_svg]:shrink-0">
+            {itemContent}
           </span>
-        ) : null}
-        <span className="relative z-10 min-w-0 flex-1 text-left">
-          <SelectPrimitive.ItemText className="block truncate">
-            {option.label}
-          </SelectPrimitive.ItemText>
-        </span>
-        <span className="relative z-10 flex h-4 w-4 shrink-0 items-center justify-center">
+        </SelectPrimitive.ItemText>
+        <span className="pointer-events-none absolute right-3 z-10 flex h-4 w-4 items-center justify-center">
           <AnimatePresence>
             {isSelected ? (
               <motion.span
@@ -188,9 +499,9 @@ function SelectItemRow({
                 className="text-primary"
                 exit={{ opacity: 0, scale: 0.8, y: 1 }}
                 initial={{ opacity: 0, scale: 0.8, y: 1 }}
-                transition={checkTransition}
+                transition={getCheckTransition(reduceMotion)}
               >
-                <Check className="h-4 w-4" />
+                <CheckIcon className="h-4 w-4" />
               </motion.span>
             ) : null}
           </AnimatePresence>
@@ -200,185 +511,64 @@ function SelectItemRow({
   );
 }
 
-function SelectMenuSection({
-  activeHighlightId,
-  hoveredValue,
-  itemVariants,
-  reduceMotion,
-  section,
-  setHoveredValue,
-  value,
-}: {
-  activeHighlightId: string;
-  hoveredValue?: string;
-  itemVariants: ReturnType<typeof getItemVariants>;
-  reduceMotion: boolean;
-  section: SelectSection;
-  setHoveredValue: React.Dispatch<React.SetStateAction<string | undefined>>;
-  value?: string;
-}) {
-  const items = section.items.map((option) => (
-    <SelectItemRow
-      activeHighlightId={activeHighlightId}
-      index={option.index}
-      isHovered={option.option.value === hoveredValue}
-      isSelected={option.option.value === value}
-      itemVariants={itemVariants}
-      key={option.option.value}
-      option={option.option}
-      reduceMotion={reduceMotion}
-      setHoveredValue={setHoveredValue}
-    />
-  ));
-
-  if (!section.label) {
-    return <div className="space-y-1">{items}</div>;
-  }
-
-  return (
-    <SelectPrimitive.Group className="pt-2 first:pt-0">
-      <SelectPrimitive.Label className="px-3 pb-1.5 font-medium text-[10px] text-muted-foreground uppercase tracking-[0.16em]">
-        {section.label}
-      </SelectPrimitive.Label>
-      <div className="space-y-1">{items}</div>
-    </SelectPrimitive.Group>
-  );
-}
-
-export function Select({
-  options,
-  value,
-  onChange,
-  placeholder = "Select an option…",
+function SelectSeparator({
   className,
-  reducedMotion,
-}: SelectProps) {
-  const reduceMotion = useResolvedReducedMotion(reducedMotion);
-  const [open, setOpen] = React.useState(false);
-  const [hoveredValue, setHoveredValue] = React.useState<string | undefined>();
-  const selected = options.find((option) => option.value === value);
-  const itemVariants = React.useMemo(
-    () => getItemVariants(reduceMotion),
-    [reduceMotion]
-  );
-  const buttonTransition = reduceMotion
-    ? { duration: 0.1, ease: "easeOut" as const }
-    : PRESS_SPRING;
-  const panelTransition = reduceMotion
-    ? { duration: 0.14, ease: "easeOut" as const }
-    : { duration: 0.22, ease: SOFT_EASE };
-  const chevronTransition = reduceMotion
-    ? { duration: 0.12, ease: "easeOut" as const }
-    : { duration: 0.2, ease: SOFT_EASE };
-  const sections = React.useMemo(() => getSelectSections(options), [options]);
-
+  ...props
+}: React.ComponentPropsWithoutRef<typeof SelectPrimitive.Separator>) {
   return (
-    <ReducedMotionConfig reducedMotion={reducedMotion}>
-      <div
-        className={cn(
-          componentThemeClassName,
-          "relative w-72 max-w-full",
-          className
-        )}
-      >
-        <SelectPrimitive.Root
-          onOpenChange={(nextOpen) => {
-            setOpen(nextOpen);
-            setHoveredValue(undefined);
-          }}
-          onValueChange={onChange}
-          open={open}
-          value={value}
-        >
-          <SelectPrimitive.Trigger asChild>
-            <motion.button
-              aria-label={selected ? selected.label : placeholder}
-              className="flex min-h-11 w-full touch-manipulation items-center justify-between gap-2 rounded-lg border border-border bg-card px-4 py-3 text-left font-medium text-foreground text-sm transition-colors hover:bg-accent focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-              data-state={open ? "open" : "closed"}
-              transition={buttonTransition}
-              type="button"
-              whileTap={reduceMotion ? undefined : { scale: 0.985 }}
-            >
-              <span
-                className={cn(
-                  "min-w-0 flex-1 truncate",
-                  selected ? "text-foreground" : "text-muted-foreground"
-                )}
-                title={selected ? selected.label : placeholder}
-              >
-                {selected ? selected.label : placeholder}
-              </span>
-              <motion.span
-                animate={{ rotate: open ? 180 : 0 }}
-                className="shrink-0"
-                transition={chevronTransition}
-              >
-                <ChevronDown className="h-4 w-4 text-muted-foreground" />
-              </motion.span>
-            </motion.button>
-          </SelectPrimitive.Trigger>
-
-          <AnimatePresence>
-            {open ? (
-              <SelectPrimitive.Portal>
-                <SelectPrimitive.Content
-                  align="start"
-                  asChild
-                  collisionPadding={12}
-                  position="popper"
-                  sideOffset={8}
-                >
-                  <motion.div
-                    animate={{ opacity: 1, y: 0 }}
-                    className={cn(
-                      componentThemeClassName,
-                      "z-[300] overflow-hidden rounded-lg border border-border bg-card shadow-lg"
-                    )}
-                    exit={{ opacity: 0, y: reduceMotion ? 0 : -4 }}
-                    initial={{ opacity: 0, y: reduceMotion ? 0 : -4 }}
-                    key="select-dropdown"
-                    style={{
-                      maxHeight: `min(var(--radix-select-content-available-height), ${MAX_MENU_HEIGHT}px)`,
-                      transformOrigin:
-                        "var(--radix-select-content-transform-origin)",
-                      width: "var(--radix-select-trigger-width)",
-                    }}
-                    transition={panelTransition}
-                  >
-                    <SelectPrimitive.Viewport
-                      className="overflow-y-auto overscroll-contain p-1.5 outline-none"
-                      onPointerLeave={() => {
-                        setHoveredValue(undefined);
-                      }}
-                    >
-                      {options.length === 0 ? (
-                        <div className="px-3 py-3 text-muted-foreground text-sm">
-                          No options available.
-                        </div>
-                      ) : (
-                        sections.map((section) => (
-                          <SelectMenuSection
-                            activeHighlightId="select-active-option"
-                            hoveredValue={hoveredValue}
-                            itemVariants={itemVariants}
-                            key={section.key}
-                            reduceMotion={reduceMotion}
-                            section={section}
-                            setHoveredValue={setHoveredValue}
-                            value={value}
-                          />
-                        ))
-                      )}
-                    </SelectPrimitive.Viewport>
-                  </motion.div>
-                </SelectPrimitive.Content>
-              </SelectPrimitive.Portal>
-            ) : null}
-          </AnimatePresence>
-        </SelectPrimitive.Root>
-      </div>
-    </ReducedMotionConfig>
+    <SelectPrimitive.Separator
+      className={cn("pointer-events-none -mx-1 my-1 h-px bg-border", className)}
+      data-slot="select-separator"
+      {...props}
+    />
   );
 }
 
-export { Select as select };
+function SelectScrollUpButton({
+  className,
+  ...props
+}: React.ComponentPropsWithoutRef<typeof SelectPrimitive.ScrollUpButton>) {
+  return (
+    <SelectPrimitive.ScrollUpButton
+      className={cn(
+        "top-0 z-10 flex w-full cursor-default items-center justify-center bg-card py-1 text-muted-foreground [&_svg:not([class*='size-'])]:size-4",
+        className
+      )}
+      data-slot="select-scroll-up-button"
+      {...props}
+    >
+      <ChevronUpIcon />
+    </SelectPrimitive.ScrollUpButton>
+  );
+}
+
+function SelectScrollDownButton({
+  className,
+  ...props
+}: React.ComponentPropsWithoutRef<typeof SelectPrimitive.ScrollDownButton>) {
+  return (
+    <SelectPrimitive.ScrollDownButton
+      className={cn(
+        "bottom-0 z-10 flex w-full cursor-default items-center justify-center bg-card py-1 text-muted-foreground [&_svg:not([class*='size-'])]:size-4",
+        className
+      )}
+      data-slot="select-scroll-down-button"
+      {...props}
+    >
+      <ChevronDownIcon />
+    </SelectPrimitive.ScrollDownButton>
+  );
+}
+
+export {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectScrollDownButton,
+  SelectScrollUpButton,
+  SelectSeparator,
+  SelectTrigger,
+  SelectValue,
+};

@@ -1,6 +1,12 @@
 "use client";
 
-import { Orbit, Sparkles, Telescope } from "lucide-react";
+import {
+  CalendarDays,
+  MessageSquareText,
+  Palette,
+  Rocket,
+  ShieldCheck,
+} from "lucide-react";
 import { type ComponentType, type ReactNode, useMemo, useState } from "react";
 
 import {
@@ -16,22 +22,18 @@ import { LINK } from "@/constants";
 import * as BaseSelect from "@/registry/b-select";
 import * as RadixSelect from "@/registry/r-select";
 
-type SelectOption = {
-  value: string;
-  label: string;
-  icon?: ReactNode;
-  group?: string;
-};
-
 type SelectModule = {
-  Select: ComponentType<{
-    options: SelectOption[];
-    value?: string;
-    onChange?: (value: string) => void;
-    placeholder?: string;
-    className?: string;
-    reducedMotion?: boolean;
+  Select: ComponentType<{ children?: ReactNode; reducedMotion?: boolean }>;
+  SelectContent: ComponentType<{ children?: ReactNode }>;
+  SelectGroup: ComponentType<{ children?: ReactNode }>;
+  SelectItem: ComponentType<{
+    children?: ReactNode;
+    icon?: ReactNode;
+    value: string;
   }>;
+  SelectLabel: ComponentType<{ children?: ReactNode }>;
+  SelectTrigger: ComponentType<{ children?: ReactNode; className?: string }>;
+  SelectValue: ComponentType<{ placeholder?: ReactNode }>;
 };
 
 type ProviderConfig = {
@@ -43,96 +45,133 @@ type ProviderConfig = {
   usageCode: string;
 };
 
-const demoOptions: SelectOption[] = [
-  {
-    value: "scout",
-    label: "Scout pass",
-    icon: <Sparkles className="size-4" />,
-  },
-  {
-    value: "transit",
-    label: "Transit window",
-    icon: <Orbit className="size-4" />,
-  },
-  {
-    value: "deep",
-    label: "Deep field",
-    icon: <Telescope className="size-4" />,
-  },
-];
-
 const breadcrumbs = [
   { label: "Docs", href: "/" },
   { label: "Components" },
   { label: "Select" },
 ];
 
+const selectUsageCode = `"use client";
+
+import {
+  CalendarDays,
+  MessageSquareText,
+  Palette,
+  Rocket,
+  ShieldCheck,
+} from "lucide-react";
+
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
+export function SelectDemo() {
+  return (
+    <Select>
+      <SelectTrigger className="w-full max-w-72">
+        <SelectValue placeholder="Choose workflow" />
+      </SelectTrigger>
+      <SelectContent>
+        <SelectGroup>
+          <SelectItem
+            icon={<Rocket className="size-4 text-muted-foreground" />}
+            value="launch"
+          >
+            Launch plan
+          </SelectItem>
+          <SelectItem
+            icon={<Palette className="size-4 text-muted-foreground" />}
+            value="design"
+          >
+            Design pass
+          </SelectItem>
+          <SelectItem
+            icon={<MessageSquareText className="size-4 text-muted-foreground" />}
+            value="review"
+          >
+            Review notes
+          </SelectItem>
+          <SelectItem
+            icon={<CalendarDays className="size-4 text-muted-foreground" />}
+            value="schedule"
+          >
+            Schedule
+          </SelectItem>
+          <SelectItem
+            icon={<ShieldCheck className="size-4 text-muted-foreground" />}
+            value="approve"
+          >
+            Approvals
+          </SelectItem>
+        </SelectGroup>
+      </SelectContent>
+    </Select>
+  );
+}`;
+
 const usageCodeByProvider: Record<ProviderConfig["componentName"], string> = {
-  "b-select": `"use client";
-
-import { Orbit, Sparkles, Telescope } from "lucide-react";
-import { useState } from "react";
-import { Select, type SelectOption } from "@/components/ui/b-select";
-
-const options: SelectOption[] = [
-  { value: "scout", label: "Scout pass", icon: <Sparkles className="size-4" /> },
-  { value: "transit", label: "Transit window", icon: <Orbit className="size-4" /> },
-  { value: "deep", label: "Deep field", icon: <Telescope className="size-4" /> },
-];
-
-export function SelectPreview() {
-  const [value, setValue] = useState<string | undefined>("scout");
-
-  return (
-    <Select
-      className="w-full max-w-sm"
-      onChange={setValue}
-      options={options}
-      placeholder="Plot the trajectory..."
-      value={value}
-    />
-  );
-}`,
-  "r-select": `"use client";
-
-import { Orbit, Sparkles, Telescope } from "lucide-react";
-import { useState } from "react";
-import { Select, type SelectOption } from "@/components/ui/r-select";
-
-const options: SelectOption[] = [
-  { value: "scout", label: "Scout pass", icon: <Sparkles className="size-4" /> },
-  { value: "transit", label: "Transit window", icon: <Orbit className="size-4" /> },
-  { value: "deep", label: "Deep field", icon: <Telescope className="size-4" /> },
-];
-
-export function SelectPreview() {
-  const [value, setValue] = useState<string | undefined>("scout");
-
-  return (
-    <Select
-      className="w-full max-w-sm"
-      onChange={setValue}
-      options={options}
-      placeholder="Plot the trajectory..."
-      value={value}
-    />
-  );
-}`,
+  "b-select": selectUsageCode,
+  "r-select": selectUsageCode,
 };
 
 function SelectPreview({ ui }: { ui: SelectModule }) {
-  const { Select } = ui;
-  const [value, setValue] = useState<string | undefined>("scout");
+  const {
+    Select,
+    SelectContent,
+    SelectGroup,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+  } = ui;
 
   return (
     <div className="flex min-h-[320px] w-full items-center justify-center p-6">
-      <Select
-        className="w-full max-w-sm"
-        onChange={setValue}
-        options={demoOptions}
-        placeholder="Plot the trajectory..."
-        value={value}
-      />
+      <Select>
+        <SelectTrigger className="w-full max-w-72">
+          <SelectValue placeholder="Choose workflow" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectGroup>
+            <SelectItem
+              icon={<Rocket className="size-4 text-muted-foreground" />}
+              value="launch"
+            >
+              Launch plan
+            </SelectItem>
+            <SelectItem
+              icon={<Palette className="size-4 text-muted-foreground" />}
+              value="design"
+            >
+              Design pass
+            </SelectItem>
+            <SelectItem
+              icon={
+                <MessageSquareText className="size-4 text-muted-foreground" />
+              }
+              value="review"
+            >
+              Review notes
+            </SelectItem>
+            <SelectItem
+              icon={<CalendarDays className="size-4 text-muted-foreground" />}
+              value="schedule"
+            >
+              Schedule
+            </SelectItem>
+            <SelectItem
+              icon={<ShieldCheck className="size-4 text-muted-foreground" />}
+              value="approve"
+            >
+              Approvals
+            </SelectItem>
+          </SelectGroup>
+        </SelectContent>
+      </Select>
     </div>
   );
 }
@@ -142,7 +181,7 @@ function getDetails(provider: ProviderConfig): DetailItem[] {
     if (item.id === "select") {
       return {
         ...item,
-        summary: `Animated single-select listbox with the same Iconiq trigger, row, and panel motion layered over ${provider.libraryLabel} primitives.`,
+        summary: `Animated compound single-select with the same Iconiq trigger, row, and panel motion layered over ${provider.libraryLabel} primitives.`,
       };
     }
 
@@ -186,8 +225,8 @@ export default function RadixBaseSelectPage() {
         dependencyLabel: "@base-ui/react, motion, lucide-react",
         libraryLabel: "Base UI",
         notes: [
-          "Installs a Base UI select with the same public option shape and controlled selection API as the Radix version.",
-          "Keeps grouped sections, trigger width matching, keyboard typeahead, and the same trigger and dropdown motion as the core select component.",
+          "Installs compound Base UI select parts with the same exported part names as the Radix version.",
+          "Keeps grouped sections, trigger width matching, keyboard typeahead, and the same trigger and dropdown motion as the prior select component.",
         ],
         ui: BaseSelect,
         usageCode: usageCodeByProvider["b-select"],
@@ -199,8 +238,8 @@ export default function RadixBaseSelectPage() {
       dependencyLabel: "@radix-ui/react-select, motion, lucide-react",
       libraryLabel: "Radix UI",
       notes: [
-        "Installs a Radix select with the same public option shape and controlled selection API as the Base UI version.",
-        "Keeps grouped sections, trigger width matching, keyboard typeahead, and the same trigger and dropdown motion as the core select component.",
+        "Installs compound Radix select parts with the same exported part names as the Base UI version.",
+        "Keeps grouped sections, trigger width matching, keyboard typeahead, and the same trigger and dropdown motion as the prior select component.",
       ],
       ui: RadixSelect,
       usageCode: usageCodeByProvider["r-select"],

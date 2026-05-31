@@ -386,17 +386,48 @@ export function ToggleGroupPreview() {
   skeleton: buildV0Page(skeletonPreviewCode),
   select:
     '"use client";\n\n' +
-    `import { Select } from "@/components/ui/select"\n` +
-    `import { useState } from "react"\n\n` +
-    "const options = [\n" +
-    '  { value: "a", label: "Option A" },\n' +
-    '  { value: "b", label: "Option B" },\n' +
-    "]\n\n" +
+    "import {\n" +
+    "  CalendarDays,\n" +
+    "  MessageSquareText,\n" +
+    "  Palette,\n" +
+    "  Rocket,\n" +
+    "  ShieldCheck,\n" +
+    `} from "lucide-react"\n\n` +
+    "import {\n" +
+    "  Select,\n" +
+    "  SelectContent,\n" +
+    "  SelectGroup,\n" +
+    "  SelectItem,\n" +
+    "  SelectTrigger,\n" +
+    "  SelectValue,\n" +
+    `} from "@/components/ui/select"\n\n` +
     "export default function Page() {\n" +
-    '  const [value, setValue] = useState<string | undefined>("a")\n' +
     "  return (\n" +
     '    <div className="flex min-h-svh items-center justify-center p-8">\n' +
-    "      <Select onChange={setValue} options={options} value={value} />\n" +
+    "      <Select>\n" +
+    '        <SelectTrigger className="w-full max-w-72">\n' +
+    '          <SelectValue placeholder="Choose workflow" />\n' +
+    "        </SelectTrigger>\n" +
+    "        <SelectContent>\n" +
+    "          <SelectGroup>\n" +
+    '            <SelectItem icon={<Rocket className="size-4 text-muted-foreground" />} value="launch">\n' +
+    "              Launch plan\n" +
+    "            </SelectItem>\n" +
+    '            <SelectItem icon={<Palette className="size-4 text-muted-foreground" />} value="design">\n' +
+    "              Design pass\n" +
+    "            </SelectItem>\n" +
+    '            <SelectItem icon={<MessageSquareText className="size-4 text-muted-foreground" />} value="review">\n' +
+    "              Review notes\n" +
+    "            </SelectItem>\n" +
+    '            <SelectItem icon={<CalendarDays className="size-4 text-muted-foreground" />} value="schedule">\n' +
+    "              Schedule\n" +
+    "            </SelectItem>\n" +
+    '            <SelectItem icon={<ShieldCheck className="size-4 text-muted-foreground" />} value="approve">\n' +
+    "              Approvals\n" +
+    "            </SelectItem>\n" +
+    "          </SelectGroup>\n" +
+    "        </SelectContent>\n" +
+    "      </Select>\n" +
     "    </div>\n" +
     "  )\n" +
     "}\n",

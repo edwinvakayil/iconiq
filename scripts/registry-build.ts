@@ -241,7 +241,7 @@ const REGISTRY_UI_META: Record<
   "b-select": {
     title: "Select (Base UI)",
     description:
-      "Select with the same Iconiq API layered over Base UI primitives, preserving the original trigger press, chevron rotation, grouped rows, and panel motion.",
+      "Compound Select parts layered over Base UI primitives, preserving the original trigger press, chevron rotation, grouped rows, and panel motion.",
     dependencies: ["@base-ui/react", "motion", "lucide-react"],
   },
   "b-separator": {
@@ -454,7 +454,7 @@ const REGISTRY_UI_META: Record<
   "r-select": {
     title: "Select (Radix UI)",
     description:
-      "Select with the same Iconiq API layered over Radix UI primitives, preserving the original trigger press, chevron rotation, grouped rows, and panel motion.",
+      "Compound Select parts layered over Radix UI primitives, preserving the original trigger press, chevron rotation, grouped rows, and panel motion.",
     dependencies: ["@radix-ui/react-select", "motion", "lucide-react"],
   },
   "r-separator": {

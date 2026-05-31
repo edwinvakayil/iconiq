@@ -2946,91 +2946,187 @@ const radioGroupApiDetails: DetailItem[] = [
 
 const selectApiDetails: DetailItem[] = [
   {
-    id: "select-option",
-    title: "Option shape",
-    summary:
-      "Each selectable row is described by a plain object and rendered inside a portaled menu.",
-    fields: [
-      field({
-        name: "value",
-        type: "string",
-        required: true,
-        description:
-          "Stable identifier used to determine the selected option and what onChange returns.",
-      }),
-      field({
-        name: "label",
-        type: "string",
-        required: true,
-        description: "Text shown in both the trigger and the dropdown row.",
-      }),
-      field({
-        name: "icon",
-        type: "ReactNode",
-        description:
-          "Optional leading visual shown only inside the dropdown row.",
-      }),
-      field({
-        name: "group",
-        type: "string",
-        description:
-          "Optional section label. Contiguous options that share the same group render under a shared heading.",
-      }),
-    ],
-  },
-  {
     id: "select",
     title: "Select",
     summary:
-      "Animated single-select listbox with keyboard navigation, typeahead, optional grouped sections, and a parent-controlled selected value.",
+      "Root select controller. Compose SelectTrigger, SelectValue, SelectContent, and SelectItem inside it.",
     fields: [
-      field({
-        name: "options",
-        type: "{ value: string; label: string; icon?: ReactNode; group?: string }[]",
-        required: true,
-        description: "Rows available in the dropdown menu.",
-      }),
       field({
         name: "value",
         type: "string",
         description:
-          "Currently selected option value. The component derives its selected label entirely from this prop.",
+          "Controlled selected value. Leave unset with defaultValue for uncontrolled usage.",
       }),
       field({
-        name: "onChange",
+        name: "defaultValue",
+        type: "string",
+        description: "Initial selected value for uncontrolled usage.",
+      }),
+      field({
+        name: "onValueChange",
         type: "(value: string) => void",
         description:
-          "Called when a row is chosen. The menu closes immediately afterward.",
+          "Called when a SelectItem is chosen. The menu closes immediately afterward.",
       }),
       field({
-        name: "placeholder",
-        type: "string",
-        defaultValue: "Select an option…",
+        name: "open",
+        type: "boolean",
         description:
-          "Fallback trigger text shown when no option matches the current value.",
+          "Controlled popup state. Pair with onOpenChange when parent state owns the menu.",
+      }),
+      field({
+        name: "defaultOpen",
+        type: "boolean",
+        defaultValue: "false",
+        description: "Initial popup state for uncontrolled usage.",
+      }),
+      field({
+        name: "onOpenChange",
+        type: "(open: boolean) => void",
+        description:
+          "Called whenever the trigger, keyboard, item choice, or outside interaction opens or closes the menu.",
+      }),
+    ],
+    notes: [
+      "The root wraps the provider primitive in the Iconiq reduced-motion config so child parts share one motion preference.",
+      "Selection and open state can be controlled or uncontrolled while still preserving primitive keyboard navigation and typeahead.",
+    ],
+  },
+  {
+    id: "select-trigger",
+    title: "SelectTrigger",
+    summary:
+      "Button that opens the menu and hosts SelectValue plus the animated chevron.",
+    fields: [
+      field({
+        name: "children",
+        type: "ReactNode",
+        description:
+          "Usually a SelectValue. The chevron icon is appended automatically.",
+      }),
+      field({
+        name: "size",
+        type: '"sm" | "default"',
+        defaultValue: '"default"',
+        description:
+          "Data attribute hook for compact trigger variants without changing the default Iconiq styling.",
       }),
       field({
         name: "className",
         type: "string",
         description:
-          "Merged onto the outer wrapper so width and placement can be adjusted without editing the component source.",
+          "Merged onto the trigger button. Use it for local width such as w-full max-w-48.",
       }),
     ],
     notes: [
-      "This implementation is effectively controlled for selection. If you call onChange without updating value, the visible selection and checkmark do not move.",
-      "With focus on the trigger or listbox, Arrow keys, Home, End, Enter, Escape, and single-character typeahead all work without leaving keyboard users behind.",
-      "The public API still does not expose disabled or native form props.",
+      "The trigger keeps the previous press spring, hover color, focus ring, and chevron rotation.",
+    ],
+  },
+  {
+    id: "select-value",
+    title: "SelectValue",
+    summary:
+      "Inline label for the current selection, with placeholder support from the underlying primitive.",
+    fields: [
+      field({
+        name: "placeholder",
+        type: "ReactNode",
+        description: "Shown in the trigger when no item is selected.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description:
+          "Merged onto the value span. The default keeps text truncated inside the trigger.",
+      }),
     ],
   },
   {
     id: "select-overlay",
-    title: "Overlay and interaction behavior",
+    title: "SelectContent",
     summary:
-      "The dropdown menu is portaled to document.body, repositions while open, and clamps itself to the viewport before deciding whether to open above or below the trigger.",
+      "Portaled menu surface with the previous Iconiq dropdown fade, slide, and viewport clamping.",
+    fields: [
+      field({
+        name: "side",
+        type: '"top" | "right" | "bottom" | "left"',
+        defaultValue: '"bottom"',
+        description: "Preferred side for the menu before collision handling.",
+      }),
+      field({
+        name: "align",
+        type: '"start" | "center" | "end"',
+        defaultValue: '"start"',
+        description: "Horizontal alignment against the trigger or anchor.",
+      }),
+      field({
+        name: "sideOffset",
+        type: "number",
+        defaultValue: "8",
+        description:
+          "Gap between trigger and menu. The default matches the prior select spacing.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description:
+          "Merged onto the animated menu panel for local max height, width, or surface overrides.",
+      }),
+    ],
     notes: [
-      "A mounted flag prevents createPortal from running during the initial server render.",
-      "The trigger exposes button-plus-listbox ARIA wiring, the listbox owns active descendant state, and the focused trigger is restored after keyboard and pointer selection.",
-      "Clicking outside the trigger and menu closes the dropdown, while grouped headings and built-in typeahead help larger sets stay scannable.",
+      "The popup is portaled, width-matches the trigger by default, and caps height at 320px before scrolling.",
+      "Scroll up/down arrow slots are included for long menus while the panel keeps the same entry and exit animation.",
+    ],
+  },
+  {
+    id: "select-item",
+    title: "SelectItem",
+    summary:
+      "Selectable row with primitive keyboard behavior plus the previous active-row highlight and checkmark motion.",
+    fields: [
+      field({
+        name: "value",
+        type: "string",
+        required: true,
+        description:
+          "Stable value reported through onValueChange and used to determine the selected checkmark.",
+      }),
+      field({
+        name: "children",
+        type: "ReactNode",
+        required: true,
+        description:
+          "Item label content. Primitive ItemText also feeds the selected trigger value.",
+      }),
+      field({
+        name: "icon",
+        type: "ReactNode",
+        description:
+          "Optional leading icon rendered inline with the item label and selected trigger value.",
+      }),
+      field({
+        name: "disabled",
+        type: "boolean",
+        defaultValue: "false",
+        description: "Prevents the item from receiving selection.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description:
+          "Merged onto the row while preserving the animated active highlight and selected checkmark.",
+      }),
+    ],
+  },
+  {
+    id: "select-groups",
+    title: "Groups, labels, separators, and scroll buttons",
+    summary:
+      "Supporting parts for structured menus: SelectGroup, SelectLabel, SelectSeparator, SelectScrollUpButton, and SelectScrollDownButton.",
+    notes: [
+      "SelectGroup adds the same section spacing as the previous grouped option renderer.",
+      "SelectLabel keeps the compact uppercase section label treatment.",
+      "SelectSeparator renders a non-interactive border-token divider between item clusters.",
     ],
   },
   registryItem("select.json", ["motion", "lucide-react"]),
