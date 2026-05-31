@@ -78,6 +78,22 @@ type SelectContextValue = {
   setActiveValue: React.Dispatch<React.SetStateAction<string | undefined>>;
 };
 
+const RESIZE_OBSERVER_LOOP_ERROR =
+  /^ResizeObserver loop (?:completed with undelivered notifications|limit exceeded)/;
+
+function useSuppressResizeObserverLoopError() {
+  React.useEffect(() => {
+    const onError = (event: ErrorEvent) => {
+      if (RESIZE_OBSERVER_LOOP_ERROR.test(event.message)) {
+        event.stopImmediatePropagation();
+      }
+    };
+
+    window.addEventListener("error", onError);
+    return () => window.removeEventListener("error", onError);
+  }, []);
+}
+
 type TriggerRenderProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   children?: React.ReactNode;
   className?: string;
@@ -307,6 +323,8 @@ function Select({
     () => getItemVariants(reduceMotion),
     [reduceMotion]
   );
+
+  useSuppressResizeObserverLoopError();
 
   const handleOpenChange = React.useCallback<
     NonNullable<SelectRootProps["onOpenChange"]>
@@ -559,7 +577,6 @@ function SelectContent({
                   setRef(popupRef, node);
                 }}
                 style={{
-                  contain: "layout style",
                   transformOrigin: "var(--transform-origin)",
                   width: "var(--anchor-width)",
                   ...popupStyle,
@@ -567,7 +584,7 @@ function SelectContent({
               >
                 <motion.div
                   animate={{ opacity: 1, y: 0 }}
-                  className="flex flex-col will-change-transform"
+                  className="flex transform-gpu flex-col"
                   initial={{
                     opacity: reduceMotion ? 1 : 0,
                     y: reduceMotion ? 0 : -4,

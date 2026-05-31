@@ -80,6 +80,22 @@ type SelectContextValue = {
   setActiveValue: React.Dispatch<React.SetStateAction<string | undefined>>;
 };
 
+const RESIZE_OBSERVER_LOOP_ERROR =
+  /^ResizeObserver loop (?:completed with undelivered notifications|limit exceeded)/;
+
+function useSuppressResizeObserverLoopError() {
+  React.useEffect(() => {
+    const onError = (event: ErrorEvent) => {
+      if (RESIZE_OBSERVER_LOOP_ERROR.test(event.message)) {
+        event.stopImmediatePropagation();
+      }
+    };
+
+    window.addEventListener("error", onError);
+    return () => window.removeEventListener("error", onError);
+  }, []);
+}
+
 const SelectContext = React.createContext<SelectContextValue | null>(null);
 
 function useSelectContext(componentName: string) {
@@ -186,6 +202,8 @@ function Select({
     () => getItemVariants(reduceMotion),
     [reduceMotion]
   );
+
+  useSuppressResizeObserverLoopError();
 
   const handleOpenChange = React.useCallback<
     NonNullable<SelectRootProps["onOpenChange"]>
@@ -387,22 +405,27 @@ function SelectContent({
       >
         <motion.div
           animate={{ opacity: 1, y: 0 }}
-          className="flex flex-col"
-          initial={{ opacity: 0, y: reduceMotion ? 0 : -4 }}
+          className="flex transform-gpu flex-col"
+          initial={{
+            opacity: reduceMotion ? 1 : 0,
+            y: reduceMotion ? 0 : -4,
+          }}
           transition={getPanelTransition(reduceMotion)}
         >
           <SelectScrollUpButton />
-          <SelectPrimitive.Viewport
-            className="overflow-y-auto overscroll-contain p-1.5 outline-none"
-            onPointerLeave={() => {
-              setActiveValue(undefined);
-            }}
-            style={{
-              maxHeight: `min(var(--radix-select-content-available-height), ${MAX_MENU_HEIGHT}px)`,
-            }}
-          >
-            {children}
-          </SelectPrimitive.Viewport>
+          <motion.div className="relative min-h-0 flex-1" layoutRoot>
+            <SelectPrimitive.Viewport
+              className="overflow-y-auto overscroll-contain p-1.5 outline-none"
+              onPointerLeave={() => {
+                setActiveValue(undefined);
+              }}
+              style={{
+                maxHeight: `min(var(--radix-select-content-available-height), ${MAX_MENU_HEIGHT}px)`,
+              }}
+            >
+              {children}
+            </SelectPrimitive.Viewport>
+          </motion.div>
           <SelectScrollDownButton />
         </motion.div>
       </SelectPrimitive.Content>
@@ -468,6 +491,7 @@ function SelectItem({
       <motion.div
         animate="visible"
         className={cn(
+          "transform-gpu",
           selectItemClassName,
           !isActive &&
             "hover:bg-[color:color-mix(in_oklch,var(--sel-accent),transparent_40%)]",
@@ -475,7 +499,8 @@ function SelectItem({
         )}
         custom={itemIndexRef.current}
         exit="exit"
-        initial="hidden"
+        initial={reduceMotion ? false : "hidden"}
+        layout={false}
         onMouseEnter={composeEventHandlers(props.onMouseEnter, () => {
           setActiveValue(value);
         })}
