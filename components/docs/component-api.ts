@@ -1626,94 +1626,227 @@ const contextMenuApiDetails: DetailItem[] = [
     id: "context-menu",
     title: "ContextMenu",
     summary:
-      "Stateful wrapper that listens for the native contextmenu event on a local surface and renders a fixed-position floating menu.",
+      "Root provider that coordinates open state and the shared motion shell used by the trigger, content, and item primitives.",
     fields: [
-      field({
-        name: "items",
-        type: "ContextMenuItem[]",
-        required: true,
-        description:
-          "Ordered list of menu rows. Each item defines its own label, optional icon and shortcut, click handler, and row state.",
-      }),
       field({
         name: "children",
         type: "ReactNode",
         required: true,
         description:
-          "Content wrapped by the local context-click target. The component always renders a div around this content and attaches the right-click handler there.",
+          "Compose ContextMenuTrigger, ContextMenuContent, and item primitives such as ContextMenuItem or ContextMenuSub inside the root.",
+      }),
+      field({
+        name: "open",
+        type: "boolean",
+        description:
+          "Controlled open state for the menu surface. Supported on the Base UI install.",
+      }),
+      field({
+        name: "defaultOpen",
+        type: "boolean",
+        defaultValue: "false",
+        description:
+          "Initial open state for uncontrolled usage on the Base UI install.",
+      }),
+      field({
+        name: "onOpenChange",
+        type: "(open: boolean) => void",
+        description:
+          "Called whenever the trigger, outside interaction, or Escape key changes the open state.",
+      }),
+      field({
+        name: "reducedMotion",
+        type: "boolean",
+        description:
+          "Forces reduced motion for this menu instance, overriding the user system preference.",
+      }),
+    ],
+    notes: [
+      "Compose ContextMenuTrigger, ContextMenuContent, ContextMenuItem, ContextMenuSub, and the other exported parts inside the root.",
+      "The menu opens from right click or long press on the trigger surface. Shift+F10 and the Context Menu key also open it from keyboard focus.",
+      "Open and defaultOpen are supported on the Base UI install. The Radix install mirrors open changes through onOpenChange but keeps open state internal to the primitive.",
+      "Content is portaled and collision-aware. The Iconiq shell keeps the original panel spring, row entrance, and active highlight motion.",
+    ],
+  },
+  {
+    id: "context-menu-trigger",
+    title: "ContextMenuTrigger",
+    summary:
+      "Interactive surface that opens the menu on right click, long press, or keyboard context-menu shortcuts.",
+    fields: [
+      field({
+        name: "children",
+        type: "ReactNode",
+        required: true,
+        description:
+          "Trigger content rendered inside the context-click target.",
+      }),
+      field({
+        name: "asChild",
+        type: "boolean",
+        description:
+          "Merges trigger behavior onto the single child element instead of rendering a wrapper element.",
       }),
       field({
         name: "className",
         type: "string",
         description:
-          "Merged onto the wrapper div that receives the native context menu event.",
-      }),
-      field({
-        name: "menuClassName",
-        type: "string",
-        description:
-          "Merged onto the floating motion.div for local surface styling overrides. The component still applies an inline width of 232px.",
+          "Merged onto the trigger surface, including the focus ring and theme token scope.",
       }),
     ],
-    notes: [
-      "Open state is fully internal. This implementation does not expose controlled open props, state callbacks, or an imperative API.",
-      "The menu opens only from the native contextmenu event, then flips horizontally or vertically when the estimated panel would overflow the viewport.",
-      "Closing is handled internally on outside mousedown, scroll, resize, and Escape. ArrowUp and ArrowDown move the highlighted row in local state, but DOM focus does not move into the menu.",
+  },
+  {
+    id: "context-menu-content",
+    title: "ContextMenuContent",
+    summary:
+      "Portaled menu panel that renders the composed item tree with the Iconiq border, shadow, and motion treatment.",
+    fields: [
+      field({
+        name: "children",
+        type: "ReactNode",
+        required: true,
+        description:
+          "Menu body content such as groups, items, separators, checkbox rows, and nested submenus.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description:
+          "Merged onto the animated panel shell. Use width utilities such as w-48 when you want a fixed menu width.",
+      }),
+      field({
+        name: "collisionPadding",
+        type: "number",
+        defaultValue: "8",
+        description:
+          "Viewport padding used while the underlying primitive resolves collision-aware placement.",
+      }),
     ],
   },
   {
     id: "context-menu-item",
     title: "ContextMenuItem",
     summary:
-      "Data shape used by the items prop to define each row in the menu.",
+      "Interactive menu row with the Iconiq active highlight, row entrance motion, and optional destructive styling.",
     fields: [
       field({
-        name: "label",
-        type: "string",
-        required: true,
-        description: "Primary row copy rendered as the main action label.",
-      }),
-      field({
-        name: "icon",
+        name: "children",
         type: "ReactNode",
+        required: true,
         description:
-          "Optional leading visual rendered inside the fixed 16px icon slot.",
+          "Row content. Pair with ContextMenuShortcut when you want trailing keyboard hints.",
       }),
       field({
-        name: "shortcut",
-        type: "string",
+        name: "variant",
+        type: '"default" | "destructive"',
+        defaultValue: "default",
         description:
-          "Optional trailing helper text, typically a keyboard hint such as R or Cmd+D.",
-      }),
-      field({
-        name: "onSelect",
-        type: "() => void",
-        description:
-          "Called when the row is activated with a click or Enter on the currently highlighted item.",
-      }),
-      field({
-        name: "destructive",
-        type: "boolean",
-        description:
-          "Switches the row into the destructive color treatment and changes the active highlight tint.",
+          "Switches the row into the destructive color treatment used for irreversible actions.",
       }),
       field({
         name: "disabled",
         type: "boolean",
-        description: "Dims the row and blocks pointer and Enter selection.",
+        description: "Dims the row and blocks pointer and keyboard selection.",
       }),
       field({
-        name: "separatorAfter",
+        name: "inset",
         type: "boolean",
         description:
-          "Inserts a thin divider after the row unless it is already the last rendered item.",
+          "Adds extra start padding so the row aligns with checkbox and radio items.",
+      }),
+      field({
+        name: "onSelect",
+        type: "(event: Event) => void",
+        description: "Called when the row is activated.",
       }),
     ],
-    notes: [
-      "Keyboard navigation skips disabled rows in both directions. If every row is disabled, the highlighted index stays unchanged.",
+  },
+  {
+    id: "context-menu-shortcut",
+    title: "ContextMenuShortcut",
+    summary:
+      "Trailing helper text for keyboard hints. It stays muted until the parent row is focused.",
+    fields: [
+      field({
+        name: "children",
+        type: "ReactNode",
+        required: true,
+        description: "Shortcut copy such as ⌘R or Del.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description: "Merged onto the trailing shortcut span.",
+      }),
     ],
   },
-  registryItem("context-menu.json", ["motion"]),
+  {
+    id: "context-menu-sub",
+    title: "ContextMenuSub",
+    summary:
+      "Nested submenu root. Pair ContextMenuSubTrigger with ContextMenuSubContent to build secondary menus such as More Tools.",
+    fields: [
+      field({
+        name: "children",
+        type: "ReactNode",
+        required: true,
+        description:
+          "Submenu trigger and content parts rendered inside the parent menu.",
+      }),
+    ],
+  },
+  {
+    id: "context-menu-checkbox-item",
+    title: "ContextMenuCheckboxItem",
+    summary:
+      "Toggle row with a trailing check indicator and the same Iconiq row motion treatment as ContextMenuItem.",
+    fields: [
+      field({
+        name: "checked",
+        type: "boolean",
+        description: "Controls whether the row renders in the checked state.",
+      }),
+      field({
+        name: "onCheckedChange",
+        type: "(checked: boolean) => void",
+        description:
+          "Called when the row toggles between checked and unchecked.",
+      }),
+      field({
+        name: "disabled",
+        type: "boolean",
+        description: "Dims the row and blocks pointer and keyboard selection.",
+      }),
+      field({
+        name: "inset",
+        type: "boolean",
+        description: "Adds extra start padding to align with sibling rows.",
+      }),
+    ],
+  },
+  {
+    id: "context-menu-radio-group",
+    title: "ContextMenuRadioGroup",
+    summary:
+      "Single-select group for ContextMenuRadioItem rows. Use ContextMenuLabel above the options when you need a section heading.",
+    fields: [
+      field({
+        name: "value",
+        type: "string",
+        description: "Controlled selected value for the radio group.",
+      }),
+      field({
+        name: "onValueChange",
+        type: "(value: string) => void",
+        description: "Called when a radio row is selected.",
+      }),
+    ],
+  },
+  registryItem("context-menu.json", [
+    "motion",
+    "lucide-react",
+    "@radix-ui/react-context-menu or @base-ui/react",
+  ]),
 ];
 
 const drawerApiDetails: DetailItem[] = [

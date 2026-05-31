@@ -172,10 +172,10 @@
       "name": "b-context-menu",
       "type": "registry:ui",
       "registryDependencies": [],
-      "dependencies": ["@base-ui/react", "motion"],
+      "dependencies": ["@base-ui/react", "motion", "lucide-react"],
       "devDependencies": [],
       "title": "Context Menu (Base UI)",
-      "description": "Context menu with the same Iconiq API layered over Base UI primitives, preserving the original panel spring, row entrance, active highlight, and shortcut layout.",
+      "description": "Composable context menu layered over Base UI primitives, preserving the original panel spring, row entrance, active highlight, and shortcut layout.",
       "files": [
         {
           "path": "b-context-menu.tsx",
@@ -841,10 +841,14 @@
       "name": "r-context-menu",
       "type": "registry:ui",
       "registryDependencies": [],
-      "dependencies": ["@radix-ui/react-context-menu", "motion"],
+      "dependencies": [
+        "@radix-ui/react-context-menu",
+        "motion",
+        "lucide-react"
+      ],
       "devDependencies": [],
       "title": "Context Menu (Radix UI)",
-      "description": "Context menu with the same Iconiq API layered over Radix UI primitives, preserving the original panel spring, row entrance, active highlight, and shortcut layout.",
+      "description": "Composable context menu layered over Radix UI primitives, preserving the original panel spring, row entrance, active highlight, and shortcut layout.",
       "files": [
         {
           "path": "r-context-menu.tsx",

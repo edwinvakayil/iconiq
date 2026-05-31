@@ -51,7 +51,7 @@ const componentSummaries: Record<string, string> = {
   "/components/combobox":
     "Base UI combobox docs in the Components section, preserving the same Iconiq filtering, keyboard navigation, and dropdown motion as the core combobox.",
   "/components/context-menu":
-    "Context menu docs with a provider switch that swaps between Base UI and Radix UI registry entries.",
+    "Composable context menu docs with a provider switch between Base UI and Radix UI registry installs.",
   "/components/dialog":
     "Dialog docs with a provider switch that swaps between Base UI and Radix UI registry entries.",
   "/components/drawer":

@@ -1,6 +1,5 @@
 "use client";
 
-import { Copy, PencilLine, Share2, Trash2 } from "lucide-react";
 import type { ReactNode } from "react";
 import { useMemo, useState } from "react";
 
@@ -15,10 +14,37 @@ import {
 } from "@/components/docs/page-shell";
 import { LINK } from "@/constants";
 import {
-  ContextMenu as BaseContextMenu,
-  type ContextMenuItem as BaseContextMenuItem,
+  ContextMenu,
+  ContextMenuCheckboxItem,
+  ContextMenuContent,
+  ContextMenuGroup,
+  ContextMenuItem,
+  ContextMenuLabel,
+  ContextMenuRadioGroup,
+  ContextMenuRadioItem,
+  ContextMenuSeparator,
+  ContextMenuShortcut,
+  ContextMenuSub,
+  ContextMenuSubContent,
+  ContextMenuSubTrigger,
+  ContextMenuTrigger,
 } from "@/registry/b-context-menu";
-import { ContextMenu as RadixContextMenu } from "@/registry/r-context-menu";
+import {
+  ContextMenu as RadixContextMenu,
+  ContextMenuCheckboxItem as RadixContextMenuCheckboxItem,
+  ContextMenuContent as RadixContextMenuContent,
+  ContextMenuGroup as RadixContextMenuGroup,
+  ContextMenuItem as RadixContextMenuItem,
+  ContextMenuLabel as RadixContextMenuLabel,
+  ContextMenuRadioGroup as RadixContextMenuRadioGroup,
+  ContextMenuRadioItem as RadixContextMenuRadioItem,
+  ContextMenuSeparator as RadixContextMenuSeparator,
+  ContextMenuShortcut as RadixContextMenuShortcut,
+  ContextMenuSub as RadixContextMenuSub,
+  ContextMenuSubContent as RadixContextMenuSubContent,
+  ContextMenuSubTrigger as RadixContextMenuSubTrigger,
+  ContextMenuTrigger as RadixContextMenuTrigger,
+} from "@/registry/r-context-menu";
 
 type ProviderConfig = {
   componentName: "b-context-menu" | "r-context-menu";
@@ -29,133 +55,310 @@ type ProviderConfig = {
   usageCode: string;
 };
 
-const demoItems: BaseContextMenuItem[] = [
-  {
-    label: "Rename",
-    icon: <PencilLine className="size-3.5" />,
-    shortcut: "R",
-  },
-  {
-    label: "Duplicate",
-    icon: <Copy className="size-3.5" />,
-    shortcut: "Cmd+D",
-    separatorAfter: true,
-  },
-  {
-    label: "Share",
-    icon: <Share2 className="size-3.5" />,
-    shortcut: "S",
-  },
-  {
-    label: "Delete",
-    icon: <Trash2 className="size-3.5" />,
-    shortcut: "Del",
-    destructive: true,
-  },
-];
-
-const previewSurface = (
-  <div className="w-full border border-border/80 px-6 py-16 text-center">
-    <p className="font-medium text-[15px] text-foreground tracking-[-0.02em]">
-      Right-click this workspace block
-    </p>
-    <p className="mt-2 text-[14px] text-secondary leading-6">
-      Inspect spacing, shortcuts, separators, and the destructive row in the
-      same menu.
-    </p>
-  </div>
-);
-
 const usageCodeByProvider: Record<ProviderConfig["componentName"], string> = {
-  "b-context-menu": `"use client";
+  "b-context-menu": `import {
+  ContextMenu,
+  ContextMenuCheckboxItem,
+  ContextMenuContent,
+  ContextMenuGroup,
+  ContextMenuItem,
+  ContextMenuLabel,
+  ContextMenuRadioGroup,
+  ContextMenuRadioItem,
+  ContextMenuSeparator,
+  ContextMenuShortcut,
+  ContextMenuSub,
+  ContextMenuSubContent,
+  ContextMenuSubTrigger,
+  ContextMenuTrigger,
+} from "@/components/ui/b-context-menu";
 
-import { Copy, PencilLine, Share2, Trash2 } from "lucide-react";
-import { ContextMenu, type ContextMenuItem } from "@/components/ui/b-context-menu";
-
-const items: ContextMenuItem[] = [
-  {
-    label: "Rename",
-    icon: <PencilLine className="size-3.5" />,
-    shortcut: "R",
-  },
-  {
-    label: "Duplicate",
-    icon: <Copy className="size-3.5" />,
-    shortcut: "Cmd+D",
-    separatorAfter: true,
-  },
-  {
-    label: "Share",
-    icon: <Share2 className="size-3.5" />,
-    shortcut: "S",
-  },
-  {
-    label: "Delete",
-    icon: <Trash2 className="size-3.5" />,
-    shortcut: "Del",
-    destructive: true,
-  },
-];
-
-export function ContextMenuPreview() {
+export function ContextMenuDemo() {
   return (
-    <ContextMenu className="w-full" items={items}>
-      <div className="w-full border border-border/80 px-6 py-16 text-center">
-        <p className="font-medium text-[15px] tracking-[-0.02em] text-foreground">
-          Right-click this workspace block
-        </p>
-        <p className="mt-2 text-[14px] leading-6 text-secondary">
-          Inspect spacing, shortcuts, separators, and the destructive row in the same menu.
-        </p>
-      </div>
+    <ContextMenu>
+      <ContextMenuTrigger className="flex aspect-video w-full max-w-xs items-center justify-center rounded-xl border border-dashed text-sm">
+        <span className="hidden pointer-fine:inline-block">
+          Right click here
+        </span>
+        <span className="hidden pointer-coarse:inline-block">
+          Long press here
+        </span>
+      </ContextMenuTrigger>
+      <ContextMenuContent className="w-48">
+        <ContextMenuGroup>
+          <ContextMenuItem>
+            Back
+            <ContextMenuShortcut>⌘[</ContextMenuShortcut>
+          </ContextMenuItem>
+          <ContextMenuItem disabled>
+            Forward
+            <ContextMenuShortcut>⌘]</ContextMenuShortcut>
+          </ContextMenuItem>
+          <ContextMenuItem>
+            Reload
+            <ContextMenuShortcut>⌘R</ContextMenuShortcut>
+          </ContextMenuItem>
+          <ContextMenuSub>
+            <ContextMenuSubTrigger>More Tools</ContextMenuSubTrigger>
+            <ContextMenuSubContent className="w-44">
+              <ContextMenuGroup>
+                <ContextMenuItem>Save Page...</ContextMenuItem>
+                <ContextMenuItem>Create Shortcut...</ContextMenuItem>
+                <ContextMenuItem>Name Window...</ContextMenuItem>
+              </ContextMenuGroup>
+              <ContextMenuSeparator />
+              <ContextMenuGroup>
+                <ContextMenuItem>Developer Tools</ContextMenuItem>
+              </ContextMenuGroup>
+              <ContextMenuSeparator />
+              <ContextMenuGroup>
+                <ContextMenuItem variant="destructive">Delete</ContextMenuItem>
+              </ContextMenuGroup>
+            </ContextMenuSubContent>
+          </ContextMenuSub>
+        </ContextMenuGroup>
+        <ContextMenuSeparator />
+        <ContextMenuGroup>
+          <ContextMenuCheckboxItem checked>
+            Show Bookmarks
+          </ContextMenuCheckboxItem>
+          <ContextMenuCheckboxItem>Show Full URLs</ContextMenuCheckboxItem>
+        </ContextMenuGroup>
+        <ContextMenuSeparator />
+        <ContextMenuGroup>
+          <ContextMenuRadioGroup value="pedro">
+            <ContextMenuLabel>People</ContextMenuLabel>
+            <ContextMenuRadioItem value="pedro">
+              Pedro Duarte
+            </ContextMenuRadioItem>
+            <ContextMenuRadioItem value="colm">Colm Tuite</ContextMenuRadioItem>
+          </ContextMenuRadioGroup>
+        </ContextMenuGroup>
+      </ContextMenuContent>
     </ContextMenu>
   );
 }`,
-  "r-context-menu": `"use client";
+  "r-context-menu": `import {
+  ContextMenu,
+  ContextMenuCheckboxItem,
+  ContextMenuContent,
+  ContextMenuGroup,
+  ContextMenuItem,
+  ContextMenuLabel,
+  ContextMenuRadioGroup,
+  ContextMenuRadioItem,
+  ContextMenuSeparator,
+  ContextMenuShortcut,
+  ContextMenuSub,
+  ContextMenuSubContent,
+  ContextMenuSubTrigger,
+  ContextMenuTrigger,
+} from "@/components/ui/r-context-menu";
 
-import { Copy, PencilLine, Share2, Trash2 } from "lucide-react";
-import { ContextMenu, type ContextMenuItem } from "@/components/ui/r-context-menu";
-
-const items: ContextMenuItem[] = [
-  {
-    label: "Rename",
-    icon: <PencilLine className="size-3.5" />,
-    shortcut: "R",
-  },
-  {
-    label: "Duplicate",
-    icon: <Copy className="size-3.5" />,
-    shortcut: "Cmd+D",
-    separatorAfter: true,
-  },
-  {
-    label: "Share",
-    icon: <Share2 className="size-3.5" />,
-    shortcut: "S",
-  },
-  {
-    label: "Delete",
-    icon: <Trash2 className="size-3.5" />,
-    shortcut: "Del",
-    destructive: true,
-  },
-];
-
-export function ContextMenuPreview() {
+export function ContextMenuDemo() {
   return (
-    <ContextMenu className="w-full" items={items}>
-      <div className="w-full border border-border/80 px-6 py-16 text-center">
-        <p className="font-medium text-[15px] tracking-[-0.02em] text-foreground">
-          Right-click this workspace block
-        </p>
-        <p className="mt-2 text-[14px] leading-6 text-secondary">
-          Inspect spacing, shortcuts, separators, and the destructive row in the same menu.
-        </p>
-      </div>
+    <ContextMenu>
+      <ContextMenuTrigger className="flex aspect-video w-full max-w-xs items-center justify-center rounded-xl border border-dashed text-sm">
+        <span className="hidden pointer-fine:inline-block">
+          Right click here
+        </span>
+        <span className="hidden pointer-coarse:inline-block">
+          Long press here
+        </span>
+      </ContextMenuTrigger>
+      <ContextMenuContent className="w-48">
+        <ContextMenuGroup>
+          <ContextMenuItem>
+            Back
+            <ContextMenuShortcut>⌘[</ContextMenuShortcut>
+          </ContextMenuItem>
+          <ContextMenuItem disabled>
+            Forward
+            <ContextMenuShortcut>⌘]</ContextMenuShortcut>
+          </ContextMenuItem>
+          <ContextMenuItem>
+            Reload
+            <ContextMenuShortcut>⌘R</ContextMenuShortcut>
+          </ContextMenuItem>
+          <ContextMenuSub>
+            <ContextMenuSubTrigger>More Tools</ContextMenuSubTrigger>
+            <ContextMenuSubContent className="w-44">
+              <ContextMenuGroup>
+                <ContextMenuItem>Save Page...</ContextMenuItem>
+                <ContextMenuItem>Create Shortcut...</ContextMenuItem>
+                <ContextMenuItem>Name Window...</ContextMenuItem>
+              </ContextMenuGroup>
+              <ContextMenuSeparator />
+              <ContextMenuGroup>
+                <ContextMenuItem>Developer Tools</ContextMenuItem>
+              </ContextMenuGroup>
+              <ContextMenuSeparator />
+              <ContextMenuGroup>
+                <ContextMenuItem variant="destructive">Delete</ContextMenuItem>
+              </ContextMenuGroup>
+            </ContextMenuSubContent>
+          </ContextMenuSub>
+        </ContextMenuGroup>
+        <ContextMenuSeparator />
+        <ContextMenuGroup>
+          <ContextMenuCheckboxItem checked>
+            Show Bookmarks
+          </ContextMenuCheckboxItem>
+          <ContextMenuCheckboxItem>Show Full URLs</ContextMenuCheckboxItem>
+        </ContextMenuGroup>
+        <ContextMenuSeparator />
+        <ContextMenuGroup>
+          <ContextMenuRadioGroup value="pedro">
+            <ContextMenuLabel>People</ContextMenuLabel>
+            <ContextMenuRadioItem value="pedro">
+              Pedro Duarte
+            </ContextMenuRadioItem>
+            <ContextMenuRadioItem value="colm">Colm Tuite</ContextMenuRadioItem>
+          </ContextMenuRadioGroup>
+        </ContextMenuGroup>
+      </ContextMenuContent>
     </ContextMenu>
   );
 }`,
 };
+
+function ContextMenuDemo() {
+  return (
+    <ContextMenu>
+      <ContextMenuTrigger className="flex aspect-video w-full max-w-xs items-center justify-center rounded-xl border border-dashed text-sm">
+        <span className="pointer-fine:inline-block hidden">
+          Right click here
+        </span>
+        <span className="pointer-coarse:inline-block hidden">
+          Long press here
+        </span>
+      </ContextMenuTrigger>
+      <ContextMenuContent className="w-48">
+        <ContextMenuGroup>
+          <ContextMenuItem>
+            Back
+            <ContextMenuShortcut>⌘[</ContextMenuShortcut>
+          </ContextMenuItem>
+          <ContextMenuItem disabled>
+            Forward
+            <ContextMenuShortcut>⌘]</ContextMenuShortcut>
+          </ContextMenuItem>
+          <ContextMenuItem>
+            Reload
+            <ContextMenuShortcut>⌘R</ContextMenuShortcut>
+          </ContextMenuItem>
+          <ContextMenuSub>
+            <ContextMenuSubTrigger>More Tools</ContextMenuSubTrigger>
+            <ContextMenuSubContent className="w-44">
+              <ContextMenuGroup>
+                <ContextMenuItem>Save Page...</ContextMenuItem>
+                <ContextMenuItem>Create Shortcut...</ContextMenuItem>
+                <ContextMenuItem>Name Window...</ContextMenuItem>
+              </ContextMenuGroup>
+              <ContextMenuSeparator />
+              <ContextMenuGroup>
+                <ContextMenuItem>Developer Tools</ContextMenuItem>
+              </ContextMenuGroup>
+              <ContextMenuSeparator />
+              <ContextMenuGroup>
+                <ContextMenuItem variant="destructive">Delete</ContextMenuItem>
+              </ContextMenuGroup>
+            </ContextMenuSubContent>
+          </ContextMenuSub>
+        </ContextMenuGroup>
+        <ContextMenuSeparator />
+        <ContextMenuGroup>
+          <ContextMenuCheckboxItem checked>
+            Show Bookmarks
+          </ContextMenuCheckboxItem>
+          <ContextMenuCheckboxItem>Show Full URLs</ContextMenuCheckboxItem>
+        </ContextMenuGroup>
+        <ContextMenuSeparator />
+        <ContextMenuGroup>
+          <ContextMenuRadioGroup value="pedro">
+            <ContextMenuLabel>People</ContextMenuLabel>
+            <ContextMenuRadioItem value="pedro">
+              Pedro Duarte
+            </ContextMenuRadioItem>
+            <ContextMenuRadioItem value="colm">Colm Tuite</ContextMenuRadioItem>
+          </ContextMenuRadioGroup>
+        </ContextMenuGroup>
+      </ContextMenuContent>
+    </ContextMenu>
+  );
+}
+
+function RadixContextMenuDemo() {
+  return (
+    <RadixContextMenu>
+      <RadixContextMenuTrigger className="flex aspect-video w-full max-w-xs items-center justify-center rounded-xl border border-dashed text-sm">
+        <span className="pointer-fine:inline-block hidden">
+          Right click here
+        </span>
+        <span className="pointer-coarse:inline-block hidden">
+          Long press here
+        </span>
+      </RadixContextMenuTrigger>
+      <RadixContextMenuContent className="w-48">
+        <RadixContextMenuGroup>
+          <RadixContextMenuItem>
+            Back
+            <RadixContextMenuShortcut>⌘[</RadixContextMenuShortcut>
+          </RadixContextMenuItem>
+          <RadixContextMenuItem disabled>
+            Forward
+            <RadixContextMenuShortcut>⌘]</RadixContextMenuShortcut>
+          </RadixContextMenuItem>
+          <RadixContextMenuItem>
+            Reload
+            <RadixContextMenuShortcut>⌘R</RadixContextMenuShortcut>
+          </RadixContextMenuItem>
+          <RadixContextMenuSub>
+            <RadixContextMenuSubTrigger>More Tools</RadixContextMenuSubTrigger>
+            <RadixContextMenuSubContent className="w-44">
+              <RadixContextMenuGroup>
+                <RadixContextMenuItem>Save Page...</RadixContextMenuItem>
+                <RadixContextMenuItem>Create Shortcut...</RadixContextMenuItem>
+                <RadixContextMenuItem>Name Window...</RadixContextMenuItem>
+              </RadixContextMenuGroup>
+              <RadixContextMenuSeparator />
+              <RadixContextMenuGroup>
+                <RadixContextMenuItem>Developer Tools</RadixContextMenuItem>
+              </RadixContextMenuGroup>
+              <RadixContextMenuSeparator />
+              <RadixContextMenuGroup>
+                <RadixContextMenuItem variant="destructive">
+                  Delete
+                </RadixContextMenuItem>
+              </RadixContextMenuGroup>
+            </RadixContextMenuSubContent>
+          </RadixContextMenuSub>
+        </RadixContextMenuGroup>
+        <RadixContextMenuSeparator />
+        <RadixContextMenuGroup>
+          <RadixContextMenuCheckboxItem checked>
+            Show Bookmarks
+          </RadixContextMenuCheckboxItem>
+          <RadixContextMenuCheckboxItem>
+            Show Full URLs
+          </RadixContextMenuCheckboxItem>
+        </RadixContextMenuGroup>
+        <RadixContextMenuSeparator />
+        <RadixContextMenuGroup>
+          <RadixContextMenuRadioGroup value="pedro">
+            <RadixContextMenuLabel>People</RadixContextMenuLabel>
+            <RadixContextMenuRadioItem value="pedro">
+              Pedro Duarte
+            </RadixContextMenuRadioItem>
+            <RadixContextMenuRadioItem value="colm">
+              Colm Tuite
+            </RadixContextMenuRadioItem>
+          </RadixContextMenuRadioGroup>
+        </RadixContextMenuGroup>
+      </RadixContextMenuContent>
+    </RadixContextMenu>
+  );
+}
 
 const breadcrumbs = [
   { label: "Docs", href: "/" },
@@ -171,36 +374,28 @@ export default function RadixBaseContextMenuPage() {
     if (selectedProvider === "base") {
       return {
         componentName: "b-context-menu",
-        dependencyLabel: "@base-ui/react, motion",
+        dependencyLabel: "@base-ui/react, motion, lucide-react",
         libraryLabel: "Base UI",
         notes: [
-          "Installs the Base UI context-menu and menu parts under the same product-facing ContextMenu API.",
-          "Base UI handles anchor positioning, dismissal, and roving focus while the menu shell keeps the same Iconiq motion treatment.",
+          "Installs the Base UI context-menu parts under the same composable ContextMenu API used by the Radix build.",
+          "Base UI handles anchor positioning, dismissal, and roving focus while the menu shell keeps the original Iconiq motion treatment.",
           "The generated registry file is /r/b-context-menu.json.",
         ],
-        preview: (
-          <BaseContextMenu className="w-full" items={demoItems}>
-            {previewSurface}
-          </BaseContextMenu>
-        ),
+        preview: <ContextMenuDemo />,
         usageCode: usageCodeByProvider["b-context-menu"],
       };
     }
 
     return {
       componentName: "r-context-menu",
-      dependencyLabel: "@radix-ui/react-context-menu, motion",
+      dependencyLabel: "@radix-ui/react-context-menu, motion, lucide-react",
       libraryLabel: "Radix UI",
       notes: [
-        "Installs the Radix context-menu primitive under the same product-facing ContextMenu API.",
-        "Radix handles focus, dismissal, and pointer anchoring while the menu shell keeps the same Iconiq motion treatment.",
+        "Installs the Radix context-menu primitive under the same composable ContextMenu API used by the Base UI build.",
+        "Radix handles focus, dismissal, and pointer anchoring while the menu shell keeps the original Iconiq motion treatment.",
         "The generated registry file is /r/r-context-menu.json.",
       ],
-      preview: (
-        <RadixContextMenu className="w-full" items={demoItems}>
-          {previewSurface}
-        </RadixContextMenu>
-      ),
+      preview: <RadixContextMenuDemo />,
       usageCode: usageCodeByProvider["r-context-menu"],
     };
   }, [selectedProvider]);
@@ -212,7 +407,7 @@ export default function RadixBaseContextMenuPage() {
           return {
             ...item,
             notes: [
-              "Open state stays internal on both installs.",
+              "Compose ContextMenuTrigger, ContextMenuContent, and item primitives inside the root.",
               `Current install target: ${provider.libraryLabel}.`,
               `Dependencies declared by this registry entry: ${provider.dependencyLabel}.`,
               ...provider.notes,
@@ -253,7 +448,7 @@ export default function RadixBaseContextMenuPage() {
       pageUrl="/components/context-menu"
       preview={
         <div className="flex min-h-[280px] w-full items-center justify-center px-4 py-10">
-          <div className="w-full max-w-2xl">{provider.preview}</div>
+          {provider.preview}
         </div>
       }
       title="Context Menu"

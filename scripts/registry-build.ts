@@ -182,8 +182,8 @@ const REGISTRY_UI_META: Record<
   "b-context-menu": {
     title: "Context Menu (Base UI)",
     description:
-      "Context menu with the same Iconiq API layered over Base UI primitives, preserving the original panel spring, row entrance, active highlight, and shortcut layout.",
-    dependencies: ["@base-ui/react", "motion"],
+      "Composable context menu layered over Base UI primitives, preserving the original panel spring, row entrance, active highlight, and shortcut layout.",
+    dependencies: ["@base-ui/react", "motion", "lucide-react"],
   },
   "b-dialog": {
     title: "Dialog (Base UI)",
@@ -408,8 +408,8 @@ const REGISTRY_UI_META: Record<
   "r-context-menu": {
     title: "Context Menu (Radix UI)",
     description:
-      "Context menu with the same Iconiq API layered over Radix UI primitives, preserving the original panel spring, row entrance, active highlight, and shortcut layout.",
-    dependencies: ["@radix-ui/react-context-menu", "motion"],
+      "Composable context menu layered over Radix UI primitives, preserving the original panel spring, row entrance, active highlight, and shortcut layout.",
+    dependencies: ["@radix-ui/react-context-menu", "motion", "lucide-react"],
   },
   "r-dialog": {
     title: "Dialog (Radix UI)",
