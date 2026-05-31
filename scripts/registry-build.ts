@@ -119,11 +119,11 @@ const REGISTRY_UI_META: Record<
       "Looping typewriter text effect with brief glitch substitutions, a blinking cursor, and reduced-motion fallback.",
     dependencies: ["motion"],
   },
-  drawer: {
-    title: "Drawer",
+  "@v-drawer": {
+    title: "Drawer (Vaul)",
     description:
-      "Controlled overlay drawer with faster slide timing, focus-trapped dialog behavior, safe-area-aware mobile ergonomics, and an optional sticky footer.",
-    dependencies: ["motion", "lucide-react"],
+      "Compound Vaul drawer primitives with a soft overlay fade, direction-aware layout classes, drag gestures, and tuned fluid slide motion.",
+    dependencies: ["vaul"],
   },
   dropdown: {
     title: "Dropdown",
@@ -195,12 +195,6 @@ const REGISTRY_UI_META: Record<
       "motion",
       "lucide-react",
     ],
-  },
-  "b-drawer": {
-    title: "Drawer (Base UI)",
-    description:
-      "Drawer in the Base section that keeps the Iconiq motion shell while layering it over Base UI drawer primitives for controlled state and close actions.",
-    dependencies: ["@base-ui/react", "motion", "lucide-react"],
   },
   "b-hover-card": {
     title: "Hover Card (Base UI)",

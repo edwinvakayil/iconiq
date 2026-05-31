@@ -1854,86 +1854,128 @@ const drawerApiDetails: DetailItem[] = [
     id: "drawer",
     title: "Drawer",
     summary:
-      "Controlled overlay drawer with side-based entry, built-in focus management, scroll locking, and an optional sticky footer area for actions.",
+      "Vaul-backed drawer root that coordinates open state, drag gestures, overlay dismissal, focus management, and side-based placement for the compound parts.",
     fields: [
       field({
         name: "open",
         type: "boolean",
-        required: true,
         description:
-          "Controls whether the drawer and overlay render at all. The component is fully controlled and does not keep its own open state.",
+          "Optional controlled open state. Pair it with onOpenChange when parent state should own the drawer lifecycle.",
       }),
       field({
-        name: "onClose",
-        type: "() => void",
-        required: true,
+        name: "defaultOpen",
+        type: "boolean",
         description:
-          "Called when the overlay is clicked or when Escape is pressed while the drawer is open.",
+          "Initial open state for uncontrolled usage. Vaul skips the first enter animation when the drawer is mounted open.",
       }),
       field({
-        name: "side",
+        name: "onOpenChange",
+        type: "(open: boolean) => void",
+        description:
+          "Called whenever the drawer opens or closes from the trigger, overlay, Escape key, close part, or drag release.",
+      }),
+      field({
+        name: "direction",
         type: '"left" | "right" | "top" | "bottom"',
-        defaultValue: '"right"',
+        defaultValue: '"bottom"',
         description:
-          "Chooses the panel edge, slide direction, and the matching border placement from the internal panelVariants map.",
+          "Chooses the drawer edge and matching Vaul slide direction. The content classes style each direction with the appropriate inset and rounded leading edge.",
       }),
       field({
-        name: "title",
-        type: "string",
+        name: "modal",
+        type: "boolean",
+        defaultValue: "true",
         description:
-          "Primary heading rendered in the header row and linked to the dialog label for assistive technology when present.",
+          "Keeps focus and outside interaction modal while the drawer is open. Set false for non-modal command surfaces.",
       }),
       field({
-        name: "description",
-        type: "string",
+        name: "dismissible",
+        type: "boolean",
+        defaultValue: "true",
         description:
-          "Secondary helper line rendered under the title and exposed through aria-describedby when present.",
+          "Allows overlay click, Escape, and drag gestures to close the drawer. Controlled drawers can disable this when a flow must be completed explicitly.",
       }),
       field({
-        name: "footer",
-        type: "ReactNode",
+        name: "snapPoints",
+        type: "(number | string)[]",
         description:
-          "Optional pinned footer region rendered beneath the scrollable body, useful for grouped actions or summary controls on mobile and desktop.",
-      }),
-      field({
-        name: "children",
-        type: "ReactNode",
-        description:
-          "Content rendered inside the scrolling body area below the header.",
+          "Optional Vaul snap points for stepped drawer heights or widths. Values may be percentages or px strings.",
       }),
     ],
     notes: [
-      "While open, the component traps Tab navigation inside the panel, closes on Escape, restores focus to the previously focused element on teardown, and locks body scrolling.",
-      "The root aside now exposes role=dialog plus aria-modal, with title and description automatically wired when those props are provided.",
-      "Top and bottom drawers measure their inner content with ResizeObserver and animate their container height as content changes, which helps expandable sections feel smoother after open.",
+      "The root accepts the full Vaul Root prop surface, including drag callbacks, activeSnapPoint, closeThreshold, shouldScaleBackground, and container.",
+      "Direction defaults to bottom at the Vaul layer, while the docs preview switches between bottom on small screens and right on larger screens.",
+    ],
+  },
+  {
+    id: "drawer-parts",
+    title: "Compound parts",
+    summary:
+      "The registry entry exports the familiar shadcn-style DrawerTrigger, DrawerPortal, DrawerOverlay, DrawerContent, DrawerClose, DrawerHeader, DrawerFooter, DrawerTitle, and DrawerDescription parts.",
+    fields: [
+      field({
+        name: "DrawerTrigger",
+        type: "Vaul Trigger props",
+        description:
+          "Opens the drawer. Use asChild when a local button or link should remain the visible trigger element.",
+      }),
+      field({
+        name: "DrawerContent",
+        type: "Vaul Content props",
+        description:
+          "Portals the overlay and animated panel, applies direction-aware layout classes, and renders the optional bottom drag handle.",
+      }),
+      field({
+        name: "DrawerClose",
+        type: "Vaul Close props",
+        description:
+          "Closes the drawer. Use asChild to turn an existing footer action into the close control.",
+      }),
+      field({
+        name: "DrawerHeader / DrawerFooter",
+        type: "div props",
+        description:
+          "Layout helpers for the title area and bottom action area. Both merge className with the default spacing.",
+      }),
+      field({
+        name: "DrawerTitle / DrawerDescription",
+        type: "Vaul Title and Description props",
+        description:
+          "Accessible heading and helper text parts forwarded to Vaul's dialog title and description primitives.",
+      }),
+    ],
+    notes: [
+      "DrawerPortal is kept as an exported part for API symmetry, while DrawerContent composes it automatically for the common overlay-plus-panel path.",
+      "DrawerTitle and DrawerDescription should be included inside DrawerHeader when the panel needs accessible labeling.",
     ],
   },
   {
     id: "drawer-motion-layout",
-    title: "Motion, layout, and close behavior",
+    title: "Motion and layout",
     summary:
-      "The drawer opens with tighter timing, keeps the close control easier to hit, and uses a dedicated body-plus-footer layout so dense content stays chunked and actionable.",
+      "The component leans on Vaul's drag-aware transform animation, then adds softer overlay timing, tuned animation duration, and direction-specific panel geometry.",
     fields: [
       field({
         name: "overlay",
         type: "built-in",
         description:
-          "A fixed full-screen overlay is always rendered behind the panel and closes the drawer on click.",
+          "A fixed full-screen overlay fades in behind the drawer and uses a subtle black tint with backdrop blur support.",
       }),
       field({
-        name: "close button",
+        name: "content",
         type: "built-in",
         description:
-          "The header always includes a larger 44px close target with the Lucide X icon wired to onClose.",
+          "The panel gets a fluid cubic-bezier open curve, a shorter close duration, GPU-friendly transform hints, and a slightly extended initial transform for a softer arrival.",
       }),
     ],
     notes: [
-      "Entry motion keeps the original slide direction but reduces child delay and fade duration so the first readable content lands faster.",
-      "Bottom and top drawers now respect safe-area insets and use rounded leading edges, which makes full-width mobile presentations feel less cramped against the device chrome.",
-      "The body region is the only scrolling area. When footer content is provided, it stays pinned beneath the body instead of scrolling away with the main content.",
+      "Bottom drawers show the handle by default; top, left, and right drawers keep the content surface clean unless you add your own handle.",
+      "DrawerContent marks rendered children as non-draggable so selecting text inside the panel does not trigger Vaul's drag-to-close gesture.",
+      "The motion classes include reduced-motion fallbacks that remove the added Tailwind animation layer while leaving Vaul's accessibility semantics intact.",
+      "Top and bottom drawers cap at 80vh, while left and right drawers use a three-quarter width with a small-screen max width at the sm breakpoint.",
     ],
   },
-  registryItem("drawer.json", ["motion", "lucide-react"]),
+  registryItem("@v-drawer.json", ["vaul"]),
 ];
 
 const dropdownApiDetails: DetailItem[] = [

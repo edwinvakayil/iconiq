@@ -62,7 +62,6 @@ const REDUCED_MOTION_COMPONENTS = new Set([
   "b-combobox",
   "b-context-menu",
   "b-dialog",
-  "b-drawer",
   "b-hover-card",
   "b-popover",
   "b-progress",
@@ -79,7 +78,6 @@ const REDUCED_MOTION_COMPONENTS = new Set([
   "combobox",
   "context-menu",
   "dialog",
-  "drawer",
   "dropdown",
   "hover-card",
   "input-group",
@@ -810,6 +808,7 @@ function ComponentDocsPage({
   usageCode,
   usageDescription,
   details,
+  preInstallationSections = [],
   extraSections = [],
   reducedMotionSectionPosition = "before",
   installationContent,
@@ -832,6 +831,7 @@ function ComponentDocsPage({
   v0PageCode?: string;
   usageDescription?: ReactNode;
   details: DetailItem[];
+  preInstallationSections?: ComponentDocsExtraSection[];
   extraSections?: ComponentDocsExtraSection[];
   reducedMotionSectionPosition?: "before" | "after";
   installationContent?: ReactNode;
@@ -879,6 +879,10 @@ function ComponentDocsPage({
   });
 
   const sectionLinks = [
+    ...preInstallationSections.map((section) => ({
+      id: section.id,
+      label: section.title,
+    })),
     { id: "installation", label: "Installation" },
     ...resolvedExtraSections.map((section) => ({
       id: section.id,
@@ -961,6 +965,16 @@ function ComponentDocsPage({
               </header>
 
               <div className="mt-14 space-y-14">
+                {preInstallationSections.map((section) => (
+                  <ComponentSection
+                    id={section.id}
+                    key={section.id}
+                    title={section.title}
+                  >
+                    {section.content}
+                  </ComponentSection>
+                ))}
+
                 <ComponentSection id="installation" title="Installation">
                   <div className="space-y-5">
                     <ComponentInstallationTabs componentName={componentName} />

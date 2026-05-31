@@ -28,5 +28,17 @@
         "noNamespaceImport": "off"
       }
     }
-  }
+  },
+  "overrides": [
+    {
+      "includes": ["registry/@v-drawer.tsx"],
+      "linter": {
+        "rules": {
+          "style": {
+            "useFilenamingConvention": "off"
+          }
+        }
+      }
+    }
+  ]
 }

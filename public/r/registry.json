@@ -4,6 +4,21 @@
   "homepage": "https://iconiqui.com",
   "items": [
     {
+      "name": "@v-drawer",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": ["vaul"],
+      "devDependencies": [],
+      "title": "Drawer (Vaul)",
+      "description": "Compound Vaul drawer primitives with a soft overlay fade, direction-aware layout classes, drag gestures, and tuned fluid slide motion.",
+      "files": [
+        {
+          "path": "@v-drawer.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "accordion",
       "type": "registry:ui",
       "registryDependencies": [],
@@ -199,21 +214,6 @@
       "files": [
         {
           "path": "b-dialog.tsx",
-          "type": "registry:ui"
-        }
-      ]
-    },
-    {
-      "name": "b-drawer",
-      "type": "registry:ui",
-      "registryDependencies": [],
-      "dependencies": ["@base-ui/react", "motion", "lucide-react"],
-      "devDependencies": [],
-      "title": "Drawer (Base UI)",
-      "description": "Drawer in the Base section that keeps the Iconiq motion shell while layering it over Base UI drawer primitives for controlled state and close actions.",
-      "files": [
-        {
-          "path": "b-drawer.tsx",
           "type": "registry:ui"
         }
       ]
@@ -604,21 +604,6 @@
       "files": [
         {
           "path": "dialog.tsx",
-          "type": "registry:ui"
-        }
-      ]
-    },
-    {
-      "name": "drawer",
-      "type": "registry:ui",
-      "registryDependencies": [],
-      "dependencies": ["motion", "lucide-react"],
-      "devDependencies": [],
-      "title": "Drawer",
-      "description": "Controlled overlay drawer with faster slide timing, focus-trapped dialog behavior, safe-area-aware mobile ergonomics, and an optional sticky footer.",
-      "files": [
-        {
-          "path": "drawer.tsx",
           "type": "registry:ui"
         }
       ]
