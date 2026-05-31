@@ -18,8 +18,8 @@ const selectThemeClassName =
 const selectTriggerClassName =
   "flex min-h-11 w-full touch-manipulation items-center justify-between gap-2 rounded-lg border border-[color:var(--sel-border)] bg-[color:var(--sel-surface)] px-4 py-3 text-left font-medium text-[color:var(--sel-foreground)] text-sm transition-colors hover:bg-[color:color-mix(in_oklch,var(--sel-accent),transparent_30%)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[color:color-mix(in_oklch,var(--sel-ring),transparent_50%)] disabled:cursor-not-allowed disabled:opacity-50 data-placeholder:text-[color:var(--sel-muted-foreground)]";
 
-const selectPanelClassName =
-  "z-[300] overflow-hidden rounded-lg border border-[color:var(--sel-border)] bg-[color:var(--sel-surface)] shadow-lg";
+const selectPanelChromeClassName =
+  "z-[300] overflow-hidden rounded-lg border border-[color:color-mix(in_oklch,var(--sel-border,#e3e7ec),transparent_40%)] bg-[var(--sel-surface,#ffffff)] text-[var(--sel-foreground,#111111)] shadow-lg dark:border-[color:color-mix(in_oklch,var(--sel-border,#2b2a25),transparent_40%)] dark:bg-[var(--sel-surface,#111111)] dark:text-[var(--sel-foreground,#f6f3ec)]";
 
 const selectItemClassName =
   "group relative isolate flex min-h-11 cursor-pointer touch-manipulation select-none items-center gap-3 rounded-lg py-2.5 pr-8 pl-3 text-[color:var(--sel-foreground)] text-sm outline-none transition-colors";
@@ -523,55 +523,59 @@ function SelectContent({
   const { open, reduceMotion, setActiveValue } =
     useSelectContext("SelectContent");
 
-  return (
-    <AnimatePresence>
-      {open ? (
-        <SelectPrimitive.Portal>
-          <SelectPrimitive.Positioner
-            align={align}
-            alignItemWithTrigger={alignItemWithTrigger}
-            alignOffset={alignOffset}
-            className="isolate z-[300]"
-            collisionAvoidance={collisionAvoidance}
-            collisionPadding={collisionPadding}
-            side={side}
-            sideOffset={sideOffset}
-          >
-            <SelectPrimitive.Popup
-              {...props}
-              render={(popupProps, popupState) => {
-                const {
-                  popupClassName,
-                  popupRef,
-                  popupStyle,
-                  resolvedPopupProps,
-                } = resolvePopupProps(popupProps as PopupRenderProps);
+  if (!open) {
+    return null;
+  }
 
-                return (
-                  <motion.div
-                    {...resolvedPopupProps}
-                    animate={{ opacity: 1, y: 0 }}
-                    className={cn(
-                      selectThemeClassName,
-                      selectPanelClassName,
-                      popupClassName,
-                      resolveStateClassName(className, popupState)
-                    )}
-                    data-slot="select-content"
-                    exit={{ opacity: 0, y: reduceMotion ? 0 : -4 }}
-                    initial={{ opacity: 0, y: reduceMotion ? 0 : -4 }}
-                    key="select-dropdown"
-                    ref={(node) => {
-                      setRef(popupRef, node);
-                    }}
-                    style={{
-                      transformOrigin: "var(--transform-origin)",
-                      width: "var(--anchor-width)",
-                      ...popupStyle,
-                    }}
-                    transition={getPanelTransition(reduceMotion)}
-                  >
-                    <SelectScrollUpButton />
+  return (
+    <SelectPrimitive.Portal>
+      <SelectPrimitive.Positioner
+        align={align}
+        alignItemWithTrigger={alignItemWithTrigger}
+        alignOffset={alignOffset}
+        className="isolate z-[300]"
+        collisionAvoidance={collisionAvoidance}
+        collisionPadding={collisionPadding}
+        side={side}
+        sideOffset={sideOffset}
+      >
+        <SelectPrimitive.Popup
+          {...props}
+          render={(popupProps, popupState) => {
+            const { popupClassName, popupRef, popupStyle, resolvedPopupProps } =
+              resolvePopupProps(popupProps as PopupRenderProps);
+
+            return (
+              <div
+                {...resolvedPopupProps}
+                className={cn(
+                  selectThemeClassName,
+                  selectPanelChromeClassName,
+                  popupClassName,
+                  resolveStateClassName(className, popupState)
+                )}
+                data-slot="select-content"
+                ref={(node) => {
+                  setRef(popupRef, node);
+                }}
+                style={{
+                  contain: "layout style",
+                  transformOrigin: "var(--transform-origin)",
+                  width: "var(--anchor-width)",
+                  ...popupStyle,
+                }}
+              >
+                <motion.div
+                  animate={{ opacity: 1, y: 0 }}
+                  className="flex flex-col will-change-transform"
+                  initial={{
+                    opacity: reduceMotion ? 1 : 0,
+                    y: reduceMotion ? 0 : -4,
+                  }}
+                  transition={getPanelTransition(reduceMotion)}
+                >
+                  <SelectScrollUpButton />
+                  <motion.div className="relative min-h-0 flex-1" layoutRoot>
                     <SelectPrimitive.List
                       className="overflow-y-auto overscroll-contain p-1.5 outline-none"
                       onPointerLeave={() => {
@@ -583,15 +587,15 @@ function SelectContent({
                     >
                       {children}
                     </SelectPrimitive.List>
-                    <SelectScrollDownButton />
                   </motion.div>
-                );
-              }}
-            />
-          </SelectPrimitive.Positioner>
-        </SelectPrimitive.Portal>
-      ) : null}
-    </AnimatePresence>
+                  <SelectScrollDownButton />
+                </motion.div>
+              </div>
+            );
+          }}
+        />
+      </SelectPrimitive.Positioner>
+    </SelectPrimitive.Portal>
   );
 }
 
@@ -669,6 +673,7 @@ function SelectItem({
             {...resolvedItemProps}
             animate="visible"
             className={cn(
+              "transform-gpu",
               selectItemClassName,
               !isActive &&
                 "hover:bg-[color:color-mix(in_oklch,var(--sel-accent),transparent_40%)]",
@@ -677,7 +682,8 @@ function SelectItem({
             )}
             custom={itemIndexRef.current}
             exit="exit"
-            initial="hidden"
+            initial={reduceMotion ? false : "hidden"}
+            layout={false}
             onMouseEnter={composeEventHandlers(
               resolvedItemProps.onMouseEnter,
               () => {
@@ -713,7 +719,7 @@ function SelectItem({
                 {isSelected ? (
                   <motion.span
                     animate={{ opacity: 1, scale: 1, y: 0 }}
-                    className="text-primary"
+                    className="text-[color:var(--sel-foreground)]"
                     exit={{ opacity: 0, scale: 0.8, y: 1 }}
                     initial={{ opacity: 0, scale: 0.8, y: 1 }}
                     transition={getCheckTransition(reduceMotion)}
