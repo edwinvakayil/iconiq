@@ -17,7 +17,7 @@ import { createMetadata } from "@/seo/metadata";
 export const metadata: Metadata = createMetadata({
   title: `Introduction | ${SITE.NAME}`,
   description:
-    "Learn what Iconiq is, how the registry workflow works, and why the library is designed for teams that want editable, fluid motion-powered React component files.",
+    "Learn what Iconiq is, how the registry workflow works, and why the library favors minimal motion and editable React component files for standard, trustworthy interfaces.",
   canonical: "/introduction",
   ogTitle: `Introduction to ${SITE.NAME}`,
   keywords: [
@@ -40,19 +40,21 @@ const sections = [
 
 const pageCopyContent = `# Introduction
 
-Iconiq is editable React components with fluid motion, built for real products.
+Iconiq is editable React components with minimal motion, built for clarity.
 
 ## Philosophy
 
-Great component libraries do more than save time. They help teams move faster without losing trust in the interface or ownership of the implementation.
+Great component libraries do more than save time. They set a baseline — how much visual noise is acceptable, how interactions should feel, and whether the product stays coherent as it grows.
+
+Iconiq is intentionally minimal. Motion is present, but never decorative. Every transition confirms an action, orients the user, or preserves spatial context — not performs. That restraint keeps interfaces feeling standard: predictable, calm, and aligned with patterns people already know from well-made products.
 
 When teams evaluate a UI library, they usually ask:
 
 - Will these components still fit our product after customization?
 - Can we inspect and change the source without fighting abstractions?
-- Do the interactions feel polished enough to earn user trust?
+- Do the interactions feel dependable without teaching users a new language?
 
-Iconiq is built around a simple answer: quality should exist both in the surface experience and in the code your team installs. Components arrive through the shadcn registry workflow as local files, so motion, styling, structure, and accessibility can evolve inside your own codebase.
+Iconiq is built around a simple answer: quality lives in clarity, not complexity. Components arrive through the shadcn registry workflow as local files, so motion, styling, structure, and accessibility can evolve inside your own codebase.
 
 That approach keeps adoption practical. You can review the implementation, adjust details to match your product, and keep moving without waiting on a package release cycle.
 
@@ -84,8 +86,8 @@ export default function IntroductionPage() {
                           Introduction
                         </h1>
                         <p className="max-w-3xl text-base text-muted-foreground">
-                          {SITE.NAME} is editable React components with fluid
-                          motion, built for real products.
+                          {SITE.NAME} is editable React components with minimal
+                          motion, built for clarity.
                         </p>
                       </div>
 
@@ -115,9 +117,9 @@ export default function IntroductionPage() {
                   <p>
                     {SITE.NAME} is a curated collection of reusable React
                     components delivered through the shadcn registry workflow.
-                    The goal is to help product teams ship precise, fluid
-                    motion-powered interfaces without giving up control over the
-                    code they install.
+                    The focus is minimalism: restrained motion and familiar
+                    interaction patterns that help teams ship interfaces users
+                    already know how to read.
                   </p>
                 </PageReveal>
 
@@ -128,9 +130,17 @@ export default function IntroductionPage() {
                     </h2>
                     <p>
                       Great component libraries do more than save time. They
-                      shape how confidently a team can ship, how easily the
-                      design can evolve, and whether the interface still feels
-                      cohesive after months of product changes.
+                      set a baseline — how much visual noise is acceptable,
+                      how interactions should feel, and whether the product
+                      stays coherent as it grows.
+                    </p>
+                    <p>
+                      {SITE.NAME} is intentionally minimal. Motion is present,
+                      but never decorative. Every transition confirms an
+                      action, orients the user, or preserves spatial context —
+                      not performs. That restraint keeps interfaces feeling
+                      standard: predictable, calm, and aligned with patterns
+                      people already know from well-made products.
                     </p>
                     <p>
                       When teams evaluate a UI library, they usually ask
@@ -146,17 +156,16 @@ export default function IntroductionPage() {
                         abstractions?
                       </li>
                       <li>
-                        Do the interactions feel polished enough to earn user
-                        trust?
+                        Do the interactions feel dependable without teaching
+                        users a new language?
                       </li>
                     </ul>
                     <p>
                       {SITE.NAME} is built around a simple answer: quality
-                      should exist both in the surface experience and in the
-                      code your team installs. Components arrive as local files,
-                      so motion, styling, structure, and accessibility can
-                      evolve inside your own codebase instead of behind a
-                      package boundary.
+                      lives in clarity, not complexity. Components arrive as
+                      local files, so motion, styling, structure, and
+                      accessibility can evolve inside your own codebase instead
+                      of behind a package boundary.
                     </p>
                     <p>
                       That approach keeps adoption practical. You can review the
