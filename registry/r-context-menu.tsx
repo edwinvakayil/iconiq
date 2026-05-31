@@ -17,8 +17,10 @@ const contextMenuThemeClassName =
 
 const ITEM_HEIGHT = 44;
 
-const contextMenuPanelShellClassName =
-  "z-50 min-w-[232px] overflow-y-auto overflow-x-hidden rounded-lg border border-[color:color-mix(in_oklch,var(--cm-border),transparent_40%)] bg-[color:var(--cm-surface)] p-1.5 text-[color:var(--cm-foreground)] shadow-2xl";
+const contextMenuPanelChromeClassName =
+  "z-50 min-w-[232px] overflow-hidden rounded-lg border border-[color:color-mix(in_oklch,var(--cm-border),transparent_40%)] bg-[color:var(--cm-surface)] text-[color:var(--cm-foreground)] shadow-2xl";
+
+const contextMenuPanelBodyClassName = "overflow-y-auto overflow-x-hidden p-1.5";
 
 const contextMenuTriggerClassName =
   "select-none outline-none focus-visible:ring-2 focus-visible:ring-[color:color-mix(in_oklch,var(--cm-ring),transparent_50%)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--cm-surface)]";
@@ -85,13 +87,6 @@ function getActiveHighlightTransition(reduceMotion: boolean) {
 function getItemEntranceTransition() {
   return {
     duration: 0.12,
-    ease: [0.16, 1, 0.3, 1] as const,
-  };
-}
-
-function getContentMotionTransition() {
-  return {
-    duration: 0.14,
     ease: [0.16, 1, 0.3, 1] as const,
   };
 }
@@ -233,32 +228,24 @@ const ContextMenuContentBody = React.forwardRef<
 
   return (
     <ContextMenuPrimitive.Content
-      asChild
+      className={cn(
+        contextMenuThemeClassName,
+        contextMenuPanelChromeClassName,
+        "overflow-hidden",
+        className
+      )}
       collisionPadding={collisionPadding}
+      onPointerLeave={() => {
+        setHoveredItemId(undefined);
+      }}
       ref={ref}
+      style={{
+        maxHeight: "calc(100vh - 16px)",
+        overscrollBehavior: "contain",
+      }}
       {...props}
     >
-      <motion.div
-        animate={{ scale: 1, y: 0 }}
-        className={cn(
-          contextMenuThemeClassName,
-          contextMenuPanelShellClassName,
-          className
-        )}
-        exit={{ scale: 0.96, y: -2 }}
-        initial={{ scale: 0.94, y: -4 }}
-        onPointerLeave={() => {
-          setHoveredItemId(undefined);
-        }}
-        style={{
-          maxHeight: "calc(100vh - 16px)",
-          overscrollBehavior: "contain",
-          transformOrigin: "var(--radix-context-menu-content-transform-origin)",
-        }}
-        transition={getContentMotionTransition()}
-      >
-        {children}
-      </motion.div>
+      <div className={contextMenuPanelBodyClassName}>{children}</div>
     </ContextMenuPrimitive.Content>
   );
 });
@@ -422,14 +409,14 @@ const ContextMenuSubContent = React.forwardRef<
     <ContextMenuPrimitive.SubContent
       className={cn(
         contextMenuThemeClassName,
-        contextMenuPanelShellClassName,
+        contextMenuPanelChromeClassName,
         "overflow-hidden",
         className
       )}
       ref={ref}
       {...props}
     >
-      {children}
+      <div className={contextMenuPanelBodyClassName}>{children}</div>
     </ContextMenuPrimitive.SubContent>
   );
 });

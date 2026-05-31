@@ -17,8 +17,10 @@ const contextMenuThemeClassName =
 
 const ITEM_HEIGHT = 44;
 
-const contextMenuPanelShellClassName =
-  "z-50 min-w-[232px] overflow-y-auto overflow-x-hidden rounded-lg border border-[color:color-mix(in_oklch,var(--cm-border),transparent_40%)] bg-[color:var(--cm-surface)] p-1.5 text-[color:var(--cm-foreground)] shadow-2xl";
+const contextMenuPanelChromeClassName =
+  "z-50 min-w-[232px] overflow-hidden rounded-lg border border-[color:color-mix(in_oklch,var(--cm-border),transparent_40%)] bg-[color:var(--cm-surface)] text-[color:var(--cm-foreground)] shadow-2xl";
+
+const contextMenuPanelBodyClassName = "overflow-y-auto overflow-x-hidden p-1.5";
 
 const contextMenuTriggerClassName =
   "select-none outline-none focus-visible:ring-2 focus-visible:ring-[color:color-mix(in_oklch,var(--cm-ring),transparent_50%)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--cm-surface)]";
@@ -212,7 +214,7 @@ function renderMotionPanel({
       animate={popupState.open ? { scale: 1, y: 0 } : { scale: 0.96, y: -2 }}
       className={cn(
         contextMenuThemeClassName,
-        contextMenuPanelShellClassName,
+        contextMenuPanelChromeClassName,
         className,
         popupClassName
       )}
@@ -226,7 +228,6 @@ function renderMotionPanel({
           actionsRef.current?.unmount();
         }
       }}
-      onPointerLeave={onPointerLeave}
       ref={(node) => {
         setRef(popupRef, node);
       }}
@@ -239,7 +240,12 @@ function renderMotionPanel({
       }}
       transition={getContentMotionTransition()}
     >
-      {children}
+      <div
+        className={contextMenuPanelBodyClassName}
+        onPointerLeave={onPointerLeave}
+      >
+        {children}
+      </div>
     </motion.div>
   );
 }
@@ -442,13 +448,25 @@ function ContextMenuContent({ children, className }: ContextMenuContentProps) {
   const { actionsRef, setHoveredItemId } = useContextMenu("ContextMenuContent");
 
   return (
-    <ContextMenuPrimitive.Portal keepMounted>
+    <ContextMenuPrimitive.Portal>
       <ContextMenuPrimitive.Positioner className="z-50 outline-none">
         <ContextMenuPrimitive.Popup
           finalFocus
           render={(popupProps, popupState) => {
             const { popupClassName, popupRef, popupStyle, resolvedPopupProps } =
               resolvePopupProps(popupProps);
+
+            if (!popupState.open) {
+              return (
+                <div
+                  {...(resolvedPopupProps as React.HTMLAttributes<HTMLDivElement>)}
+                  hidden
+                  ref={(node) => {
+                    setRef(popupRef, node);
+                  }}
+                />
+              );
+            }
 
             return renderMotionPanel({
               actionsRef,
@@ -462,6 +480,7 @@ function ContextMenuContent({ children, className }: ContextMenuContentProps) {
               popupState,
               popupStyle,
               resolvedPopupProps,
+              unmountOnClose: false,
             });
           }}
         />
