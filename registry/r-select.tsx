@@ -81,18 +81,89 @@ type SelectContextValue = {
 };
 
 const RESIZE_OBSERVER_LOOP_ERROR =
-  /^ResizeObserver loop (?:completed with undelivered notifications|limit exceeded)/;
+  /ResizeObserver loop(?:\s+\w+)*|ResizeObserver loop limit exceeded/i;
+
+let resizeObserverPatchCount = 0;
+let nativeResizeObserver: typeof ResizeObserver | undefined;
+
+function isResizeObserverLoopError(message: string) {
+  return RESIZE_OBSERVER_LOOP_ERROR.test(message);
+}
+
+function patchResizeObserverLoop() {
+  if (typeof ResizeObserver === "undefined") {
+    return;
+  }
+
+  if (resizeObserverPatchCount === 0) {
+    nativeResizeObserver = window.ResizeObserver;
+    window.ResizeObserver = class PatchedResizeObserver extends (
+      nativeResizeObserver
+    ) {
+      constructor(callback: ResizeObserverCallback) {
+        super((entries, observer) => {
+          requestAnimationFrame(() => {
+            callback(entries, observer);
+          });
+        });
+      }
+    };
+  }
+
+  resizeObserverPatchCount += 1;
+}
+
+function restoreResizeObserverLoopPatch() {
+  if (resizeObserverPatchCount === 0) {
+    return;
+  }
+
+  resizeObserverPatchCount -= 1;
+
+  if (resizeObserverPatchCount === 0 && nativeResizeObserver) {
+    window.ResizeObserver = nativeResizeObserver;
+    nativeResizeObserver = undefined;
+  }
+}
 
 function useSuppressResizeObserverLoopError() {
   React.useEffect(() => {
     const onError = (event: ErrorEvent) => {
-      if (RESIZE_OBSERVER_LOOP_ERROR.test(event.message)) {
-        event.stopImmediatePropagation();
+      if (!isResizeObserverLoopError(event.message)) {
+        return;
       }
+
+      event.preventDefault();
+      event.stopImmediatePropagation();
     };
 
-    window.addEventListener("error", onError);
-    return () => window.removeEventListener("error", onError);
+    const onUnhandledRejection = (event: PromiseRejectionEvent) => {
+      const message =
+        event.reason instanceof Error
+          ? event.reason.message
+          : String(event.reason ?? "");
+
+      if (!isResizeObserverLoopError(message)) {
+        return;
+      }
+
+      event.preventDefault();
+      event.stopImmediatePropagation();
+    };
+
+    patchResizeObserverLoop();
+    window.addEventListener("error", onError, true);
+    window.addEventListener("unhandledrejection", onUnhandledRejection, true);
+
+    return () => {
+      restoreResizeObserverLoopPatch();
+      window.removeEventListener("error", onError, true);
+      window.removeEventListener(
+        "unhandledrejection",
+        onUnhandledRejection,
+        true
+      );
+    };
   }, []);
 }
 
