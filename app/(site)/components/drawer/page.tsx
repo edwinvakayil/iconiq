@@ -80,7 +80,7 @@ export function DrawerPreview() {
           <div className="flex items-start justify-between gap-4 border-border border-b pb-5">
             <div>
               <h3 className="font-medium text-[20px] text-foreground tracking-[-0.03em]">
-                @v-drawer preview
+                Drawer preview
               </h3>
             </div>
             <Badge color="gray" size="sm">
@@ -97,13 +97,22 @@ export function DrawerPreview() {
             </p>
             <div className="mt-3">
               {reviewTasks.map((task) => (
-                <Checkbox
-                  className="w-full border-border border-b py-3 last:border-b-0 [&>span:last-child]:text-[13px]"
-                  defaultChecked={task.defaultChecked}
-                  id={\`drawer-\${task.id}\`}
+                <div
+                  className="flex items-center gap-3 border-border border-b py-3 last:border-b-0"
                   key={task.id}
-                  label={task.label}
-                />
+                >
+                  <Checkbox
+                    className="shrink-0"
+                    defaultChecked={task.defaultChecked}
+                    id={\`drawer-\${task.id}\`}
+                  />
+                  <label
+                    className="min-w-0 text-[13px] text-foreground leading-5"
+                    htmlFor={\`drawer-\${task.id}\`}
+                  >
+                    {task.label}
+                  </label>
+                </div>
               ))}
             </div>
           </div>
@@ -206,7 +215,7 @@ function DrawerPreview() {
             <div className="flex items-start justify-between gap-4 border-border border-b pb-5">
               <div>
                 <h3 className="font-medium text-[20px] text-foreground tracking-[-0.03em]">
-                  @v-drawer preview
+                  Drawer preview
                 </h3>
               </div>
               <Badge color="gray" size="sm">
@@ -223,13 +232,22 @@ function DrawerPreview() {
               </p>
               <div className="mt-3">
                 {reviewTasks.map((task) => (
-                  <Checkbox
-                    className="w-full border-border border-b py-3 last:border-b-0 [&>span:last-child]:text-[13px]"
-                    defaultChecked={task.defaultChecked}
-                    id={`drawer-${task.id}`}
+                  <div
+                    className="flex items-center gap-3 border-border border-b py-3 last:border-b-0"
                     key={task.id}
-                    label={task.label}
-                  />
+                  >
+                    <Checkbox
+                      className="shrink-0"
+                      defaultChecked={task.defaultChecked}
+                      id={`drawer-${task.id}`}
+                    />
+                    <label
+                      className="min-w-0 text-[13px] text-foreground leading-5"
+                      htmlFor={`drawer-${task.id}`}
+                    >
+                      {task.label}
+                    </label>
+                  </div>
                 ))}
               </div>
             </div>
