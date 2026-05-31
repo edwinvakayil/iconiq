@@ -2,6 +2,8 @@
 
 Thanks for contributing to [Iconiq](https://iconiqui.com).
 
+By participating in this project, you agree to abide by our [Code of Conduct](./CODE_OF_CONDUCT.md).
+
 This repository has two connected parts. The `registry/` directory holds installable component source that users add with `npx shadcn@latest add @iconiq/<name>`. The `app/(site)/` directory is the documentation site with live previews and usage examples.
 
 Good contributions usually improve one of these areas: new registry-ready components, API or behavior fixes for existing components, documentation accuracy and previews, or the registry build output under `public/r/`.

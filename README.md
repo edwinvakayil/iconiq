@@ -20,6 +20,8 @@ npx skills add https://iconiqui.com --skill iconiq
 
 Please read the [contributing guide](/CONTRIBUTING.md).
 
+This project follows the [Code of Conduct](/CODE_OF_CONDUCT.md). By participating, you agree to uphold it.
+
 ## License
 
 Licensed under the [MIT license](./LICENSE).
