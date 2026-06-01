@@ -231,7 +231,9 @@ export default function RadixBaseToggleGroupPage() {
       }
       itemSlug="toggle-group"
       pageUrl="/components/toggle-group"
-      preview={<ToggleGroupPreview ui={provider.ui} />}
+      preview={
+        <ToggleGroupPreview key={provider.componentName} ui={provider.ui} />
+      }
       title="Toggle Group"
       usageCode={provider.usageCode}
       usageDescription="Switch libraries above to update the install command, registry JSON, preview code, and generated file set together."

@@ -276,14 +276,15 @@ function ToggleGroupButtonView({
   const fillControls = useAnimationControls();
   const labelControls = useAnimationControls();
   const hasMountedRef = React.useRef(false);
+  const fillInitial = React.useMemo(
+    () => ({ opacity: selected ? 1 : 0, scale: 1 }),
+    [selected]
+  );
 
-  React.useEffect(() => {
+  React.useLayoutEffect(() => {
     if (!hasMountedRef.current) {
       hasMountedRef.current = true;
-      fillControls.set({
-        opacity: selected ? 1 : 0,
-        scale: 1,
-      });
+      fillControls.set(fillInitial);
       labelControls.set({ scale: 1, y: 0 });
       return;
     }
@@ -293,7 +294,14 @@ function ToggleGroupButtonView({
       selected,
       reduceMotion || Boolean(resolvedDisabled)
     );
-  }, [fillControls, labelControls, reduceMotion, resolvedDisabled, selected]);
+  }, [
+    fillControls,
+    fillInitial,
+    labelControls,
+    reduceMotion,
+    resolvedDisabled,
+    selected,
+  ]);
 
   return (
     <motion.button
@@ -328,7 +336,7 @@ function ToggleGroupButtonView({
         animate={fillControls}
         aria-hidden
         className="pointer-events-none absolute inset-0 z-0 rounded-[inherit] bg-accent"
-        initial={false}
+        initial={fillInitial}
         style={{ transformOrigin: "center" }}
       />
       <motion.span
@@ -337,7 +345,7 @@ function ToggleGroupButtonView({
           "relative z-10 inline-flex items-center gap-1.5",
           selected ? "text-accent-foreground" : "text-muted-foreground"
         )}
-        initial={false}
+        initial={{ scale: 1, y: 0 }}
         style={{ transformOrigin: "center" }}
       >
         {item.icon ? (
