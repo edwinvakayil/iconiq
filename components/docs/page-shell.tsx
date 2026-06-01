@@ -59,6 +59,7 @@ const REDUCED_MOTION_COMPONENTS = new Set([
   "b-checkbox",
   "b-checkbox-group",
   "b-collapsible",
+  "b-autocomplete",
   "b-combobox",
   "b-context-menu",
   "b-dialog",
@@ -182,7 +183,7 @@ function injectReducedMotionIntoCode(usageCode: string, componentName: string) {
 
   for (const componentNameEntry of componentNames) {
     const openingTagPattern = new RegExp(
-      `<${escapeRegExp(componentNameEntry)}(?!\\s+reducedMotion)(?=[\\s>])`,
+      `<${escapeRegExp(componentNameEntry)}(?!\\s+reducedMotion)(?=[\\s<>/])`,
       "g"
     );
 

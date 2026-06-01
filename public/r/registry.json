@@ -79,6 +79,21 @@
       ]
     },
     {
+      "name": "b-autocomplete",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": ["@base-ui/react", "motion", "lucide-react"],
+      "devDependencies": [],
+      "title": "Autocomplete (Base UI)",
+      "description": "Base UI autocomplete with list filtering, suggestion highlight motion, and the same Iconiq input shell as the combobox install.",
+      "files": [
+        {
+          "path": "b-autocomplete.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "b-avatar",
       "type": "registry:ui",
       "registryDependencies": [],

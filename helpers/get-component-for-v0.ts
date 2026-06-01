@@ -246,6 +246,59 @@ export function ButtonGroupDemo() {
     "    </div>\n" +
     "  )\n" +
     "}\n",
+  "b-autocomplete":
+    '"use client";\n\n' +
+    `import { useState } from "react"\n\n` +
+    "import {\n" +
+    "  Autocomplete,\n" +
+    "  AutocompleteContent,\n" +
+    "  AutocompleteEmpty,\n" +
+    "  AutocompleteInput,\n" +
+    "  AutocompleteItem,\n" +
+    "  AutocompleteList,\n" +
+    `} from "@/components/ui/b-autocomplete"\n\n` +
+    "type Country = {\n" +
+    "  code: string\n" +
+    "  name: string\n" +
+    "  region: string\n" +
+    "}\n\n" +
+    "const countries: Country[] = [\n" +
+    '  { code: "CA", name: "Canada", region: "North America" },\n' +
+    '  { code: "FR", name: "France", region: "Europe" },\n' +
+    '  { code: "JP", name: "Japan", region: "Asia" },\n' +
+    '  { code: "MX", name: "Mexico", region: "North America" },\n' +
+    '  { code: "US", name: "United States", region: "North America" },\n' +
+    "]\n\n" +
+    "export default function Page() {\n" +
+    '  const [query, setQuery] = useState("")\n' +
+    "  return (\n" +
+    '    <div className="mx-auto flex min-h-svh w-full max-w-md items-center justify-center p-8">\n' +
+    "      <Autocomplete\n" +
+    "        itemToStringValue={(country) => country.name}\n" +
+    "        items={countries}\n" +
+    "        onValueChange={setQuery}\n" +
+    "        value={query}\n" +
+    "      >\n" +
+    '        <AutocompleteInput placeholder="Search countries..." />\n' +
+    "        <AutocompleteContent>\n" +
+    "          <AutocompleteList>\n" +
+    "            {(country: Country, index: number) => (\n" +
+    "              <AutocompleteItem\n" +
+    "                description={country.region}\n" +
+    "                index={index}\n" +
+    "                key={country.code}\n" +
+    "                value={country}\n" +
+    "              >\n" +
+    "                {country.name}\n" +
+    "              </AutocompleteItem>\n" +
+    "            )}\n" +
+    "          </AutocompleteList>\n" +
+    "          <AutocompleteEmpty>No countries match that search.</AutocompleteEmpty>\n" +
+    "        </AutocompleteContent>\n" +
+    "      </Autocomplete>\n" +
+    "    </div>\n" +
+    "  )\n" +
+    "}\n",
   "context-menu":
     '"use client";\n\n' +
     "import {\n" +

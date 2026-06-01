@@ -50,6 +50,8 @@ const componentSummaries: Record<string, string> = {
     "Collapsible docs with a provider switch that swaps between Base UI and Radix UI registry entries.",
   "/components/color-picker":
     "Color picker docs with Iconiq HSV panel, format switching, alpha control, and EyeDropper.",
+  "/components/autocomplete":
+    "Autocomplete docs with a Base UI country search example, list filtering, and minimal spring motion on the suggestion panel.",
   "/components/combobox":
     "Base UI combobox docs in the Components section, preserving the same Iconiq filtering, keyboard navigation, and dropdown motion as the core combobox.",
   "/components/context-menu":

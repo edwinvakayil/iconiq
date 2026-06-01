@@ -16,6 +16,7 @@ export const SITE_SECTIONS = [
       { label: "Accordion", href: "/components/accordion" },
       { label: "Alert", href: "/components/alert" },
       { label: "Alert Dialog", href: "/components/alert-dialog" },
+      { label: "Autocomplete", href: "/components/autocomplete" },
       { label: "Avatar", href: "/components/avatar" },
       { label: "Badge", href: "/components/badge" },
       { label: "Breadcrumbs", href: "/components/breadcrumbs" },

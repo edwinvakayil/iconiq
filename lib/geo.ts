@@ -5,6 +5,7 @@ import fs from "node:fs";
 import {
   accordionApiDetails,
   alertApiDetails,
+  autocompleteApiDetails,
   avatarApiDetails,
   badgeApiDetails,
   breadcrumbsApiDetails,
@@ -96,6 +97,7 @@ const DOCS_COMPONENT_NAME_BY_HREF: Record<string, string> = {
   "/components/checkbox": "b-checkbox",
   "/components/checkbox-group": "b-checkbox-group",
   "/components/collapsible": "b-collapsible",
+  "/components/autocomplete": "b-autocomplete",
   "/components/combobox": "b-combobox",
   "/components/context-menu": "b-context-menu",
   "/components/dialog": "b-dialog",
@@ -146,6 +148,7 @@ const COMPONENT_API_DETAILS: Record<string, DetailItem[]> = {
   checkbox: checkboxApiDetails,
   "checkbox-group": checkboxGroupApiDetails,
   "color-picker": colorPickerApiDetails,
+  autocomplete: autocompleteApiDetails,
   combobox: comboboxApiDetails,
   "context-menu": contextMenuApiDetails,
   dialog: dialogApiDetails,

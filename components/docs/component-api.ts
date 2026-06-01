@@ -1621,6 +1621,170 @@ const comboboxApiDetails: DetailItem[] = [
   registryItem("combobox.json", ["motion", "lucide-react"]),
 ];
 
+const autocompleteApiDetails: DetailItem[] = [
+  {
+    id: "autocomplete",
+    title: "Autocomplete",
+    summary:
+      "Root autocomplete controller. Compose AutocompleteInput, AutocompleteContent, AutocompleteList, and AutocompleteItem inside it.",
+    fields: [
+      field({
+        name: "items",
+        type: "readonly Item[]",
+        description:
+          "Item collection used for list filtering. Pass a flat array or grouped items for sectioned results.",
+      }),
+      field({
+        name: "value",
+        type: "string",
+        description: "Controlled input text shown in the field.",
+      }),
+      field({
+        name: "defaultValue",
+        type: "string",
+        description: "Initial input text for uncontrolled usage.",
+      }),
+      field({
+        name: "onValueChange",
+        type: "(value: string) => void",
+        description:
+          "Called when the input text changes from typing or when a suggestion is accepted.",
+      }),
+      field({
+        name: "itemToStringValue",
+        type: "(item: Item) => string",
+        description:
+          "Maps each item to the string used for filtering and the committed input value.",
+      }),
+      field({
+        name: "mode",
+        type: '"list" | "both" | "inline" | "none"',
+        defaultValue: '"list"',
+        description:
+          "Controls filtering and inline completion while navigating suggestions.",
+      }),
+      field({
+        name: "autoHighlight",
+        type: 'boolean | "always"',
+        defaultValue: "true",
+        description:
+          "Automatically highlights the first matching item while typing.",
+      }),
+      field({
+        name: "open",
+        type: "boolean",
+        description: "Controlled popup state. Pair with onOpenChange.",
+      }),
+      field({
+        name: "onOpenChange",
+        type: "(open: boolean, eventDetails) => void",
+        description:
+          "Called when the suggestion panel opens or closes. Use with open for controlled popup state.",
+      }),
+      field({
+        name: "openOnInputClick",
+        type: "boolean",
+        defaultValue: "false",
+        description:
+          "When true, clicking the input opens the suggestion panel even before typing.",
+      }),
+      field({
+        name: "isItemEqualToValue",
+        type: "(item: Item, value: Item) => boolean",
+        description:
+          "Custom equality for object items. Use when items are recreated on each render.",
+      }),
+      field({
+        name: "reducedMotion",
+        type: "boolean",
+        description: "Forces the Iconiq motion layer into reduced-motion mode.",
+      }),
+    ],
+    notes: [
+      "Built on Base UI Autocomplete with list filtering, keyboard navigation, and a sliding highlight treatment.",
+      "Radix UI does not ship a dedicated autocomplete primitive, so this install is Base UI only.",
+      "Pass value and onValueChange for controlled input text. The popup opens while typing by default, not on focus.",
+      "Object items require itemToStringValue. Use isItemEqualToValue if selection highlight behaves incorrectly.",
+    ],
+  },
+  {
+    id: "autocomplete-input",
+    title: "AutocompleteInput",
+    summary:
+      "Styled input shell with border, focus ring, and optional clear control. The suggestion panel opens while typing, not on focus or click.",
+    fields: [
+      field({
+        name: "placeholder",
+        type: "string",
+        description: "Shown when the input is empty.",
+      }),
+      field({
+        name: "showClear",
+        type: "boolean",
+        defaultValue: "true",
+        description: "Controls whether AutocompleteClear is rendered.",
+      }),
+      field({
+        name: "showTrigger",
+        type: "boolean",
+        defaultValue: "false",
+        description:
+          "When true, renders a chevron trigger that toggles the suggestion panel.",
+      }),
+      field({
+        name: "disabled",
+        type: "boolean",
+        defaultValue: "false",
+        description: "Disables the input and clear button.",
+      }),
+    ],
+  },
+  {
+    id: "autocomplete-content",
+    title: "AutocompleteContent",
+    summary:
+      "Portaled suggestion panel with a subtle fade-slide entrance and anchored width.",
+    fields: [
+      field({
+        name: "side",
+        type: '"top" | "right" | "bottom" | "left"',
+        defaultValue: '"bottom"',
+        description: "Preferred side for the popup.",
+      }),
+      field({
+        name: "sideOffset",
+        type: "number",
+        defaultValue: "6",
+        description: "Distance between the input and the popup.",
+      }),
+    ],
+  },
+  {
+    id: "autocomplete-item",
+    title: "AutocompleteItem",
+    summary:
+      "Suggestion row with optional description and a spring-driven highlight fill.",
+    fields: [
+      field({
+        name: "value",
+        type: "Item",
+        required: true,
+        description: "Item value passed to Base UI for selection handling.",
+      }),
+      field({
+        name: "description",
+        type: "ReactNode",
+        description: "Optional secondary line below the primary label.",
+      }),
+    ],
+  },
+  registryItem("b-autocomplete.json", [
+    "@base-ui/react",
+    "motion",
+    "lucide-react",
+  ]),
+];
+
 const contextMenuApiDetails: DetailItem[] = [
   {
     id: "context-menu",
@@ -5024,6 +5188,7 @@ export {
   checkboxApiDetails,
   checkboxGroupApiDetails,
   colorPickerApiDetails,
+  autocompleteApiDetails,
   comboboxApiDetails,
   contextMenuApiDetails,
   drawerApiDetails,
