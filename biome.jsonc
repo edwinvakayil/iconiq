@@ -31,7 +31,7 @@
   },
   "overrides": [
     {
-      "includes": ["registry/@v-drawer.tsx"],
+      "includes": ["registry/drawer.tsx"],
       "linter": {
         "rules": {
           "style": {

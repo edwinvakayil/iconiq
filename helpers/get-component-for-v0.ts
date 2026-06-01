@@ -328,7 +328,7 @@ export function ToggleGroupPreview() {
     />
   );
 }`),
-  "@v-drawer": buildV0Page(`"use client";
+  drawer: buildV0Page(`"use client";
 
 import {
   Drawer,
@@ -339,7 +339,7 @@ import {
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
-} from "@/components/ui/@v-drawer";
+} from "@/components/ui/drawer";
 
 export function DrawerPreview() {
   return (

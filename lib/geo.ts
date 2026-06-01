@@ -99,7 +99,7 @@ const DOCS_COMPONENT_NAME_BY_HREF: Record<string, string> = {
   "/components/combobox": "b-combobox",
   "/components/context-menu": "b-context-menu",
   "/components/dialog": "b-dialog",
-  "/components/drawer": "@v-drawer",
+  "/components/drawer": "drawer",
   "/components/dropdown": "r-dropdown",
   "/components/hover-card": "b-hover-card",
   "/components/popover": "b-popover",

@@ -57,7 +57,7 @@ const componentSummaries: Record<string, string> = {
   "/components/dialog":
     "Dialog docs with a provider switch that swaps between Base UI and Radix UI registry entries.",
   "/components/drawer":
-    "Drawer docs in the Components section, using a Vaul-backed registry entry with Base UI and Radix UI options visible but disabled.",
+    "Drawer docs in the Components section, using the Vaul-backed drawer registry entry with Base UI and Radix UI options visible but disabled.",
   "/components/dropdown":
     "Dropdown docs in the Components section, using a Radix Dropdown Menu implementation that preserves the exact Iconiq dropdown shell and motion.",
   "/components/file-upload":

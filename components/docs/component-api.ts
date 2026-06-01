@@ -1975,7 +1975,7 @@ const drawerApiDetails: DetailItem[] = [
       "Top and bottom drawers cap at 80vh, while left and right drawers use a three-quarter width with a small-screen max width at the sm breakpoint.",
     ],
   },
-  registryItem("@v-drawer.json", ["vaul"]),
+  registryItem("drawer.json", ["vaul"]),
 ];
 
 const dropdownApiDetails: DetailItem[] = [

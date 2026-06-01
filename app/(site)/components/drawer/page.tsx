@@ -9,6 +9,8 @@ import {
   type DetailItem,
 } from "@/components/docs/page-shell";
 import { LINK } from "@/constants";
+import { Badge } from "@/registry/badge";
+import { Checkbox } from "@/registry/checkbox";
 import {
   Drawer,
   DrawerClose,
@@ -18,9 +20,7 @@ import {
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
-} from "@/registry/@v-drawer";
-import { Badge } from "@/registry/badge";
-import { Checkbox } from "@/registry/checkbox";
+} from "@/registry/drawer";
 
 const usageCode = `"use client";
 
@@ -34,12 +34,12 @@ import {
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
-} from "@/components/ui/@v-drawer";
+} from "@/components/ui/drawer";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 
 const reviewTasks = [
-  { id: "registry", label: "Build @v-drawer registry payload", defaultChecked: true },
+  { id: "registry", label: "Build drawer registry payload", defaultChecked: true },
   { id: "preview", label: "Review docs preview state", defaultChecked: true },
   { id: "install", label: "Check shadcn install command", defaultChecked: false },
 ] as const;
@@ -143,7 +143,7 @@ export function DrawerPreview() {
 const reviewTasks = [
   {
     id: "registry",
-    label: "Build @v-drawer registry payload",
+    label: "Build drawer registry payload",
     defaultChecked: true,
   },
   { id: "preview", label: "Review docs preview state", defaultChecked: true },
@@ -171,9 +171,9 @@ function getDetails(): DetailItem[] {
       notes: [
         "Dependencies: vaul.",
         "This page documents the Vaul install only. The Base UI and Radix UI provider options are visible for section consistency but disabled because this drawer is not a primitive-specific wrapper.",
-        "The generated registry file is /r/@v-drawer.json.",
+        "The generated registry file is /r/drawer.json.",
       ],
-      registryPath: "@v-drawer.json",
+      registryPath: "drawer.json",
     };
   });
 }
@@ -282,7 +282,7 @@ export default function RadixBaseDrawerPage() {
   return (
     <ComponentDocsPage
       breadcrumbs={breadcrumbs}
-      componentName="@v-drawer"
+      componentName="drawer"
       description="Reveal focused controls or details without leaving the page."
       details={details}
       editHref={`${LINK.GITHUB}/edit/main/app/(site)/components/drawer/page.tsx`}

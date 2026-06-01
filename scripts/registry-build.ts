@@ -119,8 +119,8 @@ const REGISTRY_UI_META: Record<
       "Looping typewriter text effect with brief glitch substitutions, a blinking cursor, and reduced-motion fallback.",
     dependencies: ["motion"],
   },
-  "@v-drawer": {
-    title: "Drawer (Vaul)",
+  drawer: {
+    title: "Drawer",
     description:
       "Compound Vaul drawer primitives with a soft overlay fade, direction-aware layout classes, drag gestures, and tuned fluid slide motion.",
     dependencies: ["vaul"],
