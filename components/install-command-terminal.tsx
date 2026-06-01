@@ -1,11 +1,12 @@
 "use client";
 
 import { Check, Copy, Terminal } from "lucide-react";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import type { PACKAGE_MANAGER } from "@/constants";
 import { capturePostHogEvent } from "@/lib/posthog";
 import { POSTHOG_EVENTS } from "@/lib/posthog-events";
@@ -15,6 +16,15 @@ import { usePackageNameContext } from "@/providers/package-name";
 type PackageManager = (typeof PACKAGE_MANAGER)[keyof typeof PACKAGE_MANAGER];
 
 const PACKAGE_MANAGER_ORDER: PackageManager[] = ["pnpm", "npm", "yarn", "bun"];
+
+const PACKAGE_TAB_SPRING = {
+  type: "spring" as const,
+  stiffness: 520,
+  damping: 34,
+  mass: 0.72,
+};
+
+const PACKAGE_CONTENT_EASE = [0.22, 1, 0.36, 1] as const;
 
 export function InstallCommandTerminal({
   className,
@@ -29,6 +39,8 @@ export function InstallCommandTerminal({
   const [copied, setCopied] = useState(false);
   const [, startTransition] = useTransition();
   const { packageName, setPackageName } = usePackageNameContext();
+  const reduceMotion = useReducedMotion() ?? false;
+  const highlightLayoutId = `install-package-manager-${eventSlug}`;
 
   const handleCopyToClipboard = () => {
     startTransition(async () => {
@@ -71,18 +83,37 @@ export function InstallCommandTerminal({
             strokeWidth={2}
           />
           <TabsList
-            className="h-auto gap-1 border-0 bg-transparent p-0"
+            className="relative h-auto gap-1 border-0 bg-transparent p-0"
             translate="no"
           >
-            {PACKAGE_MANAGER_ORDER.map((packageManager) => (
-              <TabsTrigger
-                className="h-auto rounded-sm px-2 py-1 font-mono text-xs normal-case tracking-normal"
-                key={packageManager}
-                value={packageManager}
-              >
-                {packageManager}
-              </TabsTrigger>
-            ))}
+            {PACKAGE_MANAGER_ORDER.map((packageManager) => {
+              const isActive = packageName === packageManager;
+
+              return (
+                <TabsTrigger
+                  className={cn(
+                    "relative z-10 h-auto overflow-visible rounded-sm bg-transparent px-2 py-1 font-mono text-xs normal-case tracking-normal shadow-none transition-colors duration-200",
+                    "data-[active]:bg-transparent data-[active]:shadow-none dark:data-[active]:bg-transparent",
+                    isActive
+                      ? "text-foreground"
+                      : "text-muted-foreground hover:text-foreground"
+                  )}
+                  key={packageManager}
+                  value={packageManager}
+                >
+                  {isActive ? (
+                    <motion.span
+                      className="absolute inset-0 rounded-sm bg-muted dark:bg-neutral-800"
+                      layoutId={highlightLayoutId}
+                      transition={
+                        reduceMotion ? { duration: 0.12 } : PACKAGE_TAB_SPRING
+                      }
+                    />
+                  ) : null}
+                  <span className="relative z-10">{packageManager}</span>
+                </TabsTrigger>
+              );
+            })}
           </TabsList>
           <Button
             className="absolute right-2 size-7 cursor-pointer opacity-70 shadow-none hover:bg-transparent dark:hover:bg-transparent"
@@ -98,20 +129,25 @@ export function InstallCommandTerminal({
             )}
           </Button>
         </div>
-        <div className="bg-background">
-          {PACKAGE_MANAGER_ORDER.map((packageManager) => (
-            <TabsContent
-              className="m-0"
-              key={packageManager}
-              value={packageManager}
+        <div className="overflow-hidden bg-background dark:bg-[#0F0F0F]">
+          <AnimatePresence initial={false} mode="wait">
+            <motion.pre
+              animate={{ opacity: 1, x: 0 }}
+              className="not-prose m-0 overflow-x-auto px-4 py-3"
+              exit={reduceMotion ? { opacity: 0 } : { opacity: 0, x: 8 }}
+              initial={reduceMotion ? { opacity: 0 } : { opacity: 0, x: -8 }}
+              key={packageName}
+              transition={
+                reduceMotion
+                  ? { duration: 0.12 }
+                  : { duration: 0.22, ease: PACKAGE_CONTENT_EASE }
+              }
             >
-              <pre className="not-prose overflow-x-auto px-4 py-3 dark:bg-[#0F0F0F]">
-                <code className="font-mono text-[#032F62] text-sm dark:text-[#9ECBFF]">
-                  {commands[packageManager]}
-                </code>
-              </pre>
-            </TabsContent>
-          ))}
+              <code className="font-mono text-[#032F62] text-sm dark:text-[#9ECBFF]">
+                {commands[packageName]}
+              </code>
+            </motion.pre>
+          </AnimatePresence>
         </div>
       </Tabs>
     </div>

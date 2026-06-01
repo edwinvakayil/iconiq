@@ -276,7 +276,7 @@ function RegistrySourceCode({ componentName }: { componentName: string }) {
                 width: fileIndicator.width,
               }}
               aria-hidden
-              className="pointer-events-none absolute bottom-0 h-px bg-foreground"
+              className="pointer-events-none absolute -bottom-px z-10 h-px bg-foreground"
               initial={false}
               transition={
                 reduceMotion
@@ -294,6 +294,12 @@ function RegistrySourceCode({ componentName }: { componentName: string }) {
       ) : null}
 
       <DocsCodeSnippet code={activeFile?.content ?? ""} />
+      <p className="font-medium text-[14px] text-foreground leading-6">
+        <span aria-hidden className="mr-1.5 text-muted-foreground">
+          *
+        </span>
+        Update the import paths to match your project setup.
+      </p>
     </div>
   );
 }
@@ -406,7 +412,7 @@ export function ComponentInstallationTabs({
             width: indicator.width,
           }}
           aria-hidden
-          className="pointer-events-none absolute bottom-0 h-[2px] bg-foreground dark:bg-white"
+          className="pointer-events-none absolute -bottom-px z-10 h-px bg-foreground dark:bg-white"
           initial={false}
           transition={
             reduceMotion

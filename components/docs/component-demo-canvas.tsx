@@ -147,7 +147,7 @@ export function ComponentDemoCanvas({
               width: indicator.width,
             }}
             aria-hidden
-            className="pointer-events-none absolute bottom-0 h-[2px] bg-foreground dark:bg-white"
+            className="pointer-events-none absolute -bottom-px z-10 h-px bg-foreground dark:bg-white"
             initial={false}
             transition={
               reduceMotion
