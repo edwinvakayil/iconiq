@@ -18,7 +18,7 @@ const HEX_RGBA_PATTERN = /^[0-9A-F]{8}$/;
 const HEX_INPUT_SANITIZE_PATTERN = /[^0-9a-fA-F]/g;
 
 const formatMenuPanelClassName =
-  "absolute top-full left-0 z-50 mt-1.5 w-28 origin-top-left overflow-hidden rounded-xl border border-[color:var(--color-border)] bg-[color:var(--color-card)] p-1 text-[color:var(--color-card-foreground)] shadow-[0_16px_40px_-24px_rgba(15,23,42,0.45)] dark:shadow-[0_18px_44px_-24px_rgba(0,0,0,0.72)]";
+  "absolute top-full left-0 z-50 mt-1.5 w-28 origin-top-left overflow-hidden rounded-xl border border-[color:var(--color-border)] bg-[color:var(--color-card)] p-1 text-[color:var(--color-card-foreground)] shadow-[0_10px_28px_-20px_rgba(15,23,42,0.28)] dark:shadow-[0_12px_32px_-22px_rgba(0,0,0,0.5)]";
 
 const formatMenuItemClassName =
   "relative w-full rounded-lg px-3 py-1.5 text-left text-sm outline-none transition-[color,transform] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)]";
@@ -767,7 +767,7 @@ export function ColorPicker({
       aria-disabled={disabled || undefined}
       className={cn(
         componentThemeClassName,
-        "relative isolate w-[300px] max-w-full overflow-visible rounded-2xl border border-border bg-card p-3.5 shadow-lg",
+        "relative isolate w-[300px] max-w-full overflow-visible rounded-2xl border border-border bg-card p-3.5 shadow-[0_10px_28px_-18px_rgba(15,23,42,0.16)] dark:shadow-[0_12px_32px_-20px_rgba(0,0,0,0.35)]",
         disabled && "pointer-events-none opacity-60",
         className
       )}
@@ -813,7 +813,7 @@ export function ColorPicker({
             style={{ background: "linear-gradient(to top, #000, transparent)" }}
           />
           <div
-            className="absolute h-3.5 w-3.5 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-white shadow-md"
+            className="absolute h-3.5 w-3.5 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-white shadow-sm"
             style={{
               left: `${pickerSat}%`,
               top: `${100 - pickerVal}%`,

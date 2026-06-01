@@ -16,12 +16,7 @@ import { ColorPicker } from "@/components/ui/color-picker";
 export function BrandColorPicker() {
   const [color, setColor] = useState("#3B82F6");
 
-  return (
-    <div className="flex flex-col items-center gap-5">
-      <ColorPicker onChange={setColor} value={color} />
-      <p className="font-mono text-muted-foreground text-xs">{color}</p>
-    </div>
-  );
+  return <ColorPicker onChange={setColor} value={color} />;
 }`;
 
 const details = colorPickerApiDetails.map((item) => {
@@ -44,16 +39,8 @@ function ColorPickerPreview() {
   const [color, setColor] = useState("#3B82F6");
 
   return (
-    <div className="flex flex-col items-center gap-5 px-2 py-4">
+    <div className="flex justify-center px-2 py-4">
       <ColorPicker onChange={setColor} value={color} />
-      <div className="flex items-center gap-3">
-        <span
-          aria-hidden
-          className="size-9 rounded-full border border-border shadow-sm"
-          style={{ backgroundColor: color }}
-        />
-        <p className="font-mono text-muted-foreground text-xs">{color}</p>
-      </div>
     </div>
   );
 }

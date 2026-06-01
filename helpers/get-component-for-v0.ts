@@ -603,9 +603,8 @@ export function SelectDemo() {
     "export default function Page() {\n" +
     '  const [color, setColor] = useState("#3B82F6")\n\n' +
     "  return (\n" +
-    '    <div className="flex min-h-svh flex-col items-center justify-center gap-5 p-8">\n' +
+    '    <div className="flex min-h-svh items-center justify-center p-8">\n' +
     "      <ColorPicker onChange={setColor} value={color} />\n" +
-    '      <p className="font-mono text-sm text-muted-foreground">{color}</p>\n' +
     "    </div>\n" +
     "  )\n" +
     "}\n",
