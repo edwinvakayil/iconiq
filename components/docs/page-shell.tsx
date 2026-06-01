@@ -80,7 +80,6 @@ const REDUCED_MOTION_COMPONENTS = new Set([
   "dialog",
   "dropdown",
   "hover-card",
-  "input-group",
   "popover",
   "r-dialog",
   "r-dropdown",

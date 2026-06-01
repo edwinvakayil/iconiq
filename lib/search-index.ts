@@ -62,8 +62,6 @@ const componentSummaries: Record<string, string> = {
     "File upload docs in the Components section, using the shared Iconiq file upload install with provider options visible but disabled.",
   "/components/hover-card":
     "Hover card docs with a provider switch that swaps between a Base UI popover-backed install and a Radix Hover Card primitive install.",
-  "/components/input-group":
-    "Input group docs in the Components section, using the shared Iconiq input group install with provider options visible but disabled.",
   "/components/popover":
     "Popover docs with a provider switch that swaps between Base UI and Radix UI registry entries.",
   "/components/progress":

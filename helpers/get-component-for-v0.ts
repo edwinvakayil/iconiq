@@ -876,48 +876,6 @@ export function ToggleGroupPreview() {
     "    </div>\n" +
     "  )\n" +
     "}\n",
-  "input-group":
-    '"use client";\n\n' +
-    `import { Eye, EyeOff, LockKeyhole, Mail, User2 } from "lucide-react"\n` +
-    `import { useState } from "react"\n` +
-    `import { InputGroup, InputGroupField } from "@/components/ui/input-group"\n\n` +
-    "export default function Page() {\n" +
-    '  const [name, setName] = useState("")\n' +
-    '  const [email, setEmail] = useState("")\n' +
-    "  const [showPassword, setShowPassword] = useState(false)\n\n" +
-    "  const emailError =\n" +
-    '    email.length > 0 && !email.includes("@")\n' +
-    '      ? "Enter a valid email address."\n' +
-    "      : undefined\n\n" +
-    "  return (\n" +
-    '    <div className="mx-auto flex min-h-svh w-full max-w-xl items-center justify-center p-8">\n' +
-    "      <InputGroup>\n" +
-    "        <InputGroupField\n" +
-    '          label="Full name"\n' +
-    "          onChange={(event) => setName(event.target.value)}\n" +
-    '          prefixIcon={<User2 aria-hidden className="size-5" />}\n' +
-    "          value={name}\n" +
-    "        />\n" +
-    "        <InputGroupField\n" +
-    "          error={emailError}\n" +
-    '          label="Work email"\n' +
-    "          onChange={(event) => setEmail(event.target.value)}\n" +
-    '          prefixIcon={<Mail aria-hidden className="size-5" />}\n' +
-    '          type="email"\n' +
-    "          value={email}\n" +
-    "        />\n" +
-    "        <InputGroupField\n" +
-    '          label="Password"\n' +
-    '          prefixIcon={<LockKeyhole aria-hidden className="size-5" />}\n' +
-    '          suffixLabel={showPassword ? "Hide password" : "Show password"}\n' +
-    '          suffixIcon={showPassword ? <EyeOff aria-hidden className="size-5" /> : <Eye aria-hidden className="size-5" />}\n' +
-    "          onSuffixClick={() => setShowPassword((current) => !current)}\n" +
-    '          type={showPassword ? "text" : "password"}\n' +
-    "        />\n" +
-    "      </InputGroup>\n" +
-    "    </div>\n" +
-    "  )\n" +
-    "}\n",
   tabs:
     '"use client";\n\n' +
     "import {\n" +

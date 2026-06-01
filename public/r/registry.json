@@ -703,21 +703,6 @@
       ]
     },
     {
-      "name": "input-group",
-      "type": "registry:ui",
-      "registryDependencies": [],
-      "dependencies": ["motion"],
-      "devDependencies": [],
-      "title": "Input Group",
-      "description": "Floating-label input field with optional prefix and suffix slots, inline error copy, and a matching vertical stack wrapper for grouped forms.",
-      "files": [
-        {
-          "path": "input-group.tsx",
-          "type": "registry:ui"
-        }
-      ]
-    },
-    {
       "name": "origin-button",
       "type": "registry:ui",
       "registryDependencies": [],

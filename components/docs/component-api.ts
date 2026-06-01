@@ -2774,115 +2774,6 @@ const popoverApiDetails: DetailItem[] = [
   registryItem("popover.json", ["@radix-ui/react-popover", "motion"]),
 ];
 
-const inputGroupApiDetails: DetailItem[] = [
-  {
-    id: "inputgroups",
-    title: "InputGroupField",
-    summary:
-      "Floating-label input field with optional prefix and suffix slots, a larger suffix hit area, and inline error messaging driven entirely by props.",
-    fields: [
-      field({
-        name: "label",
-        type: "string",
-        required: true,
-        description:
-          "Field label rendered inside the shell until the input becomes focused or contains a value, then animated upward into its floating position.",
-      }),
-      field({
-        name: "error",
-        type: "string",
-        description:
-          "Optional validation message rendered below the field. Passing a value also switches the label and underline to the destructive palette.",
-      }),
-      field({
-        name: "prefixIcon",
-        type: "ReactNode",
-        description:
-          "Leading visual placed before the input area. The slot is best suited to compact icons and inherits the same focus-aware color shift as the suffix.",
-      }),
-      field({
-        name: "suffixIcon",
-        type: "ReactNode",
-        description:
-          "Optional trailing visual rendered inside a button, which makes it useful for actions such as show-password toggles or clear controls.",
-      }),
-      field({
-        name: "suffixLabel",
-        type: "string",
-        description:
-          "Accessible name for the suffix action when the button only renders an icon. This is especially useful for password visibility toggles.",
-      }),
-      field({
-        name: "suffixButtonProps",
-        type: 'React.ComponentProps<"button">',
-        description:
-          "Additional props merged onto the suffix button, useful for aria-pressed, disabled, data attributes, or a custom aria-label.",
-      }),
-      field({
-        name: "onSuffixClick",
-        type: "() => void",
-        description:
-          "Called when the suffix button is pressed. It only matters when suffixIcon is also present.",
-      }),
-      field({
-        name: "id",
-        type: "string",
-        description:
-          "Optional input id. When omitted, the component creates one with useId and links the animated label automatically.",
-      }),
-      field({
-        name: "className",
-        type: "string",
-        description:
-          "Applied to the native input element itself, not the outer shell. Use it for text sizing, placeholder, or input-level spacing overrides.",
-      }),
-    ],
-    notes: [
-      "Standard native input props such as name, type, value, defaultValue, placeholder, autoComplete, disabled, onFocus, onBlur, and onChange are forwarded directly to the underlying input element.",
-      "The outer field shell uses a pointer-down focus handoff, so clicking the label area or prefix icon focuses the input without stealing focus from the suffix button on touch devices.",
-      "Value presence is tracked from the real input value, which keeps the floating label aligned for both controlled and uncontrolled usage.",
-      "When error is present, the field links the message through aria-describedby and aria-errormessage so assistive tech receives the same validation context as sighted users.",
-      "Inputgroups remains exported as a backward-compatible alias, but InputGroupField is the preferred public name going forward.",
-    ],
-  },
-  {
-    id: "input-group",
-    title: "InputGroup",
-    summary:
-      "Lightweight vertical wrapper for stacking multiple InputGroupField fields with consistent spacing.",
-    fields: [
-      field({
-        name: "children",
-        type: "ReactNode",
-        required: true,
-        description:
-          "One or more InputGroupField fields, or any other custom content you want to keep in the same vertical flow.",
-      }),
-      field({
-        name: "className",
-        type: "string",
-        description:
-          "Merged onto the wrapper div. The base layout already uses a full-width flex column with a 1.5rem gap.",
-      }),
-    ],
-    notes: [
-      "All remaining div props are forwarded to the wrapper, so data attributes and layout helpers can be attached at the group level.",
-    ],
-  },
-  {
-    id: "input-group-motion",
-    title: "Motion and behavior",
-    summary:
-      "The component keeps its motion treatment quiet and focused on form affordances rather than full-panel animation.",
-    notes: [
-      "The label, prefix slot, and suffix slot all use spring transitions, so they respond to focus without introducing layout shift.",
-      "The bottom accent line grows from the center outward only while the field is focused, then collapses away on blur.",
-      "Error copy mounts through an animated height wrapper, which keeps neighboring fields from snapping when validation feedback appears or disappears.",
-    ],
-  },
-  registryItem("input-group.json", ["motion"]),
-];
-
 const accordionApiDetails: DetailItem[] = [
   {
     id: "accordion-item",
@@ -5069,7 +4960,6 @@ export {
   originButtonApiDetails,
   faqProApiDetails,
   popoverApiDetails,
-  inputGroupApiDetails,
   accordionApiDetails,
   progressApiDetails,
   radioGroupApiDetails,

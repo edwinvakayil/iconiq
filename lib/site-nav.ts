@@ -34,7 +34,6 @@ export const SITE_SECTIONS = [
       { label: "Dropdown", href: "/components/dropdown" },
       { label: "File Upload", href: "/components/file-upload" },
       { label: "Hover Card", href: "/components/hover-card" },
-      { label: "Input Group", href: "/components/input-group" },
       { label: "Popover", href: "/components/popover" },
       { label: "Progress", href: "/components/progress" },
       { label: "Radio Group", href: "/components/radio-group" },
