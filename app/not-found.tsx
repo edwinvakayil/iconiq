@@ -1,11 +1,13 @@
 import Link from "next/link";
 
+import { NotFoundEdgeBlur } from "@/components/not-found/edge-blur";
 import { NotFoundInteractiveGrid } from "@/components/not-found/interactive-grid";
 
 export default function NotFound() {
   return (
     <div className="relative flex min-h-dvh w-full flex-col overflow-hidden bg-background">
       <NotFoundInteractiveGrid />
+      <NotFoundEdgeBlur />
 
       <main className="pointer-events-none relative z-10 flex flex-1 flex-col items-center justify-center px-6 py-16 text-center">
         <p className="mb-6 rounded-full bg-muted px-3 py-1 font-sans text-muted-foreground text-xs tracking-wide">
