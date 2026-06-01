@@ -27,6 +27,7 @@ export const SITE_SECTIONS = [
       { label: "Checkbox", href: "/components/checkbox" },
       { label: "Checkbox Group", href: "/components/checkbox-group" },
       { label: "Collapsible", href: "/components/collapsible" },
+      { label: "Color Picker", href: "/components/color-picker" },
       { label: "Combobox", href: "/components/combobox" },
       { label: "Context Menu", href: "/components/context-menu" },
       { label: "Dialog", href: "/components/dialog" },

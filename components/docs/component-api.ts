@@ -2774,6 +2774,82 @@ const popoverApiDetails: DetailItem[] = [
   registryItem("popover.json", ["@radix-ui/react-popover", "motion"]),
 ];
 
+const colorPickerApiDetails: DetailItem[] = [
+  {
+    id: "color-picker",
+    title: "ColorPicker",
+    summary:
+      "Self-contained HSV panel with saturation field, hue/alpha sliders, multi-format readouts, and EyeDropper.",
+    fields: [
+      field({
+        name: "value",
+        type: "string",
+        description:
+          "Controlled hex color such as #3B82F6. When provided, the picker syncs its internal state to this value.",
+      }),
+      field({
+        name: "defaultValue",
+        type: "string",
+        defaultValue: "#3B82F6",
+        description:
+          "Starting color for uncontrolled usage. Ignored when value is supplied.",
+      }),
+      field({
+        name: "onChange",
+        type: "(color: string) => void",
+        description:
+          "Called when the color settles (pointer up on sliders, blur/Enter on inputs). Emits #RRGGBB, or #RRGGBBAA when alpha is below 100%.",
+      }),
+      field({
+        name: "defaultAlpha",
+        type: "number",
+        defaultValue: "100",
+        description:
+          "Starting alpha percentage (0–100) for uncontrolled usage when defaultValue has no alpha channel.",
+      }),
+      field({
+        name: "disabled",
+        type: "boolean",
+        defaultValue: "false",
+        description: "Disables picker interaction and lowers shell opacity.",
+      }),
+      field({
+        name: "reducedMotion",
+        type: "boolean",
+        description:
+          "Forces reduced motion for format-menu animation and decorative pulses.",
+      }),
+      field({
+        name: "showEyedropper",
+        type: "boolean",
+        defaultValue: "true",
+        description: "Shows or hides the pipette control in the footer row.",
+      }),
+      field({
+        name: "onEyedropperUnsupported",
+        type: "() => void",
+        description:
+          "Called when EyeDropper is unavailable. No alert dialog is shown by default.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description:
+          "Merged onto the outer picker shell for width, shadow, or layout overrides.",
+      }),
+    ],
+    notes: [
+      "Install with npx shadcn@latest add https://iconiqui.com/r/color-picker.json (requires lucide-react, motion, and a cn helper).",
+      "Theme tokens are embedded on the root node so the picker works without iconiq-theme, though it still maps cleanly to shadcn semantic colors.",
+      "The saturation square, hue slider, and alpha slider share one RGB source of truth. Slider drags emit on pointer up to stay stable in controlled mode.",
+      "Format switching exposes editable HEX, RGB, HSL, and OKLCH channels. Values commit on blur or Enter so partial typing does not fight the live color state.",
+      "EyeDropper support depends on the browser API (Chrome/Edge). Use onEyedropperUnsupported for user-facing feedback.",
+      "FluidColorPicker remains exported as a backward-compatible alias for older imports.",
+    ],
+  },
+  registryItem("color-picker.json", ["lucide-react", "motion"]),
+];
+
 const accordionApiDetails: DetailItem[] = [
   {
     id: "accordion-item",
@@ -4947,6 +5023,7 @@ export {
   buttonGroupApiDetails,
   checkboxApiDetails,
   checkboxGroupApiDetails,
+  colorPickerApiDetails,
   comboboxApiDetails,
   contextMenuApiDetails,
   drawerApiDetails,

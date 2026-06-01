@@ -48,6 +48,8 @@ const componentSummaries: Record<string, string> = {
     "Base UI checkbox group docs in the Components section, preserving the same Iconiq row motion and disclosure behavior as the core checkbox group.",
   "/components/collapsible":
     "Collapsible docs with a provider switch that swaps between Base UI and Radix UI registry entries.",
+  "/components/color-picker":
+    "Color picker docs with Iconiq HSV panel, format switching, alpha control, and EyeDropper.",
   "/components/combobox":
     "Base UI combobox docs in the Components section, preserving the same Iconiq filtering, keyboard navigation, and dropdown motion as the core combobox.",
   "/components/context-menu":
@@ -115,6 +117,14 @@ const componentSummaries: Record<string, string> = {
 const extraComponentKeywordsBySlug: Record<string, string[]> = {
   card: ["panel", "surface", "container"],
   charts: ["chart", "recharts", "bar chart", "data visualization", "graph"],
+  "color-picker": [
+    "color picker",
+    "colorpicker",
+    "eyedropper",
+    "hex",
+    "hsv",
+    "swatch",
+  ],
   "dia-text": ["text", "text reveal", "animated text"],
   "file-upload": ["upload"],
   infiniteribbon: [

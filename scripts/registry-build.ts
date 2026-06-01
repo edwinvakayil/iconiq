@@ -322,6 +322,12 @@ const REGISTRY_UI_META: Record<
       "Compound card surface with optional interactive lift, Motion-smoothed layout transitions, and shared header, action, content, and footer slots.",
     dependencies: ["motion"],
   },
+  "color-picker": {
+    title: "Color Picker",
+    description:
+      "HSV panel with saturation field, hue/alpha sliders, multi-format readouts, hex input, and EyeDropper.",
+    dependencies: ["lucide-react", "motion"],
+  },
   charts: {
     title: "Charts",
     description:
