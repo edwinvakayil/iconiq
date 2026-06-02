@@ -2,10 +2,11 @@
 
 import { Building2, Cloud, GraduationCap, Sun } from "lucide-react";
 import Link from "next/link";
-import { type ReactNode, useState } from "react";
+import { type ReactNode, useEffect, useState } from "react";
 import { HomeFeaturedShowcaseExtended } from "@/components/home-featured-showcase-extended";
 import {
   Avatar,
+  AvatarBadge,
   AvatarFallback,
   AvatarGroup,
   AvatarImage,
@@ -75,6 +76,32 @@ const homeCheckboxOptions: CheckboxGroupOption[] = [
     disabled: true,
   },
 ];
+
+const progressFrames = [
+  8, 14, 22, 31, 42, 55, 68, 80, 90, 96, 88, 76, 63, 49, 36, 25, 16, 10,
+];
+
+function HomeProgressShowcase() {
+  const [frameIndex, setFrameIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = window.setInterval(() => {
+      setFrameIndex((current) => (current + 1) % progressFrames.length);
+    }, 340);
+
+    return () => window.clearInterval(interval);
+  }, []);
+
+  return (
+    <div className="w-full max-w-[320px] space-y-4">
+      <Progress label="Upload" value={progressFrames[frameIndex]} />
+      <Progress
+        label="Sync"
+        value={progressFrames[(frameIndex + 8) % progressFrames.length]}
+      />
+    </div>
+  );
+}
 
 function ShowcaseCard({
   title,
@@ -201,17 +228,23 @@ export function HomeFeaturedShowcase() {
           href="/components/avatar"
           title="Avatar"
         >
-          <div className="flex w-full items-center justify-center px-4">
+          <div className="flex w-full items-center justify-center gap-12 px-4 sm:gap-16">
+            <Avatar size="lg" tooltip="online">
+              <AvatarImage alt="shadcn/ui" src="/assets/shadcn.jpg" />
+              <AvatarFallback>SU</AvatarFallback>
+              <AvatarBadge />
+            </Avatar>
+
             <AvatarGroup>
-              <Avatar size="lg">
+              <Avatar size="lg" tooltip="Alex">
                 <AvatarImage alt="Avatar 1" src="/assets/av1.png" />
                 <AvatarFallback>A1</AvatarFallback>
               </Avatar>
-              <Avatar size="lg">
+              <Avatar size="lg" tooltip="Jordan">
                 <AvatarImage alt="Avatar 2" src="/assets/av2.png" />
                 <AvatarFallback>A2</AvatarFallback>
               </Avatar>
-              <Avatar size="lg">
+              <Avatar size="lg" tooltip="Sam">
                 <AvatarImage alt="Avatar 3" src="/assets/av3.png" />
                 <AvatarFallback>A3</AvatarFallback>
               </Avatar>
@@ -224,10 +257,7 @@ export function HomeFeaturedShowcase() {
           href="/components/progress"
           title="Progress"
         >
-          <div className="w-full max-w-[320px] space-y-4">
-            <Progress label="Upload" value={72} />
-            <Progress label="Sync" value={46} />
-          </div>
+          <HomeProgressShowcase />
         </ShowcaseCard>
 
         <HomeFeaturedShowcaseExtended
