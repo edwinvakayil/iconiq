@@ -3,9 +3,10 @@
 import { Button as ButtonPrimitive } from "@base-ui/react/button";
 import { cva, type VariantProps } from "class-variance-authority";
 import { motion } from "motion/react";
+import Link from "next/link";
 import {
-  type AnchorHTMLAttributes,
   type ButtonHTMLAttributes,
+  type ComponentPropsWithoutRef,
   type FocusEventHandler,
   forwardRef,
   type KeyboardEvent,
@@ -30,7 +31,7 @@ import {
 import { cn } from "@/lib/utils";
 
 const buttonThemeClassName =
-  "[--button-destructive:#dc2626] [--button-input:#e3e7ec] [--button-primary-foreground:#ffffff] [--button-ring:rgba(17,17,17,0.16)] [--button-ripple:color-mix(in_oklch,var(--foreground),transparent_52%)] [--button-secondary-foreground:#ffffff] dark:[--button-destructive:#f87171] dark:[--button-input:#2b2a25] dark:[--button-primary-foreground:#111111] dark:[--button-ring:rgba(246,243,236,0.18)] dark:[--button-ripple:color-mix(in_oklch,var(--foreground),transparent_30%)] dark:[--button-secondary-foreground:#111111]";
+  "[--button-destructive:#dc2626] [--button-input:#e3e7ec] [--button-primary-foreground:#ffffff] [--button-ring:rgba(17,17,17,0.16)] [--button-ripple:color-mix(in_oklch,var(--foreground),transparent_72%)] [--button-secondary-foreground:#ffffff] dark:[--button-destructive:#f87171] dark:[--button-input:#2b2a25] dark:[--button-primary-foreground:#111111] dark:[--button-ring:rgba(246,243,236,0.18)] dark:[--button-ripple:color-mix(in_oklch,var(--foreground),transparent_72%)] dark:[--button-secondary-foreground:#111111]";
 
 const buttonVariants = cva(
   cn(
@@ -43,13 +44,13 @@ const buttonVariants = cva(
         default:
           "visited:!text-primary-foreground hover:!text-primary-foreground focus-visible:!text-primary-foreground active:!text-primary-foreground bg-primary text-primary-foreground [--button-ripple:color-mix(in_oklch,var(--primary-foreground),transparent_45%)] hover:bg-primary dark:[--button-ripple:color-mix(in_oklch,#111111,transparent_10%)] [&_svg]:text-primary-foreground",
         outline:
-          "visited:!text-foreground hover:!text-foreground focus-visible:!text-foreground active:!text-foreground aria-expanded:!text-foreground border-border bg-background text-foreground [--button-ripple:color-mix(in_oklch,var(--foreground),transparent_52%)] hover:bg-accent/60 aria-expanded:bg-muted dark:border-[color:var(--button-input)] dark:bg-[color-mix(in_oklch,var(--button-input),transparent_70%)] dark:hover:bg-[color-mix(in_oklch,var(--button-input),transparent_50%)] dark:[--button-ripple:color-mix(in_oklch,var(--foreground),transparent_28%)]",
+          "hover:!text-foreground aria-expanded:!text-foreground border-border bg-background [--button-ripple:color-mix(in_oklch,var(--foreground),transparent_52%)] hover:bg-accent/60 aria-expanded:bg-muted dark:border-[color:var(--button-input)] dark:bg-[color-mix(in_oklch,var(--button-input),transparent_70%)] dark:hover:bg-[color-mix(in_oklch,var(--button-input),transparent_50%)] dark:[--button-ripple:color-mix(in_oklch,var(--foreground),transparent_28%)]",
         secondary:
-          "visited:!text-secondary-foreground hover:!text-secondary-foreground focus-visible:!text-secondary-foreground active:!text-secondary-foreground aria-expanded:!text-secondary-foreground bg-secondary text-secondary-foreground [--button-ripple:color-mix(in_oklch,var(--secondary-foreground),transparent_45%)] hover:bg-[color-mix(in_oklch,var(--secondary),var(--foreground)_5%)] aria-expanded:bg-secondary dark:[--button-ripple:color-mix(in_oklch,var(--secondary-foreground),transparent_15%)] [&_svg]:text-secondary-foreground",
+          "aria-expanded:!text-secondary-foreground hover:!text-secondary-foreground bg-secondary text-secondary-foreground [--button-ripple:color-mix(in_oklch,var(--secondary-foreground),transparent_45%)] hover:bg-[color-mix(in_oklch,var(--secondary),var(--foreground)_5%)] aria-expanded:bg-secondary dark:[--button-ripple:color-mix(in_oklch,var(--secondary-foreground),transparent_15%)] [&_svg]:text-secondary-foreground",
         ghost:
-          "visited:!text-foreground hover:!text-foreground focus-visible:!text-foreground active:!text-foreground aria-expanded:!text-foreground text-foreground [--button-ripple:color-mix(in_oklch,var(--foreground),transparent_52%)] hover:bg-accent/60 aria-expanded:bg-muted dark:hover:bg-muted/50 dark:[--button-ripple:color-mix(in_oklch,var(--foreground),transparent_28%)]",
+          "hover:!text-foreground aria-expanded:!text-foreground hover:bg-accent/60 aria-expanded:bg-muted dark:hover:bg-muted/50",
         destructive:
-          "visited:!text-[color:var(--button-destructive)] hover:!text-[color:var(--button-destructive)] focus-visible:!text-[color:var(--button-destructive)] active:!text-[color:var(--button-destructive)] bg-[color-mix(in_oklch,var(--button-destructive),transparent_90%)] text-[color:var(--button-destructive)] [--button-ripple:color-mix(in_oklch,var(--button-destructive),transparent_40%)] hover:bg-[color-mix(in_oklch,var(--button-destructive),transparent_80%)] focus-visible:border-[color:color-mix(in_oklch,var(--button-destructive),transparent_60%)] focus-visible:ring-[color:color-mix(in_oklch,var(--button-destructive),transparent_80%)] dark:bg-[color-mix(in_oklch,var(--button-destructive),transparent_80%)] dark:focus-visible:ring-[color:color-mix(in_oklch,var(--button-destructive),transparent_60%)] dark:hover:bg-[color-mix(in_oklch,var(--button-destructive),transparent_70%)] dark:[--button-ripple:color-mix(in_oklch,var(--button-destructive),transparent_20%)]",
+          "hover:!text-[color:var(--button-destructive)] bg-[color-mix(in_oklch,var(--button-destructive),transparent_90%)] text-[color:var(--button-destructive)] [--button-ripple:color-mix(in_oklch,var(--button-destructive),transparent_55%)] hover:bg-[color-mix(in_oklch,var(--button-destructive),transparent_80%)] focus-visible:border-[color:color-mix(in_oklch,var(--button-destructive),transparent_60%)] focus-visible:ring-[color:color-mix(in_oklch,var(--button-destructive),transparent_80%)] dark:bg-[color-mix(in_oklch,var(--button-destructive),transparent_80%)] dark:focus-visible:ring-[color:color-mix(in_oklch,var(--button-destructive),transparent_60%)] dark:hover:bg-[color-mix(in_oklch,var(--button-destructive),transparent_70%)]",
         link: "",
       },
       linkUnderline: {
@@ -75,13 +76,13 @@ const buttonVariants = cva(
         variant: "link",
         linkUnderline: "motion",
         class:
-          "visited:!text-foreground hover:!text-foreground focus-visible:!text-foreground px-0 text-foreground shadow-none active:translate-y-0 [&_[data-link-label]]:font-medium [&_[data-link-label]]:text-[1em]",
+          "hover:!text-foreground focus-visible:!text-foreground px-0 text-foreground shadow-none active:translate-y-0 [&_[data-link-label]]:font-medium [&_[data-link-label]]:text-[1em]",
       },
       {
         variant: "link",
         linkUnderline: "static",
         class:
-          "visited:!text-foreground hover:!text-foreground focus-visible:!text-foreground px-0 text-foreground underline-offset-4 hover:underline [&_[data-link-label]]:font-medium [&_[data-link-label]]:text-[1em]",
+          "hover:!text-foreground focus-visible:!text-foreground px-0 text-foreground underline-offset-4 hover:underline [&_[data-link-label]]:font-medium [&_[data-link-label]]:text-[1em]",
       },
       {
         variant: "link",
@@ -175,21 +176,6 @@ const buttonContentClassName =
 
 type Ripple = { id: string; x: number; y: number; size: number };
 
-type AnchorHTMLAttributesForMotion = Omit<
-  AnchorHTMLAttributes<HTMLAnchorElement>,
-  | "onAnimationEnd"
-  | "onAnimationIteration"
-  | "onAnimationStart"
-  | "onDrag"
-  | "onDragEnd"
-  | "onDragEnter"
-  | "onDragExit"
-  | "onDragLeave"
-  | "onDragOver"
-  | "onDragStart"
-  | "onDrop"
->;
-
 type ButtonHTMLAttributesForMotion = Omit<
   ButtonHTMLAttributes<HTMLButtonElement>,
   | "onAnimationEnd"
@@ -259,7 +245,7 @@ function useMeasure<T extends HTMLElement = HTMLElement>(
   return [ref, enabled ? bounds : { width: 0, height: 0 }];
 }
 
-const MotionAnchor = motion.create("a");
+const MotionLink = motion.create(Link);
 
 const buttonTransition = {
   scale: {
@@ -341,16 +327,6 @@ function resolvePrimitiveButtonProps(buttonProps: ButtonRenderProps) {
   };
 }
 
-const rippleTransition = {
-  duration: 0.65,
-  ease: [0.22, 1, 0.36, 1] as const,
-  opacity: {
-    duration: 0.65,
-    ease: [0.4, 0, 0.2, 1] as const,
-    times: [0, 0.2, 1] as const,
-  },
-} as const;
-
 const RippleLayer = memo(function RippleLayer({
   onRippleComplete,
   ripples,
@@ -361,13 +337,13 @@ const RippleLayer = memo(function RippleLayer({
   return (
     <span
       aria-hidden
-      className="pointer-events-none absolute inset-0 z-[1] overflow-hidden rounded-[inherit]"
+      className="pointer-events-none absolute inset-0 z-0 overflow-hidden rounded-[inherit]"
     >
       {ripples.map((ripple) => (
         <motion.span
-          animate={{ opacity: [0.36, 0.2, 0], scale: 1 }}
-          className="pointer-events-none absolute -translate-x-1/2 -translate-y-1/2 rounded-full bg-[var(--button-ripple)]"
-          initial={{ opacity: 0.36, scale: 0 }}
+          animate={{ opacity: 0, scale: 1 }}
+          className="pointer-events-none absolute -translate-x-1/2 -translate-y-1/2 rounded-full bg-current"
+          initial={{ opacity: 0.22, scale: 0 }}
           key={ripple.id}
           onAnimationComplete={() => onRippleComplete(ripple.id)}
           style={{
@@ -376,7 +352,10 @@ const RippleLayer = memo(function RippleLayer({
             top: ripple.y,
             width: ripple.size,
           }}
-          transition={rippleTransition}
+          transition={{
+            duration: 0.55,
+            ease: [0.22, 1, 0.36, 1],
+          }}
         />
       ))}
     </span>
@@ -407,17 +386,7 @@ export type ButtonProps = Omit<
     href?: string;
     icon?: ReactNode;
     iconPosition?: "start" | "end";
-  } & ReducedMotionProp &
-  Pick<
-    AnchorHTMLAttributes<HTMLAnchorElement>,
-    | "download"
-    | "hrefLang"
-    | "media"
-    | "ping"
-    | "referrerPolicy"
-    | "rel"
-    | "target"
-  >;
+  } & ReducedMotionProp;
 
 const ButtonInner = forwardRef<
   HTMLButtonElement | HTMLAnchorElement,
@@ -646,12 +615,10 @@ const ButtonInner = forwardRef<
 
     const buttonSurface = (
       <>
-        {allowsRipple ? (
-          <RippleLayer
-            onRippleComplete={handleRippleComplete}
-            ripples={ripples}
-          />
-        ) : null}
+        <RippleLayer
+          onRippleComplete={handleRippleComplete}
+          ripples={ripples}
+        />
         <span
           className={buttonContentClassName}
           ref={shouldAnimateSize ? contentRef : undefined}
@@ -664,17 +631,15 @@ const ButtonInner = forwardRef<
     );
 
     if (href) {
-      const {
-        onClick,
-        type: _type,
-        ...anchorProps
-      } = omitLinkMotionConflicts(props as AnchorHTMLAttributesForMotion);
+      const { onClick, ...linkProps } = omitLinkMotionConflicts(
+        props as ComponentPropsWithoutRef<typeof Link>
+      );
 
       return (
         <ReducedMotionConfig reducedMotion={reducedMotion}>
-          <MotionAnchor
+          <MotionLink
             {...motionSurfaceProps}
-            {...anchorProps}
+            {...linkProps}
             aria-disabled={disabled || undefined}
             className={rootClassName}
             data-slot="button"
@@ -687,7 +652,7 @@ const ButtonInner = forwardRef<
               if (disabled) {
                 e.preventDefault();
               }
-              onClick?.(e as React.MouseEvent<HTMLAnchorElement>);
+              onClick?.(e);
             }}
             onKeyDown={(e) => {
               onKeyDown?.(e);
@@ -719,7 +684,7 @@ const ButtonInner = forwardRef<
             tabIndex={disabled ? -1 : undefined}
           >
             {buttonSurface}
-          </MotionAnchor>
+          </MotionLink>
         </ReducedMotionConfig>
       );
     }
@@ -756,6 +721,7 @@ const ButtonInner = forwardRef<
                 ref={(node) => {
                   setButtonRef(node);
                   setRef(primitiveRef, node);
+                  setRef(ref, node);
                 }}
                 style={primitiveStyle}
                 type={type}

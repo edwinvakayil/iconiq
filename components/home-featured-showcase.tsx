@@ -1,23 +1,22 @@
 "use client";
 
 import { Building2, Cloud, GraduationCap, Sun } from "lucide-react";
-import dynamic from "next/dynamic";
 import Link from "next/link";
-import { type ReactNode, startTransition, useEffect, useState } from "react";
+import { type ReactNode, useState } from "react";
+import { HomeFeaturedShowcaseExtended } from "@/components/home-featured-showcase-extended";
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarGroup,
+  AvatarImage,
+} from "@/registry/avatar";
 import type { CheckboxGroupOption } from "@/registry/b-checkbox-group";
 import { DiaText } from "@/registry/dia-text";
 import { IconBar, IconBarItem } from "@/registry/icon-bar";
 import { Accordion, type AccordionItem } from "@/registry/r-accordion";
+import { Progress } from "@/registry/r-progress";
 import type { RadioOption } from "@/registry/r-radio-group";
 import { ShimmerSkeleton } from "@/registry/skeleton";
-
-const HomeFeaturedShowcaseExtended = dynamic(
-  () =>
-    import("@/components/home-featured-showcase-extended").then(
-      (mod) => mod.HomeFeaturedShowcaseExtended
-    ),
-  { ssr: false }
-);
 
 const featuredAccordionItems: AccordionItem[] = [
   {
@@ -113,37 +112,22 @@ export function HomeFeaturedShowcase() {
   const [selectedCheckboxes, setSelectedCheckboxes] = useState<string[]>([
     "motion",
   ]);
-  const [showExtendedShowcase, setShowExtendedShowcase] = useState(false);
-
-  useEffect(() => {
-    const reveal = () => {
-      startTransition(() => setShowExtendedShowcase(true));
-    };
-
-    if (typeof window !== "undefined" && "requestIdleCallback" in window) {
-      const id = window.requestIdleCallback(reveal, { timeout: 250 });
-      return () => window.cancelIdleCallback(id);
-    }
-
-    const timeout = setTimeout(reveal, 120);
-    return () => clearTimeout(timeout);
-  }, []);
 
   return (
     <section
       aria-labelledby="home-featured-showcase-heading"
       className="mt-24 sm:mt-32"
     >
-      <div className="sm:text-center">
+      <div>
         <h3
-          className="font-light text-[1.95rem] text-foreground tracking-[-0.07em] sm:text-[2.9rem]"
+          className="whitespace-nowrap font-light text-[clamp(0.9rem,3.4vw,1.85rem)] text-foreground tracking-[-0.07em]"
           id="home-featured-showcase-heading"
         >
           Every component, live and ready to explore.
         </h3>
       </div>
 
-      <div className="mt-8 grid gap-4 sm:mt-10 lg:grid-cols-12">
+      <div className="mt-8 grid gap-4 sm:mt-10 md:grid-cols-2 lg:grid-cols-12">
         <ShowcaseCard
           className="lg:col-span-6"
           href="/texts/dia-text"
@@ -177,7 +161,7 @@ export function HomeFeaturedShowcase() {
         </ShowcaseCard>
 
         <ShowcaseCard
-          className="lg:col-span-7"
+          className="lg:col-span-6"
           href="/components/accordion"
           title="Accordion"
         >
@@ -188,7 +172,7 @@ export function HomeFeaturedShowcase() {
         </ShowcaseCard>
 
         <ShowcaseCard
-          className="lg:col-span-5"
+          className="lg:col-span-6"
           href="/components/skeleton"
           title="Skeleton"
         >
@@ -212,16 +196,48 @@ export function HomeFeaturedShowcase() {
           </div>
         </ShowcaseCard>
 
-        {showExtendedShowcase ? (
-          <HomeFeaturedShowcaseExtended
-            checkboxOptions={homeCheckboxOptions}
-            onCheckboxChange={setSelectedCheckboxes}
-            onRadioChange={setSelectedRadio}
-            radioOptions={homeRadioOptions}
-            selectedCheckboxes={selectedCheckboxes}
-            selectedRadio={selectedRadio}
-          />
-        ) : null}
+        <ShowcaseCard
+          className="lg:col-span-6"
+          href="/components/avatar"
+          title="Avatar"
+        >
+          <div className="flex w-full items-center justify-center px-4">
+            <AvatarGroup>
+              <Avatar size="lg">
+                <AvatarImage alt="Avatar 1" src="/assets/av1.png" />
+                <AvatarFallback>A1</AvatarFallback>
+              </Avatar>
+              <Avatar size="lg">
+                <AvatarImage alt="Avatar 2" src="/assets/av2.png" />
+                <AvatarFallback>A2</AvatarFallback>
+              </Avatar>
+              <Avatar size="lg">
+                <AvatarImage alt="Avatar 3" src="/assets/av3.png" />
+                <AvatarFallback>A3</AvatarFallback>
+              </Avatar>
+            </AvatarGroup>
+          </div>
+        </ShowcaseCard>
+
+        <ShowcaseCard
+          className="lg:col-span-6"
+          href="/components/progress"
+          title="Progress"
+        >
+          <div className="w-full max-w-[320px] space-y-4">
+            <Progress label="Upload" value={72} />
+            <Progress label="Sync" value={46} />
+          </div>
+        </ShowcaseCard>
+
+        <HomeFeaturedShowcaseExtended
+          checkboxOptions={homeCheckboxOptions}
+          onCheckboxChange={setSelectedCheckboxes}
+          onRadioChange={setSelectedRadio}
+          radioOptions={homeRadioOptions}
+          selectedCheckboxes={selectedCheckboxes}
+          selectedRadio={selectedRadio}
+        />
       </div>
     </section>
   );

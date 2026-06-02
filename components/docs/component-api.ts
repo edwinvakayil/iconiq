@@ -908,6 +908,13 @@ const buttonApiDetails: DetailItem[] = [
           "Chooses the visual recipe from the exported buttonVariants map.",
       }),
       field({
+        name: "linkUnderline",
+        type: '"motion" | "static"',
+        defaultValue: '"motion" (when variant is link)',
+        description:
+          "Link variant only. motion keeps foreground text with a grey baseline underline that fills darker on hover. static uses the same text size as other variants with hover:underline.",
+      }),
+      field({
         name: "size",
         type: '"default" | "xs" | "sm" | "lg" | "icon" | "icon-xs" | "icon-sm" | "icon-lg"',
         defaultValue: "default",

@@ -20,10 +20,7 @@ function EdgeBlurLayer({
         className={`absolute inset-0 ${gradientClassName}`}
         style={maskStyle}
       />
-      <div
-        className="absolute inset-0 backdrop-blur-sm"
-        style={maskStyle}
-      />
+      <div className="absolute inset-0 backdrop-blur-sm" style={maskStyle} />
       <div
         className="absolute inset-0 backdrop-blur-xl"
         style={{

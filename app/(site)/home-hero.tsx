@@ -1,12 +1,12 @@
 "use client";
 
-import { ArrowRight, FileText } from "lucide-react";
+import { ArrowRight, ChevronRight } from "lucide-react";
 import { motion, useReducedMotion } from "motion/react";
 import dynamic from "next/dynamic";
 import Image from "next/image";
-import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import { Button } from "@/components/home-button";
 import { cn } from "@/lib/utils";
 import { useMotionTier } from "@/providers/motion-tier";
 
@@ -37,6 +37,13 @@ const HOME_SHOWCASE_SPRING = {
   stiffness: 260,
   damping: 34,
   mass: 1,
+};
+
+const HOME_CTA_ARROW_SPRING = {
+  type: "spring" as const,
+  stiffness: 380,
+  damping: 34,
+  mass: 0.72,
 };
 
 const heroContainerMotion = {
@@ -110,34 +117,6 @@ const heroBrandMarkMotion = {
   },
 };
 
-const heroShowcaseMotion = {
-  hidden: {
-    opacity: 0,
-    y: 32,
-    filter: "blur(12px)",
-  },
-  visible: {
-    opacity: 1,
-    y: 0,
-    filter: "blur(0px)",
-    transition: {
-      ...HOME_SHOWCASE_SPRING,
-      delay: 0.42,
-      opacity: { duration: 0.55, ease: [0.16, 1, 0.3, 1], delay: 0.42 },
-      filter: { duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: 0.42 },
-    },
-  },
-};
-
-const heroShowcaseLiteMotion = {
-  hidden: { opacity: 0, y: 16 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.4, ease: [0.16, 1, 0.3, 1] as const, delay: 0.3 },
-  },
-};
-
 const heroDescriptionMotion = {
   hidden: {
     opacity: 0,
@@ -194,11 +173,39 @@ const heroCtasLiteMotion = {
   },
 };
 
+const heroShowcaseMotion = {
+  hidden: {
+    opacity: 0,
+    y: 32,
+    filter: "blur(12px)",
+  },
+  visible: {
+    opacity: 1,
+    y: 0,
+    filter: "blur(0px)",
+    transition: {
+      ...HOME_SHOWCASE_SPRING,
+      delay: 0.42,
+      opacity: { duration: 0.55, ease: [0.16, 1, 0.3, 1], delay: 0.42 },
+      filter: { duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: 0.42 },
+    },
+  },
+};
+
+const heroShowcaseLiteMotion = {
+  hidden: { opacity: 0, y: 16 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.4, ease: [0.16, 1, 0.3, 1] as const, delay: 0.3 },
+  },
+};
+
 const heroHeadingClassName =
-  "max-w-none font-medium text-[clamp(1.45rem,5.5vw,1.875rem)] text-foreground leading-[1.1] tracking-[-0.06em] sm:mx-auto sm:max-w-none sm:text-[3.15rem] sm:leading-[1.06] lg:text-[3.75rem]";
+  "mt-[36px] max-w-none font-[450] text-[clamp(1.35rem,4.2vw,1.75rem)] text-foreground leading-[1.16] tracking-[-0.02em] sm:max-w-none sm:text-[2.25rem] sm:leading-[1.12] lg:text-[2.75rem]";
 
 const heroBrandMarkClassName =
-  "relative mx-1 inline-flex h-[0.82em] w-[0.82em] shrink-0 items-center justify-center overflow-hidden rounded-full bg-background align-middle sm:mx-1.5";
+  "relative mx-1 inline-flex h-[0.76em] w-[0.76em] shrink-0 items-center justify-center overflow-hidden rounded-full bg-background align-middle sm:mx-1.5";
 
 function HeroBrandMark({
   alt,
@@ -263,7 +270,7 @@ function HeroHeadingPrimaryLine({
 }) {
   return (
     <>
-      Built on
+      — Built on
       <AnimatedBrandMark
         alt="shadcn/ui"
         animateEntrance={animateEntrance}
@@ -278,13 +285,13 @@ function HeroHeadingPrimaryLine({
         href="https://motion.dev/"
         src="/assets/motion.png"
       />
-      Motion
+      motion
     </>
   );
 }
 
 function HeroHeadingSecondaryLine() {
-  return <>Copy the source. Ship the polish.</>;
+  return <>Cut the noise. Ship the calm.</>;
 }
 
 function HeroHeading({ animateEntrance }: { animateEntrance: boolean }) {
@@ -292,10 +299,10 @@ function HeroHeading({ animateEntrance }: { animateEntrance: boolean }) {
     return (
       <h1 className={heroHeadingClassName}>
         <span className="block sm:whitespace-nowrap">
-          <HeroHeadingPrimaryLine animateEntrance={false} />
+          <HeroHeadingSecondaryLine />
         </span>
         <span className="mt-1 block text-secondary sm:mt-0 sm:whitespace-nowrap">
-          <HeroHeadingSecondaryLine />
+          <HeroHeadingPrimaryLine animateEntrance={false} />
         </span>
       </h1>
     );
@@ -318,13 +325,13 @@ function HeroHeading({ animateEntrance }: { animateEntrance: boolean }) {
         className="block sm:whitespace-nowrap"
         variants={heroPrimaryLineMotion}
       >
-        <HeroHeadingPrimaryLine animateEntrance={animateEntrance} />
+        <HeroHeadingSecondaryLine />
       </motion.span>
       <motion.span
         className="mt-1 block text-secondary sm:mt-0 sm:whitespace-nowrap"
         variants={heroHeadingLineMotion}
       >
-        <HeroHeadingSecondaryLine />
+        <HeroHeadingPrimaryLine animateEntrance={animateEntrance} />
       </motion.span>
     </motion.h1>
   );
@@ -338,9 +345,9 @@ function HeroDescription({
   useFullMotion: boolean;
 }) {
   const className =
-    "mt-5 max-w-[640px] text-[15px] text-secondary leading-6 sm:mx-auto sm:mt-6 sm:max-w-[760px] sm:text-[18px] sm:leading-8";
+    "mt-4 max-w-[620px] text-[15px] text-secondary leading-7 sm:mt-5 sm:max-w-[700px] sm:text-[16px] sm:leading-7";
   const copy =
-    "shadcn/ui primitives you own, Motion animations you feel—paste a component, tune the tokens, and ship without the boilerplate hunt.";
+    "Components with motion that stays out of the way—small transitions that confirm what happened, not decoration fighting for attention.";
 
   if (!animateEntrance) {
     return <p className={className}>{copy}</p>;
@@ -358,6 +365,83 @@ function HeroDescription({
   );
 }
 
+const heroCtaRowClassName =
+  "mt-8 flex flex-wrap items-center justify-start gap-2 sm:gap-3";
+
+const heroCtaPrimaryClassName =
+  "h-9 gap-1.5 px-3 text-sm leading-5 sm:h-10 sm:px-4 sm:text-base sm:leading-5 has-data-[icon=inline-end]:pr-2.5 has-data-[icon=inline-start]:pl-2.5 sm:has-data-[icon=inline-end]:pr-3.5 sm:has-data-[icon=inline-start]:pl-3.5";
+
+const heroCtaLinkClassName =
+  "h-9 px-0 text-sm leading-5 sm:h-10 sm:text-base sm:leading-5";
+
+const heroCtaIconClassName = "size-3.5 sm:size-4";
+
+function HeroCtaArrowIcon({ active }: { active: boolean }) {
+  const reduceMotion = useReducedMotion();
+
+  if (reduceMotion) {
+    return <ChevronRight aria-hidden className={heroCtaIconClassName} />;
+  }
+
+  return (
+    <span
+      aria-hidden
+      className={cn(
+        "relative inline-flex shrink-0 items-center justify-center overflow-hidden",
+        heroCtaIconClassName
+      )}
+    >
+      <motion.span
+        animate={
+          active
+            ? { opacity: 0, x: -5, scale: 0.92 }
+            : { opacity: 1, x: 0, scale: 1 }
+        }
+        className="absolute inset-0 flex items-center justify-center"
+        initial={false}
+        transition={HOME_CTA_ARROW_SPRING}
+      >
+        <ChevronRight className={heroCtaIconClassName} />
+      </motion.span>
+      <motion.span
+        animate={
+          active
+            ? { opacity: 1, x: 0, scale: 1 }
+            : { opacity: 0, x: -7, scale: 0.92 }
+        }
+        className="absolute inset-0 flex items-center justify-center"
+        initial={false}
+        transition={{
+          ...HOME_CTA_ARROW_SPRING,
+          delay: active ? 0.05 : 0,
+        }}
+      >
+        <ArrowRight className={heroCtaIconClassName} />
+      </motion.span>
+    </span>
+  );
+}
+
+function HeroViewComponentsButton() {
+  const [active, setActive] = useState(false);
+
+  return (
+    <Button
+      className={heroCtaPrimaryClassName}
+      href="/components"
+      icon={<HeroCtaArrowIcon active={active} />}
+      iconPosition="end"
+      onBlur={() => setActive(false)}
+      onFocus={() => setActive(true)}
+      onPointerEnter={() => setActive(true)}
+      onPointerLeave={() => setActive(false)}
+      size="lg"
+    >
+      View components
+    </Button>
+  );
+}
+
 function HeroCtas({
   animateEntrance,
   useFullMotion,
@@ -367,34 +451,25 @@ function HeroCtas({
 }) {
   const links = (
     <>
-      <Link
-        className="inline-flex h-10 items-center gap-1.5 px-1 font-medium text-[15px] text-foreground decoration-transparent underline-offset-4 transition-[color,text-decoration-color] hover:text-foreground/80 hover:underline hover:decoration-foreground"
+      <HeroViewComponentsButton />
+      <Button
+        className={heroCtaLinkClassName}
         href="/introduction"
+        size="lg"
+        variant="link"
       >
-        <FileText className="size-[18px]" />
-        See Docs
-      </Link>
-      <Link
-        className="inline-flex h-10 items-center gap-2 rounded-xl bg-foreground px-5 font-medium text-background text-sm shadow-[0_10px_24px_rgba(14,165,233,0.22)] transition-[background-color,box-shadow,color] hover:bg-foreground/92 hover:shadow-[0_12px_28px_rgba(14,165,233,0.3)] dark:hover:text-background!"
-        href="/components/accordion"
-      >
-        View components
-        <ArrowRight className="size-4" />
-      </Link>
+        Getting started
+      </Button>
     </>
   );
 
   if (!animateEntrance) {
-    return (
-      <div className="mt-8 flex flex-wrap justify-start gap-3 sm:justify-center">
-        {links}
-      </div>
-    );
+    return <div className={heroCtaRowClassName}>{links}</div>;
   }
 
   return (
     <motion.div
-      className="mt-8 flex flex-wrap justify-start gap-3 sm:justify-center"
+      className={heroCtaRowClassName}
       variants={useFullMotion ? heroCtasMotion : heroCtasLiteMotion}
     >
       {links}
@@ -411,7 +486,7 @@ function HeroAnimatedContent({
 }) {
   if (!animateEntrance) {
     return (
-      <div className="mx-auto max-w-[1120px] text-left sm:text-center">
+      <div className="w-full max-w-[760px] text-left">
         <HeroHeading animateEntrance={false} />
         <HeroDescription
           animateEntrance={false}
@@ -488,7 +563,7 @@ export function HomeHero() {
   const showcase = (
     <motion.div
       animate={animateEntrance ? entranceState : false}
-      className="mx-auto max-w-[1120px] text-left sm:text-center"
+      className="w-full text-left"
       initial={animateEntrance ? "hidden" : false}
       variants={showcaseVariants}
     >
@@ -499,19 +574,19 @@ export function HomeHero() {
   return (
     <section
       className={cn(
-        "bg-background pt-12 pb-18 sm:pt-44 sm:pb-24 lg:pt-36",
+        "bg-background pt-10 pb-16 sm:pt-18 sm:pb-20 lg:pt-20",
         !isMounted && motionAllowed && "opacity-0"
       )}
     >
       {animateEntrance ? (
         <motion.div
           animate={entranceState}
-          className="mx-auto w-full max-w-[1280px] px-4 sm:px-6 lg:px-8"
+          className="w-full px-4 sm:px-6 lg:px-42"
           initial="hidden"
           variants={containerVariants}
         >
           <motion.div
-            className="mx-auto max-w-[1120px] text-left sm:text-center"
+            className="w-full max-w-[760px] text-left"
             variants={{
               hidden: {},
               visible: {},
@@ -522,11 +597,9 @@ export function HomeHero() {
           {showcase}
         </motion.div>
       ) : (
-        <div className="mx-auto w-full max-w-[1280px] px-4 sm:px-6 lg:px-8">
-          {content}
-          <div className="mx-auto max-w-[1120px] text-left sm:text-center">
-            <HomeFeaturedShowcase />
-          </div>
+        <div className="w-full px-4 sm:px-6 lg:px-42">
+          <div className="w-full max-w-[760px] text-left">{content}</div>
+          {showcase}
         </div>
       )}
     </section>
