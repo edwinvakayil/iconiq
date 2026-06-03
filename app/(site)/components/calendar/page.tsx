@@ -48,7 +48,7 @@ export default function RadixBaseCalendarPage() {
         { label: "Calendar" },
       ]}
       componentName="calendar"
-      description="shadcn-style date picking for month/year browsing and day selection."
+      description="Date picker for month, year, and day selection."
       details={calendarApiDetails}
       editHref={`${LINK.GITHUB}/edit/main/app/(site)/components/calendar/page.tsx`}
       headerActions={<SharedPrimitiveProviderSwitch />}

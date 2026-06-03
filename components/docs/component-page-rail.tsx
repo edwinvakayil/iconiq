@@ -123,10 +123,10 @@ export function DocsPageRail({
   }, [sections]);
 
   return (
-    <aside className="hidden xl:block xl:w-[248px]">
+    <aside className="hidden xl:block xl:w-[272px]">
       <div className="sticky top-[calc(var(--nav-stack-height-desktop)+24px)] space-y-6 pl-8">
         <div className="space-y-3">
-          <p className="flex h-6 items-center gap-1.5 bg-background text-[0.85rem] text-foreground [&_svg]:pointer-events-none [&_svg]:size-4">
+          <p className="flex h-6 items-center gap-1.5 bg-background text-[0.9rem] text-foreground [&_svg]:pointer-events-none [&_svg]:size-4">
             <OnThisPageIcon className="size-4" />
             <span>On This Page</span>
           </p>
@@ -136,7 +136,7 @@ export function DocsPageRail({
                 <li key={section.id}>
                   <a
                     className={cn(
-                      "block text-[0.9rem] text-muted-foreground transition-colors hover:text-foreground",
+                      "block text-[0.95rem] text-muted-foreground transition-colors hover:text-foreground",
                       activeId === section.id
                         ? "font-medium text-foreground"
                         : undefined

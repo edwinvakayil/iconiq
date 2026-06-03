@@ -66,7 +66,7 @@ export default function FaqProPage() {
         { label: "FAQ Pro" },
       ]}
       componentName="faq-pro"
-      description="Searchable FAQ accordion with rounded cards, smooth panel motion, automatic expansion for matches, and inline highlight styling for the active query."
+      description="Searchable FAQ with auto-expanded matches and query highlights."
       details={faqProApiDetails}
       preview={<FaqProPreview />}
       previewClassName="min-h-[28rem] overflow-visible"

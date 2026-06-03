@@ -5,6 +5,17 @@ import Link from "next/link";
 import { CodeBlockInstall } from "@/components/code-block-install";
 import { DocsPageRail } from "@/components/docs/component-page-rail";
 import { DocsCopyActions } from "@/components/docs/docs-copy-actions";
+import {
+  docsPageArticleClassName,
+  docsPageBodyClassName,
+  docsPageDescriptionClassName,
+  docsPageGridClassName,
+  docsPageListClassName,
+  docsPageSectionClassName,
+  docsPageSectionTitleClassName,
+  docsPageShellClassName,
+  docsPageTitleClassName,
+} from "@/components/docs/docs-page-layout";
 import { DocsBreadcrumbs } from "@/components/docs/page-shell";
 import {
   PageReveal,
@@ -17,15 +28,18 @@ import { SITE_SECTIONS } from "@/lib/site-nav";
 import { BreadcrumbJsonLdClient } from "@/seo/breadcrumb-json-ld-client";
 import { createMetadata } from "@/seo/metadata";
 
+const installationTagline =
+  "Install editable, fluid motion-powered UI directly into your app.";
+
 export const metadata: Metadata = createMetadata({
   title: `Installation | ${SITE.NAME}`,
   description:
-    "Install Iconiq components with the shadcn registry workflow, keep the generated files in your project, and work with editable, fluid motion-powered React UI components directly in your codebase.",
+    "Install Iconiq with the shadcn registry workflow, keep the generated files in your project, and work with editable, motion-refined UI directly in your codebase.",
   canonical: "/installation",
   ogTitle: `Install ${SITE.NAME} Components`,
   keywords: [
     "install shadcn registry components",
-    "editable react components",
+    "editable ui components",
     "iconiq installation guide",
   ],
 });
@@ -64,7 +78,7 @@ export default function InstallationPage() {
 
   const pageCopyContent = `# Installation
 
-Install editable, fluid motion-powered React components directly into your app.
+${installationTagline}
 
 ## Registry workflow
 
@@ -90,11 +104,11 @@ ${featuredComponents
 
   return (
     <main className="min-w-0 flex-1">
-      <div className="mx-auto w-full min-w-0 max-w-[1600px] px-4 py-8 sm:px-6 sm:py-10 lg:px-10">
+      <div className={docsPageShellClassName}>
         <BreadcrumbJsonLdClient items={breadcrumbs} />
-        <div className="xl:grid xl:grid-cols-[minmax(0,1fr)_248px] xl:gap-4">
+        <div className={docsPageGridClassName}>
           <div className="min-w-0">
-            <article className="min-w-0 max-w-4xl">
+            <article className={docsPageArticleClassName}>
               <PageStagger delayChildren={0.04}>
                 <PageStaggerItem>
                   <header className="space-y-3">
@@ -102,12 +116,9 @@ ${featuredComponents
 
                     <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
                       <div className="max-w-3xl space-y-2">
-                        <h1 className="scroll-m-20 font-semibold text-3xl text-foreground tracking-tighter">
-                          Installation
-                        </h1>
-                        <p className="max-w-3xl text-base text-muted-foreground">
-                          Install editable, fluid motion-powered React
-                          components directly into your app.
+                        <h1 className={docsPageTitleClassName}>Installation</h1>
+                        <p className={docsPageDescriptionClassName}>
+                          {installationTagline}
                         </p>
                       </div>
 
@@ -140,7 +151,7 @@ ${featuredComponents
                 </PageStaggerItem>
               </PageStagger>
 
-              <div className="mt-10 space-y-8 text-[15px] text-secondary leading-7">
+              <div className={docsPageBodyClassName}>
                 <PageReveal inView>
                   <p>
                     The installation flow is intentionally simple: pick a
@@ -153,10 +164,10 @@ ${featuredComponents
 
                 <PageReveal inView>
                   <section
-                    className="scroll-mt-28 space-y-5"
+                    className={docsPageSectionClassName}
                     id="registry-workflow"
                   >
-                    <h2 className="text-2xl text-foreground tracking-tight">
+                    <h2 className={docsPageSectionTitleClassName}>
                       Registry workflow
                     </h2>
                     <p>
@@ -169,7 +180,7 @@ ${featuredComponents
                       className="max-w-[720px]"
                       componentName="button"
                     />
-                    <ul className="list-disc space-y-2 pl-6 text-foreground/90 marker:text-muted-foreground">
+                    <ul className={docsPageListClassName}>
                       <li>
                         Run one command for the component you want to add.
                       </li>
@@ -186,8 +197,11 @@ ${featuredComponents
                 </PageReveal>
 
                 <PageReveal inView>
-                  <section className="scroll-mt-28 space-y-5" id="registry-url">
-                    <h2 className="text-2xl text-foreground tracking-tight">
+                  <section
+                    className={docsPageSectionClassName}
+                    id="registry-url"
+                  >
+                    <h2 className={docsPageSectionTitleClassName}>
                       Registry URL
                     </h2>
                     <p>
@@ -201,7 +215,7 @@ ${featuredComponents
                       className="max-w-[720px]"
                       registryPath="button.json"
                     />
-                    <ul className="list-disc space-y-2 pl-6 text-foreground/90 marker:text-muted-foreground">
+                    <ul className={docsPageListClassName}>
                       <li>
                         The direct URL follows the same shadcn add flow as the
                         scoped component command.
@@ -220,10 +234,10 @@ ${featuredComponents
 
                 <PageReveal inView>
                   <section
-                    className="scroll-mt-28 space-y-5"
+                    className={docsPageSectionClassName}
                     id="sample-entries"
                   >
-                    <h2 className="text-2xl text-foreground tracking-tight">
+                    <h2 className={docsPageSectionTitleClassName}>
                       Sample entries
                     </h2>
                     <p>
@@ -241,7 +255,7 @@ ${featuredComponents
                             key={href}
                           >
                             <div className="min-w-0 space-y-1">
-                              <p className="font-medium text-[15px] text-foreground">
+                              <p className="font-medium text-foreground">
                                 {label}
                               </p>
                               <p className="font-mono text-[11px] text-muted-foreground tracking-[0.08em]">
@@ -249,7 +263,7 @@ ${featuredComponents
                               </p>
                             </div>
                             <Link
-                              className="shrink-0 text-foreground text-sm underline underline-offset-4 transition-colors hover:text-muted-foreground"
+                              className="shrink-0 text-foreground underline underline-offset-4 transition-colors hover:text-muted-foreground"
                               href={href}
                             >
                               View docs

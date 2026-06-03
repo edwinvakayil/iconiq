@@ -83,7 +83,7 @@ export default function AvatarPage() {
         { label: "Avatar" },
       ]}
       componentName="avatar"
-      description="Composable profile images with fallbacks, tooltip-ready status badges, and grouped stacks."
+      description="Avatars with fallbacks, status badges, and grouped stacks."
       details={avatarApiDetails}
       editHref={`${LINK.GITHUB}/edit/main/app/(site)/components/avatar/page.tsx`}
       headerActions={<SharedPrimitiveProviderSwitch />}

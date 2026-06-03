@@ -350,7 +350,7 @@ export default function RadixBaseSeparatorPage() {
     <ComponentDocsPage
       breadcrumbs={breadcrumbs}
       componentName={provider.componentName}
-      description="Visual divider for grouping adjacent sections, rows, and compact controls."
+      description="Divider for sections, rows, and compact controls."
       details={details}
       editHref={`${LINK.GITHUB}/edit/main/app/(site)/components/separator/page.tsx`}
       headerActions={

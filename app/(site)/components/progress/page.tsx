@@ -287,7 +287,7 @@ export default function RadixBaseProgressPage() {
     <ComponentDocsPage
       breadcrumbs={breadcrumbs}
       componentName={provider.componentName}
-      description="Motion-smoothed progress bar for determinate and indeterminate task states."
+      description="Determinate and indeterminate progress—with subtle motion."
       details={details}
       editHref={`${LINK.GITHUB}/edit/main/app/(site)/components/progress/page.tsx`}
       extraSections={extraSections}

@@ -3,6 +3,13 @@ import type React from "react";
 import { typographyApiDetails } from "@/components/docs/component-api";
 import { ComponentInstallationTabs } from "@/components/docs/component-installation-tabs";
 import { DocsPageRail } from "@/components/docs/component-page-rail";
+import {
+  docsPageArticleClassName,
+  docsPageDescriptionClassName,
+  docsPageGridClassName,
+  docsPageShellClassName,
+  docsPageTitleClassName,
+} from "@/components/docs/docs-page-layout";
 import { PageCopyActions } from "@/components/docs/page-copy-actions";
 import {
   type BreadcrumbItem,
@@ -42,7 +49,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 const description =
-  "One component for the full type system. Use a single `variant` prop to keep headings, labels, paragraphs, subheadings, and doc copy aligned with the same source of truth.";
+  "One component and one `variant` prop for your full type scale.";
 
 function TypographyDocsSection({
   id,
@@ -183,20 +190,18 @@ export function TypographyPreview() {
 }`);
 
   return (
-    <div className="mx-auto w-full min-w-0 max-w-[1600px] px-4 py-8 sm:px-6 sm:py-10 lg:px-10">
+    <div className={docsPageShellClassName}>
       <BreadcrumbJsonLdClient items={breadcrumbs} />
-      <div className="xl:grid xl:grid-cols-[minmax(0,1fr)_248px] xl:gap-4">
+      <div className={docsPageGridClassName}>
         <main className="min-w-0">
-          <article className="min-w-0 max-w-4xl">
+          <article className={docsPageArticleClassName}>
             <header className="space-y-6">
               <div className="space-y-3">
                 <DocsBreadcrumbs items={breadcrumbs} />
                 <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
                   <div className="max-w-3xl space-y-2">
-                    <h1 className="scroll-m-20 font-semibold text-3xl text-foreground tracking-tighter">
-                      Typography
-                    </h1>
-                    <p className="max-w-3xl text-base text-muted-foreground">
+                    <h1 className={docsPageTitleClassName}>Typography</h1>
+                    <p className={docsPageDescriptionClassName}>
                       {description}
                     </p>
                   </div>

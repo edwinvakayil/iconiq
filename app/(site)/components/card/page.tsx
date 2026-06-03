@@ -132,7 +132,7 @@ export default function CardPage() {
         { label: "Card" },
       ]}
       componentName="card"
-      description="Motion-smoothed surface for grouped content, metrics, and supporting actions."
+      description="Cards for content, metrics, and actions—with subtle motion."
       details={details}
       editHref={`${LINK.GITHUB}/edit/main/app/(site)/components/card/page.tsx`}
       headerActions={<SharedPrimitiveProviderSwitch />}

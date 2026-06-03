@@ -3109,8 +3109,7 @@ const progressApiDetails: DetailItem[] = [
   {
     id: "progress",
     title: "Progress",
-    summary:
-      "Motion-smoothed progress bar for determinate and indeterminate task states.",
+    summary: "Determinate and indeterminate progress—with subtle motion.",
     fields: [
       field({
         name: "value",

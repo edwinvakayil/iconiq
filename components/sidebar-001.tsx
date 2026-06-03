@@ -236,7 +236,7 @@ export const Sidebar001Item = memo(function Sidebar001Item({
         <Link
           aria-current={isActive ? "page" : undefined}
           className={cn(
-            "relative z-1 ml-2 flex select-none items-center gap-2 rounded-md py-1.5 pl-4 text-sm",
+            "relative z-1 ml-2 flex select-none items-center gap-2 rounded-md py-1.5 pl-4 text-[15px]",
             className
           )}
           href={href}
@@ -280,7 +280,7 @@ function Sidebar001Separator({
   return (
     <div
       className={cn(
-        "mt-2 px-0 py-3.5 font-medium text-foreground/40 text-sm",
+        "mt-2 px-0 py-3.5 font-medium text-[15px] text-foreground/40",
         className
       )}
     >

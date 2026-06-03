@@ -4,6 +4,13 @@ import { diaTextApiDetails } from "@/components/docs/component-api";
 import { ComponentDemoCanvas } from "@/components/docs/component-demo-canvas";
 import { ComponentInstallationTabs } from "@/components/docs/component-installation-tabs";
 import { DocsPageRail } from "@/components/docs/component-page-rail";
+import {
+  docsPageArticleClassName,
+  docsPageDescriptionClassName,
+  docsPageGridClassName,
+  docsPageShellClassName,
+  docsPageTitleClassName,
+} from "@/components/docs/docs-page-layout";
 import { PageCopyActions } from "@/components/docs/page-copy-actions";
 import {
   type BreadcrumbItem,
@@ -23,11 +30,13 @@ import { DiaText } from "@/registry/dia-text";
 import { BreadcrumbJsonLdClient } from "@/seo/breadcrumb-json-ld-client";
 import { createMetadata } from "@/seo/metadata";
 
+const diaTextDescription =
+  "Text reveal with gradient sweep, repeats, and optional rotation.";
+
 export const metadata: Metadata = createMetadata({
   title: "Dia Text",
   canonical: "/texts/dia-text",
-  description:
-    "Animated inline text reveal with a sweeping gradient band, repeat controls, and optional fixed-width rotation for motion-driven typography.",
+  description: diaTextDescription,
   keywords: [
     "dia text",
     "animated text reveal",
@@ -43,8 +52,7 @@ const breadcrumbs: BreadcrumbItem[] = [
   { label: "Dia Text" },
 ];
 
-const description =
-  "Animated inline text reveal with a sweeping gradient band, repeat controls, and optional fixed-width rotation for motion-driven typography.";
+const description = diaTextDescription;
 
 const usageCode = `"use client";
 
@@ -114,11 +122,11 @@ export default function DiaTextPage() {
   const v0PageCode = getComponentV0Page("dia-text", usageCode);
 
   return (
-    <div className="mx-auto w-full min-w-0 max-w-[1600px] px-4 py-8 sm:px-6 sm:py-10 lg:px-10">
+    <div className={docsPageShellClassName}>
       <BreadcrumbJsonLdClient items={breadcrumbs} />
-      <div className="xl:grid xl:grid-cols-[minmax(0,1fr)_248px] xl:gap-4">
+      <div className={docsPageGridClassName}>
         <main className="min-w-0">
-          <article className="min-w-0 max-w-4xl">
+          <article className={docsPageArticleClassName}>
             <PageStagger delayChildren={0.03} staggerChildren={0.08}>
               <PageStaggerItem>
                 <header className="space-y-6">
@@ -126,10 +134,8 @@ export default function DiaTextPage() {
                     <DocsBreadcrumbs items={breadcrumbs} />
                     <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
                       <div className="max-w-3xl space-y-2">
-                        <h1 className="scroll-m-20 font-semibold text-3xl text-foreground tracking-tighter">
-                          Dia Text
-                        </h1>
-                        <p className="max-w-3xl text-base text-muted-foreground">
+                        <h1 className={docsPageTitleClassName}>Dia Text</h1>
+                        <p className={docsPageDescriptionClassName}>
                           {description}
                         </p>
                       </div>

@@ -44,7 +44,7 @@ export default function IconBarPage() {
         { label: "Icon Bar" },
       ]}
       componentName="icon-bar"
-      description="A row of compact icon chips that spring open on hover to reveal their labels. Each item keeps a fixed icon footprint while the pill width animates outward with Motion."
+      description="Icon chips that spring open on hover to reveal labels."
       details={iconBarApiDetails}
       preview={<IconBarPreview />}
       previewClassName="min-h-[16rem] overflow-visible"

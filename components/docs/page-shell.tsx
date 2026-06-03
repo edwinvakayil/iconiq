@@ -5,6 +5,13 @@ import type { ReactNode } from "react";
 import { ComponentDemoCanvas } from "@/components/docs/component-demo-canvas";
 import { ComponentInstallationTabs } from "@/components/docs/component-installation-tabs";
 import { ComponentPageRail } from "@/components/docs/component-page-rail";
+import {
+  docsPageArticleClassName,
+  docsPageDescriptionClassName,
+  docsPageGridClassName,
+  docsPageShellClassName,
+  docsPageTitleClassName,
+} from "@/components/docs/docs-page-layout";
 import { PageCopyActions } from "@/components/docs/page-copy-actions";
 import { Separator } from "@/components/ui/separator";
 import { getComponentV0Page } from "@/lib/component-v0-pages";
@@ -347,7 +354,7 @@ function DocsBreadcrumbs({
   if (usesEditorialBreadcrumb) {
     return (
       <nav aria-label="Breadcrumb" className={cn("mb-4", className)}>
-        <ol className="flex flex-wrap items-center gap-1.5 break-words text-muted-foreground text-sm sm:gap-2.5">
+        <ol className="flex flex-wrap items-center gap-1.5 break-words text-[15px] text-muted-foreground sm:gap-2.5">
           {visibleItems.map((item, index) => {
             const isLast = index === visibleItems.length - 1;
             const hasLaterDesktopVisibleItem = visibleItems
@@ -910,14 +917,14 @@ function ComponentDocsPage({
         pageUrl={resolvedPageUrl}
         title={title}
       />
-      <div className="mx-auto w-full min-w-0 max-w-[1600px] px-4 py-8 sm:px-6 sm:py-10 lg:px-10">
+      <div className={docsPageShellClassName}>
         <BreadcrumbJsonLdClient
           currentPath={resolvedPageUrl}
           items={breadcrumbs}
         />
-        <div className="xl:grid xl:grid-cols-[minmax(0,1fr)_248px] xl:gap-4">
+        <div className={docsPageGridClassName}>
           <main className="min-w-0">
-            <article className="min-w-0 max-w-4xl">
+            <article className={docsPageArticleClassName}>
               <header className="space-y-6">
                 <div className="space-y-3">
                   <DocsBreadcrumbs items={breadcrumbs} />
@@ -928,10 +935,8 @@ function ComponentDocsPage({
                           {eyebrow}
                         </p>
                       ) : null}
-                      <h1 className="scroll-m-20 font-semibold text-3xl text-foreground tracking-tighter">
-                        {title}
-                      </h1>
-                      <p className="max-w-3xl text-[15px] text-muted-foreground">
+                      <h1 className={docsPageTitleClassName}>{title}</h1>
+                      <p className={docsPageDescriptionClassName}>
                         {description}
                       </p>
                     </div>

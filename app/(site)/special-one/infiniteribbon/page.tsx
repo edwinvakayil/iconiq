@@ -49,7 +49,7 @@ export default function InfiniteRibbonPage() {
         { label: "Infinite Ribbon" },
       ]}
       componentName="infiniteribbon"
-      description="A full-width looping ribbon for announcement strips, launch banners, and kinetic section dividers. It repeats the supplied content into a seamless track and can run in either direction."
+      description="Looping marquee for banners and dividers—seamless repeat, either direction."
       details={infiniteRibbonApiDetails}
       preview={<InfiniteRibbonPreview />}
       previewClassName="relative min-h-[20rem] overflow-hidden px-0 md:px-0 [&>div]:relative"

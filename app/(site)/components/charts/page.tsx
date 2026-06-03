@@ -247,7 +247,7 @@ export default function ChartsPage() {
         { label: "Charts" },
       ]}
       componentName="charts"
-      description="Recharts shell with theme-aware series colors for bar, line, and other chart types, plus fluid bar growth and calm tooltip fades."
+      description="Theme-aware Recharts for bar, line, and more—with motion and soft tooltips."
       details={details}
       editHref={`${LINK.GITHUB}/edit/main/app/(site)/components/charts/page.tsx`}
       headerActions={<SharedPrimitiveProviderSwitch />}

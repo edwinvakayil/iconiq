@@ -4,6 +4,18 @@ import Link from "next/link";
 
 import { DocsPageRail } from "@/components/docs/component-page-rail";
 import { DocsCopyActions } from "@/components/docs/docs-copy-actions";
+import {
+  docsPageArticleClassName,
+  docsPageBodyClassName,
+  docsPageDescriptionClassName,
+  docsPageGridClassName,
+  docsPageLinkListClassName,
+  docsPageListClassName,
+  docsPageSectionClassName,
+  docsPageSectionTitleClassName,
+  docsPageShellClassName,
+  docsPageTitleClassName,
+} from "@/components/docs/docs-page-layout";
 import { DocsBreadcrumbs } from "@/components/docs/page-shell";
 import {
   PageReveal,
@@ -14,14 +26,16 @@ import { LINK, SITE } from "@/constants";
 import { BreadcrumbJsonLdClient } from "@/seo/breadcrumb-json-ld-client";
 import { createMetadata } from "@/seo/metadata";
 
+const introductionTagline = `${SITE.NAME} is editable UI with minimal motion, built for clarity.`;
+
 export const metadata: Metadata = createMetadata({
   title: `Introduction | ${SITE.NAME}`,
   description:
-    "Learn what Iconiq is, how the registry workflow works, and why the library favors minimal motion and editable React component files for standard, trustworthy interfaces.",
+    "Learn what Iconiq is, how the registry workflow works, and why the library favors minimal motion and editable source files for standard, trustworthy interfaces.",
   canonical: "/introduction",
   ogTitle: `Introduction to ${SITE.NAME}`,
   keywords: [
-    "react component library introduction",
+    "ui library introduction",
     "registry ui workflow",
     "editable component files",
   ],
@@ -40,7 +54,7 @@ const sections = [
 
 const pageCopyContent = `# Introduction
 
-Iconiq is editable React components with minimal motion, built for clarity.
+${introductionTagline}
 
 ## Philosophy
 
@@ -70,11 +84,11 @@ const pagerButtonClassName =
 export default function IntroductionPage() {
   return (
     <main className="min-w-0 flex-1">
-      <div className="mx-auto w-full min-w-0 max-w-[1600px] px-4 py-8 sm:px-6 sm:py-10 lg:px-10">
+      <div className={docsPageShellClassName}>
         <BreadcrumbJsonLdClient items={breadcrumbs} />
-        <div className="xl:grid xl:grid-cols-[minmax(0,1fr)_248px] xl:gap-4">
+        <div className={docsPageGridClassName}>
           <div className="min-w-0">
-            <article className="min-w-0 max-w-4xl">
+            <article className={docsPageArticleClassName}>
               <PageStagger delayChildren={0.04}>
                 <PageStaggerItem>
                   <header className="space-y-3">
@@ -82,12 +96,9 @@ export default function IntroductionPage() {
 
                     <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
                       <div className="max-w-3xl space-y-2">
-                        <h1 className="scroll-m-20 font-semibold text-3xl text-foreground tracking-tighter">
-                          Introduction
-                        </h1>
-                        <p className="max-w-3xl text-base text-muted-foreground">
-                          {SITE.NAME} is editable React components with minimal
-                          motion, built for clarity.
+                        <h1 className={docsPageTitleClassName}>Introduction</h1>
+                        <p className={docsPageDescriptionClassName}>
+                          {introductionTagline}
                         </p>
                       </div>
 
@@ -112,20 +123,20 @@ export default function IntroductionPage() {
                 </PageStaggerItem>
               </PageStagger>
 
-              <div className="mt-10 space-y-8 text-[15px] text-secondary leading-7">
+              <div className={docsPageBodyClassName}>
                 <PageReveal inView>
                   <p>
-                    {SITE.NAME} is a curated collection of reusable React
-                    components delivered through the shadcn registry workflow.
-                    The focus is minimalism: restrained motion and familiar
-                    interaction patterns that help teams ship interfaces users
-                    already know how to read.
+                    {SITE.NAME} is a curated collection of reusable UI delivered
+                    through the shadcn registry workflow. The focus is
+                    minimalism: restrained motion and familiar interaction
+                    patterns that help teams ship interfaces users already know
+                    how to read.
                   </p>
                 </PageReveal>
 
                 <PageReveal inView>
-                  <section className="scroll-mt-28 space-y-4" id="philosophy">
-                    <h2 className="text-2xl text-foreground tracking-tight">
+                  <section className={docsPageSectionClassName} id="philosophy">
+                    <h2 className={docsPageSectionTitleClassName}>
                       Philosophy
                     </h2>
                     <p>
@@ -146,7 +157,7 @@ export default function IntroductionPage() {
                       When teams evaluate a UI library, they usually ask
                       themselves a few practical questions:
                     </p>
-                    <ul className="list-disc space-y-2 pl-6 text-foreground/90 marker:text-muted-foreground">
+                    <ul className={docsPageListClassName}>
                       <li>
                         Will these components still fit our product after
                         customization?
@@ -176,17 +187,15 @@ export default function IntroductionPage() {
                 </PageReveal>
 
                 <PageReveal inView>
-                  <section className="scroll-mt-28 space-y-4" id="community">
-                    <h2 className="text-2xl text-foreground tracking-tight">
-                      Community
-                    </h2>
+                  <section className={docsPageSectionClassName} id="community">
+                    <h2 className={docsPageSectionTitleClassName}>Community</h2>
                     <p>
                       {SITE.NAME} is open source and meant to be adapted in real
                       products. If you want to follow updates, inspect the
                       source, or support the project, these are the best places
                       to start.
                     </p>
-                    <ul className="space-y-3">
+                    <ul className={docsPageLinkListClassName}>
                       <li>
                         <a
                           className="text-foreground underline underline-offset-4 transition-colors hover:text-muted-foreground"

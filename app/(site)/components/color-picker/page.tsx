@@ -54,7 +54,7 @@ export default function ColorPickerPage() {
         { label: "Color Picker" },
       ]}
       componentName="color-picker"
-      description="HSV panel with hue/alpha sliders, multi-format readouts, hex input, and EyeDropper."
+      description="HSV picker with sliders, format readouts, hex input, and eyedropper."
       details={details}
       editHref={`${LINK.GITHUB}/edit/main/app/(site)/components/color-picker/page.tsx`}
       headerActions={<SharedPrimitiveProviderSwitch />}

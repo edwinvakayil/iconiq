@@ -4,6 +4,17 @@ import Link from "next/link";
 
 import { DocsPageRail } from "@/components/docs/component-page-rail";
 import { DocsCopyActions } from "@/components/docs/docs-copy-actions";
+import {
+  docsPageArticleClassName,
+  docsPageBodyClassName,
+  docsPageDescriptionClassName,
+  docsPageGridClassName,
+  docsPageListClassName,
+  docsPageSectionClassName,
+  docsPageSectionTitleClassName,
+  docsPageShellClassName,
+  docsPageTitleClassName,
+} from "@/components/docs/docs-page-layout";
 import { DocsBreadcrumbs } from "@/components/docs/page-shell";
 import { McpAutoConfigTabs } from "@/components/mcp-auto-config-tabs";
 import { McpManualConfigTabs } from "@/components/mcp-manual-config-tabs";
@@ -17,10 +28,11 @@ import { LINK, SITE } from "@/constants";
 import { BreadcrumbJsonLdClient } from "@/seo/breadcrumb-json-ld-client";
 import { createMetadata } from "@/seo/metadata";
 
+const mcpDescription = `Connect ${SITE.NAME} to shadcn MCP so AI tools can add registry components to your codebase.`;
+
 export const metadata: Metadata = createMetadata({
   title: `MCP | ${SITE.NAME}`,
-  description:
-    "Set up shadcn MCP for Iconiq so AI-powered coding tools can discover the registry, add components by name, and keep the generated files inside your project.",
+  description: mcpDescription,
   canonical: "/mcp",
   ogTitle: `${SITE.NAME} MCP Setup`,
   keywords: [
@@ -62,7 +74,7 @@ const officialDocsHref = "https://ui.shadcn.com/docs/mcp";
 
 const pageCopyContent = `# MCP
 
-Connect Iconiq to shadcn MCP so AI coding tools can discover the registry and add components directly into your project.
+${mcpDescription}
 
 ## Automatic configuration
 
@@ -101,11 +113,11 @@ ${registryConfig}
 export default function McpPage() {
   return (
     <main className="min-w-0 flex-1">
-      <div className="mx-auto w-full min-w-0 max-w-[1600px] px-4 py-8 sm:px-6 sm:py-10 lg:px-10">
+      <div className={docsPageShellClassName}>
         <BreadcrumbJsonLdClient items={breadcrumbs} />
-        <div className="xl:grid xl:grid-cols-[minmax(0,1fr)_248px] xl:gap-4">
+        <div className={docsPageGridClassName}>
           <div className="min-w-0">
-            <article className="min-w-0 max-w-4xl">
+            <article className={docsPageArticleClassName}>
               <PageStagger delayChildren={0.04}>
                 <PageStaggerItem>
                   <header className="space-y-3">
@@ -113,13 +125,9 @@ export default function McpPage() {
 
                     <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
                       <div className="max-w-3xl space-y-2">
-                        <h1 className="scroll-m-20 font-semibold text-3xl text-foreground tracking-tighter">
-                          MCP
-                        </h1>
-                        <p className="max-w-3xl text-base text-muted-foreground">
-                          Connect {SITE.NAME} to shadcn MCP so AI coding tools
-                          can discover the registry, add components by name, and
-                          keep everything editable in your own codebase.
+                        <h1 className={docsPageTitleClassName}>MCP</h1>
+                        <p className={docsPageDescriptionClassName}>
+                          {mcpDescription}
                         </p>
                       </div>
 
@@ -152,7 +160,7 @@ export default function McpPage() {
                 </PageStaggerItem>
               </PageStagger>
 
-              <div className="mt-10 space-y-8 text-[15px] text-secondary leading-7">
+              <div className={docsPageBodyClassName}>
                 <PageReveal inView>
                   <p>
                     If you work with Cursor, Claude Code, or another
@@ -179,10 +187,10 @@ export default function McpPage() {
 
                 <PageReveal inView>
                   <section
-                    className="scroll-mt-28 space-y-5"
+                    className={docsPageSectionClassName}
                     id="automatic-configuration"
                   >
-                    <h2 className="text-2xl text-foreground tracking-tight">
+                    <h2 className={docsPageSectionTitleClassName}>
                       Automatic configuration
                     </h2>
                     <p>
@@ -193,7 +201,7 @@ export default function McpPage() {
                       supports.
                     </p>
                     <McpAutoConfigTabs />
-                    <ul className="list-disc space-y-2 pl-6 text-foreground/90 marker:text-muted-foreground">
+                    <ul className={docsPageListClassName}>
                       <li>
                         Run the command from the root of the app where your
                         assistant should install Iconiq components.
@@ -212,10 +220,10 @@ export default function McpPage() {
 
                 <PageReveal inView>
                   <section
-                    className="scroll-mt-28 space-y-5"
+                    className={docsPageSectionClassName}
                     id="manual-configuration"
                   >
-                    <h2 className="text-2xl text-foreground tracking-tight">
+                    <h2 className={docsPageSectionTitleClassName}>
                       Manual configuration
                     </h2>
                     <p>
@@ -230,10 +238,10 @@ export default function McpPage() {
 
                 <PageReveal inView>
                   <section
-                    className="scroll-mt-28 space-y-5"
+                    className={docsPageSectionClassName}
                     id="registry-configuration"
                   >
-                    <h2 className="text-2xl text-foreground tracking-tight">
+                    <h2 className={docsPageSectionTitleClassName}>
                       Registry configuration
                     </h2>
                     <p>
@@ -255,7 +263,7 @@ export default function McpPage() {
                         </code>
                       </pre>
                     </div>
-                    <ul className="list-disc space-y-2 pl-6 text-foreground/90 marker:text-muted-foreground">
+                    <ul className={docsPageListClassName}>
                       <li>
                         Keep any registries you already use and add{" "}
                         <code>@iconiq</code> alongside them.
@@ -275,10 +283,10 @@ export default function McpPage() {
 
                 <PageReveal inView>
                   <section
-                    className="scroll-mt-28 space-y-5"
+                    className={docsPageSectionClassName}
                     id="usage-examples"
                   >
-                    <h2 className="text-2xl text-foreground tracking-tight">
+                    <h2 className={docsPageSectionTitleClassName}>
                       Example prompts
                     </h2>
                     <p>
@@ -309,17 +317,17 @@ export default function McpPage() {
 
                 <PageReveal inView>
                   <section
-                    className="scroll-mt-28 space-y-5"
+                    className={docsPageSectionClassName}
                     id="troubleshooting"
                   >
-                    <h2 className="text-2xl text-foreground tracking-tight">
+                    <h2 className={docsPageSectionTitleClassName}>
                       Troubleshooting
                     </h2>
                     <p>
                       If MCP is not responding, the fix is usually one of a few
                       boring but important checks.
                     </p>
-                    <ul className="list-disc space-y-2 pl-6 text-foreground/90 marker:text-muted-foreground">
+                    <ul className={docsPageListClassName}>
                       <li>
                         Confirm the MCP server is enabled in your editor and
                         restart the client after configuration changes.

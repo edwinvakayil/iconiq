@@ -29,7 +29,7 @@ export default function OriginButtonPage() {
         { label: "Origin Button" },
       ]}
       componentName="origin-button"
-      description="A rounded action button with a pointer-origin fill. On hover or keyboard focus, foreground color spreads from the entry point across the surface while the label inverts for contrast."
+      description="Rounded button with pointer-origin fill on hover—and inverted label."
       details={originButtonApiDetails}
       preview={<OriginButtonPreview />}
       previewClassName="min-h-[16rem] overflow-visible"

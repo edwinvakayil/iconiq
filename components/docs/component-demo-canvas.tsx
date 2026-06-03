@@ -131,7 +131,7 @@ export function ComponentDemoCanvas({
           <TabsList className="relative isolate h-11 items-stretch gap-0 rounded-none border-0 bg-transparent p-0 shadow-none">
             {demoTabs.map((tab) => (
               <TabsTrigger
-                className="relative z-10 h-full cursor-pointer overflow-visible rounded-none px-5 py-2 text-center font-medium text-[15px] text-muted-foreground normal-case tracking-[-0.02em] transition-colors duration-200 ease-[cubic-bezier(0.32,0.72,0,1)] hover:text-foreground data-[active]:bg-transparent data-[active]:text-foreground data-[active]:shadow-none dark:text-muted-foreground dark:data-[active]:bg-transparent dark:data-[active]:text-foreground dark:data-[active]:shadow-none"
+                className="relative z-10 h-full cursor-pointer overflow-visible rounded-none px-5 py-2 text-center font-medium text-[17px] text-muted-foreground normal-case tracking-[-0.02em] transition-colors duration-200 ease-[cubic-bezier(0.32,0.72,0,1)] hover:text-foreground data-[active]:bg-transparent data-[active]:text-foreground data-[active]:shadow-none dark:text-muted-foreground dark:data-[active]:bg-transparent dark:data-[active]:text-foreground dark:data-[active]:shadow-none"
                 data-demo-tab={tab.value}
                 key={tab.value}
                 value={tab.value}
@@ -181,7 +181,7 @@ export function ComponentDemoCanvas({
       <TabsContent className="mt-0" value="preview">
         <div
           className={cn(
-            "not-prose flex h-full min-h-64 w-full items-center justify-center overflow-hidden rounded-sm border border-border/80 p-6 md:min-h-80 md:p-10",
+            "not-prose flex h-full min-h-64 w-full items-center justify-center overflow-hidden rounded-2xl border-[0.5px] border-border/85 p-6 shadow-[0_4px_16px_-10px_rgba(15,23,42,0.1)] md:min-h-80 md:p-10 dark:shadow-[0_4px_16px_-10px_rgba(0,0,0,0.32)]",
             "bg-background dark:bg-[#0F0F0F]",
             previewClassName
           )}

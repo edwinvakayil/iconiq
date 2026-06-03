@@ -205,7 +205,7 @@ export function DocsCodeSnippet({
     <div className={cn("relative", className)} data-code-container="true">
       <pre
         className={cn(
-          "overflow-x-auto rounded-sm border border-border/80 bg-background font-mono text-sm leading-6",
+          "overflow-x-auto rounded-2xl border-[0.5px] border-border/85 bg-background font-mono text-[15px] leading-6 shadow-[0_4px_16px_-10px_rgba(15,23,42,0.1)] dark:shadow-[0_4px_16px_-10px_rgba(0,0,0,0.32)]",
           maxHeightClassName
         )}
       >

@@ -220,7 +220,7 @@ export default function RadixBaseToggleGroupPage() {
     <ComponentDocsPage
       breadcrumbs={breadcrumbs}
       componentName={provider.componentName}
-      description="Segmented toggle group for switching one or more related states at once."
+      description="Segmented toggles for single or multi-select states."
       details={details}
       editHref={`${LINK.GITHUB}/edit/main/app/(site)/components/toggle-group/page.tsx`}
       headerActions={
