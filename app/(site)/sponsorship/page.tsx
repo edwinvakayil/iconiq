@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+
+import { docsPageShellClassName } from "@/components/docs/docs-page-layout";
 import {
   PageReveal,
   PageStagger,
@@ -28,7 +30,7 @@ export default function SponsorshipPage() {
   return (
     <main className="min-w-0 flex-1">
       <SponsorshipTracker />
-      <div className="mx-auto w-full min-w-0 max-w-[1600px] px-4 py-8 sm:px-6 sm:py-10 lg:px-10">
+      <div className={docsPageShellClassName}>
         <article className="w-full min-w-0 max-w-none">
           <PageStagger delayChildren={0.04}>
             <PageStaggerItem>

@@ -1,6 +1,6 @@
 /** Shared shell layout + typography for docs-style pages. */
 export const docsPageShellClassName =
-  "mx-auto w-full min-w-0 max-w-[1600px] py-8 pr-4 pl-8 sm:py-10 sm:pr-5 sm:pl-10 md:pr-6 md:pl-12 lg:pr-8 lg:pl-16 xl:pr-10 xl:pl-20 2xl:pl-24";
+  "mx-auto w-full min-w-0 max-w-[1600px] px-4 py-8 sm:py-10 md:px-6 lg:pl-14 lg:pr-8 xl:pl-18 xl:pr-10 2xl:pl-22 2xl:pr-10";
 
 export const docsPageGridClassName =
   "xl:grid xl:grid-cols-[minmax(0,1fr)_272px] xl:gap-4";
