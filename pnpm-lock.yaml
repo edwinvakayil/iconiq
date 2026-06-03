@@ -110,8 +110,8 @@ importers:
         specifier: ^2.8.9
         version: 2.8.9(next@16.2.7(@opentelemetry/api@1.9.1)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.6(react@19.2.7))(react@19.2.7))(react@19.2.7)
       posthog-js:
-        specifier: ^1.376.0
-        version: 1.376.0
+        specifier: ^1.379.0
+        version: 1.379.0
       react:
         specifier: 19.2.7
         version: 19.2.7
@@ -1236,11 +1236,11 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@posthog/core@1.29.9':
-    resolution: {integrity: sha512-DjvuIyBZ2Z/gBhtZlITlM2D8PlnMsHSQ1D78dbUYoVsgGguvanpJTobZObjLlFkybyvfZFYkpoJkFNI/2Pw4IQ==}
+  '@posthog/core@1.30.3':
+    resolution: {integrity: sha512-mGIN4Du1a8fKxV5WfnEtogq3VOQLa4PfWMUg5uMIMDD+fp5bhTA4QG4oYAea4vBTZ1ZOanQbjXcX4b5k2X93Qw==}
 
-  '@posthog/types@1.376.0':
-    resolution: {integrity: sha512-gbFfxCuZDs/D4QZMwdE+smD1jsuqgGpS6yKGHZZ19foxMy8RYHsU1E47iG1b88n/uN02fAabLibVwuxLtq8juw==}
+  '@posthog/types@1.379.0':
+    resolution: {integrity: sha512-QJLzyV22iZKy5eEXKn9IB1swSVo2JigIawebBha+BmsePsY3XA0HAcq2B+D8Km5BHnbE+SGm5aHxFG3DlVE1yg==}
 
   '@protobufjs/aspromise@1.1.2':
     resolution: {integrity: sha512-j+gKExEuLmKwvz3OgROXtrJ2UG2x8Ch2YZUxahh+s1F2HZ+wAceUNLkvy6zKCPVRkU++ZWQrdxsUeQXmcg4uoQ==}
@@ -2553,8 +2553,8 @@ packages:
   detect-node-es@1.1.0:
     resolution: {integrity: sha512-ypdmJU/TbBby2Dxibuv7ZLW3Bs1QEmM7nHjEANfohJLvE0XVujisn1qPJcZxg+qDucsr+bP6fLD1rPS3AhJ7EQ==}
 
-  dompurify@3.4.5:
-    resolution: {integrity: sha512-OrwIBKsdNSVEeubdJ1HBv/wNENRM9ytAVCv7YXt//A3vPdVMNuACRqK9mXCGCBW2ln7BT/A4X0jXHo2Gu89miA==}
+  dompurify@3.4.8:
+    resolution: {integrity: sha512-yb1cEmaOum7wFvOCSQxyfgVlv5D47Rc30iZWoMpbDIWTnJ6grDDQyu2KFJzB2k7u0pMuJcQ1zphH//fFnw2tjQ==}
 
   dunder-proto@1.0.1:
     resolution: {integrity: sha512-KIN/nDJBQRcXw0MLVhZE9iQHmG68qAVIBg9CqmUYjmQIhgij9U5MFvrqkUL5FbtyyzZuOeOt0zdeRe4UY7ct+A==}
@@ -3276,8 +3276,8 @@ packages:
     resolution: {integrity: sha512-3Ybi1tAuwAP9s0r1UQ2J4n5Y0G05bJkpUIO0/bI9MhwmD70S5aTWbXGBwxHrelT+XM1k6dM0pk+SwNkpTRN7Pg==}
     engines: {node: ^10 || ^12 || >=14}
 
-  posthog-js@1.376.0:
-    resolution: {integrity: sha512-YGfQ6gSmqmEh287PHjXRDJ9zML3Su1UIt1+xjRy7Yk6yW43Sc7sFK3CpCkLchCGhIA4x6VaqK+LaqB+7+MCo7A==}
+  posthog-js@1.379.0:
+    resolution: {integrity: sha512-cSESmnPvIaY/pyhV5a6pF00q8tqmXlJBQWX9T7dbBh9TXhVM5oQVi7g77vWGD9G8wq4iNF5ZOxqeAK9dpOSOYg==}
 
   preact@10.29.2:
     resolution: {integrity: sha512-7tNmwg/7mzzAoB/8kSg6Hl37JraAZw3Z3A0JSY7VXlZwo82Xn0G7wKbNNs2qoF4ZEEsQGTwDAroNdqKs1ofJxQ==}
@@ -3289,8 +3289,8 @@ packages:
   promisepipe@3.0.0:
     resolution: {integrity: sha512-V6TbZDJ/ZswevgkDNpGt/YqNCiZP9ASfgU+p83uJE6NrGtvSGoOcHLiDCqkMs2+yg7F5qHdLV8d0aS8O26G/KA==}
 
-  protobufjs@7.6.1:
-    resolution: {integrity: sha512-4K0myLaWL5EteuSAro91EGFgcfVgxb64Jx+7oDAY6GOkXD4M69yuSEljNcInGVCA5sOPxmZ/EqDLj2x0Q0+Ygg==}
+  protobufjs@7.6.2:
+    resolution: {integrity: sha512-N9EiLovGEQOJSPF26Ij7qUGvahfEnq0eeYZ02aigIedkmz1qZSwjnP9SBITHJuF/6MYbIW4HDN8zdYjsjqJKXQ==}
     engines: {node: '>=12.0.0'}
 
   proxy-agent@6.4.0:
@@ -3716,8 +3716,8 @@ packages:
   web-vitals@0.2.4:
     resolution: {integrity: sha512-6BjspCO9VriYy12z356nL6JBS0GYeEcA457YyRzD+dD6XYCQ75NKhcOHUMHentOE7OcVCIXXDvOm0jKFfQG2Gg==}
 
-  web-vitals@5.2.0:
-    resolution: {integrity: sha512-i2z98bEmaCqSDiHEDu+gHl/dmR4Q+TxFmG3/13KkMO+o8UxQzCqWaDRCiLgEa41nlO4VpXSI0ASa1xWmO9sBlA==}
+  web-vitals@5.3.0:
+    resolution: {integrity: sha512-q6LWsLatGYZp5VGBIOvbTj6JBV2nOmC8KvWztXBmwJcfFAzhwKwbOxhUH306XY3CcaZDUlSmSuNPBsCn0bFu+g==}
 
   webidl-conversions@3.0.1:
     resolution: {integrity: sha512-2JAn3z8AR6rjK8Sm8orRC0h/bcl/DqL7tRPdGZ4I1CjdF+EaMLmYxBHyXuKL849eucPFhvBoxMsflfOb8kxaeQ==}
@@ -4292,7 +4292,7 @@ snapshots:
       '@opentelemetry/sdk-logs': 0.208.0(@opentelemetry/api@1.9.1)
       '@opentelemetry/sdk-metrics': 2.2.0(@opentelemetry/api@1.9.1)
       '@opentelemetry/sdk-trace-base': 2.2.0(@opentelemetry/api@1.9.1)
-      protobufjs: 7.6.1
+      protobufjs: 7.6.2
 
   '@opentelemetry/resources@2.2.0(@opentelemetry/api@1.9.1)':
     dependencies:
@@ -4452,11 +4452,11 @@ snapshots:
   '@oxlint/binding-win32-x64-msvc@1.47.0':
     optional: true
 
-  '@posthog/core@1.29.9':
+  '@posthog/core@1.30.3':
     dependencies:
-      '@posthog/types': 1.376.0
+      '@posthog/types': 1.379.0
 
-  '@posthog/types@1.376.0': {}
+  '@posthog/types@1.379.0': {}
 
   '@protobufjs/aspromise@1.1.2': {}
 
@@ -5838,7 +5838,7 @@ snapshots:
 
   detect-node-es@1.1.0: {}
 
-  dompurify@3.4.5:
+  dompurify@3.4.8:
     optionalDependencies:
       '@types/trusted-types': 2.0.7
 
@@ -6567,21 +6567,21 @@ snapshots:
       picocolors: 1.1.1
       source-map-js: 1.2.1
 
-  posthog-js@1.376.0:
+  posthog-js@1.379.0:
     dependencies:
       '@opentelemetry/api': 1.9.1
       '@opentelemetry/api-logs': 0.208.0
       '@opentelemetry/exporter-logs-otlp-http': 0.208.0(@opentelemetry/api@1.9.1)
       '@opentelemetry/resources': 2.7.1(@opentelemetry/api@1.9.1)
       '@opentelemetry/sdk-logs': 0.208.0(@opentelemetry/api@1.9.1)
-      '@posthog/core': 1.29.9
-      '@posthog/types': 1.376.0
+      '@posthog/core': 1.30.3
+      '@posthog/types': 1.379.0
       core-js: 3.49.0
-      dompurify: 3.4.5
+      dompurify: 3.4.8
       fflate: 0.4.8
       preact: 10.29.2
       query-selector-shadow-dom: 1.0.1
-      web-vitals: 5.2.0
+      web-vitals: 5.3.0
 
   preact@10.29.2: {}
 
@@ -6591,7 +6591,7 @@ snapshots:
 
   promisepipe@3.0.0: {}
 
-  protobufjs@7.6.1:
+  protobufjs@7.6.2:
     dependencies:
       '@protobufjs/aspromise': 1.1.2
       '@protobufjs/base64': 1.1.2
@@ -7090,7 +7090,7 @@ snapshots:
 
   web-vitals@0.2.4: {}
 
-  web-vitals@5.2.0: {}
+  web-vitals@5.3.0: {}
 
   webidl-conversions@3.0.1: {}
 
