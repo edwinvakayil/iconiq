@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 
+import { SharedPrimitiveProviderSwitch } from "@/app/(site)/components/_components/provider-switch";
 import { carouselApiDetails } from "@/components/docs/component-api";
 import { ComponentDocsPage } from "@/components/docs/page-shell";
 import { LINK } from "@/constants";
@@ -100,6 +101,7 @@ export default function CarouselPage() {
       description="Embla-powered carousel with aspect-ratio presets and horizontal or vertical slides."
       details={carouselApiDetails}
       editHref={`${LINK.GITHUB}/edit/main/app/(site)/components/carousel/page.tsx`}
+      headerActions={<SharedPrimitiveProviderSwitch />}
       pageUrl="/components/carousel"
       preview={
         <CarouselPreview
