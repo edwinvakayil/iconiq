@@ -30,11 +30,12 @@ const contextMenuPanelThumbClassName =
 function ContextMenuPanelScroll({ children }: { children: React.ReactNode }) {
   return (
     <ScrollAreaPrimitive.Root
-      className="relative h-full max-h-full overflow-hidden"
+      className="relative overflow-hidden"
       scrollHideDelay={100}
+      style={{ maxHeight: "calc(100vh - 32px)" }}
       type="hover"
     >
-      <ScrollAreaPrimitive.Viewport className="h-full max-h-full min-h-0 overscroll-contain outline-none">
+      <ScrollAreaPrimitive.Viewport className="max-h-[inherit] min-h-0 overscroll-contain outline-none">
         <div className="overflow-x-hidden p-1.5">{children}</div>
       </ScrollAreaPrimitive.Viewport>
       <ScrollAreaPrimitive.Scrollbar

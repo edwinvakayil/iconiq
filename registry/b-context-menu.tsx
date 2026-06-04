@@ -193,8 +193,11 @@ function ContextMenuPanelScroll({
   onPointerLeave?: () => void;
 }) {
   return (
-    <ScrollAreaPrimitive.Root className="relative h-full max-h-full overflow-hidden">
-      <ScrollAreaPrimitive.Viewport className="h-full max-h-full min-h-0 overscroll-contain outline-none">
+    <ScrollAreaPrimitive.Root
+      className="relative overflow-hidden"
+      style={{ maxHeight: "calc(100vh - 32px)" }}
+    >
+      <ScrollAreaPrimitive.Viewport className="max-h-[inherit] min-h-0 overscroll-contain outline-none">
         <div
           className="overflow-x-hidden p-1.5"
           onPointerLeave={onPointerLeave}

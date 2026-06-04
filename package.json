@@ -12,6 +12,7 @@
   "packageManager": "pnpm@10.30.3",
   "scripts": {
     "dev": "next dev",
+    "dev:clean": "rm -rf .next && next dev",
     "prebuild": "node scripts/download-fonts.js",
     "build": "next build",
     "start": "next start",

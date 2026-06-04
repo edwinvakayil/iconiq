@@ -280,6 +280,7 @@ function ReducedMotionSection({
           <ReducedMotionOverride reducedMotion>{preview}</ReducedMotionOverride>
         }
         previewClassName={previewClassName}
+        tabsId={`docs-demo-rm-${componentName}`}
       />
     </div>
   );

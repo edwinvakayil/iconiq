@@ -1,7 +1,7 @@
 "use client";
 
 import { Check, ChevronDown, Copy, ExternalLink } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { OpenInV0Button } from "@/components/docs/open-in-v0-button";
 import { SITE } from "@/constants";
@@ -34,13 +34,16 @@ export function PageCopyActions({
 }) {
   const [copied, setCopied] = useState(false);
   const [open, setOpen] = useState(false);
+  const [menuMounted, setMenuMounted] = useState(false);
+  const menuContentId = `docs-page-actions-${componentName}`;
+
+  useEffect(() => {
+    setMenuMounted(true);
+  }, []);
+
   const resolvedPageUrl = useMemo(() => {
     if (pageUrl) {
       return pageUrl.startsWith("http") ? pageUrl : `${SITE.URL}${pageUrl}`;
-    }
-
-    if (typeof window !== "undefined") {
-      return `${SITE.URL}${window.location.pathname}`;
     }
 
     return SITE.URL;
@@ -115,71 +118,86 @@ export function PageCopyActions({
         </div>
       </button>
 
-      <Popover onOpenChange={setOpen} open={open}>
-        <PopoverTrigger asChild>
-          <button
-            aria-expanded={open}
-            aria-haspopup="menu"
-            aria-label="More page actions"
-            className="flex size-8 shrink-0 items-center justify-center rounded-none rounded-r-md bg-transparent text-muted-foreground shadow-none transition-colors hover:bg-muted/55 hover:text-foreground focus-visible:z-10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 dark:bg-[var(--secondary-bg)] dark:hover:bg-[#1d1d1b]"
-            type="button"
-          >
-            <ChevronDown
-              className={cn(
-                "size-4 transition-transform",
-                open && "rotate-180"
-              )}
-            />
-          </button>
-        </PopoverTrigger>
-        <PopoverContent
-          align="end"
-          className="z-20 mt-2 w-48 rounded-2xl border border-border/80 bg-background p-1.5 shadow-[0_20px_60px_rgba(15,23,42,0.12)] dark:bg-neutral-950"
-          open={open}
-          side="bottom"
-          sideOffset={8}
-        >
-          {menuItems.map((item) => (
-            <a
-              className="flex items-center justify-between whitespace-nowrap rounded-xl px-3 py-2 text-[14px] text-foreground transition-colors hover:bg-muted/70"
-              href={item.href}
-              key={item.label}
-              onClick={() => {
-                if (item.label === "Ask ChatGPT") {
-                  capturePostHogEvent(POSTHOG_EVENTS.DOCS_ASK_CHATGPT_CLICKED, {
-                    component_slug: componentName,
-                    section: docsSection,
-                    page_url: resolvedPageUrl,
-                    title,
-                    source: "component_header",
-                  });
-                } else if (item.label === "View registry JSON") {
-                  capturePostHogEvent(
-                    POSTHOG_EVENTS.DOCS_REGISTRY_JSON_VIEWED,
-                    {
-                      component_slug: componentName,
-                      section: docsSection,
-                      registry_url: registryUrl,
-                      source: "component_header",
-                    }
-                  );
-                }
-                setOpen(false);
-              }}
-              rel="noreferrer"
-              target="_blank"
+      {menuMounted ? (
+        <Popover onOpenChange={setOpen} open={open}>
+          <PopoverTrigger asChild>
+            <button
+              aria-expanded={open}
+              aria-haspopup="menu"
+              aria-label="More page actions"
+              className="flex size-8 shrink-0 items-center justify-center rounded-none rounded-r-md bg-transparent text-muted-foreground shadow-none transition-colors hover:bg-muted/55 hover:text-foreground focus-visible:z-10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 dark:bg-[var(--secondary-bg)] dark:hover:bg-[#1d1d1b]"
+              type="button"
             >
-              <span>{item.label}</span>
-              <ExternalLink className="size-3.5 text-muted-foreground" />
-            </a>
-          ))}
-          <OpenInV0Button
-            name={componentName}
-            pageContent={v0PageCode}
-            variant="menu"
-          />
-        </PopoverContent>
-      </Popover>
+              <ChevronDown
+                className={cn(
+                  "size-4 transition-transform",
+                  open && "rotate-180"
+                )}
+              />
+            </button>
+          </PopoverTrigger>
+          <PopoverContent
+            align="end"
+            className="z-20 mt-2 w-48 rounded-2xl border border-border/80 bg-background p-1.5 shadow-[0_20px_60px_rgba(15,23,42,0.12)] dark:bg-neutral-950"
+            id={menuContentId}
+            open={open}
+            side="bottom"
+            sideOffset={8}
+          >
+            {menuItems.map((item) => (
+              <a
+                className="flex items-center justify-between whitespace-nowrap rounded-xl px-3 py-2 text-[14px] text-foreground transition-colors hover:bg-muted/70"
+                href={item.href}
+                key={item.label}
+                onClick={() => {
+                  if (item.label === "Ask ChatGPT") {
+                    capturePostHogEvent(
+                      POSTHOG_EVENTS.DOCS_ASK_CHATGPT_CLICKED,
+                      {
+                        component_slug: componentName,
+                        section: docsSection,
+                        page_url: resolvedPageUrl,
+                        title,
+                        source: "component_header",
+                      }
+                    );
+                  } else if (item.label === "View registry JSON") {
+                    capturePostHogEvent(
+                      POSTHOG_EVENTS.DOCS_REGISTRY_JSON_VIEWED,
+                      {
+                        component_slug: componentName,
+                        section: docsSection,
+                        registry_url: registryUrl,
+                        source: "component_header",
+                      }
+                    );
+                  }
+                  setOpen(false);
+                }}
+                rel="noreferrer"
+                target="_blank"
+              >
+                <span>{item.label}</span>
+                <ExternalLink className="size-3.5 text-muted-foreground" />
+              </a>
+            ))}
+            <OpenInV0Button
+              name={componentName}
+              pageContent={v0PageCode}
+              variant="menu"
+            />
+          </PopoverContent>
+        </Popover>
+      ) : (
+        <button
+          aria-haspopup="menu"
+          aria-label="More page actions"
+          className="flex size-8 shrink-0 items-center justify-center rounded-none rounded-r-md bg-transparent text-muted-foreground shadow-none transition-colors hover:bg-muted/55 hover:text-foreground focus-visible:z-10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 dark:bg-[var(--secondary-bg)] dark:hover:bg-[#1d1d1b]"
+          type="button"
+        >
+          <ChevronDown className="size-4" />
+        </button>
+      )}
     </div>
   );
 }
