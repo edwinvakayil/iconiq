@@ -23,6 +23,7 @@ export const SITE_SECTIONS = [
       { label: "Button", href: "/components/button" },
       { label: "Button Group", href: "/components/button-group" },
       { label: "Card", href: "/components/card" },
+      { label: "Carousel", href: "/components/carousel" },
       { label: "Calendar", href: "/components/calendar" },
       { label: "Charts", href: "/components/charts" },
       { label: "Checkbox", href: "/components/checkbox" },

@@ -7,6 +7,7 @@ import {
   badgePreviewCode,
   buildV0Page,
   cardPreviewCode,
+  carouselPreviewCode,
   chartsPreviewCode,
   ensureV0Page,
   getComponentV0Page,
@@ -108,6 +109,7 @@ export function AccordionPreview() {
   charts: buildV0Page(chartsPreviewCode),
   infiniteribbon: buildV0Page(infiniteRibbonPreviewCode),
   "theme-toggle": buildV0Page(themeTogglePreviewCode),
+  carousel: buildV0Page(carouselPreviewCode),
   "button-group": buildV0Page(`"use client";
 
 import { MoreHorizontalIcon } from "lucide-react";

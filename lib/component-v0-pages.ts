@@ -754,6 +754,79 @@ export function SkeletonPreview() {
   );
 }`;
 
+export const carouselPreviewSlides = [
+  "Ship interfaces that feel polished from the first slide.",
+  "Motion, spacing, and type that stay in sync.",
+  "Drop in components—skip the layout guesswork.",
+  "Scroll stories without losing your rhythm.",
+  "Build faster. Keep the craft.",
+] as const;
+
+const carouselPreviewImports = `import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";`;
+
+const carouselPreviewSlidesCode = `const slides = [
+  ${carouselPreviewSlides.map((slide) => JSON.stringify(slide)).join(",\n  ")},
+] as const;`;
+
+function buildCarouselDemoMarkup(aspectRatio: string) {
+  return `    <Carousel aspectRatio="${aspectRatio}" className="w-full max-w-md sm:max-w-lg">
+      <CarouselContent>
+        {slides.map((slide) => (
+          <CarouselItem key={slide}>
+            <div className="flex h-full items-center justify-center p-1">
+              <p className="px-6 text-center font-light text-lg leading-snug text-balance text-muted-foreground">
+                {slide}
+              </p>
+            </div>
+          </CarouselItem>
+        ))}
+      </CarouselContent>
+      <CarouselPrevious />
+      <CarouselNext />
+    </Carousel>`;
+}
+
+export function buildCarouselPreviewCode(
+  aspectRatio = "video",
+  variant: "usage" | "v0" = "usage"
+) {
+  const demo = buildCarouselDemoMarkup(aspectRatio);
+
+  if (variant === "v0") {
+    return `"use client";
+
+${carouselPreviewImports}
+
+export default function Page() {
+${carouselPreviewSlidesCode}
+  return (
+    <div className="flex min-h-svh items-center justify-center bg-background p-8">
+${demo}
+    </div>
+  );
+}`;
+  }
+
+  return `"use client";
+
+${carouselPreviewImports}
+
+export function CarouselPreview() {
+${carouselPreviewSlidesCode}
+  return (
+${demo}
+  );
+}`;
+}
+
+export const carouselPreviewCode = buildCarouselPreviewCode("video", "v0");
+
 export const themeTogglePreviewCode = `"use client";
 
 import { ThemeToggle } from "@/components/ui/theme-toggle";
@@ -795,6 +868,7 @@ const COMPONENT_PREVIEW_OVERRIDES: Record<string, string> = {
   card: cardPreviewCode,
   infiniteribbon: infiniteRibbonPreviewCode,
   "theme-toggle": themeTogglePreviewCode,
+  carousel: carouselPreviewCode,
   skeleton: skeletonPreviewCode,
 };
 

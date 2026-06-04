@@ -387,6 +387,12 @@ const REGISTRY_UI_META: Record<
       "Animated light/dark switch with a sliding knob, sun and moon icons, and bouncy track transitions. Toggles the document dark class.",
     dependencies: ["lucide-react"],
   },
+  carousel: {
+    title: "Carousel",
+    description:
+      "Embla-powered carousel with aspect-ratio presets and horizontal or vertical slides. Built with embla-carousel-react and Lucide.",
+    dependencies: ["embla-carousel-react", "lucide-react"],
+  },
   "r-accordion": {
     title: "Accordion (Radix UI)",
     description:

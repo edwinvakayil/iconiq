@@ -106,6 +106,8 @@ const componentSummaries: Record<string, string> = {
     "Searchable FAQ accordion that filters items, auto-expands matches, and highlights query text.",
   "/special-one/theme-toggle":
     "Animated light/dark pill toggle with a sliding knob, sun and moon icons, and springy color transitions.",
+  "/components/carousel":
+    "Embla-powered carousel with aspect-ratio presets and horizontal or vertical slides.",
   "/foundation/typography":
     "Single typography primitive for headings, labels, paragraphs, subheadings, and documentation copy.",
   "/texts/dia-text":
@@ -138,6 +140,7 @@ const extraComponentKeywordsBySlug: Record<string, string[]> = {
     "scrolling text",
     "announcement bar",
   ],
+  carousel: ["slider", "slideshow", "embla", "slides", "gallery"],
   progress: ["progress bar", "loading bar", "meter"],
   "radio-group": ["radio group", "radiogroup"],
   radiogroup: ["radio group", "radiogroup"],

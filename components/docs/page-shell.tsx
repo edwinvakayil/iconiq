@@ -124,6 +124,7 @@ const REDUCED_MOTION_DOCS_EXCLUDED = new Set([
   "origin-button",
   "faq-pro",
   "theme-toggle",
+  "carousel",
 ]);
 
 const REDUCED_MOTION_DETAIL: DetailItem = {

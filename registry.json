@@ -504,6 +504,21 @@
       ]
     },
     {
+      "name": "carousel",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": ["embla-carousel-react", "lucide-react"],
+      "devDependencies": [],
+      "title": "Carousel",
+      "description": "Embla-powered carousel with aspect-ratio presets and horizontal or vertical slides. Built with embla-carousel-react and Lucide.",
+      "files": [
+        {
+          "path": "carousel.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "charts",
       "type": "registry:ui",
       "registryDependencies": [],
