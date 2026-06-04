@@ -1,5 +1,6 @@
 "use client";
 
+import { ScrollArea as ScrollAreaPrimitive } from "@base-ui/react/scroll-area";
 import { Check, ChevronDown } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import {
@@ -30,6 +31,13 @@ const componentThemeClassName =
   "[--ic-background:#ffffff] [--ic-foreground:#111111] [--ic-primary:#111111] [--ic-secondary:#646b75] [--ic-surface-border:#e9edf2] [--ic-border:#e3e7ec] [--ic-card:#ffffff] [--ic-card-foreground:#111111] [--ic-muted:#f5f7fa] [--ic-muted-foreground:#6d7480] [--ic-accent:#f3f5f8] [--color-accent:var(--ic-accent)] [--color-accent-foreground:var(--ic-accent-foreground)] [--ic-accent-foreground:#111111] [--ic-input:#e3e7ec] [--ic-ring:rgba(17,17,17,0.16)] [--ic-destructive:#dc2626] [--ic-paper:#fcfcfd] [--ic-popover-foreground:#111111] [--ic-brand:#0ea5e9] [--ic-brand-soft:#bae6fd] [--ic-shadow-soft:0_18px_38px_-24px_rgba(15,23,42,0.35)] [--ic-chart-1:oklch(0.52_0.19_254)] [--ic-chart-2:oklch(0.74_0.11_232)] [--ic-chart-3:oklch(0.42_0.16_262)] [--ic-chart-4:oklch(0.84_0.07_228)] [--ic-chart-5:oklch(0.62_0.14_240)] [--color-background:var(--ic-background)] [--color-foreground:var(--ic-foreground)] [--color-primary:var(--ic-primary)] [--color-secondary:var(--ic-secondary)] [--color-border:var(--ic-border)] [--color-card:var(--ic-card)] [--color-card-foreground:var(--ic-card-foreground)] [--color-muted:var(--ic-muted)] [--color-muted-foreground:var(--ic-muted-foreground)] [--color-accent:var(--ic-accent)] [--color-accent-foreground:var(--ic-accent-foreground)] [--color-input:var(--ic-input)] [--color-ring:var(--ic-ring)] [--color-destructive:var(--ic-destructive)] [--color-paper:var(--ic-paper)] [--color-popover-foreground:var(--ic-popover-foreground)] [--color-brand:var(--ic-brand)] [--color-brand-soft:var(--ic-brand-soft)] [--color-chart-1:var(--ic-chart-1)] [--color-chart-2:var(--ic-chart-2)] [--color-chart-3:var(--ic-chart-3)] [--color-chart-4:var(--ic-chart-4)] [--color-chart-5:var(--ic-chart-5)] dark:[--ic-background:#111111] dark:[--ic-foreground:#f6f3ec] dark:[--ic-primary:#f6f3ec] dark:[--ic-secondary:#cbc6bb] dark:[--ic-surface-border:#2a2a25] dark:[--ic-border:#2b2a25] dark:[--ic-card:#111111] dark:[--ic-card-foreground:#f6f3ec] dark:[--ic-muted:#171716] dark:[--ic-muted-foreground:#9a958a] dark:[--ic-accent:#1a1a18] [--color-accent:var(--ic-accent)] [--color-accent-foreground:var(--ic-accent-foreground)] dark:[--ic-accent-foreground:#f6f3ec] dark:[--ic-input:#2b2a25] dark:[--ic-ring:rgba(246,243,236,0.18)] dark:[--ic-destructive:#f87171] dark:[--ic-paper:#171716] dark:[--ic-popover-foreground:#f6f3ec] dark:[--ic-brand:#38bdf8] dark:[--ic-brand-soft:#0c4a6e] dark:[--ic-shadow-soft:0_20px_44px_-28px_rgba(0,0,0,0.6)] dark:[--ic-chart-1:oklch(0.68_0.17_250)] dark:[--ic-chart-2:oklch(0.82_0.09_225)] dark:[--ic-chart-3:oklch(0.58_0.15_260)] dark:[--ic-chart-4:oklch(0.75_0.12_235)] dark:[--ic-chart-5:oklch(0.88_0.06_220)]";
 
 const MAX_MENU_HEIGHT = 320;
+
+const selectListScrollbarClassName =
+  "z-10 my-1.5 mr-0.5 w-1 shrink-0 touch-none select-none opacity-0 transition-opacity duration-150 before:absolute before:left-1/2 before:h-full before:w-5 before:-translate-x-1/2 before:content-[''] data-hovering:pointer-events-auto data-hovering:opacity-100 data-scrolling:pointer-events-auto data-scrolling:opacity-100 data-scrolling:duration-0";
+
+const selectListThumbClassName =
+  "relative rounded-full bg-muted-foreground/50 bg-[color:color-mix(in_oklch,var(--ic-muted-foreground),transparent_35%)]";
+
 const MENU_OFFSET = 8;
 const TYPEAHEAD_RESET_MS = 500;
 const VIEWPORT_MARGIN = 12;
@@ -647,60 +655,72 @@ function SelectMenuContent({
       style={panelStyle}
       transition={panelTransition}
     >
-      <div
-        aria-activedescendant={
-          options[activeIndex]
-            ? `${listboxId}-option-${activeIndex}`
-            : undefined
-        }
-        aria-labelledby={triggerId}
-        aria-orientation="vertical"
-        className="overflow-y-auto overscroll-contain p-1.5 outline-none"
-        id={listboxId}
-        onKeyDown={(event) => {
-          setShowActiveHighlight(true);
-          handleSelectListboxKeyDown({
-            activeIndex,
-            closeMenu,
-            event,
-            optionCount: options.length,
-            runTypeahead,
-            selectOption,
-            setActiveIndex,
-          });
-        }}
-        ref={listboxRef}
-        role="listbox"
+      <ScrollAreaPrimitive.Root
+        className="relative overflow-hidden"
         style={{
           maxHeight: menuPosition?.maxHeight ?? MAX_MENU_HEIGHT,
         }}
-        tabIndex={-1}
       >
-        {options.length === 0 ? (
-          <div className="px-3 py-3 text-muted-foreground text-sm">
-            No options available.
+        <ScrollAreaPrimitive.Viewport className="max-h-[inherit] min-h-0 overscroll-contain outline-none">
+          <div
+            aria-activedescendant={
+              options[activeIndex]
+                ? `${listboxId}-option-${activeIndex}`
+                : undefined
+            }
+            aria-labelledby={triggerId}
+            aria-orientation="vertical"
+            className="p-1.5 outline-none"
+            id={listboxId}
+            onKeyDown={(event) => {
+              setShowActiveHighlight(true);
+              handleSelectListboxKeyDown({
+                activeIndex,
+                closeMenu,
+                event,
+                optionCount: options.length,
+                runTypeahead,
+                selectOption,
+                setActiveIndex,
+              });
+            }}
+            ref={listboxRef}
+            role="listbox"
+            tabIndex={-1}
+          >
+            {options.length === 0 ? (
+              <div className="px-3 py-3 text-muted-foreground text-sm">
+                No options available.
+              </div>
+            ) : (
+              sections.map((section, sectionIndex) => (
+                <SelectMenuSection
+                  activeHighlightId={`${listboxId}-active-option`}
+                  activeIndex={activeIndex}
+                  itemVariants={itemVariants}
+                  key={section.key}
+                  listboxId={listboxId}
+                  optionRefs={optionRefs}
+                  reduceMotion={reduceMotion}
+                  section={section}
+                  sectionIndex={sectionIndex}
+                  selectOption={selectOption}
+                  setActiveIndex={setActiveIndex}
+                  setShowActiveHighlight={setShowActiveHighlight}
+                  showActiveHighlight={showActiveHighlight}
+                  value={value}
+                />
+              ))
+            )}
           </div>
-        ) : (
-          sections.map((section, sectionIndex) => (
-            <SelectMenuSection
-              activeHighlightId={`${listboxId}-active-option`}
-              activeIndex={activeIndex}
-              itemVariants={itemVariants}
-              key={section.key}
-              listboxId={listboxId}
-              optionRefs={optionRefs}
-              reduceMotion={reduceMotion}
-              section={section}
-              sectionIndex={sectionIndex}
-              selectOption={selectOption}
-              setActiveIndex={setActiveIndex}
-              setShowActiveHighlight={setShowActiveHighlight}
-              showActiveHighlight={showActiveHighlight}
-              value={value}
-            />
-          ))
-        )}
-      </div>
+        </ScrollAreaPrimitive.Viewport>
+        <ScrollAreaPrimitive.Scrollbar
+          className={selectListScrollbarClassName}
+          orientation="vertical"
+        >
+          <ScrollAreaPrimitive.Thumb className={selectListThumbClassName} />
+        </ScrollAreaPrimitive.Scrollbar>
+      </ScrollAreaPrimitive.Root>
     </motion.div>
   );
 }

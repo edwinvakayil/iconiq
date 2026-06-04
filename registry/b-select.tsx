@@ -1,5 +1,6 @@
 "use client";
 
+import { ScrollArea as ScrollAreaPrimitive } from "@base-ui/react/scroll-area";
 import { Select as SelectPrimitive } from "@base-ui/react/select";
 import { CheckIcon, ChevronDownIcon, ChevronUpIcon } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
@@ -28,6 +29,13 @@ const selectItemHighlightClassName =
   "absolute inset-0 -z-10 rounded-lg bg-accent/60";
 
 const MAX_MENU_HEIGHT = 320;
+
+const selectListScrollbarClassName =
+  "z-10 my-1.5 mr-0.5 w-1 shrink-0 touch-none select-none opacity-0 transition-opacity duration-150 before:absolute before:left-1/2 before:h-full before:w-5 before:-translate-x-1/2 before:content-[''] data-hovering:pointer-events-auto data-hovering:opacity-100 data-scrolling:pointer-events-auto data-scrolling:opacity-100 data-scrolling:duration-0";
+
+const selectListThumbClassName =
+  "relative rounded-full bg-muted-foreground/50 bg-[color:color-mix(in_oklch,var(--sel-muted-foreground),transparent_35%)]";
+
 const SOFT_EASE = [0.22, 1, 0.36, 1] as const;
 const EXIT_EASE = [0.55, 0.06, 0.68, 0.19] as const;
 const CHECK_SPRING = {
@@ -169,6 +177,13 @@ type TriggerRenderProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   children?: React.ReactNode;
   className?: string;
   ref?: React.Ref<HTMLButtonElement>;
+  style?: React.CSSProperties;
+};
+
+type ListRenderProps = React.HTMLAttributes<HTMLDivElement> & {
+  children?: React.ReactNode;
+  className?: string;
+  ref?: React.Ref<HTMLDivElement>;
   style?: React.CSSProperties;
 };
 
@@ -664,17 +679,54 @@ function SelectContent({
                 >
                   <SelectScrollUpButton />
                   <motion.div className="relative min-h-0 flex-1" layoutRoot>
-                    <SelectPrimitive.List
-                      className="overflow-y-auto overscroll-contain p-1.5 outline-none"
-                      onPointerLeave={() => {
-                        setActiveValue(undefined);
-                      }}
+                    <ScrollAreaPrimitive.Root
+                      className="relative flex min-h-0 flex-1 flex-col overflow-hidden"
                       style={{
                         maxHeight: `min(var(--available-height), ${MAX_MENU_HEIGHT}px)`,
                       }}
                     >
-                      {children}
-                    </SelectPrimitive.List>
+                      <SelectPrimitive.List
+                        className="min-h-0 flex-1 p-1.5 outline-none"
+                        onPointerLeave={() => {
+                          setActiveValue(undefined);
+                        }}
+                        render={(listProps) => {
+                          const {
+                            children: listChildren,
+                            className: listClassName,
+                            ref: listRef,
+                            style: listStyle,
+                            ...resolvedListProps
+                          } = listProps as ListRenderProps;
+
+                          return (
+                            <ScrollAreaPrimitive.Viewport
+                              {...resolvedListProps}
+                              className={cn(
+                                "min-h-0 flex-1 overscroll-contain outline-none",
+                                listClassName
+                              )}
+                              ref={(node) => {
+                                setRef(listRef, node);
+                              }}
+                              style={listStyle}
+                            >
+                              {listChildren}
+                            </ScrollAreaPrimitive.Viewport>
+                          );
+                        }}
+                      >
+                        {children}
+                      </SelectPrimitive.List>
+                      <ScrollAreaPrimitive.Scrollbar
+                        className={selectListScrollbarClassName}
+                        orientation="vertical"
+                      >
+                        <ScrollAreaPrimitive.Thumb
+                          className={selectListThumbClassName}
+                        />
+                      </ScrollAreaPrimitive.Scrollbar>
+                    </ScrollAreaPrimitive.Root>
                   </motion.div>
                   <SelectScrollDownButton />
                 </motion.div>

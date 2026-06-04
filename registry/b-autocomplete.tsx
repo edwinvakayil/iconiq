@@ -1,6 +1,7 @@
 "use client";
 
 import { Autocomplete as AutocompletePrimitive } from "@base-ui/react/autocomplete";
+import { ScrollArea as ScrollAreaPrimitive } from "@base-ui/react/scroll-area";
 import { ChevronsUpDown, X } from "lucide-react";
 import { motion } from "motion/react";
 import * as React from "react";
@@ -143,6 +144,12 @@ const HIGHLIGHT_SPRING = {
   damping: 40,
   mass: 0.82,
 };
+
+const autocompleteListScrollbarClassName =
+  "z-10 my-1.5 mr-0.5 w-1 shrink-0 touch-none select-none opacity-0 transition-opacity duration-150 before:absolute before:left-1/2 before:h-full before:w-5 before:-translate-x-1/2 before:content-[''] data-hovering:pointer-events-auto data-hovering:opacity-100 data-scrolling:pointer-events-auto data-scrolling:opacity-100 data-scrolling:duration-0";
+
+const autocompleteListThumbClassName =
+  "relative rounded-full bg-muted-foreground/50 bg-[color:color-mix(in_oklch,var(--ic-muted-foreground),transparent_35%)]";
 
 function getChevronTransition(reduceMotion: boolean) {
   return reduceMotion
@@ -460,14 +467,48 @@ function AutocompleteList({
   const { setActiveValue } = useAutocompleteContext("AutocompleteList");
 
   return (
-    <AutocompletePrimitive.List
-      className={cn("max-h-64 overflow-y-auto p-1", className)}
-      data-slot="autocomplete-list"
-      onPointerLeave={composeEventHandlers(onPointerLeave, () => {
-        setActiveValue(undefined);
-      })}
-      {...props}
-    />
+    <ScrollAreaPrimitive.Root
+      className={cn("relative max-h-64 overflow-hidden", className)}
+    >
+      <AutocompletePrimitive.List
+        data-slot="autocomplete-list"
+        onPointerLeave={composeEventHandlers(onPointerLeave, () => {
+          setActiveValue(undefined);
+        })}
+        {...props}
+        render={(listProps) => {
+          const {
+            children: listChildren,
+            className: listClassName,
+            ref: listRef,
+            style: listStyle,
+            ...resolvedListProps
+          } = listProps as DivRenderProps;
+
+          return (
+            <ScrollAreaPrimitive.Viewport
+              {...resolvedListProps}
+              className={cn(
+                "max-h-64 min-h-0 overscroll-contain p-1 outline-none",
+                listClassName
+              )}
+              ref={(node) => {
+                setRef(listRef, node);
+              }}
+              style={listStyle}
+            >
+              {listChildren}
+            </ScrollAreaPrimitive.Viewport>
+          );
+        }}
+      />
+      <ScrollAreaPrimitive.Scrollbar
+        className={autocompleteListScrollbarClassName}
+        orientation="vertical"
+      >
+        <ScrollAreaPrimitive.Thumb className={autocompleteListThumbClassName} />
+      </ScrollAreaPrimitive.Scrollbar>
+    </ScrollAreaPrimitive.Root>
   );
 }
 

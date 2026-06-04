@@ -1,6 +1,7 @@
 "use client";
 
 import { ContextMenu as ContextMenuPrimitive } from "@base-ui/react/context-menu";
+import { ScrollArea as ScrollAreaPrimitive } from "@base-ui/react/scroll-area";
 import { Check, ChevronRight } from "lucide-react";
 import { motion } from "motion/react";
 import * as React from "react";
@@ -20,7 +21,11 @@ const ITEM_HEIGHT = 44;
 const contextMenuPanelChromeClassName =
   "z-50 min-w-[232px] overflow-hidden rounded-lg border border-[color:color-mix(in_oklch,var(--cm-border),transparent_40%)] bg-[color:var(--cm-surface)] text-[color:var(--cm-foreground)] shadow-2xl";
 
-const contextMenuPanelBodyClassName = "overflow-y-auto overflow-x-hidden p-1.5";
+const contextMenuPanelScrollbarClassName =
+  "z-10 my-1.5 mr-0.5 w-1 shrink-0 touch-none select-none opacity-0 transition-opacity duration-150 before:absolute before:left-1/2 before:h-full before:w-5 before:-translate-x-1/2 before:content-[''] data-hovering:pointer-events-auto data-hovering:opacity-100 data-scrolling:pointer-events-auto data-scrolling:opacity-100 data-scrolling:duration-0";
+
+const contextMenuPanelThumbClassName =
+  "relative rounded-full bg-muted-foreground/50 bg-[color:color-mix(in_oklch,var(--cm-muted-foreground),transparent_35%)]";
 
 const contextMenuTriggerClassName =
   "select-none outline-none focus-visible:ring-2 focus-visible:ring-[color:color-mix(in_oklch,var(--cm-ring),transparent_50%)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--cm-surface)]";
@@ -180,6 +185,33 @@ function getContentMotionTransition() {
   };
 }
 
+function ContextMenuPanelScroll({
+  children,
+  onPointerLeave,
+}: {
+  children: React.ReactNode;
+  onPointerLeave?: () => void;
+}) {
+  return (
+    <ScrollAreaPrimitive.Root className="relative h-full max-h-full overflow-hidden">
+      <ScrollAreaPrimitive.Viewport className="h-full max-h-full min-h-0 overscroll-contain outline-none">
+        <div
+          className="overflow-x-hidden p-1.5"
+          onPointerLeave={onPointerLeave}
+        >
+          {children}
+        </div>
+      </ScrollAreaPrimitive.Viewport>
+      <ScrollAreaPrimitive.Scrollbar
+        className={contextMenuPanelScrollbarClassName}
+        orientation="vertical"
+      >
+        <ScrollAreaPrimitive.Thumb className={contextMenuPanelThumbClassName} />
+      </ScrollAreaPrimitive.Scrollbar>
+    </ScrollAreaPrimitive.Root>
+  );
+}
+
 function renderMotionPanel({
   actionsRef,
   children,
@@ -240,12 +272,9 @@ function renderMotionPanel({
       }}
       transition={getContentMotionTransition()}
     >
-      <div
-        className={contextMenuPanelBodyClassName}
-        onPointerLeave={onPointerLeave}
-      >
+      <ContextMenuPanelScroll onPointerLeave={onPointerLeave}>
         {children}
-      </div>
+      </ContextMenuPanelScroll>
     </motion.div>
   );
 }

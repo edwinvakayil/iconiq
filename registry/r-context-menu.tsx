@@ -1,6 +1,7 @@
 "use client";
 
 import * as ContextMenuPrimitive from "@radix-ui/react-context-menu";
+import * as ScrollAreaPrimitive from "@radix-ui/react-scroll-area";
 import { Check, ChevronRight } from "lucide-react";
 import { motion } from "motion/react";
 import * as React from "react";
@@ -20,7 +21,31 @@ const ITEM_HEIGHT = 44;
 const contextMenuPanelChromeClassName =
   "z-50 min-w-[232px] overflow-hidden rounded-lg border border-[color:color-mix(in_oklch,var(--cm-border),transparent_40%)] bg-[color:var(--cm-surface)] text-[color:var(--cm-foreground)] shadow-2xl";
 
-const contextMenuPanelBodyClassName = "overflow-y-auto overflow-x-hidden p-1.5";
+const contextMenuPanelScrollbarClassName =
+  "z-10 flex w-2 shrink-0 touch-none select-none bg-transparent p-px opacity-0 transition-opacity duration-150 data-[state=visible]:pointer-events-auto data-[state=visible]:opacity-100";
+
+const contextMenuPanelThumbClassName =
+  "relative rounded-full bg-muted-foreground/50 bg-[color:color-mix(in_oklch,var(--cm-muted-foreground),transparent_35%)]";
+
+function ContextMenuPanelScroll({ children }: { children: React.ReactNode }) {
+  return (
+    <ScrollAreaPrimitive.Root
+      className="relative h-full max-h-full overflow-hidden"
+      scrollHideDelay={100}
+      type="hover"
+    >
+      <ScrollAreaPrimitive.Viewport className="h-full max-h-full min-h-0 overscroll-contain outline-none">
+        <div className="overflow-x-hidden p-1.5">{children}</div>
+      </ScrollAreaPrimitive.Viewport>
+      <ScrollAreaPrimitive.Scrollbar
+        className={contextMenuPanelScrollbarClassName}
+        orientation="vertical"
+      >
+        <ScrollAreaPrimitive.Thumb className={contextMenuPanelThumbClassName} />
+      </ScrollAreaPrimitive.Scrollbar>
+    </ScrollAreaPrimitive.Root>
+  );
+}
 
 const contextMenuTriggerClassName =
   "select-none outline-none focus-visible:ring-2 focus-visible:ring-[color:color-mix(in_oklch,var(--cm-ring),transparent_50%)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--cm-surface)]";
@@ -245,7 +270,7 @@ const ContextMenuContentBody = React.forwardRef<
       }}
       {...props}
     >
-      <div className={contextMenuPanelBodyClassName}>{children}</div>
+      <ContextMenuPanelScroll>{children}</ContextMenuPanelScroll>
     </ContextMenuPrimitive.Content>
   );
 });
@@ -416,7 +441,7 @@ const ContextMenuSubContent = React.forwardRef<
       ref={ref}
       {...props}
     >
-      <div className={contextMenuPanelBodyClassName}>{children}</div>
+      <ContextMenuPanelScroll>{children}</ContextMenuPanelScroll>
     </ContextMenuPrimitive.SubContent>
   );
 });

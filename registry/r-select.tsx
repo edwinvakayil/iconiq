@@ -1,5 +1,6 @@
 "use client";
 
+import * as ScrollAreaPrimitive from "@radix-ui/react-scroll-area";
 import * as SelectPrimitive from "@radix-ui/react-select";
 import { CheckIcon, ChevronDownIcon, ChevronUpIcon } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
@@ -26,6 +27,12 @@ const selectItemClassName =
 
 const selectItemHighlightClassName =
   "absolute inset-0 -z-10 rounded-lg bg-accent/60";
+
+const selectListScrollbarClassName =
+  "z-10 flex w-2 shrink-0 touch-none select-none bg-transparent p-px opacity-0 transition-opacity duration-150 data-[state=visible]:pointer-events-auto data-[state=visible]:opacity-100";
+
+const selectListThumbClassName =
+  "relative rounded-full bg-muted-foreground/50 bg-[color:color-mix(in_oklch,var(--sel-muted-foreground),transparent_35%)]";
 
 const MAX_MENU_HEIGHT = 320;
 const SOFT_EASE = [0.22, 1, 0.36, 1] as const;
@@ -485,17 +492,33 @@ function SelectContent({
         >
           <SelectScrollUpButton />
           <motion.div className="relative min-h-0 flex-1" layoutRoot>
-            <SelectPrimitive.Viewport
-              className="overflow-y-auto overscroll-contain p-1.5 outline-none"
-              onPointerLeave={() => {
-                setActiveValue(undefined);
-              }}
+            <ScrollAreaPrimitive.Root
+              className="relative flex min-h-0 flex-1 flex-col overflow-hidden"
+              scrollHideDelay={100}
               style={{
                 maxHeight: `min(var(--radix-select-content-available-height), ${MAX_MENU_HEIGHT}px)`,
               }}
+              type="hover"
             >
-              {children}
-            </SelectPrimitive.Viewport>
+              <SelectPrimitive.Viewport asChild>
+                <ScrollAreaPrimitive.Viewport
+                  className="min-h-0 flex-1 overscroll-contain p-1.5 outline-none"
+                  onPointerLeave={() => {
+                    setActiveValue(undefined);
+                  }}
+                >
+                  {children}
+                </ScrollAreaPrimitive.Viewport>
+              </SelectPrimitive.Viewport>
+              <ScrollAreaPrimitive.Scrollbar
+                className={selectListScrollbarClassName}
+                orientation="vertical"
+              >
+                <ScrollAreaPrimitive.Thumb
+                  className={selectListThumbClassName}
+                />
+              </ScrollAreaPrimitive.Scrollbar>
+            </ScrollAreaPrimitive.Root>
           </motion.div>
           <SelectScrollDownButton />
         </motion.div>

@@ -582,7 +582,7 @@
       "name": "combobox",
       "type": "registry:ui",
       "registryDependencies": [],
-      "dependencies": ["motion", "lucide-react"],
+      "dependencies": ["@base-ui/react", "motion", "lucide-react"],
       "devDependencies": [],
       "title": "Combobox",
       "description": "Searchable single-select input with inline filtering, arrow-key navigation, animated dropdown motion, and an optional clear action.",
@@ -657,7 +657,7 @@
       "name": "dropdown",
       "type": "registry:ui",
       "registryDependencies": [],
-      "dependencies": ["motion", "lucide-react"],
+      "dependencies": ["@base-ui/react", "motion", "lucide-react"],
       "devDependencies": [],
       "title": "Dropdown",
       "description": "Animated dropdown with a selectable value mode and an action-menu mode, plus chevron rotation and spring-driven menu entry.",
@@ -858,6 +858,7 @@
       "registryDependencies": [],
       "dependencies": [
         "@radix-ui/react-context-menu",
+        "@radix-ui/react-scroll-area",
         "motion",
         "lucide-react"
       ],
@@ -892,6 +893,7 @@
       "registryDependencies": [],
       "dependencies": [
         "@radix-ui/react-dropdown-menu",
+        "@radix-ui/react-scroll-area",
         "motion",
         "lucide-react"
       ],
@@ -973,7 +975,12 @@
       "name": "r-select",
       "type": "registry:ui",
       "registryDependencies": [],
-      "dependencies": ["@radix-ui/react-select", "motion", "lucide-react"],
+      "dependencies": [
+        "@radix-ui/react-scroll-area",
+        "@radix-ui/react-select",
+        "motion",
+        "lucide-react"
+      ],
       "devDependencies": [],
       "title": "Select (Radix UI)",
       "description": "Compound Select parts layered over Radix UI primitives, preserving the original trigger press, chevron rotation, grouped rows, and panel motion.",
@@ -1131,7 +1138,7 @@
       "name": "select",
       "type": "registry:ui",
       "registryDependencies": [],
-      "dependencies": ["motion", "lucide-react"],
+      "dependencies": ["@base-ui/react", "motion", "lucide-react"],
       "devDependencies": [],
       "title": "Select",
       "description": "Animated single-select dropdown with staggered options, chevron rotation, scaleY panel, row hover slide, and check mark on the active item. Motion + Lucide.",
