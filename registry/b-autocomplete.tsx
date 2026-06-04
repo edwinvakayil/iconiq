@@ -297,18 +297,25 @@ function AutocompleteInput({
   className,
   children,
   disabled = false,
+  id: idProp,
+  label,
+  labelClassName,
   ref: refProp,
   showClear = true,
   showTrigger = false,
   ...props
 }: AutocompletePrimitive.Input.Props & {
+  label?: React.ReactNode;
+  labelClassName?: string;
   showClear?: boolean;
   showTrigger?: boolean;
 }) {
   const { open, setOpen } = useAutocompleteContext("AutocompleteInput");
   const inputRef = React.useRef<HTMLInputElement | null>(null);
+  const generatedId = React.useId();
+  const inputId = idProp ?? generatedId;
 
-  return (
+  const inputGroup = (
     <AutocompletePrimitive.InputGroup
       className={cn(
         componentThemeClassName,
@@ -317,7 +324,7 @@ function AutocompleteInput({
         "focus-within:border-ring focus-within:ring-1 focus-within:ring-ring/25",
         disabled && "cursor-not-allowed opacity-50",
         open && "border-ring ring-1 ring-ring/25",
-        className
+        label ? undefined : className
       )}
       data-slot="autocomplete-input"
       onClick={() => {
@@ -330,6 +337,7 @@ function AutocompleteInput({
         autoComplete="off"
         className="h-full w-full min-w-0 flex-1 bg-transparent text-[16px] text-foreground placeholder:text-muted-foreground focus:outline-none disabled:cursor-not-allowed sm:text-sm"
         disabled={disabled}
+        id={inputId}
         onKeyDown={composeEventHandlers(props.onKeyDown, (event) => {
           if (event.key === "Tab") {
             setOpen(false);
@@ -345,6 +353,22 @@ function AutocompleteInput({
       {showTrigger ? <AutocompleteTrigger disabled={disabled} /> : null}
       {children}
     </AutocompletePrimitive.InputGroup>
+  );
+
+  if (!label) {
+    return inputGroup;
+  }
+
+  return (
+    <div className={cn("flex w-full flex-col gap-2", className)}>
+      <label
+        className={cn("font-medium text-foreground text-sm", labelClassName)}
+        htmlFor={inputId}
+      >
+        {label}
+      </label>
+      {inputGroup}
+    </div>
   );
 }
 

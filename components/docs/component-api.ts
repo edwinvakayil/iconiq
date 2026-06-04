@@ -1721,6 +1721,17 @@ const autocompleteApiDetails: DetailItem[] = [
       "Styled input shell with border, focus ring, and optional clear control. The suggestion panel opens while typing, not on focus or click.",
     fields: [
       field({
+        name: "label",
+        type: "React.ReactNode",
+        description:
+          "Optional field label rendered above the input and linked with htmlFor.",
+      }),
+      field({
+        name: "labelClassName",
+        type: "string",
+        description: "Optional class names merged onto the field label.",
+      }),
+      field({
         name: "placeholder",
         type: "string",
         description: "Shown when the input is empty.",

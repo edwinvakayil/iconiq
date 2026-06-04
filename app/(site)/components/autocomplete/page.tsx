@@ -106,7 +106,10 @@ export function AutocompletePreview() {
         onValueChange={setQuery}
         value={query}
       >
-        <AutocompleteInput placeholder="Search countries..." />
+        <AutocompleteInput
+          label="Search countries"
+          placeholder="e.g. Canada"
+        />
         <AutocompleteContent>
           <AutocompleteList>
             {(country: Country, index: number) => (
@@ -137,7 +140,7 @@ function CountryAutocomplete() {
       onValueChange={setQuery}
       value={query}
     >
-      <AutocompleteInput placeholder="Search countries..." />
+      <AutocompleteInput label="Search countries" placeholder="e.g. Canada" />
       <AutocompleteContent>
         <AutocompleteList>
           {(country: Country, index: number) => (
