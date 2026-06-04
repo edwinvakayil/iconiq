@@ -3734,6 +3734,37 @@ const infiniteRibbonApiDetails: DetailItem[] = [
   registryItem("infiniteribbon.json", []),
 ];
 
+const themeToggleApiDetails: DetailItem[] = [
+  {
+    id: "theme-toggle",
+    title: "ThemeToggle",
+    summary:
+      "Client-only pill switch that toggles light and dark mode by adding or removing the `dark` class on `document.documentElement`, with sun and moon icons inside a sliding knob.",
+    fields: [
+      field({
+        name: "size",
+        type: '"sm" | "md" | "lg"',
+        defaultValue: "md",
+        description:
+          "Controls track, knob, and icon dimensions. Use `sm` in compact toolbars and `lg` for hero or settings layouts.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description:
+          "Optional class names merged onto the root button for spacing or layout in your header or settings panel.",
+      }),
+    ],
+    notes: [
+      "On mount, the control reads `prefers-color-scheme: dark` and syncs both local state and the document `dark` class.",
+      "Before hydration completes, a neutral placeholder button is rendered to avoid layout shift while keeping an accessible name.",
+      "The toggle manages theme locally via the `dark` class; pair it with your own CSS variables or Tailwind dark mode setup.",
+      "Install path is `components/ui/theme-toggle.tsx` with the `ThemeToggle` export.",
+    ],
+  },
+  registryItem("theme-toggle.json", ["lucide-react"]),
+];
+
 const originButtonApiDetails: DetailItem[] = [
   {
     id: "origin-button",
@@ -5206,6 +5237,7 @@ export {
   iconBarApiDetails,
   infiniteRibbonApiDetails,
   originButtonApiDetails,
+  themeToggleApiDetails,
   faqProApiDetails,
   popoverApiDetails,
   accordionApiDetails,

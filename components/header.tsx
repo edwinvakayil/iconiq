@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 import { BrandLink } from "@/components/brand-wordmark";
 import { HomeHeaderNav } from "@/components/home-header-nav";
 import { SiteSearch } from "@/components/site-search";
-import { ThemeToggle } from "@/components/ui/theme-toggle";
+import { SiteThemeToggle } from "@/components/ui/site-theme-toggle";
 import { LINK } from "@/constants";
 import { BASE_LINKS, SITE_SECTIONS } from "@/lib/site-nav";
 import { cn } from "@/lib/utils";
@@ -258,7 +258,7 @@ export function Header() {
         <div className="flex items-center gap-2 lg:gap-3">
           <SiteSearch variant="desktop" />
           <GitHubStarsLink starCount={starCount} />
-          <ThemeToggle className="size-8 rounded-md text-neutral-950 hover:bg-accent hover:text-foreground dark:text-white dark:hover:bg-input/20 dark:hover:text-white" />
+          <SiteThemeToggle className="size-8 rounded-md text-neutral-950 hover:bg-accent hover:text-foreground dark:text-white dark:hover:bg-input/20 dark:hover:text-white" />
         </div>
       </div>
     </header>

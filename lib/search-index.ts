@@ -104,6 +104,8 @@ const componentSummaries: Record<string, string> = {
     "Rounded action button with a pointer-origin fill that spreads on hover and inverts the label.",
   "/special-one/faq-pro":
     "Searchable FAQ accordion that filters items, auto-expands matches, and highlights query text.",
+  "/special-one/theme-toggle":
+    "Animated light/dark pill toggle with a sliding knob, sun and moon icons, and springy color transitions.",
   "/foundation/typography":
     "Single typography primitive for headings, labels, paragraphs, subheadings, and documentation copy.",
   "/texts/dia-text":

@@ -754,6 +754,21 @@ export function SkeletonPreview() {
   );
 }`;
 
+export const themeTogglePreviewCode = `"use client";
+
+import { ThemeToggle } from "@/components/ui/theme-toggle";
+
+export default function Page() {
+  return (
+    <div className="flex min-h-svh flex-col items-center justify-center gap-4 bg-background p-8">
+      <p className="text-center text-muted-foreground text-sm">
+        Click the toggle to switch between light and dark mode.
+      </p>
+      <ThemeToggle size="md" />
+    </div>
+  );
+}`;
+
 export const infiniteRibbonPreviewCode = `"use client";
 
 import { InfiniteRibbon } from "@/components/ui/infiniteribbon";
@@ -779,6 +794,7 @@ const COMPONENT_PREVIEW_OVERRIDES: Record<string, string> = {
   charts: chartsPreviewCode,
   card: cardPreviewCode,
   infiniteribbon: infiniteRibbonPreviewCode,
+  "theme-toggle": themeTogglePreviewCode,
   skeleton: skeletonPreviewCode,
 };
 

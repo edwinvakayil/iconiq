@@ -381,6 +381,12 @@ const REGISTRY_UI_META: Record<
       "Rounded action button with a pointer-origin foreground fill that spreads on hover or focus-visible. Built with Motion.",
     dependencies: ["motion"],
   },
+  "theme-toggle": {
+    title: "Theme Toggle",
+    description:
+      "Animated light/dark switch with a sliding knob, sun and moon icons, and bouncy track transitions. Toggles the document dark class.",
+    dependencies: ["lucide-react"],
+  },
   "r-accordion": {
     title: "Accordion (Radix UI)",
     description:

@@ -12,6 +12,7 @@ import {
   getComponentV0Page,
   infiniteRibbonPreviewCode,
   skeletonPreviewCode,
+  themeTogglePreviewCode,
 } from "@/lib/component-v0-pages";
 
 const COMPONENT_EXAMPLE: Record<string, string> = {
@@ -106,6 +107,7 @@ export function AccordionPreview() {
   card: buildV0Page(cardPreviewCode),
   charts: buildV0Page(chartsPreviewCode),
   infiniteribbon: buildV0Page(infiniteRibbonPreviewCode),
+  "theme-toggle": buildV0Page(themeTogglePreviewCode),
   "button-group": buildV0Page(`"use client";
 
 import { MoreHorizontalIcon } from "lucide-react";

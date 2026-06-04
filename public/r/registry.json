@@ -1263,6 +1263,21 @@
       ]
     },
     {
+      "name": "theme-toggle",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": ["lucide-react"],
+      "devDependencies": [],
+      "title": "Theme Toggle",
+      "description": "Animated light/dark switch with a sliding knob, sun and moon icons, and bouncy track transitions. Toggles the document dark class.",
+      "files": [
+        {
+          "path": "theme-toggle.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "toggle",
       "type": "registry:ui",
       "registryDependencies": [],

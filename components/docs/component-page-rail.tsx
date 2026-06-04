@@ -2,6 +2,7 @@
 
 import { CircleDot, Heart, PencilLine } from "lucide-react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
 import { useEffect, useState } from "react";
 
@@ -189,12 +190,11 @@ export function ComponentPageRail({
   editHref?: string;
   sections: RailSection[];
 }) {
+  const pathname = usePathname();
   const resolvedEditHref =
     editHref ??
     `${LINK.GITHUB}/edit/main/app/(site)${
-      typeof window !== "undefined" && window.location.pathname !== "/"
-        ? `${window.location.pathname}/page.tsx`
-        : "/page.tsx"
+      pathname && pathname !== "/" ? `${pathname}/page.tsx` : "/page.tsx"
     }`;
 
   return <DocsPageRail editHref={resolvedEditHref} sections={sections} />;

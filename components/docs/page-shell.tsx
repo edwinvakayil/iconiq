@@ -123,6 +123,7 @@ const REDUCED_MOTION_DOCS_EXCLUDED = new Set([
   "icon-bar",
   "origin-button",
   "faq-pro",
+  "theme-toggle",
 ]);
 
 const REDUCED_MOTION_DETAIL: DetailItem = {

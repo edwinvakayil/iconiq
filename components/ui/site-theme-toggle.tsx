@@ -5,11 +5,11 @@ import { useTheme } from "next-themes";
 import { useCallback, useEffect } from "react";
 import { cn } from "@/lib/utils";
 
-type ThemeToggleProps = {
+type SiteThemeToggleProps = {
   className?: string;
 };
 
-const ThemeToggle = ({ className }: ThemeToggleProps) => {
+const SiteThemeToggle = ({ className }: SiteThemeToggleProps) => {
   const { setTheme, resolvedTheme } = useTheme();
 
   const isDark = resolvedTheme === "dark";
@@ -69,4 +69,4 @@ const ThemeToggle = ({ className }: ThemeToggleProps) => {
   );
 };
 
-export { ThemeToggle };
+export { SiteThemeToggle };
