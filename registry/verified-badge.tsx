@@ -1,11 +1,13 @@
+import type { ComponentPropsWithoutRef } from "react";
+
 import { cn } from "@/lib/utils";
 
 export type VerifiedBadgeVariant = "spin" | "static";
 
-interface VerifiedBadgeProps {
+export interface VerifiedBadgeProps
+  extends Omit<ComponentPropsWithoutRef<"span">, "children" | "role"> {
   variant?: VerifiedBadgeVariant;
   size?: number;
-  className?: string;
 }
 
 // Official Twitter/X verified badge scalloped shape
@@ -22,18 +24,25 @@ export function VerifiedBadge({
   variant = "spin",
   size = 64,
   className,
+  "aria-label": ariaLabel = "Verified",
+  style,
+  ...props
 }: VerifiedBadgeProps) {
   return (
     <span
-      className={cn("relative inline-block align-middle", className)}
-      style={{ width: size, height: size }}
-    >
-      {variant === "spin" && (
-        <ScallopShape className="absolute inset-0 h-full w-full animate-[spin_6s_linear_infinite] text-[hsl(203,89%,57%)]" />
+      aria-label={ariaLabel}
+      className={cn(
+        "relative inline-block align-middle text-[hsl(203,89%,57%)]",
+        className
       )}
-
-      {variant === "static" && (
-        <ScallopShape className="absolute inset-0 h-full w-full text-[hsl(203,89%,57%)]" />
+      role="img"
+      style={{ width: size, height: size, ...style }}
+      {...props}
+    >
+      {variant === "spin" ? (
+        <ScallopShape className="absolute inset-0 h-full w-full motion-safe:animate-[spin_6s_linear_infinite]" />
+      ) : (
+        <ScallopShape className="absolute inset-0 h-full w-full" />
       )}
 
       <svg
@@ -44,14 +53,7 @@ export function VerifiedBadge({
         strokeLinecap="round"
         strokeLinejoin="round"
         strokeWidth="3.5"
-        style={{
-          width: size * 0.5,
-          height: size * 0.5,
-          top: 0,
-          bottom: 0,
-          left: 0,
-          right: 0,
-        }}
+        style={{ width: size * 0.5, height: size * 0.5 }}
         viewBox="0 0 24 24"
       >
         <polyline points="5 12.5 10 17.5 19 7.5" />

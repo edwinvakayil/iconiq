@@ -3877,12 +3877,21 @@ const verifiedBadgeApiDetails: DetailItem[] = [
         name: "className",
         type: "string",
         description:
-          "Optional class names merged onto the root span for alignment with adjacent text or avatars.",
+          "Merged onto the root span. Pass a `text-*` class to override the default Twitter-blue scallop color.",
+      }),
+      field({
+        name: "aria-label",
+        type: "string",
+        defaultValue: "Verified",
+        description:
+          "Announced to screen readers. Override when the badge conveys a different status.",
       }),
     ],
     notes: [
-      "The scallop uses `currentColor` with a Twitter-blue HSL fill; override via parent text color if needed.",
-      "Decorative SVG layers set `aria-hidden` on shapes; add surrounding context for screen readers when the badge conveys status.",
+      "Extends native `span` props (`id`, `onClick`, `data-*`, tooltips, and other `aria-*` attributes) via prop spreading on the root.",
+      "Default color lives on the root span (`text-[hsl(203,89%,57%)]`); scallop paths use `currentColor` so `cn` can override via `className`.",
+      "The `spin` variant uses `motion-safe:animate-[spin_6s_linear_infinite]` so rotation respects `prefers-reduced-motion`.",
+      'Root uses `role="img"` with `aria-label`; inner SVG shapes are `aria-hidden`.',
       "Install path is `components/ui/verified-badge.tsx` with the `VerifiedBadge` export.",
     ],
   },
