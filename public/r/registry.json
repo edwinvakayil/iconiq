@@ -1361,6 +1361,21 @@
       ]
     },
     {
+      "name": "verified-badge",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": [],
+      "devDependencies": [],
+      "title": "Verified Badge",
+      "description": "X-style verified badge with spin or static variants.",
+      "files": [
+        {
+          "path": "verified-badge.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "iconiq-theme",
       "type": "registry:lib",
       "title": "Iconiq theme tokens",

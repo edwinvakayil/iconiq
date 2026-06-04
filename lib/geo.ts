@@ -42,6 +42,7 @@ import {
   tooltipApiDetails,
   typewriterApiDetails,
   typographyApiDetails,
+  verifiedBadgeApiDetails,
 } from "@/components/docs/component-api";
 import type { DetailItem } from "@/components/docs/page-shell";
 import { SITE } from "@/constants";
@@ -160,6 +161,7 @@ const COMPONENT_API_DETAILS: Record<string, DetailItem[]> = {
   "icon-bar": iconBarApiDetails,
   "origin-button": originButtonApiDetails,
   "theme-toggle": themeToggleApiDetails,
+  "verified-badge": verifiedBadgeApiDetails,
   "faq-pro": faqProApiDetails,
   popover: popoverApiDetails,
   radiogroup: radioGroupApiDetails,

@@ -125,6 +125,7 @@ const REDUCED_MOTION_DOCS_EXCLUDED = new Set([
   "faq-pro",
   "theme-toggle",
   "carousel",
+  "verified-badge",
 ]);
 
 const REDUCED_MOTION_DETAIL: DetailItem = {

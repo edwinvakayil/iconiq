@@ -14,6 +14,7 @@ import {
   infiniteRibbonPreviewCode,
   skeletonPreviewCode,
   themeTogglePreviewCode,
+  verifiedBadgePreviewCode,
 } from "@/lib/component-v0-pages";
 
 const COMPONENT_EXAMPLE: Record<string, string> = {
@@ -109,6 +110,7 @@ export function AccordionPreview() {
   charts: buildV0Page(chartsPreviewCode),
   infiniteribbon: buildV0Page(infiniteRibbonPreviewCode),
   "theme-toggle": buildV0Page(themeTogglePreviewCode),
+  "verified-badge": buildV0Page(verifiedBadgePreviewCode),
   carousel: buildV0Page(carouselPreviewCode),
   "button-group": buildV0Page(`"use client";
 

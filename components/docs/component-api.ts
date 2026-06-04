@@ -3852,6 +3852,43 @@ const carouselApiDetails: DetailItem[] = [
   registryItem("carousel.json", ["embla-carousel-react", "lucide-react"]),
 ];
 
+const verifiedBadgeApiDetails: DetailItem[] = [
+  {
+    id: "verified-badge",
+    title: "VerifiedBadge",
+    summary:
+      "Inline X-style verified scallop with a check. Use spin or static variants.",
+    fields: [
+      field({
+        name: "variant",
+        type: '"spin" | "static"',
+        defaultValue: "spin",
+        description:
+          "Use `spin` for the animated scallop ring or `static` for a fixed badge without rotation.",
+      }),
+      field({
+        name: "size",
+        type: "number",
+        defaultValue: "64",
+        description:
+          "Width and height in pixels for the outer badge; the check scales to half this value.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description:
+          "Optional class names merged onto the root span for alignment with adjacent text or avatars.",
+      }),
+    ],
+    notes: [
+      "The scallop uses `currentColor` with a Twitter-blue HSL fill; override via parent text color if needed.",
+      "Decorative SVG layers set `aria-hidden` on shapes; add surrounding context for screen readers when the badge conveys status.",
+      "Install path is `components/ui/verified-badge.tsx` with the `VerifiedBadge` export.",
+    ],
+  },
+  registryItem("verified-badge.json", []),
+];
+
 const themeToggleApiDetails: DetailItem[] = [
   {
     id: "theme-toggle",
@@ -5357,6 +5394,7 @@ export {
   carouselApiDetails,
   originButtonApiDetails,
   themeToggleApiDetails,
+  verifiedBadgeApiDetails,
   faqProApiDetails,
   popoverApiDetails,
   accordionApiDetails,
