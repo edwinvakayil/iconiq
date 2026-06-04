@@ -827,6 +827,23 @@ ${demo}
 
 export const carouselPreviewCode = buildCarouselPreviewCode("video", "v0");
 
+export const verifiedBadgePreviewCode = `"use client";
+
+import { VerifiedBadge } from "@/components/ui/verified-badge";
+
+export default function Page() {
+  return (
+    <div className="flex min-h-svh items-center justify-center bg-background p-8">
+      <span className="inline-flex items-center gap-1.5">
+        <span className="font-semibold text-foreground text-xl tracking-tight">
+          Iconiq UI
+        </span>
+        <VerifiedBadge variant="shimmer" size={22} />
+      </span>
+    </div>
+  );
+}`;
+
 export const themeTogglePreviewCode = `"use client";
 
 import { ThemeToggle } from "@/components/ui/theme-toggle";
@@ -868,6 +885,7 @@ const COMPONENT_PREVIEW_OVERRIDES: Record<string, string> = {
   card: cardPreviewCode,
   infiniteribbon: infiniteRibbonPreviewCode,
   "theme-toggle": themeTogglePreviewCode,
+  "verified-badge": verifiedBadgePreviewCode,
   carousel: carouselPreviewCode,
   skeleton: skeletonPreviewCode,
 };

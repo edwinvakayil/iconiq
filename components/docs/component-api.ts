@@ -3852,6 +3852,52 @@ const carouselApiDetails: DetailItem[] = [
   registryItem("carousel.json", ["embla-carousel-react", "lucide-react"]),
 ];
 
+const verifiedBadgeApiDetails: DetailItem[] = [
+  {
+    id: "verified-badge",
+    title: "VerifiedBadge",
+    summary:
+      "Inline X-style verified scallop with a check. Use shimmer or static variants.",
+    fields: [
+      field({
+        name: "variant",
+        type: '"shimmer" | "static"',
+        defaultValue: "shimmer",
+        description:
+          "Use `shimmer` for a sweeping highlight across the scallop or `static` for a fixed badge.",
+      }),
+      field({
+        name: "size",
+        type: "number",
+        defaultValue: "64",
+        description:
+          "Width and height in pixels for the outer badge; the check scales to half this value.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description:
+          "Merged onto the root span. Pass a `text-*` class to override the default Twitter-blue scallop color.",
+      }),
+      field({
+        name: "aria-label",
+        type: "string",
+        defaultValue: "Verified",
+        description:
+          "Announced to screen readers. Override when the badge conveys a different status.",
+      }),
+    ],
+    notes: [
+      "Extends native `span` props (`id`, `onClick`, `data-*`, tooltips, and other `aria-*` attributes) via prop spreading on the root.",
+      "Default color lives on the root span (`text-[hsl(203,89%,57%)]`); scallop paths use `currentColor` so `cn` can override via `className`.",
+      "The `shimmer` variant uses Motion to sweep a highlight across the scallop (0.5s pass, 1.5s pause between repeats) and skips animation when `prefers-reduced-motion` is enabled.",
+      'Root uses `role="img"` with `aria-label`; inner SVG shapes are `aria-hidden`.',
+      "Install path is `components/ui/verified-badge.tsx` with the `VerifiedBadge` export.",
+    ],
+  },
+  registryItem("verified-badge.json", ["motion"]),
+];
+
 const themeToggleApiDetails: DetailItem[] = [
   {
     id: "theme-toggle",
@@ -5357,6 +5403,7 @@ export {
   carouselApiDetails,
   originButtonApiDetails,
   themeToggleApiDetails,
+  verifiedBadgeApiDetails,
   faqProApiDetails,
   popoverApiDetails,
   accordionApiDetails,

@@ -393,6 +393,11 @@ const REGISTRY_UI_META: Record<
       "Embla-powered carousel with aspect-ratio presets and horizontal or vertical slides. Built with embla-carousel-react and Lucide.",
     dependencies: ["embla-carousel-react", "lucide-react"],
   },
+  "verified-badge": {
+    title: "Verified Badge",
+    description: "X-style verified badge with shimmer or static variants.",
+    dependencies: ["motion"],
+  },
   "r-accordion": {
     title: "Accordion (Radix UI)",
     description:

@@ -65,6 +65,7 @@ export const SITE_SECTIONS = [
       { label: "Origin Button", href: "/special-one/origin-button" },
       { label: "FAQ Pro", href: "/special-one/faq-pro" },
       { label: "Theme Toggle", href: "/special-one/theme-toggle" },
+      { label: "Verified Badge", href: "/special-one/verified-badge" },
     ],
   },
   {
