@@ -107,7 +107,7 @@ const componentSummaries: Record<string, string> = {
   "/special-one/theme-toggle":
     "Animated light/dark pill toggle with a sliding knob, sun and moon icons, and springy color transitions.",
   "/special-one/verified-badge":
-    "X-style verified badge with spin or static variants.",
+    "X-style verified badge with shimmer or static variants.",
   "/components/carousel":
     "Embla-powered carousel with aspect-ratio presets and horizontal or vertical slides.",
   "/foundation/typography":

@@ -3857,14 +3857,14 @@ const verifiedBadgeApiDetails: DetailItem[] = [
     id: "verified-badge",
     title: "VerifiedBadge",
     summary:
-      "Inline X-style verified scallop with a check. Use spin or static variants.",
+      "Inline X-style verified scallop with a check. Use shimmer or static variants.",
     fields: [
       field({
         name: "variant",
-        type: '"spin" | "static"',
-        defaultValue: "spin",
+        type: '"shimmer" | "static"',
+        defaultValue: "shimmer",
         description:
-          "Use `spin` for the animated scallop ring or `static` for a fixed badge without rotation.",
+          "Use `shimmer` for a sweeping highlight across the scallop or `static` for a fixed badge.",
       }),
       field({
         name: "size",
@@ -3890,12 +3890,12 @@ const verifiedBadgeApiDetails: DetailItem[] = [
     notes: [
       "Extends native `span` props (`id`, `onClick`, `data-*`, tooltips, and other `aria-*` attributes) via prop spreading on the root.",
       "Default color lives on the root span (`text-[hsl(203,89%,57%)]`); scallop paths use `currentColor` so `cn` can override via `className`.",
-      "The `spin` variant uses `motion-safe:animate-[spin_6s_linear_infinite]` so rotation respects `prefers-reduced-motion`.",
+      "The `shimmer` variant uses Motion to sweep a highlight across the scallop (0.5s pass, 1.5s pause between repeats) and skips animation when `prefers-reduced-motion` is enabled.",
       'Root uses `role="img"` with `aria-label`; inner SVG shapes are `aria-hidden`.',
       "Install path is `components/ui/verified-badge.tsx` with the `VerifiedBadge` export.",
     ],
   },
-  registryItem("verified-badge.json", []),
+  registryItem("verified-badge.json", ["motion"]),
 ];
 
 const themeToggleApiDetails: DetailItem[] = [

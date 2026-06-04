@@ -15,7 +15,7 @@ export function VerifiedBadgePreview() {
       <span className="font-semibold text-foreground text-xl tracking-tight">
         Iconiq UI
       </span>
-      <VerifiedBadge variant="spin" size={22} />
+      <VerifiedBadge variant="shimmer" size={22} />
     </span>
   );
 }`;
@@ -27,7 +27,7 @@ function VerifiedBadgePreview() {
         <span className="font-semibold text-foreground text-xl tracking-tight">
           Iconiq UI
         </span>
-        <VerifiedBadge size={22} variant="spin" />
+        <VerifiedBadge size={22} variant="shimmer" />
       </span>
     </div>
   );
@@ -42,14 +42,14 @@ export default function VerifiedBadgePage() {
         { label: "Verified Badge" },
       ]}
       componentName="verified-badge"
-      description="X-style verified badge with spin or static variants."
+      description="X-style verified badge with shimmer or static variants."
       details={verifiedBadgeApiDetails}
       preview={<VerifiedBadgePreview />}
       previewClassName="min-h-[12rem] overflow-visible"
       title="Verified Badge"
       usageCode={usageCode}
       usageDescription={
-        'Render `VerifiedBadge` beside usernames, profile headers, or trust indicators. Use `variant="spin"` for the animated scallop ring, `variant="static"` for a fixed badge, and `size` to scale the mark in pixels.'
+        'Render `VerifiedBadge` beside usernames, profile headers, or trust indicators. Use `variant="shimmer"` for a sweeping highlight on the scallop, `variant="static"` for a fixed badge, and `size` to scale the mark in pixels.'
       }
       v0PageCode={verifiedBadgePreviewCode}
     />

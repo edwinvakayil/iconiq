@@ -395,7 +395,8 @@ const REGISTRY_UI_META: Record<
   },
   "verified-badge": {
     title: "Verified Badge",
-    description: "X-style verified badge with spin or static variants.",
+    description: "X-style verified badge with shimmer or static variants.",
+    dependencies: ["motion"],
   },
   "r-accordion": {
     title: "Accordion (Radix UI)",

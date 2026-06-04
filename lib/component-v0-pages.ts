@@ -838,7 +838,7 @@ export default function Page() {
         <span className="font-semibold text-foreground text-xl tracking-tight">
           Iconiq UI
         </span>
-        <VerifiedBadge variant="spin" size={22} />
+        <VerifiedBadge variant="shimmer" size={22} />
       </span>
     </div>
   );

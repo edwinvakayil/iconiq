@@ -1364,10 +1364,10 @@
       "name": "verified-badge",
       "type": "registry:ui",
       "registryDependencies": [],
-      "dependencies": [],
+      "dependencies": ["motion"],
       "devDependencies": [],
       "title": "Verified Badge",
-      "description": "X-style verified badge with spin or static variants.",
+      "description": "X-style verified badge with shimmer or static variants.",
       "files": [
         {
           "path": "verified-badge.tsx",
