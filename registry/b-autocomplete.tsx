@@ -2,7 +2,7 @@
 
 import { Autocomplete as AutocompletePrimitive } from "@base-ui/react/autocomplete";
 import { ScrollArea as ScrollAreaPrimitive } from "@base-ui/react/scroll-area";
-import { ChevronsUpDown, X } from "lucide-react";
+import { ChevronsUpDown } from "lucide-react";
 import { motion } from "motion/react";
 import * as React from "react";
 
@@ -21,6 +21,8 @@ type AutocompleteRootProps<Value> = ReducedMotionProp &
     items: readonly Value[];
   };
 
+const INSTANT_CLOSE_TRANSITION = { duration: 0 } as const;
+
 type AutocompleteContextValue = {
   actionsRef: React.RefObject<AutocompletePrimitive.Root.Actions | null>;
   activeHighlightId: string;
@@ -29,6 +31,7 @@ type AutocompleteContextValue = {
   reduceMotion: boolean;
   setActiveValue: React.Dispatch<React.SetStateAction<unknown>>;
   setOpen: (open: boolean) => void;
+  skipExitAnimationRef: React.MutableRefObject<boolean>;
 };
 
 type DivRenderProps = React.HTMLAttributes<HTMLDivElement> & {
@@ -228,6 +231,7 @@ function Autocomplete<Value>({
   const [activeValue, setActiveValue] = React.useState<unknown>();
   const open = isOpenControlled ? openProp : uncontrolledOpen;
   const activeHighlightId = React.useId();
+  const skipExitAnimationRef = React.useRef(false);
 
   const setOpen = React.useCallback(
     (nextOpen: boolean) => {
@@ -246,6 +250,12 @@ function Autocomplete<Value>({
     NonNullable<AutocompletePrimitive.Root.Props<Value>["onOpenChange"]>
   >(
     (nextOpen, eventDetails) => {
+      if (!nextOpen && eventDetails.reason === "item-press") {
+        skipExitAnimationRef.current = true;
+      } else if (nextOpen) {
+        skipExitAnimationRef.current = false;
+      }
+
       if (!nextOpen && reduceMotion) {
         requestAnimationFrame(() => {
           actionsRef.current?.unmount();
@@ -272,6 +282,7 @@ function Autocomplete<Value>({
           reduceMotion,
           setActiveValue,
           setOpen,
+          skipExitAnimationRef,
         }}
       >
         <AutocompletePrimitive.Root
@@ -327,26 +338,6 @@ function AutocompleteTrigger({
   );
 }
 
-function AutocompleteClear({
-  className,
-  ...props
-}: AutocompletePrimitive.Clear.Props) {
-  return (
-    <AutocompletePrimitive.Clear
-      aria-label="Clear input"
-      className={cn(
-        "flex size-8 shrink-0 items-center justify-center rounded-md text-muted-foreground opacity-70 transition hover:bg-accent/60 hover:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/30",
-        className
-      )}
-      data-slot="autocomplete-clear"
-      keepMounted={false}
-      {...props}
-    >
-      <X className="h-3.5 w-3.5" />
-    </AutocompletePrimitive.Clear>
-  );
-}
-
 function AutocompleteInput({
   className,
   children,
@@ -355,13 +346,11 @@ function AutocompleteInput({
   label,
   labelClassName,
   ref: refProp,
-  showClear = true,
   showTrigger = false,
   ...props
 }: AutocompletePrimitive.Input.Props & {
   label?: React.ReactNode;
   labelClassName?: string;
-  showClear?: boolean;
   showTrigger?: boolean;
 }) {
   const { open, setOpen } = useAutocompleteContext("AutocompleteInput");
@@ -403,7 +392,6 @@ function AutocompleteInput({
         }}
         {...props}
       />
-      {showClear ? <AutocompleteClear disabled={disabled} /> : null}
       {showTrigger ? <AutocompleteTrigger disabled={disabled} /> : null}
       {children}
     </AutocompletePrimitive.InputGroup>
@@ -422,6 +410,89 @@ function AutocompleteInput({
         {label}
       </label>
       {inputGroup}
+    </div>
+  );
+}
+
+function AutocompleteContentPanel({
+  children,
+  className,
+  popupClassName,
+  popupRef,
+  popupState,
+  popupStyle,
+  resolvedPopupProps,
+}: {
+  children: React.ReactNode;
+  className?:
+    | string
+    | ((state: AutocompletePrimitive.Popup.State) => string | undefined);
+  popupClassName?: string;
+  popupRef?: React.Ref<HTMLDivElement>;
+  popupState: AutocompletePrimitive.Popup.State;
+  popupStyle?: React.CSSProperties;
+  resolvedPopupProps: Omit<
+    DivRenderProps,
+    "children" | "className" | "ref" | "style"
+  >;
+}) {
+  const { actionsRef, reduceMotion, setOpen, skipExitAnimationRef } =
+    useAutocompleteContext("AutocompleteContentPanel");
+  const popupMotion = getPopupMotion(reduceMotion);
+  const isPopupVisible = popupState.open && !popupState.empty;
+  const skipExitAnimation = !popupState.open && skipExitAnimationRef.current;
+
+  React.useEffect(() => {
+    if (popupState.open && popupState.empty) {
+      setOpen(false);
+    }
+  }, [popupState.empty, popupState.open, setOpen]);
+
+  return (
+    <div
+      {...resolvedPopupProps}
+      ref={(node) => {
+        setRef(popupRef, node);
+      }}
+      role="presentation"
+      style={{
+        ...popupStyle,
+        transformOrigin: "var(--transform-origin)",
+      }}
+    >
+      <motion.div
+        animate={isPopupVisible ? popupMotion.animate : popupMotion.closed}
+        className={cn(
+          componentThemeClassName,
+          "w-[var(--anchor-width)] max-w-[var(--available-width)] transform-gpu overflow-hidden rounded-lg border border-neutral-200/60 bg-white text-neutral-900 shadow-none dark:border-neutral-700/60 dark:bg-neutral-950 dark:text-neutral-100",
+          popupClassName,
+          resolveStateClassName(className, popupState)
+        )}
+        initial={
+          popupState.transitionStatus === "starting" && !popupState.empty
+            ? popupMotion.initial
+            : false
+        }
+        onAnimationComplete={() => {
+          if (!popupState.open || popupState.empty) {
+            skipExitAnimationRef.current = false;
+            actionsRef.current?.unmount();
+          }
+        }}
+        style={{
+          pointerEvents: isPopupVisible ? undefined : "none",
+          transformOrigin: "var(--transform-origin)",
+        }}
+        transition={
+          isPopupVisible
+            ? popupMotion.openTransition
+            : skipExitAnimation
+              ? INSTANT_CLOSE_TRANSITION
+              : popupMotion.closedTransition
+        }
+      >
+        {children}
+      </motion.div>
     </div>
   );
 }
@@ -446,11 +517,6 @@ function AutocompleteContent({
     | "collisionPadding"
     | "sideOffset"
   >) {
-  const { actionsRef, reduceMotion } = useAutocompleteContext(
-    "AutocompleteContent"
-  );
-  const popupMotion = getPopupMotion(reduceMotion);
-
   return (
     <AutocompletePrimitive.Portal keepMounted>
       <AutocompletePrimitive.Positioner
@@ -472,50 +538,16 @@ function AutocompleteContent({
               resolvePopupProps(popupProps as DivRenderProps);
 
             return (
-              <div
-                {...resolvedPopupProps}
-                ref={(node) => {
-                  setRef(popupRef, node);
-                }}
-                role="presentation"
-                style={{
-                  ...popupStyle,
-                  transformOrigin: "var(--transform-origin)",
-                }}
+              <AutocompleteContentPanel
+                className={className}
+                popupClassName={popupClassName}
+                popupRef={popupRef}
+                popupState={popupState}
+                popupStyle={popupStyle}
+                resolvedPopupProps={resolvedPopupProps}
               >
-                <motion.div
-                  animate={
-                    popupState.open ? popupMotion.animate : popupMotion.closed
-                  }
-                  className={cn(
-                    componentThemeClassName,
-                    "w-[var(--anchor-width)] max-w-[var(--available-width)] transform-gpu overflow-hidden rounded-lg border border-neutral-200/60 bg-white text-neutral-900 shadow-none dark:border-neutral-700/60 dark:bg-neutral-950 dark:text-neutral-100",
-                    popupClassName,
-                    resolveStateClassName(className, popupState)
-                  )}
-                  initial={
-                    popupState.transitionStatus === "starting"
-                      ? popupMotion.initial
-                      : false
-                  }
-                  onAnimationComplete={() => {
-                    if (!popupState.open) {
-                      actionsRef.current?.unmount();
-                    }
-                  }}
-                  style={{
-                    pointerEvents: popupState.open ? undefined : "none",
-                    transformOrigin: "var(--transform-origin)",
-                  }}
-                  transition={
-                    popupState.open
-                      ? popupMotion.openTransition
-                      : popupMotion.closedTransition
-                  }
-                >
-                  {children}
-                </motion.div>
-              </div>
+                {children}
+              </AutocompleteContentPanel>
             );
           }}
         />
@@ -688,22 +720,6 @@ function AutocompleteCollection({
   );
 }
 
-function AutocompleteEmpty({
-  className,
-  children = "No results found.",
-  ...props
-}: AutocompletePrimitive.Empty.Props) {
-  return (
-    <AutocompletePrimitive.Empty
-      className={cn("text-center text-muted-foreground text-sm", className)}
-      data-slot="autocomplete-empty"
-      {...props}
-    >
-      <span className="block px-3 py-6">{children}</span>
-    </AutocompletePrimitive.Empty>
-  );
-}
-
 function AutocompleteSeparator({
   className,
   ...props
@@ -723,10 +739,8 @@ function useAutocompleteAnchor() {
 
 export {
   Autocomplete,
-  AutocompleteClear,
   AutocompleteCollection,
   AutocompleteContent,
-  AutocompleteEmpty,
   AutocompleteGroup,
   AutocompleteInput,
   AutocompleteItem,

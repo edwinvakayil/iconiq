@@ -2,7 +2,7 @@
 
 import { Combobox as ComboboxPrimitive } from "@base-ui/react/combobox";
 import { ScrollArea as ScrollAreaPrimitive } from "@base-ui/react/scroll-area";
-import { Check, ChevronsUpDown, X } from "lucide-react";
+import { Check, ChevronDown, ChevronUp, X } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import * as React from "react";
 
@@ -21,6 +21,8 @@ type ComboboxRootProps<
   Multiple extends boolean | undefined = false,
 > = ComboboxPrimitive.Root.Props<Value, Multiple> & ReducedMotionProp;
 
+const INSTANT_CLOSE_TRANSITION = { duration: 0 } as const;
+
 type ComboboxContextValue = {
   actionsRef: React.RefObject<ComboboxPrimitive.Root.Actions | null>;
   activeHighlightId: string;
@@ -29,6 +31,7 @@ type ComboboxContextValue = {
   reduceMotion: boolean;
   setActiveValue: React.Dispatch<React.SetStateAction<unknown>>;
   setOpen: (open: boolean) => void;
+  skipExitAnimationRef: React.MutableRefObject<boolean>;
 };
 
 type DivRenderProps = React.HTMLAttributes<HTMLDivElement> & {
@@ -137,17 +140,49 @@ function resolveItemProps(itemProps: DivRenderProps) {
   };
 }
 
+const FLUID_EASE = [0.16, 1, 0.3, 1] as const;
+const EXIT_EASE = [0.4, 0, 0.6, 1] as const;
+
+const POPUP_SPRING = {
+  type: "spring" as const,
+  stiffness: 260,
+  damping: 32,
+  mass: 0.95,
+};
+
+function getPopupMotion(reduceMotion: boolean) {
+  if (reduceMotion) {
+    return {
+      animate: { opacity: 1, scale: 1, y: 0 },
+      closed: { opacity: 0, scale: 1, y: 0 },
+      initial: { opacity: 0, scale: 1, y: 0 },
+      openTransition: { duration: 0.12, ease: "easeOut" as const },
+      closedTransition: { duration: 0.1, ease: "easeOut" as const },
+    };
+  }
+
+  return {
+    animate: { opacity: 1, scale: 1, y: 0 },
+    closed: { opacity: 0, scale: 0.985, y: -5 },
+    initial: { opacity: 0, scale: 0.985, y: -5 },
+    openTransition: {
+      opacity: { duration: 0.34, ease: FLUID_EASE },
+      scale: POPUP_SPRING,
+      y: POPUP_SPRING,
+    },
+    closedTransition: {
+      opacity: { duration: 0.22, ease: EXIT_EASE },
+      scale: { duration: 0.22, ease: EXIT_EASE },
+      y: { duration: 0.22, ease: EXIT_EASE },
+    },
+  };
+}
+
 const comboboxListScrollbarClassName =
   "z-10 my-1.5 mr-0.5 w-1 shrink-0 touch-none select-none opacity-0 transition-opacity duration-150 before:absolute before:left-1/2 before:h-full before:w-5 before:-translate-x-1/2 before:content-[''] data-hovering:pointer-events-auto data-hovering:opacity-100 data-scrolling:pointer-events-auto data-scrolling:opacity-100 data-scrolling:duration-0";
 
 const comboboxListThumbClassName =
   "relative rounded-full bg-muted-foreground/50 bg-[color:color-mix(in_oklch,var(--ic-muted-foreground),transparent_35%)]";
-
-function getChevronTransition(reduceMotion: boolean) {
-  return reduceMotion
-    ? { duration: 0.12, ease: "easeOut" as const }
-    : { type: "spring" as const, stiffness: 300, damping: 22 };
-}
 
 function Combobox<Value, Multiple extends boolean | undefined = false>({
   actionsRef: actionsRefProp,
@@ -171,6 +206,7 @@ function Combobox<Value, Multiple extends boolean | undefined = false>({
   const [activeValue, setActiveValue] = React.useState<unknown>();
   const open = isOpenControlled ? openProp : uncontrolledOpen;
   const activeHighlightId = React.useId();
+  const skipExitAnimationRef = React.useRef(false);
 
   const setOpen = React.useCallback(
     (nextOpen: boolean) => {
@@ -189,6 +225,12 @@ function Combobox<Value, Multiple extends boolean | undefined = false>({
     NonNullable<ComboboxPrimitive.Root.Props<Value, Multiple>["onOpenChange"]>
   >(
     (nextOpen, eventDetails) => {
+      if (!nextOpen && eventDetails.reason === "item-press") {
+        skipExitAnimationRef.current = true;
+      } else if (nextOpen) {
+        skipExitAnimationRef.current = false;
+      }
+
       if (!nextOpen && reduceMotion) {
         requestAnimationFrame(() => {
           actionsRef.current?.unmount();
@@ -215,6 +257,7 @@ function Combobox<Value, Multiple extends boolean | undefined = false>({
           reduceMotion,
           setActiveValue,
           setOpen,
+          skipExitAnimationRef,
         }}
       >
         <ComboboxPrimitive.Root
@@ -242,45 +285,42 @@ function ComboboxValue({ ...props }: ComboboxPrimitive.Value.Props) {
 function ComboboxTrigger({
   className,
   children,
-  ...props
-}: ComboboxPrimitive.Trigger.Props) {
-  const { open, reduceMotion } = useComboboxContext("ComboboxTrigger");
+  disabled = false,
+}: {
+  children?: React.ReactNode;
+  className?: string;
+  disabled?: boolean;
+}) {
+  const { open, setOpen } = useComboboxContext("ComboboxTrigger");
 
   return (
-    <ComboboxPrimitive.Trigger
+    <div
       className={cn(
-        "flex shrink-0 items-center justify-center text-muted-foreground transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/30 disabled:cursor-not-allowed disabled:opacity-50",
+        "flex shrink-0 items-center justify-center text-muted-foreground",
         className
       )}
       data-slot="combobox-trigger"
-      type="button"
-      {...props}
     >
       {children}
-      <motion.span
-        animate={{ rotate: open ? 180 : 0 }}
-        transition={getChevronTransition(reduceMotion)}
+      <button
+        aria-expanded={open}
+        aria-label={open ? "Collapse options" : "Open options"}
+        className="flex size-8 items-center justify-center rounded-md text-muted-foreground transition-colors duration-150 hover:bg-accent/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/30 disabled:cursor-not-allowed disabled:opacity-50"
+        disabled={disabled}
+        onClick={(event) => {
+          event.preventDefault();
+          event.stopPropagation();
+          setOpen(!open);
+        }}
+        type="button"
       >
-        <ChevronsUpDown className="h-4 w-4" />
-      </motion.span>
-    </ComboboxPrimitive.Trigger>
-  );
-}
-
-function ComboboxClear({ className, ...props }: ComboboxPrimitive.Clear.Props) {
-  return (
-    <ComboboxPrimitive.Clear
-      aria-label="Clear selection"
-      className={cn(
-        "flex h-10 w-10 shrink-0 items-center justify-center rounded-lg text-muted-foreground opacity-70 transition hover:bg-accent/60 hover:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/30",
-        className
-      )}
-      data-slot="combobox-clear"
-      keepMounted={false}
-      {...props}
-    >
-      <X className="h-3.5 w-3.5" />
-    </ComboboxPrimitive.Clear>
+        {open ? (
+          <ChevronUp className="h-4 w-4" />
+        ) : (
+          <ChevronDown className="h-4 w-4" />
+        )}
+      </button>
+    </div>
   );
 }
 
@@ -288,11 +328,9 @@ function ComboboxInput({
   className,
   children,
   disabled = false,
-  showClear = true,
   showTrigger = true,
   ...props
 }: ComboboxPrimitive.Input.Props & {
-  showClear?: boolean;
   showTrigger?: boolean;
 }) {
   const { open, setOpen } = useComboboxContext("ComboboxInput");
@@ -328,10 +366,86 @@ function ComboboxInput({
         ref={inputRef}
         {...props}
       />
-      {showClear ? <ComboboxClear disabled={disabled} /> : null}
       {showTrigger ? <ComboboxTrigger disabled={disabled} /> : null}
       {children}
     </ComboboxPrimitive.InputGroup>
+  );
+}
+
+function ComboboxContentPanel({
+  children,
+  className,
+  popupClassName,
+  popupRef,
+  popupState,
+  popupStyle,
+  resolvedPopupProps,
+}: {
+  children: React.ReactNode;
+  className?:
+    | string
+    | ((state: ComboboxPrimitive.Popup.State) => string | undefined);
+  popupClassName?: string;
+  popupRef?: React.Ref<HTMLDivElement>;
+  popupState: ComboboxPrimitive.Popup.State;
+  popupStyle?: React.CSSProperties;
+  resolvedPopupProps: Omit<
+    DivRenderProps,
+    "children" | "className" | "ref" | "style"
+  >;
+}) {
+  const { actionsRef, reduceMotion, skipExitAnimationRef } = useComboboxContext(
+    "ComboboxContentPanel"
+  );
+  const popupMotion = getPopupMotion(reduceMotion);
+  const skipExitAnimation = !popupState.open && skipExitAnimationRef.current;
+
+  return (
+    <div
+      {...resolvedPopupProps}
+      ref={(node) => {
+        setRef(popupRef, node);
+      }}
+      role="presentation"
+      style={{
+        ...popupStyle,
+        transformOrigin: "var(--transform-origin)",
+      }}
+    >
+      <motion.div
+        animate={popupState.open ? popupMotion.animate : popupMotion.closed}
+        className={cn(
+          componentThemeClassName,
+          "w-[var(--anchor-width)] max-w-[var(--available-width)] transform-gpu overflow-hidden rounded-lg border border-neutral-200/60 bg-white text-neutral-900 shadow-none dark:border-neutral-700/60 dark:bg-neutral-950 dark:text-neutral-100",
+          popupClassName,
+          resolveStateClassName(className, popupState)
+        )}
+        initial={
+          popupState.transitionStatus === "starting"
+            ? popupMotion.initial
+            : false
+        }
+        onAnimationComplete={() => {
+          if (!popupState.open) {
+            skipExitAnimationRef.current = false;
+            actionsRef.current?.unmount();
+          }
+        }}
+        style={{
+          pointerEvents: popupState.open ? undefined : "none",
+          transformOrigin: "var(--transform-origin)",
+        }}
+        transition={
+          popupState.open
+            ? popupMotion.openTransition
+            : skipExitAnimation
+              ? INSTANT_CLOSE_TRANSITION
+              : popupMotion.closedTransition
+        }
+      >
+        {children}
+      </motion.div>
+    </div>
   );
 }
 
@@ -349,8 +463,6 @@ function ComboboxContent({
     ComboboxPrimitive.Positioner.Props,
     "align" | "alignOffset" | "anchor" | "side" | "sideOffset"
   >) {
-  const { actionsRef, reduceMotion } = useComboboxContext("ComboboxContent");
-
   return (
     <ComboboxPrimitive.Portal keepMounted>
       <ComboboxPrimitive.Positioner
@@ -370,41 +482,16 @@ function ComboboxContent({
               resolvePopupProps(popupProps as DivRenderProps);
 
             return (
-              <motion.div
-                {...resolvedPopupProps}
-                animate={
-                  popupState.open
-                    ? { opacity: 1, y: 0 }
-                    : { opacity: 0, y: reduceMotion ? 0 : -4 }
-                }
-                className={cn(
-                  componentThemeClassName,
-                  "w-[var(--anchor-width)] max-w-[var(--available-width)] overflow-hidden rounded-lg border border-neutral-200/60 bg-white text-neutral-900 shadow-none dark:border-neutral-700/60 dark:bg-neutral-950 dark:text-neutral-100",
-                  popupClassName,
-                  resolveStateClassName(className, popupState)
-                )}
-                initial={
-                  popupState.transitionStatus === "starting"
-                    ? { opacity: 0, y: reduceMotion ? 0 : -6 }
-                    : false
-                }
-                onAnimationComplete={() => {
-                  if (!popupState.open) {
-                    actionsRef.current?.unmount();
-                  }
-                }}
-                ref={(node) => {
-                  setRef(popupRef, node);
-                }}
-                role="presentation"
-                style={popupStyle}
-                transition={{
-                  duration: reduceMotion ? 0.1 : 0.16,
-                  ease: [0.22, 1, 0.36, 1],
-                }}
+              <ComboboxContentPanel
+                className={className}
+                popupClassName={popupClassName}
+                popupRef={popupRef}
+                popupState={popupState}
+                popupStyle={popupStyle}
+                resolvedPopupProps={resolvedPopupProps}
               >
                 {children}
-              </motion.div>
+              </ComboboxContentPanel>
             );
           }}
         />
@@ -696,7 +783,6 @@ export {
   ComboboxChips,
   ComboboxChip,
   ComboboxChipsInput,
-  ComboboxClear,
   ComboboxCollection,
   ComboboxContent,
   ComboboxEmpty,
