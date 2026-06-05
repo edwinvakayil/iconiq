@@ -139,10 +139,10 @@ function getDetails(provider: ProviderConfig): DetailItem[] {
         notes: [
           "Additional motion.div props such as style, role, onClick, aria-*, and data-* are forwarded, but initial, animate, exit, and transition are reserved by the component.",
           provider.libraryLabel === "Base UI"
-            ? "The panel is portaled through Base UI popover positioner and popup primitives, while preserving the same spring-driven blur, scale, and directional offset animation."
-            : "The panel is portaled through Radix Hover Card content, while preserving the same spring-driven blur, scale, and directional offset animation.",
+            ? "The panel is portaled through Base UI popover positioner and popup primitives, while preserving the same spring-driven scale and directional offset animation."
+            : "The panel is portaled through Radix Hover Card content, while preserving the same spring-driven scale and directional offset animation.",
           "Focus can move from the trigger into interactive content without immediately closing the card.",
-          "By default the content is centered below the trigger with a fixed w-72 width and a 12px hover bridge across the trigger-to-panel gap.",
+          "By default the content is centered below the trigger with a fixed w-72 width, no drop shadow, and a 12px hover bridge across the trigger-to-panel gap.",
         ],
       };
     }

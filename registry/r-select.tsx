@@ -20,7 +20,7 @@ const selectTriggerClassName =
   "flex min-h-11 w-full touch-manipulation items-center justify-between gap-2 rounded-lg border border-[color:var(--sel-border)] bg-[color:var(--sel-surface)] px-4 py-3 text-left font-medium text-[color:var(--sel-foreground)] text-sm transition-colors hover:bg-accent/60 focus:outline-none focus-visible:ring-2 focus-visible:ring-[color:color-mix(in_oklch,var(--sel-ring),transparent_50%)] disabled:cursor-not-allowed disabled:opacity-50 data-placeholder:text-[color:var(--sel-muted-foreground)]";
 
 const selectPanelChromeClassName =
-  "z-[300] overflow-hidden rounded-lg border border-[color:color-mix(in_oklch,var(--sel-border,#e3e7ec),transparent_40%)] bg-[var(--sel-surface,#ffffff)] text-[var(--sel-foreground,#111111)] shadow-lg dark:border-[color:color-mix(in_oklch,var(--sel-border,#2b2a25),transparent_40%)] dark:bg-[var(--sel-surface,#111111)] dark:text-[var(--sel-foreground,#f6f3ec)]";
+  "z-[300] overflow-hidden rounded-lg border border-[color:color-mix(in_oklch,var(--sel-border,#e3e7ec),transparent_40%)] bg-[var(--sel-surface,#ffffff)] text-[var(--sel-foreground,#111111)] shadow-none dark:border-[color:color-mix(in_oklch,var(--sel-border,#2b2a25),transparent_40%)] dark:bg-[var(--sel-surface,#111111)] dark:text-[var(--sel-foreground,#f6f3ec)]";
 
 const selectItemClassName =
   "group relative isolate flex min-h-11 cursor-pointer touch-manipulation select-none items-center gap-3 rounded-lg py-2.5 pr-8 pl-3 text-[color:var(--sel-foreground)] text-sm outline-none transition-colors";

@@ -5,17 +5,13 @@ import { Slot } from "@radix-ui/react-slot";
 import { AnimatePresence, motion } from "motion/react";
 import * as React from "react";
 
-import {
-  ReducedMotionConfig,
-  type ReducedMotionProp,
-} from "@/lib/reduced-motion";
 import { cn } from "@/lib/utils";
 
 const hoverCardThemeClassName =
   "[--hc-surface:#ffffff] [--hc-foreground:#111111] [--hc-border:#e3e7ec] [--hc-ring:rgba(17,17,17,0.16)] dark:[--hc-surface:#111111] dark:[--hc-foreground:#f6f3ec] dark:[--hc-border:#2b2a25] dark:[--hc-ring:rgba(246,243,236,0.18)]";
 
 const hoverCardPanelClassName =
-  "relative z-50 w-72 rounded-lg border border-[color:var(--hc-border)] bg-[color:var(--hc-surface)] p-4 text-[color:var(--hc-foreground)] shadow-2xl outline-none";
+  "relative z-50 w-72 transform-gpu rounded-lg border border-[color:var(--hc-border)] bg-[color:var(--hc-surface)] p-4 text-[color:var(--hc-foreground)] shadow-none outline-none";
 
 const hoverCardTriggerClassName =
   "inline-flex min-h-9 cursor-pointer items-center rounded-md px-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:color-mix(in_oklch,var(--hc-ring),transparent_40%)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--hc-surface)]";
@@ -42,12 +38,50 @@ const HoverCardContext = React.createContext<HoverCardContextValue | null>(
   null
 );
 
-const initialOffset: Record<Side, { x: number; y: number }> = {
-  top: { x: 0, y: 8 },
-  right: { x: -8, y: 0 },
-  bottom: { x: 0, y: -8 },
-  left: { x: 8, y: 0 },
+const FLUID_EASE = [0.16, 1, 0.3, 1] as const;
+const HOVER_CARD_EXIT_EASE = [0.4, 0, 0.6, 1] as const;
+
+const HOVER_CARD_SPRING = {
+  type: "spring" as const,
+  stiffness: 340,
+  damping: 30,
+  mass: 0.72,
 };
+
+function getSideMotionOffset(side: Side) {
+  switch (side) {
+    case "top":
+      return { x: 0, y: 4 };
+    case "right":
+      return { x: -4, y: 0 };
+    case "left":
+      return { x: 4, y: 0 };
+    default:
+      return { x: 0, y: -4 };
+  }
+}
+
+function getHoverCardMotion(side: Side) {
+  const offset = getSideMotionOffset(side);
+
+  return {
+    animate: { opacity: 1, scale: 1, x: 0, y: 0 },
+    closed: { opacity: 0, scale: 0.988, ...offset },
+    initial: { opacity: 0, scale: 0.988, ...offset },
+    openTransition: {
+      opacity: { duration: 0.26, ease: FLUID_EASE },
+      scale: HOVER_CARD_SPRING,
+      x: HOVER_CARD_SPRING,
+      y: HOVER_CARD_SPRING,
+    },
+    closedTransition: {
+      opacity: { duration: 0.16, ease: HOVER_CARD_EXIT_EASE },
+      scale: { duration: 0.16, ease: HOVER_CARD_EXIT_EASE },
+      x: { duration: 0.16, ease: HOVER_CARD_EXIT_EASE },
+      y: { duration: 0.16, ease: HOVER_CARD_EXIT_EASE },
+    },
+  };
+}
 
 const hoverBridgeStyles: Record<Side, string> = {
   top: "before:pointer-events-auto before:absolute before:right-0 before:bottom-[calc(var(--hover-card-bridge-size)*-1)] before:left-0 before:h-[var(--hover-card-bridge-size)] before:bg-transparent before:content-['']",
@@ -79,7 +113,7 @@ const useHoverCard = () => {
   return context;
 };
 
-type HoverCardProps = ReducedMotionProp & {
+type HoverCardProps = {
   className?: string;
   openDelay?: number;
   closeDelay?: number;
@@ -91,7 +125,6 @@ const HoverCard = ({
   openDelay = 80,
   closeDelay = 120,
   children,
-  reducedMotion,
 }: HoverCardProps) => {
   const [open, setOpen] = React.useState(false);
   const timeoutRef = React.useRef<number | null>(null);
@@ -184,43 +217,41 @@ const HoverCard = ({
   React.useEffect(() => clearTimer, [clearTimer]);
 
   return (
-    <ReducedMotionConfig reducedMotion={reducedMotion}>
-      <HoverCardContext.Provider
-        value={{
-          open,
-          contentId: `${reactId}-content`,
-          triggerId: `${reactId}-trigger`,
-          setContentNode: (node) => {
-            contentRef.current = node;
-          },
-          setTriggerNode: (node) => {
-            triggerRef.current = node;
-          },
-          handleFocusEnd,
-          handleFocusStart,
-          handleHoverEnd,
-          handleHoverStart,
+    <HoverCardContext.Provider
+      value={{
+        open,
+        contentId: `${reactId}-content`,
+        triggerId: `${reactId}-trigger`,
+        setContentNode: (node) => {
+          contentRef.current = node;
+        },
+        setTriggerNode: (node) => {
+          triggerRef.current = node;
+        },
+        handleFocusEnd,
+        handleFocusStart,
+        handleHoverEnd,
+        handleHoverStart,
+      }}
+    >
+      <HoverCardPrimitive.Root
+        onOpenChange={(nextOpen) => {
+          clearTimer();
+          setOpen(nextOpen);
         }}
+        open={open}
       >
-        <HoverCardPrimitive.Root
-          onOpenChange={(nextOpen) => {
-            clearTimer();
-            setOpen(nextOpen);
-          }}
-          open={open}
+        <span
+          className={cn(
+            hoverCardThemeClassName,
+            "inline-flex w-fit",
+            className
+          )}
         >
-          <span
-            className={cn(
-              hoverCardThemeClassName,
-              "inline-flex w-fit",
-              className
-            )}
-          >
-            {children}
-          </span>
-        </HoverCardPrimitive.Root>
-      </HoverCardContext.Provider>
-    </ReducedMotionConfig>
+          {children}
+        </span>
+      </HoverCardPrimitive.Root>
+    </HoverCardContext.Provider>
   );
 };
 
@@ -358,13 +389,23 @@ const HoverCardContentBody = React.forwardRef<
     const {
       contentId,
       triggerId,
-      open,
       setContentNode,
       handleFocusEnd,
       handleFocusStart,
       handleHoverEnd,
       handleHoverStart,
     } = useHoverCard();
+    const cardMotion = getHoverCardMotion(side);
+    const panelVariants = {
+      closed: {
+        ...cardMotion.closed,
+        transition: cardMotion.closedTransition,
+      },
+      open: {
+        ...cardMotion.animate,
+        transition: cardMotion.openTransition,
+      },
+    };
 
     return (
       <HoverCardPrimitive.Content
@@ -376,87 +417,78 @@ const HoverCardContentBody = React.forwardRef<
         side={side}
         sideOffset={sideOffset}
       >
-        <motion.div
-          animate={{ opacity: 1, x: 0, y: 0, scale: 1, filter: "blur(0px)" }}
-          aria-labelledby={triggerId}
-          className={cn(
-            hoverCardThemeClassName,
-            hoverCardPanelClassName,
-            hoverBridgeStyles[side],
-            className
-          )}
-          data-state={open ? "open" : "closed"}
-          exit={{
-            opacity: 0,
-            scale: 0.97,
-            filter: "blur(6px)",
-            ...initialOffset[side],
-          }}
-          id={contentId}
-          initial={{
-            opacity: 0,
-            scale: 0.96,
-            filter: "blur(8px)",
-            ...initialOffset[side],
-          }}
-          onBlur={(event) => {
-            onBlur?.(event);
-
-            if (event.defaultPrevented) {
-              return;
-            }
-
-            handleFocusEnd(event);
-          }}
-          onFocus={(event) => {
-            onFocus?.(event);
-
-            if (event.defaultPrevented) {
-              return;
-            }
-
-            handleFocusStart();
-          }}
-          onPointerEnter={(event) => {
-            onPointerEnter?.(event);
-
-            if (event.defaultPrevented) {
-              return;
-            }
-
-            handleHoverStart(event);
-          }}
-          onPointerLeave={(event) => {
-            onPointerLeave?.(event);
-
-            if (event.defaultPrevented) {
-              return;
-            }
-
-            handleHoverEnd(event);
-          }}
-          ref={(node: HTMLDivElement | null) => {
-            setContentNode(node);
-            assignRef(ref, node);
-          }}
+        <div
           style={
             {
               "--hover-card-bridge-size": `${sideOffset}px`,
-              transformOrigin:
-                "var(--radix-hover-card-content-transform-origin)",
               ...style,
             } as React.CSSProperties
           }
-          transition={{
-            type: "spring",
-            stiffness: 280,
-            damping: 24,
-            mass: 0.55,
-          }}
-          {...props}
         >
-          {children}
-        </motion.div>
+          <motion.div
+            {...props}
+            animate="open"
+            aria-labelledby={triggerId}
+            className={cn(
+              hoverCardThemeClassName,
+              hoverCardPanelClassName,
+              hoverBridgeStyles[side],
+              "transform-gpu",
+              className
+            )}
+            data-state="open"
+            exit="closed"
+            id={contentId}
+            initial="closed"
+            onBlur={(event) => {
+              onBlur?.(event);
+
+              if (event.defaultPrevented) {
+                return;
+              }
+
+              handleFocusEnd(event);
+            }}
+            onFocus={(event) => {
+              onFocus?.(event);
+
+              if (event.defaultPrevented) {
+                return;
+              }
+
+              handleFocusStart();
+            }}
+            onPointerEnter={(event) => {
+              onPointerEnter?.(event);
+
+              if (event.defaultPrevented) {
+                return;
+              }
+
+              handleHoverStart(event);
+            }}
+            onPointerLeave={(event) => {
+              onPointerLeave?.(event);
+
+              if (event.defaultPrevented) {
+                return;
+              }
+
+              handleHoverEnd(event);
+            }}
+            ref={(node: HTMLDivElement | null) => {
+              setContentNode(node);
+              assignRef(ref, node);
+            }}
+            style={{
+              transformOrigin:
+                "var(--radix-hover-card-content-transform-origin)",
+            }}
+            variants={panelVariants}
+          >
+            {children}
+          </motion.div>
+        </div>
       </HoverCardPrimitive.Content>
     );
   }
