@@ -8,8 +8,6 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import type { PACKAGE_MANAGER } from "@/constants";
-import { capturePostHogEvent } from "@/lib/posthog";
-import { POSTHOG_EVENTS } from "@/lib/posthog-events";
 import { cn } from "@/lib/utils";
 import { usePackageNameContext } from "@/providers/package-name";
 
@@ -46,12 +44,6 @@ export function InstallCommandTerminal({
     startTransition(async () => {
       try {
         await navigator.clipboard.writeText(commands[packageName]);
-        capturePostHogEvent(POSTHOG_EVENTS.DOCS_INSTALL_COPIED, {
-          component_slug: eventSlug,
-          package_manager: packageName,
-          command: commands[packageName],
-          source: "install_block",
-        });
         setCopied(true);
         await new Promise((resolve) => setTimeout(resolve, 2000));
         setCopied(false);
