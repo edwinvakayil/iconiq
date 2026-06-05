@@ -74,6 +74,7 @@ export function InstallCommandTerminal({
       <Tabs
         className="gap-0"
         defaultValue={packageName}
+        id={`docs-install-cli-${eventSlug}`}
         onValueChange={(value) => setPackageName(value as PackageManager)}
         value={packageName}
       >

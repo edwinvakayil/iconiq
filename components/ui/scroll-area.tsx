@@ -45,12 +45,12 @@ const ScrollAreaScrollbar = React.forwardRef<
 >(({ className, orientation = "vertical", ...props }, ref) => (
   <BaseScrollArea.Scrollbar
     className={cn(
-      "pointer-events-none relative flex touch-none opacity-0 transition-opacity duration-100",
+      "z-10 shrink-0 touch-none select-none opacity-0 transition-opacity duration-150",
       "before:absolute before:content-['']",
+      "data-hovering:pointer-events-auto data-hovering:opacity-100",
       "data-scrolling:pointer-events-auto data-scrolling:opacity-100 data-scrolling:duration-0",
-      "data-hovering:pointer-events-auto data-hovering:opacity-100 data-hovering:delay-0",
       orientation === "vertical" &&
-        "m-2 w-1 before:left-1/2 before:h-full before:w-5 before:-translate-x-1/2",
+        "my-1.5 mr-0.5 w-1 before:left-1/2 before:h-full before:w-5 before:-translate-x-1/2",
       orientation === "horizontal" &&
         "m-2 h-1 before:right-0 before:-bottom-2 before:left-0 before:h-5 before:w-full",
       className
@@ -59,7 +59,7 @@ const ScrollAreaScrollbar = React.forwardRef<
     ref={ref}
     {...props}
   >
-    <BaseScrollArea.Thumb className="relative w-full flex-1" />
+    <BaseScrollArea.Thumb className="relative rounded-full bg-muted-foreground/50" />
   </BaseScrollArea.Scrollbar>
 ));
 ScrollAreaScrollbar.displayName = "ScrollAreaScrollbar";

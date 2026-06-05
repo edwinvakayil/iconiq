@@ -386,6 +386,7 @@ export function ComponentInstallationTabs({
   return (
     <Tabs
       className="gap-0"
+      id={`docs-install-${componentName}`}
       onValueChange={(value) => setActiveTab(value as InstallationTabValue)}
       value={activeTab}
     >

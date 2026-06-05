@@ -1,7 +1,8 @@
 "use client";
 
 import { Autocomplete as AutocompletePrimitive } from "@base-ui/react/autocomplete";
-import { ChevronsUpDown, X } from "lucide-react";
+import { ScrollArea as ScrollAreaPrimitive } from "@base-ui/react/scroll-area";
+import { ChevronsUpDown } from "lucide-react";
 import { motion } from "motion/react";
 import * as React from "react";
 
@@ -20,6 +21,8 @@ type AutocompleteRootProps<Value> = ReducedMotionProp &
     items: readonly Value[];
   };
 
+const INSTANT_CLOSE_TRANSITION = { duration: 0 } as const;
+
 type AutocompleteContextValue = {
   actionsRef: React.RefObject<AutocompletePrimitive.Root.Actions | null>;
   activeHighlightId: string;
@@ -28,6 +31,7 @@ type AutocompleteContextValue = {
   reduceMotion: boolean;
   setActiveValue: React.Dispatch<React.SetStateAction<unknown>>;
   setOpen: (open: boolean) => void;
+  skipExitAnimationRef: React.MutableRefObject<boolean>;
 };
 
 type DivRenderProps = React.HTMLAttributes<HTMLDivElement> & {
@@ -137,11 +141,64 @@ function resolveItemProps(itemProps: DivRenderProps) {
   };
 }
 
+const FLUID_EASE = [0.16, 1, 0.3, 1] as const;
+const EXIT_EASE = [0.4, 0, 0.6, 1] as const;
+
+const POPUP_SPRING = {
+  type: "spring" as const,
+  stiffness: 260,
+  damping: 32,
+  mass: 0.95,
+};
+
 const HIGHLIGHT_SPRING = {
   type: "spring" as const,
   stiffness: 460,
   damping: 40,
   mass: 0.82,
+};
+
+function getPopupMotion(reduceMotion: boolean) {
+  if (reduceMotion) {
+    return {
+      animate: { opacity: 1, scale: 1, y: 0 },
+      closed: { opacity: 0, scale: 1, y: 0 },
+      initial: { opacity: 0, scale: 1, y: 0 },
+      openTransition: { duration: 0.12, ease: "easeOut" as const },
+      closedTransition: { duration: 0.1, ease: "easeOut" as const },
+    };
+  }
+
+  return {
+    animate: { opacity: 1, scale: 1, y: 0 },
+    closed: { opacity: 0, scale: 0.985, y: -5 },
+    initial: { opacity: 0, scale: 0.985, y: -5 },
+    openTransition: {
+      opacity: { duration: 0.34, ease: FLUID_EASE },
+      scale: POPUP_SPRING,
+      y: POPUP_SPRING,
+    },
+    closedTransition: {
+      opacity: { duration: 0.22, ease: EXIT_EASE },
+      scale: { duration: 0.22, ease: EXIT_EASE },
+      y: { duration: 0.22, ease: EXIT_EASE },
+    },
+  };
+}
+
+const autocompleteListScrollbarClassName =
+  "z-10 my-1.5 mr-0.5 w-1 shrink-0 touch-none select-none opacity-0 transition-opacity duration-150 before:absolute before:left-1/2 before:h-full before:w-5 before:-translate-x-1/2 before:content-[''] data-hovering:pointer-events-auto data-hovering:opacity-100 data-scrolling:pointer-events-auto data-scrolling:opacity-100 data-scrolling:duration-0";
+
+const autocompleteListThumbClassName =
+  "relative rounded-full bg-muted-foreground/50 bg-[color:color-mix(in_oklch,var(--ic-muted-foreground),transparent_35%)]";
+
+const MAX_MENU_HEIGHT = 256;
+const VIEWPORT_PADDING = 12;
+
+const autocompleteCollisionAvoidance = {
+  align: "shift" as const,
+  fallbackAxisSide: "none" as const,
+  side: "none" as const,
 };
 
 function getChevronTransition(reduceMotion: boolean) {
@@ -174,6 +231,7 @@ function Autocomplete<Value>({
   const [activeValue, setActiveValue] = React.useState<unknown>();
   const open = isOpenControlled ? openProp : uncontrolledOpen;
   const activeHighlightId = React.useId();
+  const skipExitAnimationRef = React.useRef(false);
 
   const setOpen = React.useCallback(
     (nextOpen: boolean) => {
@@ -192,6 +250,12 @@ function Autocomplete<Value>({
     NonNullable<AutocompletePrimitive.Root.Props<Value>["onOpenChange"]>
   >(
     (nextOpen, eventDetails) => {
+      if (!nextOpen && eventDetails.reason === "item-press") {
+        skipExitAnimationRef.current = true;
+      } else if (nextOpen) {
+        skipExitAnimationRef.current = false;
+      }
+
       if (!nextOpen && reduceMotion) {
         requestAnimationFrame(() => {
           actionsRef.current?.unmount();
@@ -218,6 +282,7 @@ function Autocomplete<Value>({
           reduceMotion,
           setActiveValue,
           setOpen,
+          skipExitAnimationRef,
         }}
       >
         <AutocompletePrimitive.Root
@@ -273,26 +338,6 @@ function AutocompleteTrigger({
   );
 }
 
-function AutocompleteClear({
-  className,
-  ...props
-}: AutocompletePrimitive.Clear.Props) {
-  return (
-    <AutocompletePrimitive.Clear
-      aria-label="Clear input"
-      className={cn(
-        "flex size-8 shrink-0 items-center justify-center rounded-md text-muted-foreground opacity-70 transition hover:bg-accent/60 hover:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/30",
-        className
-      )}
-      data-slot="autocomplete-clear"
-      keepMounted={false}
-      {...props}
-    >
-      <X className="h-3.5 w-3.5" />
-    </AutocompletePrimitive.Clear>
-  );
-}
-
 function AutocompleteInput({
   className,
   children,
@@ -301,13 +346,11 @@ function AutocompleteInput({
   label,
   labelClassName,
   ref: refProp,
-  showClear = true,
   showTrigger = false,
   ...props
 }: AutocompletePrimitive.Input.Props & {
   label?: React.ReactNode;
   labelClassName?: string;
-  showClear?: boolean;
   showTrigger?: boolean;
 }) {
   const { open, setOpen } = useAutocompleteContext("AutocompleteInput");
@@ -349,7 +392,6 @@ function AutocompleteInput({
         }}
         {...props}
       />
-      {showClear ? <AutocompleteClear disabled={disabled} /> : null}
       {showTrigger ? <AutocompleteTrigger disabled={disabled} /> : null}
       {children}
     </AutocompletePrimitive.InputGroup>
@@ -372,24 +414,109 @@ function AutocompleteInput({
   );
 }
 
+function AutocompleteContentPanel({
+  children,
+  className,
+  popupClassName,
+  popupRef,
+  popupState,
+  popupStyle,
+  resolvedPopupProps,
+}: {
+  children: React.ReactNode;
+  className?:
+    | string
+    | ((state: AutocompletePrimitive.Popup.State) => string | undefined);
+  popupClassName?: string;
+  popupRef?: React.Ref<HTMLDivElement>;
+  popupState: AutocompletePrimitive.Popup.State;
+  popupStyle?: React.CSSProperties;
+  resolvedPopupProps: Omit<
+    DivRenderProps,
+    "children" | "className" | "ref" | "style"
+  >;
+}) {
+  const { actionsRef, reduceMotion, setOpen, skipExitAnimationRef } =
+    useAutocompleteContext("AutocompleteContentPanel");
+  const popupMotion = getPopupMotion(reduceMotion);
+  const isPopupVisible = popupState.open && !popupState.empty;
+  const skipExitAnimation = !popupState.open && skipExitAnimationRef.current;
+
+  React.useEffect(() => {
+    if (popupState.open && popupState.empty) {
+      setOpen(false);
+    }
+  }, [popupState.empty, popupState.open, setOpen]);
+
+  return (
+    <div
+      {...resolvedPopupProps}
+      ref={(node) => {
+        setRef(popupRef, node);
+      }}
+      role="presentation"
+      style={{
+        ...popupStyle,
+        transformOrigin: "var(--transform-origin)",
+      }}
+    >
+      <motion.div
+        animate={isPopupVisible ? popupMotion.animate : popupMotion.closed}
+        className={cn(
+          componentThemeClassName,
+          "w-[var(--anchor-width)] max-w-[var(--available-width)] transform-gpu overflow-hidden rounded-lg border border-neutral-200/60 bg-white text-neutral-900 shadow-none dark:border-neutral-700/60 dark:bg-neutral-950 dark:text-neutral-100",
+          popupClassName,
+          resolveStateClassName(className, popupState)
+        )}
+        initial={
+          popupState.transitionStatus === "starting" && !popupState.empty
+            ? popupMotion.initial
+            : false
+        }
+        onAnimationComplete={() => {
+          if (!popupState.open || popupState.empty) {
+            skipExitAnimationRef.current = false;
+            actionsRef.current?.unmount();
+          }
+        }}
+        style={{
+          pointerEvents: isPopupVisible ? undefined : "none",
+          transformOrigin: "var(--transform-origin)",
+        }}
+        transition={
+          isPopupVisible
+            ? popupMotion.openTransition
+            : skipExitAnimation
+              ? INSTANT_CLOSE_TRANSITION
+              : popupMotion.closedTransition
+        }
+      >
+        {children}
+      </motion.div>
+    </div>
+  );
+}
+
 function AutocompleteContent({
   align = "start",
   alignOffset = 0,
   anchor,
   children,
   className,
-  side = "bottom",
+  collisionAvoidance = autocompleteCollisionAvoidance,
+  collisionPadding = VIEWPORT_PADDING,
   sideOffset = 6,
   ...props
 }: AutocompletePrimitive.Popup.Props &
   Pick<
     AutocompletePrimitive.Positioner.Props,
-    "align" | "alignOffset" | "anchor" | "side" | "sideOffset"
+    | "align"
+    | "alignOffset"
+    | "anchor"
+    | "collisionAvoidance"
+    | "collisionPadding"
+    | "sideOffset"
   >) {
-  const { actionsRef, reduceMotion } = useAutocompleteContext(
-    "AutocompleteContent"
-  );
-
   return (
     <AutocompletePrimitive.Portal keepMounted>
       <AutocompletePrimitive.Positioner
@@ -397,7 +524,9 @@ function AutocompleteContent({
         alignOffset={alignOffset}
         anchor={anchor}
         className="z-[9999] outline-none"
-        side={side}
+        collisionAvoidance={collisionAvoidance}
+        collisionPadding={collisionPadding}
+        side="bottom"
         sideOffset={sideOffset}
       >
         <AutocompletePrimitive.Popup
@@ -409,41 +538,16 @@ function AutocompleteContent({
               resolvePopupProps(popupProps as DivRenderProps);
 
             return (
-              <motion.div
-                {...resolvedPopupProps}
-                animate={
-                  popupState.open
-                    ? { opacity: 1, y: 0 }
-                    : { opacity: 0, y: reduceMotion ? 0 : -4 }
-                }
-                className={cn(
-                  componentThemeClassName,
-                  "w-[var(--anchor-width)] max-w-[var(--available-width)] overflow-hidden rounded-lg border border-neutral-200/60 bg-white text-neutral-900 shadow-none dark:border-neutral-700/60 dark:bg-neutral-950 dark:text-neutral-100",
-                  popupClassName,
-                  resolveStateClassName(className, popupState)
-                )}
-                initial={
-                  popupState.transitionStatus === "starting"
-                    ? { opacity: 0, y: reduceMotion ? 0 : -6 }
-                    : false
-                }
-                onAnimationComplete={() => {
-                  if (!popupState.open) {
-                    actionsRef.current?.unmount();
-                  }
-                }}
-                ref={(node) => {
-                  setRef(popupRef, node);
-                }}
-                role="presentation"
-                style={popupStyle}
-                transition={{
-                  duration: reduceMotion ? 0.1 : 0.18,
-                  ease: [0.32, 0.72, 0, 1],
-                }}
+              <AutocompleteContentPanel
+                className={className}
+                popupClassName={popupClassName}
+                popupRef={popupRef}
+                popupState={popupState}
+                popupStyle={popupStyle}
+                resolvedPopupProps={resolvedPopupProps}
               >
                 {children}
-              </motion.div>
+              </AutocompleteContentPanel>
             );
           }}
         />
@@ -460,14 +564,51 @@ function AutocompleteList({
   const { setActiveValue } = useAutocompleteContext("AutocompleteList");
 
   return (
-    <AutocompletePrimitive.List
-      className={cn("max-h-64 overflow-y-auto p-1", className)}
-      data-slot="autocomplete-list"
-      onPointerLeave={composeEventHandlers(onPointerLeave, () => {
-        setActiveValue(undefined);
-      })}
-      {...props}
-    />
+    <ScrollAreaPrimitive.Root
+      className={cn("relative min-h-0 overflow-hidden", className)}
+      style={{
+        maxHeight: `min(var(--available-height, ${MAX_MENU_HEIGHT}px), ${MAX_MENU_HEIGHT}px)`,
+      }}
+    >
+      <AutocompletePrimitive.List
+        data-slot="autocomplete-list"
+        onPointerLeave={composeEventHandlers(onPointerLeave, () => {
+          setActiveValue(undefined);
+        })}
+        {...props}
+        render={(listProps) => {
+          const {
+            children: listChildren,
+            className: listClassName,
+            ref: listRef,
+            style: listStyle,
+            ...resolvedListProps
+          } = listProps as DivRenderProps;
+
+          return (
+            <ScrollAreaPrimitive.Viewport
+              {...resolvedListProps}
+              className={cn(
+                "max-h-[inherit] min-h-0 overscroll-contain p-1 outline-none",
+                listClassName
+              )}
+              ref={(node) => {
+                setRef(listRef, node);
+              }}
+              style={listStyle}
+            >
+              {listChildren}
+            </ScrollAreaPrimitive.Viewport>
+          );
+        }}
+      />
+      <ScrollAreaPrimitive.Scrollbar
+        className={autocompleteListScrollbarClassName}
+        orientation="vertical"
+      >
+        <ScrollAreaPrimitive.Thumb className={autocompleteListThumbClassName} />
+      </ScrollAreaPrimitive.Scrollbar>
+    </ScrollAreaPrimitive.Root>
   );
 }
 
@@ -497,13 +638,11 @@ function AutocompleteItem({
         return (
           <motion.div
             {...resolvedItemProps}
-            animate={{ opacity: 1 }}
             className={cn(
               "relative flex cursor-pointer select-none items-start rounded-lg px-2.5 py-2 text-foreground text-sm",
               itemClassName,
               resolveStateClassName(className, itemState)
             )}
-            initial={reduceMotion ? false : { opacity: 0 }}
             onMouseEnter={composeEventHandlers(
               resolvedItemProps.onMouseEnter,
               () => {
@@ -520,10 +659,6 @@ function AutocompleteItem({
               setRef(itemRef, node);
             }}
             style={itemStyle}
-            transition={{
-              duration: reduceMotion ? 0.1 : 0.14,
-              ease: [0.32, 0.72, 0, 1],
-            }}
           >
             {showHighlight ? (
               <motion.div
@@ -585,24 +720,6 @@ function AutocompleteCollection({
   );
 }
 
-function AutocompleteEmpty({
-  className,
-  children = "No results found.",
-  ...props
-}: AutocompletePrimitive.Empty.Props) {
-  return (
-    <AutocompletePrimitive.Empty
-      className={cn("text-center text-muted-foreground text-sm", className)}
-      data-slot="autocomplete-empty"
-      {...props}
-    >
-      <motion.span animate={{ opacity: 1 }} className="block px-3 py-6">
-        {children}
-      </motion.span>
-    </AutocompletePrimitive.Empty>
-  );
-}
-
 function AutocompleteSeparator({
   className,
   ...props
@@ -622,10 +739,8 @@ function useAutocompleteAnchor() {
 
 export {
   Autocomplete,
-  AutocompleteClear,
   AutocompleteCollection,
   AutocompleteContent,
-  AutocompleteEmpty,
   AutocompleteGroup,
   AutocompleteInput,
   AutocompleteItem,

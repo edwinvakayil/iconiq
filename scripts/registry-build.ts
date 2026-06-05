@@ -87,7 +87,7 @@ const REGISTRY_UI_META: Record<
     title: "Combobox",
     description:
       "Searchable single-select input with inline filtering, arrow-key navigation, animated dropdown motion, and an optional clear action.",
-    dependencies: ["motion", "lucide-react"],
+    dependencies: ["@base-ui/react", "motion", "lucide-react"],
   },
   "context-menu": {
     title: "Context Menu",
@@ -129,7 +129,7 @@ const REGISTRY_UI_META: Record<
     title: "Dropdown",
     description:
       "Animated dropdown with a selectable value mode and an action-menu mode, plus chevron rotation and spring-driven menu entry.",
-    dependencies: ["motion", "lucide-react"],
+    dependencies: ["@base-ui/react", "motion", "lucide-react"],
   },
   "file-upload": {
     title: "File Upload",
@@ -432,7 +432,12 @@ const REGISTRY_UI_META: Record<
     title: "Context Menu (Radix UI)",
     description:
       "Composable context menu layered over Radix UI primitives, preserving the original panel spring, row entrance, active highlight, and shortcut layout.",
-    dependencies: ["@radix-ui/react-context-menu", "motion", "lucide-react"],
+    dependencies: [
+      "@radix-ui/react-context-menu",
+      "@radix-ui/react-scroll-area",
+      "motion",
+      "lucide-react",
+    ],
   },
   "r-dialog": {
     title: "Dialog (Radix UI)",
@@ -472,13 +477,23 @@ const REGISTRY_UI_META: Record<
     title: "Dropdown (Radix UI)",
     description:
       "Dropdown with the same Iconiq trigger, grouped rows, action and select variants, and exact panel motion layered over Radix Dropdown Menu primitives.",
-    dependencies: ["@radix-ui/react-dropdown-menu", "motion", "lucide-react"],
+    dependencies: [
+      "@radix-ui/react-dropdown-menu",
+      "@radix-ui/react-scroll-area",
+      "motion",
+      "lucide-react",
+    ],
   },
   "r-select": {
     title: "Select (Radix UI)",
     description:
       "Compound Select parts layered over Radix UI primitives, preserving the original trigger press, chevron rotation, grouped rows, and panel motion.",
-    dependencies: ["@radix-ui/react-select", "motion", "lucide-react"],
+    dependencies: [
+      "@radix-ui/react-scroll-area",
+      "@radix-ui/react-select",
+      "motion",
+      "lucide-react",
+    ],
   },
   "r-separator": {
     title: "Separator (Radix UI)",
@@ -554,7 +569,7 @@ const REGISTRY_UI_META: Record<
     title: "Select",
     description:
       "Animated single-select dropdown with staggered options, chevron rotation, scaleY panel, row hover slide, and check mark on the active item. Motion + Lucide.",
-    dependencies: ["motion", "lucide-react"],
+    dependencies: ["@base-ui/react", "motion", "lucide-react"],
   },
   selectiontoolbar: {
     title: "Selection Toolbar",

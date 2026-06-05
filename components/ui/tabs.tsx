@@ -2,18 +2,32 @@
 
 import { Tabs as BaseTabs } from "@base-ui/react/tabs";
 import type * as React from "react";
+import { createContext, useContext } from "react";
 import { cn } from "@/lib/utils";
+
+const TabsIdContext = createContext<string | null>(null);
+
+function getTabTriggerId(tabsId: string, value: BaseTabs.Tab.Value) {
+  return `${tabsId}-tab-${String(value)}`;
+}
+
+function getTabPanelId(tabsId: string, value: BaseTabs.Tab.Value) {
+  return `${tabsId}-panel-${String(value)}`;
+}
 
 function Tabs({
   className,
+  id,
   ...props
-}: React.ComponentProps<typeof BaseTabs.Root>) {
+}: React.ComponentProps<typeof BaseTabs.Root> & { id?: string }) {
   return (
-    <BaseTabs.Root
-      className={cn("flex flex-col gap-2", className)}
-      data-slot="tabs"
-      {...props}
-    />
+    <TabsIdContext.Provider value={id ?? null}>
+      <BaseTabs.Root
+        className={cn("flex flex-col gap-2", className)}
+        data-slot="tabs"
+        {...props}
+      />
+    </TabsIdContext.Provider>
   );
 }
 
@@ -35,8 +49,14 @@ function TabsList({
 
 function TabsTrigger({
   className,
+  id,
+  value,
   ...props
 }: React.ComponentProps<typeof BaseTabs.Tab>) {
+  const tabsId = useContext(TabsIdContext);
+  const resolvedId =
+    id ?? (tabsId !== null ? getTabTriggerId(tabsId, value) : undefined);
+
   return (
     <BaseTabs.Tab
       className={cn(
@@ -47,6 +67,8 @@ function TabsTrigger({
         className
       )}
       data-slot="tabs-trigger"
+      id={resolvedId}
+      value={value}
       {...props}
     />
   );
@@ -54,12 +76,20 @@ function TabsTrigger({
 
 function TabsContent({
   className,
+  id,
+  value,
   ...props
 }: React.ComponentProps<typeof BaseTabs.Panel>) {
+  const tabsId = useContext(TabsIdContext);
+  const resolvedId =
+    id ?? (tabsId !== null ? getTabPanelId(tabsId, value) : undefined);
+
   return (
     <BaseTabs.Panel
       className={cn("flex-1 outline-none", className)}
       data-slot="tabs-content"
+      id={resolvedId}
+      value={value}
       {...props}
     />
   );

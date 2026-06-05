@@ -4,17 +4,13 @@ import { Popover as PopoverPrimitive } from "@base-ui/react/popover";
 import { motion } from "motion/react";
 import * as React from "react";
 
-import {
-  ReducedMotionConfig,
-  type ReducedMotionProp,
-} from "@/lib/reduced-motion";
 import { cn } from "@/lib/utils";
 
 const popoverThemeClassName =
   "[--po-surface:#ffffff] [--po-foreground:#111111] [--po-border:#e3e7ec] [--po-ring:rgba(17,17,17,0.16)] dark:[--po-surface:#111111] dark:[--po-foreground:#f6f3ec] dark:[--po-border:#2b2a25] dark:[--po-ring:rgba(246,243,236,0.18)]";
 
 const popoverPanelClassName =
-  "z-50 w-72 transform-gpu rounded-lg border border-[color:var(--po-border)] bg-[color:var(--po-surface)] p-4 text-[color:var(--po-foreground)] shadow-lg outline-none will-change-[transform,opacity,filter]";
+  "z-50 w-72 transform-gpu rounded-lg border border-[color:var(--po-border)] bg-[color:var(--po-surface)] p-4 text-[color:var(--po-foreground)] shadow-none outline-none";
 
 const popoverTriggerClassName =
   "inline-flex min-h-11 min-w-11 touch-manipulation items-center justify-center rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:color-mix(in_oklch,var(--po-ring),transparent_50%)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--po-surface)]";
@@ -60,19 +56,50 @@ type PopupRenderProps = React.HTMLAttributes<HTMLDivElement> & {
 
 const PopoverContext = React.createContext<PopoverContextValue | null>(null);
 
-const initialOffset: Record<Side, { x: number; y: number }> = {
-  top: { x: 0, y: 10 },
-  right: { x: -10, y: 0 },
-  bottom: { x: 0, y: -10 },
-  left: { x: 10, y: 0 },
+const FLUID_EASE = [0.16, 1, 0.3, 1] as const;
+const POPOVER_EXIT_EASE = [0.4, 0, 0.6, 1] as const;
+
+const POPOVER_SPRING = {
+  type: "spring" as const,
+  stiffness: 340,
+  damping: 30,
+  mass: 0.72,
 };
 
-const PANEL_SPRING = {
-  type: "spring",
-  stiffness: 240,
-  damping: 22,
-  mass: 0.78,
-} as const;
+function getSideMotionOffset(side: Side) {
+  switch (side) {
+    case "top":
+      return { x: 0, y: 4 };
+    case "right":
+      return { x: -4, y: 0 };
+    case "left":
+      return { x: 4, y: 0 };
+    default:
+      return { x: 0, y: -4 };
+  }
+}
+
+function getPopoverMotion(side: Side) {
+  const offset = getSideMotionOffset(side);
+
+  return {
+    animate: { opacity: 1, scale: 1, x: 0, y: 0 },
+    closed: { opacity: 0, scale: 0.988, ...offset },
+    initial: { opacity: 0, scale: 0.988, ...offset },
+    openTransition: {
+      opacity: { duration: 0.26, ease: FLUID_EASE },
+      scale: POPOVER_SPRING,
+      x: POPOVER_SPRING,
+      y: POPOVER_SPRING,
+    },
+    closedTransition: {
+      opacity: { duration: 0.16, ease: POPOVER_EXIT_EASE },
+      scale: { duration: 0.16, ease: POPOVER_EXIT_EASE },
+      x: { duration: 0.16, ease: POPOVER_EXIT_EASE },
+      y: { duration: 0.16, ease: POPOVER_EXIT_EASE },
+    },
+  };
+}
 
 const assignRef = <T,>(ref: React.ForwardedRef<T>, value: T | null) => {
   if (typeof ref === "function") {
@@ -173,14 +200,13 @@ type PopoverProps = BasePopoverRootProps & {
   defaultOpen?: boolean;
   onOpenChange?: (open: boolean) => void;
   open?: boolean;
-} & ReducedMotionProp;
+};
 
 const Popover = ({
   children,
   defaultOpen = false,
   onOpenChange,
   open: openProp,
-  reducedMotion,
   ...props
 }: PopoverProps) => {
   const isControlled = openProp !== undefined;
@@ -203,34 +229,32 @@ const Popover = ({
   );
 
   return (
-    <ReducedMotionConfig reducedMotion={reducedMotion}>
-      <PopoverContext.Provider
-        value={{
-          actionsRef,
-          open,
-          contentId: `${reactId}-content`,
-          triggerId: `${reactId}-trigger`,
-          getAnchorNode: () => anchorRef.current ?? triggerRef.current,
-          setAnchorNode: (node) => {
-            anchorRef.current = node;
-          },
-          setTriggerNode: (node) => {
-            triggerRef.current = node;
-          },
+    <PopoverContext.Provider
+      value={{
+        actionsRef,
+        open,
+        contentId: `${reactId}-content`,
+        triggerId: `${reactId}-trigger`,
+        getAnchorNode: () => anchorRef.current ?? triggerRef.current,
+        setAnchorNode: (node) => {
+          anchorRef.current = node;
+        },
+        setTriggerNode: (node) => {
+          triggerRef.current = node;
+        },
+      }}
+    >
+      <PopoverPrimitive.Root
+        {...props}
+        actionsRef={actionsRef}
+        onOpenChange={(nextOpen) => {
+          handleOpenChange(nextOpen);
         }}
+        open={open}
       >
-        <PopoverPrimitive.Root
-          {...props}
-          actionsRef={actionsRef}
-          onOpenChange={(nextOpen) => {
-            handleOpenChange(nextOpen);
-          }}
-          open={open}
-        >
-          {children}
-        </PopoverPrimitive.Root>
-      </PopoverContext.Provider>
-    </ReducedMotionConfig>
+        {children}
+      </PopoverPrimitive.Root>
+    </PopoverContext.Provider>
   );
 };
 Popover.displayName = "Popover";
@@ -347,16 +371,17 @@ const PopoverAnchor = React.forwardRef<HTMLElement, PopoverAnchorProps>(
 );
 PopoverAnchor.displayName = "PopoverAnchor";
 
-type PopoverContentProps = Omit<
-  React.ComponentPropsWithoutRef<typeof motion.div>,
-  "animate" | "exit" | "initial" | "transition"
-> & {
+type PopoverContentProps = {
   align?: Align;
   avoidCollisions?: boolean;
+  children?: React.ReactNode;
+  className?: string;
   collisionPadding?: CollisionPadding;
+  onAnimationComplete?: (definition: unknown) => void;
   open?: boolean;
   side?: Side;
   sideOffset?: number;
+  style?: React.CSSProperties;
 };
 
 const PopoverContentBody = React.forwardRef<
@@ -374,7 +399,6 @@ const PopoverContentBody = React.forwardRef<
       side = "bottom",
       sideOffset = 8,
       style,
-      ...props
     },
     ref
   ) => {
@@ -407,64 +431,62 @@ const PopoverContentBody = React.forwardRef<
                 resolvedPopupProps,
               } = resolvePopupProps(popupProps as PopupRenderProps);
               const resolvedSide = (popupState.side as Side) ?? side;
+              const popoverMotion = getPopoverMotion(resolvedSide);
 
               return (
-                <motion.div
+                <div
                   {...resolvedPopupProps}
-                  {...props}
-                  animate={
-                    open
-                      ? {
-                          opacity: 1,
-                          scale: 1,
-                          x: 0,
-                          y: 0,
-                          filter: "blur(0px)",
-                        }
-                      : {
-                          opacity: 0,
-                          scale: 0.985,
-                          filter: "blur(4px)",
-                          ...initialOffset[resolvedSide],
-                          transition: { duration: 0.2, ease: "easeIn" },
-                        }
-                  }
                   aria-labelledby={triggerId}
-                  className={cn(
-                    popoverThemeClassName,
-                    popoverPanelClassName,
-                    popupClassName,
-                    className
-                  )}
-                  data-side={resolvedSide}
                   id={contentId}
-                  initial={{
-                    opacity: 0,
-                    scale: 0.955,
-                    filter: "blur(8px)",
-                    ...initialOffset[resolvedSide],
-                  }}
-                  layout="size"
-                  onAnimationComplete={(definition) => {
-                    onAnimationComplete?.(definition);
-
-                    if (!open) {
-                      actionsRef.current?.unmount();
-                    }
-                  }}
                   ref={(node) => {
                     setRef(popupRef, node);
                     assignRef(ref, node);
                   }}
+                  role="presentation"
                   style={{
                     transformOrigin: "var(--transform-origin)",
                     ...popupStyle,
-                    ...style,
                   }}
-                  transition={PANEL_SPRING}
                 >
-                  {children}
-                </motion.div>
+                  <motion.div
+                    animate={
+                      open ? popoverMotion.animate : popoverMotion.closed
+                    }
+                    className={cn(
+                      popoverThemeClassName,
+                      popoverPanelClassName,
+                      popupClassName,
+                      className
+                    )}
+                    data-side={resolvedSide}
+                    data-state={open ? "open" : "closed"}
+                    initial={
+                      popupState.transitionStatus === "starting"
+                        ? popoverMotion.initial
+                        : false
+                    }
+                    layout="size"
+                    onAnimationComplete={(definition) => {
+                      onAnimationComplete?.(definition);
+
+                      if (!open) {
+                        actionsRef.current?.unmount();
+                      }
+                    }}
+                    style={{
+                      pointerEvents: open ? undefined : "none",
+                      transformOrigin: "var(--transform-origin)",
+                      ...style,
+                    }}
+                    transition={
+                      open
+                        ? popoverMotion.openTransition
+                        : popoverMotion.closedTransition
+                    }
+                  >
+                    {children}
+                  </motion.div>
+                </div>
               );
             }}
           />

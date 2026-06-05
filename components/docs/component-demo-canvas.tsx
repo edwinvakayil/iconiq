@@ -29,14 +29,18 @@ export function ComponentDemoCanvas({
   preview,
   previewClassName,
   code,
+  tabsId,
   v0PageCode,
 }: {
   componentName: string;
   preview: React.ReactNode;
   previewClassName?: string;
   code: string;
+  /** Stable DOM ids for tab triggers/panels; defaults to `docs-demo-{componentName}`. */
+  tabsId?: string;
   v0PageCode?: string;
 }) {
+  const resolvedTabsId = tabsId ?? `docs-demo-${componentName}`;
   const resolvedV0PageCode = useMemo(
     () => v0PageCode || getComponentV0Page(componentName, code),
     [code, componentName, v0PageCode]
@@ -120,6 +124,7 @@ export function ComponentDemoCanvas({
   return (
     <Tabs
       className="gap-0"
+      id={resolvedTabsId}
       onValueChange={(value) => setActiveTab(value as DemoTabValue)}
       value={activeTab}
     >

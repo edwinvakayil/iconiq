@@ -1,5 +1,6 @@
 "use client";
 
+import * as ScrollAreaPrimitive from "@radix-ui/react-scroll-area";
 import * as SelectPrimitive from "@radix-ui/react-select";
 import { CheckIcon, ChevronDownIcon, ChevronUpIcon } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
@@ -19,7 +20,7 @@ const selectTriggerClassName =
   "flex min-h-11 w-full touch-manipulation items-center justify-between gap-2 rounded-lg border border-[color:var(--sel-border)] bg-[color:var(--sel-surface)] px-4 py-3 text-left font-medium text-[color:var(--sel-foreground)] text-sm transition-colors hover:bg-accent/60 focus:outline-none focus-visible:ring-2 focus-visible:ring-[color:color-mix(in_oklch,var(--sel-ring),transparent_50%)] disabled:cursor-not-allowed disabled:opacity-50 data-placeholder:text-[color:var(--sel-muted-foreground)]";
 
 const selectPanelChromeClassName =
-  "z-[300] overflow-hidden rounded-lg border border-[color:color-mix(in_oklch,var(--sel-border,#e3e7ec),transparent_40%)] bg-[var(--sel-surface,#ffffff)] text-[var(--sel-foreground,#111111)] shadow-lg dark:border-[color:color-mix(in_oklch,var(--sel-border,#2b2a25),transparent_40%)] dark:bg-[var(--sel-surface,#111111)] dark:text-[var(--sel-foreground,#f6f3ec)]";
+  "z-[300] overflow-hidden rounded-lg border border-[color:color-mix(in_oklch,var(--sel-border,#e3e7ec),transparent_40%)] bg-[var(--sel-surface,#ffffff)] text-[var(--sel-foreground,#111111)] shadow-none dark:border-[color:color-mix(in_oklch,var(--sel-border,#2b2a25),transparent_40%)] dark:bg-[var(--sel-surface,#111111)] dark:text-[var(--sel-foreground,#f6f3ec)]";
 
 const selectItemClassName =
   "group relative isolate flex min-h-11 cursor-pointer touch-manipulation select-none items-center gap-3 rounded-lg py-2.5 pr-8 pl-3 text-[color:var(--sel-foreground)] text-sm outline-none transition-colors";
@@ -27,9 +28,25 @@ const selectItemClassName =
 const selectItemHighlightClassName =
   "absolute inset-0 -z-10 rounded-lg bg-accent/60";
 
+const selectListScrollbarClassName =
+  "z-10 flex w-2 shrink-0 touch-none select-none bg-transparent p-px opacity-0 transition-opacity duration-150 data-[state=visible]:pointer-events-auto data-[state=visible]:opacity-100";
+
+const selectListThumbClassName =
+  "relative rounded-full bg-muted-foreground/50 bg-[color:color-mix(in_oklch,var(--sel-muted-foreground),transparent_35%)]";
+
 const MAX_MENU_HEIGHT = 320;
+const INSTANT_CLOSE_TRANSITION = { duration: 0 } as const;
+const POPUP_TRANSFORM_ORIGIN = "top center";
 const SOFT_EASE = [0.22, 1, 0.36, 1] as const;
 const EXIT_EASE = [0.55, 0.06, 0.68, 0.19] as const;
+const FLUID_EASE = [0.16, 1, 0.3, 1] as const;
+const POPUP_EXIT_EASE = [0.4, 0, 0.6, 1] as const;
+const POPUP_SPRING = {
+  type: "spring" as const,
+  stiffness: 260,
+  damping: 32,
+  mass: 0.95,
+};
 const CHECK_SPRING = {
   type: "spring",
   stiffness: 520,
@@ -78,6 +95,7 @@ type SelectContextValue = {
   reduceMotion: boolean;
   selectedValue?: string;
   setActiveValue: React.Dispatch<React.SetStateAction<string | undefined>>;
+  skipExitAnimationRef: React.MutableRefObject<boolean>;
 };
 
 const RESIZE_OBSERVER_LOOP_ERROR =
@@ -206,16 +224,38 @@ function getItemVariants(reduceMotion: boolean) {
   };
 }
 
+function getPopupMotion(reduceMotion: boolean) {
+  if (reduceMotion) {
+    return {
+      animate: { opacity: 1, scale: 1, y: 0 },
+      closed: { opacity: 0, scale: 1, y: 0 },
+      initial: { opacity: 0, scale: 1, y: 0 },
+      openTransition: { duration: 0.12, ease: "easeOut" as const },
+      closedTransition: { duration: 0.1, ease: "easeOut" as const },
+    };
+  }
+
+  return {
+    animate: { opacity: 1, scale: 1, y: 0 },
+    closed: { opacity: 0, scale: 0.985, y: -5 },
+    initial: { opacity: 0, scale: 0.985, y: -5 },
+    openTransition: {
+      opacity: { duration: 0.34, ease: FLUID_EASE },
+      scale: POPUP_SPRING,
+      y: POPUP_SPRING,
+    },
+    closedTransition: {
+      opacity: { duration: 0.22, ease: POPUP_EXIT_EASE },
+      scale: { duration: 0.22, ease: POPUP_EXIT_EASE },
+      y: { duration: 0.22, ease: POPUP_EXIT_EASE },
+    },
+  };
+}
+
 function getPressTransition(reduceMotion: boolean) {
   return reduceMotion
     ? { duration: 0.12, ease: "easeOut" as const }
     : PRESS_SPRING;
-}
-
-function getPanelTransition(reduceMotion: boolean) {
-  return reduceMotion
-    ? { duration: 0.14, ease: "easeOut" as const }
-    : { duration: 0.22, ease: SOFT_EASE };
 }
 
 function getChevronTransition(reduceMotion: boolean) {
@@ -258,6 +298,7 @@ function Select({
   ...props
 }: SelectProps) {
   const reduceMotion = useResolvedReducedMotion(reducedMotion);
+  const skipExitAnimationRef = React.useRef(false);
   const isOpenControlled = openProp !== undefined;
   const isValueControlled = valueProp !== undefined;
   const [uncontrolledOpen, setUncontrolledOpen] = React.useState(defaultOpen);
@@ -280,6 +321,10 @@ function Select({
     NonNullable<SelectRootProps["onOpenChange"]>
   >(
     (nextOpen) => {
+      if (nextOpen) {
+        skipExitAnimationRef.current = false;
+      }
+
       if (!isOpenControlled) {
         setUncontrolledOpen(nextOpen);
       }
@@ -338,6 +383,7 @@ function Select({
           reduceMotion,
           selectedValue,
           setActiveValue,
+          skipExitAnimationRef,
         }}
       >
         <SelectPrimitive.Root
@@ -410,13 +456,11 @@ function SelectTrigger({
 
   return (
     <SelectPrimitive.Trigger asChild {...props}>
-      <motion.button
+      <button
         className={cn(selectThemeClassName, selectTriggerClassName, className)}
         data-size={size}
         data-slot="select-trigger"
-        transition={getPressTransition(reduceMotion)}
         type="button"
-        whileTap={reduceMotion ? undefined : { scale: 0.985 }}
       >
         {children}
         <SelectPrimitive.Icon asChild>
@@ -428,7 +472,7 @@ function SelectTrigger({
             <ChevronDownIcon className="h-4 w-4 text-[color:var(--sel-muted-foreground)]" />
           </motion.span>
         </SelectPrimitive.Icon>
-      </motion.button>
+      </button>
     </SelectPrimitive.Trigger>
   );
 }
@@ -445,62 +489,113 @@ function SelectContent({
   style,
   ...props
 }: React.ComponentPropsWithoutRef<typeof SelectPrimitive.Content>) {
-  const { open, reduceMotion, setActiveValue } =
+  const { open, reduceMotion, setActiveValue, skipExitAnimationRef } =
     useSelectContext("SelectContent");
-
-  if (!open) {
-    return null;
-  }
+  const popupMotion = getPopupMotion(reduceMotion);
+  const panelVariants = {
+    closed: {
+      ...popupMotion.closed,
+      transition: popupMotion.closedTransition,
+    },
+    closedInstant: {
+      opacity: reduceMotion ? 0 : popupMotion.closed.opacity,
+      scale: reduceMotion ? 1 : popupMotion.closed.scale,
+      y: reduceMotion ? 0 : popupMotion.closed.y,
+      transition: INSTANT_CLOSE_TRANSITION,
+    },
+    open: {
+      ...popupMotion.animate,
+      transition: popupMotion.openTransition,
+    },
+  };
 
   return (
-    <SelectPrimitive.Portal>
-      <SelectPrimitive.Content
-        align={align}
-        avoidCollisions={avoidCollisions}
-        className={cn(
-          selectThemeClassName,
-          selectPanelChromeClassName,
-          className
-        )}
-        collisionPadding={collisionPadding}
-        data-slot="select-content"
-        position={position}
-        side={side}
-        sideOffset={sideOffset}
-        style={{
-          transformOrigin: "var(--radix-select-content-transform-origin)",
-          width: "var(--radix-select-trigger-width)",
-          ...style,
-        }}
-        {...props}
-      >
-        <motion.div
-          animate={{ opacity: 1, y: 0 }}
-          className="flex transform-gpu flex-col"
-          initial={{
-            opacity: reduceMotion ? 1 : 0,
-            y: reduceMotion ? 0 : -4,
-          }}
-          transition={getPanelTransition(reduceMotion)}
-        >
-          <SelectScrollUpButton />
-          <motion.div className="relative min-h-0 flex-1" layoutRoot>
-            <SelectPrimitive.Viewport
-              className="overflow-y-auto overscroll-contain p-1.5 outline-none"
-              onPointerLeave={() => {
-                setActiveValue(undefined);
-              }}
+    <AnimatePresence
+      custom={skipExitAnimationRef}
+      onExitComplete={() => {
+        skipExitAnimationRef.current = false;
+      }}
+    >
+      {open ? (
+        <SelectPrimitive.Portal>
+          <SelectPrimitive.Content
+            {...({
+              align,
+              asChild: true,
+              avoidCollisions,
+              collisionPadding,
+              forceMount: true,
+              position,
+              side,
+              sideOffset,
+              ...props,
+            } as React.ComponentPropsWithoutRef<
+              typeof SelectPrimitive.Content
+            >)}
+          >
+            <div
               style={{
-                maxHeight: `min(var(--radix-select-content-available-height), ${MAX_MENU_HEIGHT}px)`,
+                width: "var(--radix-select-trigger-width)",
+                ...style,
               }}
             >
-              {children}
-            </SelectPrimitive.Viewport>
-          </motion.div>
-          <SelectScrollDownButton />
-        </motion.div>
-      </SelectPrimitive.Content>
-    </SelectPrimitive.Portal>
+              <motion.div
+                animate="open"
+                className={cn(
+                  selectThemeClassName,
+                  selectPanelChromeClassName,
+                  "flex transform-gpu flex-col",
+                  className
+                )}
+                custom={skipExitAnimationRef}
+                data-slot="select-content"
+                exit={
+                  ((
+                    custom: React.MutableRefObject<boolean>
+                  ): "closed" | "closedInstant" =>
+                    custom.current ? "closedInstant" : "closed") as never
+                }
+                initial="closed"
+                style={{ transformOrigin: POPUP_TRANSFORM_ORIGIN }}
+                variants={panelVariants}
+              >
+                <SelectScrollUpButton />
+                <motion.div className="relative min-h-0 flex-1" layoutRoot>
+                  <ScrollAreaPrimitive.Root
+                    className="relative flex min-h-0 flex-1 flex-col"
+                    scrollHideDelay={100}
+                    style={{
+                      maxHeight: `min(var(--radix-select-content-available-height), ${MAX_MENU_HEIGHT}px)`,
+                    }}
+                    type="hover"
+                  >
+                    <ScrollAreaPrimitive.Viewport className="min-h-0 flex-1 overscroll-contain outline-none">
+                      <SelectPrimitive.Viewport
+                        className="p-1.5"
+                        onPointerLeave={() => {
+                          setActiveValue(undefined);
+                        }}
+                      >
+                        {children}
+                      </SelectPrimitive.Viewport>
+                    </ScrollAreaPrimitive.Viewport>
+                    <ScrollAreaPrimitive.Scrollbar
+                      className={selectListScrollbarClassName}
+                      orientation="vertical"
+                    >
+                      <ScrollAreaPrimitive.Thumb
+                        className={selectListThumbClassName}
+                      />
+                    </ScrollAreaPrimitive.Scrollbar>
+                  </ScrollAreaPrimitive.Root>
+                </motion.div>
+                <SelectScrollDownButton />
+              </motion.div>
+            </div>
+          </SelectPrimitive.Content>
+        </SelectPrimitive.Portal>
+      ) : null}
+    </AnimatePresence>
   );
 }
 
@@ -538,6 +633,7 @@ function SelectItem({
     reduceMotion,
     selectedValue,
     setActiveValue,
+    skipExitAnimationRef,
   } = useSelectContext("SelectItem");
   const isActive = value === activeValue;
   const isSelected = value === selectedValue;
@@ -558,7 +654,14 @@ function SelectItem({
   registerItemLabel(value, itemContent);
 
   return (
-    <SelectPrimitive.Item asChild value={value} {...props}>
+    <SelectPrimitive.Item
+      asChild
+      onSelect={() => {
+        skipExitAnimationRef.current = true;
+      }}
+      value={value}
+      {...props}
+    >
       <motion.div
         animate="visible"
         className={cn(

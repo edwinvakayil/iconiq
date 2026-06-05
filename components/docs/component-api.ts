@@ -2768,7 +2768,7 @@ const hoverCardApiDetails: DetailItem[] = [
     id: "hover-card-content",
     title: "HoverCardContent",
     summary:
-      "Animated content panel with collision-aware Popover positioning, side and align controls, and a spring-driven blur fade.",
+      "Animated content panel with collision-aware positioning, side and align controls, and a spring-driven scale and directional offset fade.",
     fields: [
       field({
         name: "children",
@@ -2828,7 +2828,7 @@ const hoverCardApiDetails: DetailItem[] = [
       "Additional motion.div props such as style, role, onClick, aria-*, and data-* are forwarded, but initial, animate, exit, and transition are reserved by the component.",
       "The panel is portaled through Radix Popover content, so it can escape overflow-hidden ancestors and reposition near viewport edges.",
       "Focus can move from the trigger into interactive content without immediately closing the card.",
-      "By default the content is centered below the trigger with a fixed w-72 width and a 12px hover bridge across the trigger-to-panel gap.",
+      "By default the content is centered below the trigger with a fixed w-72 width, no drop shadow, and a 12px hover bridge across the trigger-to-panel gap.",
     ],
   },
   registryItem("hover-card.json", [
@@ -2949,6 +2949,7 @@ const popoverApiDetails: DetailItem[] = [
     notes: [
       "Remaining Radix content props are forwarded through to PopoverPrimitive.Content, including side, collisionPadding, onEscapeKeyDown, and accessibility props.",
       "The component always renders inside a Radix portal, reads the resolved placement for direction-aware motion, and uses the Radix transform-origin CSS variable so scaling stays anchored to the trigger.",
+      "The panel ships without drop shadow so the surface stays flat against the page.",
       "Content size changes animate while the popover is open, so progressive disclosure and copy swaps do not snap abruptly.",
       "Entry and exit animation are owned internally, so Motion-specific props such as initial, animate, exit, and transition are not part of the public prop surface.",
     ],

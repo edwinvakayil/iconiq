@@ -70,8 +70,6 @@ const REDUCED_MOTION_COMPONENTS = new Set([
   "b-combobox",
   "b-context-menu",
   "b-dialog",
-  "b-hover-card",
-  "b-popover",
   "b-progress",
   "b-select",
   "b-selection-toolbar",
@@ -87,12 +85,8 @@ const REDUCED_MOTION_COMPONENTS = new Set([
   "context-menu",
   "dialog",
   "dropdown",
-  "hover-card",
-  "popover",
   "r-dialog",
   "r-dropdown",
-  "r-hover-card",
-  "r-popover",
   "r-progress",
   "r-select",
   "r-selection-toolbar",
@@ -280,6 +274,7 @@ function ReducedMotionSection({
           <ReducedMotionOverride reducedMotion>{preview}</ReducedMotionOverride>
         }
         previewClassName={previewClassName}
+        tabsId={`docs-demo-rm-${componentName}`}
       />
     </div>
   );

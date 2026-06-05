@@ -1,4 +1,6 @@
 "use client";
+
+import { ScrollArea as ScrollAreaPrimitive } from "@base-ui/react/scroll-area";
 import { Check, ChevronsUpDown, X } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import * as React from "react";
@@ -11,6 +13,12 @@ import { cn } from "@/lib/utils";
 
 const componentThemeClassName =
   "[--ic-background:#ffffff] [--ic-foreground:#111111] [--ic-primary:#111111] [--ic-secondary:#646b75] [--ic-surface-border:#e9edf2] [--ic-border:#e3e7ec] [--ic-card:#ffffff] [--ic-card-foreground:#111111] [--ic-muted:#f5f7fa] [--ic-muted-foreground:#6d7480] [--ic-accent:#f3f5f8] [--color-accent:var(--ic-accent)] [--color-accent-foreground:var(--ic-accent-foreground)] [--ic-accent-foreground:#111111] [--ic-input:#e3e7ec] [--ic-ring:rgba(17,17,17,0.16)] [--ic-destructive:#dc2626] [--ic-paper:#fcfcfd] [--ic-popover-foreground:#111111] [--ic-brand:#0ea5e9] [--ic-brand-soft:#bae6fd] [--ic-shadow-soft:0_18px_38px_-24px_rgba(15,23,42,0.35)] [--ic-chart-1:oklch(0.52_0.19_254)] [--ic-chart-2:oklch(0.74_0.11_232)] [--ic-chart-3:oklch(0.42_0.16_262)] [--ic-chart-4:oklch(0.84_0.07_228)] [--ic-chart-5:oklch(0.62_0.14_240)] [--color-background:var(--ic-background)] [--color-foreground:var(--ic-foreground)] [--color-primary:var(--ic-primary)] [--color-secondary:var(--ic-secondary)] [--color-border:var(--ic-border)] [--color-card:var(--ic-card)] [--color-card-foreground:var(--ic-card-foreground)] [--color-muted:var(--ic-muted)] [--color-muted-foreground:var(--ic-muted-foreground)] [--color-accent:var(--ic-accent)] [--color-accent-foreground:var(--ic-accent-foreground)] [--color-input:var(--ic-input)] [--color-ring:var(--ic-ring)] [--color-destructive:var(--ic-destructive)] [--color-paper:var(--ic-paper)] [--color-popover-foreground:var(--ic-popover-foreground)] [--color-brand:var(--ic-brand)] [--color-brand-soft:var(--ic-brand-soft)] [--color-chart-1:var(--ic-chart-1)] [--color-chart-2:var(--ic-chart-2)] [--color-chart-3:var(--ic-chart-3)] [--color-chart-4:var(--ic-chart-4)] [--color-chart-5:var(--ic-chart-5)] dark:[--ic-background:#111111] dark:[--ic-foreground:#f6f3ec] dark:[--ic-primary:#f6f3ec] dark:[--ic-secondary:#cbc6bb] dark:[--ic-surface-border:#2a2a25] dark:[--ic-border:#2b2a25] dark:[--ic-card:#111111] dark:[--ic-card-foreground:#f6f3ec] dark:[--ic-muted:#171716] dark:[--ic-muted-foreground:#9a958a] dark:[--ic-accent:#1a1a18] [--color-accent:var(--ic-accent)] [--color-accent-foreground:var(--ic-accent-foreground)] dark:[--ic-accent-foreground:#f6f3ec] dark:[--ic-input:#2b2a25] dark:[--ic-ring:rgba(246,243,236,0.18)] dark:[--ic-destructive:#f87171] dark:[--ic-paper:#171716] dark:[--ic-popover-foreground:#f6f3ec] dark:[--ic-brand:#38bdf8] dark:[--ic-brand-soft:#0c4a6e] dark:[--ic-shadow-soft:0_20px_44px_-28px_rgba(0,0,0,0.6)] dark:[--ic-chart-1:oklch(0.68_0.17_250)] dark:[--ic-chart-2:oklch(0.82_0.09_225)] dark:[--ic-chart-3:oklch(0.58_0.15_260)] dark:[--ic-chart-4:oklch(0.75_0.12_235)] dark:[--ic-chart-5:oklch(0.88_0.06_220)]";
+
+const comboboxListScrollbarClassName =
+  "z-10 my-1.5 mr-0.5 w-1 shrink-0 touch-none select-none opacity-0 transition-opacity duration-150 before:absolute before:left-1/2 before:h-full before:w-5 before:-translate-x-1/2 before:content-[''] data-hovering:pointer-events-auto data-hovering:opacity-100 data-scrolling:pointer-events-auto data-scrolling:opacity-100 data-scrolling:duration-0";
+
+const comboboxListThumbClassName =
+  "relative rounded-full bg-muted-foreground/50 bg-[color:color-mix(in_oklch,var(--ic-muted-foreground),transparent_35%)]";
 
 export type ComboboxOption = {
   value: string;
@@ -302,94 +310,104 @@ export function Combobox({
             ease: [0.22, 1, 0.36, 1],
           }}
         >
-          <div
-            className="max-h-64 overflow-y-auto p-1"
-            id={listboxId}
-            ref={listRef}
-            role="listbox"
-          >
-            {filtered.length === 0 ? (
-              <motion.div
-                animate={{ opacity: 1 }}
-                className="px-3 py-6 text-center text-muted-foreground text-sm"
-                initial={{ opacity: 0 }}
-              >
-                {emptyMessage}
-              </motion.div>
-            ) : (
-              filtered.map((opt, index) => {
-                const isSelected = opt.value === value;
-                const isActive = index === activeIndex;
-                return (
-                  <motion.div
-                    animate={{ opacity: 1, y: 0 }}
-                    aria-selected={isSelected}
-                    className={cn(
-                      "relative flex cursor-pointer select-none items-start gap-2 rounded-lg px-2.5 py-2 text-sm transition-colors",
-                      isActive
-                        ? "bg-accent text-accent-foreground"
-                        : "text-foreground"
-                    )}
-                    data-index={index}
-                    id={`${listboxId}-opt-${opt.value}`}
-                    initial={{ opacity: 0, y: 2 }}
-                    key={opt.value}
-                    onClick={() => select(opt)}
-                    onMouseDown={(e) => {
-                      e.preventDefault();
-                    }}
-                    onMouseEnter={() => setActiveIndex(index)}
-                    role="option"
-                    transition={{
-                      duration: 0.12,
-                      ease: "easeOut",
-                    }}
-                  >
-                    {isActive && (
-                      <motion.div
-                        className="absolute inset-0 -z-10 rounded-lg bg-accent"
-                        layoutId="combobox-active"
-                        transition={{
-                          type: "spring",
-                          stiffness: 500,
-                          damping: 35,
-                        }}
-                      />
-                    )}
-                    <span className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center">
-                      <AnimatePresence>
-                        {isSelected && (
-                          <motion.span
-                            animate={{ scale: 1, rotate: 0 }}
-                            className="text-primary"
-                            exit={{ scale: 0, rotate: 90 }}
-                            initial={{ scale: 0, rotate: -90 }}
-                            transition={{
-                              type: "spring",
-                              stiffness: 500,
-                              damping: 22,
-                            }}
-                          >
-                            <Check className="h-4 w-4" strokeWidth={3} />
-                          </motion.span>
-                        )}
-                      </AnimatePresence>
-                    </span>
-                    <span className="flex flex-col">
-                      <span className="font-medium leading-tight">
-                        {opt.label}
-                      </span>
-                      {opt.description && (
-                        <span className="text-muted-foreground text-xs">
-                          {opt.description}
-                        </span>
+          <ScrollAreaPrimitive.Root className="relative max-h-64 overflow-hidden">
+            <ScrollAreaPrimitive.Viewport
+              className="max-h-64 min-h-0 overscroll-contain p-1 outline-none"
+              id={listboxId}
+              ref={listRef}
+              role="listbox"
+            >
+              {filtered.length === 0 ? (
+                <motion.div
+                  animate={{ opacity: 1 }}
+                  className="px-3 py-6 text-center text-muted-foreground text-sm"
+                  initial={{ opacity: 0 }}
+                >
+                  {emptyMessage}
+                </motion.div>
+              ) : (
+                filtered.map((opt, index) => {
+                  const isSelected = opt.value === value;
+                  const isActive = index === activeIndex;
+                  return (
+                    <motion.div
+                      animate={{ opacity: 1, y: 0 }}
+                      aria-selected={isSelected}
+                      className={cn(
+                        "relative flex cursor-pointer select-none items-start gap-2 rounded-lg px-2.5 py-2 text-sm transition-colors",
+                        isActive
+                          ? "bg-accent text-accent-foreground"
+                          : "text-foreground"
                       )}
-                    </span>
-                  </motion.div>
-                );
-              })
-            )}
-          </div>
+                      data-index={index}
+                      id={`${listboxId}-opt-${opt.value}`}
+                      initial={{ opacity: 0, y: 2 }}
+                      key={opt.value}
+                      onClick={() => select(opt)}
+                      onMouseDown={(e) => {
+                        e.preventDefault();
+                      }}
+                      onMouseEnter={() => setActiveIndex(index)}
+                      role="option"
+                      transition={{
+                        duration: 0.12,
+                        ease: "easeOut",
+                      }}
+                    >
+                      {isActive && (
+                        <motion.div
+                          className="absolute inset-0 -z-10 rounded-lg bg-accent"
+                          layoutId="combobox-active"
+                          transition={{
+                            type: "spring",
+                            stiffness: 500,
+                            damping: 35,
+                          }}
+                        />
+                      )}
+                      <span className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center">
+                        <AnimatePresence>
+                          {isSelected && (
+                            <motion.span
+                              animate={{ scale: 1, rotate: 0 }}
+                              className="text-primary"
+                              exit={{ scale: 0, rotate: 90 }}
+                              initial={{ scale: 0, rotate: -90 }}
+                              transition={{
+                                type: "spring",
+                                stiffness: 500,
+                                damping: 22,
+                              }}
+                            >
+                              <Check className="h-4 w-4" strokeWidth={3} />
+                            </motion.span>
+                          )}
+                        </AnimatePresence>
+                      </span>
+                      <span className="flex flex-col">
+                        <span className="font-medium leading-tight">
+                          {opt.label}
+                        </span>
+                        {opt.description && (
+                          <span className="text-muted-foreground text-xs">
+                            {opt.description}
+                          </span>
+                        )}
+                      </span>
+                    </motion.div>
+                  );
+                })
+              )}
+            </ScrollAreaPrimitive.Viewport>
+            <ScrollAreaPrimitive.Scrollbar
+              className={comboboxListScrollbarClassName}
+              orientation="vertical"
+            >
+              <ScrollAreaPrimitive.Thumb
+                className={comboboxListThumbClassName}
+              />
+            </ScrollAreaPrimitive.Scrollbar>
+          </ScrollAreaPrimitive.Root>
         </motion.div>
       )}
     </AnimatePresence>

@@ -1,5 +1,6 @@
 "use client";
 
+import { ScrollArea as ScrollAreaPrimitive } from "@base-ui/react/scroll-area";
 import { Check, ChevronDown } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import * as React from "react";
@@ -20,6 +21,12 @@ type DropdownFocusStrategy = "first" | "last" | "selected";
 
 const SOFT_EASE = [0.22, 1, 0.36, 1] as const;
 const MAX_CONTENT_HEIGHT = 384;
+
+const dropdownListScrollbarClassName =
+  "z-10 my-1.5 mr-0.5 w-1 shrink-0 touch-none select-none opacity-0 transition-opacity duration-150 before:absolute before:left-1/2 before:h-full before:w-5 before:-translate-x-1/2 before:content-[''] data-hovering:pointer-events-auto data-hovering:opacity-100 data-scrolling:pointer-events-auto data-scrolling:opacity-100 data-scrolling:duration-0";
+
+const dropdownListThumbClassName =
+  "relative rounded-full bg-muted-foreground/50";
 const TYPEAHEAD_RESET_MS = 500;
 const VIEWPORT_MARGIN = 12;
 
@@ -894,15 +901,32 @@ export const DropdownContent = React.forwardRef<
           >
             <motion.div
               animate={innerContentMotion.animate}
-              className="scroll-py-1 overflow-y-auto overscroll-contain p-1.5"
+              className="overflow-hidden"
               exit={innerContentMotion.exit}
               initial={innerContentMotion.initial}
-              style={{
-                maxHeight: position.maxHeight ?? undefined,
-              }}
               transition={innerContentMotion.transition}
             >
-              {children}
+              <ScrollAreaPrimitive.Root
+                className={cn(
+                  componentThemeClassName,
+                  "relative overflow-hidden"
+                )}
+                style={{
+                  maxHeight: position.maxHeight ?? MAX_CONTENT_HEIGHT,
+                }}
+              >
+                <ScrollAreaPrimitive.Viewport className="max-h-[inherit] min-h-0 scroll-py-1 overscroll-contain p-1.5 outline-none">
+                  {children as React.ReactNode}
+                </ScrollAreaPrimitive.Viewport>
+                <ScrollAreaPrimitive.Scrollbar
+                  className={dropdownListScrollbarClassName}
+                  orientation="vertical"
+                >
+                  <ScrollAreaPrimitive.Thumb
+                    className={dropdownListThumbClassName}
+                  />
+                </ScrollAreaPrimitive.Scrollbar>
+              </ScrollAreaPrimitive.Root>
             </motion.div>
           </motion.div>
         ) : null}

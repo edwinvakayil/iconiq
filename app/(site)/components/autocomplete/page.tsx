@@ -12,7 +12,6 @@ import { LINK } from "@/constants";
 import {
   Autocomplete,
   AutocompleteContent,
-  AutocompleteEmpty,
   AutocompleteInput,
   AutocompleteItem,
   AutocompleteList,
@@ -75,7 +74,6 @@ import { useState } from "react";
 import {
   Autocomplete,
   AutocompleteContent,
-  AutocompleteEmpty,
   AutocompleteInput,
   AutocompleteItem,
   AutocompleteList,
@@ -123,7 +121,6 @@ export function AutocompletePreview() {
               </AutocompleteItem>
             )}
           </AutocompleteList>
-          <AutocompleteEmpty>No countries match that search.</AutocompleteEmpty>
         </AutocompleteContent>
       </Autocomplete>
     </div>
@@ -154,7 +151,6 @@ function CountryAutocomplete() {
             </AutocompleteItem>
           )}
         </AutocompleteList>
-        <AutocompleteEmpty>No countries match that search.</AutocompleteEmpty>
       </AutocompleteContent>
     </Autocomplete>
   );

@@ -22,7 +22,6 @@ type PopoverModule = {
     defaultOpen?: boolean;
     onOpenChange?: (open: boolean) => void;
     open?: boolean;
-    reducedMotion?: boolean;
   }>;
   PopoverContent: ComponentType<{
     children: ReactNode;
@@ -233,6 +232,7 @@ function getPopoverContentDetail(item: DetailItem, provider: ProviderConfig) {
       provider.libraryLabel === "Base UI"
         ? "The panel uses the Base UI transform-origin CSS variable, keeps the same side-aware spring motion as the core popover, and delays primitive unmount until the close animation completes."
         : "The component always renders inside a Radix portal, reads the resolved placement for direction-aware motion, and uses the Radix transform-origin CSS variable so scaling stays anchored to the trigger.",
+      "The panel ships without drop shadow so the surface stays flat against the page.",
       "Content size changes animate while the popover is open, so progressive disclosure and copy swaps do not snap abruptly.",
       "Entry and exit animation are owned internally, so Motion-specific props such as initial, animate, exit, and transition are not part of the public prop surface.",
     ],
