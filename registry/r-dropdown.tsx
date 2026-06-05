@@ -39,32 +39,45 @@ export type DropdownVariant = "select" | "action";
 type DropdownAlign = "center" | "end" | "start";
 type DropdownFocusStrategy = "first" | "last" | "selected";
 
-const SOFT_EASE = [0.22, 1, 0.36, 1] as const;
+const FLUID_EASE = [0.16, 1, 0.3, 1] as const;
+const EXIT_EASE = [0.4, 0, 0.6, 1] as const;
+const INSTANT_CLOSE_TRANSITION = { duration: 0 } as const;
 const MAX_CONTENT_HEIGHT = 384;
 const VIEWPORT_MARGIN = 12;
 const CLASSNAME_TOKEN_SPLIT = /\s+/;
 
-function getContentMotion(reduceMotion: boolean) {
-  return {
-    animate: { opacity: 1, y: 0 },
-    exit: { opacity: 0, y: reduceMotion ? 0 : -4 },
-    initial: { opacity: 0, y: reduceMotion ? 0 : -4 },
-    transition: {
-      duration: reduceMotion ? 0.16 : 0.25,
-      ease: reduceMotion ? ("easeOut" as const) : SOFT_EASE,
-    },
-  };
-}
+const POPUP_SPRING = {
+  type: "spring" as const,
+  stiffness: 260,
+  damping: 32,
+  mass: 0.95,
+};
+const POPUP_TRANSFORM_ORIGIN = "top center";
 
-function getInnerContentMotion(reduceMotion: boolean) {
+function getPopupMotion(reduceMotion: boolean) {
+  if (reduceMotion) {
+    return {
+      animate: { opacity: 1, scale: 1, y: 0 },
+      closed: { opacity: 0, scale: 1, y: 0 },
+      initial: { opacity: 0, scale: 1, y: 0 },
+      openTransition: { duration: 0.12, ease: "easeOut" as const },
+      closedTransition: { duration: 0.1, ease: "easeOut" as const },
+    };
+  }
+
   return {
-    animate: { opacity: 1, y: 0 },
-    exit: { opacity: 0, y: reduceMotion ? 0 : -2 },
-    initial: { opacity: 0, y: reduceMotion ? 0 : 3 },
-    transition: {
-      delay: reduceMotion ? 0 : 0.03,
-      duration: reduceMotion ? 0.12 : 0.18,
-      ease: reduceMotion ? ("easeOut" as const) : SOFT_EASE,
+    animate: { opacity: 1, scale: 1, y: 0 },
+    closed: { opacity: 0, scale: 0.985, y: -5 },
+    initial: { opacity: 0, scale: 0.985, y: -5 },
+    openTransition: {
+      opacity: { duration: 0.34, ease: FLUID_EASE },
+      scale: POPUP_SPRING,
+      y: POPUP_SPRING,
+    },
+    closedTransition: {
+      opacity: { duration: 0.22, ease: EXIT_EASE },
+      scale: { duration: 0.22, ease: EXIT_EASE },
+      y: { duration: 0.22, ease: EXIT_EASE },
     },
   };
 }
@@ -80,6 +93,7 @@ type DropdownContextValue = {
   setHoveredItemId: React.Dispatch<React.SetStateAction<string | undefined>>;
   setOpen: (open: boolean) => void;
   setValue: (value: string | undefined) => void;
+  skipExitAnimationRef: React.MutableRefObject<boolean>;
   triggerRef: React.RefObject<HTMLButtonElement | null>;
   value: string | undefined;
   variant: DropdownVariant;
@@ -245,6 +259,7 @@ export function Dropdown({
   const reduceMotion = useResolvedReducedMotion(reducedMotion);
   const contentId = React.useId();
   const focusStrategyRef = React.useRef<DropdownFocusStrategy>("selected");
+  const skipExitAnimationRef = React.useRef(false);
   const [open, setOpen] = useControllableState<boolean>({
     defaultProp: defaultOpen,
     onChange: onOpenChange,
@@ -277,6 +292,7 @@ export function Dropdown({
       setHoveredItemId,
       setOpen,
       setValue,
+      skipExitAnimationRef,
       triggerRef,
       value,
       variant,
@@ -300,6 +316,10 @@ export function Dropdown({
         <DropdownMenuPrimitive.Root
           modal={false}
           onOpenChange={(nextOpen) => {
+            if (nextOpen) {
+              skipExitAnimationRef.current = false;
+            }
+
             setOpen(nextOpen);
 
             if (!nextOpen) {
@@ -324,10 +344,7 @@ export function Dropdown({
 }
 
 export interface DropdownTriggerProps
-  extends Omit<
-    React.ComponentPropsWithoutRef<typeof motion.button>,
-    "children"
-  > {
+  extends Omit<React.ComponentPropsWithoutRef<"button">, "children"> {
   children?: React.ReactNode;
   showChevron?: boolean;
 }
@@ -360,7 +377,7 @@ export const DropdownTrigger = React.forwardRef<
 
     return (
       <DropdownMenuPrimitive.Trigger asChild disabled={disabled}>
-        <motion.button
+        <button
           aria-controls={contentId}
           aria-expanded={open}
           aria-haspopup={variant === "action" ? "menu" : "listbox"}
@@ -371,7 +388,6 @@ export const DropdownTrigger = React.forwardRef<
           )}
           data-state={open ? "open" : "closed"}
           disabled={disabled}
-          layout={reduceMotion ? false : "size"}
           onKeyDown={(event) => {
             onKeyDown?.(event);
 
@@ -409,15 +425,11 @@ export const DropdownTrigger = React.forwardRef<
             setRefValue(ref, node);
           }}
           type="button"
-          whileTap={disabled ? undefined : { scale: 0.98 }}
           {...props}
         >
-          <motion.span
-            className="flex min-w-0 flex-1 items-center gap-2"
-            layout={reduceMotion ? false : "position"}
-          >
+          <span className="flex min-w-0 flex-1 items-center gap-2">
             {children}
-          </motion.span>
+          </span>
           {showChevron ? (
             <motion.span
               animate={{ rotate: open ? 180 : 0 }}
@@ -431,7 +443,7 @@ export const DropdownTrigger = React.forwardRef<
               <ChevronDown className="h-4 w-4" />
             </motion.span>
           ) : null}
-        </motion.button>
+        </button>
       </DropdownMenuPrimitive.Trigger>
     );
   }
@@ -466,154 +478,177 @@ export const DropdownValue = React.forwardRef<
 });
 DropdownValue.displayName = "DropdownValue";
 
-export interface DropdownContentProps
-  extends React.ComponentPropsWithoutRef<typeof motion.div> {
+export interface DropdownContentProps {
   align?: DropdownAlign;
+  children?: React.ReactNode;
+  className?: string;
   sideOffset?: number;
+  style?: React.CSSProperties;
 }
 
 export const DropdownContent = React.forwardRef<
   HTMLDivElement,
   DropdownContentProps
->(
-  (
-    { align = "start", children, className, sideOffset = 8, style, ...props },
-    ref
-  ) => {
-    const { focusStrategyRef, open, reduceMotion, setHoveredItemId, value } =
-      useDropdownContext("DropdownContent");
-    const contentRef = React.useRef<HTMLDivElement | null>(null);
-    const contentMotion = getContentMotion(reduceMotion);
-    const innerContentMotion = getInnerContentMotion(reduceMotion);
-    const shouldMatchTriggerWidth = classNameHasToken(className, "w-full");
+>(({ align = "start", children, className, sideOffset = 8, style }, ref) => {
+  const {
+    focusStrategyRef,
+    open,
+    reduceMotion,
+    setHoveredItemId,
+    skipExitAnimationRef,
+    value,
+  } = useDropdownContext("DropdownContent");
+  const contentRef = React.useRef<HTMLDivElement | null>(null);
+  const popupMotion = getPopupMotion(reduceMotion);
+  const shouldMatchTriggerWidth = classNameHasToken(className, "w-full");
+  const panelVariants = {
+    closed: {
+      ...popupMotion.closed,
+      transition: popupMotion.closedTransition,
+    },
+    closedInstant: {
+      opacity: reduceMotion ? 0 : popupMotion.closed.opacity,
+      scale: reduceMotion ? 1 : popupMotion.closed.scale,
+      y: reduceMotion ? 0 : popupMotion.closed.y,
+      transition: INSTANT_CLOSE_TRANSITION,
+    },
+    open: {
+      ...popupMotion.animate,
+      transition: popupMotion.openTransition,
+    },
+  };
 
-    const setContentRef = React.useCallback(
-      (node: HTMLDivElement | null) => {
-        contentRef.current = node;
-        setRefValue(ref, node);
-      },
-      [ref]
-    );
+  const setContentRef = React.useCallback(
+    (node: HTMLDivElement | null) => {
+      contentRef.current = node;
+      setRefValue(ref, node);
+    },
+    [ref]
+  );
 
-    const focusContentByStrategy = React.useCallback(() => {
-      const items = getEnabledItems(contentRef.current);
+  const focusContentByStrategy = React.useCallback(() => {
+    const items = getEnabledItems(contentRef.current);
 
-      if (!items.length) {
-        return;
-      }
+    if (!items.length) {
+      return;
+    }
 
-      if (focusStrategyRef.current === "first") {
-        focusItem(items, 0);
-        return;
-      }
+    if (focusStrategyRef.current === "first") {
+      focusItem(items, 0);
+      return;
+    }
 
-      if (focusStrategyRef.current === "last") {
-        focusItem(items, items.length - 1);
-        return;
-      }
+    if (focusStrategyRef.current === "last") {
+      focusItem(items, items.length - 1);
+      return;
+    }
 
-      const selectedIndex =
-        value === undefined
-          ? -1
-          : items.findIndex((item) => item.dataset.value === value);
+    const selectedIndex =
+      value === undefined
+        ? -1
+        : items.findIndex((item) => item.dataset.value === value);
 
-      focusItem(items, selectedIndex >= 0 ? selectedIndex : 0);
-    }, [focusStrategyRef, value]);
+    focusItem(items, selectedIndex >= 0 ? selectedIndex : 0);
+  }, [focusStrategyRef, value]);
 
-    React.useEffect(() => {
-      if (!open) {
-        return;
-      }
+  React.useEffect(() => {
+    if (!open) {
+      return;
+    }
 
-      const frame = window.requestAnimationFrame(() => {
-        focusContentByStrategy();
-      });
+    const frame = window.requestAnimationFrame(() => {
+      focusContentByStrategy();
+    });
 
-      return () => {
-        window.cancelAnimationFrame(frame);
-      };
-    }, [focusContentByStrategy, open]);
+    return () => {
+      window.cancelAnimationFrame(frame);
+    };
+  }, [focusContentByStrategy, open]);
 
-    return (
-      <AnimatePresence>
-        {open ? (
-          <DropdownMenuPrimitive.Portal forceMount>
-            <DropdownMenuPrimitive.Content
-              align={align}
-              asChild
-              avoidCollisions={false}
-              collisionPadding={VIEWPORT_MARGIN}
-              forceMount
-              loop
-              onCloseAutoFocus={() => {
-                focusStrategyRef.current = "selected";
+  return (
+    <AnimatePresence
+      custom={skipExitAnimationRef}
+      onExitComplete={() => {
+        skipExitAnimationRef.current = false;
+      }}
+    >
+      {open ? (
+        <DropdownMenuPrimitive.Portal forceMount>
+          <DropdownMenuPrimitive.Content
+            align={align}
+            asChild
+            avoidCollisions={false}
+            collisionPadding={VIEWPORT_MARGIN}
+            forceMount
+            loop
+            onCloseAutoFocus={() => {
+              focusStrategyRef.current = "selected";
+            }}
+            side="bottom"
+            sideOffset={sideOffset}
+          >
+            <div
+              ref={setContentRef}
+              style={{
+                ...style,
+                width: shouldMatchTriggerWidth
+                  ? "var(--radix-dropdown-menu-trigger-width)"
+                  : style?.width,
+                maxWidth: "calc(100vw - 1.5rem)",
               }}
-              side="bottom"
-              sideOffset={sideOffset}
             >
               <motion.div
-                animate={contentMotion.animate}
+                animate="open"
                 className={cn(
                   dropdownThemeClassName,
                   dropdownPanelClassName,
+                  "transform-gpu",
                   className
                 )}
-                exit={contentMotion.exit}
-                initial={contentMotion.initial}
-                ref={setContentRef}
-                style={{
-                  ...style,
-                  transformOrigin:
-                    "var(--radix-dropdown-menu-content-transform-origin)",
-                  width: shouldMatchTriggerWidth
-                    ? "var(--radix-dropdown-menu-trigger-width)"
-                    : style?.width,
-                  maxWidth: "calc(100vw - 1.5rem)",
-                }}
-                transition={contentMotion.transition}
-                {...props}
+                custom={skipExitAnimationRef}
+                exit={
+                  ((
+                    custom: React.MutableRefObject<boolean>
+                  ): "closed" | "closedInstant" =>
+                    custom.current ? "closedInstant" : "closed") as never
+                }
+                initial="closed"
+                style={{ transformOrigin: POPUP_TRANSFORM_ORIGIN }}
+                variants={panelVariants}
               >
-                <motion.div
-                  animate={innerContentMotion.animate}
-                  className="overflow-hidden"
-                  exit={innerContentMotion.exit}
-                  initial={innerContentMotion.initial}
-                  transition={innerContentMotion.transition}
+                <ScrollAreaPrimitive.Root
+                  className="relative overflow-hidden"
+                  scrollHideDelay={100}
+                  style={{
+                    maxHeight: `min(${MAX_CONTENT_HEIGHT}px, var(--radix-dropdown-menu-content-available-height, ${MAX_CONTENT_HEIGHT}px))`,
+                  }}
+                  type="hover"
                 >
-                  <ScrollAreaPrimitive.Root
-                    className="relative overflow-hidden"
-                    scrollHideDelay={100}
-                    style={{
-                      maxHeight: `min(${MAX_CONTENT_HEIGHT}px, var(--radix-dropdown-menu-content-available-height, ${MAX_CONTENT_HEIGHT}px))`,
+                  <ScrollAreaPrimitive.Viewport
+                    className="max-h-[inherit] min-h-0 scroll-py-1 overscroll-contain p-1.5 outline-none"
+                    onPointerLeave={() => {
+                      setHoveredItemId(undefined);
                     }}
-                    type="hover"
                   >
-                    <ScrollAreaPrimitive.Viewport
-                      className="max-h-[inherit] min-h-0 scroll-py-1 overscroll-contain p-1.5 outline-none"
-                      onPointerLeave={() => {
-                        setHoveredItemId(undefined);
-                      }}
-                    >
-                      {children as React.ReactNode}
-                    </ScrollAreaPrimitive.Viewport>
-                    <ScrollAreaPrimitive.Scrollbar
-                      className={dropdownListScrollbarClassName}
-                      orientation="vertical"
-                    >
-                      <ScrollAreaPrimitive.Thumb
-                        className={dropdownListThumbClassName}
-                      />
-                    </ScrollAreaPrimitive.Scrollbar>
-                  </ScrollAreaPrimitive.Root>
-                </motion.div>
+                    {children as React.ReactNode}
+                  </ScrollAreaPrimitive.Viewport>
+                  <ScrollAreaPrimitive.Scrollbar
+                    className={dropdownListScrollbarClassName}
+                    orientation="vertical"
+                  >
+                    <ScrollAreaPrimitive.Thumb
+                      className={dropdownListThumbClassName}
+                    />
+                  </ScrollAreaPrimitive.Scrollbar>
+                </ScrollAreaPrimitive.Root>
               </motion.div>
-            </DropdownMenuPrimitive.Content>
-          </DropdownMenuPrimitive.Portal>
-        ) : null}
-      </AnimatePresence>
-    );
-  }
-);
+            </div>
+          </DropdownMenuPrimitive.Content>
+        </DropdownMenuPrimitive.Portal>
+      ) : null}
+    </AnimatePresence>
+  );
+});
 DropdownContent.displayName = "DropdownContent";
 
 export interface DropdownItemProps
@@ -634,6 +669,7 @@ export const DropdownItem = React.forwardRef<HTMLDivElement, DropdownItemProps>(
       reduceMotion,
       setHoveredItemId,
       setValue,
+      skipExitAnimationRef,
       value: currentValue,
       variant,
     } = useDropdownContext("DropdownItem");
@@ -651,6 +687,10 @@ export const DropdownItem = React.forwardRef<HTMLDivElement, DropdownItemProps>(
         asChild
         disabled={disabled}
         onSelect={(event) => {
+          if (!(disabled || event.defaultPrevented)) {
+            skipExitAnimationRef.current = true;
+          }
+
           onClick?.(event as unknown as React.MouseEvent<HTMLDivElement>);
 
           if (event.defaultPrevented || disabled) {
