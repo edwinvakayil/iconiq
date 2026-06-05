@@ -7,12 +7,6 @@ import { useTheme } from "next-themes";
 import * as React from "react";
 import { Kbd, KbdGroup } from "@/components/ui/kbd";
 import { useDebouncedValue } from "@/hooks/use-debounced-value";
-import { capturePostHogEvent } from "@/lib/posthog";
-import {
-  sectionFromDocsHref,
-  slugFromDocsHref,
-} from "@/lib/posthog-event-name";
-import { POSTHOG_EVENTS } from "@/lib/posthog-events";
 import { cn } from "@/lib/utils";
 
 const QUERY_SPLIT_REGEX = /\s+/;
@@ -207,11 +201,6 @@ function CommandMenu({
       ) {
         event.preventDefault();
         event.stopPropagation();
-        if (!openRef.current) {
-          capturePostHogEvent(POSTHOG_EVENTS.SEARCH_OPENED, {
-            source: "keyboard_shortcut",
-          });
-        }
         setOpen((current) => !current);
       }
     };
@@ -228,13 +217,7 @@ function CommandMenu({
     fn();
   }, []);
 
-  const openRef = React.useRef(open);
-  openRef.current = open;
-
   const handleOpen = React.useCallback(() => {
-    capturePostHogEvent(POSTHOG_EVENTS.SEARCH_OPENED, {
-      source: "search_button",
-    });
     setOpen(true);
   }, []);
 
@@ -311,17 +294,6 @@ function CommandMenu({
 
   const handleItemSelect = React.useCallback(
     (item: CommandMenuItemDef) => {
-      const docsSlug = item.href ? slugFromDocsHref(item.href) : null;
-      const section = item.href ? sectionFromDocsHref(item.href) : null;
-      capturePostHogEvent(POSTHOG_EVENTS.SEARCH_RESULT_SELECTED, {
-        label: item.label,
-        href: item.href ?? null,
-        query,
-        source: "command_menu",
-        ...(docsSlug ? { component_slug: docsSlug } : {}),
-        ...(section ? { section } : {}),
-      });
-
       if (item.action) {
         run(item.action);
         return;
@@ -332,7 +304,7 @@ function CommandMenu({
         run(() => router.push(href));
       }
     },
-    [router, run, query]
+    [router, run]
   );
 
   const handleListKeyDown = (event: React.KeyboardEvent<HTMLElement>) => {

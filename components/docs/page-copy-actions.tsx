@@ -5,13 +5,8 @@ import { useEffect, useMemo, useState } from "react";
 
 import { OpenInV0Button } from "@/components/docs/open-in-v0-button";
 import { SITE } from "@/constants";
-import { capturePostHogEvent } from "@/lib/posthog";
-import { sectionFromDocsHref } from "@/lib/posthog-event-name";
-import { POSTHOG_EVENTS } from "@/lib/posthog-events";
 import { cn } from "@/lib/utils";
 import { Popover, PopoverContent, PopoverTrigger } from "@/registry/popover";
-
-const PAGE_URL_ORIGIN_REGEX = /^https?:\/\/[^/]+/i;
 
 function getChatGptPrompt(pageUrl: string, title: string) {
   return encodeURIComponent(
@@ -49,9 +44,6 @@ export function PageCopyActions({
     return SITE.URL;
   }, [pageUrl]);
   const registryUrl = `${SITE.URL}/r/${componentName}.json`;
-  const docsSection =
-    sectionFromDocsHref(resolvedPageUrl.replace(PAGE_URL_ORIGIN_REGEX, "")) ??
-    "docs";
 
   const menuItems = useMemo(
     () => [
@@ -73,13 +65,6 @@ export function PageCopyActions({
   const handleCopy = async () => {
     try {
       await navigator.clipboard.writeText(pageContent);
-      capturePostHogEvent(POSTHOG_EVENTS.DOCS_PAGE_COPIED, {
-        component_slug: componentName,
-        section: docsSection,
-        page_url: resolvedPageUrl,
-        title,
-        source: "component_header",
-      });
       setCopied(true);
       window.setTimeout(() => setCopied(false), 1500);
     } catch {
@@ -149,31 +134,7 @@ export function PageCopyActions({
                 className="flex items-center justify-between whitespace-nowrap rounded-xl px-3 py-2 text-[14px] text-foreground transition-colors hover:bg-muted/70"
                 href={item.href}
                 key={item.label}
-                onClick={() => {
-                  if (item.label === "Ask ChatGPT") {
-                    capturePostHogEvent(
-                      POSTHOG_EVENTS.DOCS_ASK_CHATGPT_CLICKED,
-                      {
-                        component_slug: componentName,
-                        section: docsSection,
-                        page_url: resolvedPageUrl,
-                        title,
-                        source: "component_header",
-                      }
-                    );
-                  } else if (item.label === "View registry JSON") {
-                    capturePostHogEvent(
-                      POSTHOG_EVENTS.DOCS_REGISTRY_JSON_VIEWED,
-                      {
-                        component_slug: componentName,
-                        section: docsSection,
-                        registry_url: registryUrl,
-                        source: "component_header",
-                      }
-                    );
-                  }
-                  setOpen(false);
-                }}
+                onClick={() => setOpen(false)}
                 rel="noreferrer"
                 target="_blank"
               >
