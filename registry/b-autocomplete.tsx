@@ -138,6 +138,16 @@ function resolveItemProps(itemProps: DivRenderProps) {
   };
 }
 
+const FLUID_EASE = [0.16, 1, 0.3, 1] as const;
+const EXIT_EASE = [0.4, 0, 0.6, 1] as const;
+
+const POPUP_SPRING = {
+  type: "spring" as const,
+  stiffness: 260,
+  damping: 32,
+  mass: 0.95,
+};
+
 const HIGHLIGHT_SPRING = {
   type: "spring" as const,
   stiffness: 460,
@@ -145,11 +155,48 @@ const HIGHLIGHT_SPRING = {
   mass: 0.82,
 };
 
+function getPopupMotion(reduceMotion: boolean) {
+  if (reduceMotion) {
+    return {
+      animate: { opacity: 1, scale: 1, y: 0 },
+      closed: { opacity: 0, scale: 1, y: 0 },
+      initial: { opacity: 0, scale: 1, y: 0 },
+      openTransition: { duration: 0.12, ease: "easeOut" as const },
+      closedTransition: { duration: 0.1, ease: "easeOut" as const },
+    };
+  }
+
+  return {
+    animate: { opacity: 1, scale: 1, y: 0 },
+    closed: { opacity: 0, scale: 0.985, y: -5 },
+    initial: { opacity: 0, scale: 0.985, y: -5 },
+    openTransition: {
+      opacity: { duration: 0.34, ease: FLUID_EASE },
+      scale: POPUP_SPRING,
+      y: POPUP_SPRING,
+    },
+    closedTransition: {
+      opacity: { duration: 0.22, ease: EXIT_EASE },
+      scale: { duration: 0.22, ease: EXIT_EASE },
+      y: { duration: 0.22, ease: EXIT_EASE },
+    },
+  };
+}
+
 const autocompleteListScrollbarClassName =
   "z-10 my-1.5 mr-0.5 w-1 shrink-0 touch-none select-none opacity-0 transition-opacity duration-150 before:absolute before:left-1/2 before:h-full before:w-5 before:-translate-x-1/2 before:content-[''] data-hovering:pointer-events-auto data-hovering:opacity-100 data-scrolling:pointer-events-auto data-scrolling:opacity-100 data-scrolling:duration-0";
 
 const autocompleteListThumbClassName =
   "relative rounded-full bg-muted-foreground/50 bg-[color:color-mix(in_oklch,var(--ic-muted-foreground),transparent_35%)]";
+
+const MAX_MENU_HEIGHT = 256;
+const VIEWPORT_PADDING = 12;
+
+const autocompleteCollisionAvoidance = {
+  align: "shift" as const,
+  fallbackAxisSide: "none" as const,
+  side: "none" as const,
+};
 
 function getChevronTransition(reduceMotion: boolean) {
   return reduceMotion
@@ -385,17 +432,24 @@ function AutocompleteContent({
   anchor,
   children,
   className,
-  side = "bottom",
+  collisionAvoidance = autocompleteCollisionAvoidance,
+  collisionPadding = VIEWPORT_PADDING,
   sideOffset = 6,
   ...props
 }: AutocompletePrimitive.Popup.Props &
   Pick<
     AutocompletePrimitive.Positioner.Props,
-    "align" | "alignOffset" | "anchor" | "side" | "sideOffset"
+    | "align"
+    | "alignOffset"
+    | "anchor"
+    | "collisionAvoidance"
+    | "collisionPadding"
+    | "sideOffset"
   >) {
   const { actionsRef, reduceMotion } = useAutocompleteContext(
     "AutocompleteContent"
   );
+  const popupMotion = getPopupMotion(reduceMotion);
 
   return (
     <AutocompletePrimitive.Portal keepMounted>
@@ -404,7 +458,9 @@ function AutocompleteContent({
         alignOffset={alignOffset}
         anchor={anchor}
         className="z-[9999] outline-none"
-        side={side}
+        collisionAvoidance={collisionAvoidance}
+        collisionPadding={collisionPadding}
+        side="bottom"
         sideOffset={sideOffset}
       >
         <AutocompletePrimitive.Popup
@@ -416,41 +472,50 @@ function AutocompleteContent({
               resolvePopupProps(popupProps as DivRenderProps);
 
             return (
-              <motion.div
+              <div
                 {...resolvedPopupProps}
-                animate={
-                  popupState.open
-                    ? { opacity: 1, y: 0 }
-                    : { opacity: 0, y: reduceMotion ? 0 : -4 }
-                }
-                className={cn(
-                  componentThemeClassName,
-                  "w-[var(--anchor-width)] max-w-[var(--available-width)] overflow-hidden rounded-lg border border-neutral-200/60 bg-white text-neutral-900 shadow-none dark:border-neutral-700/60 dark:bg-neutral-950 dark:text-neutral-100",
-                  popupClassName,
-                  resolveStateClassName(className, popupState)
-                )}
-                initial={
-                  popupState.transitionStatus === "starting"
-                    ? { opacity: 0, y: reduceMotion ? 0 : -6 }
-                    : false
-                }
-                onAnimationComplete={() => {
-                  if (!popupState.open) {
-                    actionsRef.current?.unmount();
-                  }
-                }}
                 ref={(node) => {
                   setRef(popupRef, node);
                 }}
                 role="presentation"
-                style={popupStyle}
-                transition={{
-                  duration: reduceMotion ? 0.1 : 0.18,
-                  ease: [0.32, 0.72, 0, 1],
+                style={{
+                  ...popupStyle,
+                  transformOrigin: "var(--transform-origin)",
                 }}
               >
-                {children}
-              </motion.div>
+                <motion.div
+                  animate={
+                    popupState.open ? popupMotion.animate : popupMotion.closed
+                  }
+                  className={cn(
+                    componentThemeClassName,
+                    "w-[var(--anchor-width)] max-w-[var(--available-width)] transform-gpu overflow-hidden rounded-lg border border-neutral-200/60 bg-white text-neutral-900 shadow-none dark:border-neutral-700/60 dark:bg-neutral-950 dark:text-neutral-100",
+                    popupClassName,
+                    resolveStateClassName(className, popupState)
+                  )}
+                  initial={
+                    popupState.transitionStatus === "starting"
+                      ? popupMotion.initial
+                      : false
+                  }
+                  onAnimationComplete={() => {
+                    if (!popupState.open) {
+                      actionsRef.current?.unmount();
+                    }
+                  }}
+                  style={{
+                    pointerEvents: popupState.open ? undefined : "none",
+                    transformOrigin: "var(--transform-origin)",
+                  }}
+                  transition={
+                    popupState.open
+                      ? popupMotion.openTransition
+                      : popupMotion.closedTransition
+                  }
+                >
+                  {children}
+                </motion.div>
+              </div>
             );
           }}
         />
@@ -468,7 +533,10 @@ function AutocompleteList({
 
   return (
     <ScrollAreaPrimitive.Root
-      className={cn("relative max-h-64 overflow-hidden", className)}
+      className={cn("relative min-h-0 overflow-hidden", className)}
+      style={{
+        maxHeight: `min(var(--available-height, ${MAX_MENU_HEIGHT}px), ${MAX_MENU_HEIGHT}px)`,
+      }}
     >
       <AutocompletePrimitive.List
         data-slot="autocomplete-list"
@@ -489,7 +557,7 @@ function AutocompleteList({
             <ScrollAreaPrimitive.Viewport
               {...resolvedListProps}
               className={cn(
-                "max-h-64 min-h-0 overscroll-contain p-1 outline-none",
+                "max-h-[inherit] min-h-0 overscroll-contain p-1 outline-none",
                 listClassName
               )}
               ref={(node) => {
@@ -538,13 +606,11 @@ function AutocompleteItem({
         return (
           <motion.div
             {...resolvedItemProps}
-            animate={{ opacity: 1 }}
             className={cn(
               "relative flex cursor-pointer select-none items-start rounded-lg px-2.5 py-2 text-foreground text-sm",
               itemClassName,
               resolveStateClassName(className, itemState)
             )}
-            initial={reduceMotion ? false : { opacity: 0 }}
             onMouseEnter={composeEventHandlers(
               resolvedItemProps.onMouseEnter,
               () => {
@@ -561,10 +627,6 @@ function AutocompleteItem({
               setRef(itemRef, node);
             }}
             style={itemStyle}
-            transition={{
-              duration: reduceMotion ? 0.1 : 0.14,
-              ease: [0.32, 0.72, 0, 1],
-            }}
           >
             {showHighlight ? (
               <motion.div
@@ -637,9 +699,7 @@ function AutocompleteEmpty({
       data-slot="autocomplete-empty"
       {...props}
     >
-      <motion.span animate={{ opacity: 1 }} className="block px-3 py-6">
-        {children}
-      </motion.span>
+      <span className="block px-3 py-6">{children}</span>
     </AutocompletePrimitive.Empty>
   );
 }
