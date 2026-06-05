@@ -1,8 +1,9 @@
 import type { Viewport } from "next";
 
 import "./globals.css";
-import { Geist, Geist_Mono } from "next/font/google";
 
+import { Analytics } from "@vercel/analytics/next";
+import { Geist, Geist_Mono } from "next/font/google";
 import { SITE } from "@/constants";
 import { MotionTierProvider } from "@/providers/motion-tier";
 import { PackageNameProvider } from "@/providers/package-name";
@@ -71,6 +72,7 @@ export default function RootLayout({
             <PackageNameProvider>{children}</PackageNameProvider>
           </MotionTierProvider>
         </ThemeProvider>
+        <Analytics />
       </body>
     </html>
   );
