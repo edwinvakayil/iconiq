@@ -29,6 +29,7 @@ const selectItemHighlightClassName =
   "absolute inset-0 -z-10 rounded-lg bg-accent/60";
 
 const MAX_MENU_HEIGHT = 320;
+const INSTANT_CLOSE_TRANSITION = { duration: 0 } as const;
 
 const selectListScrollbarClassName =
   "z-10 my-1.5 mr-0.5 w-1 shrink-0 touch-none select-none opacity-0 transition-opacity duration-150 before:absolute before:left-1/2 before:h-full before:w-5 before:-translate-x-1/2 before:content-[''] data-hovering:pointer-events-auto data-hovering:opacity-100 data-scrolling:pointer-events-auto data-scrolling:opacity-100 data-scrolling:duration-0";
@@ -38,6 +39,14 @@ const selectListThumbClassName =
 
 const SOFT_EASE = [0.22, 1, 0.36, 1] as const;
 const EXIT_EASE = [0.55, 0.06, 0.68, 0.19] as const;
+const FLUID_EASE = [0.16, 1, 0.3, 1] as const;
+const POPUP_EXIT_EASE = [0.4, 0, 0.6, 1] as const;
+const POPUP_SPRING = {
+  type: "spring" as const,
+  stiffness: 260,
+  damping: 32,
+  mass: 0.95,
+};
 const CHECK_SPRING = {
   type: "spring",
   stiffness: 520,
@@ -74,6 +83,7 @@ type SelectProps = Omit<
   };
 
 type SelectContextValue = {
+  actionsRef: React.RefObject<SelectPrimitive.Root.Actions | null>;
   activeHighlightId: string;
   activeValue?: string;
   getItemIndex: () => number;
@@ -84,6 +94,7 @@ type SelectContextValue = {
   reduceMotion: boolean;
   selectedValue: SelectRootProps["value"];
   setActiveValue: React.Dispatch<React.SetStateAction<string | undefined>>;
+  skipExitAnimationRef: React.MutableRefObject<boolean>;
 };
 
 const RESIZE_OBSERVER_LOOP_ERROR =
@@ -246,10 +257,32 @@ function getPressTransition(reduceMotion: boolean) {
     : PRESS_SPRING;
 }
 
-function getPanelTransition(reduceMotion: boolean) {
-  return reduceMotion
-    ? { duration: 0.14, ease: "easeOut" as const }
-    : { duration: 0.22, ease: SOFT_EASE };
+function getPopupMotion(reduceMotion: boolean) {
+  if (reduceMotion) {
+    return {
+      animate: { opacity: 1, scale: 1, y: 0 },
+      closed: { opacity: 0, scale: 1, y: 0 },
+      initial: { opacity: 0, scale: 1, y: 0 },
+      openTransition: { duration: 0.12, ease: "easeOut" as const },
+      closedTransition: { duration: 0.1, ease: "easeOut" as const },
+    };
+  }
+
+  return {
+    animate: { opacity: 1, scale: 1, y: 0 },
+    closed: { opacity: 0, scale: 0.985, y: -5 },
+    initial: { opacity: 0, scale: 0.985, y: -5 },
+    openTransition: {
+      opacity: { duration: 0.34, ease: FLUID_EASE },
+      scale: POPUP_SPRING,
+      y: POPUP_SPRING,
+    },
+    closedTransition: {
+      opacity: { duration: 0.22, ease: POPUP_EXIT_EASE },
+      scale: { duration: 0.22, ease: POPUP_EXIT_EASE },
+      y: { duration: 0.22, ease: POPUP_EXIT_EASE },
+    },
+  };
 }
 
 function getChevronTransition(reduceMotion: boolean) {
@@ -394,6 +427,11 @@ function Select({
   ...props
 }: SelectProps) {
   const reduceMotion = useResolvedReducedMotion(reducedMotion);
+  const internalActionsRef = React.useRef<SelectPrimitive.Root.Actions | null>(
+    null
+  );
+  const actionsRef = internalActionsRef;
+  const skipExitAnimationRef = React.useRef(false);
   const isOpenControlled = openProp !== undefined;
   const isValueControlled = valueProp !== undefined;
   const [uncontrolledOpen, setUncontrolledOpen] = React.useState(defaultOpen);
@@ -416,6 +454,18 @@ function Select({
     NonNullable<SelectRootProps["onOpenChange"]>
   >(
     (nextOpen, eventDetails) => {
+      if (!nextOpen && eventDetails.reason === "item-press") {
+        skipExitAnimationRef.current = true;
+      } else if (nextOpen) {
+        skipExitAnimationRef.current = false;
+      }
+
+      if (!nextOpen && reduceMotion) {
+        requestAnimationFrame(() => {
+          actionsRef.current?.unmount();
+        });
+      }
+
       if (!isOpenControlled) {
         setUncontrolledOpen(nextOpen);
       }
@@ -426,7 +476,7 @@ function Select({
 
       onOpenChange?.(nextOpen, eventDetails);
     },
-    [isOpenControlled, onOpenChange]
+    [actionsRef, isOpenControlled, onOpenChange, reduceMotion]
   );
 
   const handleValueChange = React.useCallback<
@@ -464,6 +514,7 @@ function Select({
     <ReducedMotionConfig reducedMotion={reducedMotion}>
       <SelectContext.Provider
         value={{
+          actionsRef,
           activeHighlightId,
           activeValue,
           getItemIndex,
@@ -474,10 +525,12 @@ function Select({
           reduceMotion,
           selectedValue,
           setActiveValue,
+          skipExitAnimationRef,
         }}
       >
         <SelectPrimitive.Root
           {...props}
+          actionsRef={actionsRef}
           onOpenChange={handleOpenChange}
           onValueChange={handleValueChange}
           open={open}
@@ -561,7 +614,7 @@ function SelectTrigger({
         } = resolveTriggerProps(triggerProps as TriggerRenderProps);
 
         return (
-          <motion.button
+          <button
             {...resolvedTriggerProps}
             className={cn(
               selectThemeClassName,
@@ -575,9 +628,7 @@ function SelectTrigger({
               setRef(triggerRef, node);
             }}
             style={triggerStyle}
-            transition={getPressTransition(reduceMotion)}
             type="button"
-            whileTap={reduceMotion ? undefined : { scale: 0.985 }}
           >
             {children}
             <SelectPrimitive.Icon
@@ -591,10 +642,89 @@ function SelectTrigger({
                 </motion.span>
               }
             />
-          </motion.button>
+          </button>
         );
       }}
     />
+  );
+}
+
+function SelectContentPanel({
+  children,
+  className,
+  popupClassName,
+  popupRef,
+  popupState,
+  popupStyle,
+  resolvedPopupProps,
+}: {
+  children: React.ReactNode;
+  className?:
+    | string
+    | ((state: SelectPrimitive.Popup.State) => string | undefined);
+  popupClassName?: string;
+  popupRef?: React.Ref<HTMLDivElement>;
+  popupState: SelectPrimitive.Popup.State;
+  popupStyle?: React.CSSProperties;
+  resolvedPopupProps: Omit<
+    PopupRenderProps,
+    "children" | "className" | "ref" | "style"
+  >;
+}) {
+  const { actionsRef, reduceMotion, skipExitAnimationRef } =
+    useSelectContext("SelectContentPanel");
+  const popupMotion = getPopupMotion(reduceMotion);
+  const skipExitAnimation = !popupState.open && skipExitAnimationRef.current;
+
+  return (
+    <div
+      {...resolvedPopupProps}
+      ref={(node) => {
+        setRef(popupRef, node);
+      }}
+      role="presentation"
+      style={{
+        ...popupStyle,
+        transformOrigin: "var(--transform-origin)",
+        width: "var(--anchor-width)",
+      }}
+    >
+      <motion.div
+        animate={popupState.open ? popupMotion.animate : popupMotion.closed}
+        className={cn(
+          selectThemeClassName,
+          selectPanelChromeClassName,
+          "flex transform-gpu flex-col",
+          popupClassName,
+          resolveStateClassName(className, popupState)
+        )}
+        data-slot="select-content"
+        initial={
+          popupState.transitionStatus === "starting"
+            ? popupMotion.initial
+            : false
+        }
+        onAnimationComplete={() => {
+          if (!popupState.open) {
+            skipExitAnimationRef.current = false;
+            actionsRef.current?.unmount();
+          }
+        }}
+        style={{
+          pointerEvents: popupState.open ? undefined : "none",
+          transformOrigin: "var(--transform-origin)",
+        }}
+        transition={
+          popupState.open
+            ? popupMotion.openTransition
+            : skipExitAnimation
+              ? INSTANT_CLOSE_TRANSITION
+              : popupMotion.closedTransition
+        }
+      >
+        {children}
+      </motion.div>
+    </div>
   );
 }
 
@@ -624,12 +754,7 @@ function SelectContent({
     | "side"
     | "sideOffset"
   >) {
-  const { open, reduceMotion, setActiveValue } =
-    useSelectContext("SelectContent");
-
-  if (!open) {
-    return null;
-  }
+  const { setActiveValue } = useSelectContext("SelectContent");
 
   return (
     <SelectPrimitive.Portal>
@@ -650,87 +775,67 @@ function SelectContent({
               resolvePopupProps(popupProps as PopupRenderProps);
 
             return (
-              <div
-                {...resolvedPopupProps}
-                className={cn(
-                  selectThemeClassName,
-                  selectPanelChromeClassName,
-                  popupClassName,
-                  resolveStateClassName(className, popupState)
-                )}
-                data-slot="select-content"
-                ref={(node) => {
-                  setRef(popupRef, node);
-                }}
-                style={{
-                  transformOrigin: "var(--transform-origin)",
-                  width: "var(--anchor-width)",
-                  ...popupStyle,
-                }}
+              <SelectContentPanel
+                className={className}
+                popupClassName={popupClassName}
+                popupRef={popupRef}
+                popupState={popupState}
+                popupStyle={popupStyle}
+                resolvedPopupProps={resolvedPopupProps}
               >
-                <motion.div
-                  animate={{ opacity: 1, y: 0 }}
-                  className="flex transform-gpu flex-col"
-                  initial={{
-                    opacity: reduceMotion ? 1 : 0,
-                    y: reduceMotion ? 0 : -4,
-                  }}
-                  transition={getPanelTransition(reduceMotion)}
-                >
-                  <SelectScrollUpButton />
-                  <motion.div className="relative min-h-0 flex-1" layoutRoot>
-                    <ScrollAreaPrimitive.Root
-                      className="relative flex min-h-0 flex-1 flex-col overflow-hidden"
-                      style={{
-                        maxHeight: `min(var(--available-height), ${MAX_MENU_HEIGHT}px)`,
+                <SelectScrollUpButton />
+                <motion.div className="relative min-h-0 flex-1" layoutRoot>
+                  <ScrollAreaPrimitive.Root
+                    className="relative flex min-h-0 flex-1 flex-col overflow-hidden"
+                    style={{
+                      maxHeight: `min(var(--available-height), ${MAX_MENU_HEIGHT}px)`,
+                    }}
+                  >
+                    <SelectPrimitive.List
+                      className="min-h-0 flex-1 p-1.5 outline-none"
+                      onPointerLeave={() => {
+                        setActiveValue(undefined);
+                      }}
+                      render={(listProps) => {
+                        const {
+                          children: listChildren,
+                          className: listClassName,
+                          ref: listRef,
+                          style: listStyle,
+                          ...resolvedListProps
+                        } = listProps as ListRenderProps;
+
+                        return (
+                          <ScrollAreaPrimitive.Viewport
+                            {...resolvedListProps}
+                            className={cn(
+                              "min-h-0 flex-1 overscroll-contain outline-none",
+                              listClassName
+                            )}
+                            ref={(node) => {
+                              setRef(listRef, node);
+                            }}
+                            style={listStyle}
+                          >
+                            {listChildren}
+                          </ScrollAreaPrimitive.Viewport>
+                        );
                       }}
                     >
-                      <SelectPrimitive.List
-                        className="min-h-0 flex-1 p-1.5 outline-none"
-                        onPointerLeave={() => {
-                          setActiveValue(undefined);
-                        }}
-                        render={(listProps) => {
-                          const {
-                            children: listChildren,
-                            className: listClassName,
-                            ref: listRef,
-                            style: listStyle,
-                            ...resolvedListProps
-                          } = listProps as ListRenderProps;
-
-                          return (
-                            <ScrollAreaPrimitive.Viewport
-                              {...resolvedListProps}
-                              className={cn(
-                                "min-h-0 flex-1 overscroll-contain outline-none",
-                                listClassName
-                              )}
-                              ref={(node) => {
-                                setRef(listRef, node);
-                              }}
-                              style={listStyle}
-                            >
-                              {listChildren}
-                            </ScrollAreaPrimitive.Viewport>
-                          );
-                        }}
-                      >
-                        {children}
-                      </SelectPrimitive.List>
-                      <ScrollAreaPrimitive.Scrollbar
-                        className={selectListScrollbarClassName}
-                        orientation="vertical"
-                      >
-                        <ScrollAreaPrimitive.Thumb
-                          className={selectListThumbClassName}
-                        />
-                      </ScrollAreaPrimitive.Scrollbar>
-                    </ScrollAreaPrimitive.Root>
-                  </motion.div>
-                  <SelectScrollDownButton />
+                      {children}
+                    </SelectPrimitive.List>
+                    <ScrollAreaPrimitive.Scrollbar
+                      className={selectListScrollbarClassName}
+                      orientation="vertical"
+                    >
+                      <ScrollAreaPrimitive.Thumb
+                        className={selectListThumbClassName}
+                      />
+                    </ScrollAreaPrimitive.Scrollbar>
+                  </ScrollAreaPrimitive.Root>
                 </motion.div>
-              </div>
+                <SelectScrollDownButton />
+              </SelectContentPanel>
             );
           }}
         />
