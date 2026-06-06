@@ -2,10 +2,12 @@ import type { Viewport } from "next";
 
 import "./globals.css";
 
+import { statsigAdapter } from "@flags-sdk/statsig";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Geist, Geist_Mono } from "next/font/google";
-import MyStatsig from "@/app/my-statsig";
+
+import { DynamicStatsigProvider } from "@/app/dynamic-statsig-provider";
 import { SITE } from "@/constants";
 import { MotionTierProvider } from "@/providers/motion-tier";
 import { PackageNameProvider } from "@/providers/package-name";
@@ -36,11 +38,40 @@ export const viewport: Viewport = {
   ],
 };
 
-export default function RootLayout({
+async function getStatsigShell(children: React.ReactNode) {
+  if (
+    !(
+      process.env.STATSIG_SERVER_API_KEY &&
+      process.env.NEXT_PUBLIC_STATSIG_CLIENT_KEY
+    )
+  ) {
+    return children;
+  }
+
+  const Statsig = await statsigAdapter.initialize();
+  const datafile = await Statsig.getClientInitializeResponse(
+    { userID: "anonymous" },
+    { hash: "djb2" }
+  );
+
+  if (!datafile) {
+    return children;
+  }
+
+  return (
+    <DynamicStatsigProvider datafile={datafile}>
+      {children}
+    </DynamicStatsigProvider>
+  );
+}
+
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const statsigShell = await getStatsigShell(children);
+
   return (
     <html
       className={`${geistMono.variable} ${geistSans.variable}`}
@@ -69,13 +100,11 @@ export default function RootLayout({
         <JsonLdScripts />
       </head>
       <body className="relative bg-background font-sans antialiased">
-        <MyStatsig>
-          <ThemeProvider>
-            <MotionTierProvider>
-              <PackageNameProvider>{children}</PackageNameProvider>
-            </MotionTierProvider>
-          </ThemeProvider>
-        </MyStatsig>
+        <ThemeProvider>
+          <MotionTierProvider>
+            <PackageNameProvider>{statsigShell}</PackageNameProvider>
+          </MotionTierProvider>
+        </ThemeProvider>
         <Analytics />
         <SpeedInsights />
       </body>
