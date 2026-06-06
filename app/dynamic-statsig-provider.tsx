@@ -20,7 +20,10 @@ export function DynamicStatsigProvider({
     process.env.NEXT_PUBLIC_STATSIG_CLIENT_KEY as string,
     datafile.user,
     JSON.stringify(datafile),
-    { plugins: [new StatsigAutoCapturePlugin()] }
+    {
+      environment: { tier: "production" },
+      plugins: [new StatsigAutoCapturePlugin()],
+    }
   );
 
   return (
