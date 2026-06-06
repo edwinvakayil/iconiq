@@ -12,6 +12,7 @@ import {
 import { CodeBlockInstall } from "@/components/code-block-install";
 import { DocsCodeSnippet } from "@/components/docs/code-snippet";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useTrackDocsCopyGate } from "@/lib/statsig-docs-copy";
 import { cn } from "@/lib/utils";
 
 type RegistryResponse = {
@@ -99,7 +100,13 @@ function FileTabTrigger({
   );
 }
 
-function RegistrySourceCode({ componentName }: { componentName: string }) {
+function RegistrySourceCode({
+  componentName,
+  onCopied,
+}: {
+  componentName: string;
+  onCopied: () => void;
+}) {
   const [activeFileId, setActiveFileId] = useState<string>("");
   const [fileIndicator, setFileIndicator] = useState({
     left: 0,
@@ -293,11 +300,7 @@ function RegistrySourceCode({ componentName }: { componentName: string }) {
         </div>
       ) : null}
 
-      <DocsCodeSnippet
-        code={activeFile?.content ?? ""}
-        componentName={componentName}
-        copySource="manual"
-      />
+      <DocsCodeSnippet code={activeFile?.content ?? ""} onCopied={onCopied} />
       <p className="font-medium text-[14px] text-foreground leading-6">
         <span aria-hidden className="mr-1.5 text-muted-foreground">
           *
@@ -313,6 +316,7 @@ export function ComponentInstallationTabs({
 }: {
   componentName: string;
 }) {
+  const trackDocsCopyGate = useTrackDocsCopyGate();
   const [activeTab, setActiveTab] = useState<InstallationTabValue>("cli");
   const [indicator, setIndicator] = useState({
     left: 0,
@@ -433,12 +437,18 @@ export function ComponentInstallationTabs({
       </div>
 
       <TabsContent className="mt-0" value="cli">
-        <CodeBlockInstall componentName={componentName} />
+        <CodeBlockInstall
+          componentName={componentName}
+          onCopied={() => trackDocsCopyGate(componentName, "cli")}
+        />
       </TabsContent>
 
       <TabsContent className="mt-0" value="manual">
         {activeTab === "manual" ? (
-          <RegistrySourceCode componentName={componentName} />
+          <RegistrySourceCode
+            componentName={componentName}
+            onCopied={() => trackDocsCopyGate(componentName, "manual")}
+          />
         ) : null}
       </TabsContent>
     </Tabs>

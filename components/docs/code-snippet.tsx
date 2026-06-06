@@ -5,10 +5,6 @@ import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { useMemo, useState } from "react";
 
 import { Button } from "@/components/ui/button";
-import {
-  type DocsCopySource,
-  useLogDocsCopyEvent,
-} from "@/lib/statsig-docs-copy";
 import { cn } from "@/lib/utils";
 
 type HighlightTokenKind =
@@ -186,26 +182,21 @@ export function DocsCodeSnippet({
   code,
   className,
   maxHeightClassName = "max-h-80",
-  componentName,
-  copySource,
+  onCopied,
 }: {
   code: string;
   className?: string;
   maxHeightClassName?: string;
-  componentName?: string;
-  copySource?: DocsCopySource;
+  onCopied?: () => void;
 }) {
   const [copied, setCopied] = useState(false);
   const tokens = useMemo(() => tokenizeCode(code), [code]);
   const prefersReducedMotion = useReducedMotion();
-  const logDocsCopyEvent = useLogDocsCopyEvent();
 
   const handleCopy = async () => {
     try {
       await navigator.clipboard.writeText(code);
-      if (componentName && copySource) {
-        logDocsCopyEvent(componentName, copySource);
-      }
+      onCopied?.();
       setCopied(true);
       window.setTimeout(() => setCopied(false), 1500);
     } catch {
