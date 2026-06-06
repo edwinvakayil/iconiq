@@ -3,7 +3,7 @@
   "name": "b-accordion",
   "type": "registry:ui",
   "registryDependencies": [],
-  "dependencies": ["@base-ui/react", "motion", "lucide-react"],
+  "dependencies": ["@base-ui/react", "motion"],
   "devDependencies": [],
   "files": [
     {

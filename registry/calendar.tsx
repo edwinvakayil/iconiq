@@ -340,7 +340,8 @@ export const Calendar = ({
   const palette: CalendarPalette = isDark
     ? {
         cardBackground: "var(--ic-card, #111111)",
-        cardBorder: "1px solid var(--ic-border, #2b2a25)",
+        cardBorder:
+          "1px solid color-mix(in srgb, var(--ic-foreground, #f6f3ec) 4%, transparent)",
         cardShadow: "none",
         textPrimary: "var(--ic-foreground, #f6f3ec)",
         textMuted: "var(--ic-muted-foreground, #9a958a)",
@@ -356,13 +357,15 @@ export const Calendar = ({
         todayBackground: "var(--ic-muted, #171716)",
         focusRing: "var(--ic-ring, rgba(246, 243, 236, 0.18))",
         popoverBackground: "var(--ic-card, #111111)",
-        popoverBorder: "1px solid var(--ic-border, #2b2a25)",
+        popoverBorder:
+          "1px solid color-mix(in srgb, var(--ic-foreground, #f6f3ec) 4%, transparent)",
         popoverShadow: "0 12px 32px -18px rgba(0, 0, 0, 0.6)",
         pickerHoverBackground: "var(--ic-accent, #1a1a18)",
       }
     : {
         cardBackground: "var(--ic-card, #ffffff)",
-        cardBorder: "1px solid var(--ic-border, #e4e4e7)",
+        cardBorder:
+          "1px solid color-mix(in srgb, var(--ic-foreground, #111111) 4%, transparent)",
         cardShadow: "none",
         textPrimary: "var(--ic-foreground, #111111)",
         textMuted: "var(--ic-muted-foreground, #6d7480)",
@@ -378,7 +381,8 @@ export const Calendar = ({
         todayBackground: "var(--ic-muted, #f5f7fa)",
         focusRing: "var(--ic-ring, rgba(17, 17, 17, 0.16))",
         popoverBackground: "var(--ic-card, #ffffff)",
-        popoverBorder: "1px solid var(--ic-border, #e3e7ec)",
+        popoverBorder:
+          "1px solid color-mix(in srgb, var(--ic-foreground, #111111) 4%, transparent)",
         popoverShadow: "0 12px 32px -18px rgba(15, 23, 42, 0.28)",
         pickerHoverBackground: "var(--ic-accent, #f3f5f8)",
       };

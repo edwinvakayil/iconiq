@@ -425,45 +425,23 @@ const launchBadgeTone = {
   },
 };
 
-const betaBadgeTone = {
-  className:
-    "[--badge-bg:#ffedd5] [--badge-fg:#9a3412] dark:[--badge-bg:#fed7aa] dark:[--badge-fg:#7c2d12]",
-  style: {
-    backgroundColor: "var(--badge-bg)",
-    color: "var(--badge-fg)",
-  },
-};
-
-const shippingBadgeTone = {
-  className:
-    "[--badge-bg:#fce7f3] [--badge-fg:#9d174d] dark:[--badge-bg:#fbcfe8] dark:[--badge-fg:#831843]",
-  style: {
-    backgroundColor: "var(--badge-bg)",
-    color: "var(--badge-fg)",
-  },
-};
-
 export function BadgePreview() {
   return (
-    <div className="flex min-h-[260px] flex-1 items-center justify-center px-4 py-8">
-      <p className="max-w-2xl text-center font-medium text-lg leading-relaxed text-neutral-800 dark:text-neutral-100 sm:text-xl">
-        Mark the beat with a{" "}
-        <Badge {...launchBadgeTone} color="teal">
-          Fresh Launch
-        </Badge>{" "}
-        tag for releases,{" "}
-        <Badge {...betaBadgeTone} color="orange">
-          Private Beta
-        </Badge>{" "}
-        while you are still tuning,{" "}
-        <Badge {...shippingBadgeTone} color="pink">
-          Now Shipping
-        </Badge>{" "}
-        once it is out the door, and a quieter{" "}
-        <Badge color="blue" variant="dot">
-          Status Monitoring
-        </Badge>{" "}
-        pulse when the release just needs a status check.
+    <div className="flex min-h-[260px] items-center justify-center px-4 py-8">
+      <p className="flex flex-wrap items-center justify-center gap-x-2 gap-y-2 text-balance text-center font-medium text-lg text-neutral-800 leading-snug tracking-tight sm:text-xl dark:text-neutral-100">
+        <span>This update is</span>
+        <span className="inline-flex translate-y-px align-middle">
+          <Badge {...launchBadgeTone} color="teal">
+            Early Access
+          </Badge>
+        </span>
+        <span>and</span>
+        <span className="inline-flex translate-y-px align-middle">
+          <Badge color="blue" variant="dot">
+            On Track
+          </Badge>
+        </span>
+        <span>.</span>
       </p>
     </div>
   );
@@ -648,7 +626,7 @@ const currentDateFormatter = new Intl.DateTimeFormat("en-US", {
 });
 
 const tagClassName =
-  "inline-flex items-center rounded-md bg-muted px-2.5 py-1 font-medium text-[12px] text-foreground";
+  "inline-flex items-center rounded-md bg-muted px-2 py-0.5 font-medium text-[11px] text-foreground";
 
 function formatCurrentDate() {
   return currentDateFormatter.format(new Date());
@@ -671,60 +649,65 @@ export function CardPreview() {
   }, []);
 
   return (
-    <Card
-      className="mx-auto w-full max-w-[21rem] overflow-hidden rounded-[1.1rem] border border-border/80 bg-background pt-0 shadow-[0_24px_70px_-46px_rgba(15,23,42,0.24)] sm:max-w-[23rem]"
-      interactive
-    >
-      <div className="px-[1.5px] pt-[1.5px]">
-        <Image
-          alt="Red and purple gradient artwork"
-          className="aspect-[4/2.2] w-full rounded-[0.85rem] object-cover"
-          height={4000}
-          sizes="(max-width: 640px) 100vw, 23rem"
-          src={artworkSrc}
-          width={6000}
-        />
-      </div>
-
-      <CardContent className="space-y-3 px-3.5 pt-3 pb-0 sm:px-4 sm:pt-3.5">
-        <div className="flex items-center justify-between gap-3">
-          <Avatar className="size-8 shrink-0 ring-1 ring-black/5">
-            <AvatarImage alt="" loading="lazy" src={artworkSrc} />
-            <AvatarFallback>DS</AvatarFallback>
-          </Avatar>
-          <p className="text-right text-[12px] text-muted-foreground sm:text-[13px]">
-            {currentDate}
-          </p>
-        </div>
-
-        <div className="space-y-2.5">
-          <CardTitle className="whitespace-nowrap text-[1rem] font-normal leading-[1.08] tracking-[-0.05em] sm:text-[1.08rem]">
-            Design Systems That Age Gracefully
-          </CardTitle>
-          <CardDescription className="w-full text-pretty text-[12px] leading-5 text-muted-foreground sm:text-[13px] sm:leading-6">
-            Lasting interfaces come from steady patterns, resilient
-            foundations, and decisions that remain coherent as products grow.
-          </CardDescription>
-        </div>
-
-        <button
-          className="inline-flex h-8 w-fit items-center justify-center rounded-md border border-border px-3.5 font-medium text-[12px] text-foreground transition-colors hover:bg-muted/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-          type="button"
+    <div className="flex w-full items-center justify-center px-4 py-6">
+      <div className="flex w-full flex-col items-center gap-4 text-center">
+        <Card
+          className="mx-auto w-full max-w-[16rem] overflow-hidden rounded-[0.95rem] border border-border/80 bg-background pt-0 text-left shadow-[0_18px_48px_-36px_rgba(15,23,42,0.22)] sm:max-w-[17.5rem]"
+          interactive
         >
-          Read more
-        </button>
-      </CardContent>
+          <div className="px-[1.5px] pt-[1.5px]">
+            <Image
+              alt="Red and purple gradient artwork"
+              className="aspect-[4/2.25] w-full rounded-[0.75rem] object-cover"
+              height={4000}
+              sizes="(max-width: 640px) 100vw, 17.5rem"
+              src={artworkSrc}
+              width={6000}
+            />
+          </div>
 
-      <CardFooter className="items-center justify-between gap-2.5 border-t-0 bg-transparent px-3.5 pt-4 pb-3.5 sm:px-4 sm:pb-4">
-        <span className="text-[12px] text-muted-foreground sm:text-[13px]">
-          Categories
-        </span>
-        <div className="flex flex-wrap justify-end gap-1.5">
-          <span className={tagClassName}>Marketing</span>
-          <span className={tagClassName}>UI Design</span>
-        </div>
-      </CardFooter>
-    </Card>
+          <CardContent className="space-y-3 px-3.5 pt-3 pb-0 text-left">
+            <div className="flex items-center justify-between gap-2">
+              <Avatar className="size-7 shrink-0 ring-1 ring-black/5">
+                <AvatarImage alt="" loading="lazy" src={artworkSrc} />
+                <AvatarFallback className="text-[10px]">DS</AvatarFallback>
+              </Avatar>
+              <p className="text-right text-[11px] text-muted-foreground">
+                {currentDate}
+              </p>
+            </div>
+
+            <div className="space-y-2 text-left">
+              <CardTitle className="text-left text-balance text-[0.95rem] font-normal leading-[1.15] tracking-[-0.04em]">
+                Design Systems That Last
+              </CardTitle>
+              <CardDescription className="w-full text-left text-pretty text-[12px] leading-[1.35] text-muted-foreground">
+                Steady patterns keep interfaces coherent as products grow.
+              </CardDescription>
+            </div>
+
+            <button
+              className="inline-flex h-8 w-fit items-center justify-center self-start rounded-md border border-border px-3 font-medium text-[12px] text-foreground transition-colors hover:bg-muted/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+              type="button"
+            >
+              Read more
+            </button>
+          </CardContent>
+
+          <CardFooter className="items-center justify-between gap-2 border-t-0 bg-transparent px-3.5 pt-3.5 pb-3.5">
+            <span className="text-[11px] text-muted-foreground">Categories</span>
+            <div className="flex flex-wrap justify-end gap-1">
+              <span className={tagClassName}>Marketing</span>
+              <span className={tagClassName}>UI Design</span>
+            </div>
+          </CardFooter>
+        </Card>
+
+        <p className="max-w-xs text-balance text-center text-[15px] text-muted-foreground leading-relaxed sm:max-w-sm sm:text-base">
+          Headline, excerpt, and next step—kept in one compact card.
+        </p>
+      </div>
+    </div>
   );
 }`;
 
@@ -850,11 +833,14 @@ import { ThemeToggle } from "@/components/ui/theme-toggle";
 
 export default function Page() {
   return (
-    <div className="flex min-h-svh flex-col items-center justify-center gap-4 bg-background p-8">
-      <p className="text-center text-muted-foreground text-sm">
-        Click the toggle to switch between light and dark mode.
+    <div className="flex min-h-svh items-center justify-center bg-background p-8">
+      <p className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1.5 text-balance text-[13px] text-muted-foreground leading-snug tracking-tight sm:text-sm">
+        <span>Switch between light</span>
+        <span className="inline-flex translate-y-px items-center align-middle">
+          <ThemeToggle size="md" />
+        </span>
+        <span>and dark.</span>
       </p>
-      <ThemeToggle size="md" />
     </div>
   );
 }`;
@@ -878,7 +864,91 @@ export default function Page() {
   );
 }`;
 
+export const alertPreviewCode = `"use client";
+
+import {
+  CheckCircle2Icon,
+  CircleAlert,
+  TriangleAlert,
+} from "lucide-react";
+import { useState } from "react";
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+} from "@/components/ui/alert";
+import { cn } from "@/lib/utils";
+
+const appearanceOptions = [
+  { value: "default", label: "Default" },
+  { value: "warning", label: "Warning" },
+  { value: "destructive", label: "Destructive" },
+] as const;
+
+const appearanceContent = {
+  default: {
+    Icon: CheckCircle2Icon,
+    title: "Changes saved",
+    description: "The latest version is live for your team.",
+  },
+  warning: {
+    Icon: TriangleAlert,
+    title: "Unsaved changes detected",
+    description: "Save now or recent edits may be lost.",
+  },
+  destructive: {
+    Icon: CircleAlert,
+    title: "Upload failed",
+    description: "Try again in a moment.",
+  },
+} as const;
+
+export function AlertPreview() {
+  const [appearance, setAppearance] = useState<
+    "default" | "warning" | "destructive"
+  >("default");
+
+  const { description, Icon, title } = appearanceContent[appearance];
+
+  return (
+    <div className="flex w-full flex-col items-center gap-6 px-4 py-6 sm:px-8 sm:py-8">
+      <fieldset
+        aria-label="Alert appearance"
+        className="m-0 flex flex-wrap items-center justify-center gap-4 border-0 p-0"
+      >
+        {appearanceOptions.map((option) => {
+          const isSelected = appearance === option.value;
+
+          return (
+            <button
+              aria-pressed={isSelected}
+              className={cn(
+                "text-[13px] transition-colors",
+                isSelected
+                  ? "font-medium text-foreground"
+                  : "font-light text-muted-foreground hover:text-foreground"
+              )}
+              key={option.value}
+              onClick={() => setAppearance(option.value)}
+              type="button"
+            >
+              {option.label}
+            </button>
+          );
+        })}
+      </fieldset>
+
+      <Alert appearance={appearance} className="w-full">
+        <Icon />
+        <AlertTitle>{title}</AlertTitle>
+        <AlertDescription>{description}</AlertDescription>
+      </Alert>
+    </div>
+  );
+}`;
+
 const COMPONENT_PREVIEW_OVERRIDES: Record<string, string> = {
+  alert: alertPreviewCode,
   avatar: avatarPreviewCode,
   badge: badgePreviewCode,
   charts: chartsPreviewCode,

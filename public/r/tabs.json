@@ -3,7 +3,7 @@
   "name": "tabs",
   "type": "registry:ui",
   "registryDependencies": [],
-  "dependencies": ["@base-ui/react"],
+  "dependencies": ["motion"],
   "devDependencies": [],
   "files": [
     {

@@ -12,6 +12,9 @@ import {
   AvatarImage,
 } from "@/registry/avatar";
 
+const previewSentenceClassName =
+  "flex flex-wrap items-center justify-center gap-x-2 gap-y-2 text-balance font-medium text-lg text-neutral-800 leading-snug tracking-tight sm:text-xl dark:text-neutral-100";
+
 const usageCode = `import {
   Avatar,
   AvatarBadge,
@@ -49,27 +52,35 @@ export function AvatarDemo() {
 
 function AvatarPreview() {
   return (
-    <div className="flex min-h-[18rem] items-center justify-center gap-10 p-6">
-      <Avatar size="lg" tooltip="online">
-        <AvatarImage alt="shadcn/ui" src="/assets/shadcn.jpg" />
-        <AvatarFallback>SU</AvatarFallback>
-        <AvatarBadge />
-      </Avatar>
-
-      <AvatarGroup>
-        <Avatar size="lg">
-          <AvatarImage alt="Avatar 1" src="/assets/av1.png" />
-          <AvatarFallback>A1</AvatarFallback>
-        </Avatar>
-        <Avatar size="lg">
-          <AvatarImage alt="Avatar 3" src="/assets/av3.png" />
-          <AvatarFallback>A3</AvatarFallback>
-        </Avatar>
-        <Avatar size="lg">
-          <AvatarImage alt="Avatar 2" src="/assets/av2.png" />
-          <AvatarFallback>A2</AvatarFallback>
-        </Avatar>
-      </AvatarGroup>
+    <div className="flex min-h-[18rem] items-center justify-center p-6">
+      <p className={previewSentenceClassName}>
+        <span>Assigned to</span>
+        <span className="inline-flex translate-y-px align-middle">
+          <Avatar size="default" tooltip="online">
+            <AvatarImage alt="shadcn/ui" src="/assets/shadcn.jpg" />
+            <AvatarFallback>SU</AvatarFallback>
+            <AvatarBadge />
+          </Avatar>
+        </span>
+        <span>and reviewed by</span>
+        <span className="inline-flex translate-y-px align-middle">
+          <AvatarGroup>
+            <Avatar size="default">
+              <AvatarImage alt="Avatar 1" src="/assets/av1.png" />
+              <AvatarFallback>A1</AvatarFallback>
+            </Avatar>
+            <Avatar size="default">
+              <AvatarImage alt="Avatar 3" src="/assets/av3.png" />
+              <AvatarFallback>A3</AvatarFallback>
+            </Avatar>
+            <Avatar size="default">
+              <AvatarImage alt="Avatar 2" src="/assets/av2.png" />
+              <AvatarFallback>A2</AvatarFallback>
+            </Avatar>
+          </AvatarGroup>
+        </span>
+        <span>on this release.</span>
+      </p>
     </div>
   );
 }
@@ -89,6 +100,7 @@ export default function AvatarPage() {
       headerActions={<SharedPrimitiveProviderSwitch />}
       pageUrl="/components/avatar"
       preview={<AvatarPreview />}
+      previewDescription="See a single avatar with a badge and a stacked group inline in one sentence."
       title="Avatar"
       usageCode={usageCode}
       usageDescription="Use the compound parts to compose an avatar image, fallback initials, and status badge. Add tooltip to Avatar when the whole avatar should reveal a short status hint."

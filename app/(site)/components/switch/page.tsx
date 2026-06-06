@@ -44,6 +44,9 @@ const breadcrumbs = [
   { label: "Switch" },
 ];
 
+const previewSentenceClassName =
+  "flex flex-wrap items-center justify-center gap-x-2 gap-y-1.5 text-balance text-[13px] text-muted-foreground leading-snug tracking-tight sm:text-sm";
+
 const usageCodeByProvider: Record<ProviderConfig["componentName"], string> = {
   "b-switch": `"use client";
 
@@ -54,12 +57,19 @@ export function MotionSwitch() {
   const [enabled, setEnabled] = useState(true);
 
   return (
-    <Switch
-      aria-label="Enable motion"
-      checked={enabled}
-      label="Enable motion"
-      onCheckedChange={setEnabled}
-    />
+    <div className="flex min-h-[18rem] items-center justify-center px-4 py-6">
+      <p className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1.5 text-balance text-[13px] text-muted-foreground leading-snug tracking-tight sm:text-sm">
+        <span>Turn motion on or off with</span>
+        <span className="inline-flex translate-y-px align-middle">
+          <Switch
+            aria-label="Enable motion"
+            checked={enabled}
+            onCheckedChange={setEnabled}
+          />
+        </span>
+        <span>for this workspace.</span>
+      </p>
+    </div>
   );
 }`,
   "r-switch": `"use client";
@@ -71,12 +81,19 @@ export function MotionSwitch() {
   const [enabled, setEnabled] = useState(true);
 
   return (
-    <Switch
-      aria-label="Enable motion"
-      checked={enabled}
-      label="Enable motion"
-      onCheckedChange={setEnabled}
-    />
+    <div className="flex min-h-[18rem] items-center justify-center px-4 py-6">
+      <p className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1.5 text-balance text-[13px] text-muted-foreground leading-snug tracking-tight sm:text-sm">
+        <span>Turn motion on or off with</span>
+        <span className="inline-flex translate-y-px align-middle">
+          <Switch
+            aria-label="Enable motion"
+            checked={enabled}
+            onCheckedChange={setEnabled}
+          />
+        </span>
+        <span>for this workspace.</span>
+      </p>
+    </div>
   );
 }`,
 };
@@ -86,13 +103,18 @@ function SwitchPreview({ ui }: { ui: SwitchModule }) {
   const [enabled, setEnabled] = useState(true);
 
   return (
-    <div className="flex min-h-[280px] items-center justify-center px-4 py-10">
-      <Switch
-        aria-label="Enable motion"
-        checked={enabled}
-        label="Enable motion"
-        onCheckedChange={setEnabled}
-      />
+    <div className="flex min-h-[18rem] items-center justify-center px-4 py-6">
+      <p className={previewSentenceClassName}>
+        <span>Turn motion on or off with</span>
+        <span className="inline-flex translate-y-px align-middle">
+          <Switch
+            aria-label="Enable motion"
+            checked={enabled}
+            onCheckedChange={setEnabled}
+          />
+        </span>
+        <span>for this workspace.</span>
+      </p>
     </div>
   );
 }
@@ -190,6 +212,7 @@ export default function RadixBaseSwitchPage() {
       itemSlug="switch"
       pageUrl="/components/switch"
       preview={<SwitchPreview ui={provider.ui} />}
+      previewDescription="Inline sentence with the motion switch embedded on one line."
       title="Switch"
       usageCode={provider.usageCode}
       usageDescription="Switch libraries above to update the install command, registry JSON, preview code, and generated file set together."

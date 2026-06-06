@@ -93,7 +93,7 @@ const REGISTRY_UI_META: Record<
     title: "Context Menu",
     description:
       "Native-feeling context menu with fixed-position viewport-aware placement, per-item icons and shortcuts, and spring entrance motion.",
-    dependencies: ["motion"],
+    dependencies: ["@radix-ui/react-slot", "motion"],
   },
   "dia-text": {
     title: "Dia Text",
@@ -141,13 +141,13 @@ const REGISTRY_UI_META: Record<
     title: "Accordion",
     description:
       "Accordion with spring height, staggered text, default or quiet disclosure styles, and optional multi-open behavior. Built with Motion.",
-    dependencies: ["@radix-ui/react-accordion", "motion", "lucide-react"],
+    dependencies: ["@radix-ui/react-accordion", "motion"],
   },
   "b-accordion": {
     title: "Accordion (Base UI)",
     description:
       "Compound Accordion, AccordionItem, AccordionTrigger, and AccordionContent parts layered over Base UI primitives with default and quiet variants.",
-    dependencies: ["@base-ui/react", "motion", "lucide-react"],
+    dependencies: ["@base-ui/react", "motion"],
   },
   "b-alert-dialog": {
     title: "Alert Dialog (Base UI)",
@@ -296,7 +296,7 @@ const REGISTRY_UI_META: Record<
     title: "Alert",
     description:
       "Compound Alert, AlertTitle, and AlertDescription parts with optional icons, legacy prop support, polite live announcements, and inline or toast behavior.",
-    dependencies: ["motion"],
+    dependencies: ["motion", "class-variance-authority"],
   },
   breadcrumbs: {
     title: "Breadcrumbs",
@@ -402,7 +402,7 @@ const REGISTRY_UI_META: Record<
     title: "Accordion (Radix UI)",
     description:
       "Compound Accordion, AccordionItem, AccordionTrigger, and AccordionContent parts layered over Radix UI primitives with Motion-heavy panel choreography.",
-    dependencies: ["@radix-ui/react-accordion", "motion", "lucide-react"],
+    dependencies: ["@radix-ui/react-accordion", "motion"],
   },
   "r-alert-dialog": {
     title: "Alert Dialog (Radix UI)",
@@ -598,7 +598,7 @@ const REGISTRY_UI_META: Record<
     title: "Tabs",
     description:
       "Clean segmented tabs with active-state surfaces, keyboard navigation, and straightforward panel switching.",
-    dependencies: ["@base-ui/react"],
+    dependencies: ["motion"],
   },
   typography: {
     title: "Typography",

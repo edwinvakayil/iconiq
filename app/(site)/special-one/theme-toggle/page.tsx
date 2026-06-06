@@ -5,28 +5,37 @@ import { ComponentDocsPage } from "@/components/docs/page-shell";
 import { themeTogglePreviewCode } from "@/lib/component-v0-pages";
 import { ThemeToggle } from "@/registry/theme-toggle";
 
+const previewSentenceClassName =
+  "flex flex-wrap items-center justify-center gap-x-2 gap-y-1.5 text-balance text-[13px] text-muted-foreground leading-snug tracking-tight sm:text-sm";
+
 const usageCode = `"use client";
 
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 
 export function ThemeTogglePreview() {
   return (
-    <div className="flex flex-col items-center justify-center gap-4">
-      <p className="text-center text-muted-foreground text-sm">
-        Click the toggle to switch between light and dark mode.
+    <div className="flex min-h-[18rem] items-center justify-center px-4 py-6">
+      <p className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1.5 text-balance text-[13px] text-muted-foreground leading-snug tracking-tight sm:text-sm">
+        <span>Switch between light</span>
+        <span className="inline-flex translate-y-px items-center align-middle">
+          <ThemeToggle size="md" />
+        </span>
+        <span>and dark.</span>
       </p>
-      <ThemeToggle size="md" />
     </div>
   );
 }`;
 
 function ThemeTogglePreview() {
   return (
-    <div className="flex min-h-[12rem] w-full flex-col items-center justify-center gap-4 px-4 py-10">
-      <p className="text-center text-muted-foreground text-sm">
-        Click the toggle to switch between light and dark mode.
+    <div className="flex min-h-[18rem] items-center justify-center px-4 py-6">
+      <p className={previewSentenceClassName}>
+        <span>Switch between light</span>
+        <span className="inline-flex translate-y-px items-center align-middle">
+          <ThemeToggle size="md" />
+        </span>
+        <span>and dark.</span>
       </p>
-      <ThemeToggle size="md" />
     </div>
   );
 }
@@ -43,7 +52,8 @@ export default function ThemeTogglePage() {
       description="Pill switch with a sliding knob, sun and moon icons, and bouncy light/dark transitions."
       details={themeToggleApiDetails}
       preview={<ThemeTogglePreview />}
-      previewClassName="min-h-[12rem] overflow-visible"
+      previewClassName="min-h-[18rem] overflow-visible"
+      previewDescription="Inline sentence with the theme toggle embedded between light and dark."
       title="Theme Toggle"
       usageCode={usageCode}
       usageDescription={

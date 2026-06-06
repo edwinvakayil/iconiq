@@ -16,62 +16,42 @@ const launchBadgeTone = {
   },
 } as const;
 
-const betaBadgeTone = {
-  className:
-    "[--badge-bg:#ffedd5] [--badge-fg:#9a3412] dark:[--badge-bg:#fed7aa] dark:[--badge-fg:#7c2d12]",
-  style: {
-    backgroundColor: "var(--badge-bg)",
-    color: "var(--badge-fg)",
-  },
-} as const;
-
-const shippingBadgeTone = {
-  className:
-    "[--badge-bg:#fce7f3] [--badge-fg:#9d174d] dark:[--badge-bg:#fbcfe8] dark:[--badge-fg:#831843]",
-  style: {
-    backgroundColor: "var(--badge-bg)",
-    color: "var(--badge-fg)",
-  },
-} as const;
+const previewSentenceClassName =
+  "flex flex-wrap items-center justify-center gap-x-2 gap-y-2 text-balance font-medium text-lg text-neutral-800 leading-snug tracking-tight sm:text-xl dark:text-neutral-100";
 
 const usageCode = `import { Badge } from "@/components/ui/badge";
 
 export function BadgePreview() {
   return (
-    <p className="max-w-2xl text-center text-lg font-medium leading-relaxed dark:text-neutral-100">
-      Mark the beat with a <Badge color="teal">Fresh Launch</Badge> tag for
-      releases, <Badge color="orange">Private Beta</Badge> while you're still
-      tuning, <Badge color="pink">Now Shipping</Badge> once it's out the door,
-      and a quieter{" "}
+    <p className="flex flex-wrap items-center justify-center gap-x-2 gap-y-2 text-balance text-center font-medium text-lg leading-snug dark:text-neutral-100">
+      <span>This update is</span>
+      <Badge color="teal">Early Access</Badge>
+      <span>and</span>
       <Badge color="blue" variant="dot">
-        Status Monitoring
-      </Badge>{" "}
-      pulse when the release just needs a status check.
+        On Track
+      </Badge>
+      <span>.</span>
     </p>
   );
 }`;
 
 function BadgePreview() {
   return (
-    <div className="flex min-h-[260px] flex-1 items-center justify-center px-4 py-8">
-      <p className="max-w-2xl text-center font-medium font-sans text-lg text-neutral-800 leading-relaxed sm:text-xl dark:text-neutral-100">
-        Mark the beat with a{" "}
-        <Badge {...launchBadgeTone} color="teal">
-          Fresh Launch
-        </Badge>{" "}
-        tag for releases,{" "}
-        <Badge {...betaBadgeTone} color="orange">
-          Private Beta
-        </Badge>{" "}
-        while you&apos;re still tuning,{" "}
-        <Badge {...shippingBadgeTone} color="pink">
-          Now Shipping
-        </Badge>{" "}
-        once it&apos;s out the door, and a quieter{" "}
-        <Badge color="blue" variant="dot">
-          Status Monitoring
-        </Badge>{" "}
-        pulse when the release just needs a status check.
+    <div className="flex min-h-[260px] items-center justify-center px-4 py-8">
+      <p className={previewSentenceClassName}>
+        <span>This update is</span>
+        <span className="inline-flex translate-y-px align-middle">
+          <Badge {...launchBadgeTone} color="teal">
+            Early Access
+          </Badge>
+        </span>
+        <span>and</span>
+        <span className="inline-flex translate-y-px align-middle">
+          <Badge color="blue" variant="dot">
+            On Track
+          </Badge>
+        </span>
+        <span>.</span>
       </p>
     </div>
   );
@@ -93,6 +73,7 @@ export default function BadgePage() {
       pageUrl="/components/badge"
       preview={<BadgePreview />}
       previewCode={badgePreviewCode}
+      previewDescription="Default badges and a dot variant inline in one short sentence."
       title="Badge"
       usageCode={usageCode}
       usageDescription='Start with the default badge, switch to `variant="dot"` for a quieter status label, then tune size, color, and shimmer through the API panel.'

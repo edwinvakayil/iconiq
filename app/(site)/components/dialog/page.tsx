@@ -67,6 +67,12 @@ const cancelButtonClassName =
 const actionButtonClassName =
   "inline-flex min-h-11 items-center justify-center rounded-md bg-foreground px-4 py-2.5 font-medium text-[14px] text-background tracking-[-0.01em] transition-[transform,background-color] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-px hover:bg-foreground/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2";
 
+const previewSentenceClassName =
+  "flex flex-wrap items-center justify-center gap-x-2 gap-y-1.5 text-balance text-[13px] text-muted-foreground leading-snug tracking-tight sm:text-sm";
+
+const previewTriggerClassName =
+  "inline-flex h-8 min-h-8 translate-y-px items-center align-middle rounded-md bg-foreground px-3 py-0 font-medium text-[13px] text-background tracking-[-0.01em] transition-[transform,background-color] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-px hover:bg-foreground/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2";
+
 const breadcrumbs = [
   { label: "Docs", href: "/" },
   { label: "Components" },
@@ -206,11 +212,16 @@ function DialogPreview({ ui }: { ui: DialogModule }) {
   return (
     <div className="flex min-h-[18rem] items-center justify-center p-6">
       <Dialog onOpenChange={setOpen} open={open}>
-        <DialogTrigger asChild>
-          <button className={triggerButtonClassName} type="button">
-            Open dialog
-          </button>
-        </DialogTrigger>
+        <p className={previewSentenceClassName}>
+          <span>This goes live for the team.</span>
+          <span>Tap</span>
+          <DialogTrigger asChild>
+            <button className={previewTriggerClassName} type="button">
+              Publish
+            </button>
+          </DialogTrigger>
+          <span>to continue.</span>
+        </p>
         <DialogContent open={open}>
           <DialogHeader>
             <DialogTitle>Confirm publish</DialogTitle>
@@ -373,6 +384,7 @@ export default function RadixBaseDialogPage() {
       itemSlug="dialog"
       pageUrl="/components/dialog"
       preview={<DialogPreview ui={provider.ui} />}
+      previewDescription="Tap Publish in the sentence to open the confirmation dialog before sending a draft live."
       title="Dialog"
       usageCode={provider.usageCode}
       usageDescription="Switch libraries above to update the install command, registry JSON, preview code, and generated file set together."
