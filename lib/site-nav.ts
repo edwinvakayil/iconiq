@@ -11,6 +11,17 @@ export const BASE_LINKS = [
 
 export const SITE_SECTIONS = [
   {
+    label: "Special One",
+    children: [
+      { label: "Icon Bar", href: "/special-one/icon-bar" },
+      { label: "Infinite Ribbon", href: "/special-one/infiniteribbon" },
+      { label: "Origin Button", href: "/special-one/origin-button" },
+      { label: "FAQ Pro", href: "/special-one/faq-pro" },
+      { label: "Theme Toggle", href: "/special-one/theme-toggle" },
+      { label: "Verified Badge", href: "/special-one/verified-badge" },
+    ],
+  },
+  {
     label: "Components",
     children: [
       { label: "Accordion", href: "/components/accordion" },
@@ -55,17 +66,6 @@ export const SITE_SECTIONS = [
       { label: "Toggle", href: "/components/toggle" },
       { label: "Toggle Group", href: "/components/toggle-group" },
       { label: "Tooltip", href: "/components/tooltip" },
-    ],
-  },
-  {
-    label: "Special One",
-    children: [
-      { label: "Icon Bar", href: "/special-one/icon-bar" },
-      { label: "Infinite Ribbon", href: "/special-one/infiniteribbon" },
-      { label: "Origin Button", href: "/special-one/origin-button" },
-      { label: "FAQ Pro", href: "/special-one/faq-pro" },
-      { label: "Theme Toggle", href: "/special-one/theme-toggle" },
-      { label: "Verified Badge", href: "/special-one/verified-badge" },
     ],
   },
   {

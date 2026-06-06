@@ -428,7 +428,7 @@ function HeroViewComponentsButton() {
   return (
     <Button
       className={heroCtaPrimaryClassName}
-      href="/components"
+      href="/special-one/icon-bar"
       icon={<HeroCtaArrowIcon active={active} />}
       iconPosition="end"
       onBlur={() => setActive(false)}
