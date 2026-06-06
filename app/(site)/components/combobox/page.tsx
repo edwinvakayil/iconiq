@@ -48,10 +48,9 @@ const demoOptions: RouteOption[] = [
 ];
 
 const previewSentenceClassName =
-  "max-w-xs text-balance text-center text-[13px] text-muted-foreground leading-snug tracking-tight sm:max-w-sm sm:text-sm";
+  "text-pretty text-[13px] text-muted-foreground leading-snug tracking-tight sm:text-sm";
 
-const previewContentClassName =
-  "flex w-full max-w-sm flex-col items-center gap-4 text-center";
+const previewContentClassName = "flex w-full max-w-sm flex-col gap-2.5";
 
 function RouteCombobox({
   onValueChange,
@@ -135,8 +134,8 @@ export function ComboboxPreview() {
 
   return (
     <div className="flex w-full items-center justify-center px-4 py-6">
-      <div className="flex w-full max-w-sm flex-col items-center gap-4 text-center">
-        <p className="max-w-xs text-balance text-center text-[13px] text-muted-foreground leading-snug tracking-tight sm:max-w-sm sm:text-sm">
+      <div className="flex w-full max-w-sm flex-col gap-2.5">
+        <p className="text-pretty text-[13px] text-muted-foreground leading-snug tracking-tight sm:text-sm">
           Search, filter, and pick a route from one input.
         </p>
         <div className="w-full">
@@ -235,7 +234,7 @@ export default function RadixBaseComboboxPage() {
       itemSlug="combobox"
       pageUrl="/components/combobox"
       preview={<ComboboxPreview />}
-      previewDescription="A searchable route combobox with a centered caption above."
+      previewDescription="A searchable route combobox with a left-aligned caption above."
       title="Combobox"
       usageCode={usageCode}
       usageDescription="This Base UI install exposes compound combobox parts while keeping the same input styling, filtering, clear action, keyboard model, and dropdown motion as the prior Iconiq combobox."

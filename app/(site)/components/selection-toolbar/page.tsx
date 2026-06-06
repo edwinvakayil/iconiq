@@ -39,7 +39,7 @@ type ProviderConfig = {
 };
 
 const previewText =
-  "Select any phrase in this sentence to reveal the toolbar, then try bold or underline on the highlighted text. The interaction stays scoped to this text surface, which makes it useful for lightweight notes, comments, or internal writing tools.";
+  "Select any phrase here to reveal the toolbar, then try bold or underline on the highlight.";
 
 const breadcrumbs = [
   { label: "Docs", href: "/" },
@@ -68,7 +68,7 @@ import { useRef } from "react";
 import { SelectionToolbar } from "@/components/ui/${componentName}";
 
 const previewText =
-  "Select any phrase in this sentence to reveal the toolbar, then try bold or underline on the highlighted text. The interaction stays scoped to this text surface, which makes it useful for lightweight notes, comments, or internal writing tools.";
+  "Select any phrase here to reveal the toolbar, then try bold or underline on the highlight.";
 
 function isBlockedMutationInput(inputType: string) {
   return (
@@ -115,9 +115,9 @@ export function SelectionToolbarPreview() {
     <>
       <SelectionToolbar containerRef={editorRef} />
 
-      <div className="w-full max-w-3xl">
+      <div className="mx-auto w-full max-w-xl text-center">
         <div
-          className="text-[15px] text-foreground leading-7 outline-none sm:text-[16px]"
+          className="text-balance text-[15px] text-foreground leading-7 outline-none sm:text-[16px]"
           contentEditable
           onBeforeInput={handleBeforeInput}
           onCut={handleClipboard}
@@ -179,9 +179,9 @@ function SelectionToolbarPreview({ ui }: { ui: SelectionToolbarModule }) {
     <>
       <SelectionToolbar containerRef={editorRef} />
 
-      <div className="w-full max-w-3xl">
+      <div className="mx-auto w-full max-w-xl text-center">
         <div
-          className="text-[15px] text-foreground leading-7 outline-none sm:text-[16px]"
+          className="text-balance text-[15px] text-foreground leading-7 outline-none sm:text-[16px]"
           contentEditable
           onBeforeInput={handleBeforeInput}
           onCut={handleClipboard}
