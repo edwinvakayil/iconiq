@@ -891,6 +891,13 @@ import {
   AlertDescription,
   AlertTitle,
 } from "@/components/ui/alert";
+import { cn } from "@/lib/utils";
+
+const appearanceOptions = [
+  { value: "default", label: "Default" },
+  { value: "warning", label: "Warning" },
+  { value: "destructive", label: "Destructive" },
+] as const;
 
 const appearanceContent = {
   default: {
@@ -913,101 +920,44 @@ const appearanceContent = {
 export function AlertPreview() {
   const [appearance, setAppearance] = useState<
     "default" | "warning" | "destructive"
-  >("warning");
-  const [position, setPosition] = useState<
-    | "top-left"
-    | "top-center"
-    | "top-right"
-    | "bottom-left"
-    | "bottom-center"
-    | "bottom-right"
-  >("top-right");
-  const [showToast, setShowToast] = useState(false);
-  const [toastKey, setToastKey] = useState(0);
+  >("default");
 
   const { description, Icon, title } = appearanceContent[appearance];
 
-  const triggerToast = () => {
-    setShowToast(true);
-    setToastKey((current) => current + 1);
-  };
-
   return (
-    <>
-      <div className="grid w-full max-w-[400px] items-start gap-4">
-        <Alert appearance={appearance}>
-          <Icon />
-          <AlertTitle>{title}</AlertTitle>
-          <AlertDescription>{description}</AlertDescription>
-        </Alert>
+    <div className="flex w-full flex-col items-center gap-6 px-4 py-6 sm:px-8 sm:py-8">
+      <fieldset
+        aria-label="Alert appearance"
+        className="m-0 flex flex-wrap items-center justify-center gap-4 border-0 p-0"
+      >
+        {appearanceOptions.map((option) => {
+          const isSelected = appearance === option.value;
 
-        <div className="flex flex-wrap items-end gap-3">
-          <label className="flex min-w-[140px] flex-1 flex-col gap-1.5 text-[13px] text-secondary">
-            <span>Appearance</span>
-            <select
-              className="h-9 w-full rounded-md border border-border/80 bg-background px-2.5 text-[13px] text-foreground outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-              onChange={(event) =>
-                setAppearance(
-                  event.target.value as "default" | "warning" | "destructive"
-                )
-              }
-              value={appearance}
+          return (
+            <button
+              aria-pressed={isSelected}
+              className={cn(
+                "text-[13px] transition-colors",
+                isSelected
+                  ? "font-medium text-foreground"
+                  : "font-light text-muted-foreground hover:text-foreground"
+              )}
+              key={option.value}
+              onClick={() => setAppearance(option.value)}
+              type="button"
             >
-              <option value="default">Default</option>
-              <option value="warning">Warning</option>
-              <option value="destructive">Destructive</option>
-            </select>
-          </label>
+              {option.label}
+            </button>
+          );
+        })}
+      </fieldset>
 
-          <label className="flex min-w-[140px] flex-1 flex-col gap-1.5 text-[13px] text-secondary">
-            <span>Toast position</span>
-            <select
-              className="h-9 w-full rounded-md border border-border/80 bg-background px-2.5 text-[13px] text-foreground outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-              onChange={(event) =>
-                setPosition(
-                  event.target.value as
-                    | "top-left"
-                    | "top-center"
-                    | "top-right"
-                    | "bottom-left"
-                    | "bottom-center"
-                    | "bottom-right"
-                )
-              }
-              value={position}
-            >
-              <option value="top-left">Top left</option>
-              <option value="top-center">Top center</option>
-              <option value="top-right">Top right</option>
-              <option value="bottom-left">Bottom left</option>
-              <option value="bottom-center">Bottom center</option>
-              <option value="bottom-right">Bottom right</option>
-            </select>
-          </label>
-
-          <button
-            className="inline-flex h-9 shrink-0 items-center justify-center rounded-md border border-border/80 bg-background px-3 font-medium text-[13px] text-foreground transition-colors hover:bg-muted/70"
-            onClick={triggerToast}
-            type="button"
-          >
-            Show toast
-          </button>
-        </div>
-      </div>
-
-      {showToast ? (
-        <Alert
-          appearance={appearance}
-          key={toastKey}
-          onDismiss={() => setShowToast(false)}
-          position={position}
-        >
-          <Icon />
-          <AlertTitle>{title}</AlertTitle>
-          <AlertDescription>{description}</AlertDescription>
-        </Alert>
-      ) : null}
-    </>
+      <Alert appearance={appearance} className="w-full">
+        <Icon />
+        <AlertTitle>{title}</AlertTitle>
+        <AlertDescription>{description}</AlertDescription>
+      </Alert>
+    </div>
   );
 }`;
 

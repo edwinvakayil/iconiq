@@ -5,6 +5,7 @@ import { AnimatePresence, motion, type Variants } from "motion/react";
 import {
   Children,
   type ComponentPropsWithoutRef,
+  type CSSProperties,
   createContext,
   type FocusEvent,
   forwardRef,
@@ -52,16 +53,83 @@ export type AlertPosition =
 
 export type AlertVariant = "inline" | "toast";
 
+export type AlertSize = "sm" | "md" | "lg" | "xl";
+
+export const DEFAULT_ALERT_SIZE: AlertSize = "md";
+
 export type AlertAppearance = NonNullable<
   VariantProps<typeof alertVariants>["appearance"]
 >;
 
+const ALERT_SIZE_CLASS: Record<AlertSize, string> = {
+  sm: "max-w-[320px]",
+  md: "max-w-[400px]",
+  lg: "max-w-[480px]",
+  xl: "max-w-[560px]",
+};
+
+const ALERT_TOAST_SIZE_CLASS: Record<AlertSize, string> = {
+  sm: "max-w-full sm:max-w-[320px]",
+  md: "max-w-full sm:max-w-[400px]",
+  lg: "max-w-full sm:max-w-[480px]",
+  xl: "max-w-full sm:max-w-[560px]",
+};
+
+function resolveAlertWidth({
+  size = DEFAULT_ALERT_SIZE,
+  width,
+  variant,
+}: {
+  size?: AlertSize;
+  width?: string | number;
+  variant: AlertVariant;
+}): { className?: string; style?: CSSProperties } {
+  if (width !== undefined && width !== "") {
+    const maxWidth =
+      typeof width === "number"
+        ? width > 0
+          ? `${width}px`
+          : undefined
+        : width.trim();
+
+    if (!maxWidth) {
+      return {
+        className:
+          variant === "toast"
+            ? ALERT_TOAST_SIZE_CLASS[size]
+            : ALERT_SIZE_CLASS[size],
+      };
+    }
+
+    return {
+      className: "max-w-full",
+      style: { maxWidth },
+    };
+  }
+
+  return {
+    className:
+      variant === "toast"
+        ? ALERT_TOAST_SIZE_CLASS[size]
+        : ALERT_SIZE_CLASS[size],
+  };
+}
+
 type AlertContextValue = {
   descriptionId: string;
+  hasIcon: boolean;
   titleId: string;
 };
 
 const AlertContext = createContext<AlertContextValue | null>(null);
+
+function getComponentDisplayName(type: unknown) {
+  if (typeof type === "function" || typeof type === "object") {
+    return (type as { displayName?: string }).displayName;
+  }
+
+  return undefined;
+}
 
 type MotionDivProps = ComponentPropsWithoutRef<typeof motion.div>;
 
@@ -76,6 +144,10 @@ export interface AlertProps
   /** Optional action row rendered below the message. */
   action?: ReactNode;
   dismissible?: boolean;
+  /** Preset max width. Defaults to md (400px). */
+  size?: AlertSize;
+  /** Custom max width. Pass a CSS length such as "28rem" or a pixel number. Overrides size when set. */
+  width?: string | number;
   /** Explicitly choose inline flow or viewport toast behavior. */
   variant?: AlertVariant;
   position?: AlertPosition;
@@ -112,51 +184,74 @@ const positionClasses: Record<AlertPosition, string> = {
     "fixed top-4 inset-x-4 sm:inset-x-auto sm:top-auto sm:bottom-4 sm:left-auto sm:right-4",
 };
 
-/** Entry direction per position (desktop). On mobile all arrive from top. */
-const entryY: Record<AlertPosition, number> = {
-  "top-left": -10,
-  "top-center": -10,
-  "top-right": -10,
-  "bottom-left": 10,
-  "bottom-center": 10,
-  "bottom-right": 10,
-};
+/** Vertical travel only — kept small so motion reads as a drift, not a snap. */
+function getAlertMotionOffset(position?: AlertPosition): { y: number } {
+  if (!position) {
+    return { y: 6 };
+  }
 
-const EASE_OUT: [number, number, number, number] = [0.25, 0.46, 0.45, 0.94];
-const EASE_IN: [number, number, number, number] = [0.4, 0, 1, 1];
+  return position.startsWith("top") ? { y: -8 } : { y: 8 };
+}
 
-/** Shared stagger children — subtle lift + blur fade */
+const FLUID_EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
+const FLUID_EXIT_EASE: [number, number, number, number] = [0.4, 0, 0.2, 1];
+
+function getContainerVariants(position?: AlertPosition): Variants {
+  const { y: dy } = getAlertMotionOffset(position);
+
+  return {
+    hidden: {
+      opacity: 0,
+      y: dy,
+      scale: 0.982,
+      filter: "blur(3px)",
+    },
+    visible: {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      filter: "blur(0px)",
+      transition: {
+        opacity: { duration: 0.42, ease: FLUID_EASE },
+        y: { duration: 0.48, ease: FLUID_EASE },
+        scale: { duration: 0.48, ease: FLUID_EASE },
+        filter: { duration: 0.52, ease: FLUID_EASE },
+        staggerChildren: 0.055,
+        delayChildren: 0.12,
+      },
+    },
+    exit: {
+      opacity: 0,
+      y: dy * 0.55,
+      scale: 0.986,
+      filter: "blur(2px)",
+      transition: {
+        opacity: { duration: 0.3, ease: FLUID_EXIT_EASE },
+        y: { duration: 0.34, ease: FLUID_EXIT_EASE },
+        scale: { duration: 0.32, ease: FLUID_EXIT_EASE },
+        filter: { duration: 0.28, ease: FLUID_EXIT_EASE },
+      },
+    },
+  };
+}
+
+/** Text drifts in softly while the container handles exit motion. */
 const childVariants: Variants = {
-  hidden: { opacity: 0, y: 4, filter: "blur(3px)" },
+  hidden: { opacity: 0, y: 4 },
   visible: {
     opacity: 1,
     y: 0,
-    filter: "blur(0px)",
-    transition: { duration: 0.28, ease: EASE_OUT },
-  },
-  exit: {
-    opacity: 0,
-    transition: { duration: 0.12, ease: "easeIn" },
+    transition: { duration: 0.38, ease: FLUID_EASE },
   },
 };
 
-/** Icon — soft spring scale-up from a visible start */
+/** Icon eases in with the same fluid curve as the container. */
 const iconVariants: Variants = {
-  hidden: { scale: 0.5, opacity: 0 },
+  hidden: { opacity: 0, scale: 0.92 },
   visible: {
-    scale: 1,
     opacity: 1,
-    transition: {
-      type: "spring" as const,
-      stiffness: 340,
-      damping: 22,
-      delay: 0.06,
-    },
-  },
-  exit: {
-    scale: 0.6,
-    opacity: 0,
-    transition: { duration: 0.12, ease: "easeIn" },
+    scale: 1,
+    transition: { duration: 0.44, ease: FLUID_EASE, delay: 0.1 },
   },
 };
 
@@ -167,7 +262,8 @@ const AlertTitle = forwardRef<HTMLDivElement, AlertTitleProps>(
     return (
       <motion.div
         className={cn(
-          "col-start-2 line-clamp-1 min-h-4 font-medium tracking-tight",
+          "line-clamp-1 min-h-4 font-medium tracking-tight",
+          context?.hasIcon ? "col-start-2" : "col-start-1",
           className
         )}
         data-slot="alert-title"
@@ -191,7 +287,8 @@ const AlertDescription = forwardRef<HTMLDivElement, AlertDescriptionProps>(
     return (
       <motion.div
         className={cn(
-          "col-start-2 grid justify-items-start gap-1 text-muted-foreground text-sm [&_p]:leading-relaxed",
+          "grid justify-items-start gap-1 text-muted-foreground text-sm [&_p]:leading-relaxed",
+          context?.hasIcon ? "col-start-2" : "col-start-1",
           className
         )}
         data-slot="alert-description"
@@ -209,11 +306,25 @@ const AlertDescription = forwardRef<HTMLDivElement, AlertDescriptionProps>(
 AlertDescription.displayName = "AlertDescription";
 
 function isAlertTitleChild(child: ReactNode) {
-  return isValidElement(child) && child.type === AlertTitle;
+  if (!isValidElement(child)) {
+    return false;
+  }
+
+  return (
+    child.type === AlertTitle ||
+    getComponentDisplayName(child.type) === AlertTitle.displayName
+  );
 }
 
 function isAlertDescriptionChild(child: ReactNode) {
-  return isValidElement(child) && child.type === AlertDescription;
+  if (!isValidElement(child)) {
+    return false;
+  }
+
+  return (
+    child.type === AlertDescription ||
+    getComponentDisplayName(child.type) === AlertDescription.displayName
+  );
 }
 
 function isAlertTextChild(child: ReactNode) {
@@ -294,7 +405,15 @@ function useAlertLifecycle(timeout: number, onDismiss?: () => void) {
   }, [clearTimer]);
 
   const startTimer = useCallback(() => {
-    if (timeoutIdRef.current !== null || remainingTimeRef.current <= 0) {
+    if (remainingTimeRef.current <= 0) {
+      if (timeoutIdRef.current === null) {
+        requestDismiss();
+      }
+
+      return;
+    }
+
+    if (timeoutIdRef.current !== null) {
       return;
     }
 
@@ -403,11 +522,26 @@ function AlertIcon({ children }: { children: ReactNode }) {
   );
 }
 
+function getDismissButtonClasses(
+  appearance?: VariantProps<typeof alertVariants>["appearance"]
+) {
+  switch (appearance) {
+    case "warning":
+      return "text-amber-900/40 hover:text-amber-900 dark:text-amber-100/45 dark:hover:text-amber-100";
+    case "destructive":
+      return "text-destructive/40 hover:text-destructive";
+    default:
+      return "text-foreground/35 hover:text-foreground/70";
+  }
+}
+
 function AlertDismissButton({
+  appearance,
   className,
   onDismiss,
   show,
 }: {
+  appearance?: VariantProps<typeof alertVariants>["appearance"];
   className?: string;
   onDismiss: () => void;
   show: boolean;
@@ -420,9 +554,11 @@ function AlertDismissButton({
     <motion.button
       aria-label="Dismiss alert"
       className={cn(
-        "relative -my-2 -mr-2 inline-flex size-10 shrink-0 items-center justify-center self-start rounded-md text-foreground/35 transition-colors hover:bg-accent/60 hover:text-foreground/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+        "relative -my-2 -mr-2 inline-flex size-10 shrink-0 items-center justify-center self-start rounded-md transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+        getDismissButtonClasses(appearance),
         className
       )}
+      data-slot="alert-dismiss"
       onClick={onDismiss}
       type="button"
       variants={childVariants}
@@ -459,7 +595,6 @@ function AlertCard({
   appearance,
   className,
   content,
-  contextValue,
   descriptionId,
   hasDescription,
   hasIcon,
@@ -474,15 +609,16 @@ function AlertCard({
   onPointerLeave,
   position,
   showDismiss,
+  size,
   titleId,
   variants,
   variant,
   visible,
+  width,
 }: {
   appearance?: VariantProps<typeof alertVariants>["appearance"];
   className?: MotionDivProps["className"];
   content: ReactNode;
-  contextValue: AlertContextValue;
   descriptionId: string;
   hasDescription: boolean;
   hasIcon: boolean;
@@ -497,19 +633,26 @@ function AlertCard({
   onPointerLeave: () => void;
   position?: AlertPosition;
   showDismiss: boolean;
+  size?: AlertSize;
   titleId: string;
   variants: Variants;
   variant: AlertVariant;
   visible: boolean;
+  width?: string | number;
 }) {
   const dismissColumnClass = hasIcon
     ? "col-start-3 row-start-1"
     : "col-start-2 row-start-1";
+  const alertWidth = resolveAlertWidth({
+    size: size ?? DEFAULT_ALERT_SIZE,
+    width,
+    variant,
+  });
 
   return (
     <AnimatePresence onExitComplete={onExitComplete}>
       {visible ? (
-        <AlertContext.Provider value={contextValue}>
+        <AlertContext.Provider value={{ descriptionId, hasIcon, titleId }}>
           <motion.div
             {...motionProps}
             animate="visible"
@@ -521,9 +664,10 @@ function AlertCard({
               componentThemeClassName,
               alertVariants({ appearance }),
               getAlertGridClasses({ hasIcon, showDismiss }),
-              variant === "toast" ? "sm:max-w-[400px]" : "max-w-[400px]",
+              "transform-gpu will-change-[transform,opacity,filter]",
+              alertWidth.className,
               position ? positionClasses[position] : undefined,
-              position && "z-300",
+              position && "z-[300]",
               className
             )}
             data-slot="alert"
@@ -534,11 +678,13 @@ function AlertCard({
             onPointerEnter={onPointerEnter}
             onPointerLeave={onPointerLeave}
             role={variant === "toast" ? "status" : "alert"}
+            style={{ ...motionProps.style, ...alertWidth.style }}
             variants={variants}
           >
             {icon ? <AlertIcon>{icon}</AlertIcon> : null}
             {content}
             <AlertDismissButton
+              appearance={appearance}
               className={dismissColumnClass}
               onDismiss={onDismiss}
               show={showDismiss}
@@ -581,27 +727,34 @@ function getAlertConfig({
   };
 }
 
-function getAlertAction(action?: ReactNode) {
-  if (!action) {
-    return null;
-  }
-
+function AlertAction({
+  children,
+  hasIcon,
+}: {
+  children: ReactNode;
+  hasIcon: boolean;
+}) {
   return (
     <motion.div
-      className="col-start-2 mt-2 flex flex-wrap items-center gap-2"
+      className={cn(
+        "mt-2 flex flex-wrap items-center gap-2",
+        hasIcon ? "col-start-2" : "col-start-1"
+      )}
       variants={childVariants}
     >
-      {action}
+      {children}
     </motion.div>
   );
 }
 
 function getLegacyAlertContent({
   action,
+  hasIcon,
   message,
   title,
 }: {
   action?: ReactNode;
+  hasIcon: boolean;
   message?: ReactNode;
   title?: ReactNode;
 }) {
@@ -609,7 +762,7 @@ function getLegacyAlertContent({
     <>
       {title ? <AlertTitle>{title}</AlertTitle> : null}
       {message ? <AlertDescription>{message}</AlertDescription> : null}
-      {getAlertAction(action)}
+      {action ? <AlertAction hasIcon={hasIcon}>{action}</AlertAction> : null}
     </>
   );
 }
@@ -631,25 +784,37 @@ function getAlertContent({
 }) {
   if (hasCompoundChildren) {
     const { contentChildren, leadingIcon } = splitAlertChildren(children);
+    const renderedIcon = icon ?? leadingIcon;
 
     return {
       hasDescription: contentChildren.some(isAlertDescriptionChild),
+      hasIcon: Boolean(renderedIcon),
       hasTitle: contentChildren.some(isAlertTitleChild),
       renderedContent: (
         <>
           {contentChildren}
-          {getAlertAction(action)}
+          {action ? (
+            <AlertAction hasIcon={Boolean(renderedIcon)}>{action}</AlertAction>
+          ) : null}
         </>
       ),
-      renderedIcon: icon ?? leadingIcon,
+      renderedIcon,
     };
   }
 
+  const renderedIcon = icon;
+
   return {
     hasDescription: Boolean(message),
+    hasIcon: Boolean(renderedIcon),
     hasTitle: Boolean(title),
-    renderedContent: getLegacyAlertContent({ action, message, title }),
-    renderedIcon: icon,
+    renderedContent: getLegacyAlertContent({
+      action,
+      hasIcon: Boolean(renderedIcon),
+      message,
+      title,
+    }),
+    renderedIcon,
   };
 }
 
@@ -662,6 +827,8 @@ export const Alert = ({
   message,
   action,
   dismissible,
+  size = DEFAULT_ALERT_SIZE,
+  width,
   variant,
   position,
   timeout,
@@ -694,32 +861,7 @@ export const Alert = ({
   const titleId = useId();
   const messageId = useId();
 
-  const dy = resolvedPosition ? entryY[resolvedPosition] : -8;
-
-  const containerVariants: Variants = {
-    hidden: { opacity: 0, y: dy, scale: 0.97, filter: "blur(6px)" },
-    visible: {
-      opacity: 1,
-      y: 0,
-      scale: 1,
-      filter: "blur(0px)",
-      transition: {
-        opacity: { duration: 0.22, ease: "easeOut" },
-        y: { type: "spring" as const, stiffness: 320, damping: 26 },
-        scale: { type: "spring" as const, stiffness: 320, damping: 26 },
-        filter: { duration: 0.3, ease: "easeOut" },
-        staggerChildren: 0.05,
-        delayChildren: 0.08,
-      },
-    },
-    exit: {
-      opacity: 0,
-      y: dy,
-      scale: 0.97,
-      filter: "blur(4px)",
-      transition: { duration: 0.18, ease: EASE_IN },
-    },
-  };
+  const containerVariants = getContainerVariants(resolvedPosition);
   const { hasDescription, hasTitle, renderedContent, renderedIcon } =
     getAlertContent({
       action,
@@ -735,7 +877,6 @@ export const Alert = ({
       appearance={appearance}
       className={className}
       content={renderedContent}
-      contextValue={{ descriptionId: messageId, titleId }}
       descriptionId={messageId}
       hasDescription={hasDescription}
       hasIcon={Boolean(renderedIcon)}
@@ -750,10 +891,12 @@ export const Alert = ({
       onPointerLeave={() => setIsHovered(false)}
       position={resolvedPosition}
       showDismiss={resolvedDismissible}
+      size={size}
       titleId={titleId}
       variant={resolvedVariant}
       variants={containerVariants}
       visible={visible}
+      width={width}
     />
   );
 
@@ -764,7 +907,11 @@ export const Alert = ({
    * element instead of the viewport.
    */
   if (resolvedVariant === "toast") {
-    return mounted ? createPortal(card, document.body) : null;
+    if (!mounted || typeof document === "undefined") {
+      return null;
+    }
+
+    return createPortal(card, document.body);
   }
 
   return card;

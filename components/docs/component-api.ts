@@ -67,6 +67,19 @@ const alertApiDetails: DetailItem[] = [
           "Visual tone for the alert surface. Destructive shifts toward error colors; warning uses a warm amber surface with muted description text.",
       }),
       field({
+        name: "size",
+        type: '"sm" | "md" | "lg" | "xl"',
+        defaultValue: '"md"',
+        description:
+          "Preset max width for inline and toast alerts. sm is 320px, md is 400px, lg is 480px, and xl is 560px.",
+      }),
+      field({
+        name: "width",
+        type: "string | number",
+        description:
+          "Custom max width. Pass a CSS length such as 28rem or a pixel number. Overrides size when set.",
+      }),
+      field({
         name: "dismissible",
         type: "boolean",
         defaultValue: "legacy: true; compound inline: false",
@@ -101,7 +114,7 @@ const alertApiDetails: DetailItem[] = [
       }),
     ],
     notes: [
-      "The root caps at 400px wide, uses a light border, and rounds corners with rounded-xl.",
+      "Use size for preset widths or pass width for a custom max width. md defaults to 400px.",
       "Every positioned alert snaps to a full-width top placement on small screens, then switches to the requested corner at the sm breakpoint.",
       'Inline alerts use role="alert"; toast alerts use role="status" with aria-live="polite" and keep title and message linked with aria-labelledby and aria-describedby.',
       "The alert keeps its own visible state internally when dismissal is enabled, so toast usage is designed for fire-and-forget notifications rather than parent-controlled open state.",
@@ -155,7 +168,9 @@ const alertApiDetails: DetailItem[] = [
     summary:
       "Alert uses AnimatePresence for mount and exit, with separate variants for the container, icon, and text stack.",
     notes: [
-      "Entry direction is derived from position: top placements slide down slightly, bottom placements rise upward, and inline alerts use a smaller upward offset.",
+      "Entry uses long fluid easing on opacity, vertical drift, scale, and blur so the alert settles in rather than snapping.",
+      "Exit keeps the same direction with a softer, slightly slower fade so dismissal still feels continuous.",
+      "Child text and the icon only fade on exit, which keeps the container motion cohesive.",
       "The timeout effect is cleared on cleanup, so unmounting or rerendering the alert does not leak timers.",
       "When position is set, the component waits until after mount before calling createPortal to avoid touching document during server render.",
       "Dismissal callbacks wait until the exit transition completes, so parent cleanup does not cut off the visual exit early.",

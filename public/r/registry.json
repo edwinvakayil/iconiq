@@ -22,7 +22,7 @@
       "name": "alert",
       "type": "registry:ui",
       "registryDependencies": [],
-      "dependencies": ["motion"],
+      "dependencies": ["motion", "class-variance-authority"],
       "devDependencies": [],
       "title": "Alert",
       "description": "Compound Alert, AlertTitle, and AlertDescription parts with optional icons, legacy prop support, polite live announcements, and inline or toast behavior.",

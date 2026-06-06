@@ -13,22 +13,13 @@ import { alertApiDetails } from "@/components/docs/component-api";
 import { ComponentDocsPage } from "@/components/docs/page-shell";
 import { LINK } from "@/constants";
 import { alertPreviewCode } from "@/lib/component-v0-pages";
+import { cn } from "@/lib/utils";
 import {
   Alert,
   type AlertAppearance,
   AlertDescription,
-  type AlertPosition,
   AlertTitle,
 } from "@/registry/alert";
-
-const toastPositions: { value: AlertPosition; label: string }[] = [
-  { value: "top-left", label: "Top left" },
-  { value: "top-center", label: "Top center" },
-  { value: "top-right", label: "Top right" },
-  { value: "bottom-left", label: "Bottom left" },
-  { value: "bottom-center", label: "Bottom center" },
-  { value: "bottom-right", label: "Bottom right" },
-];
 
 const appearanceOptions: { value: AlertAppearance; label: string }[] = [
   { value: "default", label: "Default" },
@@ -57,9 +48,6 @@ const appearanceContent: Record<
   },
 };
 
-const previewSelectClassName =
-  "h-9 w-full rounded-md border border-border/80 bg-background px-2.5 text-[13px] text-foreground outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2";
-
 const usageCode = `import {
   Alert,
   AlertDescription,
@@ -69,11 +57,23 @@ import { TriangleAlert } from "lucide-react";
 
 export function AlertDemo() {
   return (
-    <Alert appearance="warning" className="max-w-[400px]">
+    <Alert appearance="warning">
       <TriangleAlert />
       <AlertTitle>Unsaved changes detected</AlertTitle>
       <AlertDescription>
         Save now or recent edits may be lost.
+      </AlertDescription>
+    </Alert>
+  );
+}
+
+export function AlertCustomWidthDemo() {
+  return (
+    <Alert appearance="default" width={440}>
+      <TriangleAlert />
+      <AlertTitle>Heads up</AlertTitle>
+      <AlertDescription>
+        Pass width for a custom max width instead of a preset size.
       </AlertDescription>
     </Alert>
   );
@@ -97,93 +97,43 @@ const details = alertApiDetails.map((item) => {
 });
 
 function AlertPreview() {
-  const [appearance, setAppearance] = useState<AlertAppearance>("warning");
-  const [position, setPosition] = useState<AlertPosition>("top-right");
-  const [showToast, setShowToast] = useState(false);
-  const [toastKey, setToastKey] = useState(0);
-
+  const [appearance, setAppearance] = useState<AlertAppearance>("default");
   const { description, Icon, title } = appearanceContent[appearance];
 
-  const triggerToast = () => {
-    setShowToast(true);
-    setToastKey((current) => current + 1);
-  };
-
-  const handlePositionChange = (nextPosition: AlertPosition) => {
-    setPosition(nextPosition);
-
-    if (showToast) {
-      setToastKey((current) => current + 1);
-    }
-  };
-
   return (
-    <>
-      <div className="grid w-full max-w-[400px] items-start gap-4">
-        <Alert appearance={appearance}>
-          <Icon />
-          <AlertTitle>{title}</AlertTitle>
-          <AlertDescription>{description}</AlertDescription>
-        </Alert>
+    <div className="flex w-full flex-col items-center gap-6 px-4 py-6 sm:px-8 sm:py-8">
+      <fieldset
+        aria-label="Alert appearance"
+        className="m-0 flex flex-wrap items-center justify-center gap-4 border-0 p-0"
+      >
+        {appearanceOptions.map((option) => {
+          const isSelected = appearance === option.value;
 
-        <div className="flex flex-wrap items-end gap-3">
-          <label className="flex min-w-[140px] flex-1 flex-col gap-1.5 text-[13px] text-secondary">
-            <span>Appearance</span>
-            <select
-              className={previewSelectClassName}
-              onChange={(event) =>
-                setAppearance(event.target.value as AlertAppearance)
-              }
-              value={appearance}
+          return (
+            <button
+              aria-pressed={isSelected}
+              className={cn(
+                "text-[13px] transition-colors",
+                isSelected
+                  ? "font-medium text-foreground"
+                  : "font-light text-muted-foreground hover:text-foreground"
+              )}
+              key={option.value}
+              onClick={() => setAppearance(option.value)}
+              type="button"
             >
-              {appearanceOptions.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
-          </label>
+              {option.label}
+            </button>
+          );
+        })}
+      </fieldset>
 
-          <label className="flex min-w-[140px] flex-1 flex-col gap-1.5 text-[13px] text-secondary">
-            <span>Toast position</span>
-            <select
-              className={previewSelectClassName}
-              onChange={(event) =>
-                handlePositionChange(event.target.value as AlertPosition)
-              }
-              value={position}
-            >
-              {toastPositions.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
-          </label>
-
-          <button
-            className="inline-flex h-9 shrink-0 items-center justify-center rounded-md border border-border/80 bg-background px-3 font-medium text-[13px] text-foreground transition-colors hover:bg-muted/70"
-            onClick={triggerToast}
-            type="button"
-          >
-            Show toast
-          </button>
-        </div>
-      </div>
-
-      {showToast ? (
-        <Alert
-          appearance={appearance}
-          key={toastKey}
-          onDismiss={() => setShowToast(false)}
-          position={position}
-        >
-          <Icon />
-          <AlertTitle>{title}</AlertTitle>
-          <AlertDescription>{description}</AlertDescription>
-        </Alert>
-      ) : null}
-    </>
+      <Alert appearance={appearance} className="w-full">
+        <Icon />
+        <AlertTitle>{title}</AlertTitle>
+        <AlertDescription>{description}</AlertDescription>
+      </Alert>
+    </div>
   );
 }
 
@@ -204,11 +154,11 @@ export default function RadixBaseAlertPage() {
       preview={<AlertPreview />}
       previewClassName="lg:col-span-8"
       previewCode={alertPreviewCode}
-      previewDescription="Switch between default, warning, and destructive tones, then trigger a toast to compare placement, auto-dismiss, and the close control."
+      previewDescription="Switch between default, warning, and destructive appearances to compare tone, icon treatment, and copy density in the inline alert."
       title="Alert"
       usageCode={usageCode}
       usageDescription={
-        'Start with the compound inline alert, then pass a position or variant="toast" when you need viewport placement, timed dismissal, and polite live announcements. Use appearance="warning" or appearance="destructive" for caution and error feedback.'
+        'Start with the compound inline alert, then pass a position or variant="toast" when you need viewport placement, timed dismissal, and polite live announcements. Use size="sm" | "md" | "lg" | "xl" for preset widths, or width for a custom max width.'
       }
     />
   );

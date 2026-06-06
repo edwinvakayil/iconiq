@@ -296,7 +296,7 @@ const REGISTRY_UI_META: Record<
     title: "Alert",
     description:
       "Compound Alert, AlertTitle, and AlertDescription parts with optional icons, legacy prop support, polite live announcements, and inline or toast behavior.",
-    dependencies: ["motion"],
+    dependencies: ["motion", "class-variance-authority"],
   },
   breadcrumbs: {
     title: "Breadcrumbs",
