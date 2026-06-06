@@ -25,12 +25,6 @@ type ProviderConfig = {
   usageCode: string;
 };
 
-const breadcrumbs = [
-  { label: "Docs", href: "/" },
-  { label: "Components" },
-  { label: "Alert Dialog" },
-];
-
 const usageCodeByProvider: Record<ProviderConfig["componentName"], string> = {
   "b-alert-dialog": `import {
   AlertDialog,
@@ -98,6 +92,18 @@ export function DeleteCollectionAlert() {
 }`,
 };
 
+const previewSentenceClassName =
+  "flex flex-wrap items-center justify-center gap-x-2 gap-y-1.5 text-balance text-[13px] text-muted-foreground leading-snug tracking-tight sm:text-sm";
+
+const previewTriggerClassName =
+  "inline-flex h-8 min-h-8 translate-y-px items-center align-middle px-3 py-0 text-[13px]";
+
+const breadcrumbs = [
+  { label: "Docs", href: "/" },
+  { label: "Components" },
+  { label: "Alert Dialog" },
+];
+
 function AlertDialogPreview({ ui }: { ui: AlertDialogModule }) {
   const {
     AlertDialog,
@@ -114,7 +120,14 @@ function AlertDialogPreview({ ui }: { ui: AlertDialogModule }) {
   return (
     <div className="flex min-h-[18rem] items-center justify-center p-6">
       <AlertDialog>
-        <AlertDialogTrigger>Open dialog</AlertDialogTrigger>
+        <p className={previewSentenceClassName}>
+          <span>This can&apos;t be undone.</span>
+          <span>Tap</span>
+          <AlertDialogTrigger className={previewTriggerClassName}>
+            Delete
+          </AlertDialogTrigger>
+          <span>to confirm.</span>
+        </p>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Delete this item?</AlertDialogTitle>
@@ -264,6 +277,7 @@ export default function RadixBaseAlertDialogPage() {
       itemSlug="alert-dialog"
       pageUrl="/components/alert-dialog"
       preview={<AlertDialogPreview ui={provider.ui} />}
+      previewDescription="Tap Delete in the sentence to open the confirmation dialog before a permanent action."
       title="Alert Dialog"
       usageCode={provider.usageCode}
       usageDescription="Switch libraries above to update the install command, registry JSON, preview code, and generated file set together."

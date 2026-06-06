@@ -47,6 +47,12 @@ const demoOptions: RouteOption[] = [
   },
 ];
 
+const previewSentenceClassName =
+  "max-w-xs text-balance text-center text-[13px] text-muted-foreground leading-snug tracking-tight sm:max-w-sm sm:text-sm";
+
+const previewContentClassName =
+  "flex w-full max-w-sm flex-col items-center gap-4 text-center";
+
 function RouteCombobox({
   onValueChange,
   value,
@@ -128,31 +134,38 @@ export function ComboboxPreview() {
   const [value, setValue] = useState<RouteOption | null>(options[1]);
 
   return (
-    <div className="w-full max-w-xl">
-      <Combobox
-        itemToStringLabel={(item) => item.label}
-        itemToStringValue={(item) => item.value}
-        items={options}
-        onValueChange={setValue}
-        value={value}
-      >
-        <ComboboxInput placeholder="Pick a route..." />
-        <ComboboxContent>
-          <ComboboxList>
-            {(option: RouteOption, index: number) => (
-              <ComboboxItem
-                description={option.description}
-                index={index}
-                key={option.value}
-                value={option}
-              >
-                {option.label}
-              </ComboboxItem>
-            )}
-          </ComboboxList>
-          <ComboboxEmpty>No route matches that query.</ComboboxEmpty>
-        </ComboboxContent>
-      </Combobox>
+    <div className="flex w-full items-center justify-center px-4 py-6">
+      <div className="flex w-full max-w-sm flex-col items-center gap-4 text-center">
+        <p className="max-w-xs text-balance text-center text-[13px] text-muted-foreground leading-snug tracking-tight sm:max-w-sm sm:text-sm">
+          Search, filter, and pick a route from one input.
+        </p>
+        <div className="w-full">
+          <Combobox
+            itemToStringLabel={(item) => item.label}
+            itemToStringValue={(item) => item.value}
+            items={options}
+            onValueChange={setValue}
+            value={value}
+          >
+            <ComboboxInput placeholder="Pick a route..." />
+            <ComboboxContent>
+              <ComboboxList>
+                {(option: RouteOption, index: number) => (
+                  <ComboboxItem
+                    description={option.description}
+                    index={index}
+                    key={option.value}
+                    value={option}
+                  >
+                    {option.label}
+                  </ComboboxItem>
+                )}
+              </ComboboxList>
+              <ComboboxEmpty>No route matches that query.</ComboboxEmpty>
+            </ComboboxContent>
+          </Combobox>
+        </div>
+      </div>
     </div>
   );
 }`;
@@ -185,8 +198,24 @@ function handleProviderSelect() {
   return undefined;
 }
 
-export default function RadixBaseComboboxPage() {
+function ComboboxPreview() {
   const [value, setValue] = useState<RouteOption | null>(demoOptions[1]);
+
+  return (
+    <div className="flex w-full items-center justify-center px-4 py-6">
+      <div className={previewContentClassName}>
+        <p className={previewSentenceClassName}>
+          Search, filter, and pick a route from one input.
+        </p>
+        <div className="w-full">
+          <RouteCombobox onValueChange={setValue} value={value} />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default function RadixBaseComboboxPage() {
   const details = useMemo(() => getDetails(), []);
 
   return (
@@ -205,13 +234,8 @@ export default function RadixBaseComboboxPage() {
       }
       itemSlug="combobox"
       pageUrl="/components/combobox"
-      preview={
-        <div className="flex min-h-[280px] w-full items-center justify-center">
-          <div className="w-full max-w-xl">
-            <RouteCombobox onValueChange={setValue} value={value} />
-          </div>
-        </div>
-      }
+      preview={<ComboboxPreview />}
+      previewDescription="A searchable route combobox with a centered caption above."
       title="Combobox"
       usageCode={usageCode}
       usageDescription="This Base UI install exposes compound combobox parts while keeping the same input styling, filtering, clear action, keyboard model, and dropdown motion as the prior Iconiq combobox."

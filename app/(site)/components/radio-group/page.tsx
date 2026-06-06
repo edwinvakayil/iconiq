@@ -96,13 +96,15 @@ export function RadioGroupPreview() {
   const [value, setValue] = useState("standard");
 
   return (
-    <RadioGroup
-      aria-label="Delivery options"
-      className="w-full max-w-md"
-      onChange={setValue}
-      options={options}
-      value={value}
-    />
+    <div className="flex w-full items-center justify-center px-4 py-6">
+      <RadioGroup
+        aria-label="Delivery options"
+        className="w-full max-w-md"
+        onChange={setValue}
+        options={options}
+        value={value}
+      />
+    </div>
   );
 }`,
   "r-radio-group": `"use client";
@@ -132,13 +134,15 @@ export function RadioGroupPreview() {
   const [value, setValue] = useState("standard");
 
   return (
-    <RadioGroup
-      aria-label="Delivery options"
-      className="w-full max-w-md"
-      onChange={setValue}
-      options={options}
-      value={value}
-    />
+    <div className="flex w-full items-center justify-center px-4 py-6">
+      <RadioGroup
+        aria-label="Delivery options"
+        className="w-full max-w-md"
+        onChange={setValue}
+        options={options}
+        value={value}
+      />
+    </div>
   );
 }`,
 };
@@ -148,7 +152,7 @@ function RadioGroupPreview({ ui }: { ui: RadioGroupModule }) {
   const [value, setValue] = useState("standard");
 
   return (
-    <div className="flex min-h-[320px] w-full items-center justify-center p-6">
+    <div className="flex w-full items-center justify-center px-4 py-6">
       <RadioGroup
         aria-label="Delivery options"
         className="w-full max-w-md"
@@ -247,6 +251,7 @@ export default function RadixBaseRadioGroupPage() {
       itemSlug="radio-group"
       pageUrl="/components/radio-group"
       preview={<RadioGroupPreview ui={provider.ui} />}
+      previewDescription="Delivery options radio group with controlled selection."
       title="Radio Group"
       usageCode={provider.usageCode}
       usageDescription="Switch libraries above to update the install command, registry JSON, preview code, and generated file set together."

@@ -51,6 +51,11 @@ const breadcrumbs = [
   { label: "Select" },
 ];
 
+const previewSentenceClassName =
+  "text-pretty text-[13px] text-muted-foreground leading-snug tracking-tight";
+
+const previewContentClassName = "flex w-full max-w-72 flex-col gap-2.5";
+
 const selectUsageCodeTemplate = (importPath: string) => `"use client";
 
 import {
@@ -72,45 +77,52 @@ import {
 
 export function SelectDemo() {
   return (
-    <Select>
-      <SelectTrigger className="w-full max-w-72">
-        <SelectValue placeholder="Choose workflow" />
-      </SelectTrigger>
-      <SelectContent>
-        <SelectGroup>
-          <SelectItem
-            icon={<Rocket className="size-4 text-muted-foreground" />}
-            value="launch"
-          >
-            Launch plan
-          </SelectItem>
-          <SelectItem
-            icon={<Palette className="size-4 text-muted-foreground" />}
-            value="design"
-          >
-            Design pass
-          </SelectItem>
-          <SelectItem
-            icon={<MessageSquareText className="size-4 text-muted-foreground" />}
-            value="review"
-          >
-            Review notes
-          </SelectItem>
-          <SelectItem
-            icon={<CalendarDays className="size-4 text-muted-foreground" />}
-            value="schedule"
-          >
-            Schedule
-          </SelectItem>
-          <SelectItem
-            icon={<ShieldCheck className="size-4 text-muted-foreground" />}
-            value="approve"
-          >
-            Approvals
-          </SelectItem>
-        </SelectGroup>
-      </SelectContent>
-    </Select>
+    <div className="flex w-full items-center justify-center px-4 py-6">
+      <div className="flex w-full max-w-72 flex-col gap-2.5">
+        <p className="text-pretty text-[13px] text-muted-foreground leading-snug tracking-tight">
+          Choose the next workflow step from one compact select.
+        </p>
+        <Select>
+          <SelectTrigger className="w-full">
+            <SelectValue placeholder="Choose workflow" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              <SelectItem
+                icon={<Rocket className="size-4 text-muted-foreground" />}
+                value="launch"
+              >
+                Launch plan
+              </SelectItem>
+              <SelectItem
+                icon={<Palette className="size-4 text-muted-foreground" />}
+                value="design"
+              >
+                Design pass
+              </SelectItem>
+              <SelectItem
+                icon={<MessageSquareText className="size-4 text-muted-foreground" />}
+                value="review"
+              >
+                Review notes
+              </SelectItem>
+              <SelectItem
+                icon={<CalendarDays className="size-4 text-muted-foreground" />}
+                value="schedule"
+              >
+                Schedule
+              </SelectItem>
+              <SelectItem
+                icon={<ShieldCheck className="size-4 text-muted-foreground" />}
+                value="approve"
+              >
+                Approvals
+              </SelectItem>
+            </SelectGroup>
+          </SelectContent>
+        </Select>
+      </div>
+    </div>
   );
 }`;
 
@@ -130,48 +142,53 @@ function SelectPreview({ ui }: { ui: SelectModule }) {
   } = ui;
 
   return (
-    <div className="flex min-h-[320px] w-full items-center justify-center p-6">
-      <Select>
-        <SelectTrigger className="w-full max-w-72">
-          <SelectValue placeholder="Choose workflow" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectGroup>
-            <SelectItem
-              icon={<Rocket className="size-4 text-muted-foreground" />}
-              value="launch"
-            >
-              Launch plan
-            </SelectItem>
-            <SelectItem
-              icon={<Palette className="size-4 text-muted-foreground" />}
-              value="design"
-            >
-              Design pass
-            </SelectItem>
-            <SelectItem
-              icon={
-                <MessageSquareText className="size-4 text-muted-foreground" />
-              }
-              value="review"
-            >
-              Review notes
-            </SelectItem>
-            <SelectItem
-              icon={<CalendarDays className="size-4 text-muted-foreground" />}
-              value="schedule"
-            >
-              Schedule
-            </SelectItem>
-            <SelectItem
-              icon={<ShieldCheck className="size-4 text-muted-foreground" />}
-              value="approve"
-            >
-              Approvals
-            </SelectItem>
-          </SelectGroup>
-        </SelectContent>
-      </Select>
+    <div className="flex w-full items-center justify-center px-4 py-6">
+      <div className={previewContentClassName}>
+        <p className={previewSentenceClassName}>
+          Choose the next workflow step from one compact select.
+        </p>
+        <Select>
+          <SelectTrigger className="w-full">
+            <SelectValue placeholder="Choose workflow" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              <SelectItem
+                icon={<Rocket className="size-4 text-muted-foreground" />}
+                value="launch"
+              >
+                Launch plan
+              </SelectItem>
+              <SelectItem
+                icon={<Palette className="size-4 text-muted-foreground" />}
+                value="design"
+              >
+                Design pass
+              </SelectItem>
+              <SelectItem
+                icon={
+                  <MessageSquareText className="size-4 text-muted-foreground" />
+                }
+                value="review"
+              >
+                Review notes
+              </SelectItem>
+              <SelectItem
+                icon={<CalendarDays className="size-4 text-muted-foreground" />}
+                value="schedule"
+              >
+                Schedule
+              </SelectItem>
+              <SelectItem
+                icon={<ShieldCheck className="size-4 text-muted-foreground" />}
+                value="approve"
+              >
+                Approvals
+              </SelectItem>
+            </SelectGroup>
+          </SelectContent>
+        </Select>
+      </div>
     </div>
   );
 }
@@ -264,6 +281,7 @@ export default function RadixBaseSelectPage() {
       itemSlug="select"
       pageUrl="/components/select"
       preview={<SelectPreview ui={provider.ui} />}
+      previewDescription="A workflow select with a centered caption above."
       title="Select"
       usageCode={provider.usageCode}
       usageDescription="Switch libraries above to update the install command, registry JSON, preview code, and generated file set together."

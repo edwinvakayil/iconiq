@@ -40,8 +40,14 @@ const currentDateFormatter = new Intl.DateTimeFormat("en-US", {
   day: "numeric",
   year: "numeric",
 });
+const previewSentenceClassName =
+  "max-w-xs text-balance text-center text-[15px] text-muted-foreground leading-relaxed sm:max-w-sm sm:text-base";
+const previewContentClassName =
+  "flex w-full flex-col items-center gap-4 text-center";
+const cardClassName =
+  "w-full max-w-[16rem] overflow-hidden rounded-[0.95rem] border border-border/80 bg-background pt-0 text-left shadow-[0_18px_48px_-36px_rgba(15,23,42,0.22)] sm:max-w-[17.5rem]";
 const tagClassName =
-  "inline-flex items-center rounded-md bg-muted px-2.5 py-1 font-medium text-[12px] text-foreground";
+  "inline-flex items-center rounded-md bg-muted px-2 py-0.5 font-medium text-[11px] text-foreground";
 
 function formatCurrentDate() {
   return currentDateFormatter.format(new Date());
@@ -64,61 +70,63 @@ function CardPreview() {
   }, []);
 
   return (
-    <div className="flex w-full items-center justify-center px-0 py-4 sm:py-5">
-      <Card
-        className="w-full max-w-[21rem] overflow-hidden rounded-[1.1rem] border border-border/80 bg-background pt-0 shadow-[0_24px_70px_-46px_rgba(15,23,42,0.24)] sm:max-w-[23rem]"
-        interactive
-      >
-        <div className="px-[1.5px] pt-[1.5px]">
-          <Image
-            alt="Red and purple gradient artwork"
-            className="aspect-[4/2.2] w-full rounded-[0.85rem] object-cover"
-            height={4000}
-            sizes="(max-width: 640px) 100vw, 23rem"
-            src={artworkSrc}
-            width={6000}
-          />
-        </div>
-
-        <CardContent className="space-y-3 px-3.5 pt-3 pb-0 sm:px-4 sm:pt-3.5">
-          <div className="flex items-center justify-between gap-3">
-            <Avatar className="size-8 shrink-0 ring-1 ring-black/5">
-              <AvatarImage alt="" loading="lazy" src={artworkSrc} />
-              <AvatarFallback>DS</AvatarFallback>
-            </Avatar>
-            <p className="text-right text-[12px] text-muted-foreground sm:text-[13px]">
-              {currentDate}
-            </p>
+    <div className="flex w-full items-center justify-center px-4 py-6">
+      <div className={previewContentClassName}>
+        <Card className={cardClassName} interactive>
+          <div className="px-[1.5px] pt-[1.5px]">
+            <Image
+              alt="Red and purple gradient artwork"
+              className="aspect-[4/2.25] w-full rounded-[0.75rem] object-cover"
+              height={4000}
+              sizes="(max-width: 640px) 100vw, 17.5rem"
+              src={artworkSrc}
+              width={6000}
+            />
           </div>
 
-          <div className="space-y-2.5">
-            <CardTitle className="whitespace-nowrap font-normal text-[1rem] leading-[1.08] tracking-[-0.05em] sm:text-[1.08rem]">
-              Design Systems That Age Gracefully
-            </CardTitle>
-            <CardDescription className="w-full text-pretty text-[12px] text-muted-foreground leading-5 sm:text-[13px] sm:leading-6">
-              Lasting interfaces come from steady patterns, resilient
-              foundations, and decisions that remain coherent as products grow.
-            </CardDescription>
-          </div>
+          <CardContent className="space-y-3 px-3.5 pt-3 pb-0 text-left">
+            <div className="flex items-center justify-between gap-2">
+              <Avatar className="size-7 shrink-0 ring-1 ring-black/5">
+                <AvatarImage alt="" loading="lazy" src={artworkSrc} />
+                <AvatarFallback className="text-[10px]">DS</AvatarFallback>
+              </Avatar>
+              <p className="text-right text-[11px] text-muted-foreground">
+                {currentDate}
+              </p>
+            </div>
 
-          <button
-            className="inline-flex h-8 w-fit items-center justify-center rounded-md border border-border px-3.5 font-medium text-[12px] text-foreground transition-colors hover:bg-muted/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-            type="button"
-          >
-            Read more
-          </button>
-        </CardContent>
+            <div className="space-y-2 text-left">
+              <CardTitle className="text-balance text-left font-normal text-[0.95rem] leading-[1.15] tracking-[-0.04em]">
+                Design Systems That Last
+              </CardTitle>
+              <CardDescription className="w-full text-pretty text-left text-[12px] text-muted-foreground leading-[1.35]">
+                Steady patterns keep interfaces coherent as products grow.
+              </CardDescription>
+            </div>
 
-        <CardFooter className="items-center justify-between gap-2.5 border-t-0 bg-transparent px-3.5 pt-4 pb-3.5 sm:px-4 sm:pb-4">
-          <span className="text-[12px] text-muted-foreground sm:text-[13px]">
-            Categories
-          </span>
-          <div className="flex flex-wrap justify-end gap-1.5">
-            <span className={tagClassName}>Marketing</span>
-            <span className={tagClassName}>UI Design</span>
-          </div>
-        </CardFooter>
-      </Card>
+            <button
+              className="inline-flex h-8 w-fit items-center justify-center self-start rounded-md border border-border px-3 font-medium text-[12px] text-foreground transition-colors hover:bg-muted/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+              type="button"
+            >
+              Read more
+            </button>
+          </CardContent>
+
+          <CardFooter className="items-center justify-between gap-2 border-t-0 bg-transparent px-3.5 pt-3.5 pb-3.5">
+            <span className="text-[11px] text-muted-foreground">
+              Categories
+            </span>
+            <div className="flex flex-wrap justify-end gap-1">
+              <span className={tagClassName}>Marketing</span>
+              <span className={tagClassName}>UI Design</span>
+            </div>
+          </CardFooter>
+        </Card>
+
+        <p className={previewSentenceClassName}>
+          Headline, excerpt, and next step—kept in one compact card.
+        </p>
+      </div>
     </div>
   );
 }
@@ -138,9 +146,8 @@ export default function CardPage() {
       headerActions={<SharedPrimitiveProviderSwitch />}
       pageUrl="/components/card"
       preview={<CardPreview />}
-      previewClassName="min-h-0 !p-0"
       previewCode={cardPreviewCode}
-      previewDescription="A simpler editorial card layout that reuses the same gradient artwork for the hero surface and the round avatar accent."
+      previewDescription="A compact editorial card with a centered caption below."
       title="Card"
       usageCode={cardPreviewCode}
       usageDescription="Use the shared slots for a clean article or marketing card, and reuse the same visual asset across the media block and avatar accent when you want a tighter visual system."

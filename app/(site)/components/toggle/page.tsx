@@ -1,6 +1,6 @@
 "use client";
 
-import { Star } from "lucide-react";
+import { Bold } from "lucide-react";
 import { type ComponentType, type ReactNode, useMemo, useState } from "react";
 
 import {
@@ -13,6 +13,7 @@ import {
   type DetailItem,
 } from "@/components/docs/page-shell";
 import { LINK } from "@/constants";
+import { cn } from "@/lib/utils";
 import * as BaseToggle from "@/registry/b-toggle";
 import * as RadixToggle from "@/registry/r-toggle";
 
@@ -47,48 +48,93 @@ const breadcrumbs = [
   { label: "Toggle" },
 ];
 
+const previewSentenceClassName =
+  "flex flex-wrap items-center justify-center gap-x-2.5 gap-y-2 text-balance font-medium text-lg text-neutral-800 leading-snug tracking-tight sm:text-xl dark:text-neutral-100";
+
+const emphasizedTextClassName = (bold: boolean) =>
+  cn(
+    "transition-[font-weight,color] duration-200",
+    bold
+      ? "font-bold text-neutral-950 dark:text-neutral-50"
+      : "text-neutral-800 dark:text-neutral-100"
+  );
+
+const previewToggleClassName = "size-8 min-h-8 min-w-8 shrink-0 px-2 py-2";
+
 const usageCodeByProvider: Record<ProviderConfig["componentName"], string> = {
   "b-toggle": `"use client";
 
-import { Star } from "lucide-react";
+import { Bold } from "lucide-react";
 import { useState } from "react";
 import { Toggle } from "@/components/ui/b-toggle";
 
 export function TogglePreview() {
-  const [favorite, setFavorite] = useState(false);
+  const [bold, setBold] = useState(false);
 
   return (
-    <div className="flex items-center justify-center px-2 py-4">
-      <Toggle
-        aria-label="Toggle favorite"
-        onPressedChange={setFavorite}
-        pressed={favorite}
-      >
-        <Star className="size-5" fill={favorite ? "currentColor" : "none"} />
-        Favorite
-      </Toggle>
+    <div className="flex min-h-[18rem] items-center justify-center px-4 py-6">
+      <p className="flex flex-wrap items-center justify-center gap-x-2.5 gap-y-2 text-balance font-medium text-lg text-neutral-800 leading-snug tracking-tight sm:text-xl dark:text-neutral-100">
+        <span>Ship the</span>
+        <span
+          className={
+            bold
+              ? "font-bold text-neutral-950 transition-[font-weight,color] duration-200 dark:text-neutral-50"
+              : "text-neutral-800 transition-[font-weight,color] duration-200 dark:text-neutral-100"
+          }
+        >
+          release notes
+        </span>
+        <span className="inline-flex translate-y-px items-center align-middle">
+          <Toggle
+            aria-label="Toggle bold"
+            className="size-8 min-h-8 min-w-8 shrink-0 px-2 py-2"
+            onPressedChange={setBold}
+            pressed={bold}
+            size="sm"
+            variant="outline"
+          >
+            <Bold className="size-4" />
+          </Toggle>
+        </span>
+      </p>
     </div>
   );
 }`,
   "r-toggle": `"use client";
 
-import { Star } from "lucide-react";
+import { Bold } from "lucide-react";
 import { useState } from "react";
 import { Toggle } from "@/components/ui/r-toggle";
 
 export function TogglePreview() {
-  const [favorite, setFavorite] = useState(false);
+  const [bold, setBold] = useState(false);
 
   return (
-    <div className="flex items-center justify-center px-2 py-4">
-      <Toggle
-        aria-label="Toggle favorite"
-        onPressedChange={setFavorite}
-        pressed={favorite}
-      >
-        <Star className="size-5" fill={favorite ? "currentColor" : "none"} />
-        Favorite
-      </Toggle>
+    <div className="flex min-h-[18rem] items-center justify-center px-4 py-6">
+      <p className="flex flex-wrap items-center justify-center gap-x-2.5 gap-y-2 text-balance font-medium text-lg text-neutral-800 leading-snug tracking-tight sm:text-xl dark:text-neutral-100">
+        <span>Ship the</span>
+        <span
+          className={
+            bold
+              ? "font-bold text-neutral-950 transition-[font-weight,color] duration-200 dark:text-neutral-50"
+              : "text-neutral-800 transition-[font-weight,color] duration-200 dark:text-neutral-100"
+          }
+        >
+          release notes
+        </span>
+        <span className="inline-flex translate-y-px items-center align-middle">
+          <Toggle
+            aria-label="Toggle bold"
+            className="size-8 min-h-8 min-w-8 shrink-0 px-2 py-2"
+            onPressedChange={setBold}
+            pressed={bold}
+            size="sm"
+            variant="outline"
+          >
+            <Bold className="size-4" />
+          </Toggle>
+        </span>
+      </p>
     </div>
   );
 }`,
@@ -96,18 +142,26 @@ export function TogglePreview() {
 
 function TogglePreview({ ui }: { ui: ToggleModule }) {
   const { Toggle } = ui;
-  const [favorite, setFavorite] = useState(false);
+  const [bold, setBold] = useState(false);
 
   return (
-    <div className="flex min-h-[320px] w-full items-center justify-center p-6">
-      <Toggle
-        aria-label="Toggle favorite"
-        onPressedChange={setFavorite}
-        pressed={favorite}
-      >
-        <Star className="size-5" fill={favorite ? "currentColor" : "none"} />
-        Favorite
-      </Toggle>
+    <div className="flex min-h-[18rem] items-center justify-center px-4 py-6">
+      <p className={previewSentenceClassName}>
+        <span>Ship the</span>
+        <span className={emphasizedTextClassName(bold)}>release notes</span>
+        <span className="inline-flex translate-y-px items-center align-middle">
+          <Toggle
+            aria-label="Toggle bold"
+            className={previewToggleClassName}
+            onPressedChange={setBold}
+            pressed={bold}
+            size="sm"
+            variant="outline"
+          >
+            <Bold className="size-4" />
+          </Toggle>
+        </span>
+      </p>
     </div>
   );
 }
@@ -209,6 +263,7 @@ export default function RadixBaseTogglePage() {
       itemSlug="toggle"
       pageUrl="/components/toggle"
       preview={<TogglePreview ui={provider.ui} />}
+      previewDescription="Inline formatting demo where the bold toggle emphasizes release notes in the sentence."
       title="Toggle"
       usageCode={provider.usageCode}
       usageDescription="Switch libraries above to update the install command, registry JSON, preview code, and generated file set together."

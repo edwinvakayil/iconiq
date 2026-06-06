@@ -48,19 +48,18 @@ const demoItems: AccordionDemoItem[] = [
     id: "workflow",
     title: "How should I use this page?",
     content:
-      "Switch between Base UI and Radix UI above. The preview, install command, and generated registry files update together so you can compare the same surface on top of two different headless foundations.",
+      "Switch libraries above. The preview, install command, and registry files update together.",
   },
   {
     id: "api",
     title: "Does the public API stay the same?",
     content:
-      "Yes. Both registry entries export Accordion, AccordionItem, AccordionTrigger, and AccordionContent with the same compound API, default and quiet variants, and optional multi-open behavior.",
+      "Yes. Both entries export the same compound parts, variants, and multi-open behavior.",
   },
   {
     id: "install",
     title: "What changes when I switch providers?",
-    content:
-      "Only the underlying implementation and runtime dependency list. The Radix version ships the Radix accordion primitive, while the Base UI version installs the Base UI accordion parts and keeps the same product-facing shape.",
+    content: "Only the underlying implementation and dependency list change.",
   },
 ];
 
@@ -105,21 +104,21 @@ export function AccordionPreview() {
       <AccordionItem value="workflow">
         <AccordionTrigger>How should I use this page?</AccordionTrigger>
         <AccordionContent>
-          Switch between Base UI and Radix UI above. The preview, install
-          command, and generated registry files update together.
+          Switch libraries above. The preview, install command, and registry
+          files update together.
         </AccordionContent>
       </AccordionItem>
       <AccordionItem value="api">
         <AccordionTrigger>Does the public API stay the same?</AccordionTrigger>
         <AccordionContent>
-          Yes. Both registry entries export the same compound parts, variants,
-          and optional multi-open behavior.
+          Yes. Both entries export the same compound parts, variants, and
+          multi-open behavior.
         </AccordionContent>
       </AccordionItem>
       <AccordionItem value="install">
         <AccordionTrigger>What changes when I switch providers?</AccordionTrigger>
         <AccordionContent>
-          Only the underlying implementation and runtime dependency list.
+          Only the underlying implementation and dependency list change.
         </AccordionContent>
       </AccordionItem>
     </Accordion>
@@ -138,21 +137,21 @@ export function AccordionPreview() {
       <AccordionItem value="workflow">
         <AccordionTrigger>How should I use this page?</AccordionTrigger>
         <AccordionContent>
-          Switch between Base UI and Radix UI above. The preview, install
-          command, and generated registry files update together.
+          Switch libraries above. The preview, install command, and registry
+          files update together.
         </AccordionContent>
       </AccordionItem>
       <AccordionItem value="api">
         <AccordionTrigger>Does the public API stay the same?</AccordionTrigger>
         <AccordionContent>
-          Yes. Both registry entries export the same compound parts, variants,
-          and optional multi-open behavior.
+          Yes. Both entries export the same compound parts, variants, and
+          multi-open behavior.
         </AccordionContent>
       </AccordionItem>
       <AccordionItem value="install">
         <AccordionTrigger>What changes when I switch providers?</AccordionTrigger>
         <AccordionContent>
-          Only the underlying implementation and runtime dependency list.
+          Only the underlying implementation and dependency list change.
         </AccordionContent>
       </AccordionItem>
     </Accordion>
@@ -181,21 +180,21 @@ export function QuietAccordionPreview() {
       <AccordionItem value="workflow">
         <AccordionTrigger>How should I use this page?</AccordionTrigger>
         <AccordionContent>
-          Switch between Base UI and Radix UI above. The preview, install
-          command, and generated registry files update together.
+          Switch libraries above. The preview, install command, and registry
+          files update together.
         </AccordionContent>
       </AccordionItem>
       <AccordionItem value="api">
         <AccordionTrigger>Does the public API stay the same?</AccordionTrigger>
         <AccordionContent>
-          Yes. Both registry entries export the same compound parts, variants,
-          and optional multi-open behavior.
+          Yes. Both entries export the same compound parts, variants, and
+          multi-open behavior.
         </AccordionContent>
       </AccordionItem>
       <AccordionItem value="install">
         <AccordionTrigger>What changes when I switch providers?</AccordionTrigger>
         <AccordionContent>
-          Only the underlying implementation and runtime dependency list.
+          Only the underlying implementation and dependency list change.
         </AccordionContent>
       </AccordionItem>
     </Accordion>
@@ -218,21 +217,21 @@ export function QuietAccordionPreview() {
       <AccordionItem value="workflow">
         <AccordionTrigger>How should I use this page?</AccordionTrigger>
         <AccordionContent>
-          Switch between Base UI and Radix UI above. The preview, install
-          command, and generated registry files update together.
+          Switch libraries above. The preview, install command, and registry
+          files update together.
         </AccordionContent>
       </AccordionItem>
       <AccordionItem value="api">
         <AccordionTrigger>Does the public API stay the same?</AccordionTrigger>
         <AccordionContent>
-          Yes. Both registry entries export the same compound parts, variants,
-          and optional multi-open behavior.
+          Yes. Both entries export the same compound parts, variants, and
+          multi-open behavior.
         </AccordionContent>
       </AccordionItem>
       <AccordionItem value="install">
         <AccordionTrigger>What changes when I switch providers?</AccordionTrigger>
         <AccordionContent>
-          Only the underlying implementation and runtime dependency list.
+          Only the underlying implementation and dependency list change.
         </AccordionContent>
       </AccordionItem>
     </Accordion>

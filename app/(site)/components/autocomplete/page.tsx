@@ -156,6 +156,16 @@ function CountryAutocomplete() {
   );
 }
 
+function AutocompletePreview() {
+  return (
+    <div className="flex min-h-[280px] w-full items-center justify-center px-4 py-6">
+      <div className="w-full max-w-sm">
+        <CountryAutocomplete />
+      </div>
+    </div>
+  );
+}
+
 function getDetails(): DetailItem[] {
   return autocompleteApiDetails.map((item) => {
     if (item.id !== "registry") {
@@ -197,13 +207,8 @@ export default function AutocompletePage() {
       }
       itemSlug="autocomplete"
       pageUrl="/components/autocomplete"
-      preview={
-        <div className="flex min-h-[280px] w-full items-center justify-center px-4">
-          <div className="w-full max-w-sm">
-            <CountryAutocomplete />
-          </div>
-        </div>
-      }
+      preview={<AutocompletePreview />}
+      previewDescription="Type to filter country suggestions and select a match from the list."
       title="Autocomplete"
       usageCode={usageCode}
       usageDescription="This Base UI install filters country suggestions as you type, commits the country name on selection, and uses minimal spring motion on the highlight and popup."

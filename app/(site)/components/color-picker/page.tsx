@@ -8,6 +8,12 @@ import { ComponentDocsPage } from "@/components/docs/page-shell";
 import { LINK } from "@/constants";
 import { ColorPicker } from "@/registry/color-picker";
 
+const previewSentenceClassName =
+  "flex flex-wrap items-center justify-center gap-x-1 gap-y-1 text-balance text-center text-[15px] text-muted-foreground leading-relaxed sm:text-base";
+
+const previewContentClassName =
+  "flex w-full flex-col items-center gap-4 text-center";
+
 const usageCode = `"use client";
 
 import { useState } from "react";
@@ -16,7 +22,20 @@ import { ColorPicker } from "@/components/ui/color-picker";
 export function BrandColorPicker() {
   const [color, setColor] = useState("#3B82F6");
 
-  return <ColorPicker onChange={setColor} value={color} />;
+  return (
+    <div className="flex w-full items-center justify-center px-4 py-6">
+      <div className="flex w-full flex-col items-center gap-4 text-center">
+        <ColorPicker onChange={setColor} value={color} />
+        <p className="flex flex-wrap items-center justify-center gap-x-1 gap-y-1 text-balance text-center text-[15px] text-muted-foreground leading-relaxed sm:text-base">
+          <span>Your</span>
+          <span className="font-medium" style={{ color }}>
+            brand color
+          </span>
+          <span>—tuned from one compact panel.</span>
+        </p>
+      </div>
+    </div>
+  );
 }`;
 
 const details = colorPickerApiDetails.map((item) => {
@@ -39,8 +58,17 @@ function ColorPickerPreview() {
   const [color, setColor] = useState("#3B82F6");
 
   return (
-    <div className="flex justify-center px-2 py-4">
-      <ColorPicker onChange={setColor} value={color} />
+    <div className="flex w-full items-center justify-center px-4 py-6">
+      <div className={previewContentClassName}>
+        <ColorPicker onChange={setColor} value={color} />
+        <p className={previewSentenceClassName}>
+          <span>Your</span>
+          <span className="font-medium" style={{ color }}>
+            brand color
+          </span>
+          <span>—tuned from one compact panel.</span>
+        </p>
+      </div>
     </div>
   );
 }
@@ -61,7 +89,7 @@ export default function ColorPickerPage() {
       pageUrl="/components/color-picker"
       preview={<ColorPickerPreview />}
       previewClassName="!overflow-visible"
-      previewDescription="Drag inside the saturation field, tune hue and alpha on the sliders, switch between HEX, RGB, HSL, and OKLCH readouts, or sample a screen color when the browser supports EyeDropper."
+      previewDescription="A compact color picker with a centered caption below."
       railNotes={[
         "The picker emits a leading-hash hex string through onChange (8-digit when alpha is below 100%). Slider drags commit on pointer up for stable controlled usage.",
         "HEX, RGB, HSL, and OKLCH rows are editable; channel values commit on blur or Enter.",

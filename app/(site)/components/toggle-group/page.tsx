@@ -12,6 +12,7 @@ import {
   type DetailItem,
 } from "@/components/docs/page-shell";
 import { LINK } from "@/constants";
+import { cn } from "@/lib/utils";
 import * as BaseToggleGroup from "@/registry/b-togglegroup";
 import * as RadixToggleGroup from "@/registry/r-togglegroup";
 
@@ -54,6 +55,24 @@ const formattingItems: PreviewItem[] = [
   },
 ];
 
+const previewContentClassName =
+  "flex w-full max-w-md flex-col items-start gap-4 text-left";
+
+const previewSentenceClassName =
+  "flex flex-wrap items-center justify-start gap-x-2.5 gap-y-2 text-left text-pretty font-medium text-lg text-neutral-800 leading-snug tracking-tight sm:text-xl dark:text-neutral-100";
+
+function getEmphasizedTextClassName(value: string[]) {
+  return cn(
+    "transition-all duration-200",
+    value.includes("bold") && "font-bold",
+    value.includes("italic") && "italic",
+    value.includes("underline") && "underline underline-offset-2",
+    value.length > 0
+      ? "text-neutral-950 dark:text-neutral-50"
+      : "text-neutral-800 dark:text-neutral-100"
+  );
+}
+
 const breadcrumbs = [
   { label: "Docs", href: "/" },
   { label: "Components" },
@@ -64,6 +83,7 @@ const usageCodeByProvider: Record<ProviderConfig["componentName"], string> = {
   "b-togglegroup": `"use client";
 
 import { useState } from "react";
+import { cn } from "@/lib/utils";
 import {
   ToggleGroup,
   type ToggleGroupItem,
@@ -83,17 +103,38 @@ export function ToggleGroupPreview() {
   const [value, setValue] = useState<string[]>([]);
 
   return (
-    <ToggleGroup
-      aria-label="Text formatting"
-      items={items}
-      onValueChange={setValue}
-      value={value}
-    />
+    <div className="flex min-h-[18rem] items-center justify-center px-4 py-6">
+      <div className="flex w-full max-w-md flex-col items-start gap-4 text-left">
+        <ToggleGroup
+          aria-label="Text formatting"
+          items={items}
+          onValueChange={setValue}
+          value={value}
+        />
+        <p className="flex flex-wrap items-center justify-start gap-x-2.5 gap-y-2 text-left text-pretty font-medium text-lg text-neutral-800 leading-snug tracking-tight sm:text-xl dark:text-neutral-100">
+          <span>Ship the</span>
+          <span
+            className={cn(
+              "transition-all duration-200",
+              value.includes("bold") && "font-bold",
+              value.includes("italic") && "italic",
+              value.includes("underline") && "underline underline-offset-2",
+              value.length > 0
+                ? "text-neutral-950 dark:text-neutral-50"
+                : "text-neutral-800 dark:text-neutral-100"
+            )}
+          >
+            release notes
+          </span>
+        </p>
+      </div>
+    </div>
   );
 }`,
   "r-togglegroup": `"use client";
 
 import { useState } from "react";
+import { cn } from "@/lib/utils";
 import {
   ToggleGroup,
   type ToggleGroupItem,
@@ -113,12 +154,32 @@ export function ToggleGroupPreview() {
   const [value, setValue] = useState<string[]>([]);
 
   return (
-    <ToggleGroup
-      aria-label="Text formatting"
-      items={items}
-      onValueChange={setValue}
-      value={value}
-    />
+    <div className="flex min-h-[18rem] items-center justify-center px-4 py-6">
+      <div className="flex w-full max-w-md flex-col items-start gap-4 text-left">
+        <ToggleGroup
+          aria-label="Text formatting"
+          items={items}
+          onValueChange={setValue}
+          value={value}
+        />
+        <p className="flex flex-wrap items-center justify-start gap-x-2.5 gap-y-2 text-left text-pretty font-medium text-lg text-neutral-800 leading-snug tracking-tight sm:text-xl dark:text-neutral-100">
+          <span>Ship the</span>
+          <span
+            className={cn(
+              "transition-all duration-200",
+              value.includes("bold") && "font-bold",
+              value.includes("italic") && "italic",
+              value.includes("underline") && "underline underline-offset-2",
+              value.length > 0
+                ? "text-neutral-950 dark:text-neutral-50"
+                : "text-neutral-800 dark:text-neutral-100"
+            )}
+          >
+            release notes
+          </span>
+        </p>
+      </div>
+    </div>
   );
 }`,
 };
@@ -128,13 +189,21 @@ function ToggleGroupPreview({ ui }: { ui: ToggleGroupModule }) {
   const [value, setValue] = useState<string[]>([]);
 
   return (
-    <div className="flex w-full items-center justify-center py-10">
-      <ToggleGroup
-        aria-label="Text formatting"
-        items={formattingItems}
-        onValueChange={setValue}
-        value={value}
-      />
+    <div className="flex min-h-[18rem] items-center justify-center px-4 py-6">
+      <div className={previewContentClassName}>
+        <ToggleGroup
+          aria-label="Text formatting"
+          items={formattingItems}
+          onValueChange={setValue}
+          value={value}
+        />
+        <p className={previewSentenceClassName}>
+          <span>Ship the</span>
+          <span className={getEmphasizedTextClassName(value)}>
+            release notes
+          </span>
+        </p>
+      </div>
     </div>
   );
 }
@@ -234,6 +303,7 @@ export default function RadixBaseToggleGroupPage() {
       preview={
         <ToggleGroupPreview key={provider.componentName} ui={provider.ui} />
       }
+      previewDescription="Formatting toggle group above a sentence that updates as you select B, I, or U."
       title="Toggle Group"
       usageCode={provider.usageCode}
       usageDescription="Switch libraries above to update the install command, registry JSON, preview code, and generated file set together."

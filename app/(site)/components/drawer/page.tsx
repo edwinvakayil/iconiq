@@ -22,6 +22,12 @@ import {
   DrawerTrigger,
 } from "@/registry/drawer";
 
+const previewSentenceClassName =
+  "flex flex-wrap items-center justify-center gap-x-2 gap-y-1.5 text-balance text-[13px] text-muted-foreground leading-snug tracking-tight sm:text-sm";
+
+const previewTriggerClassName =
+  "inline-flex h-8 min-h-8 translate-y-px items-center align-middle rounded-md bg-foreground px-3 py-0 font-medium text-[13px] text-background tracking-[-0.01em] transition-[transform,background-color] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-px hover:bg-foreground/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2";
+
 const usageCode = `"use client";
 
 import { useEffect, useState } from "react";
@@ -61,14 +67,19 @@ export function DrawerPreview() {
 
   return (
     <Drawer direction={isMobile ? "bottom" : "right"}>
-      <DrawerTrigger asChild>
-        <button
-          className="inline-flex items-center justify-center rounded-lg bg-foreground px-4.5 py-2.5 text-sm font-medium text-background transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-          type="button"
-        >
-          Open drawer
-        </button>
-      </DrawerTrigger>
+      <p className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1.5 text-balance text-[13px] text-muted-foreground leading-snug tracking-tight sm:text-sm">
+        <span>Review the checklist without leaving the page.</span>
+        <span>Tap</span>
+        <DrawerTrigger asChild>
+          <button
+            className="inline-flex h-8 min-h-8 translate-y-px items-center align-middle rounded-md bg-foreground px-3 py-0 font-medium text-[13px] text-background tracking-[-0.01em] transition-[transform,background-color] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-px hover:bg-foreground/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+            type="button"
+          >
+            Review
+          </button>
+        </DrawerTrigger>
+        <span>to continue.</span>
+      </p>
       <DrawerContent>
         <DrawerHeader className="pb-7">
           <DrawerTitle>Iconiq registry</DrawerTitle>
@@ -196,14 +207,16 @@ function DrawerPreview() {
   return (
     <div className="flex min-h-[280px] w-full items-center justify-center px-4 py-10">
       <Drawer direction={isMobile ? "bottom" : "right"}>
-        <DrawerTrigger asChild>
-          <button
-            className="inline-flex items-center justify-center rounded-lg bg-foreground px-5 py-3 font-medium text-[13px] text-background transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-            type="button"
-          >
-            Open drawer
-          </button>
-        </DrawerTrigger>
+        <p className={previewSentenceClassName}>
+          <span>Review the checklist without leaving the page.</span>
+          <span>Tap</span>
+          <DrawerTrigger asChild>
+            <button className={previewTriggerClassName} type="button">
+              Review
+            </button>
+          </DrawerTrigger>
+          <span>to continue.</span>
+        </p>
         <DrawerContent>
           <DrawerHeader className="pb-7">
             <DrawerTitle>Iconiq registry</DrawerTitle>
@@ -319,6 +332,7 @@ export default function RadixBaseDrawerPage() {
         },
       ]}
       preview={<DrawerPreview />}
+      previewDescription="Tap Review in the sentence to open the registry checklist drawer."
       title="Drawer"
       usageCode={usageCode}
       usageDescription="This Vaul install exposes the familiar compound drawer parts, side-aware placement, drag gestures, a soft overlay fade, and a tuned slide curve for fluid open and close motion."

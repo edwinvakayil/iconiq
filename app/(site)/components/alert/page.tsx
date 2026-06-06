@@ -48,6 +48,9 @@ const appearanceContent: Record<
   },
 };
 
+const previewSentenceClassName =
+  "flex flex-wrap items-center justify-center gap-x-2 gap-y-1.5 text-balance text-[13px] text-muted-foreground leading-snug tracking-tight sm:text-sm";
+
 const usageCode = `import {
   Alert,
   AlertDescription,
@@ -102,31 +105,35 @@ function AlertPreview() {
 
   return (
     <div className="flex w-full flex-col items-center gap-6 px-4 py-6 sm:px-8 sm:py-8">
-      <fieldset
-        aria-label="Alert appearance"
-        className="m-0 flex flex-wrap items-center justify-center gap-4 border-0 p-0"
-      >
-        {appearanceOptions.map((option) => {
-          const isSelected = appearance === option.value;
+      <p className={previewSentenceClassName}>
+        <span>Preview a</span>
+        <fieldset
+          aria-label="Alert appearance"
+          className="m-0 inline-flex flex-wrap items-center gap-x-3 border-0 p-0"
+        >
+          {appearanceOptions.map((option) => {
+            const isSelected = appearance === option.value;
 
-          return (
-            <button
-              aria-pressed={isSelected}
-              className={cn(
-                "text-[13px] transition-colors",
-                isSelected
-                  ? "font-medium text-foreground"
-                  : "font-light text-muted-foreground hover:text-foreground"
-              )}
-              key={option.value}
-              onClick={() => setAppearance(option.value)}
-              type="button"
-            >
-              {option.label}
-            </button>
-          );
-        })}
-      </fieldset>
+            return (
+              <button
+                aria-pressed={isSelected}
+                className={cn(
+                  "border-0 bg-transparent p-0 text-[length:inherit] leading-[inherit] underline-offset-4 transition-colors hover:underline",
+                  isSelected
+                    ? "font-medium text-foreground"
+                    : "font-light text-muted-foreground hover:text-foreground"
+                )}
+                key={option.value}
+                onClick={() => setAppearance(option.value)}
+                type="button"
+              >
+                {option.label}
+              </button>
+            );
+          })}
+        </fieldset>
+        <span>alert below.</span>
+      </p>
 
       <Alert appearance={appearance} className="w-full">
         <Icon />
@@ -146,7 +153,7 @@ export default function RadixBaseAlertPage() {
         { label: "Alert" },
       ]}
       componentName="alert"
-      description="Compact inline notices and viewport toasts with motion, dismiss controls, and default, warning, or destructive tones."
+      description="Polished inline notices and toast updates for concise feedback."
       details={details}
       editHref={`${LINK.GITHUB}/edit/main/app/(site)/components/alert/page.tsx`}
       headerActions={<SharedPrimitiveProviderSwitch />}
@@ -154,7 +161,7 @@ export default function RadixBaseAlertPage() {
       preview={<AlertPreview />}
       previewClassName="lg:col-span-8"
       previewCode={alertPreviewCode}
-      previewDescription="Switch between default, warning, and destructive appearances to compare tone, icon treatment, and copy density in the inline alert."
+      previewDescription="Tap default, warning, or destructive inline in the sentence, then compare tone and copy in the alert below."
       title="Alert"
       usageCode={usageCode}
       usageDescription={
