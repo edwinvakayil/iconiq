@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import type { PACKAGE_MANAGER } from "@/constants";
+import { useLogDocsCopyEvent } from "@/lib/statsig-docs-copy";
 import { cn } from "@/lib/utils";
 import { usePackageNameContext } from "@/providers/package-name";
 
@@ -38,12 +39,14 @@ export function InstallCommandTerminal({
   const [, startTransition] = useTransition();
   const { packageName, setPackageName } = usePackageNameContext();
   const reduceMotion = useReducedMotion() ?? false;
+  const logDocsCopyEvent = useLogDocsCopyEvent();
   const highlightLayoutId = `install-package-manager-${eventSlug}`;
 
   const handleCopyToClipboard = () => {
     startTransition(async () => {
       try {
         await navigator.clipboard.writeText(commands[packageName]);
+        logDocsCopyEvent(eventSlug, "cli");
         setCopied(true);
         await new Promise((resolve) => setTimeout(resolve, 2000));
         setCopied(false);

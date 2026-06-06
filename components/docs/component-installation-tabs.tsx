@@ -293,7 +293,11 @@ function RegistrySourceCode({ componentName }: { componentName: string }) {
         </div>
       ) : null}
 
-      <DocsCodeSnippet code={activeFile?.content ?? ""} />
+      <DocsCodeSnippet
+        code={activeFile?.content ?? ""}
+        componentName={componentName}
+        copySource="manual"
+      />
       <p className="font-medium text-[14px] text-foreground leading-6">
         <span aria-hidden className="mr-1.5 text-muted-foreground">
           *

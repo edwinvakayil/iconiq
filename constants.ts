@@ -4,6 +4,7 @@ const SITE = {
   LOGO: "iconiq.",
   URL: "https://iconiqui.com",
   GOOGLE_SITE_VERIFICATION: "Q0ClgYhHbG0_wpdPrrl4AaoNekaLVmjgT-nIp_-sD7Y",
+  STATSIG_CLIENT_KEY: "client-2PigA7hWPKeIwY2GlrlseaYtm59NSU6NqkunEDm3dVD",
   OG_IMAGE: "/opengraph-image",
   AUTHOR: {
     NAME: "Edwin Vakayil",
