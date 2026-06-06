@@ -8,11 +8,9 @@ import { getPackageManagerPrefix } from "@/lib/get-package-manager-prefix";
 export function CodeBlockInstall({
   componentName = "code-block",
   className,
-  onCopied,
 }: {
   componentName?: string;
   className?: string;
-  onCopied?: () => void;
 }) {
   const commands = useMemo(
     () => ({
@@ -29,7 +27,6 @@ export function CodeBlockInstall({
       className={className}
       commands={commands}
       eventSlug={componentName}
-      onCopied={onCopied}
     />
   );
 }

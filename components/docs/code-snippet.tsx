@@ -182,12 +182,10 @@ export function DocsCodeSnippet({
   code,
   className,
   maxHeightClassName = "max-h-80",
-  onCopied,
 }: {
   code: string;
   className?: string;
   maxHeightClassName?: string;
-  onCopied?: () => void;
 }) {
   const [copied, setCopied] = useState(false);
   const tokens = useMemo(() => tokenizeCode(code), [code]);
@@ -196,7 +194,6 @@ export function DocsCodeSnippet({
   const handleCopy = async () => {
     try {
       await navigator.clipboard.writeText(code);
-      onCopied?.();
       setCopied(true);
       window.setTimeout(() => setCopied(false), 1500);
     } catch {

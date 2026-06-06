@@ -28,13 +28,11 @@ export function InstallCommandTerminal({
   className,
   commands,
   eventSlug,
-  onCopied,
 }: {
   className?: string;
   commands: Record<PackageManager, string>;
   /** Registry component or page slug (e.g. `accordion`, `mcp-init`). */
   eventSlug: string;
-  onCopied?: () => void;
 }) {
   const [copied, setCopied] = useState(false);
   const [, startTransition] = useTransition();
@@ -46,7 +44,6 @@ export function InstallCommandTerminal({
     startTransition(async () => {
       try {
         await navigator.clipboard.writeText(commands[packageName]);
-        onCopied?.();
         setCopied(true);
         await new Promise((resolve) => setTimeout(resolve, 2000));
         setCopied(false);

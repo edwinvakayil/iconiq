@@ -2,15 +2,11 @@ import type { Viewport } from "next";
 
 import "./globals.css";
 
-import { statsigAdapter } from "@flags-sdk/statsig";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Geist, Geist_Mono } from "next/font/google";
-import { cookies, headers } from "next/headers";
 
-import { DynamicStatsigProvider } from "@/app/dynamic-statsig-provider";
 import { SITE } from "@/constants";
-import { identify } from "@/lib/statsig-identify";
 import { MotionTierProvider } from "@/providers/motion-tier";
 import { PackageNameProvider } from "@/providers/package-name";
 import { ThemeProvider } from "@/providers/theme";
@@ -40,45 +36,11 @@ export const viewport: Viewport = {
   ],
 };
 
-async function getStatsigShell(children: React.ReactNode) {
-  if (
-    !(
-      process.env.STATSIG_SERVER_API_KEY &&
-      process.env.NEXT_PUBLIC_STATSIG_CLIENT_KEY
-    )
-  ) {
-    return children;
-  }
-
-  const [headersStore, cookieStore] = await Promise.all([headers(), cookies()]);
-  const user = await identify({
-    cookies: cookieStore,
-    headers: headersStore,
-  });
-
-  const Statsig = await statsigAdapter.initialize();
-  const datafile = await Statsig.getClientInitializeResponse(user, {
-    hash: "djb2",
-  });
-
-  if (!datafile) {
-    return children;
-  }
-
-  return (
-    <DynamicStatsigProvider datafile={datafile}>
-      {children}
-    </DynamicStatsigProvider>
-  );
-}
-
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const statsigShell = await getStatsigShell(children);
-
   return (
     <html
       className={`${geistMono.variable} ${geistSans.variable}`}
@@ -109,7 +71,7 @@ export default async function RootLayout({
       <body className="relative bg-background font-sans antialiased">
         <ThemeProvider>
           <MotionTierProvider>
-            <PackageNameProvider>{statsigShell}</PackageNameProvider>
+            <PackageNameProvider>{children}</PackageNameProvider>
           </MotionTierProvider>
         </ThemeProvider>
         <Analytics />

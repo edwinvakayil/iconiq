@@ -12,7 +12,6 @@ import {
 import { CodeBlockInstall } from "@/components/code-block-install";
 import { DocsCodeSnippet } from "@/components/docs/code-snippet";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useTrackDocsCopyGate } from "@/lib/statsig-docs-copy";
 import { cn } from "@/lib/utils";
 
 type RegistryResponse = {
@@ -100,13 +99,7 @@ function FileTabTrigger({
   );
 }
 
-function RegistrySourceCode({
-  componentName,
-  onCopied,
-}: {
-  componentName: string;
-  onCopied: () => void;
-}) {
+function RegistrySourceCode({ componentName }: { componentName: string }) {
   const [activeFileId, setActiveFileId] = useState<string>("");
   const [fileIndicator, setFileIndicator] = useState({
     left: 0,
@@ -300,7 +293,7 @@ function RegistrySourceCode({
         </div>
       ) : null}
 
-      <DocsCodeSnippet code={activeFile?.content ?? ""} onCopied={onCopied} />
+      <DocsCodeSnippet code={activeFile?.content ?? ""} />
       <p className="font-medium text-[14px] text-foreground leading-6">
         <span aria-hidden className="mr-1.5 text-muted-foreground">
           *
@@ -316,7 +309,6 @@ export function ComponentInstallationTabs({
 }: {
   componentName: string;
 }) {
-  const trackDocsCopyGate = useTrackDocsCopyGate();
   const [activeTab, setActiveTab] = useState<InstallationTabValue>("cli");
   const [indicator, setIndicator] = useState({
     left: 0,
@@ -437,18 +429,12 @@ export function ComponentInstallationTabs({
       </div>
 
       <TabsContent className="mt-0" value="cli">
-        <CodeBlockInstall
-          componentName={componentName}
-          onCopied={() => trackDocsCopyGate(componentName, "cli")}
-        />
+        <CodeBlockInstall componentName={componentName} />
       </TabsContent>
 
       <TabsContent className="mt-0" value="manual">
         {activeTab === "manual" ? (
-          <RegistrySourceCode
-            componentName={componentName}
-            onCopied={() => trackDocsCopyGate(componentName, "manual")}
-          />
+          <RegistrySourceCode componentName={componentName} />
         ) : null}
       </TabsContent>
     </Tabs>
