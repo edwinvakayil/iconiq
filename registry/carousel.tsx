@@ -5,8 +5,39 @@ import useEmblaCarousel, {
 } from "embla-carousel-react";
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 import * as React from "react";
-import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+
+const carouselButtonVariants = {
+  ghost: "text-foreground hover:bg-accent hover:text-accent-foreground",
+  default: "bg-primary text-background shadow hover:bg-primary/90",
+};
+
+const carouselButtonSizes = {
+  icon: "size-9",
+  default: "h-9 px-4 py-2",
+};
+
+function CarouselButton({
+  className,
+  variant = "default",
+  size = "default",
+  ...props
+}: React.ComponentPropsWithoutRef<"button"> & {
+  variant?: keyof typeof carouselButtonVariants;
+  size?: keyof typeof carouselButtonSizes;
+}) {
+  return (
+    <button
+      className={cn(
+        "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md font-medium text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+        carouselButtonVariants[variant],
+        carouselButtonSizes[size],
+        className
+      )}
+      {...props}
+    />
+  );
+}
 
 type CarouselApi = UseEmblaCarouselType[1];
 type UseCarouselParameters = Parameters<typeof useEmblaCarousel>;
@@ -218,11 +249,14 @@ function CarouselPrevious({
   variant = "ghost",
   size = "icon",
   ...props
-}: React.ComponentProps<typeof Button>) {
+}: React.ComponentPropsWithoutRef<"button"> & {
+  variant?: keyof typeof carouselButtonVariants;
+  size?: keyof typeof carouselButtonSizes;
+}) {
   const { orientation, scrollPrev, canScrollPrev } = useCarousel();
 
   return (
-    <Button
+    <CarouselButton
       className={cn(
         carouselNavButtonClassName,
         orientation === "horizontal"
@@ -239,7 +273,7 @@ function CarouselPrevious({
     >
       <ChevronLeftIcon className="cn-rtl-flip" strokeWidth={2.25} />
       <span className="sr-only">Previous slide</span>
-    </Button>
+    </CarouselButton>
   );
 }
 
@@ -248,11 +282,14 @@ function CarouselNext({
   variant = "ghost",
   size = "icon",
   ...props
-}: React.ComponentProps<typeof Button>) {
+}: React.ComponentPropsWithoutRef<"button"> & {
+  variant?: keyof typeof carouselButtonVariants;
+  size?: keyof typeof carouselButtonSizes;
+}) {
   const { orientation, scrollNext, canScrollNext } = useCarousel();
 
   return (
-    <Button
+    <CarouselButton
       className={cn(
         carouselNavButtonClassName,
         orientation === "horizontal"
@@ -269,7 +306,7 @@ function CarouselNext({
     >
       <ChevronRightIcon className="cn-rtl-flip" strokeWidth={2.25} />
       <span className="sr-only">Next slide</span>
-    </Button>
+    </CarouselButton>
   );
 }
 
