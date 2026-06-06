@@ -103,9 +103,6 @@ const createMetadata = (options: CreateMetadataOptions = {}): Metadata => {
 const baseMetadata: Metadata = {
   metadataBase: new URL(SITE.URL),
   manifest: "/manifest.webmanifest",
-  alternates: {
-    canonical: "/",
-  },
   icons: {
     icon: "/favicon.ico",
     shortcut: "/favicon.ico",

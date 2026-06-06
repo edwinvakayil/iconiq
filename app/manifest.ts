@@ -5,7 +5,7 @@ import { SITE } from "@/constants";
 export default function manifest(): MetadataRoute.Manifest {
   return {
     name: SITE.NAME,
-    short_name: SITE.NAME,
+    short_name: SITE.SHORT_NAME,
     description: SITE.DESCRIPTION.SHORT,
     start_url: "/",
     display: "standalone",

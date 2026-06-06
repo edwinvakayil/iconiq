@@ -1,7 +1,28 @@
 import type { MetadataRoute } from "next";
 
 import { SITE } from "@/constants";
+import { SITELINK_ROUTES } from "@/lib/seo-routes";
 import { BASE_LINKS, SITE_SECTIONS } from "@/lib/site-nav";
+
+const SITELINK_PATHS = new Set<string>(
+  SITELINK_ROUTES.map((route) => route.href).filter((href) => href !== "/")
+);
+
+function getPagePriority(path: string) {
+  if (path === "/") {
+    return 1;
+  }
+
+  if (SITELINK_PATHS.has(path)) {
+    return 0.95;
+  }
+
+  if (BASE_LINKS.some((item) => item.href === path)) {
+    return 0.9;
+  }
+
+  return 0.8;
+}
 
 // biome-ignore lint/suspicious/useAwait: ignore
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
@@ -12,48 +33,41 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
           {
             path: homepage.href,
             changeFrequency: "weekly" as const,
-            priority: 1,
           },
         ]
       : []),
     ...BASE_LINKS.filter((item) => item.href !== "/").map((item) => ({
       path: item.href,
       changeFrequency: "monthly" as const,
-      priority: 0.9,
     })),
     ...SITE_SECTIONS.flatMap((section) =>
       section.children.map((item) => ({
         path: item.href,
         changeFrequency: "monthly" as const,
-        priority: 0.8,
       }))
     ),
     {
       path: "/sponsorship",
       changeFrequency: "monthly" as const,
-      priority: 0.5,
     },
     {
       path: "/llms.txt",
       changeFrequency: "weekly" as const,
-      priority: 0.6,
     },
     {
       path: "/llms-full.txt",
       changeFrequency: "weekly" as const,
-      priority: 0.6,
     },
     {
       path: "/ai-index.json",
       changeFrequency: "weekly" as const,
-      priority: 0.5,
     },
   ];
 
-  return docsPages.map(({ path, changeFrequency, priority }) => ({
+  return docsPages.map(({ path, changeFrequency }) => ({
     url: path === "/" ? SITE.URL : `${SITE.URL}${path}`,
     lastModified: new Date(),
     changeFrequency,
-    priority,
+    priority: getPagePriority(path),
   }));
 }

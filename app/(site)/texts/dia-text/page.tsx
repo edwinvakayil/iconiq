@@ -27,7 +27,7 @@ import {
 import { LINK } from "@/constants";
 import { getComponentV0Page } from "@/lib/component-v0-pages";
 import { DiaText } from "@/registry/dia-text";
-import { BreadcrumbJsonLdClient } from "@/seo/breadcrumb-json-ld-client";
+import { BreadcrumbJsonLd } from "@/seo/breadcrumb-json-ld";
 import { createMetadata } from "@/seo/metadata";
 
 const diaTextDescription =
@@ -123,7 +123,7 @@ export default function DiaTextPage() {
 
   return (
     <div className={docsPageShellClassName}>
-      <BreadcrumbJsonLdClient items={breadcrumbs} />
+      <BreadcrumbJsonLd items={breadcrumbs} />
       <div className={docsPageGridClassName}>
         <main className="min-w-0">
           <article className={docsPageArticleClassName}>

@@ -1,5 +1,3 @@
-"use client";
-
 import { SITE } from "@/constants";
 
 type BreadcrumbItem = {
@@ -22,7 +20,7 @@ function toAbsoluteUrl(path: string) {
   return `${SITE.URL}${path}`;
 }
 
-export function BreadcrumbJsonLdClient({
+export function BreadcrumbJsonLd({
   items,
   currentPath,
 }: {

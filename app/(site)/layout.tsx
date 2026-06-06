@@ -1,4 +1,6 @@
 import { CircleXIcon, TriangleAlertIcon } from "lucide-react";
+import type { Metadata } from "next";
+import { headers } from "next/headers";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { Toaster } from "sonner";
 
@@ -8,6 +10,12 @@ import { Header } from "@/components/header";
 import { PageTitleSync } from "@/components/page-title-sync";
 import { PageTransition } from "@/components/page-transition";
 import { RouteScrollReset } from "@/components/route-scroll-reset";
+import { getRouteMetadata } from "@/lib/seo-routes";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const pathname = (await headers()).get("x-pathname") ?? "/";
+  return getRouteMetadata(pathname);
+}
 
 export default function SiteLayout({
   children,

@@ -23,7 +23,7 @@ import {
   PageStaggerItem,
 } from "@/components/page-reveal";
 import { LINK, SITE } from "@/constants";
-import { BreadcrumbJsonLdClient } from "@/seo/breadcrumb-json-ld-client";
+import { BreadcrumbJsonLd } from "@/seo/breadcrumb-json-ld";
 import { createMetadata } from "@/seo/metadata";
 
 const introductionTagline = `${SITE.NAME} is editable UI with minimal motion, built for clarity.`;
@@ -85,7 +85,7 @@ export default function IntroductionPage() {
   return (
     <main className="min-w-0 flex-1">
       <div className={docsPageShellClassName}>
-        <BreadcrumbJsonLdClient items={breadcrumbs} />
+        <BreadcrumbJsonLd items={breadcrumbs} />
         <div className={docsPageGridClassName}>
           <div className="min-w-0">
             <article className={docsPageArticleClassName}>

@@ -25,7 +25,7 @@ import {
 } from "@/components/page-reveal";
 import { ShadcnDevDependencyBlock } from "@/components/shadcn-dev-dependency-block";
 import { LINK, SITE } from "@/constants";
-import { BreadcrumbJsonLdClient } from "@/seo/breadcrumb-json-ld-client";
+import { BreadcrumbJsonLd } from "@/seo/breadcrumb-json-ld";
 import { createMetadata } from "@/seo/metadata";
 
 const mcpDescription = `Connect ${SITE.NAME} to shadcn MCP so AI tools can add registry components to your codebase.`;
@@ -114,7 +114,7 @@ export default function McpPage() {
   return (
     <main className="min-w-0 flex-1">
       <div className={docsPageShellClassName}>
-        <BreadcrumbJsonLdClient items={breadcrumbs} />
+        <BreadcrumbJsonLd items={breadcrumbs} />
         <div className={docsPageGridClassName}>
           <div className="min-w-0">
             <article className={docsPageArticleClassName}>

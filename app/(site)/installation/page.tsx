@@ -25,7 +25,7 @@ import {
 import { RegistryInstallBlock } from "@/components/registry-install-block";
 import { LINK, SITE } from "@/constants";
 import { SITE_SECTIONS } from "@/lib/site-nav";
-import { BreadcrumbJsonLdClient } from "@/seo/breadcrumb-json-ld-client";
+import { BreadcrumbJsonLd } from "@/seo/breadcrumb-json-ld";
 import { createMetadata } from "@/seo/metadata";
 
 const installationTagline =
@@ -105,7 +105,7 @@ ${featuredComponents
   return (
     <main className="min-w-0 flex-1">
       <div className={docsPageShellClassName}>
-        <BreadcrumbJsonLdClient items={breadcrumbs} />
+        <BreadcrumbJsonLd items={breadcrumbs} />
         <div className={docsPageGridClassName}>
           <div className="min-w-0">
             <article className={docsPageArticleClassName}>

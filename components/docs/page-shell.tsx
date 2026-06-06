@@ -1,6 +1,7 @@
 import { ArrowLeft, ArrowRight, ChevronRight } from "lucide-react";
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { cloneElement, isValidElement } from "react";
 
 import { ComponentDemoCanvas } from "@/components/docs/component-demo-canvas";
 import { ComponentInstallationTabs } from "@/components/docs/component-installation-tabs";
@@ -19,7 +20,7 @@ import { nodeToText } from "@/lib/node-to-text";
 import { ReducedMotionOverride } from "@/lib/reduced-motion";
 import { SITE_SECTIONS } from "@/lib/site-nav";
 import { cn } from "@/lib/utils";
-import { BreadcrumbJsonLdClient } from "@/seo/breadcrumb-json-ld-client";
+import { BreadcrumbJsonLd } from "@/seo/breadcrumb-json-ld";
 import { ComponentDocJsonLd } from "@/seo/json-ld";
 
 type BreadcrumbItem = {
@@ -249,6 +250,14 @@ function withReducedMotionDetail(details: DetailItem[]) {
   ];
 }
 
+function clonePreviewForSection(preview: ReactNode, key: string) {
+  if (isValidElement(preview)) {
+    return cloneElement(preview, { key });
+  }
+
+  return preview;
+}
+
 function ReducedMotionSection({
   componentName,
   code,
@@ -271,7 +280,9 @@ function ReducedMotionSection({
         code={code}
         componentName={componentName}
         preview={
-          <ReducedMotionOverride reducedMotion>{preview}</ReducedMotionOverride>
+          <ReducedMotionOverride reducedMotion>
+            {clonePreviewForSection(preview, `rm-${componentName}`)}
+          </ReducedMotionOverride>
         }
         previewClassName={previewClassName}
         tabsId={`docs-demo-rm-${componentName}`}
@@ -916,10 +927,7 @@ function ComponentDocsPage({
         title={title}
       />
       <div className={docsPageShellClassName}>
-        <BreadcrumbJsonLdClient
-          currentPath={resolvedPageUrl}
-          items={breadcrumbs}
-        />
+        <BreadcrumbJsonLd currentPath={resolvedPageUrl} items={breadcrumbs} />
         <div className={docsPageGridClassName}>
           <main className="min-w-0">
             <article className={docsPageArticleClassName}>

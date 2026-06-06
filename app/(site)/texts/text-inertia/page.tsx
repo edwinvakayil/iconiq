@@ -27,7 +27,7 @@ import {
 import { LINK } from "@/constants";
 import { getComponentV0Page } from "@/lib/component-v0-pages";
 import TextInertia from "@/registry/text-inertia";
-import { BreadcrumbJsonLdClient } from "@/seo/breadcrumb-json-ld-client";
+import { BreadcrumbJsonLd } from "@/seo/breadcrumb-json-ld";
 import { createMetadata } from "@/seo/metadata";
 
 const textInertiaDescription =
@@ -120,7 +120,7 @@ export default function TextInertiaPage() {
 
   return (
     <div className={docsPageShellClassName}>
-      <BreadcrumbJsonLdClient items={breadcrumbs} />
+      <BreadcrumbJsonLd items={breadcrumbs} />
       <div className={docsPageGridClassName}>
         <main className="min-w-0">
           <article className={docsPageArticleClassName}>

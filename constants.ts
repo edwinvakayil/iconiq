@@ -1,5 +1,6 @@
 const SITE = {
-  NAME: "Iconiq",
+  NAME: "Iconiq UI",
+  SHORT_NAME: "Iconiq",
   LOGO: "iconiq.",
   URL: "https://iconiqui.com",
   OG_IMAGE: "/opengraph-image",
@@ -8,11 +9,13 @@ const SITE = {
     TWITTER: "@edwinvakayil",
   },
   DESCRIPTION: {
-    LONG: "Iconiq is an open-source React component library built around the shadcn registry workflow. Browse polished UI primitives, install them as local files, and adapt them directly inside modern interfaces.",
+    LONG: "Iconiq UI is an open-source React component library built around the shadcn registry workflow. Browse motion-powered UI primitives, install them as local files, and adapt them directly inside modern interfaces.",
     SHORT:
-      "Open-source React components delivered through the shadcn registry with editable, polished UI primitives.",
+      "Open-source React UI components with motion, shadcn registry installs, and editable source files.",
   },
   KEYWORDS: [
+    "Iconiq UI",
+    "iconiq ui",
     "open source react component library",
     "motion-powered components",
     "react components",
