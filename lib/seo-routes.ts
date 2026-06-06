@@ -170,13 +170,20 @@ export function getRouteMetadata(pathname: string): Metadata {
   const seo = getRouteSeo(normalized);
   const isHome = normalized === "/";
 
-  return createMetadata({
-    title: isHome ? seo.title : seo.title,
-    description: seo.description,
-    canonical: normalized,
-    ogTitle: isHome ? seo.title : `${seo.title} | ${SITE.NAME}`,
-    keywords: seo.keywords,
-  });
+  return {
+    ...createMetadata({
+      title: isHome ? seo.title : seo.title,
+      description: seo.description,
+      canonical: normalized,
+      ogTitle: isHome ? seo.title : `${seo.title} | ${SITE.NAME}`,
+      keywords: seo.keywords,
+    }),
+    ...(isHome && {
+      verification: {
+        google: SITE.GOOGLE_SITE_VERIFICATION,
+      },
+    }),
+  };
 }
 
 export function getRouteDocumentTitle(pathname: string) {
