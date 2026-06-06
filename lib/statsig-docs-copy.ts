@@ -2,10 +2,8 @@
 
 import { useStatsigClient } from "@statsig/react-bindings";
 import { useCallback } from "react";
-
 import { SITE } from "@/constants";
-
-export type DocsCopySource = "cli" | "manual";
+import { type DocsCopySource, getDocsCopyGateName } from "@/lib/copy-gate-keys";
 
 const STATSIG_PRODUCTION_HOST = new URL(SITE.URL).hostname;
 
@@ -21,7 +19,7 @@ export function useTrackDocsCopyGate() {
         return;
       }
 
-      checkGate(`copied-${componentName.trim().toLowerCase()}-${source}`);
+      checkGate(getDocsCopyGateName(componentName, source));
     },
     [checkGate]
   );

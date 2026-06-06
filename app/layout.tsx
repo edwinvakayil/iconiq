@@ -6,9 +6,11 @@ import { statsigAdapter } from "@flags-sdk/statsig";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { cookies, headers } from "next/headers";
 
 import { DynamicStatsigProvider } from "@/app/dynamic-statsig-provider";
 import { SITE } from "@/constants";
+import { identify } from "@/lib/statsig-identify";
 import { MotionTierProvider } from "@/providers/motion-tier";
 import { PackageNameProvider } from "@/providers/package-name";
 import { ThemeProvider } from "@/providers/theme";
@@ -48,11 +50,16 @@ async function getStatsigShell(children: React.ReactNode) {
     return children;
   }
 
+  const [headersStore, cookieStore] = await Promise.all([headers(), cookies()]);
+  const user = await identify({
+    cookies: cookieStore,
+    headers: headersStore,
+  });
+
   const Statsig = await statsigAdapter.initialize();
-  const datafile = await Statsig.getClientInitializeResponse(
-    { userID: "anonymous" },
-    { hash: "djb2" }
-  );
+  const datafile = await Statsig.getClientInitializeResponse(user, {
+    hash: "djb2",
+  });
 
   if (!datafile) {
     return children;
