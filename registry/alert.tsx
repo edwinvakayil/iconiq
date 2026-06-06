@@ -1,5 +1,6 @@
 "use client";
 
+import { cva, type VariantProps } from "class-variance-authority";
 import { AnimatePresence, motion, type Variants } from "motion/react";
 import {
   Children,
@@ -20,6 +21,24 @@ import { createPortal } from "react-dom";
 
 import { cn } from "@/lib/utils";
 
+const alertVariants = cva(
+  "relative grid w-full grid-cols-[0_1fr] items-start gap-y-0.5 rounded-xl border border-foreground/8 px-3.5 py-2.5 text-sm has-[>svg]:grid-cols-[calc(var(--spacing)*4)_1fr] has-[>svg]:gap-x-3 [&>svg]:size-4 [&>svg]:translate-y-0.5 [&>svg]:text-current",
+  {
+    variants: {
+      appearance: {
+        default: "bg-card text-card-foreground",
+        destructive:
+          "bg-card text-destructive *:data-[slot=alert-description]:text-destructive/90 [&>svg]:text-current",
+        warning:
+          "border-amber-200 bg-amber-50 text-amber-950 *:data-[slot=alert-description]:text-stone-600 dark:border-amber-800/70 dark:bg-amber-950/40 dark:text-amber-50 dark:*:data-[slot=alert-description]:text-amber-100/70 [&>svg]:text-amber-900 dark:[&>svg]:text-amber-200",
+      },
+    },
+    defaultVariants: {
+      appearance: "default",
+    },
+  }
+);
+
 const componentThemeClassName =
   "[--ic-background:#ffffff] [--ic-foreground:#111111] [--ic-primary:#111111] [--ic-secondary:#646b75] [--ic-surface-border:#e9edf2] [--ic-border:#e3e7ec] [--ic-card:#ffffff] [--ic-card-foreground:#111111] [--ic-muted:#f5f7fa] [--ic-muted-foreground:#6d7480] [--ic-accent:#f3f5f8] [--color-accent:var(--ic-accent)] [--color-accent-foreground:var(--ic-accent-foreground)] [--ic-accent-foreground:#111111] [--ic-input:#e3e7ec] [--ic-ring:rgba(17,17,17,0.16)] [--ic-destructive:#dc2626] [--ic-paper:#fcfcfd] [--ic-popover-foreground:#111111] [--ic-brand:#0ea5e9] [--ic-brand-soft:#bae6fd] [--ic-shadow-soft:0_18px_38px_-24px_rgba(15,23,42,0.35)] [--ic-chart-1:oklch(0.52_0.19_254)] [--ic-chart-2:oklch(0.74_0.11_232)] [--ic-chart-3:oklch(0.42_0.16_262)] [--ic-chart-4:oklch(0.84_0.07_228)] [--ic-chart-5:oklch(0.62_0.14_240)] [--color-background:var(--ic-background)] [--color-foreground:var(--ic-foreground)] [--color-primary:var(--ic-primary)] [--color-secondary:var(--ic-secondary)] [--color-border:var(--ic-border)] [--color-card:var(--ic-card)] [--color-card-foreground:var(--ic-card-foreground)] [--color-muted:var(--ic-muted)] [--color-muted-foreground:var(--ic-muted-foreground)] [--color-accent:var(--ic-accent)] [--color-accent-foreground:var(--ic-accent-foreground)] [--color-input:var(--ic-input)] [--color-ring:var(--ic-ring)] [--color-destructive:var(--ic-destructive)] [--color-paper:var(--ic-paper)] [--color-popover-foreground:var(--ic-popover-foreground)] [--color-brand:var(--ic-brand)] [--color-brand-soft:var(--ic-brand-soft)] [--color-chart-1:var(--ic-chart-1)] [--color-chart-2:var(--ic-chart-2)] [--color-chart-3:var(--ic-chart-3)] [--color-chart-4:var(--ic-chart-4)] [--color-chart-5:var(--ic-chart-5)] dark:[--ic-background:#111111] dark:[--ic-foreground:#f6f3ec] dark:[--ic-primary:#f6f3ec] dark:[--ic-secondary:#cbc6bb] dark:[--ic-surface-border:#2a2a25] dark:[--ic-border:#2b2a25] dark:[--ic-card:#111111] dark:[--ic-card-foreground:#f6f3ec] dark:[--ic-muted:#171716] dark:[--ic-muted-foreground:#9a958a] dark:[--ic-accent:#1a1a18] [--color-accent:var(--ic-accent)] [--color-accent-foreground:var(--ic-accent-foreground)] dark:[--ic-accent-foreground:#f6f3ec] dark:[--ic-input:#2b2a25] dark:[--ic-ring:rgba(246,243,236,0.18)] dark:[--ic-destructive:#f87171] dark:[--ic-paper:#171716] dark:[--ic-popover-foreground:#f6f3ec] dark:[--ic-brand:#38bdf8] dark:[--ic-brand-soft:#0c4a6e] dark:[--ic-shadow-soft:0_20px_44px_-28px_rgba(0,0,0,0.6)] dark:[--ic-chart-1:oklch(0.68_0.17_250)] dark:[--ic-chart-2:oklch(0.82_0.09_225)] dark:[--ic-chart-3:oklch(0.58_0.15_260)] dark:[--ic-chart-4:oklch(0.75_0.12_235)] dark:[--ic-chart-5:oklch(0.88_0.06_220)]";
 
@@ -33,6 +52,10 @@ export type AlertPosition =
 
 export type AlertVariant = "inline" | "toast";
 
+export type AlertAppearance = NonNullable<
+  VariantProps<typeof alertVariants>["appearance"]
+>;
+
 type AlertContextValue = {
   descriptionId: string;
   titleId: string;
@@ -42,7 +65,9 @@ const AlertContext = createContext<AlertContextValue | null>(null);
 
 type MotionDivProps = ComponentPropsWithoutRef<typeof motion.div>;
 
-export interface AlertProps extends Omit<MotionDivProps, "title"> {
+export interface AlertProps
+  extends Omit<MotionDivProps, "title">,
+    VariantProps<typeof alertVariants> {
   children?: ReactNode;
   /** Leading graphic (e.g. a Lucide icon). You control markup and sizing. */
   icon?: ReactNode;
@@ -54,7 +79,7 @@ export interface AlertProps extends Omit<MotionDivProps, "title"> {
   /** Explicitly choose inline flow or viewport toast behavior. */
   variant?: AlertVariant;
   position?: AlertPosition;
-  /** Auto-dismiss after this many milliseconds. Defaults to 10 000. Pass 0 to disable. */
+  /** Auto-dismiss after this many milliseconds. Defaults to 5 000. Pass 0 to disable. */
   timeout?: number;
   onDismiss?: () => void;
 }
@@ -142,7 +167,7 @@ const AlertTitle = forwardRef<HTMLDivElement, AlertTitleProps>(
     return (
       <motion.div
         className={cn(
-          "font-medium text-foreground text-sm leading-5 tracking-[-0.01em]",
+          "col-start-2 line-clamp-1 min-h-4 font-medium tracking-tight",
           className
         )}
         data-slot="alert-title"
@@ -166,7 +191,7 @@ const AlertDescription = forwardRef<HTMLDivElement, AlertDescriptionProps>(
     return (
       <motion.div
         className={cn(
-          "mt-1 text-[13px] text-foreground/65 leading-5",
+          "col-start-2 grid justify-items-start gap-1 text-muted-foreground text-sm [&_p]:leading-relaxed",
           className
         )}
         data-slot="alert-description"
@@ -370,7 +395,7 @@ function AlertIcon({ children }: { children: ReactNode }) {
 
   return (
     <motion.div
-      className="mt-0.5 shrink-0 text-black dark:text-white [&_svg]:h-[18px] [&_svg]:w-[18px]"
+      className="col-start-1 row-start-1 shrink-0 [&_svg]:size-4 [&_svg]:translate-y-0.5 [&_svg]:text-current"
       variants={iconVariants}
     >
       {children}
@@ -379,9 +404,11 @@ function AlertIcon({ children }: { children: ReactNode }) {
 }
 
 function AlertDismissButton({
+  className,
   onDismiss,
   show,
 }: {
+  className?: string;
   onDismiss: () => void;
   show: boolean;
 }) {
@@ -392,7 +419,10 @@ function AlertDismissButton({
   return (
     <motion.button
       aria-label="Dismiss alert"
-      className="relative -my-2 -mr-2 inline-flex size-10 shrink-0 items-center justify-center self-start rounded-md text-foreground/35 transition-colors hover:bg-accent/60 hover:text-foreground/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+      className={cn(
+        "relative -my-2 -mr-2 inline-flex size-10 shrink-0 items-center justify-center self-start rounded-md text-foreground/35 transition-colors hover:bg-accent/60 hover:text-foreground/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+        className
+      )}
       onClick={onDismiss}
       type="button"
       variants={childVariants}
@@ -409,12 +439,30 @@ function AlertDismissButton({
   );
 }
 
+function getAlertGridClasses({
+  hasIcon,
+  showDismiss,
+}: {
+  hasIcon: boolean;
+  showDismiss: boolean;
+}) {
+  if (hasIcon) {
+    return showDismiss
+      ? "grid-cols-[calc(var(--spacing)*4)_1fr_auto] gap-x-3"
+      : "grid-cols-[calc(var(--spacing)*4)_1fr] gap-x-3";
+  }
+
+  return showDismiss ? "grid-cols-[1fr_auto]" : undefined;
+}
+
 function AlertCard({
+  appearance,
   className,
   content,
   contextValue,
   descriptionId,
   hasDescription,
+  hasIcon,
   hasTitle,
   icon,
   motionProps,
@@ -431,11 +479,13 @@ function AlertCard({
   variant,
   visible,
 }: {
+  appearance?: VariantProps<typeof alertVariants>["appearance"];
   className?: MotionDivProps["className"];
   content: ReactNode;
   contextValue: AlertContextValue;
   descriptionId: string;
   hasDescription: boolean;
+  hasIcon: boolean;
   hasTitle: boolean;
   icon: ReactNode;
   motionProps: MotionDivProps;
@@ -452,6 +502,10 @@ function AlertCard({
   variant: AlertVariant;
   visible: boolean;
 }) {
+  const dismissColumnClass = hasIcon
+    ? "col-start-3 row-start-1"
+    : "col-start-2 row-start-1";
+
   return (
     <AnimatePresence onExitComplete={onExitComplete}>
       {visible ? (
@@ -462,29 +516,33 @@ function AlertCard({
             aria-atomic={true}
             aria-describedby={hasDescription ? descriptionId : undefined}
             aria-labelledby={hasTitle ? titleId : undefined}
-            aria-live="polite"
+            aria-live={variant === "toast" ? "polite" : undefined}
             className={cn(
               componentThemeClassName,
-              "relative flex items-start gap-3 overflow-hidden rounded-lg border border-foreground/8 bg-card px-3.5 shadow-[0_2px_14px_0_rgba(0,0,0,0.07)]",
-              variant === "toast"
-                ? "py-3 sm:max-w-sm sm:py-2.5"
-                : "w-full max-w-sm py-3",
+              alertVariants({ appearance }),
+              getAlertGridClasses({ hasIcon, showDismiss }),
+              variant === "toast" ? "sm:max-w-[400px]" : "max-w-[400px]",
               position ? positionClasses[position] : undefined,
               position && "z-300",
               className
             )}
+            data-slot="alert"
             exit="exit"
             initial="hidden"
             onBlurCapture={onBlurCapture}
             onFocusCapture={onFocusCapture}
             onPointerEnter={onPointerEnter}
             onPointerLeave={onPointerLeave}
-            role="status"
+            role={variant === "toast" ? "status" : "alert"}
             variants={variants}
           >
-            <AlertIcon>{icon}</AlertIcon>
-            <div className="min-w-0 flex-1">{content}</div>
-            <AlertDismissButton onDismiss={onDismiss} show={showDismiss} />
+            {icon ? <AlertIcon>{icon}</AlertIcon> : null}
+            {content}
+            <AlertDismissButton
+              className={dismissColumnClass}
+              onDismiss={onDismiss}
+              show={showDismiss}
+            />
           </motion.div>
         </AlertContext.Provider>
       ) : null}
@@ -518,7 +576,7 @@ function getAlertConfig({
         : undefined,
     resolvedTimeout:
       timeout ??
-      (hasCompoundChildren && resolvedVariant === "inline" ? 0 : 10_000),
+      (hasCompoundChildren && resolvedVariant === "inline" ? 0 : 5000),
     resolvedVariant,
   };
 }
@@ -530,7 +588,7 @@ function getAlertAction(action?: ReactNode) {
 
   return (
     <motion.div
-      className="mt-2 flex flex-wrap items-center gap-2"
+      className="col-start-2 mt-2 flex flex-wrap items-center gap-2"
       variants={childVariants}
     >
       {action}
@@ -596,6 +654,7 @@ function getAlertContent({
 }
 
 export const Alert = ({
+  appearance,
   children,
   className,
   icon,
@@ -673,11 +732,13 @@ export const Alert = ({
 
   const card = (
     <AlertCard
+      appearance={appearance}
       className={className}
       content={renderedContent}
       contextValue={{ descriptionId: messageId, titleId }}
       descriptionId={messageId}
       hasDescription={hasDescription}
+      hasIcon={Boolean(renderedIcon)}
       hasTitle={hasTitle}
       icon={renderedIcon}
       motionProps={props}

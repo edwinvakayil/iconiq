@@ -878,7 +878,141 @@ export default function Page() {
   );
 }`;
 
+export const alertPreviewCode = `"use client";
+
+import {
+  CheckCircle2Icon,
+  CircleAlert,
+  TriangleAlert,
+} from "lucide-react";
+import { useState } from "react";
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+} from "@/components/ui/alert";
+
+const appearanceContent = {
+  default: {
+    Icon: CheckCircle2Icon,
+    title: "Changes saved",
+    description: "The latest version is live for your team.",
+  },
+  warning: {
+    Icon: TriangleAlert,
+    title: "Unsaved changes detected",
+    description: "Save now or recent edits may be lost.",
+  },
+  destructive: {
+    Icon: CircleAlert,
+    title: "Upload failed",
+    description: "Try again in a moment.",
+  },
+} as const;
+
+export function AlertPreview() {
+  const [appearance, setAppearance] = useState<
+    "default" | "warning" | "destructive"
+  >("warning");
+  const [position, setPosition] = useState<
+    | "top-left"
+    | "top-center"
+    | "top-right"
+    | "bottom-left"
+    | "bottom-center"
+    | "bottom-right"
+  >("top-right");
+  const [showToast, setShowToast] = useState(false);
+  const [toastKey, setToastKey] = useState(0);
+
+  const { description, Icon, title } = appearanceContent[appearance];
+
+  const triggerToast = () => {
+    setShowToast(true);
+    setToastKey((current) => current + 1);
+  };
+
+  return (
+    <>
+      <div className="grid w-full max-w-[400px] items-start gap-4">
+        <Alert appearance={appearance}>
+          <Icon />
+          <AlertTitle>{title}</AlertTitle>
+          <AlertDescription>{description}</AlertDescription>
+        </Alert>
+
+        <div className="flex flex-wrap items-end gap-3">
+          <label className="flex min-w-[140px] flex-1 flex-col gap-1.5 text-[13px] text-secondary">
+            <span>Appearance</span>
+            <select
+              className="h-9 w-full rounded-md border border-border/80 bg-background px-2.5 text-[13px] text-foreground outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+              onChange={(event) =>
+                setAppearance(
+                  event.target.value as "default" | "warning" | "destructive"
+                )
+              }
+              value={appearance}
+            >
+              <option value="default">Default</option>
+              <option value="warning">Warning</option>
+              <option value="destructive">Destructive</option>
+            </select>
+          </label>
+
+          <label className="flex min-w-[140px] flex-1 flex-col gap-1.5 text-[13px] text-secondary">
+            <span>Toast position</span>
+            <select
+              className="h-9 w-full rounded-md border border-border/80 bg-background px-2.5 text-[13px] text-foreground outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+              onChange={(event) =>
+                setPosition(
+                  event.target.value as
+                    | "top-left"
+                    | "top-center"
+                    | "top-right"
+                    | "bottom-left"
+                    | "bottom-center"
+                    | "bottom-right"
+                )
+              }
+              value={position}
+            >
+              <option value="top-left">Top left</option>
+              <option value="top-center">Top center</option>
+              <option value="top-right">Top right</option>
+              <option value="bottom-left">Bottom left</option>
+              <option value="bottom-center">Bottom center</option>
+              <option value="bottom-right">Bottom right</option>
+            </select>
+          </label>
+
+          <button
+            className="inline-flex h-9 shrink-0 items-center justify-center rounded-md border border-border/80 bg-background px-3 font-medium text-[13px] text-foreground transition-colors hover:bg-muted/70"
+            onClick={triggerToast}
+            type="button"
+          >
+            Show toast
+          </button>
+        </div>
+      </div>
+
+      {showToast ? (
+        <Alert
+          appearance={appearance}
+          key={toastKey}
+          onDismiss={() => setShowToast(false)}
+          position={position}
+        >
+          <Icon />
+          <AlertTitle>{title}</AlertTitle>
+          <AlertDescription>{description}</AlertDescription>
+        </Alert>
+      ) : null}
+    </>
+  );
+}`;
+
 const COMPONENT_PREVIEW_OVERRIDES: Record<string, string> = {
+  alert: alertPreviewCode,
   avatar: avatarPreviewCode,
   badge: badgePreviewCode,
   charts: chartsPreviewCode,

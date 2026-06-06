@@ -27,7 +27,7 @@ const alertApiDetails: DetailItem[] = [
     id: "alert",
     title: "Alert",
     summary:
-      "Root container for a single notice. It accepts compound children for static inline alerts while preserving the older icon, title, and message prop API for existing installs.",
+      "Root container for a single notice. Uses a compact grid layout with optional leading icon, compound title and description slots, legacy prop support, and inline or toast behavior.",
     fields: [
       field({
         name: "children",
@@ -60,6 +60,13 @@ const alertApiDetails: DetailItem[] = [
           "Optional action row rendered beneath the message, useful for a single follow-up button or link such as Undo or View details.",
       }),
       field({
+        name: "appearance",
+        type: '"default" | "destructive" | "warning"',
+        defaultValue: '"default"',
+        description:
+          "Visual tone for the alert surface. Destructive shifts toward error colors; warning uses a warm amber surface with muted description text.",
+      }),
+      field({
         name: "dismissible",
         type: "boolean",
         defaultValue: "legacy: true; compound inline: false",
@@ -82,7 +89,7 @@ const alertApiDetails: DetailItem[] = [
       field({
         name: "timeout",
         type: "number",
-        defaultValue: "legacy/toast: 10000; compound inline: 0",
+        defaultValue: "legacy/toast: 5000; compound inline: 0",
         description:
           "Auto-dismiss delay in milliseconds. Passing 0 disables the timer; compound inline alerts default to no timer so static notices stay visible.",
       }),
@@ -94,8 +101,9 @@ const alertApiDetails: DetailItem[] = [
       }),
     ],
     notes: [
+      "The root caps at 400px wide, uses a light border, and rounds corners with rounded-xl.",
       "Every positioned alert snaps to a full-width top placement on small screens, then switches to the requested corner at the sm breakpoint.",
-      "The root announces itself as a polite live region and keeps title and message linked with aria-labelledby and aria-describedby.",
+      'Inline alerts use role="alert"; toast alerts use role="status" with aria-live="polite" and keep title and message linked with aria-labelledby and aria-describedby.',
       "The alert keeps its own visible state internally when dismissal is enabled, so toast usage is designed for fire-and-forget notifications rather than parent-controlled open state.",
       "Hovering or focusing the alert pauses auto-dismiss, which gives people more time to read and makes the close target less stressful to hit.",
     ],
@@ -104,7 +112,7 @@ const alertApiDetails: DetailItem[] = [
     id: "alert-title",
     title: "AlertTitle",
     summary:
-      "Primary line for the compound alert API, rendered with the same motion and text treatment as the legacy title prop.",
+      "Primary line for the compound alert API. Renders in the second grid column beside the optional icon.",
     fields: [
       field({
         name: "children",
@@ -124,7 +132,7 @@ const alertApiDetails: DetailItem[] = [
     id: "alert-description",
     title: "AlertDescription",
     summary:
-      "Secondary line for the compound alert API, linked to the root with aria-describedby.",
+      "Secondary line for the compound alert API. Renders beneath the title in the second grid column and links to the root with aria-describedby.",
     fields: [
       field({
         name: "children",
@@ -153,7 +161,7 @@ const alertApiDetails: DetailItem[] = [
       "Dismissal callbacks wait until the exit transition completes, so parent cleanup does not cut off the visual exit early.",
     ],
   },
-  registryItem("alert.json", ["motion"]),
+  registryItem("alert.json", ["motion", "class-variance-authority"]),
 ];
 
 const avatarApiDetails: DetailItem[] = [
