@@ -3,6 +3,7 @@ import type { Viewport } from "next";
 import "./globals.css";
 
 import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { SITE } from "@/constants";
 import { MotionTierProvider } from "@/providers/motion-tier";
@@ -73,6 +74,7 @@ export default function RootLayout({
           </MotionTierProvider>
         </ThemeProvider>
         <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
