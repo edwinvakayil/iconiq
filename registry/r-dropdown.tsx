@@ -28,7 +28,7 @@ const dropdownItemHighlightClassName =
   "absolute inset-0 rounded-[0.65rem] bg-[color:var(--dd-accent)]";
 
 const dropdownListScrollClassName =
-  "min-h-0 overflow-y-auto overscroll-contain p-1.5 outline-none [scrollbar-color:color-mix(in_oklch,var(--dd-muted-foreground,#6d7480),transparent_35%)_transparent] [scrollbar-width:thin] [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-[color:color-mix(in_oklch,var(--dd-muted-foreground,#6d7480),transparent_35%)] [&::-webkit-scrollbar-track]:bg-transparent";
+  "min-h-0 overflow-y-auto overscroll-contain p-1.5 pr-1 outline-none [scrollbar-color:color-mix(in_oklch,var(--dd-muted-foreground,#6d7480),transparent_55%)_transparent] [scrollbar-width:thin] [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-[color:color-mix(in_oklch,var(--dd-muted-foreground,#6d7480),transparent_55%)] [&::-webkit-scrollbar-track]:bg-transparent";
 
 export type DropdownVariant = "select" | "action";
 
@@ -572,57 +572,58 @@ export const DropdownContent = React.forwardRef<
         <DropdownMenuPrimitive.Portal forceMount>
           <DropdownMenuPrimitive.Content
             align={align}
-            asChild
             avoidCollisions={false}
+            className="z-[300] max-h-none overflow-visible border-0 bg-transparent p-0 shadow-none outline-none"
             collisionPadding={VIEWPORT_MARGIN}
             forceMount
             loop
             onCloseAutoFocus={() => {
               focusStrategyRef.current = "selected";
             }}
+            ref={setContentRef}
             side="bottom"
             sideOffset={sideOffset}
+            style={{
+              ...style,
+              width: shouldMatchTriggerWidth
+                ? "var(--radix-dropdown-menu-trigger-width)"
+                : style?.width,
+              maxWidth: "calc(100vw - 1.5rem)",
+              maxHeight: "unset",
+              overflow: "visible",
+            }}
           >
-            <div
-              ref={setContentRef}
-              style={{
-                ...style,
-                width: shouldMatchTriggerWidth
-                  ? "var(--radix-dropdown-menu-trigger-width)"
-                  : style?.width,
-                maxWidth: "calc(100vw - 1.5rem)",
-              }}
+            <motion.div
+              animate="open"
+              className={cn(
+                dropdownThemeClassName,
+                dropdownPanelClassName,
+                "transform-gpu",
+                className
+              )}
+              custom={skipExitAnimationRef}
+              exit={
+                ((
+                  custom: React.MutableRefObject<boolean>
+                ): "closed" | "closedInstant" =>
+                  custom.current ? "closedInstant" : "closed") as never
+              }
+              initial="closed"
+              style={{ transformOrigin: POPUP_TRANSFORM_ORIGIN }}
+              variants={panelVariants}
             >
-              <motion.div
-                animate="open"
-                className={cn(
-                  dropdownThemeClassName,
-                  dropdownPanelClassName,
-                  "transform-gpu",
-                  className
-                )}
-                custom={skipExitAnimationRef}
-                exit={
-                  ((
-                    custom: React.MutableRefObject<boolean>
-                  ): "closed" | "closedInstant" =>
-                    custom.current ? "closedInstant" : "closed") as never
-                }
-                initial="closed"
-                style={{ transformOrigin: POPUP_TRANSFORM_ORIGIN }}
-                variants={panelVariants}
+              <div
+                className={dropdownListScrollClassName}
+                onPointerLeave={() => {
+                  setHoveredItemId(undefined);
+                }}
+                style={{
+                  maxHeight: `min(${MAX_CONTENT_HEIGHT}px, var(--radix-dropdown-menu-content-available-height, ${MAX_CONTENT_HEIGHT}px))`,
+                }}
               >
-                <div
-                  className={dropdownListScrollClassName}
-                  onPointerLeave={() => {
-                    setHoveredItemId(undefined);
-                  }}
-                  style={{ maxHeight: MAX_CONTENT_HEIGHT }}
-                >
-                  {children as React.ReactNode}
-                </div>
-              </motion.div>
-            </div>
+                {children as React.ReactNode}
+              </div>
+            </motion.div>
           </DropdownMenuPrimitive.Content>
         </DropdownMenuPrimitive.Portal>
       ) : null}
