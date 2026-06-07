@@ -1,11 +1,16 @@
 "use client";
 
 import { Check } from "lucide-react";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 import { InlinePreviewSelect } from "@/app/(site)/components/_components/inline-preview-select";
+import { ProviderSwitch } from "@/app/(site)/components/_components/provider-switch";
 import { fluxButtonApiDetails } from "@/components/docs/component-api";
-import { ComponentDocsPage } from "@/components/docs/page-shell";
+import {
+  ComponentDocsPage,
+  type DetailItem,
+} from "@/components/docs/page-shell";
+import { LINK } from "@/constants";
 import { FluxButton, type FluxButtonProps } from "@/registry/flux-button";
 
 type VisualVariant = NonNullable<FluxButtonProps["variant"]>;
@@ -96,23 +101,58 @@ function FluxButtonPreview() {
   );
 }
 
+const breadcrumbs = [
+  { label: "Docs", href: "/" },
+  { label: "Buttons & Actions" },
+  { label: "Flux Button" },
+];
+
+function getDetails(): DetailItem[] {
+  return fluxButtonApiDetails.map((item) => {
+    if (item.id !== "registry") {
+      return item;
+    }
+
+    return {
+      ...item,
+      notes: [
+        "Dependencies: @base-ui/react/button, class-variance-authority, lucide-react, motion.",
+        "This page documents the Base UI install only. Flux Button builds on the Base UI button primitive.",
+        "The generated registry file is /r/flux-button.json.",
+      ],
+      registryPath: "flux-button.json",
+    };
+  });
+}
+
+function handleProviderSelect() {
+  return undefined;
+}
+
 export default function FluxButtonPage() {
+  const details = useMemo(() => getDetails(), []);
+
   return (
     <ComponentDocsPage
-      breadcrumbs={[
-        { label: "Docs", href: "/" },
-        { label: "Buttons & Actions" },
-        { label: "Flux Button" },
-      ]}
+      breadcrumbs={breadcrumbs}
       componentName="flux-button"
       description="Async button with idle, loading, and success states."
-      details={fluxButtonApiDetails}
+      details={details}
+      editHref={`${LINK.GITHUB}/edit/main/app/(site)/buttons-and-actions/flux-button/page.tsx`}
+      headerActions={
+        <ProviderSwitch
+          disabledProviders={["radix"]}
+          onSelect={handleProviderSelect}
+          selectedProvider="base"
+        />
+      }
+      pageUrl="/buttons-and-actions/flux-button"
       preview={<FluxButtonPreview />}
       previewDescription="Pick a variant inline in the sentence, then click the button to see the idle → loading → success flow."
       title="Flux Button"
       usageCode={usageCode}
       usageDescription={
-        'Pass `idleLabel`, `loadingLabel`, `successLabel`, an optional `successIcon`, and an async `onAction` handler. Style with `variant`. Use `type="submit"` inside forms, or `type="button"` (default) for standalone async actions. The loading spinner is built in.'
+        'Pass `idleLabel`, `loadingLabel`, `successLabel`, an optional `successIcon`, and an async `onAction` handler. Style with `variant`. Use `type="submit"` inside forms, or `type="button"` (default) for standalone async actions. The loading spinner is built in. Flux Button is built on the Base UI button primitive.'
       }
     />
   );

@@ -56,11 +56,19 @@ function formatStarCount(n: number): string {
   return n.toLocaleString();
 }
 
+function recordGithubNavbarClick() {
+  fetch("/api/flags/clicked-github", {
+    keepalive: true,
+    method: "POST",
+  }).catch(() => undefined);
+}
+
 function GitHubStarsLink({ starCount }: { starCount: number | null }) {
   return (
     <a
       className="inline-flex h-8 items-center gap-2 rounded-md bg-transparent px-3 font-medium text-sm shadow-none transition-colors hover:bg-accent hover:text-accent-foreground dark:hover:bg-input/20"
       href={LINK.GITHUB}
+      onClick={recordGithubNavbarClick}
       rel="noopener noreferrer"
       target="_blank"
     >
