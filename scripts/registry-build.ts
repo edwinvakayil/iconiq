@@ -75,7 +75,12 @@ function buildIconiqThemeSchema(): Schema {
 /** Optional title, description, and dependencies for registry UI components. */
 const REGISTRY_UI_META: Record<
   string,
-  { title: string; description: string; dependencies?: string[] }
+  {
+    title: string;
+    description: string;
+    dependencies?: string[];
+    registryDependencies?: string[];
+  }
 > = {
   badge: {
     title: "Badge",
@@ -278,6 +283,12 @@ const REGISTRY_UI_META: Record<
     title: "Toggle (Base UI)",
     description:
       "Two-state button with spring press feedback, a muted fill that bounces in when pressed, and a subtle content lift layered over Base UI toggle primitives.",
+    dependencies: ["@base-ui/react", "class-variance-authority", "motion"],
+  },
+  "b-togglegroup": {
+    title: "Toggle Group (Base UI)",
+    description:
+      "Segmented toggle group with the same fluid wipe fill, sheen sweep, and icon press feedback as the standalone toggle, over Base UI toggle-group primitives.",
     dependencies: ["@base-ui/react", "class-variance-authority", "motion"],
   },
   "b-tooltip": {
@@ -535,6 +546,12 @@ const REGISTRY_UI_META: Record<
       "Two-state button with spring press feedback, a muted fill that bounces in when pressed, and a subtle content lift layered over Radix UI toggle primitives.",
     dependencies: ["radix-ui", "class-variance-authority", "motion"],
   },
+  "r-togglegroup": {
+    title: "Toggle Group (Radix UI)",
+    description:
+      "Segmented toggle group with the same fluid wipe fill, sheen sweep, and icon press feedback as the standalone toggle, over Radix UI toggle-group primitives.",
+    dependencies: ["radix-ui", "class-variance-authority", "motion"],
+  },
   "r-tooltip": {
     title: "Tooltip (Radix UI)",
     description:
@@ -756,6 +773,12 @@ for (const component of components) {
     if (!schema.title) schema.title = uiMeta.title;
     if (!schema.description) schema.description = uiMeta.description;
     if (uiMeta.dependencies?.length) schema.dependencies = uiMeta.dependencies;
+    if (uiMeta.registryDependencies?.length) {
+      schema.registryDependencies = getRegistryDependencies(
+        sourceContent,
+        uiMeta.registryDependencies
+      );
+    }
   }
   if (component.author) schema.author = component.author;
   if (component.tailwind) schema.tailwind = component.tailwind;

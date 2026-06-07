@@ -15,6 +15,10 @@ export const DOCS_URL_REDIRECTS: { source: string; destination: string }[] = [
   },
   { source: "/components/toggle", destination: "/buttons-and-actions/toggle" },
   {
+    source: "/components/toggle-group",
+    destination: "/buttons-and-actions/toggle-group",
+  },
+  {
     source: "/components/autocomplete",
     destination: "/inputs-and-forms/autocomplete",
   },

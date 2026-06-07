@@ -4004,6 +4004,139 @@ const toggleApiDetails: DetailItem[] = [
   ]),
 ];
 
+const toggleGroupApiDetails: DetailItem[] = [
+  {
+    id: "toggle-group",
+    title: "ToggleGroup",
+    summary:
+      "Root container for a connected set of toggle buttons with shared variant, size, spacing, and orientation settings.",
+    fields: [
+      field({
+        name: "type",
+        type: '"single" | "multiple"',
+        defaultValue: '"multiple"',
+        description:
+          "Selection mode. Multiple allows several active items by default; single keeps one pressed item at a time.",
+      }),
+      field({
+        name: "value",
+        type: "string | string[]",
+        description:
+          "Controlled selection. Pass a string for single mode or a string array for multiple mode.",
+      }),
+      field({
+        name: "defaultValue",
+        type: "string | string[]",
+        description:
+          "Initial selection for uncontrolled usage in the matching single or multiple mode.",
+      }),
+      field({
+        name: "onValueChange",
+        type: "(value: string | string[]) => void",
+        description:
+          "Called with the next selection whenever an item is pressed or released.",
+      }),
+      field({
+        name: "variant",
+        type: '"default" | "outline"',
+        defaultValue: '"default"',
+        description:
+          "Shared visual treatment applied to every item unless an item overrides it locally.",
+      }),
+      field({
+        name: "size",
+        type: '"default" | "sm" | "lg"',
+        defaultValue: '"default"',
+        description:
+          "Shared height, padding, and icon sizing preset for all group items.",
+      }),
+      field({
+        name: "spacing",
+        type: "number",
+        defaultValue: "1",
+        description:
+          "Gap between items in spacing units. Defaults to 1 (4px). Set to 0 to remove the gap.",
+      }),
+      field({
+        name: "orientation",
+        type: '"horizontal" | "vertical"',
+        defaultValue: '"horizontal"',
+        description:
+          "Layout direction for the group. Vertical stacks items and adjusts connected border handling.",
+      }),
+      field({
+        name: "disabled",
+        type: "boolean",
+        description: "Disables the entire group and all nested items.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description:
+          "Merged onto the root group wrapper for local layout or width overrides.",
+      }),
+    ],
+    notes: [
+      "Default spacing is 4px between items. Pass spacing={0} to remove the gap entirely.",
+      "Each item uses the same fluid wipe fill, sheen sweep, and icon press feedback as the standalone Toggle component.",
+      "Group items inherit variant and size from context but can override either prop locally.",
+    ],
+  },
+  {
+    id: "toggle-group-item",
+    title: "ToggleGroupItem",
+    summary:
+      "Individual toggle button inside the group with the same fluid motion as the standalone toggle.",
+    fields: [
+      field({
+        name: "value",
+        type: "string",
+        required: true,
+        description:
+          "Stable identifier used when reading or updating the group selection.",
+      }),
+      field({
+        name: "variant",
+        type: '"default" | "outline"',
+        description:
+          "Optional local override for the shared group variant treatment.",
+      }),
+      field({
+        name: "size",
+        type: '"default" | "sm" | "lg"',
+        description:
+          "Optional local override for the shared group size preset.",
+      }),
+      field({
+        name: "disabled",
+        type: "boolean",
+        description:
+          "Disables this item without affecting the rest of the group.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description:
+          "Merged onto the item button for local width, color, or spacing overrides.",
+      }),
+      field({
+        name: "children",
+        type: "ReactNode",
+        description:
+          "Icon or label content rendered inside the item. Pair icon-only items with aria-label.",
+      }),
+    ],
+    notes: [
+      "Items share the standalone toggle fluid motion system: liquid wipe fill, sheen sweep, and icon press squeeze.",
+    ],
+  },
+  registryItem("b-togglegroup.json", [
+    "@base-ui/react",
+    "class-variance-authority",
+    "motion",
+  ]),
+];
+
 const themeToggleApiDetails: DetailItem[] = [
   {
     id: "theme-toggle",
@@ -5392,6 +5525,7 @@ export {
   tableApiDetails,
   tabsApiDetails,
   toggleApiDetails,
+  toggleGroupApiDetails,
   textInertiaApiDetails,
   typewriterApiDetails,
   typographyApiDetails,

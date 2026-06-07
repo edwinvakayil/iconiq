@@ -96,6 +96,8 @@ const componentSummaries: Record<string, string> = {
     "Horizontal icon chips in the Buttons & Actions section that expand on hover to reveal short labels with spring motion.",
   "/buttons-and-actions/toggle":
     "Toggle docs in the Buttons & Actions section with a provider switch that swaps between Base UI and Radix UI registry entries and spring press feedback.",
+  "/buttons-and-actions/toggle-group":
+    "Toggle group docs in the Buttons & Actions section with a provider switch that swaps between Base UI and Radix UI registry entries for segmented toolbar controls.",
   "/layout-and-toolbars/infiniteribbon":
     "Looping announcement ribbon in the Layout & Toolbars section that repeats text into a full-width marquee with optional reverse direction and rotation.",
   "/special-one/radial-button":

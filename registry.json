@@ -384,6 +384,21 @@
       ]
     },
     {
+      "name": "b-togglegroup",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": ["@base-ui/react", "class-variance-authority", "motion"],
+      "devDependencies": [],
+      "title": "Toggle Group (Base UI)",
+      "description": "Segmented toggle group with the same fluid wipe fill, sheen sweep, and icon press feedback as the standalone toggle, over Base UI toggle-group primitives.",
+      "files": [
+        {
+          "path": "b-togglegroup.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "b-tooltip",
       "type": "registry:ui",
       "registryDependencies": [],
@@ -1067,6 +1082,21 @@
       "files": [
         {
           "path": "r-toggle.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "r-togglegroup",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": ["radix-ui", "class-variance-authority", "motion"],
+      "devDependencies": [],
+      "title": "Toggle Group (Radix UI)",
+      "description": "Segmented toggle group with the same fluid wipe fill, sheen sweep, and icon press feedback as the standalone toggle, over Radix UI toggle-group primitives.",
+      "files": [
+        {
+          "path": "r-togglegroup.tsx",
           "type": "registry:ui"
         }
       ]
