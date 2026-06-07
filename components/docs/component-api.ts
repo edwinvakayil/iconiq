@@ -3990,11 +3990,11 @@ const toggleApiDetails: DetailItem[] = [
     id: "toggle-motion",
     title: "Motion and interaction behavior",
     summary:
-      "Pressed state drives a bouncy muted fill pop-in, a pointer-origin bubble on click, and a subtle icon scale snap.",
+      "Pressed state drives a horizontal liquid wipe, a one-shot light sheen, and tactile icon motion.",
     notes: [
-      "The fill springs in from 0.55 scale with high bounce when pressed and snaps away faster on release.",
-      "Each click spawns a circular bubble from the pointer that expands with spring bounce and fades out.",
-      "Icons and labels scale up with bounce when active. System prefers-reduced-motion skips the bubble and shortens transitions.",
+      "The muted fill wipes in from the left when pressed and retracts to the right on release with a heavy spring.",
+      "Each state change sends a diagonal sheen across the surface once. Outline keeps the same outer border in both states.",
+      "Icons scale and squash on press with a spring settle. System prefers-reduced-motion skips sheen and shortens transitions.",
     ],
   },
   registryItem("b-toggle.json", [

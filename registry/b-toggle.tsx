@@ -2,7 +2,7 @@
 
 import { Toggle as TogglePrimitive } from "@base-ui/react/toggle";
 import { cva, type VariantProps } from "class-variance-authority";
-import { AnimatePresence, motion } from "motion/react";
+import { animate, motion, useMotionValue, useTransform } from "motion/react";
 import * as React from "react";
 
 import {
@@ -12,19 +12,34 @@ import {
 } from "@/lib/reduced-motion";
 import { cn } from "@/lib/utils";
 
-const MAX_BUBBLES = 3;
-const BUBBLE_FALLBACK_MS = 700;
+const ICON_REST = 0.93;
 
-const fillSpring = { type: "spring", stiffness: 420, damping: 24 } as const;
-const iconSpring = { type: "spring", stiffness: 560, damping: 26 } as const;
-const bubbleSpring = { type: "spring", stiffness: 260, damping: 22 } as const;
-const reducedTransition = { duration: 0.12 } as const;
-
-type Bubble = {
-  id: string;
-  size: number;
-  x: number;
-  y: number;
+const FLUID_FILL = {
+  type: "spring" as const,
+  stiffness: 210,
+  damping: 28,
+  mass: 1.08,
+};
+const FLUID_ICON = {
+  type: "spring" as const,
+  stiffness: 340,
+  damping: 32,
+  mass: 0.92,
+};
+const FLUID_TAP = {
+  type: "spring" as const,
+  stiffness: 520,
+  damping: 34,
+  mass: 0.72,
+};
+const FLUID_SNAP = {
+  type: "spring" as const,
+  duration: 0.45,
+  bounce: 0.32,
+};
+const FLUID_SHEEN = {
+  duration: 0.58,
+  ease: [0.22, 1, 0.36, 1] as const,
 };
 
 const toggleVariants = cva(
@@ -64,38 +79,18 @@ function setRef<T>(ref: React.Ref<T> | undefined, value: T | null) {
   }
 }
 
-function createBubble(
-  target: HTMLButtonElement | null,
-  clientX: number,
-  clientY: number
-): Bubble | null {
-  if (!target) {
-    return null;
-  }
+function runSheenSweep(
+  sheenX: ReturnType<typeof useMotionValue<number>>,
+  sheenOpacity: ReturnType<typeof useMotionValue<number>>
+) {
+  sheenX.set(-0.4);
+  sheenOpacity.set(0.85);
 
-  const rect = target.getBoundingClientRect();
-
-  if (rect.width <= 0 || rect.height <= 0) {
-    return null;
-  }
-
-  const x = clientX - rect.left;
-  const y = clientY - rect.top;
-  const size =
-    2 *
-    Math.max(
-      Math.hypot(x, y),
-      Math.hypot(rect.width - x, y),
-      Math.hypot(x, rect.height - y),
-      Math.hypot(rect.width - x, rect.height - y)
-    );
-
-  return {
-    id: `bubble-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
-    size: Math.max(size, 1),
-    x,
-    y,
-  };
+  animate(sheenX, 1.4, FLUID_SHEEN);
+  animate(sheenOpacity, 0, {
+    duration: 0.58,
+    ease: [0.4, 0, 0.2, 1],
+  });
 }
 
 const Toggle = React.forwardRef<HTMLButtonElement, ToggleProps>(function Toggle(
@@ -107,6 +102,8 @@ const Toggle = React.forwardRef<HTMLButtonElement, ToggleProps>(function Toggle(
     defaultPressed = false,
     disabled,
     onPointerDown,
+    onPointerLeave,
+    onPointerUp,
     onPressedChange,
     children,
     reducedMotion,
@@ -114,56 +111,70 @@ const Toggle = React.forwardRef<HTMLButtonElement, ToggleProps>(function Toggle(
   },
   forwardedRef
 ) {
-  const buttonRef = React.useRef<HTMLButtonElement | null>(null);
-  const bubbleIdRef = React.useRef(0);
-  const bubbleTimeoutsRef = React.useRef<Map<string, number>>(new Map());
   const isControlled = pressed !== undefined;
   const [uncontrolledPressed, setUncontrolledPressed] =
     React.useState(defaultPressed);
-  const [bubbles, setBubbles] = React.useState<Bubble[]>([]);
   const reduceMotion = useResolvedReducedMotion(reducedMotion);
   const isPressed = isControlled ? Boolean(pressed) : uncontrolledPressed;
+
+  const fillProgress = useMotionValue(isPressed ? 1 : 0);
+  const iconScale = useMotionValue(isPressed ? 1 : ICON_REST);
+  const iconScaleX = useMotionValue(1);
+  const iconScaleY = useMotionValue(1);
+  const sheenX = useMotionValue(-0.4);
+  const sheenOpacity = useMotionValue(0);
+
+  const fillScaleX = useTransform(fillProgress, [0, 1], [0, 1]);
+  const fillOpacity = useTransform(fillProgress, [0, 0.1, 1], [0, 0.92, 1]);
+  const sheenLeft = useTransform(sheenX, (value) => `${value * 100}%`);
+
+  const [wipeOrigin, setWipeOrigin] = React.useState("left center");
+  const prevPressedRef = React.useRef(isPressed);
+  const isPointerDownRef = React.useRef(false);
+
+  React.useEffect(() => {
+    if (prevPressedRef.current === isPressed) {
+      return;
+    }
+
+    prevPressedRef.current = isPressed;
+    setWipeOrigin(isPressed ? "left center" : "right center");
+
+    if (reduceMotion) {
+      fillProgress.set(isPressed ? 1 : 0);
+      iconScale.set(isPressed ? 1 : ICON_REST);
+      iconScaleX.set(1);
+      iconScaleY.set(1);
+      sheenOpacity.set(0);
+      return;
+    }
+
+    animate(fillProgress, isPressed ? 1 : 0, FLUID_FILL);
+    animate(iconScale, isPressed ? 1 : ICON_REST, FLUID_ICON);
+    runSheenSweep(sheenX, sheenOpacity);
+
+    animate(iconScaleX, 1.1, FLUID_TAP).then(() => {
+      animate(iconScaleX, 1, FLUID_SNAP);
+    });
+    animate(iconScaleY, 0.91, FLUID_TAP).then(() => {
+      animate(iconScaleY, 1, FLUID_SNAP);
+    });
+  }, [
+    fillProgress,
+    iconScale,
+    iconScaleX,
+    iconScaleY,
+    isPressed,
+    reduceMotion,
+    sheenOpacity,
+    sheenX,
+  ]);
 
   React.useEffect(() => {
     if (!isControlled) {
       setUncontrolledPressed(defaultPressed);
     }
   }, [defaultPressed, isControlled]);
-
-  React.useEffect(() => {
-    if (disabled) {
-      setBubbles([]);
-    }
-  }, [disabled]);
-
-  React.useEffect(() => {
-    const timeouts = bubbleTimeoutsRef.current;
-
-    return () => {
-      for (const timeoutId of timeouts.values()) {
-        window.clearTimeout(timeoutId);
-      }
-
-      timeouts.clear();
-    };
-  }, []);
-
-  const clearBubbleTimeout = React.useCallback((id: string) => {
-    const timeoutId = bubbleTimeoutsRef.current.get(id);
-
-    if (timeoutId !== undefined) {
-      window.clearTimeout(timeoutId);
-      bubbleTimeoutsRef.current.delete(id);
-    }
-  }, []);
-
-  const removeBubble = React.useCallback(
-    (id: string) => {
-      clearBubbleTimeout(id);
-      setBubbles((current) => current.filter((bubble) => bubble.id !== id));
-    },
-    [clearBubbleTimeout]
-  );
 
   const handlePressedChange = React.useCallback<
     NonNullable<TogglePrimitive.Props["onPressedChange"]>
@@ -178,44 +189,16 @@ const Toggle = React.forwardRef<HTMLButtonElement, ToggleProps>(function Toggle(
     [isControlled, onPressedChange]
   );
 
-  const scheduleBubbleRemoval = React.useCallback(
-    (id: string) => {
-      clearBubbleTimeout(id);
+  const resetTapScale = React.useCallback(() => {
+    if (reduceMotion) {
+      iconScaleX.set(1);
+      iconScaleY.set(1);
+      return;
+    }
 
-      const timeoutId = window.setTimeout(() => {
-        removeBubble(id);
-      }, BUBBLE_FALLBACK_MS);
-
-      bubbleTimeoutsRef.current.set(id, timeoutId);
-    },
-    [clearBubbleTimeout, removeBubble]
-  );
-
-  const spawnBubble = React.useCallback(
-    (target: HTMLButtonElement | null, clientX: number, clientY: number) => {
-      if (disabled || reduceMotion) {
-        return;
-      }
-
-      const bubble = createBubble(target, clientX, clientY);
-
-      if (!bubble) {
-        return;
-      }
-
-      bubbleIdRef.current += 1;
-      const nextBubble = { ...bubble, id: `bubble-${bubbleIdRef.current}` };
-
-      setBubbles((current) => {
-        const next = [...current, nextBubble];
-        return next.length > MAX_BUBBLES
-          ? next.slice(next.length - MAX_BUBBLES)
-          : next;
-      });
-      scheduleBubbleRemoval(nextBubble.id);
-    },
-    [disabled, reduceMotion, scheduleBubbleRemoval]
-  );
+    animate(iconScaleX, 1, FLUID_SNAP);
+    animate(iconScaleY, 1, FLUID_SNAP);
+  }, [iconScaleX, iconScaleY, reduceMotion]);
 
   const handlePointerDown = React.useCallback<
     NonNullable<TogglePrimitive.Props["onPointerDown"]>
@@ -227,17 +210,50 @@ const Toggle = React.forwardRef<HTMLButtonElement, ToggleProps>(function Toggle(
         return;
       }
 
-      const target = event.currentTarget ?? buttonRef.current;
-      const { clientX, clientY } = event;
+      isPointerDownRef.current = true;
 
-      spawnBubble(target, clientX, clientY);
+      if (!reduceMotion) {
+        animate(iconScaleX, 0.86, FLUID_TAP);
+        animate(iconScaleY, 1.08, FLUID_TAP);
+      }
     },
-    [disabled, onPointerDown, spawnBubble]
+    [disabled, iconScaleX, iconScaleY, onPointerDown, reduceMotion]
+  );
+
+  const handlePointerUp = React.useCallback<
+    NonNullable<TogglePrimitive.Props["onPointerUp"]>
+  >(
+    (event) => {
+      onPointerUp?.(event);
+
+      if (!isPointerDownRef.current) {
+        return;
+      }
+
+      isPointerDownRef.current = false;
+      resetTapScale();
+    },
+    [onPointerUp, resetTapScale]
+  );
+
+  const handlePointerLeave = React.useCallback<
+    NonNullable<TogglePrimitive.Props["onPointerLeave"]>
+  >(
+    (event) => {
+      onPointerLeave?.(event);
+
+      if (!isPointerDownRef.current) {
+        return;
+      }
+
+      isPointerDownRef.current = false;
+      resetTapScale();
+    },
+    [onPointerLeave, resetTapScale]
   );
 
   const mergeRefs = React.useCallback(
     (node: HTMLButtonElement | null) => {
-      buttonRef.current = node;
       setRef(forwardedRef, node);
     },
     [forwardedRef]
@@ -251,53 +267,48 @@ const Toggle = React.forwardRef<HTMLButtonElement, ToggleProps>(function Toggle(
         data-slot="toggle"
         disabled={disabled}
         onPointerDown={handlePointerDown}
+        onPointerLeave={handlePointerLeave}
+        onPointerUp={handlePointerUp}
         onPressedChange={handlePressedChange}
         pressed={pressed}
         ref={mergeRefs}
         {...(isControlled ? {} : { defaultPressed })}
       >
-        <AnimatePresence initial={false}>
-          {isPressed ? (
-            <motion.span
-              animate={{ opacity: 1, scale: 1 }}
-              aria-hidden
-              className="pointer-events-none absolute inset-0 z-0 origin-center rounded-[inherit] bg-muted"
-              exit={{ opacity: 0, scale: 0.72 }}
-              initial={{ opacity: 0, scale: 0.72 }}
-              key="toggle-fill"
-              transition={reduceMotion ? reducedTransition : fillSpring}
-            />
-          ) : null}
-        </AnimatePresence>
+        <motion.span
+          aria-hidden
+          className="pointer-events-none absolute inset-0 z-0 rounded-[inherit] bg-muted"
+          style={{
+            opacity: fillOpacity,
+            scaleX: fillScaleX,
+            transformOrigin: wipeOrigin,
+          }}
+        />
         <span
           aria-hidden
           className="pointer-events-none absolute inset-0 z-[1] overflow-hidden rounded-[inherit]"
         >
-          {bubbles.map((bubble) => (
-            <motion.span
-              animate={{ opacity: 0, scale: 1.25 }}
-              className="pointer-events-none absolute -translate-x-1/2 -translate-y-1/2 rounded-full bg-foreground/30 dark:bg-foreground/35"
-              initial={{ opacity: 0.45, scale: 0 }}
-              key={bubble.id}
-              onAnimationComplete={() => removeBubble(bubble.id)}
-              style={{
-                height: bubble.size,
-                left: bubble.x,
-                top: bubble.y,
-                width: bubble.size,
-              }}
-              transition={reduceMotion ? reducedTransition : bubbleSpring}
-            />
-          ))}
-        </span>
-        <span className="relative z-10 inline-flex origin-center items-center justify-center gap-1">
           <motion.span
-            animate={{ scale: isPressed ? 1 : 0.92 }}
-            className="inline-flex items-center justify-center gap-1"
-            initial={false}
-            transition={reduceMotion ? reducedTransition : iconSpring}
+            className="absolute inset-y-[-20%] w-[42%] -skew-x-[18deg] bg-gradient-to-r from-transparent via-foreground/18 to-transparent dark:via-foreground/26"
+            style={{
+              left: sheenLeft,
+              opacity: sheenOpacity,
+            }}
+          />
+        </span>
+        <span className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center">
+          <motion.span
+            className="inline-flex origin-center items-center justify-center"
+            style={{ scale: iconScale }}
           >
-            {children}
+            <motion.span
+              className="inline-flex origin-center items-center justify-center [&_svg]:block"
+              style={{
+                scaleX: iconScaleX,
+                scaleY: iconScaleY,
+              }}
+            >
+              {children}
+            </motion.span>
           </motion.span>
         </span>
       </TogglePrimitive>
