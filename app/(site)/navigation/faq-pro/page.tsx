@@ -1,7 +1,14 @@
 "use client";
 
+import { useMemo } from "react";
+
+import { ProviderSwitch } from "@/app/(site)/components/_components/provider-switch";
 import { faqProApiDetails } from "@/components/docs/component-api";
-import { ComponentDocsPage } from "@/components/docs/page-shell";
+import {
+  ComponentDocsPage,
+  type DetailItem,
+} from "@/components/docs/page-shell";
+import { LINK } from "@/constants";
 import { FaqPro, type FaqProItem } from "@/registry/faq-pro";
 
 const demoItems: FaqProItem[] = [
@@ -57,23 +64,59 @@ function FaqProPreview() {
   );
 }
 
+const breadcrumbs = [
+  { label: "Docs", href: "/" },
+  { label: "Navigation" },
+  { label: "FAQ Pro" },
+];
+
+function getDetails(): DetailItem[] {
+  return faqProApiDetails.map((item) => {
+    if (item.id !== "registry") {
+      return item;
+    }
+
+    return {
+      ...item,
+      notes: [
+        "Dependencies: @base-ui/react/accordion, motion, lucide-react.",
+        "This page documents the Base UI install only. FAQ Pro uses Base UI Accordion for single-open FAQ rows.",
+        "The generated registry file is /r/faq-pro.json.",
+      ],
+      registryPath: "faq-pro.json",
+    };
+  });
+}
+
+function handleProviderSelect() {
+  return undefined;
+}
+
 export default function FaqProPage() {
+  const details = useMemo(() => getDetails(), []);
+
   return (
     <ComponentDocsPage
-      breadcrumbs={[
-        { label: "Docs", href: "/" },
-        { label: "Navigation" },
-        { label: "FAQ Pro" },
-      ]}
+      breadcrumbs={breadcrumbs}
       componentName="faq-pro"
       description="Searchable FAQ with auto-expanded matches and query highlights."
-      details={faqProApiDetails}
+      details={details}
+      editHref={`${LINK.GITHUB}/edit/main/app/(site)/navigation/faq-pro/page.tsx`}
+      headerActions={
+        <ProviderSwitch
+          disabledProviders={["radix"]}
+          onSelect={handleProviderSelect}
+          selectedProvider="base"
+        />
+      }
+      itemSlug="faq-pro"
+      pageUrl="/navigation/faq-pro"
       preview={<FaqProPreview />}
       previewClassName="min-h-[28rem] overflow-visible"
       title="FAQ Pro"
       usageCode={usageCode}
       usageDescription={
-        "Pass an `items` array of `{ id, question, answer }` objects. Search filters the list, opens matching rows, and highlights matched text. Use `defaultOpenFirst` to show the first item before typing."
+        "Pass an `items` array of `{ id, question, answer }` objects. Built on Base UI Accordion. Search filters the list, opens matching rows, and highlights matched text. Use `defaultOpenFirst` to show the first item before typing."
       }
     />
   );

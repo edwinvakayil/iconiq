@@ -672,10 +672,10 @@
       "name": "faq-pro",
       "type": "registry:ui",
       "registryDependencies": [],
-      "dependencies": ["motion", "lucide-react"],
+      "dependencies": ["@base-ui/react/accordion", "motion", "lucide-react"],
       "devDependencies": [],
       "title": "FAQ Pro",
-      "description": "Searchable FAQ accordion with rounded cards, animated panels, automatic match expansion, and inline query highlighting. Built with Motion and Lucide.",
+      "description": "Searchable FAQ accordion with rounded cards, animated panels, automatic match expansion, and inline query highlighting. Built with Base UI Accordion, Motion, and Lucide.",
       "files": [
         {
           "path": "faq-pro.tsx",
@@ -741,10 +741,15 @@
       "name": "icon-bar",
       "type": "registry:ui",
       "registryDependencies": [],
-      "dependencies": ["motion", "lucide-react"],
+      "dependencies": [
+        "@base-ui/react/toggle",
+        "@base-ui/react/toggle-group",
+        "motion",
+        "lucide-react"
+      ],
       "devDependencies": [],
       "title": "Icon Bar",
-      "description": "Row of compact icon chips that expand on hover or focus and stay open when selected. Built with Motion and Lucide.",
+      "description": "Row of compact icon chips that expand on hover or focus and stay open when selected. Built with Base UI Toggle Group, Motion, and Lucide.",
       "files": [
         {
           "path": "icon-bar.tsx",
@@ -1304,10 +1309,10 @@
       "name": "theme-toggle",
       "type": "registry:ui",
       "registryDependencies": [],
-      "dependencies": ["lucide-react"],
+      "dependencies": ["@base-ui/react/toggle", "lucide-react"],
       "devDependencies": [],
       "title": "Theme Toggle",
-      "description": "Animated light/dark switch with a sliding knob, sun and moon icons, and bouncy track transitions. Toggles the document dark class.",
+      "description": "Animated light/dark switch with a sliding knob, sun and moon icons, and bouncy track transitions. Built with Base UI Toggle; toggles the document dark class.",
       "files": [
         {
           "path": "theme-toggle.tsx",

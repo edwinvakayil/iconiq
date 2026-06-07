@@ -1,5 +1,6 @@
 "use client";
 
+import { SharedPrimitiveProviderSwitch } from "@/app/(site)/components/_components/provider-switch";
 import { radialButtonApiDetails } from "@/components/docs/component-api";
 import { ComponentDocsPage } from "@/components/docs/page-shell";
 import { RadialButton } from "@/registry/radial-button";
@@ -31,6 +32,7 @@ export default function RadialButtonPage() {
       componentName="radial-button"
       description="Rounded button with a radial fill on hover—and inverted label."
       details={radialButtonApiDetails}
+      headerActions={<SharedPrimitiveProviderSwitch />}
       preview={<RadialButtonPreview />}
       previewClassName="min-h-[16rem] overflow-visible"
       title="Radial Button"

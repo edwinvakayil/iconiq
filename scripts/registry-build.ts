@@ -372,8 +372,13 @@ const REGISTRY_UI_META: Record<
   "icon-bar": {
     title: "Icon Bar",
     description:
-      "Row of compact icon chips that expand on hover or focus and stay open when selected. Built with Motion and Lucide.",
-    dependencies: ["motion", "lucide-react"],
+      "Row of compact icon chips that expand on hover or focus and stay open when selected. Built with Base UI Toggle Group, Motion, and Lucide.",
+    dependencies: [
+      "@base-ui/react/toggle",
+      "@base-ui/react/toggle-group",
+      "motion",
+      "lucide-react",
+    ],
   },
   infiniteribbon: {
     title: "Infinite Ribbon",
@@ -399,8 +404,8 @@ const REGISTRY_UI_META: Record<
   "theme-toggle": {
     title: "Theme Toggle",
     description:
-      "Animated light/dark switch with a sliding knob, sun and moon icons, and bouncy track transitions. Toggles the document dark class.",
-    dependencies: ["lucide-react"],
+      "Animated light/dark switch with a sliding knob, sun and moon icons, and bouncy track transitions. Built with Base UI Toggle; toggles the document dark class.",
+    dependencies: ["@base-ui/react/toggle", "lucide-react"],
   },
   carousel: {
     title: "Carousel",
@@ -561,8 +566,8 @@ const REGISTRY_UI_META: Record<
   "faq-pro": {
     title: "FAQ Pro",
     description:
-      "Searchable FAQ accordion with rounded cards, animated panels, automatic match expansion, and inline query highlighting. Built with Motion and Lucide.",
-    dependencies: ["motion", "lucide-react"],
+      "Searchable FAQ accordion with rounded cards, animated panels, automatic match expansion, and inline query highlighting. Built with Base UI Accordion, Motion, and Lucide.",
+    dependencies: ["@base-ui/react/accordion", "motion", "lucide-react"],
   },
   popover: {
     title: "Popover",

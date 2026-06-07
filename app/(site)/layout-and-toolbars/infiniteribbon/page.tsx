@@ -1,5 +1,6 @@
 "use client";
 
+import { SharedPrimitiveProviderSwitch } from "@/app/(site)/components/_components/provider-switch";
 import { infiniteRibbonApiDetails } from "@/components/docs/component-api";
 import { ComponentDocsPage } from "@/components/docs/page-shell";
 import { infiniteRibbonPreviewCode } from "@/lib/component-v0-pages";
@@ -51,6 +52,7 @@ export default function InfiniteRibbonPage() {
       componentName="infiniteribbon"
       description="Looping marquee for banners and dividers—seamless repeat, either direction."
       details={infiniteRibbonApiDetails}
+      headerActions={<SharedPrimitiveProviderSwitch />}
       preview={<InfiniteRibbonPreview />}
       previewClassName="relative min-h-[20rem] overflow-hidden px-0 md:px-0 [&>div]:relative"
       title="Infinite Ribbon"

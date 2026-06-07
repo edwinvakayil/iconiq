@@ -1,5 +1,6 @@
 "use client";
 
+import { SharedPrimitiveProviderSwitch } from "@/app/(site)/components/_components/provider-switch";
 import { verifiedBadgeApiDetails } from "@/components/docs/component-api";
 import { ComponentDocsPage } from "@/components/docs/page-shell";
 import { verifiedBadgePreviewCode } from "@/lib/component-v0-pages";
@@ -44,6 +45,7 @@ export default function VerifiedBadgePage() {
       componentName="verified-badge"
       description="X-style verified badge with shimmer or static variants."
       details={verifiedBadgeApiDetails}
+      headerActions={<SharedPrimitiveProviderSwitch />}
       preview={<VerifiedBadgePreview />}
       previewClassName="min-h-[12rem] overflow-visible"
       title="Verified Badge"

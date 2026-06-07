@@ -1,5 +1,7 @@
 "use client";
 
+import { Toggle as TogglePrimitive } from "@base-ui/react/toggle";
+import { ToggleGroup as ToggleGroupPrimitive } from "@base-ui/react/toggle-group";
 import type { LucideIcon } from "lucide-react";
 import { motion } from "motion/react";
 import * as React from "react";
@@ -14,21 +16,15 @@ const EXPAND_DURATION = 0.62;
 const COLLAPSE_DURATION = 0.48;
 const FLUID_EASE = [0.16, 1, 0.3, 1] as const;
 
-type IconBarContextValue = {
-  selectedValue: string | null;
-  setSelectedValue: (value: string) => void;
-};
-
-const IconBarContext = React.createContext<IconBarContextValue | null>(null);
-
-function useIconBarContext(componentName: string) {
-  const context = React.useContext(IconBarContext);
-
-  if (!context) {
-    throw new Error(`${componentName} must be used within IconBar.`);
+function setRef<T>(ref: React.Ref<T> | undefined, value: T | null) {
+  if (typeof ref === "function") {
+    ref(value);
+    return;
   }
 
-  return context;
+  if (ref) {
+    (ref as React.MutableRefObject<T | null>).current = value;
+  }
 }
 
 type IconBarProps = {
@@ -52,44 +48,162 @@ function IconBar({
   const isControlled = valueProp !== undefined;
   const selectedValue = isControlled ? (valueProp ?? null) : uncontrolledValue;
 
-  const setSelectedValue = React.useCallback(
-    (nextValue: string) => {
-      const resolved = selectedValue === nextValue ? null : nextValue;
+  const handleValueChange = React.useCallback(
+    (groupValue: string[]) => {
+      const nextValue = groupValue[0] ?? null;
 
       if (!isControlled) {
-        setUncontrolledValue(resolved);
+        setUncontrolledValue(nextValue);
       }
-      onValueChange?.(resolved);
+
+      onValueChange?.(nextValue);
     },
-    [isControlled, onValueChange, selectedValue]
+    [isControlled, onValueChange]
   );
 
-  const contextValue = React.useMemo(
-    () => ({ selectedValue, setSelectedValue }),
-    [selectedValue, setSelectedValue]
-  );
+  const groupValue = selectedValue ? [selectedValue] : [];
 
   return (
-    <IconBarContext.Provider value={contextValue}>
-      <div
-        aria-orientation="horizontal"
-        className={cn(
-          componentThemeClassName,
-          "flex flex-wrap items-center gap-2",
-          className
-        )}
-        role="toolbar"
-      >
-        {children}
-      </div>
-    </IconBarContext.Provider>
+    <ToggleGroupPrimitive
+      aria-orientation="horizontal"
+      className={cn(
+        componentThemeClassName,
+        "flex flex-wrap items-center gap-2",
+        className
+      )}
+      multiple={false}
+      onValueChange={handleValueChange}
+      role="toolbar"
+      value={groupValue}
+    >
+      {children}
+    </ToggleGroupPrimitive>
   );
 }
 IconBar.displayName = "IconBar";
 
+type IconBarItemButtonProps = React.ComponentProps<"button"> & {
+  forwardedRef: React.ForwardedRef<HTMLButtonElement>;
+  hoverPreview: boolean;
+  icon: LucideIcon;
+  isSelected: boolean;
+  label: string;
+  labelWidth: number;
+  measureRef: React.RefObject<HTMLSpanElement | null>;
+  renderRef?: React.Ref<HTMLButtonElement>;
+  setHoverPreview: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+function IconBarItemButton({
+  className,
+  disabled,
+  forwardedRef,
+  hoverPreview,
+  icon: Icon,
+  isSelected,
+  label,
+  labelWidth,
+  measureRef,
+  onBlur,
+  onFocus,
+  renderRef,
+  setHoverPreview,
+  ...buttonProps
+}: IconBarItemButtonProps) {
+  const buttonRef = React.useRef<HTMLButtonElement | null>(null);
+  const prevSelectedRef = React.useRef(isSelected);
+  const expanded = !disabled && (isSelected || hoverPreview);
+  const showLabel = expanded && labelWidth > 0;
+
+  React.useEffect(() => {
+    if (prevSelectedRef.current && !isSelected) {
+      setHoverPreview(false);
+      buttonRef.current?.blur();
+    }
+
+    prevSelectedRef.current = isSelected;
+  }, [isSelected, setHoverPreview]);
+
+  const mergeRefs = React.useCallback(
+    (node: HTMLButtonElement | null) => {
+      buttonRef.current = node;
+      setRef(renderRef, node);
+      setRef(forwardedRef, node);
+    },
+    [forwardedRef, renderRef]
+  );
+
+  return (
+    <button
+      {...buttonProps}
+      aria-expanded={showLabel}
+      aria-label={label}
+      aria-pressed={isSelected}
+      className={cn(
+        "relative inline-flex h-9 shrink-0 items-center overflow-hidden rounded-xl bg-muted text-muted-foreground outline-none",
+        "transition-[background-color,color] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]",
+        "focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+        "hover:bg-accent/60 hover:text-foreground",
+        "disabled:pointer-events-none disabled:opacity-50",
+        isSelected && "bg-accent text-foreground",
+        className
+      )}
+      disabled={disabled}
+      onBlur={(event) => {
+        setHoverPreview(false);
+        onBlur?.(event);
+      }}
+      onFocus={(event) => {
+        onFocus?.(event);
+
+        if (disabled || event.defaultPrevented) return;
+
+        if (event.currentTarget.matches(":focus-visible")) {
+          setHoverPreview(true);
+        }
+      }}
+      onMouseEnter={() => {
+        if (!disabled) setHoverPreview(true);
+      }}
+      onMouseLeave={() => {
+        if (!disabled) setHoverPreview(false);
+      }}
+      ref={mergeRefs}
+      type="button"
+    >
+      <span className="flex size-9 shrink-0 items-center justify-center">
+        <Icon aria-hidden className="size-[18px] stroke-[1.5]" />
+      </span>
+
+      <motion.div
+        animate={{ width: showLabel ? labelWidth : 0 }}
+        className="overflow-hidden"
+        initial={false}
+        transition={{
+          duration: expanded ? EXPAND_DURATION : COLLAPSE_DURATION,
+          ease: FLUID_EASE,
+        }}
+      >
+        <span className="block whitespace-nowrap pr-3 font-medium text-[14px] tracking-[-0.01em]">
+          {label}
+        </span>
+      </motion.div>
+
+      <span
+        aria-hidden
+        className="pointer-events-none absolute top-0 whitespace-nowrap pr-3 font-medium text-[14px] tracking-[-0.01em] opacity-0"
+        ref={measureRef}
+        style={{ left: ICON_CELL_PX }}
+      >
+        {label}
+      </span>
+    </button>
+  );
+}
+
 type IconBarItemProps = Omit<
-  React.ComponentPropsWithoutRef<typeof motion.button>,
-  "children" | "aria-expanded" | "aria-label" | "aria-pressed"
+  TogglePrimitive.Props,
+  "children" | "render" | "value"
 > & {
   icon: LucideIcon;
   label: string;
@@ -101,26 +215,22 @@ const IconBarItem = React.forwardRef<HTMLButtonElement, IconBarItemProps>(
     {
       className,
       disabled = false,
-      icon: Icon,
+      icon,
       label,
       onBlur: onBlurProp,
       onClick,
       onFocus: onFocusProp,
       value,
-      ...buttonProps
+      ...toggleProps
     },
-    ref
+    forwardedRef
   ) => {
-    const { selectedValue, setSelectedValue } =
-      useIconBarContext("IconBarItem");
     const itemValue = value ?? label;
     const [hoverPreview, setHoverPreview] = React.useState(false);
     const measureRef = React.useRef<HTMLSpanElement>(null);
     const [labelWidth, setLabelWidth] = React.useState(0);
 
-    const isSelected = !disabled && selectedValue === itemValue;
-    const expanded = !disabled && (isSelected || hoverPreview);
-
+    // biome-ignore lint/correctness/useExhaustiveDependencies: remeasure when label copy changes
     React.useLayoutEffect(() => {
       const node = measureRef.current;
       if (!node) return;
@@ -140,88 +250,41 @@ const IconBarItem = React.forwardRef<HTMLButtonElement, IconBarItemProps>(
       }
 
       return () => observer.disconnect();
-    }, []);
-
-    const widthTransition = {
-      duration: expanded ? EXPAND_DURATION : COLLAPSE_DURATION,
-      ease: FLUID_EASE,
-    };
-
-    const showLabel = expanded && labelWidth > 0;
+    }, [label]);
 
     return (
-      <motion.button
-        {...buttonProps}
-        aria-expanded={showLabel}
-        aria-label={label}
-        aria-pressed={isSelected}
-        className={cn(
-          "relative inline-flex h-9 shrink-0 items-center overflow-hidden rounded-xl bg-muted text-muted-foreground outline-none",
-          "transition-[background-color,color] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]",
-          "focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
-          "hover:bg-accent/60 hover:text-foreground",
-          "disabled:pointer-events-none disabled:opacity-50",
-          isSelected && "bg-accent text-foreground",
-          className
-        )}
+      <TogglePrimitive
+        {...toggleProps}
         disabled={disabled}
-        onBlur={(event) => {
-          setHoverPreview(false);
-          onBlurProp?.(event);
-        }}
-        onClick={(event) => {
-          if (disabled) return;
+        onBlur={onBlurProp}
+        onClick={onClick}
+        onFocus={onFocusProp}
+        render={(renderProps, state) => {
+          const {
+            className: renderClassName,
+            ref: renderRef,
+            ...resolvedRenderProps
+          } = renderProps;
 
-          const willDeselect = isSelected;
-          setSelectedValue(itemValue);
-
-          if (willDeselect) {
-            setHoverPreview(false);
-            event.currentTarget.blur();
-          }
-
-          onClick?.(event);
+          return (
+            <IconBarItemButton
+              {...resolvedRenderProps}
+              className={cn(renderClassName, className)}
+              disabled={disabled}
+              forwardedRef={forwardedRef}
+              hoverPreview={hoverPreview}
+              icon={icon}
+              isSelected={state.pressed}
+              label={label}
+              labelWidth={labelWidth}
+              measureRef={measureRef}
+              renderRef={renderRef}
+              setHoverPreview={setHoverPreview}
+            />
+          );
         }}
-        onFocus={(event) => {
-          onFocusProp?.(event);
-          if (disabled || event.defaultPrevented) return;
-          if (event.currentTarget.matches(":focus-visible")) {
-            setHoverPreview(true);
-          }
-        }}
-        onHoverEnd={() => {
-          if (!disabled) setHoverPreview(false);
-        }}
-        onHoverStart={() => {
-          if (!disabled) setHoverPreview(true);
-        }}
-        ref={ref}
-        type="button"
-      >
-        <span className="flex size-9 shrink-0 items-center justify-center">
-          <Icon aria-hidden className="size-[18px] stroke-[1.5]" />
-        </span>
-
-        <motion.div
-          animate={{ width: showLabel ? labelWidth : 0 }}
-          className="overflow-hidden"
-          initial={false}
-          transition={widthTransition}
-        >
-          <span className="block whitespace-nowrap pr-3 font-medium text-[14px] tracking-[-0.01em]">
-            {label}
-          </span>
-        </motion.div>
-
-        <span
-          aria-hidden
-          className="pointer-events-none absolute top-0 whitespace-nowrap pr-3 font-medium text-[14px] tracking-[-0.01em] opacity-0"
-          ref={measureRef}
-          style={{ left: ICON_CELL_PX }}
-        >
-          {label}
-        </span>
-      </motion.button>
+        value={itemValue}
+      />
     );
   }
 );

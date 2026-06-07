@@ -1,7 +1,9 @@
 "use client";
 
+import { Toggle as TogglePrimitive } from "@base-ui/react/toggle";
 import { Moon } from "lucide-react";
-import { useEffect, useState } from "react";
+import * as React from "react";
+
 import { cn } from "@/lib/utils";
 
 type ToggleSize = "sm" | "md" | "lg";
@@ -68,46 +70,26 @@ const sizeConfig = {
     icon: 20,
     sunIcon: 20,
   },
+} as const;
+
+type SizeConfig = (typeof sizeConfig)[ToggleSize];
+
+type ThemeToggleTrackProps = React.ComponentProps<"button"> & {
+  config: SizeConfig;
+  isDark: boolean;
+  renderRef?: React.Ref<HTMLButtonElement>;
 };
 
-export function ThemeToggle({ className, size = "md" }: ThemeToggleProps) {
-  const [isDark, setIsDark] = useState(false);
-  const [mounted, setMounted] = useState(false);
-  const config = sizeConfig[size];
-
-  useEffect(() => {
-    setMounted(true);
-    const prefersDark = window.matchMedia(
-      "(prefers-color-scheme: dark)"
-    ).matches;
-    setIsDark(prefersDark);
-    if (prefersDark) document.documentElement.classList.add("dark");
-  }, []);
-
-  const toggle = () => {
-    setIsDark((prev) => {
-      const next = !prev;
-      document.documentElement.classList.toggle("dark", next);
-      return next;
-    });
-  };
-
-  if (!mounted) {
-    return (
-      <button
-        aria-label="Toggle theme"
-        className={cn(
-          "relative rounded-full border-2 border-border bg-muted",
-          config.track,
-          className
-        )}
-        type="button"
-      />
-    );
-  }
-
+function ThemeToggleTrack({
+  className,
+  config,
+  isDark,
+  renderRef,
+  ...buttonProps
+}: ThemeToggleTrackProps) {
   return (
     <button
+      {...buttonProps}
       aria-label="Toggle theme"
       className={cn(
         "relative cursor-pointer rounded-full border-2 transition-colors duration-700 ease-[cubic-bezier(0.68,-0.55,0.265,1.55)]",
@@ -117,7 +99,7 @@ export function ThemeToggle({ className, size = "md" }: ThemeToggleProps) {
           : "border-[#e8d5b7] bg-[#fef3c7]",
         className
       )}
-      onClick={toggle}
+      ref={renderRef}
       type="button"
     >
       <div
@@ -149,5 +131,64 @@ export function ThemeToggle({ className, size = "md" }: ThemeToggleProps) {
         />
       </div>
     </button>
+  );
+}
+
+export function ThemeToggle({ className, size = "md" }: ThemeToggleProps) {
+  const [isDark, setIsDark] = React.useState(false);
+  const [mounted, setMounted] = React.useState(false);
+  const config = sizeConfig[size];
+
+  React.useEffect(() => {
+    setMounted(true);
+    const prefersDark = window.matchMedia(
+      "(prefers-color-scheme: dark)"
+    ).matches;
+    setIsDark(prefersDark);
+    if (prefersDark) document.documentElement.classList.add("dark");
+  }, []);
+
+  const handlePressedChange = React.useCallback((pressed: boolean) => {
+    setIsDark(pressed);
+    document.documentElement.classList.toggle("dark", pressed);
+  }, []);
+
+  if (!mounted) {
+    return (
+      <button
+        aria-label="Toggle theme"
+        className={cn(
+          "relative rounded-full border-2 border-border bg-muted",
+          config.track,
+          className
+        )}
+        type="button"
+      />
+    );
+  }
+
+  return (
+    <TogglePrimitive
+      aria-label="Toggle theme"
+      onPressedChange={handlePressedChange}
+      pressed={isDark}
+      render={(renderProps, state) => {
+        const {
+          className: renderClassName,
+          ref: renderRef,
+          ...resolvedRenderProps
+        } = renderProps;
+
+        return (
+          <ThemeToggleTrack
+            {...resolvedRenderProps}
+            className={cn(renderClassName, className)}
+            config={config}
+            isDark={state.pressed}
+            renderRef={renderRef}
+          />
+        );
+      }}
+    />
   );
 }

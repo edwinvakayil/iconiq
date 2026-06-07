@@ -1,9 +1,15 @@
 "use client";
 
 import { Building2, Cloud, GraduationCap, Sun } from "lucide-react";
+import { useMemo } from "react";
 
+import { ProviderSwitch } from "@/app/(site)/components/_components/provider-switch";
 import { iconBarApiDetails } from "@/components/docs/component-api";
-import { ComponentDocsPage } from "@/components/docs/page-shell";
+import {
+  ComponentDocsPage,
+  type DetailItem,
+} from "@/components/docs/page-shell";
+import { LINK } from "@/constants";
 import { IconBar, IconBarItem } from "@/registry/icon-bar";
 
 const usageCode = `"use client";
@@ -35,22 +41,58 @@ function IconBarPreview() {
   );
 }
 
+const breadcrumbs = [
+  { label: "Docs", href: "/" },
+  { label: "Buttons & Actions" },
+  { label: "Icon Bar" },
+];
+
+function getDetails(): DetailItem[] {
+  return iconBarApiDetails.map((item) => {
+    if (item.id !== "registry") {
+      return item;
+    }
+
+    return {
+      ...item,
+      notes: [
+        "Dependencies: @base-ui/react/toggle, @base-ui/react/toggle-group, motion, lucide-react.",
+        "This page documents the Base UI install only. Icon Bar uses Base UI Toggle Group and Toggle for selection.",
+        "The generated registry file is /r/icon-bar.json.",
+      ],
+      registryPath: "icon-bar.json",
+    };
+  });
+}
+
+function handleProviderSelect() {
+  return undefined;
+}
+
 export default function IconBarPage() {
+  const details = useMemo(() => getDetails(), []);
+
   return (
     <ComponentDocsPage
-      breadcrumbs={[
-        { label: "Docs", href: "/" },
-        { label: "Buttons & Actions" },
-        { label: "Icon Bar" },
-      ]}
+      breadcrumbs={breadcrumbs}
       componentName="icon-bar"
       description="Icon chips that spring open on hover to reveal labels."
-      details={iconBarApiDetails}
+      details={details}
+      editHref={`${LINK.GITHUB}/edit/main/app/(site)/buttons-and-actions/icon-bar/page.tsx`}
+      headerActions={
+        <ProviderSwitch
+          disabledProviders={["radix"]}
+          onSelect={handleProviderSelect}
+          selectedProvider="base"
+        />
+      }
+      itemSlug="icon-bar"
+      pageUrl="/buttons-and-actions/icon-bar"
       preview={<IconBarPreview />}
       previewClassName="min-h-[16rem] overflow-visible"
       title="Icon Bar"
       usageCode={usageCode}
-      usageDescription="Compose `IconBar` with one or more `IconBarItem` children. Hover or focus previews the label; clicking selects and keeps a chip expanded; clicking the active chip again collapses it."
+      usageDescription="Compose `IconBar` with one or more `IconBarItem` children. Built on Base UI Toggle Group for single-select chips. Hover or focus previews the label; clicking selects and keeps a chip expanded; clicking the active chip again collapses it."
     />
   );
 }

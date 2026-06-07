@@ -3707,7 +3707,12 @@ const iconBarApiDetails: DetailItem[] = [
       "In controlled mode, update value from onValueChange (including null on deselect) for the UI to stay in sync.",
     ],
   },
-  registryItem("icon-bar.json", ["motion", "lucide-react"]),
+  registryItem("icon-bar.json", [
+    "@base-ui/react/toggle",
+    "@base-ui/react/toggle-group",
+    "motion",
+    "lucide-react",
+  ]),
 ];
 
 const infiniteRibbonApiDetails: DetailItem[] = [
@@ -4165,7 +4170,7 @@ const themeToggleApiDetails: DetailItem[] = [
       "Install path is `components/ui/theme-toggle.tsx` with the `ThemeToggle` export.",
     ],
   },
-  registryItem("theme-toggle.json", ["lucide-react"]),
+  registryItem("theme-toggle.json", ["@base-ui/react/toggle", "lucide-react"]),
 ];
 
 const radialButtonApiDetails: DetailItem[] = [
@@ -4380,7 +4385,11 @@ const faqProApiDetails: DetailItem[] = [
       "When the query is cleared, the list returns to the default open state controlled by defaultOpenFirst.",
     ],
   },
-  registryItem("faq-pro.json", ["motion", "lucide-react"]),
+  registryItem("faq-pro.json", [
+    "@base-ui/react/accordion",
+    "motion",
+    "lucide-react",
+  ]),
 ];
 
 const sliderApiDetails: DetailItem[] = [
