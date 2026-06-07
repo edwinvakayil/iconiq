@@ -1,10 +1,19 @@
 import type { NextConfig } from "next";
 
+import { DOCS_URL_REDIRECTS } from "@/lib/docs-url-redirects";
+
 const nextConfig: NextConfig = {
   experimental: {
     viewTransition: true,
   },
   reactCompiler: true,
+  async redirects() {
+    return DOCS_URL_REDIRECTS.map(({ source, destination }) => ({
+      source,
+      destination,
+      permanent: true,
+    }));
+  },
   async headers() {
     return [
       {

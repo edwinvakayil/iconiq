@@ -1,8 +1,12 @@
 const REGISTRY_JSON_SUFFIX_REGEX = /\.json$/i;
-const DOCS_HREF_SLUG_REGEX =
-  /^\/(?:components|radix-base-ui|texts|special-one|foundation)\/([^/?#]+)/;
-const DOCS_HREF_SECTION_REGEX =
-  /^\/(components|radix-base-ui|texts|special-one|foundation)\//;
+
+import { DOCS_SECTION_SEGMENTS } from "@/lib/section-paths";
+
+const DOCS_SECTION_PATTERN = DOCS_SECTION_SEGMENTS.join("|");
+const DOCS_HREF_SLUG_REGEX = new RegExp(
+  `^\\/(?:${DOCS_SECTION_PATTERN})\\/([^/?#]+)`
+);
+const DOCS_HREF_SECTION_REGEX = new RegExp(`^\\/(${DOCS_SECTION_PATTERN})\\/`);
 const PAGE_URL_ORIGIN_REGEX = /^https?:\/\/[^/]+/i;
 const LEADING_SLASH_REGEX = /^\//;
 
@@ -11,13 +15,13 @@ export function registrySlugFromPath(registryPath: string): string {
   return registryPath.replace(REGISTRY_JSON_SUFFIX_REGEX, "");
 }
 
-/** `/components/accordion` → `accordion` */
+/** `/navigation/accordion` → `accordion` */
 export function slugFromDocsHref(href: string): string | null {
   const match = href.match(DOCS_HREF_SLUG_REGEX);
   return match?.[1] ?? null;
 }
 
-/** `/components/accordion` → `components` */
+/** `/navigation/accordion` → `components` */
 export function sectionFromDocsHref(href: string): string | null {
   const match = href.match(DOCS_HREF_SECTION_REGEX);
   return match?.[1] ?? null;

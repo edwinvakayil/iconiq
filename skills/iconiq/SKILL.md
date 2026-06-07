@@ -32,7 +32,7 @@ description: Work on the Iconiq (iconiqui.com) shadcn registry and docs site—r
 | Registry build | `scripts/registry-build.ts` | `REGISTRY_UI_META`, generates payloads |
 | Generated output | `public/r/`, `registry.json` | **Do not edit by hand** |
 
-Reference pattern: `registry/calendar.tsx`, `app/(site)/components/calendar/page.tsx`, calendar section in `component-api.ts`.
+Reference pattern: `registry/calendar.tsx`, `app/(site)/display-and-content/calendar/page.tsx`, calendar section in `component-api.ts`.
 
 ## Commands
 

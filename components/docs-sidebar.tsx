@@ -3,16 +3,15 @@
 import { usePathname } from "next/navigation";
 
 import { SidebarNav } from "@/components/sidebar-nav";
+import { SECTION_PATH_PREFIX } from "@/lib/section-paths";
 
 const DOCS_PREFIXES = [
   "/introduction",
   "/installation",
   "/mcp",
   "/components",
-  "/foundation",
   "/radix-base-ui",
-  "/texts",
-  "/special-one",
+  ...Object.values(SECTION_PATH_PREFIX),
 ];
 
 export function DocsSidebar() {

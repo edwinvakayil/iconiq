@@ -174,7 +174,7 @@ export function HomeFeaturedShowcase() {
 
         <ShowcaseCard
           className="lg:col-span-6"
-          href="/special-one/icon-bar"
+          href="/buttons-and-actions/icon-bar"
           title="Icon Bar"
         >
           <div className="flex w-full items-center justify-center px-4">
@@ -189,7 +189,7 @@ export function HomeFeaturedShowcase() {
 
         <ShowcaseCard
           className="lg:col-span-6"
-          href="/components/accordion"
+          href="/navigation/accordion"
           title="Accordion"
         >
           <Accordion
@@ -200,7 +200,7 @@ export function HomeFeaturedShowcase() {
 
         <ShowcaseCard
           className="lg:col-span-6"
-          href="/components/skeleton"
+          href="/display-and-content/skeleton"
           title="Skeleton"
         >
           <div className="w-full max-w-[360px] p-4">
@@ -225,7 +225,7 @@ export function HomeFeaturedShowcase() {
 
         <ShowcaseCard
           className="lg:col-span-6"
-          href="/components/avatar"
+          href="/display-and-content/avatar"
           title="Avatar"
         >
           <div className="flex w-full items-center justify-center gap-12 px-4 sm:gap-16">
@@ -254,7 +254,7 @@ export function HomeFeaturedShowcase() {
 
         <ShowcaseCard
           className="lg:col-span-6"
-          href="/components/progress"
+          href="/display-and-content/progress"
           title="Progress"
         >
           <HomeProgressShowcase />

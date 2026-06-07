@@ -337,32 +337,6 @@ export function ProgressPreview() {
     />
   );
 }`),
-  "b-togglegroup": buildV0Page(`"use client";
-
-import { useState } from "react";
-import {
-  ToggleGroup,
-  type ToggleGroupItem,
-} from "@/components/ui/b-togglegroup";
-
-const items: ToggleGroupItem[] = [
-  { value: "overview", label: "Overview" },
-  { value: "members", label: "Members" },
-  { value: "activity", label: "Activity" },
-];
-
-export function ToggleGroupPreview() {
-  const [value, setValue] = useState<string[]>([]);
-
-  return (
-    <ToggleGroup
-      aria-label="Project sections"
-      items={items}
-      onValueChange={setValue}
-      value={value}
-    />
-  );
-}`),
   drawer: buildV0Page(`"use client";
 
 import {
@@ -820,32 +794,6 @@ export function SeparatorPreview() {
     </div>
   );
 }`),
-  "r-togglegroup": buildV0Page(`"use client";
-
-import { useState } from "react";
-import {
-  ToggleGroup,
-  type ToggleGroupItem,
-} from "@/components/ui/r-togglegroup";
-
-const items: ToggleGroupItem[] = [
-  { value: "overview", label: "Overview" },
-  { value: "members", label: "Members" },
-  { value: "activity", label: "Activity" },
-];
-
-export function ToggleGroupPreview() {
-  const [value, setValue] = useState<string[]>([]);
-
-  return (
-    <ToggleGroup
-      aria-label="Project sections"
-      items={items}
-      onValueChange={setValue}
-      value={value}
-    />
-  );
-}`),
   slider:
     '"use client";\n\n' +
     `import { Slider } from "@/components/ui/slider"\n` +
@@ -992,30 +940,6 @@ export function ToggleGroupPreview() {
     "        </TableBody>\n" +
     "        <TableCaption>2 revenue entries</TableCaption>\n" +
     "      </Table>\n" +
-    "    </div>\n" +
-    "  )\n" +
-    "}\n",
-  toggle:
-    '"use client";\n\n' +
-    `import { Bold, Italic, Underline } from "lucide-react"\n` +
-    `import { useState } from "react"\n` +
-    `import { Toggle } from "@/components/ui/toggle"\n\n` +
-    "export default function Page() {\n" +
-    "  const [bold, setBold] = useState(false)\n" +
-    "  return (\n" +
-    '    <div className="mx-auto flex min-h-svh w-full max-w-xl items-center justify-center p-8">\n' +
-    '      <div className="flex items-center gap-2">\n' +
-    '        <Toggle aria-label="Toggle bold" onPressedChange={setBold} pressed={bold}>\n' +
-    '          <Bold className="size-4" />\n' +
-    "          Bold\n" +
-    "        </Toggle>\n" +
-    '        <Toggle aria-label="Toggle italic" variant="outline">\n' +
-    '          <Italic className="size-4" />\n' +
-    "        </Toggle>\n" +
-    '        <Toggle aria-label="Toggle underline" variant="outline">\n' +
-    '          <Underline className="size-4" />\n' +
-    "        </Toggle>\n" +
-    "      </div>\n" +
     "    </div>\n" +
     "  )\n" +
     "}\n",

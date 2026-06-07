@@ -66,7 +66,7 @@ Create the docs page at `app/(site)/components/<component-name>/page.tsx`.
 
 For Texts or Special One items, use `app/(site)/texts/<component-name>/page.tsx` or `app/(site)/special-one/<component-name>/page.tsx` instead.
 
-Each page should include a live preview, an installation block, a usage snippet, and API details that match the real implementation. Use `ComponentDocsPage` from `@/components/docs/page-shell` so the page matches the rest of the site. See `app/(site)/components/calendar/page.tsx` for the pattern.
+Each page should include a live preview, an installation block, a usage snippet, and API details that match the real implementation. Use `ComponentDocsPage` from `@/components/docs/page-shell` so the page matches the rest of the site. See `app/(site)/display-and-content/calendar/page.tsx` for the pattern.
 
 ### 3. Document the API
 
@@ -118,6 +118,6 @@ Keep PRs focused on one change or feature. Include screenshots or a short walkth
 
 ## Questions
 
-If you are unsure whether a change belongs in the registry component, the docs page, or shared docs metadata, compare with the existing calendar patterns in `registry/calendar.tsx`, `app/(site)/components/calendar/page.tsx`, and the calendar section in `components/docs/component-api.ts`.
+If you are unsure whether a change belongs in the registry component, the docs page, or shared docs metadata, compare with the existing calendar patterns in `registry/calendar.tsx`, `app/(site)/display-and-content/calendar/page.tsx`, and the calendar section in `components/docs/component-api.ts`.
 
 Open an issue on [GitHub](https://github.com/edwinvakayil/iconiq) if something is unclear before starting a large change.

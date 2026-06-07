@@ -369,36 +369,6 @@
       ]
     },
     {
-      "name": "b-toggle",
-      "type": "registry:ui",
-      "registryDependencies": [],
-      "dependencies": ["@base-ui/react", "class-variance-authority", "motion"],
-      "devDependencies": [],
-      "title": "Toggle (Base UI)",
-      "description": "Pressed-state toggle with the same Iconiq ripple, icon motion, and size and variant shell layered over the Base UI toggle primitive.",
-      "files": [
-        {
-          "path": "b-toggle.tsx",
-          "type": "registry:ui"
-        }
-      ]
-    },
-    {
-      "name": "b-togglegroup",
-      "type": "registry:ui",
-      "registryDependencies": [],
-      "dependencies": ["@base-ui/react", "motion"],
-      "devDependencies": [],
-      "title": "Toggle Group (Base UI)",
-      "description": "Minimal toggle group with the same Iconiq API layered over Base UI primitives, preserving the animated underline, stable multi-select ordering, and soft press motion.",
-      "files": [
-        {
-          "path": "b-togglegroup.tsx",
-          "type": "registry:ui"
-        }
-      ]
-    },
-    {
       "name": "b-tooltip",
       "type": "registry:ui",
       "registryDependencies": [],
@@ -768,21 +738,6 @@
       ]
     },
     {
-      "name": "origin-button",
-      "type": "registry:ui",
-      "registryDependencies": [],
-      "dependencies": ["motion"],
-      "devDependencies": [],
-      "title": "Origin Button",
-      "description": "Rounded action button with a pointer-origin foreground fill that spreads on hover or focus-visible. Built with Motion.",
-      "files": [
-        {
-          "path": "origin-button.tsx",
-          "type": "registry:ui"
-        }
-      ]
-    },
-    {
       "name": "popover",
       "type": "registry:ui",
       "registryDependencies": [],
@@ -1087,40 +1042,6 @@
       ]
     },
     {
-      "name": "r-toggle",
-      "type": "registry:ui",
-      "registryDependencies": [],
-      "dependencies": [
-        "@radix-ui/react-toggle",
-        "class-variance-authority",
-        "motion"
-      ],
-      "devDependencies": [],
-      "title": "Toggle (Radix UI)",
-      "description": "Pressed-state toggle with the same Iconiq ripple, icon motion, and size and variant shell layered over the Radix toggle primitive.",
-      "files": [
-        {
-          "path": "r-toggle.tsx",
-          "type": "registry:ui"
-        }
-      ]
-    },
-    {
-      "name": "r-togglegroup",
-      "type": "registry:ui",
-      "registryDependencies": [],
-      "dependencies": ["@radix-ui/react-toggle-group", "motion"],
-      "devDependencies": [],
-      "title": "Toggle Group (Radix UI)",
-      "description": "Minimal toggle group with the same Iconiq API layered over Radix UI primitives, preserving the animated underline, stable multi-select ordering, and soft press motion.",
-      "files": [
-        {
-          "path": "r-togglegroup.tsx",
-          "type": "registry:ui"
-        }
-      ]
-    },
-    {
       "name": "r-tooltip",
       "type": "registry:ui",
       "registryDependencies": [],
@@ -1135,6 +1056,21 @@
       "files": [
         {
           "path": "r-tooltip.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "radial-button",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": ["motion"],
+      "devDependencies": [],
+      "title": "Radial Button",
+      "description": "Rounded action button with a radial foreground fill that spreads on hover or focus-visible. Built with Motion.",
+      "files": [
+        {
+          "path": "radial-button.tsx",
           "type": "registry:ui"
         }
       ]
@@ -1315,25 +1251,6 @@
       "files": [
         {
           "path": "theme-toggle.tsx",
-          "type": "registry:ui"
-        }
-      ]
-    },
-    {
-      "name": "toggle",
-      "type": "registry:ui",
-      "registryDependencies": [],
-      "dependencies": [
-        "@radix-ui/react-toggle",
-        "class-variance-authority",
-        "motion"
-      ],
-      "devDependencies": [],
-      "title": "Toggle",
-      "description": "Pressed-state toggle built on Radix with button squash, icon motion, pointer-origin ripple, and larger shadcn-style size and outline variants.",
-      "files": [
-        {
-          "path": "toggle.tsx",
           "type": "registry:ui"
         }
       ]
