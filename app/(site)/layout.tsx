@@ -6,6 +6,7 @@ import { Toaster } from "sonner";
 
 import { ConditionalFooter } from "@/components/conditional-footer";
 import { DocsSidebar } from "@/components/docs-sidebar";
+import { GitHubStarNudge } from "@/components/github-star-nudge";
 import { Header } from "@/components/header";
 import { PageTitleSync } from "@/components/page-title-sync";
 import { PageTransition } from "@/components/page-transition";
@@ -60,6 +61,7 @@ export default function SiteLayout({
           </div>
         </div>
       </div>
+      <GitHubStarNudge />
     </>
   );
 }

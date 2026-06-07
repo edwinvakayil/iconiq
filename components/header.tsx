@@ -10,6 +10,7 @@ import { HomeHeaderNav } from "@/components/home-header-nav";
 import { SiteSearch } from "@/components/site-search";
 import { SiteThemeToggle } from "@/components/ui/site-theme-toggle";
 import { LINK } from "@/constants";
+import { recordGithubClick } from "@/lib/record-github-click";
 import { BASE_LINKS, SITE_SECTIONS } from "@/lib/site-nav";
 import { cn } from "@/lib/utils";
 import { Popover, PopoverContent, PopoverTrigger } from "@/registry/popover";
@@ -56,19 +57,12 @@ function formatStarCount(n: number): string {
   return n.toLocaleString();
 }
 
-function recordGithubNavbarClick() {
-  fetch("/api/flags/clicked-github", {
-    keepalive: true,
-    method: "POST",
-  }).catch(() => undefined);
-}
-
 function GitHubStarsLink({ starCount }: { starCount: number | null }) {
   return (
     <a
       className="inline-flex h-8 items-center gap-2 rounded-md bg-transparent px-3 font-medium text-sm shadow-none transition-colors hover:bg-accent hover:text-accent-foreground dark:hover:bg-input/20"
       href={LINK.GITHUB}
-      onClick={recordGithubNavbarClick}
+      onClick={recordGithubClick}
       rel="noopener noreferrer"
       target="_blank"
     >
