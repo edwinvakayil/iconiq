@@ -369,6 +369,21 @@
       ]
     },
     {
+      "name": "b-toggle",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": ["@base-ui/react", "class-variance-authority", "motion"],
+      "devDependencies": [],
+      "title": "Toggle (Base UI)",
+      "description": "Two-state button with spring press feedback, a muted fill that bounces in when pressed, and a subtle content lift layered over Base UI toggle primitives.",
+      "files": [
+        {
+          "path": "b-toggle.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "b-tooltip",
       "type": "registry:ui",
       "registryDependencies": [],
@@ -1037,6 +1052,21 @@
       "files": [
         {
           "path": "r-tabs.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "r-toggle",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": ["radix-ui", "class-variance-authority", "motion"],
+      "devDependencies": [],
+      "title": "Toggle (Radix UI)",
+      "description": "Two-state button with spring press feedback, a muted fill that bounces in when pressed, and a subtle content lift layered over Radix UI toggle primitives.",
+      "files": [
+        {
+          "path": "r-toggle.tsx",
           "type": "registry:ui"
         }
       ]

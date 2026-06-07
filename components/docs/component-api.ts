@@ -3922,6 +3922,88 @@ const verifiedBadgeApiDetails: DetailItem[] = [
   registryItem("verified-badge.json", ["motion"]),
 ];
 
+const toggleApiDetails: DetailItem[] = [
+  {
+    id: "toggle",
+    title: "Toggle",
+    summary:
+      "Two-state button with spring press feedback and a muted fill that bounces in when pressed.",
+    fields: [
+      field({
+        name: "pressed",
+        type: "boolean",
+        description:
+          "Controlled pressed state. Pass this when the parent owns whether the toggle is on.",
+      }),
+      field({
+        name: "defaultPressed",
+        type: "boolean",
+        defaultValue: "false",
+        description:
+          "Initial pressed state for uncontrolled usage. The component manages future toggles internally.",
+      }),
+      field({
+        name: "onPressedChange",
+        type: "(pressed: boolean) => void",
+        description:
+          "Called with the next pressed state whenever the toggle is activated or deactivated.",
+      }),
+      field({
+        name: "variant",
+        type: '"default" | "outline"',
+        defaultValue: '"default"',
+        description:
+          "Visual treatment. Outline adds a border for toolbar or segmented layouts.",
+      }),
+      field({
+        name: "size",
+        type: '"default" | "sm" | "lg"',
+        defaultValue: '"default"',
+        description:
+          "Height, padding, and icon sizing preset for compact toolbars or larger action rows.",
+      }),
+      field({
+        name: "disabled",
+        type: "boolean",
+        description:
+          "Disables interaction and dims the control while preserving its pressed appearance.",
+      }),
+      field({
+        name: "reducedMotion",
+        type: "boolean",
+        description:
+          "Forces reduced-motion transitions for the fill, lift, and press scale regardless of system preference.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description:
+          "Merged onto the root button for local spacing, width, or color overrides.",
+      }),
+    ],
+    notes: [
+      "Use aria-label or visible text when the toggle contains only an icon.",
+      "Additional primitive props such as value, name, and form attributes are forwarded to the root button.",
+    ],
+  },
+  {
+    id: "toggle-motion",
+    title: "Motion and interaction behavior",
+    summary:
+      "Pressed state drives a bouncy muted fill pop-in, a pointer-origin bubble on click, and a subtle icon scale snap.",
+    notes: [
+      "The fill springs in from 0.55 scale with high bounce when pressed and snaps away faster on release.",
+      "Each click spawns a circular bubble from the pointer that expands with spring bounce and fades out.",
+      "Icons and labels scale up with bounce when active. System prefers-reduced-motion skips the bubble and shortens transitions.",
+    ],
+  },
+  registryItem("b-toggle.json", [
+    "@base-ui/react",
+    "class-variance-authority",
+    "motion",
+  ]),
+];
+
 const themeToggleApiDetails: DetailItem[] = [
   {
     id: "theme-toggle",
@@ -5309,6 +5391,7 @@ export {
   switchApiDetails,
   tableApiDetails,
   tabsApiDetails,
+  toggleApiDetails,
   textInertiaApiDetails,
   typewriterApiDetails,
   typographyApiDetails,

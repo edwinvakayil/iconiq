@@ -13,6 +13,7 @@ export const DOCS_URL_REDIRECTS: { source: string; destination: string }[] = [
     source: "/special-one/icon-bar",
     destination: "/buttons-and-actions/icon-bar",
   },
+  { source: "/components/toggle", destination: "/buttons-and-actions/toggle" },
   {
     source: "/components/autocomplete",
     destination: "/inputs-and-forms/autocomplete",

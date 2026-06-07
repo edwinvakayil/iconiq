@@ -17,6 +17,7 @@ export const SITE_SECTIONS = [
       { label: "Button Group", href: "/buttons-and-actions/button-group" },
       { label: "Flux Button", href: "/buttons-and-actions/flux-button" },
       { label: "Icon Bar", href: "/buttons-and-actions/icon-bar" },
+      { label: "Toggle", href: "/buttons-and-actions/toggle" },
     ],
   },
   {

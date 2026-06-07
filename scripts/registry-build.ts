@@ -274,6 +274,12 @@ const REGISTRY_UI_META: Record<
       "Tabs with the same Iconiq API layered over Base UI primitives, preserving the measured underline, keyboard flow, and motion-smoothed panel shell from the core tabs component.",
     dependencies: ["@base-ui/react", "motion"],
   },
+  "b-toggle": {
+    title: "Toggle (Base UI)",
+    description:
+      "Two-state button with spring press feedback, a muted fill that bounces in when pressed, and a subtle content lift layered over Base UI toggle primitives.",
+    dependencies: ["@base-ui/react", "class-variance-authority", "motion"],
+  },
   "b-tooltip": {
     title: "Tooltip (Base UI)",
     description:
@@ -522,6 +528,12 @@ const REGISTRY_UI_META: Record<
     description:
       "Tabs with the same Iconiq API layered over Radix UI primitives, preserving the measured underline, keyboard flow, and motion-smoothed panel shell from the core tabs component.",
     dependencies: ["@radix-ui/react-tabs", "motion"],
+  },
+  "r-toggle": {
+    title: "Toggle (Radix UI)",
+    description:
+      "Two-state button with spring press feedback, a muted fill that bounces in when pressed, and a subtle content lift layered over Radix UI toggle primitives.",
+    dependencies: ["radix-ui", "class-variance-authority", "motion"],
   },
   "r-tooltip": {
     title: "Tooltip (Radix UI)",
