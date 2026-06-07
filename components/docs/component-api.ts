@@ -4025,6 +4025,106 @@ const originButtonApiDetails: DetailItem[] = [
   registryItem("origin-button.json", ["motion"]),
 ];
 
+const fluxButtonApiDetails: DetailItem[] = [
+  {
+    id: "flux-button",
+    title: "FluxButton",
+    summary:
+      "Async button with idle, loading, and success states, plus b-button visual variants.",
+    fields: [
+      field({
+        name: "idleLabel",
+        type: "string",
+        required: true,
+        description: "Label shown before the action starts.",
+      }),
+      field({
+        name: "loadingLabel",
+        type: "string",
+        required: true,
+        description:
+          "Label shown with the built-in loader while onAction is in progress.",
+      }),
+      field({
+        name: "successLabel",
+        type: "string",
+        required: true,
+        description: "Label shown after onAction resolves.",
+      }),
+      field({
+        name: "successIcon",
+        type: "React.ReactNode",
+        description:
+          "Optional icon shown on success. Pass any node, such as a Lucide checkmark. Omit for text-only success.",
+      }),
+      field({
+        name: "onAction",
+        type: "() => void | Promise<void>",
+        required: true,
+        description:
+          "Runs when the button is pressed, drives loading and success states, then returns to idle after successHold.",
+      }),
+      field({
+        name: "variant",
+        type: '"default" | "outline" | "secondary" | "ghost" | "destructive" | "link"',
+        defaultValue: "default",
+        description: "Visual style variant. Matches the b-button variant set.",
+      }),
+      field({
+        name: "successHold",
+        type: "number",
+        defaultValue: "1000",
+        description:
+          "Milliseconds to hold the success state before returning to the idle label.",
+      }),
+      field({
+        name: "size",
+        type: '"xs" | "sm" | "default" | "lg"',
+        defaultValue: "default",
+        description:
+          "Height and horizontal padding preset. Matches b-button sizes.",
+      }),
+      field({
+        name: "type",
+        type: '"button" | "submit"',
+        defaultValue: "button",
+        description:
+          "Native button type. Use submit inside forms; defaults to button so the control does not submit unless you opt in.",
+      }),
+      field({
+        name: "disabled",
+        type: "boolean",
+        defaultValue: "false",
+        description:
+          "Native disabled state. Also blocks the action flow while true.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description:
+          "Optional class names merged onto the root button element.",
+      }),
+      field({
+        name: "onClick",
+        type: "React.MouseEventHandler<HTMLButtonElement>",
+        description: "Native click handler forwarded to the underlying button.",
+      }),
+    ],
+    notes: [
+      "Built on `@base-ui/react/button` with a Motion render surface, matching the b-button integration pattern.",
+      "Locks interaction while loading or showing success without applying disabled opacity, using aria-disabled and pointer-events-none instead.",
+      "Motion transitions start only after the first click, so the button renders statically on page load.",
+      "Install path is `components/ui/flux-button.tsx` with the `FluxButton` export.",
+    ],
+  },
+  registryItem("flux-button.json", [
+    "@base-ui/react/button",
+    "class-variance-authority",
+    "lucide-react",
+    "motion",
+  ]),
+];
+
 const faqProApiDetails: DetailItem[] = [
   {
     id: "faq-pro",
@@ -5426,6 +5526,7 @@ export {
   infiniteRibbonApiDetails,
   carouselApiDetails,
   originButtonApiDetails,
+  fluxButtonApiDetails,
   themeToggleApiDetails,
   verifiedBadgeApiDetails,
   faqProApiDetails,

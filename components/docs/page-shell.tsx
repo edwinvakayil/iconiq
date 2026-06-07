@@ -117,6 +117,7 @@ const REDUCED_MOTION_COMPONENTS = new Set([
 const REDUCED_MOTION_DOCS_EXCLUDED = new Set([
   "icon-bar",
   "origin-button",
+  "flux-button",
   "faq-pro",
   "theme-toggle",
   "carousel",

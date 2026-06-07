@@ -699,6 +699,26 @@
       ]
     },
     {
+      "name": "flux-button",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": [
+        "@base-ui/react/button",
+        "class-variance-authority",
+        "lucide-react",
+        "motion"
+      ],
+      "devDependencies": [],
+      "title": "Flux Button",
+      "description": "Async button with idle, loading, and success states.",
+      "files": [
+        {
+          "path": "flux-button.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "hover-card",
       "type": "registry:ui",
       "registryDependencies": [],

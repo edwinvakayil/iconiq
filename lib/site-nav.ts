@@ -13,10 +13,11 @@ export const SITE_SECTIONS = [
   {
     label: "Special One",
     children: [
+      { label: "FAQ Pro", href: "/special-one/faq-pro" },
+      { label: "Flux Button", href: "/special-one/flux-button" },
       { label: "Icon Bar", href: "/special-one/icon-bar" },
       { label: "Infinite Ribbon", href: "/special-one/infiniteribbon" },
       { label: "Origin Button", href: "/special-one/origin-button" },
-      { label: "FAQ Pro", href: "/special-one/faq-pro" },
       { label: "Theme Toggle", href: "/special-one/theme-toggle" },
       { label: "Verified Badge", href: "/special-one/verified-badge" },
     ],

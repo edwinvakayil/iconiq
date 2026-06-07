@@ -381,6 +381,16 @@ const REGISTRY_UI_META: Record<
       "Rounded action button with a pointer-origin foreground fill that spreads on hover or focus-visible. Built with Motion.",
     dependencies: ["motion"],
   },
+  "flux-button": {
+    title: "Flux Button",
+    description: "Async button with idle, loading, and success states.",
+    dependencies: [
+      "@base-ui/react/button",
+      "class-variance-authority",
+      "lucide-react",
+      "motion",
+    ],
+  },
   "theme-toggle": {
     title: "Theme Toggle",
     description:

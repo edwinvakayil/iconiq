@@ -104,6 +104,8 @@ const componentSummaries: Record<string, string> = {
     "Rounded action button with a pointer-origin fill that spreads on hover and inverts the label.",
   "/special-one/faq-pro":
     "Searchable FAQ accordion that filters items, auto-expands matches, and highlights query text.",
+  "/special-one/flux-button":
+    "Async button with idle, loading, and success states.",
   "/special-one/theme-toggle":
     "Animated light/dark pill toggle with a sliding knob, sun and moon icons, and springy color transitions.",
   "/special-one/verified-badge":
