@@ -75,7 +75,12 @@ function buildIconiqThemeSchema(): Schema {
 /** Optional title, description, and dependencies for registry UI components. */
 const REGISTRY_UI_META: Record<
   string,
-  { title: string; description: string; dependencies?: string[] }
+  {
+    title: string;
+    description: string;
+    dependencies?: string[];
+    registryDependencies?: string[];
+  }
 > = {
   badge: {
     title: "Badge",
@@ -274,22 +279,22 @@ const REGISTRY_UI_META: Record<
       "Tabs with the same Iconiq API layered over Base UI primitives, preserving the measured underline, keyboard flow, and motion-smoothed panel shell from the core tabs component.",
     dependencies: ["@base-ui/react", "motion"],
   },
-  "b-tooltip": {
-    title: "Tooltip (Base UI)",
-    description:
-      "Tooltip with the same Iconiq API layered over Base UI primitives, preserving the original controlled delay timing, bubble shell, rotated-square arrow, and spring entrance motion.",
-    dependencies: ["@base-ui/react", "motion"],
-  },
   "b-toggle": {
     title: "Toggle (Base UI)",
     description:
-      "Pressed-state toggle with the same Iconiq ripple, icon motion, and size and variant shell layered over the Base UI toggle primitive.",
+      "Two-state button with spring press feedback, a muted fill that bounces in when pressed, and a subtle content lift layered over Base UI toggle primitives.",
     dependencies: ["@base-ui/react", "class-variance-authority", "motion"],
   },
   "b-togglegroup": {
     title: "Toggle Group (Base UI)",
     description:
-      "Minimal toggle group with the same Iconiq API layered over Base UI primitives, preserving the animated underline, stable multi-select ordering, and soft press motion.",
+      "Segmented toggle group with the same fluid wipe fill, sheen sweep, and icon press feedback as the standalone toggle, over Base UI toggle-group primitives.",
+    dependencies: ["@base-ui/react", "class-variance-authority", "motion"],
+  },
+  "b-tooltip": {
+    title: "Tooltip (Base UI)",
+    description:
+      "Tooltip with the same Iconiq API layered over Base UI primitives, preserving the original controlled delay timing, bubble shell, rotated-square arrow, and spring entrance motion.",
     dependencies: ["@base-ui/react", "motion"],
   },
   alert: {
@@ -375,10 +380,10 @@ const REGISTRY_UI_META: Record<
     description:
       "Full-width looping announcement ribbon with repeated content, optional reverse direction, and diagonal rotation controls.",
   },
-  "origin-button": {
-    title: "Origin Button",
+  "radial-button": {
+    title: "Radial Button",
     description:
-      "Rounded action button with a pointer-origin foreground fill that spreads on hover or focus-visible. Built with Motion.",
+      "Rounded action button with a radial foreground fill that spreads on hover or focus-visible. Built with Motion.",
     dependencies: ["motion"],
   },
   "flux-button": {
@@ -535,27 +540,23 @@ const REGISTRY_UI_META: Record<
       "Tabs with the same Iconiq API layered over Radix UI primitives, preserving the measured underline, keyboard flow, and motion-smoothed panel shell from the core tabs component.",
     dependencies: ["@radix-ui/react-tabs", "motion"],
   },
+  "r-toggle": {
+    title: "Toggle (Radix UI)",
+    description:
+      "Two-state button with spring press feedback, a muted fill that bounces in when pressed, and a subtle content lift layered over Radix UI toggle primitives.",
+    dependencies: ["radix-ui", "class-variance-authority", "motion"],
+  },
+  "r-togglegroup": {
+    title: "Toggle Group (Radix UI)",
+    description:
+      "Segmented toggle group with the same fluid wipe fill, sheen sweep, and icon press feedback as the standalone toggle, over Radix UI toggle-group primitives.",
+    dependencies: ["radix-ui", "class-variance-authority", "motion"],
+  },
   "r-tooltip": {
     title: "Tooltip (Radix UI)",
     description:
       "Tooltip with the same Iconiq API layered over Radix Tooltip primitives, preserving the original controlled delay timing, bubble shell, rotated-square arrow, and spring entrance motion.",
     dependencies: ["@radix-ui/react-tooltip", "@radix-ui/react-slot", "motion"],
-  },
-  "r-toggle": {
-    title: "Toggle (Radix UI)",
-    description:
-      "Pressed-state toggle with the same Iconiq ripple, icon motion, and size and variant shell layered over the Radix toggle primitive.",
-    dependencies: [
-      "@radix-ui/react-toggle",
-      "class-variance-authority",
-      "motion",
-    ],
-  },
-  "r-togglegroup": {
-    title: "Toggle Group (Radix UI)",
-    description:
-      "Minimal toggle group with the same Iconiq API layered over Radix UI primitives, preserving the animated underline, stable multi-select ordering, and soft press motion.",
-    dependencies: ["@radix-ui/react-toggle-group", "motion"],
   },
   "faq-pro": {
     title: "FAQ Pro",
@@ -615,16 +616,6 @@ const REGISTRY_UI_META: Record<
     description:
       "Single typography primitive that maps the full heading, label, paragraph, subheading, and documentation scale through one variant prop.",
     dependencies: ["class-variance-authority"],
-  },
-  toggle: {
-    title: "Toggle",
-    description:
-      "Pressed-state toggle built on Radix with button squash, icon motion, pointer-origin ripple, and larger shadcn-style size and outline variants.",
-    dependencies: [
-      "@radix-ui/react-toggle",
-      "class-variance-authority",
-      "motion",
-    ],
   },
   table: {
     title: "Table",
@@ -782,6 +773,12 @@ for (const component of components) {
     if (!schema.title) schema.title = uiMeta.title;
     if (!schema.description) schema.description = uiMeta.description;
     if (uiMeta.dependencies?.length) schema.dependencies = uiMeta.dependencies;
+    if (uiMeta.registryDependencies?.length) {
+      schema.registryDependencies = getRegistryDependencies(
+        sourceContent,
+        uiMeta.registryDependencies
+      );
+    }
   }
   if (component.author) schema.author = component.author;
   if (component.tailwind) schema.tailwind = component.tailwind;

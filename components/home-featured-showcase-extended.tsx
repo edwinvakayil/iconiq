@@ -64,7 +64,7 @@ export function HomeFeaturedShowcaseExtended({
     <>
       <ShowcaseCard
         className="lg:col-span-4"
-        href="/components/calendar"
+        href="/display-and-content/calendar"
         title="Calendar"
       >
         <div className="flex w-full justify-center">
@@ -76,7 +76,7 @@ export function HomeFeaturedShowcaseExtended({
       </ShowcaseCard>
 
       <div className="grid gap-4 lg:col-span-8 lg:grid-cols-2">
-        <ShowcaseCard href="/components/tooltip" title="Tooltip">
+        <ShowcaseCard href="/overlay-and-popups/tooltip" title="Tooltip">
           <div className="flex min-h-[150px] w-full items-center justify-center px-4">
             <p className="max-w-sm text-center font-sans text-[15px] text-foreground leading-relaxed">
               Hover the{" "}
@@ -97,7 +97,7 @@ export function HomeFeaturedShowcaseExtended({
           </div>
         </ShowcaseCard>
 
-        <ShowcaseCard href="/components/badge" title="Badge">
+        <ShowcaseCard href="/display-and-content/badge" title="Badge">
           <div className="flex min-h-[150px] w-full items-center justify-center px-4">
             <Badge color="indigo">Early Access</Badge>
           </div>
@@ -105,7 +105,7 @@ export function HomeFeaturedShowcaseExtended({
 
         <ShowcaseCard
           className="lg:col-span-2"
-          href="/components/button"
+          href="/buttons-and-actions/button"
           title="Button"
         >
           <div className="flex w-full max-w-[360px] flex-wrap items-center justify-center gap-2.5">
@@ -125,7 +125,7 @@ export function HomeFeaturedShowcaseExtended({
 
       <ShowcaseCard
         className="lg:col-span-6"
-        href="/components/switch"
+        href="/inputs-and-forms/switch"
         title="Switch"
       >
         <div className="w-full max-w-[320px] space-y-4">
@@ -152,7 +152,7 @@ export function HomeFeaturedShowcaseExtended({
 
       <ShowcaseCard
         className="lg:col-span-6"
-        href="/components/slider"
+        href="/inputs-and-forms/slider"
         title="Slider"
       >
         <div className="w-full max-w-[320px] space-y-4">
@@ -164,7 +164,7 @@ export function HomeFeaturedShowcaseExtended({
 
       <ShowcaseCard
         className="lg:col-span-6"
-        href="/components/radio-group"
+        href="/inputs-and-forms/radio-group"
         title="Radio Group"
       >
         <div className="w-full max-w-md">
@@ -180,7 +180,7 @@ export function HomeFeaturedShowcaseExtended({
 
       <ShowcaseCard
         className="lg:col-span-6"
-        href="/components/checkbox-group"
+        href="/inputs-and-forms/checkbox-group"
         title="Checkbox Group"
       >
         <div className="w-full max-w-md">

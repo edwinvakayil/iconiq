@@ -64,15 +64,15 @@ const pagerButtonClassName =
   "inline-flex size-9 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2";
 
 export default function InstallationPage() {
-  const components =
-    SITE_SECTIONS.find((section) => section.label === "Components")?.children ??
-    [];
+  const allComponents = SITE_SECTIONS.flatMap((section) => [
+    ...section.children,
+  ]);
 
-  const featuredComponents = components.filter(({ href }) =>
+  const featuredComponents = allComponents.filter(({ href }) =>
     [
-      "/components/button",
-      "/components/accordion",
-      "/components/combobox",
+      "/buttons-and-actions/button",
+      "/navigation/accordion",
+      "/inputs-and-forms/combobox",
     ].includes(href)
   );
 

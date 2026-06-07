@@ -63,13 +63,65 @@ const GUIDE_SEO: Record<string, RouteSeo> = {
 };
 
 const SECTION_FALLBACK_SEO: Record<string, RouteSeo> = {
-  Components: {
-    title: "Components",
+  "Buttons & Actions": {
+    title: "Buttons & Actions",
     description:
-      "Browse Iconiq UI React components with live previews, shadcn install commands, and matching Base UI or Radix registry entries.",
+      "Browse Iconiq UI button components with live previews, shadcn install commands, and matching Base UI or Radix registry entries.",
     keywords: [
-      "iconiq ui components",
-      "react ui primitives",
+      "iconiq ui buttons",
+      "react button components",
+      "shadcn registry",
+    ],
+  },
+  "Inputs & Forms": {
+    title: "Inputs & Forms",
+    description:
+      "Browse Iconiq UI input and form components with live previews, shadcn install commands, and matching Base UI or Radix registry entries.",
+    keywords: ["iconiq ui forms", "react input components", "shadcn registry"],
+  },
+  "Overlay & Popups": {
+    title: "Overlay & Popups",
+    description:
+      "Browse Iconiq UI overlay and popup components for dialogs, menus, drawers, and floating surfaces with live previews and shadcn registry installs.",
+    keywords: [
+      "iconiq ui overlays",
+      "react dialog popover tooltip",
+      "shadcn registry",
+    ],
+  },
+  Navigation: {
+    title: "Navigation",
+    description:
+      "Browse Iconiq UI navigation components for accordions, breadcrumbs, and tabs with live previews and shadcn registry installs.",
+    keywords: [
+      "iconiq ui navigation",
+      "react tabs breadcrumbs accordion",
+      "shadcn registry",
+    ],
+  },
+  "Display & Content": {
+    title: "Display & Content",
+    description:
+      "Browse Iconiq UI display and content components for cards, tables, charts, avatars, and loading states with live previews and shadcn registry installs.",
+    keywords: [
+      "iconiq ui display components",
+      "react card table chart",
+      "shadcn registry",
+    ],
+  },
+  "Feedback & Alerts": {
+    title: "Feedback & Alerts",
+    description:
+      "Browse Iconiq UI feedback and alert components with live previews, shadcn install commands, and editable registry source files.",
+    keywords: ["iconiq ui alerts", "react alert component", "shadcn registry"],
+  },
+  "Layout & Toolbars": {
+    title: "Layout & Toolbars",
+    description:
+      "Browse Iconiq UI layout and toolbar components with live previews, shadcn install commands, and matching Base UI or Radix registry entries.",
+    keywords: [
+      "iconiq ui layout",
+      "react collapsible toolbar",
       "shadcn registry",
     ],
   },
@@ -126,7 +178,14 @@ for (const section of SITE_SECTIONS) {
   for (const child of section.children) {
     ROUTE_SEO.set(
       child.href,
-      section.label === "Components" || section.label === "Special One"
+      section.label === "Buttons & Actions" ||
+        section.label === "Inputs & Forms" ||
+        section.label === "Overlay & Popups" ||
+        section.label === "Navigation" ||
+        section.label === "Display & Content" ||
+        section.label === "Feedback & Alerts" ||
+        section.label === "Layout & Toolbars" ||
+        section.label === "Special One"
         ? buildComponentSeo(child.label)
         : {
             title: `${child.label} | ${section.label}`,
@@ -144,9 +203,9 @@ export const SITELINK_ROUTES = [
   { name: SITE.NAME, href: "/" },
   { name: "Introduction", href: "/introduction" },
   { name: "Installation", href: "/installation" },
-  { name: "Button", href: "/components/button" },
-  { name: "Dialog", href: "/components/dialog" },
-  { name: "Accordion", href: "/components/accordion" },
+  { name: "Button", href: "/buttons-and-actions/button" },
+  { name: "Dialog", href: "/overlay-and-popups/dialog" },
+  { name: "Accordion", href: "/navigation/accordion" },
   { name: "MCP", href: "/mcp" },
 ] as const;
 

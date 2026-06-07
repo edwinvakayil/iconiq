@@ -2,8 +2,7 @@
 
 import { Checkbox as CheckboxPrimitive } from "@base-ui/react/checkbox";
 import { CheckboxGroup as CheckboxGroupPrimitive } from "@base-ui/react/checkbox-group";
-import { Check } from "lucide-react";
-import { AnimatePresence, motion } from "motion/react";
+import { motion } from "motion/react";
 import type * as React from "react";
 import { useEffect, useState } from "react";
 
@@ -17,13 +16,6 @@ import { cn } from "@/lib/utils";
 const componentThemeClassName =
   "[--ic-background:#ffffff] [--ic-foreground:#111111] [--ic-primary:#111111] [--ic-secondary:#646b75] [--ic-surface-border:#e9edf2] [--ic-border:#e3e7ec] [--ic-card:#ffffff] [--ic-card-foreground:#111111] [--ic-muted:#f5f7fa] [--ic-muted-foreground:#6d7480] [--ic-accent:#f3f5f8] [--color-accent:var(--ic-accent)] [--color-accent-foreground:var(--ic-accent-foreground)] [--ic-accent-foreground:#111111] [--ic-input:#e3e7ec] [--ic-ring:rgba(17,17,17,0.16)] [--ic-destructive:#dc2626] [--ic-paper:#fcfcfd] [--ic-popover-foreground:#111111] [--ic-brand:#0ea5e9] [--ic-brand-soft:#bae6fd] [--ic-shadow-soft:0_18px_38px_-24px_rgba(15,23,42,0.35)] [--ic-chart-1:oklch(0.52_0.19_254)] [--ic-chart-2:oklch(0.74_0.11_232)] [--ic-chart-3:oklch(0.42_0.16_262)] [--ic-chart-4:oklch(0.84_0.07_228)] [--ic-chart-5:oklch(0.62_0.14_240)] [--color-background:var(--ic-background)] [--color-foreground:var(--ic-foreground)] [--color-primary:var(--ic-primary)] [--color-secondary:var(--ic-secondary)] [--color-border:var(--ic-border)] [--color-card:var(--ic-card)] [--color-card-foreground:var(--ic-card-foreground)] [--color-muted:var(--ic-muted)] [--color-muted-foreground:var(--ic-muted-foreground)] [--color-accent:var(--ic-accent)] [--color-accent-foreground:var(--ic-accent-foreground)] [--color-input:var(--ic-input)] [--color-ring:var(--ic-ring)] [--color-destructive:var(--ic-destructive)] [--color-paper:var(--ic-paper)] [--color-popover-foreground:var(--ic-popover-foreground)] [--color-brand:var(--ic-brand)] [--color-brand-soft:var(--ic-brand-soft)] [--color-chart-1:var(--ic-chart-1)] [--color-chart-2:var(--ic-chart-2)] [--color-chart-3:var(--ic-chart-3)] [--color-chart-4:var(--ic-chart-4)] [--color-chart-5:var(--ic-chart-5)] dark:[--ic-background:#111111] dark:[--ic-foreground:#f6f3ec] dark:[--ic-primary:#f6f3ec] dark:[--ic-secondary:#cbc6bb] dark:[--ic-surface-border:#2a2a25] dark:[--ic-border:#2b2a25] dark:[--ic-card:#111111] dark:[--ic-card-foreground:#f6f3ec] dark:[--ic-muted:#171716] dark:[--ic-muted-foreground:#9a958a] dark:[--ic-accent:#1a1a18] [--color-accent:var(--ic-accent)] [--color-accent-foreground:var(--ic-accent-foreground)] dark:[--ic-accent-foreground:#f6f3ec] dark:[--ic-input:#2b2a25] dark:[--ic-ring:rgba(246,243,236,0.18)] dark:[--ic-destructive:#f87171] dark:[--ic-paper:#171716] dark:[--ic-popover-foreground:#f6f3ec] dark:[--ic-brand:#38bdf8] dark:[--ic-brand-soft:#0c4a6e] dark:[--ic-shadow-soft:0_20px_44px_-28px_rgba(0,0,0,0.6)] dark:[--ic-chart-1:oklch(0.68_0.17_250)] dark:[--ic-chart-2:oklch(0.82_0.09_225)] dark:[--ic-chart-3:oklch(0.58_0.15_260)] dark:[--ic-chart-4:oklch(0.75_0.12_235)] dark:[--ic-chart-5:oklch(0.88_0.06_220)]";
 
-const springFlow = {
-  type: "spring" as const,
-  stiffness: 280,
-  damping: 24,
-  mass: 0.65,
-};
-
 const springTap = {
   type: "spring" as const,
   stiffness: 520,
@@ -31,15 +23,41 @@ const springTap = {
   mass: 0.35,
 };
 
-const springCheck = {
-  type: "spring" as const,
-  stiffness: 720,
-  damping: 34,
-  mass: 0.38,
-};
-
 const reducedTransition = { duration: 0.12 } as const;
-const reducedExitTransition = { duration: 0.1 } as const;
+
+function getCheckmarkVariants(reduceMotion: boolean) {
+  const pathEase = [0.65, 0, 0.35, 1] as const;
+  const pathTransition = reduceMotion
+    ? { duration: 0.12 }
+    : { duration: 0.3, ease: pathEase };
+
+  return {
+    checked: {
+      pathLength: 1,
+      pathOffset: 0,
+      opacity: 1,
+      transition: {
+        pathLength: pathTransition,
+        opacity: {
+          duration: 0.05,
+          delay: reduceMotion ? 0 : 0.06,
+        },
+      },
+    },
+    unchecked: {
+      pathLength: 0,
+      pathOffset: 0,
+      opacity: 0,
+      transition: {
+        pathLength: pathTransition,
+        opacity: {
+          duration: reduceMotion ? 0.06 : 0.1,
+          delay: reduceMotion ? 0 : 0.18,
+        },
+      },
+    },
+  } as const;
+}
 
 export interface CheckboxGroupOption {
   description?: string;
@@ -155,63 +173,6 @@ function resolveRootRenderProps(rootProps: CheckboxRootRenderProps) {
   };
 }
 
-function CheckboxGroupIndicator({
-  checked,
-  reduceMotion,
-}: Pick<CheckboxGroupRowProps, "checked" | "reduceMotion">) {
-  if (!checked) {
-    return null;
-  }
-
-  const animate = reduceMotion
-    ? {
-        opacity: 1,
-        scale: 1,
-      }
-    : {
-        opacity: 1,
-        rotate: 0,
-        scale: 1,
-      };
-  const exit = reduceMotion
-    ? {
-        opacity: 0,
-        transition: reducedExitTransition,
-      }
-    : {
-        opacity: 0,
-        rotate: -8,
-        scale: 0.86,
-        transition: {
-          duration: 0.12,
-          ease: [0.4, 0, 1, 1] as const,
-        },
-      };
-  const initial = reduceMotion
-    ? {
-        opacity: 0,
-        scale: 1,
-      }
-    : {
-        opacity: 0.92,
-        rotate: -5,
-        scale: 0.78,
-      };
-
-  return (
-    <motion.div
-      animate={animate}
-      className="flex items-center justify-center"
-      exit={exit}
-      initial={initial}
-      key="check"
-      transition={reduceMotion ? reducedTransition : springCheck}
-    >
-      <Check className="h-4 w-4 text-primary" strokeWidth={3} />
-    </motion.div>
-  );
-}
-
 function CheckboxGroupCopy({
   option,
   reduceMotion,
@@ -250,7 +211,7 @@ function CheckboxGroupRow({
 }: CheckboxGroupRowProps) {
   const disabled = option.disabled;
   const rowTransition = reduceMotion ? reducedTransition : springTap;
-  const checkboxTransition = reduceMotion ? reducedTransition : springFlow;
+  const checkmarkVariants = getCheckmarkVariants(reduceMotion);
   const whileTap =
     disabled || reduceMotion
       ? undefined
@@ -299,9 +260,9 @@ function CheckboxGroupRow({
       value={option.value}
     >
       <div className="flex h-[18px] w-[18px] shrink-0 items-center justify-center">
-        <motion.div
+        <div
           className={cn(
-            "flex h-[18px] w-[18px] items-center justify-center rounded transition-[border-color] duration-420 ease-[cubic-bezier(0.25,0.85,0.3,1)]",
+            "flex h-[18px] w-[18px] items-center justify-center rounded bg-transparent transition-[border-color] duration-420 ease-[cubic-bezier(0.25,0.85,0.3,1)]",
             checked
               ? "border-0 bg-transparent"
               : [
@@ -310,16 +271,49 @@ function CheckboxGroupRow({
                   "dark:border-neutral-600 dark:group-hover:border-neutral-400",
                 ]
           )}
-          layout={reduceMotion ? false : "position"}
-          transition={checkboxTransition}
         >
-          <AnimatePresence initial={false} mode="sync">
-            <CheckboxGroupIndicator
-              checked={checked}
-              reduceMotion={reduceMotion}
-            />
-          </AnimatePresence>
-        </motion.div>
+          <CheckboxPrimitive.Indicator
+            keepMounted
+            render={(indicatorProps) => {
+              const {
+                className: indicatorClassName,
+                children: _children,
+                onAnimationEnd: _onAnimationEnd,
+                onAnimationIteration: _onAnimationIteration,
+                onAnimationStart: _onAnimationStart,
+                onDrag: _onDrag,
+                onDragEnd: _onDragEnd,
+                onDragEnter: _onDragEnter,
+                onDragExit: _onDragExit,
+                onDragLeave: _onDragLeave,
+                onDragOver: _onDragOver,
+                onDragStart: _onDragStart,
+                onDrop: _onDrop,
+                ...resolvedIndicatorProps
+              } = indicatorProps;
+
+              return (
+                <motion.svg
+                  {...resolvedIndicatorProps}
+                  animate={checked ? "checked" : "unchecked"}
+                  className={cn("h-4 w-4 text-primary", indicatorClassName)}
+                  fill="none"
+                  initial={false}
+                  viewBox="0 0 24 24"
+                >
+                  <motion.path
+                    d="M4 12 L9 17 L20 6"
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={3}
+                    variants={checkmarkVariants}
+                  />
+                </motion.svg>
+              );
+            }}
+          />
+        </div>
       </div>
 
       <CheckboxGroupCopy option={option} reduceMotion={reduceMotion} />

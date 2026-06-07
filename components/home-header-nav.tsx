@@ -121,11 +121,11 @@ export function HomeHeaderNav({ className }: { className?: string }) {
           </MotionNavigationMenuContent>
         </MotionNavigationMenuItem>
 
-        <NavTopLevelLink href="/components/accordion">
+        <NavTopLevelLink href="/navigation/accordion">
           Components
         </NavTopLevelLink>
 
-        <NavTopLevelLink href="/special-one/icon-bar">
+        <NavTopLevelLink href="/buttons-and-actions/icon-bar">
           Special One
         </NavTopLevelLink>
       </MotionNavigationMenuList>

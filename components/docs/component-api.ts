@@ -3922,6 +3922,221 @@ const verifiedBadgeApiDetails: DetailItem[] = [
   registryItem("verified-badge.json", ["motion"]),
 ];
 
+const toggleApiDetails: DetailItem[] = [
+  {
+    id: "toggle",
+    title: "Toggle",
+    summary:
+      "Two-state button with spring press feedback and a muted fill that bounces in when pressed.",
+    fields: [
+      field({
+        name: "pressed",
+        type: "boolean",
+        description:
+          "Controlled pressed state. Pass this when the parent owns whether the toggle is on.",
+      }),
+      field({
+        name: "defaultPressed",
+        type: "boolean",
+        defaultValue: "false",
+        description:
+          "Initial pressed state for uncontrolled usage. The component manages future toggles internally.",
+      }),
+      field({
+        name: "onPressedChange",
+        type: "(pressed: boolean) => void",
+        description:
+          "Called with the next pressed state whenever the toggle is activated or deactivated.",
+      }),
+      field({
+        name: "variant",
+        type: '"default" | "outline"',
+        defaultValue: '"default"',
+        description:
+          "Visual treatment. Outline adds a border for toolbar or segmented layouts.",
+      }),
+      field({
+        name: "size",
+        type: '"default" | "sm" | "lg"',
+        defaultValue: '"default"',
+        description:
+          "Height, padding, and icon sizing preset for compact toolbars or larger action rows.",
+      }),
+      field({
+        name: "disabled",
+        type: "boolean",
+        description:
+          "Disables interaction and dims the control while preserving its pressed appearance.",
+      }),
+      field({
+        name: "reducedMotion",
+        type: "boolean",
+        description:
+          "Forces reduced-motion transitions for the fill, lift, and press scale regardless of system preference.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description:
+          "Merged onto the root button for local spacing, width, or color overrides.",
+      }),
+    ],
+    notes: [
+      "Use aria-label or visible text when the toggle contains only an icon.",
+      "Additional primitive props such as value, name, and form attributes are forwarded to the root button.",
+    ],
+  },
+  {
+    id: "toggle-motion",
+    title: "Motion and interaction behavior",
+    summary:
+      "Pressed state drives a horizontal liquid wipe, a one-shot light sheen, and tactile icon motion.",
+    notes: [
+      "The muted fill wipes in from the left when pressed and retracts to the right on release with a heavy spring.",
+      "Each state change sends a diagonal sheen across the surface once. Outline keeps the same outer border in both states.",
+      "Icons scale and squash on press with a spring settle. System prefers-reduced-motion skips sheen and shortens transitions.",
+    ],
+  },
+  registryItem("b-toggle.json", [
+    "@base-ui/react",
+    "class-variance-authority",
+    "motion",
+  ]),
+];
+
+const toggleGroupApiDetails: DetailItem[] = [
+  {
+    id: "toggle-group",
+    title: "ToggleGroup",
+    summary:
+      "Root container for a connected set of toggle buttons with shared variant, size, spacing, and orientation settings.",
+    fields: [
+      field({
+        name: "type",
+        type: '"single" | "multiple"',
+        defaultValue: '"multiple"',
+        description:
+          "Selection mode. Multiple allows several active items by default; single keeps one pressed item at a time.",
+      }),
+      field({
+        name: "value",
+        type: "string | string[]",
+        description:
+          "Controlled selection. Pass a string for single mode or a string array for multiple mode.",
+      }),
+      field({
+        name: "defaultValue",
+        type: "string | string[]",
+        description:
+          "Initial selection for uncontrolled usage in the matching single or multiple mode.",
+      }),
+      field({
+        name: "onValueChange",
+        type: "(value: string | string[]) => void",
+        description:
+          "Called with the next selection whenever an item is pressed or released.",
+      }),
+      field({
+        name: "variant",
+        type: '"default" | "outline"',
+        defaultValue: '"default"',
+        description:
+          "Shared visual treatment applied to every item unless an item overrides it locally.",
+      }),
+      field({
+        name: "size",
+        type: '"default" | "sm" | "lg"',
+        defaultValue: '"default"',
+        description:
+          "Shared height, padding, and icon sizing preset for all group items.",
+      }),
+      field({
+        name: "spacing",
+        type: "number",
+        defaultValue: "1",
+        description:
+          "Gap between items in spacing units. Defaults to 1 (4px). Set to 0 to remove the gap.",
+      }),
+      field({
+        name: "orientation",
+        type: '"horizontal" | "vertical"',
+        defaultValue: '"horizontal"',
+        description:
+          "Layout direction for the group. Vertical stacks items and adjusts connected border handling.",
+      }),
+      field({
+        name: "disabled",
+        type: "boolean",
+        description: "Disables the entire group and all nested items.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description:
+          "Merged onto the root group wrapper for local layout or width overrides.",
+      }),
+    ],
+    notes: [
+      "Default spacing is 4px between items. Pass spacing={0} to remove the gap entirely.",
+      "Each item uses the same fluid wipe fill, sheen sweep, and icon press feedback as the standalone Toggle component.",
+      "Group items inherit variant and size from context but can override either prop locally.",
+    ],
+  },
+  {
+    id: "toggle-group-item",
+    title: "ToggleGroupItem",
+    summary:
+      "Individual toggle button inside the group with the same fluid motion as the standalone toggle.",
+    fields: [
+      field({
+        name: "value",
+        type: "string",
+        required: true,
+        description:
+          "Stable identifier used when reading or updating the group selection.",
+      }),
+      field({
+        name: "variant",
+        type: '"default" | "outline"',
+        description:
+          "Optional local override for the shared group variant treatment.",
+      }),
+      field({
+        name: "size",
+        type: '"default" | "sm" | "lg"',
+        description:
+          "Optional local override for the shared group size preset.",
+      }),
+      field({
+        name: "disabled",
+        type: "boolean",
+        description:
+          "Disables this item without affecting the rest of the group.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description:
+          "Merged onto the item button for local width, color, or spacing overrides.",
+      }),
+      field({
+        name: "children",
+        type: "ReactNode",
+        description:
+          "Icon or label content rendered inside the item. Pair icon-only items with aria-label.",
+      }),
+    ],
+    notes: [
+      "Items share the standalone toggle fluid motion system: liquid wipe fill, sheen sweep, and icon press squeeze.",
+    ],
+  },
+  registryItem("b-togglegroup.json", [
+    "@base-ui/react",
+    "class-variance-authority",
+    "motion",
+  ]),
+];
+
 const themeToggleApiDetails: DetailItem[] = [
   {
     id: "theme-toggle",
@@ -3953,12 +4168,12 @@ const themeToggleApiDetails: DetailItem[] = [
   registryItem("theme-toggle.json", ["lucide-react"]),
 ];
 
-const originButtonApiDetails: DetailItem[] = [
+const radialButtonApiDetails: DetailItem[] = [
   {
-    id: "origin-button",
-    title: "OriginButton",
+    id: "radial-button",
+    title: "RadialButton",
     summary:
-      "Ref-forwarding motion button with a pointer-origin fill, press feedback, and native form support. Hover, focus-visible, pointer-down, and keyboard activation spread the fill from the entry point.",
+      "Ref-forwarding motion button with a radial fill, press feedback, and native form support. Hover, focus-visible, pointer-down, and keyboard activation spread the fill from the entry point.",
     fields: [
       field({
         name: "children",
@@ -4022,7 +4237,7 @@ const originButtonApiDetails: DetailItem[] = [
       "Icon-only usage should include aria-label or aria-labelledby for an accessible name.",
     ],
   },
-  registryItem("origin-button.json", ["motion"]),
+  registryItem("radial-button.json", ["motion"]),
 ];
 
 const fluxButtonApiDetails: DetailItem[] = [
@@ -4792,241 +5007,6 @@ const tableApiDetails: DetailItem[] = [
   registryItem("table.json", ["motion", "lucide-react"]),
 ];
 
-const toggleApiDetails: DetailItem[] = [
-  {
-    id: "toggle",
-    title: "Toggle",
-    summary:
-      "Single pressed-state toggle built on Radix Toggle, with Motion-driven surface and icon transitions layered over shadcn-style size and variant classes.",
-    fields: [
-      field({
-        name: "children",
-        type: "ReactNode",
-        required: true,
-        description:
-          "Visible button content rendered inside the animated inner span. This can be plain text, icons, or both.",
-      }),
-      field({
-        name: "variant",
-        type: '"default" | "outline"',
-        defaultValue: "default",
-        description:
-          "Visual treatment from the internal CVA config. Outline adds the input border and shadow-sm treatment.",
-      }),
-      field({
-        name: "size",
-        type: '"default" | "sm" | "lg"',
-        defaultValue: "default",
-        description:
-          "Height and horizontal padding preset applied through the shared toggleVariants helper. sm starts at 40px, default at 44px, and lg at 48px.",
-      }),
-      field({
-        name: "pressed",
-        type: "boolean",
-        description:
-          "Controlled pressed state from Radix Toggle.Root. Use this when the parent should own the on/off state.",
-      }),
-      field({
-        name: "defaultPressed",
-        type: "boolean",
-        description: "Initial pressed state for uncontrolled usage.",
-      }),
-      field({
-        name: "onPressedChange",
-        type: "(pressed: boolean) => void",
-        description:
-          "Called after the component kicks off its local motion sequence, with the next pressed value from Radix.",
-      }),
-      field({
-        name: "disabled",
-        type: "boolean",
-        description:
-          "Disables the toggle and prevents the hover, tap, and pressed-state interaction flow.",
-      }),
-      field({
-        name: "className",
-        type: "string",
-        description:
-          "Merged onto the rendered motion button for local spacing or surface overrides.",
-      }),
-    ],
-    notes: [
-      "Additional Radix toggle button props such as aria-label, name, value, and type are forwarded through the underlying Toggle.Root surface.",
-      "The component renders Radix Root with asChild internally, then supplies its own motion.button as the child node.",
-      "When you render an icon-only toggle, provide aria-label or aria-labelledby so the control still has a clear accessible name.",
-    ],
-  },
-  {
-    id: "toggle-motion",
-    title: "Motion and state behavior",
-    summary:
-      "Every pressed change triggers a button squash, an active-surface transition, and a separate icon animation sequence when motion is allowed.",
-    notes: [
-      "The outer button uses useAnimationControls so the pressed sequence can run immediately whenever Radix reports a state change.",
-      "The icon motion differs between on and off transitions, so enabling and disabling the toggle do not feel identical.",
-      "A subtle active surface fades and settles into place behind the content when the toggle turns on.",
-      "Hover always applies a slight upward lift and tap applies an extra scale-down when motion is enabled and the control is not disabled.",
-      "Reduced-motion preferences suppress the local toggle animations and keep the control on its quieter visual path.",
-    ],
-  },
-  registryItem("toggle.json", [
-    "@radix-ui/react-toggle",
-    "class-variance-authority",
-    "motion",
-  ]),
-];
-
-const toggleGroupApiDetails: DetailItem[] = [
-  {
-    id: "toggle-group-item",
-    title: "ToggleGroupItem",
-    summary:
-      "Each toggle is described by a plain object so both provider-backed installs keep the same display and selection contract.",
-    fields: [
-      field({
-        name: "value",
-        type: "string",
-        required: true,
-        description:
-          "Stable identifier used for selection state and forwarded to the underlying toggle primitive item.",
-      }),
-      field({
-        name: "label",
-        type: "ReactNode",
-        required: true,
-        description:
-          "Visible item content rendered inside each segmented button. This can be plain text or richer inline content.",
-      }),
-      field({
-        name: "icon",
-        type: "ReactNode",
-        description:
-          "Optional leading visual rendered before the label inside the button surface.",
-      }),
-      field({
-        name: "disabled",
-        type: "boolean",
-        description:
-          "Disables that item while keeping the rest of the group interactive.",
-      }),
-      field({
-        name: "ariaLabel",
-        type: "string",
-        description:
-          "Accessible item name for icon-only buttons or abbreviated visual labels.",
-      }),
-    ],
-  },
-  {
-    id: "toggle-group",
-    title: "ToggleGroup",
-    summary:
-      "Segmented toggle group with a shared API for single and multiple selection states.",
-    fields: [
-      field({
-        name: "items",
-        type: "ToggleGroupItem[]",
-        required: true,
-        description: "Buttons to render in display order.",
-      }),
-      field({
-        name: "type",
-        type: '"single" | "multiple"',
-        defaultValue: '"multiple"',
-        description:
-          'Defaults to multiple selection. Pass type="single" for a one-of-many picker.',
-      }),
-      field({
-        name: "value",
-        type: "string | string[]",
-        description:
-          "Controlled selection state. Use a string for single mode or an array for multiple mode.",
-      }),
-      field({
-        name: "defaultValue",
-        type: "string | string[]",
-        description:
-          "Initial selection state for uncontrolled usage, following the same single versus multiple shape as value.",
-      }),
-      field({
-        name: "onValueChange",
-        type: "((value: string | undefined) => void) | ((value: string[]) => void)",
-        description:
-          "Called with the next selected value in single mode or the next ordered selected values array in multiple mode.",
-      }),
-      field({
-        name: "size",
-        type: '"default" | "sm"',
-        defaultValue: '"default"',
-        description:
-          "Adjusts the item height, minimum width, and label sizing while keeping the same motion profile.",
-      }),
-      field({
-        name: "orientation",
-        type: '"horizontal" | "vertical"',
-        defaultValue: '"horizontal"',
-        description:
-          "Changes both the visual layout and the underlying keyboard navigation axis.",
-      }),
-      field({
-        name: "disabled",
-        type: "boolean",
-        description:
-          "Disables the whole group and prevents hover, tap, and selection changes.",
-      }),
-      field({
-        name: "className",
-        type: "string",
-        description:
-          "Merged onto the segmented group shell for width, spacing, or placement overrides.",
-      }),
-      field({
-        name: "itemClassName",
-        type: "string",
-        description:
-          "Merged onto every toggle item so you can tune button sizing or local visual treatment without rewriting the structure.",
-      }),
-      field({
-        name: "reducedMotion",
-        type: "boolean",
-        description:
-          "Forces the quieter motion path while still respecting OS-level reduced motion preferences.",
-      }),
-      field({
-        name: "aria-label",
-        type: "string",
-        description:
-          "Accessible name for the group when no external label element is connected.",
-      }),
-      field({
-        name: "aria-labelledby",
-        type: "string",
-        description:
-          "References external text that labels the whole group, which takes precedence over aria-label.",
-      }),
-    ],
-    notes: [
-      "Multiple mode is the default and starts with no items selected unless you pass defaultValue or a controlled value array.",
-      "Multiple mode normalizes outgoing values back into the original item order, so the callback shape stays stable even if users toggle items out of sequence.",
-      'Pass type="single" when only one item should stay pressed at a time. Single mode starts with no implicit selection unless you provide value or defaultValue.',
-      "Icon-only items should provide ariaLabel so every button still has a clear accessible name.",
-    ],
-  },
-  {
-    id: "toggle-group-motion",
-    title: "Motion and selection behavior",
-    summary:
-      "Active items use the same accent fill language as Toggle and IconBar, with hairline separators between controls.",
-    notes: [
-      "Each pressed item fades in a local bg-accent surface instead of a shared track, underline, or sliding chip.",
-      "Multiple-selection mode can light up several items at once, which suits formatting-style toolbars.",
-      "Toggling runs a short accent fill bloom and label pop (same settle curve as Toggle); reduced motion falls back to instant fades.",
-      "Both provider-backed installs keep the underlying roving-focus and arrow-key behavior from their headless primitives.",
-    ],
-  },
-  registryItem("togglegroup.json", ["motion"]),
-];
-
 const switchApiDetails: DetailItem[] = [
   {
     id: "switch",
@@ -5525,7 +5505,7 @@ export {
   iconBarApiDetails,
   infiniteRibbonApiDetails,
   carouselApiDetails,
-  originButtonApiDetails,
+  radialButtonApiDetails,
   fluxButtonApiDetails,
   themeToggleApiDetails,
   verifiedBadgeApiDetails,
@@ -5544,10 +5524,10 @@ export {
   switchApiDetails,
   tableApiDetails,
   tabsApiDetails,
+  toggleApiDetails,
+  toggleGroupApiDetails,
   textInertiaApiDetails,
   typewriterApiDetails,
   typographyApiDetails,
-  toggleApiDetails,
-  toggleGroupApiDetails,
   tooltipApiDetails,
 };

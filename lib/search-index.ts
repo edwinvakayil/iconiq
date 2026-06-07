@@ -20,98 +20,98 @@ const pageSummaries: Record<string, string> = {
 };
 
 const componentSummaries: Record<string, string> = {
-  "/components/accordion":
-    "Accordion docs with a provider switch that swaps between Base UI and Radix UI registry entries.",
-  "/components/alert":
-    "Alert docs in the Components section, using the shared Iconiq alert install with provider options visible but disabled.",
-  "/components/alert-dialog":
-    "Alert dialog docs with a provider switch that swaps between Base UI and Radix UI registry entries.",
-  "/components/avatar":
-    "Avatar docs for the compound Base UI avatar with image, fallback, badge, group, and count parts.",
-  "/components/badge":
-    "Badge docs in the Components section, using the shared Iconiq badge install with provider options visible but disabled.",
-  "/components/breadcrumbs":
-    "Breadcrumbs docs for the compound Base UI render-compatible trail with animated items, separators, current page, and ellipsis parts.",
-  "/components/button":
-    "Base UI button docs in the Components section, preserving the same Iconiq motion and API as the core button.",
-  "/components/button-group":
-    "Button group docs in the Components section, using the shared Iconiq button group install with provider options visible but disabled.",
-  "/components/calendar":
-    "Calendar docs in the Components section, using the shared Iconiq calendar install with month/year picking, fluid date-grid motion, and provider options visible but disabled.",
-  "/components/charts":
-    "Charts docs in the Components section, using the shared Iconiq Recharts shell with provider options visible but disabled because there is no Radix UI or Base UI variant.",
-  "/components/card":
-    "Card docs in the Components section, using the shared Iconiq card install with provider options visible but disabled because there is no Radix UI or Base UI variant.",
-  "/components/checkbox":
-    "Checkbox docs with a provider switch that swaps between Base UI and Radix UI registry entries.",
-  "/components/checkbox-group":
-    "Base UI checkbox group docs in the Components section, preserving the same Iconiq row motion and disclosure behavior as the core checkbox group.",
-  "/components/collapsible":
-    "Collapsible docs with a provider switch that swaps between Base UI and Radix UI registry entries.",
-  "/components/color-picker":
-    "Color picker docs with Iconiq HSV panel, format switching, alpha control, and EyeDropper.",
-  "/components/autocomplete":
-    "Autocomplete docs with a Base UI country search example, list filtering, and minimal spring motion on the suggestion panel.",
-  "/components/combobox":
-    "Base UI combobox docs in the Components section, preserving the same Iconiq filtering, keyboard navigation, and dropdown motion as the core combobox.",
-  "/components/context-menu":
-    "Composable context menu docs with a provider switch between Base UI and Radix UI registry installs.",
-  "/components/dialog":
-    "Dialog docs with a provider switch that swaps between Base UI and Radix UI registry entries.",
-  "/components/drawer":
-    "Drawer docs in the Components section, using the Vaul-backed drawer registry entry with Base UI and Radix UI options visible but disabled.",
-  "/components/dropdown":
-    "Dropdown docs in the Components section, using a Radix Dropdown Menu implementation that preserves the exact Iconiq dropdown shell and motion.",
-  "/components/file-upload":
-    "File upload docs in the Components section, using the shared Iconiq file upload install with provider options visible but disabled.",
-  "/components/hover-card":
-    "Hover card docs with a provider switch that swaps between a Base UI popover-backed install and a Radix Hover Card primitive install.",
-  "/components/popover":
-    "Popover docs with a provider switch that swaps between Base UI and Radix UI registry entries.",
-  "/components/progress":
-    "Progress docs with a provider switch that swaps between Base UI and Radix UI registry entries.",
-  "/components/radio-group":
-    "Radio group docs with a provider switch that swaps between Base UI and Radix UI registry entries.",
-  "/components/select":
-    "Select docs with a provider switch that swaps between Base UI and Radix UI registry entries.",
-  "/components/separator":
-    "Separator docs with a provider switch that swaps between Base UI and Radix UI registry entries, plus line, dashed, and dotted variants.",
-  "/components/selection-toolbar":
-    "Selection toolbar docs with a provider switch that swaps between Base UI and Radix UI registry entries.",
-  "/components/skeleton":
-    "Skeleton docs in the Components section, using the shared Iconiq skeleton install with provider options visible but disabled.",
-  "/components/slider":
-    "Slider docs with a provider switch that swaps between Base UI and Radix UI registry entries.",
-  "/components/spinner":
-    "Spinner docs in the Components section, using the shared Iconiq spinner install with provider options visible but disabled.",
-  "/components/switch":
-    "Switch docs with a provider switch that swaps between Base UI and Radix UI registry entries.",
-  "/components/table":
-    "Table docs in the Components section, using the shared Iconiq table install with the provider options visible but disabled.",
-  "/components/tabs":
-    "Tabs docs with a provider switch that swaps between Base UI and Radix UI registry entries.",
-  "/components/tooltip":
-    "Tooltip docs with a provider switch that swaps between Base UI and Radix UI registry entries.",
-  "/components/toggle":
-    "Compare the same pressed-state toggle API on Radix UI and Base UI, with the same ripple, icon motion, and pressed styling layered over different primitives.",
-  "/components/toggle-group":
-    "Toggle group docs with a provider switch that swaps between Base UI and Radix UI registry entries.",
-  "/special-one/icon-bar":
-    "Horizontal icon chips that expand on hover to reveal short labels with spring motion.",
-  "/special-one/infiniteribbon":
-    "Looping announcement ribbon that repeats text into a full-width marquee with optional reverse direction and rotation.",
-  "/special-one/origin-button":
-    "Rounded action button with a pointer-origin fill that spreads on hover and inverts the label.",
-  "/special-one/faq-pro":
-    "Searchable FAQ accordion that filters items, auto-expands matches, and highlights query text.",
-  "/special-one/flux-button":
-    "Async button with idle, loading, and success states.",
-  "/special-one/theme-toggle":
-    "Animated light/dark pill toggle with a sliding knob, sun and moon icons, and springy color transitions.",
-  "/special-one/verified-badge":
-    "X-style verified badge with shimmer or static variants.",
-  "/components/carousel":
-    "Embla-powered carousel with aspect-ratio presets and horizontal or vertical slides.",
+  "/navigation/accordion":
+    "Accordion docs in the Navigation section with a provider switch that swaps between Base UI and Radix UI registry entries.",
+  "/feedback-and-alerts/alert":
+    "Alert docs in the Feedback & Alerts section, using the shared Iconiq alert install with provider options visible but disabled.",
+  "/overlay-and-popups/alert-dialog":
+    "Alert dialog docs in the Overlay & Popups section with a provider switch that swaps between Base UI and Radix UI registry entries.",
+  "/display-and-content/avatar":
+    "Avatar docs in the Display & Content section for the compound Base UI avatar with image, fallback, badge, group, and count parts.",
+  "/display-and-content/badge":
+    "Badge docs in the Display & Content section, using the shared Iconiq badge install with provider options visible but disabled.",
+  "/navigation/breadcrumbs":
+    "Breadcrumbs docs in the Navigation section for the compound Base UI render-compatible trail with animated items, separators, current page, and ellipsis parts.",
+  "/buttons-and-actions/button":
+    "Base UI button docs in the Buttons & Actions section, preserving the same Iconiq motion and API as the core button.",
+  "/buttons-and-actions/button-group":
+    "Button group docs in the Buttons & Actions section, using the shared Iconiq button group install with provider options visible but disabled.",
+  "/display-and-content/calendar":
+    "Calendar docs in the Display & Content section, using the shared Iconiq calendar install with month/year picking, fluid date-grid motion, and provider options visible but disabled.",
+  "/display-and-content/charts":
+    "Charts docs in the Display & Content section, using the shared Iconiq Recharts shell with provider options visible but disabled because there is no Radix UI or Base UI variant.",
+  "/display-and-content/card":
+    "Card docs in the Display & Content section, using the shared Iconiq card install with provider options visible but disabled because there is no Radix UI or Base UI variant.",
+  "/inputs-and-forms/checkbox":
+    "Checkbox docs in the Inputs & Forms section with a provider switch that swaps between Base UI and Radix UI registry entries.",
+  "/inputs-and-forms/checkbox-group":
+    "Base UI checkbox group docs in the Inputs & Forms section, preserving the same Iconiq row motion and disclosure behavior as the core checkbox group.",
+  "/layout-and-toolbars/collapsible":
+    "Collapsible docs in the Layout & Toolbars section with a provider switch that swaps between Base UI and Radix UI registry entries.",
+  "/inputs-and-forms/color-picker":
+    "Color picker docs in the Inputs & Forms section with Iconiq HSV panel, format switching, alpha control, and EyeDropper.",
+  "/inputs-and-forms/autocomplete":
+    "Autocomplete docs in the Inputs & Forms section with a Base UI country search example, list filtering, and minimal spring motion on the suggestion panel.",
+  "/inputs-and-forms/combobox":
+    "Base UI combobox docs in the Inputs & Forms section, preserving the same Iconiq filtering, keyboard navigation, and dropdown motion as the core combobox.",
+  "/overlay-and-popups/context-menu":
+    "Composable context menu docs in the Overlay & Popups section with a provider switch between Base UI and Radix UI registry installs.",
+  "/overlay-and-popups/dialog":
+    "Dialog docs in the Overlay & Popups section with a provider switch that swaps between Base UI and Radix UI registry entries.",
+  "/overlay-and-popups/drawer":
+    "Drawer docs in the Overlay & Popups section, using the Vaul-backed drawer registry entry with Base UI and Radix UI options visible but disabled.",
+  "/overlay-and-popups/dropdown":
+    "Dropdown docs in the Overlay & Popups section, using a Radix Dropdown Menu implementation that preserves the exact Iconiq dropdown shell and motion.",
+  "/inputs-and-forms/file-upload":
+    "File upload docs in the Inputs & Forms section, using the shared Iconiq file upload install with provider options visible but disabled.",
+  "/overlay-and-popups/hover-card":
+    "Hover card docs in the Overlay & Popups section with a provider switch that swaps between a Base UI popover-backed install and a Radix Hover Card primitive install.",
+  "/overlay-and-popups/popover":
+    "Popover docs in the Overlay & Popups section with a provider switch that swaps between Base UI and Radix UI registry entries.",
+  "/display-and-content/progress":
+    "Progress docs in the Display & Content section with a provider switch that swaps between Base UI and Radix UI registry entries.",
+  "/inputs-and-forms/radio-group":
+    "Radio group docs in the Inputs & Forms section with a provider switch that swaps between Base UI and Radix UI registry entries.",
+  "/inputs-and-forms/select":
+    "Select docs in the Inputs & Forms section with a provider switch that swaps between Base UI and Radix UI registry entries.",
+  "/layout-and-toolbars/separator":
+    "Separator docs in the Layout & Toolbars section with a provider switch that swaps between Base UI and Radix UI registry entries, plus line, dashed, and dotted variants.",
+  "/layout-and-toolbars/selection-toolbar":
+    "Selection toolbar docs in the Layout & Toolbars section with a provider switch that swaps between Base UI and Radix UI registry entries.",
+  "/display-and-content/skeleton":
+    "Skeleton docs in the Display & Content section, using the shared Iconiq skeleton install with provider options visible but disabled.",
+  "/inputs-and-forms/slider":
+    "Slider docs in the Inputs & Forms section with a provider switch that swaps between Base UI and Radix UI registry entries.",
+  "/display-and-content/spinner":
+    "Spinner docs in the Display & Content section, using the shared Iconiq spinner install with provider options visible but disabled.",
+  "/inputs-and-forms/switch":
+    "Switch docs in the Inputs & Forms section with a provider switch that swaps between Base UI and Radix UI registry entries.",
+  "/display-and-content/table":
+    "Table docs in the Display & Content section, using the shared Iconiq table install with the provider options visible but disabled.",
+  "/navigation/tabs":
+    "Tabs docs in the Navigation section with a provider switch that swaps between Base UI and Radix UI registry entries.",
+  "/overlay-and-popups/tooltip":
+    "Tooltip docs in the Overlay & Popups section with a provider switch that swaps between Base UI and Radix UI registry entries.",
+  "/buttons-and-actions/icon-bar":
+    "Horizontal icon chips in the Buttons & Actions section that expand on hover to reveal short labels with spring motion.",
+  "/buttons-and-actions/toggle":
+    "Toggle docs in the Buttons & Actions section with a provider switch that swaps between Base UI and Radix UI registry entries and spring press feedback.",
+  "/buttons-and-actions/toggle-group":
+    "Toggle group docs in the Buttons & Actions section with a provider switch that swaps between Base UI and Radix UI registry entries for segmented toolbar controls.",
+  "/layout-and-toolbars/infiniteribbon":
+    "Looping announcement ribbon in the Layout & Toolbars section that repeats text into a full-width marquee with optional reverse direction and rotation.",
+  "/special-one/radial-button":
+    "Rounded action button with a radial fill that spreads on hover and inverts the label.",
+  "/navigation/faq-pro":
+    "Searchable FAQ accordion in the Navigation section that filters items, auto-expands matches, and highlights query text.",
+  "/buttons-and-actions/flux-button":
+    "Async button in the Buttons & Actions section with idle, loading, and success states.",
+  "/inputs-and-forms/theme-toggle":
+    "Animated light/dark pill switch with sun and moon icons.",
+  "/display-and-content/verified-badge":
+    "X-style verified badge in the Display & Content section with shimmer or static variants.",
+  "/display-and-content/carousel":
+    "Embla-powered carousel in the Display & Content section with aspect-ratio presets and horizontal or vertical slides.",
   "/foundation/typography":
     "Single typography primitive for headings, labels, paragraphs, subheadings, and documentation copy.",
   "/texts/dia-text":
@@ -166,13 +166,6 @@ const extraComponentKeywordsBySlug: Record<string, string[]> = {
     "cursor velocity",
     "animated words",
     "motion text",
-  ],
-  "toggle-group": [
-    "toggle group",
-    "togglegroup",
-    "segmented control",
-    "segmented",
-    "view switch",
   ],
   typography: [
     "type scale",

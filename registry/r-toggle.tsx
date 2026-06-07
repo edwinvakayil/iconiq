@@ -1,6 +1,8 @@
-import * as TogglePrimitive from "@radix-ui/react-toggle";
+"use client";
+
 import { cva, type VariantProps } from "class-variance-authority";
-import { motion, useAnimationControls } from "motion/react";
+import { animate, motion, useMotionValue, useTransform } from "motion/react";
+import { Toggle as TogglePrimitive } from "radix-ui";
 import * as React from "react";
 
 import {
@@ -10,39 +12,49 @@ import {
 } from "@/lib/reduced-motion";
 import { cn } from "@/lib/utils";
 
-const componentThemeClassName =
-  "[--ic-background:#ffffff] [--ic-foreground:#111111] [--ic-primary:#111111] [--ic-secondary:#646b75] [--ic-surface-border:#e9edf2] [--ic-border:#e3e7ec] [--ic-card:#ffffff] [--ic-card-foreground:#111111] [--ic-muted:#f5f7fa] [--ic-muted-foreground:#6d7480] [--ic-accent:#f3f5f8] [--color-accent:var(--ic-accent)] [--color-accent-foreground:var(--ic-accent-foreground)] [--ic-accent-foreground:#111111] [--ic-input:#e3e7ec] [--ic-ring:rgba(17,17,17,0.16)] [--ic-destructive:#dc2626] [--ic-paper:#fcfcfd] [--ic-popover-foreground:#111111] [--ic-brand:#0ea5e9] [--ic-brand-soft:#bae6fd] [--ic-shadow-soft:0_18px_38px_-24px_rgba(15,23,42,0.35)] [--ic-chart-1:oklch(0.52_0.19_254)] [--ic-chart-2:oklch(0.74_0.11_232)] [--ic-chart-3:oklch(0.42_0.16_262)] [--ic-chart-4:oklch(0.84_0.07_228)] [--ic-chart-5:oklch(0.62_0.14_240)] [--color-background:var(--ic-background)] [--color-foreground:var(--ic-foreground)] [--color-primary:var(--ic-primary)] [--color-secondary:var(--ic-secondary)] [--color-border:var(--ic-border)] [--color-card:var(--ic-card)] [--color-card-foreground:var(--ic-card-foreground)] [--color-muted:var(--ic-muted)] [--color-muted-foreground:var(--ic-muted-foreground)] [--color-accent:var(--ic-accent)] [--color-accent-foreground:var(--ic-accent-foreground)] [--color-input:var(--ic-input)] [--color-ring:var(--ic-ring)] [--color-destructive:var(--ic-destructive)] [--color-paper:var(--ic-paper)] [--color-popover-foreground:var(--ic-popover-foreground)] [--color-brand:var(--ic-brand)] [--color-brand-soft:var(--ic-brand-soft)] [--color-chart-1:var(--ic-chart-1)] [--color-chart-2:var(--ic-chart-2)] [--color-chart-3:var(--ic-chart-3)] [--color-chart-4:var(--ic-chart-4)] [--color-chart-5:var(--ic-chart-5)] dark:[--ic-background:#111111] dark:[--ic-foreground:#f6f3ec] dark:[--ic-primary:#f6f3ec] dark:[--ic-secondary:#cbc6bb] dark:[--ic-surface-border:#2a2a25] dark:[--ic-border:#2b2a25] dark:[--ic-card:#111111] dark:[--ic-card-foreground:#f6f3ec] dark:[--ic-muted:#171716] dark:[--ic-muted-foreground:#9a958a] dark:[--ic-accent:#1a1a18] [--color-accent:var(--ic-accent)] [--color-accent-foreground:var(--ic-accent-foreground)] dark:[--ic-accent-foreground:#f6f3ec] dark:[--ic-input:#2b2a25] dark:[--ic-ring:rgba(246,243,236,0.18)] dark:[--ic-destructive:#f87171] dark:[--ic-paper:#171716] dark:[--ic-popover-foreground:#f6f3ec] dark:[--ic-brand:#38bdf8] dark:[--ic-brand-soft:#0c4a6e] dark:[--ic-shadow-soft:0_20px_44px_-28px_rgba(0,0,0,0.6)] dark:[--ic-chart-1:oklch(0.68_0.17_250)] dark:[--ic-chart-2:oklch(0.82_0.09_225)] dark:[--ic-chart-3:oklch(0.58_0.15_260)] dark:[--ic-chart-4:oklch(0.75_0.12_235)] dark:[--ic-chart-5:oklch(0.88_0.06_220)]";
+const ICON_REST = 0.93;
 
-function hasTextContent(node: React.ReactNode): boolean {
-  if (typeof node === "string" || typeof node === "number") {
-    return String(node).trim().length > 0;
-  }
-
-  if (Array.isArray(node)) {
-    return node.some(hasTextContent);
-  }
-
-  if (React.isValidElement<{ children?: React.ReactNode }>(node)) {
-    return hasTextContent(node.props.children);
-  }
-
-  return false;
-}
+const FLUID_FILL = {
+  type: "spring" as const,
+  stiffness: 210,
+  damping: 28,
+  mass: 1.08,
+};
+const FLUID_ICON = {
+  type: "spring" as const,
+  stiffness: 340,
+  damping: 32,
+  mass: 0.92,
+};
+const FLUID_TAP = {
+  type: "spring" as const,
+  stiffness: 520,
+  damping: 34,
+  mass: 0.72,
+};
+const FLUID_SNAP = {
+  type: "spring" as const,
+  duration: 0.45,
+  bounce: 0.32,
+};
+const FLUID_SHEEN = {
+  duration: 0.58,
+  ease: [0.22, 1, 0.36, 1] as const,
+};
 
 const toggleVariants = cva(
-  "group/toggle relative inline-flex touch-manipulation select-none items-center justify-center gap-2 overflow-hidden whitespace-nowrap rounded-md font-medium text-sm transition-[color,box-shadow,transform] duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+  "group/toggle relative inline-flex items-center justify-center gap-1 overflow-hidden whitespace-nowrap rounded-lg font-medium text-sm outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0",
   {
     variants: {
       variant: {
-        default:
-          "bg-transparent text-foreground hover:bg-accent/60 hover:text-foreground",
-        outline:
-          "border border-input bg-background text-foreground shadow-sm hover:bg-accent/60 hover:text-accent-foreground",
+        default: "bg-transparent",
+        outline: "border border-input bg-transparent",
       },
       size: {
-        default: "h-9 px-3.5",
-        sm: "h-8 px-3 text-xs",
-        lg: "h-10 px-4.5",
+        default:
+          "h-8 min-w-8 px-2.5 has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2",
+        sm: "h-7 min-w-7 rounded-[min(var(--radius-md),12px)] px-2.5 text-[0.8rem] has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 [&_svg:not([class*='size-'])]:size-3.5",
+        lg: "h-9 min-w-9 px-2.5 has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2",
       },
     },
     defaultVariants: {
@@ -52,184 +64,254 @@ const toggleVariants = cva(
   }
 );
 
-const Toggle = React.forwardRef<
-  React.ElementRef<typeof TogglePrimitive.Root>,
-  React.ComponentPropsWithoutRef<typeof TogglePrimitive.Root> &
-    VariantProps<typeof toggleVariants> &
-    ReducedMotionProp
->(
-  (
-    {
-      children,
-      className,
-      onPressedChange,
-      reducedMotion,
-      size,
-      variant,
-      ...props
+type ToggleProps = React.ComponentProps<typeof TogglePrimitive.Root> &
+  VariantProps<typeof toggleVariants> &
+  ReducedMotionProp;
+
+function setRef<T>(ref: React.Ref<T> | undefined, value: T | null) {
+  if (typeof ref === "function") {
+    ref(value);
+    return;
+  }
+
+  if (ref) {
+    (ref as React.MutableRefObject<T | null>).current = value;
+  }
+}
+
+function runSheenSweep(
+  sheenX: ReturnType<typeof useMotionValue<number>>,
+  sheenOpacity: ReturnType<typeof useMotionValue<number>>
+) {
+  sheenX.set(-0.4);
+  sheenOpacity.set(0.85);
+
+  animate(sheenX, 1.4, FLUID_SHEEN);
+  animate(sheenOpacity, 0, {
+    duration: 0.58,
+    ease: [0.4, 0, 0.2, 1],
+  });
+}
+
+const Toggle = React.forwardRef<HTMLButtonElement, ToggleProps>(function Toggle(
+  {
+    className,
+    variant = "default",
+    size = "default",
+    pressed,
+    defaultPressed = false,
+    disabled,
+    onPointerDown,
+    onPointerLeave,
+    onPointerUp,
+    onPressedChange,
+    children,
+    reducedMotion,
+    ...props
+  },
+  forwardedRef
+) {
+  const isControlled = pressed !== undefined;
+  const [uncontrolledPressed, setUncontrolledPressed] =
+    React.useState(defaultPressed);
+  const reduceMotion = useResolvedReducedMotion(reducedMotion);
+  const isPressed = isControlled ? Boolean(pressed) : uncontrolledPressed;
+
+  const fillProgress = useMotionValue(isPressed ? 1 : 0);
+  const iconScale = useMotionValue(isPressed ? 1 : ICON_REST);
+  const iconScaleX = useMotionValue(1);
+  const iconScaleY = useMotionValue(1);
+  const sheenX = useMotionValue(-0.4);
+  const sheenOpacity = useMotionValue(0);
+
+  const fillScaleX = useTransform(fillProgress, [0, 1], [0, 1]);
+  const fillOpacity = useTransform(fillProgress, [0, 0.1, 1], [0, 0.92, 1]);
+  const sheenLeft = useTransform(sheenX, (value) => `${value * 100}%`);
+
+  const [wipeOrigin, setWipeOrigin] = React.useState("left center");
+  const prevPressedRef = React.useRef(isPressed);
+  const isPointerDownRef = React.useRef(false);
+
+  React.useEffect(() => {
+    if (prevPressedRef.current === isPressed) {
+      return;
+    }
+
+    prevPressedRef.current = isPressed;
+    setWipeOrigin(isPressed ? "left center" : "right center");
+
+    if (reduceMotion) {
+      fillProgress.set(isPressed ? 1 : 0);
+      iconScale.set(isPressed ? 1 : ICON_REST);
+      iconScaleX.set(1);
+      iconScaleY.set(1);
+      sheenOpacity.set(0);
+      return;
+    }
+
+    animate(fillProgress, isPressed ? 1 : 0, FLUID_FILL);
+    animate(iconScale, isPressed ? 1 : ICON_REST, FLUID_ICON);
+    runSheenSweep(sheenX, sheenOpacity);
+
+    animate(iconScaleX, 1.1, FLUID_TAP).then(() => {
+      animate(iconScaleX, 1, FLUID_SNAP);
+    });
+    animate(iconScaleY, 0.91, FLUID_TAP).then(() => {
+      animate(iconScaleY, 1, FLUID_SNAP);
+    });
+  }, [
+    fillProgress,
+    iconScale,
+    iconScaleX,
+    iconScaleY,
+    isPressed,
+    reduceMotion,
+    sheenOpacity,
+    sheenX,
+  ]);
+
+  React.useEffect(() => {
+    if (!isControlled) {
+      setUncontrolledPressed(defaultPressed);
+    }
+  }, [defaultPressed, isControlled]);
+
+  const handlePressedChange = React.useCallback<
+    NonNullable<
+      React.ComponentProps<typeof TogglePrimitive.Root>["onPressedChange"]
+    >
+  >(
+    (next) => {
+      if (!isControlled) {
+        setUncontrolledPressed(next);
+      }
+
+      onPressedChange?.(next);
     },
-    ref
-  ) => {
-    const buttonControls = useAnimationControls();
-    const iconControls = useAnimationControls();
-    const resolvedReducedMotion = useResolvedReducedMotion(reducedMotion);
-    const isIconOnly = !hasTextContent(children);
-    const canAnimate = !(props.disabled || resolvedReducedMotion);
-    const isPressedControlled = props.pressed !== undefined;
-    const [uncontrolledPressed, setUncontrolledPressed] = React.useState(
-      props.defaultPressed ?? false
-    );
-    const pressed = isPressedControlled
-      ? props.pressed === true
-      : uncontrolledPressed;
+    [isControlled, onPressedChange]
+  );
 
-    const ariaLabel = props["aria-label"];
-    const ariaLabelledBy = props["aria-labelledby"];
+  const resetTapScale = React.useCallback(() => {
+    if (reduceMotion) {
+      iconScaleX.set(1);
+      iconScaleY.set(1);
+      return;
+    }
 
-    React.useEffect(() => {
-      if (process.env.NODE_ENV === "production") {
+    animate(iconScaleX, 1, FLUID_SNAP);
+    animate(iconScaleY, 1, FLUID_SNAP);
+  }, [iconScaleX, iconScaleY, reduceMotion]);
+
+  const handlePointerDown = React.useCallback(
+    (event: React.PointerEvent<HTMLButtonElement>) => {
+      onPointerDown?.(event);
+
+      if (event.defaultPrevented || disabled || event.button !== 0) {
         return;
       }
 
-      if (!(isIconOnly && !(ariaLabel || ariaLabelledBy))) {
+      isPointerDownRef.current = true;
+
+      if (!reduceMotion) {
+        animate(iconScaleX, 0.86, FLUID_TAP);
+        animate(iconScaleY, 1.08, FLUID_TAP);
+      }
+    },
+    [disabled, iconScaleX, iconScaleY, onPointerDown, reduceMotion]
+  );
+
+  const handlePointerUp = React.useCallback(
+    (event: React.PointerEvent<HTMLButtonElement>) => {
+      onPointerUp?.(event);
+
+      if (!isPointerDownRef.current) {
         return;
       }
 
-      console.warn(
-        "Toggle: icon-only toggles should include aria-label or aria-labelledby so the control has a clear accessible name."
-      );
-    }, [ariaLabel, ariaLabelledBy, isIconOnly]);
+      isPointerDownRef.current = false;
+      resetTapScale();
+    },
+    [onPointerUp, resetTapScale]
+  );
 
-    const runPressedMotion = React.useCallback(
-      (nextPressed: boolean) => {
-        buttonControls.start({
-          scale: nextPressed ? [1, 0.968, 1.022, 1] : [1, 0.982, 1.01, 1],
-          y: nextPressed ? [0, -0.8, 0] : [0, -0.3, 0],
-          transition: {
-            duration: 0.34,
-            ease: [0.22, 1, 0.36, 1],
-          },
-        });
+  const handlePointerLeave = React.useCallback(
+    (event: React.PointerEvent<HTMLButtonElement>) => {
+      onPointerLeave?.(event);
 
-        iconControls.start({
-          scale: nextPressed ? [1, 0.9, 1.08, 1] : [1, 0.96, 1.02, 1],
-          rotate: nextPressed ? [0, -8, 0] : [0, 4, 0],
-          transition: {
-            type: "spring",
-            stiffness: 260,
-            damping: 18,
-            mass: 0.8,
-          },
-        });
-      },
-      [buttonControls, iconControls]
-    );
-
-    const handlePressedChange = (nextPressed: boolean) => {
-      if (!isPressedControlled) {
-        setUncontrolledPressed(nextPressed);
+      if (!isPointerDownRef.current) {
+        return;
       }
 
-      if (canAnimate) {
-        runPressedMotion(nextPressed);
-      }
+      isPointerDownRef.current = false;
+      resetTapScale();
+    },
+    [onPointerLeave, resetTapScale]
+  );
 
-      onPressedChange?.(nextPressed);
-    };
+  const mergeRefs = React.useCallback(
+    (node: HTMLButtonElement | null) => {
+      setRef(forwardedRef, node);
+    },
+    [forwardedRef]
+  );
 
-    const selectedClasses =
-      "border-border bg-accent text-accent-foreground shadow-sm";
-    const overlayTransition = canAnimate
-      ? {
-          duration: 0.26,
-          ease: [0.22, 1, 0.36, 1] as const,
-        }
-      : { duration: 0.14 };
-
-    return (
-      <ReducedMotionConfig reducedMotion={reducedMotion}>
-        <TogglePrimitive.Root
-          asChild
-          onPressedChange={handlePressedChange}
-          ref={ref}
-          {...props}
+  return (
+    <ReducedMotionConfig reducedMotion={reducedMotion}>
+      <TogglePrimitive.Root
+        {...props}
+        className={cn(toggleVariants({ variant, size, className }))}
+        data-slot="toggle"
+        disabled={disabled}
+        onPointerDown={handlePointerDown}
+        onPointerLeave={handlePointerLeave}
+        onPointerUp={handlePointerUp}
+        onPressedChange={handlePressedChange}
+        pressed={pressed}
+        ref={mergeRefs}
+        {...(isControlled ? {} : { defaultPressed })}
+      >
+        <motion.span
+          aria-hidden
+          className="pointer-events-none absolute inset-0 z-0 rounded-[inherit] bg-muted"
+          style={{
+            opacity: fillOpacity,
+            scaleX: fillScaleX,
+            transformOrigin: wipeOrigin,
+          }}
+        />
+        <span
+          aria-hidden
+          className="pointer-events-none absolute inset-0 z-[1] overflow-hidden rounded-[inherit]"
         >
-          <motion.button
-            animate={buttonControls}
-            className={cn(
-              componentThemeClassName,
-              toggleVariants({ variant, size }),
-              pressed && selectedClasses,
-              isIconOnly && "px-0",
-              className
-            )}
-            style={undefined}
-            whileHover={
-              canAnimate
-                ? {
-                    scale: 1.01,
-                    y: -0.5,
-                    transition: { type: "spring", stiffness: 300, damping: 24 },
-                  }
-                : undefined
-            }
-            whileTap={canAnimate ? { scale: 0.985, y: 0.15 } : undefined}
+          <motion.span
+            className="absolute inset-y-[-20%] w-[42%] -skew-x-[18deg] bg-gradient-to-r from-transparent via-foreground/18 to-transparent dark:via-foreground/26"
+            style={{
+              left: sheenLeft,
+              opacity: sheenOpacity,
+            }}
+          />
+        </span>
+        <span className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center">
+          <motion.span
+            className="inline-flex origin-center items-center justify-center"
+            style={{ scale: iconScale }}
           >
             <motion.span
-              animate={
-                pressed
-                  ? {
-                      opacity: 1,
-                      scale: 1,
-                      y: 0,
-                    }
-                  : {
-                      opacity: 0,
-                      scale: 0.92,
-                      y: 2,
-                    }
-              }
-              aria-hidden
-              className="absolute inset-0 z-0 rounded-[inherit] bg-accent"
-              initial={false}
-              transition={overlayTransition}
-            />
-            <motion.span
-              animate={
-                canAnimate
-                  ? {
-                      x: pressed ? 0.8 : 0,
-                    }
-                  : undefined
-              }
-              className="relative z-10 inline-flex items-center gap-2"
-              initial={false}
-              transition={{
-                type: "spring",
-                stiffness: 280,
-                damping: 20,
-                mass: 0.85,
+              className="inline-flex origin-center items-center justify-center [&_svg]:block"
+              style={{
+                scaleX: iconScaleX,
+                scaleY: iconScaleY,
               }}
             >
-              <motion.span
-                animate={iconControls}
-                className={cn(
-                  "inline-flex items-center gap-2 transition-colors duration-200",
-                  pressed ? "text-accent-foreground" : "text-foreground",
-                  isIconOnly && "gap-0"
-                )}
-                style={{ transformOrigin: "center" }}
-              >
-                {children}
-              </motion.span>
+              {children}
             </motion.span>
-          </motion.button>
-        </TogglePrimitive.Root>
-      </ReducedMotionConfig>
-    );
-  }
-);
+          </motion.span>
+        </span>
+      </TogglePrimitive.Root>
+    </ReducedMotionConfig>
+  );
+});
 
-Toggle.displayName = TogglePrimitive.Root.displayName;
+Toggle.displayName = "Toggle";
 
 export { Toggle, toggleVariants };

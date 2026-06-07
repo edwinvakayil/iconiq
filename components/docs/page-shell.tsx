@@ -18,6 +18,7 @@ import { Separator } from "@/components/ui/separator";
 import { getComponentV0Page } from "@/lib/component-v0-pages";
 import { nodeToText } from "@/lib/node-to-text";
 import { ReducedMotionOverride } from "@/lib/reduced-motion";
+import { SECTION_PATH_PREFIX } from "@/lib/section-paths";
 import { SITE_SECTIONS } from "@/lib/site-nav";
 import { cn } from "@/lib/utils";
 import { BreadcrumbJsonLd } from "@/seo/breadcrumb-json-ld";
@@ -77,7 +78,6 @@ const REDUCED_MOTION_COMPONENTS = new Set([
   "b-slider",
   "b-switch",
   "b-tabs",
-  "b-toggle",
   "badge",
   "button",
   "button-group",
@@ -94,7 +94,6 @@ const REDUCED_MOTION_COMPONENTS = new Set([
   "r-slider",
   "r-switch",
   "r-tabs",
-  "r-toggle",
   "r-tooltip",
   "r-context-menu",
   "r-accordion",
@@ -109,14 +108,13 @@ const REDUCED_MOTION_COMPONENTS = new Set([
   "slider",
   "switch",
   "tabs",
-  "toggle",
   "tooltip",
 ]);
 
 /** Special One and other docs pages that should not render the ReducedMotion section. */
 const REDUCED_MOTION_DOCS_EXCLUDED = new Set([
   "icon-bar",
-  "origin-button",
+  "radial-button",
   "flux-button",
   "faq-pro",
   "theme-toggle",
@@ -210,18 +208,22 @@ function supportsReducedMotionDocs(componentName: string) {
 }
 
 function inferDocsPageUrl(sectionLabel: string, itemSlug: string) {
-  switch (sectionLabel) {
-    case "Components":
-      return `/components/${itemSlug}`;
-    case "Special One":
-      return `/special-one/${itemSlug}`;
-    case "Foundation":
-      return `/foundation/${itemSlug}`;
-    case "Texts":
-      return `/texts/${itemSlug}`;
-    default:
-      return `/${itemSlug}`;
+  const navItem = SITE_SECTIONS.find(
+    (section) => section.label.toLowerCase() === sectionLabel.toLowerCase()
+  )?.children.find((item) => item.href.split("/").pop() === itemSlug);
+
+  if (navItem) {
+    return navItem.href;
   }
+
+  const sectionPrefix =
+    SECTION_PATH_PREFIX[sectionLabel as keyof typeof SECTION_PATH_PREFIX];
+
+  if (sectionPrefix) {
+    return `${sectionPrefix}/${itemSlug}`;
+  }
+
+  return `/${itemSlug}`;
 }
 
 function withReducedMotionDetail(details: DetailItem[]) {
@@ -348,6 +350,13 @@ function DocsBreadcrumbs({
       "components",
       "foundation",
       "getting started",
+      "buttons & actions",
+      "inputs & forms",
+      "overlay & popups",
+      "navigation",
+      "display & content",
+      "feedback & alerts",
+      "layout & toolbars",
       "radix ui + base ui",
       "texts",
       "special one",
