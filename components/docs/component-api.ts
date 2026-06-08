@@ -4345,6 +4345,140 @@ const fluxButtonApiDetails: DetailItem[] = [
   ]),
 ];
 
+const fileTreeApiDetails: DetailItem[] = [
+  {
+    id: "file-tree",
+    title: "FileTree",
+    summary:
+      "Root provider for the compound file tree. Tracks expanded folders, hover highlight bounds, and shared visual settings.",
+    fields: [
+      field({
+        name: "defaultExpandedIds",
+        type: "string[]",
+        defaultValue: "[]",
+        description:
+          "Folder node ids that should start expanded on first render.",
+      }),
+      field({
+        name: "highlightColor",
+        type: "string",
+        defaultValue: "#3b82f6",
+        description:
+          "Text color applied to items with `highlight` on `FileTreeItem`.",
+      }),
+      field({
+        name: "indentSize",
+        type: "number",
+        defaultValue: "24",
+        description:
+          "Horizontal indent in pixels for each nested folder level.",
+      }),
+      field({
+        name: "showIcons",
+        type: "boolean",
+        defaultValue: "true",
+        description:
+          "Whether to render icons. File icons are inferred from the label extension when no custom icon is provided.",
+      }),
+      field({
+        name: "onNodeClick",
+        type: "(nodeId: string) => void",
+        description: "Called when a file or folder row is activated.",
+      }),
+      field({
+        name: "onNodeExpand",
+        type: "(nodeId: string, expanded: boolean) => void",
+        description: "Called when a folder branch opens or closes.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description:
+          "Optional class names applied to the bordered root container.",
+      }),
+      field({
+        name: "children",
+        type: "React.ReactNode",
+        description:
+          "Usually a single `FileTreeList` with nested `FileTreeItem` rows.",
+      }),
+    ],
+    notes: [
+      "Wrap `FileTreeList` and nested `FileTreeItem` components inside the root provider.",
+      "Hovering any row updates a single animated highlight that follows the active item inside the tree container.",
+    ],
+  },
+  {
+    id: "file-tree-list",
+    title: "FileTreeList",
+    summary:
+      "Semantic tree container for top-level and nested file rows. Supports Base UI `render` composition instead of Radix Slot.",
+    fields: [
+      field({
+        name: "className",
+        type: "string",
+        description: "Merged with the default vertical stack layout.",
+      }),
+      field({
+        name: "render",
+        type: "ReactElement | ((props) => ReactElement)",
+        description:
+          "Optional Base UI render override for the list container element.",
+      }),
+    ],
+  },
+  {
+    id: "file-tree-item",
+    title: "FileTreeItem",
+    summary:
+      "Single file or folder row. Nested children render as an animated branch when the row is expandable.",
+    fields: [
+      field({
+        name: "nodeId",
+        type: "string",
+        required: true,
+        description:
+          "Stable unique id used for expand state, callbacks, and tree semantics.",
+      }),
+      field({
+        name: "label",
+        type: "string",
+        required: true,
+        description:
+          "Display label for the row. File extension is used to pick a default icon.",
+      }),
+      field({
+        name: "icon",
+        type: "React.ReactNode",
+        description: "Optional custom icon node rendered before the label.",
+      }),
+      field({
+        name: "hasChildren",
+        type: "boolean",
+        description:
+          "Marks the row as a branch even when it has no nested children yet. Otherwise inferred from child items.",
+      }),
+      field({
+        name: "highlight",
+        type: "boolean",
+        description:
+          "When true, tints the row with `highlightColor` to mark it as new or relevant.",
+      }),
+      field({
+        name: "children",
+        type: "React.ReactNode",
+        description:
+          "Nested `FileTreeItem` rows rendered when the branch is expanded.",
+      }),
+    ],
+    notes: [
+      "Folder rows use Base UI Button for the toggle control while file rows remain static display rows.",
+      "Folder icons swap with a spring transition, and child lists animate open and closed with height and opacity motion.",
+    ],
+  },
+  registryItem("file-tree.json", ["@base-ui/react", "motion", "lucide-react"]),
+];
+
 const faqProApiDetails: DetailItem[] = [
   {
     id: "faq-pro",
@@ -5519,6 +5653,7 @@ export {
   themeToggleApiDetails,
   verifiedBadgeApiDetails,
   faqProApiDetails,
+  fileTreeApiDetails,
   popoverApiDetails,
   accordionApiDetails,
   progressApiDetails,

@@ -569,6 +569,12 @@ const REGISTRY_UI_META: Record<
       "Searchable FAQ accordion with rounded cards, animated panels, automatic match expansion, and inline query highlighting. Built with Base UI Accordion, Motion, and Lucide.",
     dependencies: ["@base-ui/react/accordion", "motion", "lucide-react"],
   },
+  "file-tree": {
+    title: "File Tree",
+    description:
+      "Compound file tree with nested FileTreeItem rows, Base UI Button folder toggles, extension-aware icons, hover highlight tracking, and optional blue emphasis for new files.",
+    dependencies: ["@base-ui/react", "motion", "lucide-react"],
+  },
   popover: {
     title: "Popover",
     description:

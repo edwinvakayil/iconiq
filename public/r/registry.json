@@ -684,6 +684,21 @@
       ]
     },
     {
+      "name": "file-tree",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": ["@base-ui/react", "motion", "lucide-react"],
+      "devDependencies": [],
+      "title": "File Tree",
+      "description": "Compound file tree with nested FileTreeItem rows, Base UI Button folder toggles, extension-aware icons, hover highlight tracking, and optional blue emphasis for new files.",
+      "files": [
+        {
+          "path": "file-tree.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "file-upload",
       "type": "registry:ui",
       "registryDependencies": [],

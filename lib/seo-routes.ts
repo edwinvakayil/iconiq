@@ -92,7 +92,7 @@ const SECTION_FALLBACK_SEO: Record<string, RouteSeo> = {
   Navigation: {
     title: "Navigation",
     description:
-      "Browse Iconiq UI navigation components for accordions, breadcrumbs, and tabs with live previews and shadcn registry installs.",
+      "Browse Iconiq UI navigation components for accordions, breadcrumbs, file trees, and tabs with live previews and shadcn registry installs.",
     keywords: [
       "iconiq ui navigation",
       "react tabs breadcrumbs accordion",

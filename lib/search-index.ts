@@ -104,6 +104,8 @@ const componentSummaries: Record<string, string> = {
     "Rounded action button with a radial fill that spreads on hover and inverts the label.",
   "/navigation/faq-pro":
     "Searchable FAQ accordion in the Navigation section that filters items, auto-expands matches, and highlights query text.",
+  "/navigation/file-tree":
+    "Compound file tree in the Navigation section with nested FileTreeItem rows, Base UI Button folder toggles, hover highlight tracking, and optional emphasis for new files. Base UI install only.",
   "/buttons-and-actions/flux-button":
     "Async button in the Buttons & Actions section with idle, loading, and success states.",
   "/inputs-and-forms/theme-toggle":
