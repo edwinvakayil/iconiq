@@ -1,6 +1,6 @@
 "use client";
 
-import type { OTPFieldInput } from "@base-ui/react/otp-field";
+import type { OTPFieldInput, OTPFieldRoot } from "@base-ui/react/otp-field";
 import { OTPFieldPreview as OTPField } from "@base-ui/react/otp-field";
 import {
   AnimatePresence,
@@ -49,6 +49,54 @@ type OTPProps = React.ComponentPropsWithoutRef<typeof OTPField.Root> & {
   reducedMotion?: boolean;
 };
 
+const otpRootBaseClassName = "flex items-center gap-3 data-disabled:opacity-50";
+
+function resolveRootClassName(
+  className: OTPProps["className"],
+  containerClassName?: string
+) {
+  const baseClassName = cn(otpRootBaseClassName, containerClassName);
+
+  if (typeof className === "function") {
+    return (state: OTPFieldRoot.State) => cn(baseClassName, className(state));
+  }
+
+  return cn(baseClassName, className);
+}
+
+function resolvePlaceholderClassName(className: OTPProps["className"]) {
+  return typeof className === "function" ? undefined : className;
+}
+
+function OTPPlaceholder({
+  className,
+  containerClassName,
+  length,
+  placeholderRef,
+}: {
+  className?: string;
+  containerClassName?: string;
+  length: number;
+  placeholderRef: React.Ref<HTMLDivElement>;
+}) {
+  return (
+    <div
+      aria-hidden
+      className={cn("flex items-center gap-3", containerClassName, className)}
+      ref={placeholderRef}
+    >
+      <div className="flex items-center gap-3">
+        {Array.from({ length }, (_, index) => (
+          <div
+            className="h-14 w-14 rounded-xl border-2 border-border bg-background"
+            key={`otp-placeholder-${index}`}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
 const OTP = React.forwardRef<HTMLDivElement, OTPProps>(
   (
     {
@@ -62,26 +110,38 @@ const OTP = React.forwardRef<HTMLDivElement, OTPProps>(
     },
     ref
   ) => {
+    const [mounted, setMounted] = React.useState(false);
     const prefersReducedMotion = useReducedMotion() ?? false;
     const resolvedLength = length ?? maxLength ?? 6;
     const resolveReducedMotion = reducedMotion ?? prefersReducedMotion;
 
+    React.useEffect(() => {
+      setMounted(true);
+    }, []);
+
     return (
       <OTPLengthContext.Provider value={resolvedLength}>
-        <MotionConfig reducedMotion={resolveReducedMotion ? "always" : "user"}>
-          <OTPField.Root
-            className={cn(
-              "flex items-center gap-3 data-disabled:opacity-50",
-              containerClassName,
-              className
-            )}
-            length={resolvedLength}
-            ref={ref}
-            {...props}
+        {mounted ? (
+          <MotionConfig
+            reducedMotion={resolveReducedMotion ? "always" : "user"}
           >
-            {children}
-          </OTPField.Root>
-        </MotionConfig>
+            <OTPField.Root
+              className={resolveRootClassName(className, containerClassName)}
+              length={resolvedLength}
+              ref={ref}
+              {...props}
+            >
+              {children}
+            </OTPField.Root>
+          </MotionConfig>
+        ) : (
+          <OTPPlaceholder
+            className={resolvePlaceholderClassName(className)}
+            containerClassName={containerClassName}
+            length={resolvedLength}
+            placeholderRef={ref}
+          />
+        )}
       </OTPLengthContext.Provider>
     );
   }

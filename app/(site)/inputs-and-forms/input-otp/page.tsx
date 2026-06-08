@@ -12,7 +12,7 @@ import { LINK } from "@/constants";
 import { OTP, OTPSlots } from "@/registry/input-otp";
 
 const previewSentenceClassName =
-  "text-balance text-center text-[15px] text-muted-foreground leading-relaxed sm:text-base";
+  "text-balance text-center text-[13px] text-muted-foreground leading-tight";
 
 const usageCode = `"use client";
 
@@ -28,7 +28,7 @@ export function InputOtpPreview() {
       <OTP length={6} onValueChange={setValue} value={value}>
         <OTPSlots separatorAfter={3} />
       </OTP>
-      <p className="text-balance text-center text-[15px] text-muted-foreground leading-relaxed sm:text-base">
+      <p className="text-balance text-center text-[13px] text-muted-foreground leading-tight">
         Enter the 6-digit verification code sent to your device.
       </p>
     </div>
