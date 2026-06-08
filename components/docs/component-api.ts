@@ -565,6 +565,65 @@ const calendarApiDetails: DetailItem[] = [
   registryItem("calendar.json", ["motion", "lucide-react", "date-fns"]),
 ];
 
+const datePickerApiDetails: DetailItem[] = [
+  {
+    id: "date-picker",
+    title: "DatePicker",
+    summary:
+      "Collapsible date field with a formatted trigger button and the shared Iconiq Calendar panel underneath.",
+    fields: [
+      field({
+        name: "value",
+        type: "Date | null",
+        description:
+          "Controlled selected date. When provided, the trigger and embedded Calendar both reflect this value.",
+      }),
+      field({
+        name: "placeholder",
+        type: "string",
+        defaultValue: "Select a date",
+        description: "Copy shown in the trigger when no date is selected.",
+      }),
+      field({
+        name: "onChange",
+        type: "(date: Date) => void",
+        description:
+          "Called when the user picks a date from the embedded Calendar.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description: "Optional class names applied to the outer wrapper.",
+      }),
+      field({
+        name: "defaultOpen",
+        type: "boolean",
+        defaultValue: "false",
+        description:
+          "Whether the Calendar panel starts expanded on first render.",
+      }),
+      field({
+        name: "calendarProps",
+        type: "Omit<CalendarProps, 'selected' | 'defaultSelected' | 'onSelect' | 'month' | 'onMonthChange'>",
+        description:
+          "Props forwarded to the embedded Calendar, such as size, locale, disabled, weekStartsOn, minYear, and maxYear.",
+      }),
+    ],
+    notes: [
+      "Also exported as `AnimatedDatePicker` for backwards compatibility.",
+      "The trigger formats the selected date as `EEE, MMM d, yyyy` and toggles the panel open and closed.",
+      "Choosing a date closes the panel automatically while keeping the visible month aligned with the selected value.",
+      "Click outside or press Escape to close the panel. The embedded Calendar stays mounted after the first open to avoid repeat entrance motion.",
+      "Install the `calendar` registry entry alongside `date-picker` so `@/components/ui/calendar` resolves in consumer apps.",
+    ],
+  },
+  registryItem(
+    "date-picker.json",
+    ["motion", "lucide-react", "date-fns"],
+    ["Registry dependency: calendar."]
+  ),
+];
+
 const chartsApiDetails: DetailItem[] = [
   {
     id: "chart-container",
@@ -5628,6 +5687,7 @@ export {
   avatarApiDetails,
   badgeApiDetails,
   calendarApiDetails,
+  datePickerApiDetails,
   cardApiDetails,
   chartsApiDetails,
   breadcrumbsApiDetails,

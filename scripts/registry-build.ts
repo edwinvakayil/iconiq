@@ -327,6 +327,13 @@ const REGISTRY_UI_META: Record<
       "shadcn-style monthly calendar with animated month/year transitions, selectable days, and date-fns-powered grid generation.",
     dependencies: ["motion", "lucide-react", "date-fns"],
   },
+  "date-picker": {
+    title: "Date Picker",
+    description:
+      "Collapsible date picker trigger with the shared Iconiq Calendar panel, spring open motion, and month-aware selection.",
+    dependencies: ["motion", "lucide-react", "date-fns"],
+    registryDependencies: ["calendar"],
+  },
   card: {
     title: "Card",
     description:

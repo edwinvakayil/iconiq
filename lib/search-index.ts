@@ -38,6 +38,8 @@ const componentSummaries: Record<string, string> = {
     "Button group docs in the Buttons & Actions section, using the shared Iconiq button group install with provider options visible but disabled.",
   "/display-and-content/calendar":
     "Calendar docs in the Display & Content section, using the shared Iconiq calendar install with month/year picking, fluid date-grid motion, and provider options visible but disabled.",
+  "/display-and-content/date-picker":
+    "Date picker docs in the Display & Content section with a collapsible trigger and the shared Iconiq Calendar panel, spring open motion, and close-on-select behavior.",
   "/display-and-content/charts":
     "Charts docs in the Display & Content section, using the shared Iconiq Recharts shell with provider options visible but disabled because there is no Radix UI or Base UI variant.",
   "/display-and-content/card":

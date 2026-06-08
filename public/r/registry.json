@@ -609,6 +609,21 @@
       ]
     },
     {
+      "name": "date-picker",
+      "type": "registry:ui",
+      "registryDependencies": ["calendar"],
+      "dependencies": ["motion", "lucide-react", "date-fns"],
+      "devDependencies": [],
+      "title": "Date Picker",
+      "description": "Collapsible date picker trigger with the shared Iconiq Calendar panel, spring open motion, and month-aware selection.",
+      "files": [
+        {
+          "path": "date-picker.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "dia-text",
       "type": "registry:ui",
       "registryDependencies": [],

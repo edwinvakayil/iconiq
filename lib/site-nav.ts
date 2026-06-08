@@ -66,6 +66,7 @@ export const SITE_SECTIONS = [
       { label: "Avatar", href: "/display-and-content/avatar" },
       { label: "Badge", href: "/display-and-content/badge" },
       { label: "Calendar", href: "/display-and-content/calendar" },
+      { label: "Date Picker", href: "/display-and-content/date-picker" },
       { label: "Card", href: "/display-and-content/card" },
       { label: "Carousel", href: "/display-and-content/carousel" },
       { label: "Charts", href: "/display-and-content/charts" },
