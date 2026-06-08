@@ -387,6 +387,12 @@ const REGISTRY_UI_META: Record<
       "lucide-react",
     ],
   },
+  "input-otp": {
+    title: "Input OTP",
+    description:
+      "Animated one-time password field built on Base UI OTP Field with focus border motion, character entrance, caret pulse, OTPSlots auto-layout, and reduced-motion support.",
+    dependencies: ["@base-ui/react", "motion"],
+  },
   infiniteribbon: {
     title: "Infinite Ribbon",
     description:

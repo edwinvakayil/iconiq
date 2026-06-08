@@ -2629,6 +2629,160 @@ const fileUploadApiDetails: DetailItem[] = [
   registryItem("file-upload.json", ["motion", "lucide-react"]),
 ];
 
+const inputOtpApiDetails: DetailItem[] = [
+  {
+    id: "otp",
+    title: "OTP",
+    summary:
+      "Root wrapper around Base UI OTP Field that owns the shared value, completion state, and keyboard/paste behavior for every slot.",
+    fields: [
+      field({
+        name: "length",
+        type: "number",
+        required: true,
+        description:
+          "Number of OTP characters. Required so Base UI can clamp values, detect completion, and manage focus order.",
+      }),
+      field({
+        name: "value",
+        type: "string",
+        description:
+          "Controlled OTP string. Pair with `onValueChange` when the parent owns the code.",
+      }),
+      field({
+        name: "defaultValue",
+        type: "string",
+        description: "Initial value for uncontrolled usage.",
+      }),
+      field({
+        name: "onValueChange",
+        type: "(value: string, eventDetails) => void",
+        description:
+          "Called whenever the OTP value changes from typing, paste, backspace, or keyboard navigation.",
+      }),
+      field({
+        name: "onValueComplete",
+        type: "(value: string, eventDetails) => void",
+        description:
+          "Called when all slots are filled, including when a complete code is pasted.",
+      }),
+      field({
+        name: "validationType",
+        type: '"numeric" | "alpha" | "alphanumeric" | "none"',
+        defaultValue: '"numeric"',
+        description:
+          "Built-in validation applied before values are stored. Use `alphanumeric` for backup or recovery codes.",
+      }),
+      field({
+        name: "disabled",
+        type: "boolean",
+        defaultValue: "false",
+        description: "Disables interaction across every slot.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description: "Classes merged onto the root flex container.",
+      }),
+      field({
+        name: "containerClassName",
+        type: "string",
+        description:
+          "Legacy alias merged onto the root container alongside `className`.",
+      }),
+      field({
+        name: "reducedMotion",
+        type: "boolean",
+        description:
+          "Force reduced motion for slot animations. Defaults to the user OS preference.",
+      }),
+    ],
+    notes: [
+      "Built on `OTPFieldPreview` from `@base-ui/react/otp-field`.",
+      "Prefer `OTPSlots` so slot count always matches `length`, or render one `OTPSlot` per character manually.",
+      "Supports `autoSubmit`, `mask`, `normalizeValue`, and `onValueInvalid` from the underlying Base UI root.",
+    ],
+  },
+  {
+    id: "otp-slots",
+    title: "OTPSlots",
+    summary:
+      "Convenience layout that renders the correct number of slots from the parent `OTP` length, with an optional separator.",
+    fields: [
+      field({
+        name: "separatorAfter",
+        type: "number",
+        description:
+          "Inserts `OTPSeparator` before the slot at this zero-based index, such as `3` for a 3-3 grouped code.",
+      }),
+      field({
+        name: "slotClassName",
+        type: "string",
+        description: "Classes forwarded to every rendered `OTPSlot`.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description: "Classes merged onto the internal `OTPGroup` wrapper.",
+      }),
+    ],
+    notes: [
+      "Must be rendered inside `OTP` so it can read the configured `length`.",
+      "Adds `aria-label` to every slot after the first one for screen reader context.",
+    ],
+  },
+  {
+    id: "otp-slot",
+    title: "OTPSlot",
+    summary:
+      "Animated character cell with spring focus ring, pop-in digit motion, and a pulsing caret on the active empty slot.",
+    fields: [
+      field({
+        name: "className",
+        type: "string",
+        description: "Classes merged onto the animated slot surface.",
+      }),
+      field({
+        name: "aria-label",
+        type: "string",
+        description:
+          "Accessible label for slots after the first one. The first slot inherits the field label from `OTP` or a surrounding `<label>`.",
+      }),
+    ],
+    notes: [
+      "The real input is visually hidden but remains focusable for typing, paste, and mobile one-time-code autofill.",
+      "Slot order is determined by render order; the legacy `index` prop is accepted but ignored.",
+    ],
+  },
+  {
+    id: "otp-group",
+    title: "OTPGroup",
+    summary:
+      "Optional layout wrapper that groups slots with consistent spacing when you need multiple visual clusters.",
+    fields: [
+      field({
+        name: "className",
+        type: "string",
+        description: "Classes merged onto the group flex container.",
+      }),
+    ],
+  },
+  {
+    id: "otp-separator",
+    title: "OTPSeparator",
+    summary:
+      "Accessible separator between OTP groups, rendered with the dotted divider used in the Iconiq preview.",
+    fields: [
+      field({
+        name: "className",
+        type: "string",
+        description: "Classes merged onto the separator element.",
+      }),
+    ],
+  },
+  registryItem("input-otp.json", ["@base-ui/react", "motion"]),
+];
+
 const dialogApiDetails: DetailItem[] = [
   {
     id: "dialog-root",
@@ -5706,6 +5860,7 @@ export {
   fileUploadApiDetails,
   hoverCardApiDetails,
   iconBarApiDetails,
+  inputOtpApiDetails,
   infiniteRibbonApiDetails,
   carouselApiDetails,
   radialButtonApiDetails,

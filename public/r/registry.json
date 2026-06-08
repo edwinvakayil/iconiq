@@ -803,6 +803,21 @@
       ]
     },
     {
+      "name": "input-otp",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": ["@base-ui/react", "motion"],
+      "devDependencies": [],
+      "title": "Input OTP",
+      "description": "Animated one-time password field built on Base UI OTP Field with focus border motion, character entrance, caret pulse, OTPSlots auto-layout, and reduced-motion support.",
+      "files": [
+        {
+          "path": "input-otp.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "popover",
       "type": "registry:ui",
       "registryDependencies": [],
