@@ -1,5 +1,6 @@
 "use client";
 
+import type { OTPFieldInput } from "@base-ui/react/otp-field";
 import { OTPFieldPreview as OTPField } from "@base-ui/react/otp-field";
 import {
   AnimatePresence,
@@ -135,12 +136,14 @@ type OTPSlotInputProps = React.ComponentPropsWithoutRef<"input"> & {
   ref?: React.Ref<HTMLInputElement>;
 };
 
-type OTPSlotState = {
-  disabled: boolean;
-  index: number;
-  readOnly: boolean;
-  value: string;
-};
+type OTPSlotState = OTPFieldInput.State;
+
+function resolveSlotClassName(
+  className: OTPSlotProps["className"],
+  state: OTPSlotState
+) {
+  return typeof className === "function" ? className(state) : className;
+}
 
 function OTPSlotCharacter({
   char,
@@ -225,9 +228,9 @@ function OTPSlotSurface({
   reduceMotion: boolean;
   slotRef: React.Ref<HTMLInputElement>;
   state: OTPSlotState;
-  tabIndex: number;
+  tabIndex: number | undefined;
 }) {
-  const isActive = tabIndex === 0;
+  const isActive = (tabIndex ?? -1) === 0;
   const char = state.value;
   const showCaret = isActive && !char && !state.disabled && !state.readOnly;
 
@@ -295,7 +298,7 @@ const OTPSlot = React.forwardRef<HTMLInputElement, OTPSlotProps>(
 
           return (
             <OTPSlotSurface
-              className={className}
+              className={resolveSlotClassName(className, state)}
               inputClassName={inputClassName}
               inputProps={resolvedInputProps}
               inputRef={inputRef}
