@@ -187,7 +187,7 @@ const RadialButton = React.forwardRef<HTMLButtonElement, RadialButtonProps>(
         aria-busy={loading || undefined}
         className={cn(
           componentThemeClassName,
-          "relative inline-flex h-12 cursor-pointer touch-manipulation select-none items-center justify-center overflow-hidden rounded-xl px-8 font-medium text-[15px] tracking-[-0.02em]",
+          "relative inline-flex h-12 cursor-pointer touch-manipulation select-none items-center justify-center overflow-hidden rounded-lg px-8 font-medium text-[15px] tracking-[-0.02em]",
           "border-[0.5px] border-border bg-card text-card-foreground",
           "dark:bg-muted dark:text-foreground",
           "transition-[color] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]",

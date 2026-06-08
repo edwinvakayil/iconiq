@@ -19,13 +19,13 @@ const dropdownTriggerClassName =
   "flex min-h-11 w-full items-center justify-between gap-2 rounded-lg border border-[color:var(--dd-border)] bg-[color:var(--dd-surface)] px-4 py-3 text-left font-medium text-[color:var(--dd-foreground)] text-sm transition-colors hover:bg-accent/60 focus:outline-none focus-visible:ring-2 focus-visible:ring-[color:color-mix(in_oklch,var(--dd-ring),transparent_50%)]";
 
 const dropdownPanelClassName =
-  "z-[300] min-w-[12rem] max-w-[calc(100vw-1.5rem)] overflow-hidden rounded-xl border border-[color:color-mix(in_oklch,var(--dd-border),transparent_40%)] bg-[color:var(--dd-surface)] outline-none";
+  "z-[300] min-w-[12rem] max-w-[calc(100vw-1.5rem)] overflow-hidden rounded-lg border border-[color:color-mix(in_oklch,var(--dd-border),transparent_40%)] bg-[color:var(--dd-surface)] outline-none";
 
 const dropdownItemClassName =
-  "relative flex min-h-11 w-full scroll-m-1 items-center justify-between gap-3 rounded-[0.65rem] px-3 py-2.5 text-left text-[color:var(--dd-foreground)] text-sm outline-none transition-colors focus-visible:text-[color:var(--dd-foreground)] focus-visible:outline-none";
+  "relative flex min-h-11 w-full scroll-m-1 items-center justify-between gap-3 rounded-lg px-3 py-2.5 text-left text-[color:var(--dd-foreground)] text-sm outline-none transition-colors focus-visible:text-[color:var(--dd-foreground)] focus-visible:outline-none";
 
 const dropdownItemHighlightClassName =
-  "absolute inset-0 rounded-[0.65rem] bg-[color:var(--dd-accent)]";
+  "absolute inset-0 rounded-lg bg-[color:var(--dd-accent)]";
 
 const dropdownListScrollClassName =
   "min-h-0 overflow-y-auto overscroll-contain p-1.5 pr-1 outline-none [scrollbar-color:color-mix(in_oklch,var(--dd-muted-foreground,#6d7480),transparent_55%)_transparent] [scrollbar-width:thin] [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-[color:color-mix(in_oklch,var(--dd-muted-foreground,#6d7480),transparent_55%)] [&::-webkit-scrollbar-track]:bg-transparent";

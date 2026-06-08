@@ -186,7 +186,7 @@ export function ComponentDemoCanvas({
       <TabsContent className="mt-0" value="preview">
         <div
           className={cn(
-            "not-prose flex h-full min-h-64 w-full items-center justify-center overflow-hidden rounded-2xl border-[0.5px] border-border/85 p-6 shadow-[0_4px_16px_-10px_rgba(15,23,42,0.1)] md:min-h-80 md:p-10 dark:shadow-[0_4px_16px_-10px_rgba(0,0,0,0.32)]",
+            "not-prose flex h-full min-h-64 w-full items-center justify-center overflow-hidden rounded-lg border-[0.5px] border-border/85 p-6 shadow-[0_4px_16px_-10px_rgba(15,23,42,0.1)] md:min-h-80 md:p-10 dark:shadow-[0_4px_16px_-10px_rgba(0,0,0,0.32)]",
             "bg-background dark:bg-[#0F0F0F]",
             previewClassName
           )}

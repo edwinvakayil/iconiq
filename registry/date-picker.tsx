@@ -109,7 +109,7 @@ export function AnimatedDatePicker({
         aria-label={
           selected ? `Selected date, ${format(selected, "PPPP")}` : placeholder
         }
-        className="group flex w-full items-center rounded-2xl border border-border bg-card px-4 py-3 text-left text-foreground text-sm transition-all hover:border-foreground/30"
+        className="group flex w-full items-center rounded-lg border border-border bg-card px-4 py-3 text-left text-foreground text-sm transition-all hover:border-foreground/30"
         onClick={() => setOpen((current) => !current)}
         type="button"
       >

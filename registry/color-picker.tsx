@@ -18,7 +18,7 @@ const HEX_RGBA_PATTERN = /^[0-9A-F]{8}$/;
 const HEX_INPUT_SANITIZE_PATTERN = /[^0-9a-fA-F]/g;
 
 const formatMenuPanelClassName =
-  "absolute top-full left-0 z-50 mt-1.5 w-28 origin-top-left overflow-hidden rounded-xl border border-[color:var(--color-border)] bg-[color:var(--color-card)] p-1 text-[color:var(--color-card-foreground)] shadow-[0_10px_28px_-20px_rgba(15,23,42,0.28)] dark:shadow-[0_12px_32px_-22px_rgba(0,0,0,0.5)]";
+  "absolute top-full left-0 z-50 mt-1.5 w-28 origin-top-left overflow-hidden rounded-lg border border-[color:var(--color-border)] bg-[color:var(--color-card)] p-1 text-[color:var(--color-card-foreground)] shadow-[0_10px_28px_-20px_rgba(15,23,42,0.28)] dark:shadow-[0_12px_32px_-22px_rgba(0,0,0,0.5)]";
 
 const formatMenuItemClassName =
   "relative w-full rounded-lg px-3 py-1.5 text-left text-sm outline-none transition-[color,transform] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)]";
@@ -767,13 +767,13 @@ export function ColorPicker({
       aria-disabled={disabled || undefined}
       className={cn(
         componentThemeClassName,
-        "relative isolate w-[300px] max-w-full overflow-visible rounded-2xl border border-border bg-card p-3.5 shadow-[0_10px_28px_-18px_rgba(15,23,42,0.16)] dark:shadow-[0_12px_32px_-20px_rgba(0,0,0,0.35)]",
+        "relative isolate w-[300px] max-w-full overflow-visible rounded-lg border border-border bg-card p-3.5 shadow-[0_10px_28px_-18px_rgba(15,23,42,0.16)] dark:shadow-[0_12px_32px_-20px_rgba(0,0,0,0.35)]",
         disabled && "pointer-events-none opacity-60",
         className
       )}
       data-slot="color-picker"
     >
-      <div className="pointer-events-none absolute -inset-10 overflow-hidden rounded-2xl opacity-[0.12] blur-2xl motion-reduce:opacity-0">
+      <div className="pointer-events-none absolute -inset-10 overflow-hidden rounded-lg opacity-[0.12] blur-2xl motion-reduce:opacity-0">
         <div
           className="absolute top-[20%] left-[20%] h-32 w-32 animate-pulse rounded-full motion-reduce:animate-none"
           style={{
@@ -792,7 +792,7 @@ export function ColorPicker({
 
       <div className="relative">
         <div
-          className="relative h-40 w-full cursor-crosshair touch-none select-none overflow-hidden rounded-xl transition-[background-color] duration-300"
+          className="relative h-40 w-full cursor-crosshair touch-none select-none overflow-hidden rounded-lg transition-[background-color] duration-300"
           onPointerDown={(event) => {
             dragRef.current = "sv";
             isDraggingSvRef.current = true;

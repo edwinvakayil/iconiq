@@ -327,7 +327,7 @@ export function FileTree({
     <FileTreeContext.Provider value={contextValue}>
       <div
         className={cn(
-          "overflow-hidden rounded-xl border border-border/60",
+          "overflow-hidden rounded-lg border border-border/60",
           className
         )}
         {...props}

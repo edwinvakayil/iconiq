@@ -882,7 +882,7 @@ export const DropdownContent = React.forwardRef<
             animate={contentMotion.animate}
             aria-orientation="vertical"
             className={cn(
-              "absolute z-[300] min-w-[12rem] max-w-[calc(100vw-1.5rem)] overflow-hidden rounded-xl border border-border/60 bg-card shadow-[0_14px_34px_-22px_hsl(var(--ic-foreground)/0.28)]",
+              "absolute z-[300] min-w-[12rem] max-w-[calc(100vw-1.5rem)] overflow-hidden rounded-lg border border-border/60 bg-card shadow-[0_14px_34px_-22px_hsl(var(--ic-foreground)/0.28)]",
               className
             )}
             exit={contentMotion.exit}
@@ -1035,8 +1035,8 @@ export const DropdownItem = React.forwardRef<HTMLDivElement, DropdownItemProps>(
       ...props,
       "aria-disabled": disabled || undefined,
       className: cn(
-        "group relative isolate flex min-h-11 w-full scroll-m-1 items-center justify-between gap-3 rounded-[0.65rem] px-3 py-2.5 text-left text-foreground text-sm transition-colors",
-        "before:absolute before:inset-x-1 before:inset-y-0.5 before:-z-10 before:rounded-[0.5rem] before:bg-transparent before:transition-colors",
+        "group relative isolate flex min-h-11 w-full scroll-m-1 items-center justify-between gap-3 rounded-lg px-3 py-2.5 text-left text-foreground text-sm transition-colors",
+        "before:absolute before:inset-x-1 before:inset-y-0.5 before:-z-10 before:rounded-lg before:bg-transparent before:transition-colors",
         "hover:before:bg-accent/65 focus-visible:text-foreground focus-visible:outline-none focus-visible:before:bg-accent/65",
         isActive && "before:bg-accent/65",
         isSelected &&

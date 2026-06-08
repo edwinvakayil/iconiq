@@ -88,7 +88,7 @@ function OTPPlaceholder({
       <div className="flex items-center gap-3">
         {Array.from({ length }, (_, index) => (
           <div
-            className="h-14 w-14 rounded-xl border-2 border-border bg-background"
+            className="h-14 w-14 rounded-lg border-2 border-border bg-background"
             key={`otp-placeholder-${index}`}
           />
         ))}
@@ -300,7 +300,7 @@ function OTPSlotSurface({
         borderColor: isActive ? "var(--color-primary)" : "var(--color-border)",
       }}
       className={cn(
-        "relative flex h-14 w-14 items-center justify-center rounded-xl border-2 font-medium text-xl tabular-nums",
+        "relative flex h-14 w-14 items-center justify-center rounded-lg border-2 font-medium text-xl tabular-nums",
         "bg-background text-foreground",
         state.disabled && "cursor-not-allowed opacity-50",
         state.readOnly && "cursor-default",

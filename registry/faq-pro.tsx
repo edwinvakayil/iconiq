@@ -103,7 +103,7 @@ const faqProPanelClassName = cn(
 function FaqProRow({ item, query }: FaqProRowProps) {
   return (
     <AccordionPrimitive.Item
-      className="overflow-hidden rounded-2xl bg-muted/70 dark:bg-muted/50"
+      className="overflow-hidden rounded-lg bg-muted/70 dark:bg-muted/50"
       value={item.id}
     >
       <AccordionPrimitive.Header className="flex">

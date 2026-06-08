@@ -119,7 +119,7 @@ export function SelectionToolbar({
       {createPortal(
         <ToolbarPrimitive.Root
           aria-label="Text formatting"
-          className="z-50 flex items-center gap-1 rounded-xl bg-neutral-800 px-2 py-1.5 shadow-xl ring-1 ring-black/20"
+          className="z-50 flex items-center gap-1 rounded-lg bg-neutral-800 px-2 py-1.5 shadow-xl ring-1 ring-black/20"
           onMouseDown={(event) => event.preventDefault()}
           orientation="horizontal"
           ref={toolbarRef}

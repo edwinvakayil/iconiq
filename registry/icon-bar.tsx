@@ -140,7 +140,7 @@ function IconBarItemButton({
       aria-label={label}
       aria-pressed={isSelected}
       className={cn(
-        "relative inline-flex h-9 shrink-0 items-center overflow-hidden rounded-xl bg-muted text-muted-foreground outline-none",
+        "relative inline-flex h-9 shrink-0 items-center overflow-hidden rounded-lg bg-muted text-muted-foreground outline-none",
         "transition-[background-color,color] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]",
         "focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
         "hover:bg-accent/60 hover:text-foreground",
