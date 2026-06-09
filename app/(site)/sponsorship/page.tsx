@@ -129,9 +129,7 @@ export default function SponsorshipPage() {
                   </li>
                 </ul>
                 <p className="text-muted-foreground text-sm leading-6">
-                  You can also leave a one-off tip on Buy Me a Coffee. The
-                  widget script loads in the background after you open this
-                  page.
+                  You can also leave a one-off tip on Buy Me a Coffee.
                 </p>
                 <BuyMeACoffeeEmbed />
               </section>
