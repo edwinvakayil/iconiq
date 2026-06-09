@@ -13,11 +13,6 @@ import {
   useLayoutEffect,
   useState,
 } from "react";
-import {
-  ReducedMotionConfig,
-  type ReducedMotionProp,
-  useResolvedReducedMotion,
-} from "@/lib/reduced-motion";
 import { cn } from "@/lib/utils";
 
 const componentThemeClassName =
@@ -145,7 +140,7 @@ export type ButtonProps = ButtonHTMLAttributesForMotion &
     disableRipple?: boolean;
     icon?: ReactNode;
     iconPosition?: "start" | "end";
-  } & ReducedMotionProp;
+  };
 
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   (
@@ -164,7 +159,6 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       onPointerDown,
       onPointerLeave,
       onPointerUp,
-      reducedMotion,
       size,
       style,
       type = "button",
@@ -180,12 +174,9 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     const [borderWidth, setBorderWidth] = useState(0);
     const [isPressed, setIsPressed] = useState(false);
     const [ripples, setRipples] = useState<Ripple[]>([]);
-    const resolvedReducedMotion = useResolvedReducedMotion(reducedMotion);
-
-    const canAnimate = !(disabled || resolvedReducedMotion);
+    const canAnimate = !disabled;
     const allowsRipple = !disableRipple && variant !== "link" && canAnimate;
-    const shouldAnimateSize =
-      animateSize && !resolvedReducedMotion && style?.width == null;
+    const shouldAnimateSize = animateSize && style?.width == null;
     const animatedWidth =
       shouldAnimateSize && bounds.width > 0
         ? Math.ceil(bounds.width + borderWidth)
@@ -303,90 +294,88 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     ) : null;
 
     return (
-      <ReducedMotionConfig reducedMotion={reducedMotion}>
-        <motion.button
-          animate={
-            animatedWidth
-              ? {
-                  scale: canAnimate && isPressed ? 0.985 : 1,
-                  width: animatedWidth,
-                }
-              : {
-                  scale: canAnimate && isPressed ? 0.985 : 1,
-                }
-          }
-          className={cn(
-            componentThemeClassName,
-            buttonRootVariants({ variant }),
-            className
-          )}
-          data-pressed={isPressed ? "true" : "false"}
-          disabled={disabled}
-          initial={false}
-          onBlur={(e) => {
-            onBlur?.(e);
-            setIsPressed(false);
-          }}
-          onKeyDown={handleKeyDown}
-          onKeyUp={handleKeyUp}
-          onPointerCancel={handlePointerCancel}
-          onPointerDown={handlePointerDown}
-          onPointerLeave={handlePointerLeave}
-          onPointerUp={handlePointerUp}
-          ref={setButtonRef}
-          style={style}
-          transition={{
-            scale: { type: "spring", stiffness: 640, damping: 38, mass: 0.85 },
-            width: {
-              type: "spring",
-              stiffness: 420,
-              damping: 34,
-              mass: 0.9,
-            },
-            y: { type: "spring", stiffness: 340, damping: 28, mass: 0.8 },
-          }}
-          type={type}
-          whileHover={canAnimate && variant !== "link" ? { y: -1 } : undefined}
-          {...props}
+      <motion.button
+        animate={
+          animatedWidth
+            ? {
+                scale: canAnimate && isPressed ? 0.985 : 1,
+                width: animatedWidth,
+              }
+            : {
+                scale: canAnimate && isPressed ? 0.985 : 1,
+              }
+        }
+        className={cn(
+          componentThemeClassName,
+          buttonRootVariants({ variant }),
+          className
+        )}
+        data-pressed={isPressed ? "true" : "false"}
+        disabled={disabled}
+        initial={false}
+        onBlur={(e) => {
+          onBlur?.(e);
+          setIsPressed(false);
+        }}
+        onKeyDown={handleKeyDown}
+        onKeyUp={handleKeyUp}
+        onPointerCancel={handlePointerCancel}
+        onPointerDown={handlePointerDown}
+        onPointerLeave={handlePointerLeave}
+        onPointerUp={handlePointerUp}
+        ref={setButtonRef}
+        style={style}
+        transition={{
+          scale: { type: "spring", stiffness: 640, damping: 38, mass: 0.85 },
+          width: {
+            type: "spring",
+            stiffness: 420,
+            damping: 34,
+            mass: 0.9,
+          },
+          y: { type: "spring", stiffness: 340, damping: 28, mass: 0.8 },
+        }}
+        type={type}
+        whileHover={canAnimate && variant !== "link" ? { y: -1 } : undefined}
+        {...props}
+      >
+        <span
+          aria-hidden
+          className="pointer-events-none absolute inset-0 z-0 overflow-hidden rounded-[inherit]"
         >
-          <span
-            aria-hidden
-            className="pointer-events-none absolute inset-0 z-0 overflow-hidden rounded-[inherit]"
-          >
-            {ripples.map((ripple) => (
-              <motion.span
-                animate={{ opacity: 0, scale: 1 }}
-                className="pointer-events-none absolute -translate-x-1/2 -translate-y-1/2 rounded-full bg-current"
-                initial={{ opacity: 0.22, scale: 0 }}
-                key={ripple.id}
-                onAnimationComplete={() => {
-                  setRipples((current) =>
-                    current.filter((item) => item.id !== ripple.id)
-                  );
-                }}
-                style={{
-                  height: ripple.size,
-                  left: ripple.x,
-                  top: ripple.y,
-                  width: ripple.size,
-                }}
-                transition={{
-                  duration: 0.55,
-                  ease: [0.22, 1, 0.36, 1],
-                }}
-              />
-            ))}
-          </span>
-          <span
-            className={buttonContentVariants({ size })}
-            ref={shouldAnimateSize ? contentRef : undefined}
-          >
-            {iconPosition === "start" ? renderedIcon : null}
-            {children}
-            {iconPosition === "end" ? renderedIcon : null}
-          </span>
-        </motion.button>
-      </ReducedMotionConfig>
+          {ripples.map((ripple) => (
+            <motion.span
+              animate={{ opacity: 0, scale: 1 }}
+              className="pointer-events-none absolute -translate-x-1/2 -translate-y-1/2 rounded-full bg-current"
+              initial={{ opacity: 0.22, scale: 0 }}
+              key={ripple.id}
+              onAnimationComplete={() => {
+                setRipples((current) =>
+                  current.filter((item) => item.id !== ripple.id)
+                );
+              }}
+              style={{
+                height: ripple.size,
+                left: ripple.x,
+                top: ripple.y,
+                width: ripple.size,
+              }}
+              transition={{
+                duration: 0.55,
+                ease: [0.22, 1, 0.36, 1],
+              }}
+            />
+          ))}
+        </span>
+        <span
+          className={buttonContentVariants({ size })}
+          ref={shouldAnimateSize ? contentRef : undefined}
+        >
+          {iconPosition === "start" ? renderedIcon : null}
+          {children}
+          {iconPosition === "end" ? renderedIcon : null}
+        </span>
+      </motion.button>
     );
   }
 );

@@ -3,7 +3,6 @@
 import { motion } from "motion/react";
 import { useEffect, useState } from "react";
 
-import { useResolvedReducedMotion } from "@/lib/reduced-motion";
 import { cn } from "@/lib/utils";
 
 export interface TextTypewriterProps {
@@ -23,17 +22,10 @@ export default function TextTypewriter({
   className,
   duration = 3,
 }: TextTypewriterProps) {
-  const reducedMotion = useResolvedReducedMotion();
   const [text, setText] = useState("");
   const [showCursor, setShowCursor] = useState(false);
 
   useEffect(() => {
-    if (reducedMotion) {
-      setText(children);
-      setShowCursor(false);
-      return;
-    }
-
     const timeouts = new Set<ReturnType<typeof setTimeout>>();
     const speed = duration / 3;
 
@@ -117,7 +109,7 @@ export default function TextTypewriter({
       }
       timeouts.clear();
     };
-  }, [children, duration, reducedMotion]);
+  }, [children, duration]);
 
   return (
     <div className={cn(className)}>

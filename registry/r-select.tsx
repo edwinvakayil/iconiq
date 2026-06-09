@@ -6,11 +6,6 @@ import { CheckIcon, ChevronDownIcon, ChevronUpIcon } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import * as React from "react";
 
-import {
-  ReducedMotionConfig,
-  type ReducedMotionProp,
-  useResolvedReducedMotion,
-} from "@/lib/reduced-motion";
 import { cn } from "@/lib/utils";
 
 const selectThemeClassName =
@@ -73,26 +68,24 @@ type SelectProps = Omit<
   | "onValueChange"
   | "open"
   | "value"
-> &
-  ReducedMotionProp & {
-    children?: React.ReactNode;
-    defaultOpen?: SelectRootProps["defaultOpen"];
-    defaultValue?: SelectRootProps["defaultValue"];
-    onOpenChange?: SelectRootProps["onOpenChange"];
-    onValueChange?: SelectRootProps["onValueChange"];
-    open?: SelectRootProps["open"];
-    value?: SelectRootProps["value"];
-  };
+> & {
+  children?: React.ReactNode;
+  defaultOpen?: SelectRootProps["defaultOpen"];
+  defaultValue?: SelectRootProps["defaultValue"];
+  onOpenChange?: SelectRootProps["onOpenChange"];
+  onValueChange?: SelectRootProps["onValueChange"];
+  open?: SelectRootProps["open"];
+  value?: SelectRootProps["value"];
+};
 
 type SelectContextValue = {
   activeHighlightId: string;
   activeValue?: string;
   getItemIndex: () => number;
   itemLabelsRef: React.RefObject<Record<string, React.ReactNode>>;
-  itemVariants: ReturnType<typeof getItemVariants>;
+  itemVariants: typeof itemVariants;
   open: boolean;
   registerItemLabel: (value: string, label: React.ReactNode) => void;
-  reduceMotion: boolean;
   selectedValue?: string;
   setActiveValue: React.Dispatch<React.SetStateAction<string | undefined>>;
   skipExitAnimationRef: React.MutableRefObject<boolean>;
@@ -197,84 +190,54 @@ function useSelectContext(componentName: string) {
   return context;
 }
 
-function getItemVariants(reduceMotion: boolean) {
-  return {
-    exit: (index: number) => ({
-      opacity: 0,
-      y: reduceMotion ? 0 : -2,
-      transition: {
-        delay: reduceMotion ? 0 : Math.min(index, 4) * 0.01,
-        duration: reduceMotion ? 0.1 : 0.12,
-        ease: reduceMotion ? ("easeOut" as const) : EXIT_EASE,
-      },
-    }),
-    hidden: {
-      opacity: 0,
-      y: reduceMotion ? 0 : -4,
+const itemVariants = {
+  exit: (index: number) => ({
+    opacity: 0,
+    y: -2,
+    transition: {
+      delay: Math.min(index, 4) * 0.01,
+      duration: 0.12,
+      ease: EXIT_EASE,
     },
-    visible: (index: number) => ({
-      opacity: 1,
-      y: 0,
-      transition: {
-        delay: reduceMotion ? 0 : Math.min(index, 4) * 0.02,
-        duration: reduceMotion ? 0.12 : 0.18,
-        ease: reduceMotion ? ("easeOut" as const) : SOFT_EASE,
-      },
-    }),
-  };
-}
-
-function getPopupMotion(reduceMotion: boolean) {
-  if (reduceMotion) {
-    return {
-      animate: { opacity: 1, scale: 1, y: 0 },
-      closed: { opacity: 0, scale: 1, y: 0 },
-      initial: { opacity: 0, scale: 1, y: 0 },
-      openTransition: { duration: 0.12, ease: "easeOut" as const },
-      closedTransition: { duration: 0.1, ease: "easeOut" as const },
-    };
-  }
-
-  return {
-    animate: { opacity: 1, scale: 1, y: 0 },
-    closed: { opacity: 0, scale: 0.985, y: -5 },
-    initial: { opacity: 0, scale: 0.985, y: -5 },
-    openTransition: {
-      opacity: { duration: 0.34, ease: FLUID_EASE },
-      scale: POPUP_SPRING,
-      y: POPUP_SPRING,
+  }),
+  hidden: {
+    opacity: 0,
+    y: -4,
+  },
+  visible: (index: number) => ({
+    opacity: 1,
+    y: 0,
+    transition: {
+      delay: Math.min(index, 4) * 0.02,
+      duration: 0.18,
+      ease: SOFT_EASE,
     },
-    closedTransition: {
-      opacity: { duration: 0.22, ease: POPUP_EXIT_EASE },
-      scale: { duration: 0.22, ease: POPUP_EXIT_EASE },
-      y: { duration: 0.22, ease: POPUP_EXIT_EASE },
-    },
-  };
-}
+  }),
+};
 
-function getPressTransition(reduceMotion: boolean) {
-  return reduceMotion
-    ? { duration: 0.12, ease: "easeOut" as const }
-    : PRESS_SPRING;
-}
+const popupMotion = {
+  animate: { opacity: 1, scale: 1, y: 0 },
+  closed: { opacity: 0, scale: 0.985, y: -5 },
+  initial: { opacity: 0, scale: 0.985, y: -5 },
+  openTransition: {
+    opacity: { duration: 0.34, ease: FLUID_EASE },
+    scale: POPUP_SPRING,
+    y: POPUP_SPRING,
+  },
+  closedTransition: {
+    opacity: { duration: 0.22, ease: POPUP_EXIT_EASE },
+    scale: { duration: 0.22, ease: POPUP_EXIT_EASE },
+    y: { duration: 0.22, ease: POPUP_EXIT_EASE },
+  },
+};
 
-function getChevronTransition(reduceMotion: boolean) {
-  return reduceMotion
-    ? { duration: 0.12, ease: "easeOut" as const }
-    : { duration: 0.2, ease: SOFT_EASE };
-}
+const chevronTransition = { duration: 0.2, ease: SOFT_EASE };
 
-function getCheckTransition(reduceMotion: boolean) {
-  return reduceMotion
-    ? { duration: 0.12, ease: "easeOut" as const }
-    : CHECK_SPRING;
-}
-
-function getHighlightTransition(reduceMotion: boolean) {
-  return reduceMotion
-    ? { duration: 0.12, ease: "easeOut" as const }
-    : { type: "spring" as const, stiffness: 600, damping: 38 };
-}
+const highlightTransition = {
+  type: "spring" as const,
+  stiffness: 600,
+  damping: 38,
+};
 
 function composeEventHandlers<Event extends React.SyntheticEvent>(
   originalEventHandler: ((event: Event) => void) | undefined,
@@ -293,11 +256,9 @@ function Select({
   onOpenChange,
   onValueChange,
   open: openProp,
-  reducedMotion,
   value: valueProp,
   ...props
 }: SelectProps) {
-  const reduceMotion = useResolvedReducedMotion(reducedMotion);
   const skipExitAnimationRef = React.useRef(false);
   const isOpenControlled = openProp !== undefined;
   const isValueControlled = valueProp !== undefined;
@@ -310,10 +271,6 @@ function Select({
   const open = isOpenControlled ? openProp : uncontrolledOpen;
   const selectedValue = isValueControlled ? valueProp : uncontrolledValue;
   const activeHighlightId = React.useId();
-  const itemVariants = React.useMemo(
-    () => getItemVariants(reduceMotion),
-    [reduceMotion]
-  );
 
   useSuppressResizeObserverLoopError();
 
@@ -370,33 +327,30 @@ function Select({
   }, [open]);
 
   return (
-    <ReducedMotionConfig reducedMotion={reducedMotion}>
-      <SelectContext.Provider
-        value={{
-          activeHighlightId,
-          activeValue,
-          getItemIndex,
-          itemLabelsRef,
-          itemVariants,
-          open,
-          registerItemLabel,
-          reduceMotion,
-          selectedValue,
-          setActiveValue,
-          skipExitAnimationRef,
-        }}
+    <SelectContext.Provider
+      value={{
+        activeHighlightId,
+        activeValue,
+        getItemIndex,
+        itemLabelsRef,
+        itemVariants,
+        open,
+        registerItemLabel,
+        selectedValue,
+        setActiveValue,
+        skipExitAnimationRef,
+      }}
+    >
+      <SelectPrimitive.Root
+        {...props}
+        onOpenChange={handleOpenChange}
+        onValueChange={handleValueChange}
+        open={open}
+        value={selectedValue}
       >
-        <SelectPrimitive.Root
-          {...props}
-          onOpenChange={handleOpenChange}
-          onValueChange={handleValueChange}
-          open={open}
-          value={selectedValue}
-        >
-          {children}
-        </SelectPrimitive.Root>
-      </SelectContext.Provider>
-    </ReducedMotionConfig>
+        {children}
+      </SelectPrimitive.Root>
+    </SelectContext.Provider>
   );
 }
 
@@ -452,7 +406,7 @@ function SelectTrigger({
 }: React.ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger> & {
   size?: "sm" | "default";
 }) {
-  const { open, reduceMotion } = useSelectContext("SelectTrigger");
+  const { open } = useSelectContext("SelectTrigger");
 
   return (
     <SelectPrimitive.Trigger asChild {...props}>
@@ -467,7 +421,7 @@ function SelectTrigger({
           <motion.span
             animate={{ rotate: open ? 180 : 0 }}
             className="shrink-0"
-            transition={getChevronTransition(reduceMotion)}
+            transition={chevronTransition}
           >
             <ChevronDownIcon className="h-4 w-4 text-[color:var(--sel-muted-foreground)]" />
           </motion.span>
@@ -489,18 +443,17 @@ function SelectContent({
   style,
   ...props
 }: React.ComponentPropsWithoutRef<typeof SelectPrimitive.Content>) {
-  const { open, reduceMotion, setActiveValue, skipExitAnimationRef } =
+  const { open, setActiveValue, skipExitAnimationRef } =
     useSelectContext("SelectContent");
-  const popupMotion = getPopupMotion(reduceMotion);
   const panelVariants = {
     closed: {
       ...popupMotion.closed,
       transition: popupMotion.closedTransition,
     },
     closedInstant: {
-      opacity: reduceMotion ? 0 : popupMotion.closed.opacity,
-      scale: reduceMotion ? 1 : popupMotion.closed.scale,
-      y: reduceMotion ? 0 : popupMotion.closed.y,
+      opacity: popupMotion.closed.opacity,
+      scale: popupMotion.closed.scale,
+      y: popupMotion.closed.y,
       transition: INSTANT_CLOSE_TRANSITION,
     },
     open: {
@@ -630,7 +583,6 @@ function SelectItem({
     getItemIndex,
     itemVariants,
     registerItemLabel,
-    reduceMotion,
     selectedValue,
     setActiveValue,
     skipExitAnimationRef,
@@ -672,7 +624,7 @@ function SelectItem({
         )}
         custom={itemIndexRef.current}
         exit="exit"
-        initial={reduceMotion ? false : "hidden"}
+        initial="hidden"
         layout={false}
         onMouseEnter={composeEventHandlers(props.onMouseEnter, () => {
           setActiveValue(value);
@@ -680,15 +632,15 @@ function SelectItem({
         onPointerMove={composeEventHandlers(props.onPointerMove, () => {
           setActiveValue(value);
         })}
-        transition={getPressTransition(reduceMotion)}
+        transition={PRESS_SPRING}
         variants={itemVariants}
-        whileTap={reduceMotion ? undefined : { scale: 0.985 }}
+        whileTap={{ scale: 0.985 }}
       >
         {isActive ? (
           <motion.span
             className={selectItemHighlightClassName}
             layoutId={activeHighlightId}
-            transition={getHighlightTransition(reduceMotion)}
+            transition={highlightTransition}
           />
         ) : null}
         <SelectPrimitive.ItemText asChild>
@@ -704,7 +656,7 @@ function SelectItem({
                 className="text-[color:var(--sel-foreground)]"
                 exit={{ opacity: 0, scale: 0.8, y: 1 }}
                 initial={{ opacity: 0, scale: 0.8, y: 1 }}
-                transition={getCheckTransition(reduceMotion)}
+                transition={CHECK_SPRING}
               >
                 <CheckIcon className="h-4 w-4" />
               </motion.span>

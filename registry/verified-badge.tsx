@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useReducedMotion } from "motion/react";
+import { motion } from "motion/react";
 import type { ComponentPropsWithoutRef, CSSProperties } from "react";
 
 import { cn } from "@/lib/utils";
@@ -37,12 +37,6 @@ const ScallopShape = ({ className }: { className?: string }) => (
 );
 
 const ScallopShimmer = ({ className }: { className?: string }) => {
-  const prefersReducedMotion = useReducedMotion();
-
-  if (prefersReducedMotion) {
-    return null;
-  }
-
   return (
     <span
       aria-hidden="true"

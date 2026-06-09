@@ -10,11 +10,6 @@ import {
 } from "motion/react";
 import { useEffect, useId, useState } from "react";
 
-import {
-  ReducedMotionConfig,
-  type ReducedMotionProp,
-  useResolvedReducedMotion,
-} from "@/lib/reduced-motion";
 import { cn } from "@/lib/utils";
 
 const componentThemeClassName =
@@ -25,7 +20,7 @@ export interface SliderMark {
   label?: string;
 }
 
-export interface SliderProps extends ReducedMotionProp {
+export interface SliderProps {
   value?: number;
   defaultValue?: number;
   min?: number;
@@ -206,7 +201,6 @@ export function Slider({
   ariaLabel,
   ariaLabelledBy,
   marks,
-  reducedMotion,
   className,
 }: SliderProps) {
   const labelId = useId();
@@ -251,7 +245,6 @@ export function Slider({
   const leftPercent = useTransform(progressMV, (currentProgress) => {
     return `${currentProgress}%`;
   });
-  const resolveReducedMotion = useResolvedReducedMotion(reducedMotion);
   const displayValue = useTransform(progressMV, (currentProgress) => {
     const nextValue = snapValue(
       resolvedMin + (currentProgress / 100) * range,
@@ -266,11 +259,6 @@ export function Slider({
   });
 
   useEffect(() => {
-    if (resolveReducedMotion) {
-      progressMV.set(progress);
-      return;
-    }
-
     const controls = animate(progressMV, progress, {
       type: "spring",
       stiffness: 180,
@@ -280,7 +268,7 @@ export function Slider({
     });
 
     return controls.stop;
-  }, [progress, progressMV, resolveReducedMotion]);
+  }, [progress, progressMV]);
 
   const normalizedMarks = (marks ?? [])
     .map((mark) => ({
@@ -294,112 +282,110 @@ export function Slider({
     : value.toFixed(safeValueDecimals);
 
   return (
-    <ReducedMotionConfig reducedMotion={reducedMotion}>
-      <div
-        className={cn(componentThemeClassName, "w-full select-none", className)}
-      >
-        {(label || showValue) && (
-          <div className="mb-3 flex items-baseline justify-between">
-            {label ? (
-              <span
-                className="font-medium text-muted-foreground text-sm tracking-wide"
-                id={labelId}
-              >
-                {label}
-              </span>
-            ) : null}
-            {showValue ? (
-              <motion.span className="font-semibold text-foreground text-sm tabular-nums">
-                {displayValue}
-              </motion.span>
-            ) : null}
-          </div>
-        )}
-
-        <div className="relative">
-          <SliderPrimitive.Root
-            className="relative flex h-11 w-full cursor-pointer items-center rounded-full outline-none focus-within:outline-2 focus-within:outline-foreground/35 focus-within:outline-offset-4"
-            max={resolvedMax}
-            min={resolvedMin}
-            onBlurCapture={(event) => {
-              if (resolveBlurTarget(event.currentTarget, event.relatedTarget)) {
-                setIsFocused(false);
-              }
-            }}
-            onFocusCapture={() => {
-              setIsFocused(true);
-            }}
-            onMouseEnter={() => {
-              setIsHovered(true);
-            }}
-            onMouseLeave={() => {
-              setIsHovered(false);
-            }}
-            onPointerCancelCapture={() => {
-              setIsDragging(false);
-            }}
-            onPointerDownCapture={() => {
-              setIsDragging(true);
-            }}
-            onPointerUpCapture={() => {
-              setIsDragging(false);
-            }}
-            onValueChange={(nextValues) => {
-              const nextValue = resolveSliderPrimitiveValue(
-                nextValues,
-                resolvedMin,
-                resolvedMax,
-                safeStep
-              );
-
-              if (controlledValue === undefined) {
-                setInternalValue(nextValue);
-              }
-
-              onChange?.(nextValue);
-            }}
-            onValueCommit={(nextValues) => {
-              const nextValue = resolveSliderPrimitiveValue(
-                nextValues,
-                resolvedMin,
-                resolvedMax,
-                safeStep
-              );
-
-              onValueCommit?.(nextValue);
-            }}
-            step={safeStep}
-            style={{ touchAction: "pan-y" }}
-            value={[value]}
-          >
-            <SliderPrimitive.Track className="absolute top-1/2 right-0 left-0 h-4 -translate-y-1/2 opacity-0">
-              <SliderPrimitive.Range className="absolute inset-y-0 left-0 h-full" />
-            </SliderPrimitive.Track>
-
-            <SliderPrimitive.Thumb
-              aria-label={ariaLabel}
-              aria-labelledby={ariaLabelledBy ?? (label ? labelId : undefined)}
-              aria-valuetext={formatValue ? formattedValue : undefined}
-              className="block h-4 w-4 opacity-0 outline-none"
-            />
-
-            <SliderVisualShell
-              active={active}
-              isDragging={isDragging}
-              isHovered={isHovered}
-              leftPercent={leftPercent}
-              widthPercent={widthPercent}
-            />
-          </SliderPrimitive.Root>
-
-          <SliderMarks
-            marks={normalizedMarks}
-            range={range}
-            resolvedMin={resolvedMin}
-          />
+    <div
+      className={cn(componentThemeClassName, "w-full select-none", className)}
+    >
+      {(label || showValue) && (
+        <div className="mb-3 flex items-baseline justify-between">
+          {label ? (
+            <span
+              className="font-medium text-muted-foreground text-sm tracking-wide"
+              id={labelId}
+            >
+              {label}
+            </span>
+          ) : null}
+          {showValue ? (
+            <motion.span className="font-semibold text-foreground text-sm tabular-nums">
+              {displayValue}
+            </motion.span>
+          ) : null}
         </div>
+      )}
+
+      <div className="relative">
+        <SliderPrimitive.Root
+          className="relative flex h-11 w-full cursor-pointer items-center rounded-full outline-none focus-within:outline-2 focus-within:outline-foreground/35 focus-within:outline-offset-4"
+          max={resolvedMax}
+          min={resolvedMin}
+          onBlurCapture={(event) => {
+            if (resolveBlurTarget(event.currentTarget, event.relatedTarget)) {
+              setIsFocused(false);
+            }
+          }}
+          onFocusCapture={() => {
+            setIsFocused(true);
+          }}
+          onMouseEnter={() => {
+            setIsHovered(true);
+          }}
+          onMouseLeave={() => {
+            setIsHovered(false);
+          }}
+          onPointerCancelCapture={() => {
+            setIsDragging(false);
+          }}
+          onPointerDownCapture={() => {
+            setIsDragging(true);
+          }}
+          onPointerUpCapture={() => {
+            setIsDragging(false);
+          }}
+          onValueChange={(nextValues) => {
+            const nextValue = resolveSliderPrimitiveValue(
+              nextValues,
+              resolvedMin,
+              resolvedMax,
+              safeStep
+            );
+
+            if (controlledValue === undefined) {
+              setInternalValue(nextValue);
+            }
+
+            onChange?.(nextValue);
+          }}
+          onValueCommit={(nextValues) => {
+            const nextValue = resolveSliderPrimitiveValue(
+              nextValues,
+              resolvedMin,
+              resolvedMax,
+              safeStep
+            );
+
+            onValueCommit?.(nextValue);
+          }}
+          step={safeStep}
+          style={{ touchAction: "pan-y" }}
+          value={[value]}
+        >
+          <SliderPrimitive.Track className="absolute top-1/2 right-0 left-0 h-4 -translate-y-1/2 opacity-0">
+            <SliderPrimitive.Range className="absolute inset-y-0 left-0 h-full" />
+          </SliderPrimitive.Track>
+
+          <SliderPrimitive.Thumb
+            aria-label={ariaLabel}
+            aria-labelledby={ariaLabelledBy ?? (label ? labelId : undefined)}
+            aria-valuetext={formatValue ? formattedValue : undefined}
+            className="block h-4 w-4 opacity-0 outline-none"
+          />
+
+          <SliderVisualShell
+            active={active}
+            isDragging={isDragging}
+            isHovered={isHovered}
+            leftPercent={leftPercent}
+            widthPercent={widthPercent}
+          />
+        </SliderPrimitive.Root>
+
+        <SliderMarks
+          marks={normalizedMarks}
+          range={range}
+          resolvedMin={resolvedMin}
+        />
       </div>
-    </ReducedMotionConfig>
+    </div>
   );
 }
 

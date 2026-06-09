@@ -4,10 +4,6 @@ import { ChevronDown, Pipette } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
-import {
-  type ReducedMotionProp,
-  useResolvedReducedMotion,
-} from "@/lib/reduced-motion";
 import { cn } from "@/lib/utils";
 
 const FORMAT_OPTIONS = ["HEX", "RGB", "HSL", "OKLCH"] as const;
@@ -36,34 +32,34 @@ const formatMenuHighlightTransition = {
 const formatTriggerTransitionClassName =
   "transition-[color,background-color,box-shadow] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)]";
 
-function getFormatMenuMotion(reduceMotion: boolean) {
+function getFormatMenuMotion() {
   return {
     animate: { opacity: 1, scale: 1, y: 0 },
     exit: {
       opacity: 0,
-      scale: reduceMotion ? 1 : 0.96,
-      y: reduceMotion ? 0 : -6,
+      scale: 0.96,
+      y: -6,
     },
     initial: {
       opacity: 0,
-      scale: reduceMotion ? 1 : 0.94,
-      y: reduceMotion ? 0 : -8,
+      scale: 0.94,
+      y: -8,
     },
     transition: {
-      duration: reduceMotion ? 0.14 : 0.26,
-      ease: reduceMotion ? ("easeOut" as const) : FORMAT_MENU_SOFT_EASE,
+      duration: 0.26,
+      ease: FORMAT_MENU_SOFT_EASE,
     },
   };
 }
 
-function getFormatItemMotion(index: number, reduceMotion: boolean) {
+function getFormatItemMotion(index: number) {
   return {
     animate: { opacity: 1, x: 0 },
-    initial: { opacity: 0, x: reduceMotion ? 0 : -8 },
+    initial: { opacity: 0, x: -8 },
     transition: {
-      delay: reduceMotion ? 0 : 0.04 + index * 0.035,
-      duration: reduceMotion ? 0.12 : 0.22,
-      ease: reduceMotion ? ("easeOut" as const) : FORMAT_MENU_SOFT_EASE,
+      delay: 0.04 + index * 0.035,
+      duration: 0.22,
+      ease: FORMAT_MENU_SOFT_EASE,
     },
   };
 }
@@ -76,7 +72,7 @@ const alphaCheckerClassName =
 
 type Format = (typeof FORMAT_OPTIONS)[number];
 
-export interface ColorPickerProps extends ReducedMotionProp {
+export interface ColorPickerProps {
   /** Merged onto the outer picker shell. */
   className?: string;
   /** Starting color for uncontrolled usage (6- or 8-digit hex, with or without `#`). */
@@ -438,11 +434,9 @@ export function ColorPicker({
   disabled = false,
   onChange,
   onEyedropperUnsupported,
-  reducedMotion,
   showEyedropper = true,
   value,
 }: ColorPickerProps) {
-  const reduceMotion = useResolvedReducedMotion(reducedMotion);
   const initialRgb = getInitialRgb(value ?? defaultValue);
   const initialAlpha = getInitialAlpha(value ?? defaultValue, defaultAlpha);
   const initialPickerHsv = getPickerHsv(initialRgb);
@@ -652,7 +646,7 @@ export function ColorPicker({
   const svRef = useRef<HTMLDivElement>(null);
   const dragRef = useRef<null | "sv" | "hue" | "alpha">(null);
   const formatMenuRef = useRef<HTMLDivElement>(null);
-  const formatMenuMotion = getFormatMenuMotion(reduceMotion);
+  const formatMenuMotion = getFormatMenuMotion();
 
   const updateSV = useCallback(
     (event: { clientX: number; clientY: number }, shouldEmit = false) => {
@@ -926,7 +920,7 @@ export function ColorPicker({
 
                     return (
                       <motion.button
-                        {...getFormatItemMotion(index, reduceMotion)}
+                        {...getFormatItemMotion(index)}
                         aria-selected={isSelected}
                         className={cn(
                           formatMenuItemClassName,

@@ -23,7 +23,7 @@ import * as BaseSelect from "@/registry/b-select";
 import * as RadixSelect from "@/registry/r-select";
 
 type SelectModule = {
-  Select: ComponentType<{ children?: ReactNode; reducedMotion?: boolean }>;
+  Select: ComponentType<{ children?: ReactNode }>;
   SelectContent: ComponentType<{ children?: ReactNode }>;
   SelectGroup: ComponentType<{ children?: ReactNode }>;
   SelectItem: ComponentType<{

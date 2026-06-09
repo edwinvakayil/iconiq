@@ -829,7 +829,7 @@
       "dependencies": ["@base-ui/react", "motion"],
       "devDependencies": [],
       "title": "Input OTP",
-      "description": "Animated one-time password field built on Base UI OTP Field with focus border motion, character entrance, caret pulse, OTPSlots auto-layout, and reduced-motion support.",
+      "description": "Animated one-time password field built on Base UI OTP Field with focus border motion, character entrance, caret pulse, and OTPSlots auto-layout.",
       "files": [
         {
           "path": "input-otp.tsx",
@@ -1426,7 +1426,7 @@
       "dependencies": ["motion"],
       "devDependencies": [],
       "title": "Typewriter",
-      "description": "Looping typewriter text effect with brief glitch substitutions, a blinking cursor, and reduced-motion fallback.",
+      "description": "Looping typewriter text effect with brief glitch substitutions and a blinking cursor.",
       "files": [
         {
           "path": "typewriter.tsx",

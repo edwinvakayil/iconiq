@@ -9,11 +9,6 @@ import {
 } from "motion/react";
 import * as React from "react";
 
-import {
-  ReducedMotionConfig,
-  type ReducedMotionProp,
-  useResolvedReducedMotion,
-} from "@/lib/reduced-motion";
 import { cn } from "@/lib/utils";
 
 const componentThemeClassName =
@@ -55,12 +50,11 @@ type MotionSafeDivProps = Omit<
   | "onDrop"
 >;
 
-type CardProps = MotionSafeDivProps &
-  ReducedMotionProp & {
-    interactive?: boolean;
-    onHoverEnd?: () => void;
-    onHoverStart?: () => void;
-  };
+type CardProps = MotionSafeDivProps & {
+  interactive?: boolean;
+  onHoverEnd?: () => void;
+  onHoverStart?: () => void;
+};
 
 type CardSectionProps = MotionSafeDivProps;
 
@@ -117,7 +111,6 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
       children,
       className,
       interactive = false,
-      reducedMotion,
       style: styleProp,
       onBlurCapture,
       onFocusCapture,
@@ -129,8 +122,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
     },
     ref
   ) => {
-    const prefersReducedMotion = useResolvedReducedMotion(reducedMotion);
-    const motionEnabled = interactive && !prefersReducedMotion;
+    const motionEnabled = interactive;
     const focusWithinRef = React.useRef(false);
     const pointerInsideRef = React.useRef(false);
     const { hoverStyle, shadowOpacity, setHover } =
@@ -203,62 +195,53 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
     );
 
     return (
-      <ReducedMotionConfig reducedMotion={reducedMotion}>
-        <MotionDiv
-          {...props}
-          className={cn(
-            componentThemeClassName,
-            "relative flex transform-gpu flex-col gap-4 overflow-hidden rounded-lg border border-border/70 bg-card/95 py-4 text-card-foreground text-sm backdrop-blur-[2px]",
-            "before:pointer-events-none before:absolute before:inset-x-0 before:top-0 before:z-1 before:h-px before:bg-linear-to-r before:from-transparent before:via-foreground/12 before:to-transparent before:opacity-60",
-            "has-[>img:first-child]:pt-0 has-data-[slot=card-footer]:pb-0",
-            "[&>img:first-child]:rounded-t-[inherit] [&>img:last-child]:rounded-b-[inherit]",
-            motionEnabled && [
-              "shadow-[0_1px_0_rgba(15,23,42,0.02),0_0_0_1px_rgba(0,0,0,0.03)]",
-              "transition-[background-color,border-color] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]",
-              "before:transition-opacity before:duration-500 hover:border-foreground/11 hover:bg-card hover:before:opacity-100",
-              "focus-within:border-foreground/11 focus-within:bg-card focus-within:before:opacity-100",
-            ],
-            interactive &&
-              prefersReducedMotion && [
-                "transition-[transform,border-color,background-color,box-shadow] duration-300",
-                "shadow-[0_1px_0_rgba(15,23,42,0.02),0_0_0_1px_rgba(0,0,0,0.03)]",
-                "hover:-translate-y-0.5 hover:border-foreground/11 hover:bg-card hover:shadow-[0_18px_38px_-28px_rgba(15,23,42,0.2)]",
-                "focus-within:-translate-y-0.5 focus-within:border-foreground/11 focus-within:bg-card focus-within:shadow-[0_18px_38px_-28px_rgba(15,23,42,0.2)]",
-              ],
-            !interactive && [
-              "transition-[border-color,background-color] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]",
-            ],
-            className
-          )}
-          data-interactive={interactive ? "true" : undefined}
-          data-slot="card"
-          initial={false}
-          layout
-          onBlurCapture={motionEnabled ? handleBlurCapture : onBlurCapture}
-          onFocusCapture={motionEnabled ? handleFocusCapture : onFocusCapture}
-          onHoverEnd={motionEnabled ? handleHoverEnd : onHoverEnd}
-          onHoverStart={motionEnabled ? handleHoverStart : onHoverStart}
-          onPointerEnter={motionEnabled ? handlePointerEnter : onPointerEnter}
-          onPointerLeave={motionEnabled ? handlePointerLeave : onPointerLeave}
-          ref={(node) => {
-            assignRef(ref, node);
-          }}
-          style={motionEnabled ? { ...styleProp, ...hoverStyle } : styleProp}
-          transition={cardLayoutTransition}
-        >
-          {motionEnabled ? (
-            <motion.div
-              aria-hidden
-              className="pointer-events-none absolute inset-0 z-0 rounded-[inherit]"
-              style={{
-                boxShadow: CARD_SHADOW_HOVER,
-                opacity: shadowOpacity,
-              }}
-            />
-          ) : null}
-          {children}
-        </MotionDiv>
-      </ReducedMotionConfig>
+      <MotionDiv
+        {...props}
+        className={cn(
+          componentThemeClassName,
+          "relative flex transform-gpu flex-col gap-4 overflow-hidden rounded-lg border border-border/70 bg-card/95 py-4 text-card-foreground text-sm backdrop-blur-[2px]",
+          "before:pointer-events-none before:absolute before:inset-x-0 before:top-0 before:z-1 before:h-px before:bg-linear-to-r before:from-transparent before:via-foreground/12 before:to-transparent before:opacity-60",
+          "has-[>img:first-child]:pt-0 has-data-[slot=card-footer]:pb-0",
+          "[&>img:first-child]:rounded-t-[inherit] [&>img:last-child]:rounded-b-[inherit]",
+          motionEnabled && [
+            "shadow-[0_1px_0_rgba(15,23,42,0.02),0_0_0_1px_rgba(0,0,0,0.03)]",
+            "transition-[background-color,border-color] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]",
+            "before:transition-opacity before:duration-500 hover:border-foreground/11 hover:bg-card hover:before:opacity-100",
+            "focus-within:border-foreground/11 focus-within:bg-card focus-within:before:opacity-100",
+          ],
+          !interactive && [
+            "transition-[border-color,background-color] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]",
+          ],
+          className
+        )}
+        data-interactive={interactive ? "true" : undefined}
+        data-slot="card"
+        initial={false}
+        layout
+        onBlurCapture={motionEnabled ? handleBlurCapture : onBlurCapture}
+        onFocusCapture={motionEnabled ? handleFocusCapture : onFocusCapture}
+        onHoverEnd={motionEnabled ? handleHoverEnd : onHoverEnd}
+        onHoverStart={motionEnabled ? handleHoverStart : onHoverStart}
+        onPointerEnter={motionEnabled ? handlePointerEnter : onPointerEnter}
+        onPointerLeave={motionEnabled ? handlePointerLeave : onPointerLeave}
+        ref={(node) => {
+          assignRef(ref, node);
+        }}
+        style={motionEnabled ? { ...styleProp, ...hoverStyle } : styleProp}
+        transition={cardLayoutTransition}
+      >
+        {motionEnabled ? (
+          <motion.div
+            aria-hidden
+            className="pointer-events-none absolute inset-0 z-0 rounded-[inherit]"
+            style={{
+              boxShadow: CARD_SHADOW_HOVER,
+              opacity: shadowOpacity,
+            }}
+          />
+        ) : null}
+        {children}
+      </MotionDiv>
     );
   }
 );

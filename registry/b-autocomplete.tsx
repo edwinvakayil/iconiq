@@ -6,20 +6,17 @@ import { ChevronsUpDown } from "lucide-react";
 import { motion } from "motion/react";
 import * as React from "react";
 
-import {
-  ReducedMotionConfig,
-  type ReducedMotionProp,
-  useResolvedReducedMotion,
-} from "@/lib/reduced-motion";
 import { cn } from "@/lib/utils";
 
 const componentThemeClassName =
   "[--ic-background:#ffffff] [--ic-foreground:#111111] [--ic-primary:#111111] [--ic-secondary:#646b75] [--ic-surface-border:#e9edf2] [--ic-border:#e3e7ec] [--ic-card:#ffffff] [--ic-card-foreground:#111111] [--ic-muted:#f5f7fa] [--ic-muted-foreground:#6d7480] [--ic-accent:#f3f5f8] [--color-accent:var(--ic-accent)] [--color-accent-foreground:var(--ic-accent-foreground)] [--ic-accent-foreground:#111111] [--ic-input:#e3e7ec] [--ic-ring:rgba(17,17,17,0.16)] [--ic-destructive:#dc2626] [--ic-paper:#fcfcfd] [--ic-popover-foreground:#111111] [--ic-brand:#0ea5e9] [--ic-brand-soft:#bae6fd] [--ic-shadow-soft:0_18px_38px_-24px_rgba(15,23,42,0.35)] [--ic-chart-1:oklch(0.52_0.19_254)] [--ic-chart-2:oklch(0.74_0.11_232)] [--ic-chart-3:oklch(0.42_0.16_262)] [--ic-chart-4:oklch(0.84_0.07_228)] [--ic-chart-5:oklch(0.62_0.14_240)] [--color-background:var(--ic-background)] [--color-foreground:var(--ic-foreground)] [--color-primary:var(--ic-primary)] [--color-secondary:var(--ic-secondary)] [--color-border:var(--ic-border)] [--color-card:var(--ic-card)] [--color-card-foreground:var(--ic-card-foreground)] [--color-muted:var(--ic-muted)] [--color-muted-foreground:var(--ic-muted-foreground)] [--color-accent:var(--ic-accent)] [--color-accent-foreground:var(--ic-accent-foreground)] [--color-input:var(--ic-input)] [--color-ring:var(--ic-ring)] [--color-destructive:var(--ic-destructive)] [--color-paper:var(--ic-paper)] [--color-popover-foreground:var(--ic-popover-foreground)] [--color-brand:var(--ic-brand)] [--color-brand-soft:var(--ic-brand-soft)] [--color-chart-1:var(--ic-chart-1)] [--color-chart-2:var(--ic-chart-2)] [--color-chart-3:var(--ic-chart-3)] [--color-chart-4:var(--ic-chart-4)] [--color-chart-5:var(--ic-chart-5)] dark:[--ic-background:#111111] dark:[--ic-foreground:#f6f3ec] dark:[--ic-primary:#f6f3ec] dark:[--ic-secondary:#cbc6bb] dark:[--ic-surface-border:#2a2a25] dark:[--ic-border:#2b2a25] dark:[--ic-card:#111111] dark:[--ic-card-foreground:#f6f3ec] dark:[--ic-muted:#171716] dark:[--ic-muted-foreground:#9a958a] dark:[--ic-accent:#1a1a18] [--color-accent:var(--ic-accent)] [--color-accent-foreground:var(--ic-accent-foreground)] dark:[--ic-accent-foreground:#f6f3ec] dark:[--ic-input:#2b2a25] dark:[--ic-ring:rgba(246,243,236,0.18)] dark:[--ic-destructive:#f87171] dark:[--ic-paper:#171716] dark:[--ic-popover-foreground:#f6f3ec] dark:[--ic-brand:#38bdf8] dark:[--ic-brand-soft:#0c4a6e] dark:[--ic-shadow-soft:0_20px_44px_-28px_rgba(0,0,0,0.6)] dark:[--ic-chart-1:oklch(0.68_0.17_250)] dark:[--ic-chart-2:oklch(0.82_0.09_225)] dark:[--ic-chart-3:oklch(0.58_0.15_260)] dark:[--ic-chart-4:oklch(0.75_0.12_235)] dark:[--ic-chart-5:oklch(0.88_0.06_220)]";
 
-type AutocompleteRootProps<Value> = ReducedMotionProp &
-  Omit<AutocompletePrimitive.Root.Props<Value>, "items"> & {
-    items: readonly Value[];
-  };
+type AutocompleteRootProps<Value> = Omit<
+  AutocompletePrimitive.Root.Props<Value>,
+  "items"
+> & {
+  items: readonly Value[];
+};
 
 const INSTANT_CLOSE_TRANSITION = { duration: 0 } as const;
 
@@ -28,7 +25,6 @@ type AutocompleteContextValue = {
   activeHighlightId: string;
   activeValue: unknown;
   open: boolean;
-  reduceMotion: boolean;
   setActiveValue: React.Dispatch<React.SetStateAction<unknown>>;
   setOpen: (open: boolean) => void;
   skipExitAnimationRef: React.MutableRefObject<boolean>;
@@ -158,33 +154,21 @@ const HIGHLIGHT_SPRING = {
   mass: 0.82,
 };
 
-function getPopupMotion(reduceMotion: boolean) {
-  if (reduceMotion) {
-    return {
-      animate: { opacity: 1, scale: 1, y: 0 },
-      closed: { opacity: 0, scale: 1, y: 0 },
-      initial: { opacity: 0, scale: 1, y: 0 },
-      openTransition: { duration: 0.12, ease: "easeOut" as const },
-      closedTransition: { duration: 0.1, ease: "easeOut" as const },
-    };
-  }
-
-  return {
-    animate: { opacity: 1, scale: 1, y: 0 },
-    closed: { opacity: 0, scale: 0.985, y: -5 },
-    initial: { opacity: 0, scale: 0.985, y: -5 },
-    openTransition: {
-      opacity: { duration: 0.34, ease: FLUID_EASE },
-      scale: POPUP_SPRING,
-      y: POPUP_SPRING,
-    },
-    closedTransition: {
-      opacity: { duration: 0.22, ease: EXIT_EASE },
-      scale: { duration: 0.22, ease: EXIT_EASE },
-      y: { duration: 0.22, ease: EXIT_EASE },
-    },
-  };
-}
+const popupMotion = {
+  animate: { opacity: 1, scale: 1, y: 0 },
+  closed: { opacity: 0, scale: 0.985, y: -5 },
+  initial: { opacity: 0, scale: 0.985, y: -5 },
+  openTransition: {
+    opacity: { duration: 0.34, ease: FLUID_EASE },
+    scale: POPUP_SPRING,
+    y: POPUP_SPRING,
+  },
+  closedTransition: {
+    opacity: { duration: 0.22, ease: EXIT_EASE },
+    scale: { duration: 0.22, ease: EXIT_EASE },
+    y: { duration: 0.22, ease: EXIT_EASE },
+  },
+};
 
 const autocompleteListScrollbarClassName =
   "z-10 my-1.5 mr-0.5 w-1 shrink-0 touch-none select-none opacity-0 transition-opacity duration-150 before:absolute before:left-1/2 before:h-full before:w-5 before:-translate-x-1/2 before:content-[''] data-hovering:pointer-events-auto data-hovering:opacity-100 data-scrolling:pointer-events-auto data-scrolling:opacity-100 data-scrolling:duration-0";
@@ -201,11 +185,12 @@ const autocompleteCollisionAvoidance = {
   side: "none" as const,
 };
 
-function getChevronTransition(reduceMotion: boolean) {
-  return reduceMotion
-    ? { duration: 0.1, ease: "easeOut" as const }
-    : { type: "spring" as const, stiffness: 380, damping: 30, mass: 0.8 };
-}
+const chevronTransition = {
+  type: "spring" as const,
+  stiffness: 380,
+  damping: 30,
+  mass: 0.8,
+};
 
 function Autocomplete<Value>({
   actionsRef: actionsRefProp,
@@ -219,10 +204,8 @@ function Autocomplete<Value>({
   onOpenChange,
   open: openProp,
   openOnInputClick = false,
-  reducedMotion,
   ...props
 }: AutocompleteRootProps<Value>) {
-  const reduceMotion = useResolvedReducedMotion(reducedMotion);
   const internalActionsRef =
     React.useRef<AutocompletePrimitive.Root.Actions | null>(null);
   const actionsRef = actionsRefProp ?? internalActionsRef;
@@ -256,51 +239,42 @@ function Autocomplete<Value>({
         skipExitAnimationRef.current = false;
       }
 
-      if (!nextOpen && reduceMotion) {
-        requestAnimationFrame(() => {
-          actionsRef.current?.unmount();
-        });
-      }
-
       if (!eventDetails.isCanceled) {
         setOpen(nextOpen);
       }
 
       onOpenChange?.(nextOpen, eventDetails);
     },
-    [actionsRef, onOpenChange, reduceMotion, setOpen]
+    [onOpenChange, setOpen]
   );
 
   return (
-    <ReducedMotionConfig reducedMotion={reducedMotion}>
-      <AutocompleteContext.Provider
-        value={{
-          actionsRef,
-          activeHighlightId,
-          activeValue,
-          open,
-          reduceMotion,
-          setActiveValue,
-          setOpen,
-          skipExitAnimationRef,
-        }}
+    <AutocompleteContext.Provider
+      value={{
+        actionsRef,
+        activeHighlightId,
+        activeValue,
+        open,
+        setActiveValue,
+        setOpen,
+        skipExitAnimationRef,
+      }}
+    >
+      <AutocompletePrimitive.Root
+        {...props}
+        actionsRef={actionsRef}
+        autoHighlight={autoHighlight}
+        highlightItemOnHover={highlightItemOnHover}
+        items={items}
+        modal={modal}
+        mode={mode}
+        onOpenChange={handleOpenChange}
+        open={open}
+        openOnInputClick={openOnInputClick}
       >
-        <AutocompletePrimitive.Root
-          {...props}
-          actionsRef={actionsRef}
-          autoHighlight={autoHighlight}
-          highlightItemOnHover={highlightItemOnHover}
-          items={items}
-          modal={modal}
-          mode={mode}
-          onOpenChange={handleOpenChange}
-          open={open}
-          openOnInputClick={openOnInputClick}
-        >
-          {children}
-        </AutocompletePrimitive.Root>
-      </AutocompleteContext.Provider>
-    </ReducedMotionConfig>
+        {children}
+      </AutocompletePrimitive.Root>
+    </AutocompleteContext.Provider>
   );
 }
 
@@ -315,7 +289,7 @@ function AutocompleteTrigger({
   children,
   ...props
 }: AutocompletePrimitive.Trigger.Props) {
-  const { open, reduceMotion } = useAutocompleteContext("AutocompleteTrigger");
+  const { open } = useAutocompleteContext("AutocompleteTrigger");
 
   return (
     <AutocompletePrimitive.Trigger
@@ -330,7 +304,7 @@ function AutocompleteTrigger({
       {children}
       <motion.span
         animate={{ rotate: open ? 180 : 0 }}
-        transition={getChevronTransition(reduceMotion)}
+        transition={chevronTransition}
       >
         <ChevronsUpDown className="h-4 w-4" />
       </motion.span>
@@ -436,9 +410,9 @@ function AutocompleteContentPanel({
     "children" | "className" | "ref" | "style"
   >;
 }) {
-  const { actionsRef, reduceMotion, setOpen, skipExitAnimationRef } =
-    useAutocompleteContext("AutocompleteContentPanel");
-  const popupMotion = getPopupMotion(reduceMotion);
+  const { actionsRef, setOpen, skipExitAnimationRef } = useAutocompleteContext(
+    "AutocompleteContentPanel"
+  );
   const isPopupVisible = popupState.open && !popupState.empty;
   const skipExitAnimation = !popupState.open && skipExitAnimationRef.current;
 
@@ -621,7 +595,7 @@ function AutocompleteItem({
 }: AutocompletePrimitive.Item.Props & {
   description?: React.ReactNode;
 }) {
-  const { activeHighlightId, activeValue, reduceMotion, setActiveValue } =
+  const { activeHighlightId, activeValue, setActiveValue } =
     useAutocompleteContext("AutocompleteItem");
 
   return (
@@ -664,7 +638,7 @@ function AutocompleteItem({
               <motion.div
                 className="absolute inset-0 rounded-lg bg-accent"
                 layoutId={activeHighlightId}
-                transition={reduceMotion ? { duration: 0.1 } : HIGHLIGHT_SPRING}
+                transition={HIGHLIGHT_SPRING}
               />
             ) : null}
 

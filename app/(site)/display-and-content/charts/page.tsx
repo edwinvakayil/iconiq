@@ -1,7 +1,7 @@
 "use client";
 
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
 import { useState } from "react";
 import {
   BarChart,
@@ -158,7 +158,6 @@ function LineChartSlide() {
 
 function ChartsPreview() {
   const [slideIndex, setSlideIndex] = useState(0);
-  const reduceMotion = useReducedMotion() ?? false;
   const activeSlide = chartSlides[slideIndex];
 
   const goToSlide = (nextIndex: number) => {
@@ -177,7 +176,7 @@ function ChartsPreview() {
             initial={{ opacity: 0 }}
             key={activeSlide.id}
             role="group"
-            transition={reduceMotion ? { duration: 0 } : carouselFade}
+            transition={carouselFade}
           >
             {activeSlide.id === "bar" ? <BarChartSlide /> : <LineChartSlide />}
           </motion.div>

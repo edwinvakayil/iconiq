@@ -24,7 +24,6 @@ type ToggleModule = {
     disabled?: boolean;
     onPressedChange?: (pressed: boolean) => void;
     pressed?: boolean;
-    reducedMotion?: boolean;
     size?: "default" | "lg" | "sm";
     variant?: "default" | "outline";
     children?: React.ReactNode;
@@ -210,7 +209,7 @@ export default function TogglePage() {
         dependencyLabel: "@base-ui/react, class-variance-authority, motion",
         libraryLabel: "Base UI",
         notes: [
-          "Installs a Base UI toggle with the same variant, size, and reducedMotion API as the Radix version.",
+          "Installs a Base UI toggle with the same variant and size API as the Radix version.",
           "Uses Base UI toggle primitives under the same spring background, content lift, and press scale shell.",
         ],
         ui: BaseToggle,
@@ -223,7 +222,7 @@ export default function TogglePage() {
       dependencyLabel: "radix-ui, class-variance-authority, motion",
       libraryLabel: "Radix UI",
       notes: [
-        "Installs a Radix toggle with the same variant, size, and reducedMotion API as the Base UI version.",
+        "Installs a Radix toggle with the same variant and size API as the Base UI version.",
         "Uses Radix toggle primitives under the same spring background, content lift, and press scale shell.",
       ],
       ui: RadixToggle,

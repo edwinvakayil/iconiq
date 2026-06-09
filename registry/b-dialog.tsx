@@ -6,11 +6,6 @@ import { X } from "lucide-react";
 import { motion } from "motion/react";
 import * as React from "react";
 
-import {
-  ReducedMotionConfig,
-  type ReducedMotionProp,
-  useResolvedReducedMotion,
-} from "@/lib/reduced-motion";
 import { cn } from "@/lib/utils";
 
 const dialogThemeClassName =
@@ -74,7 +69,6 @@ const childVariants = {
 type DialogContextValue = {
   actionsRef: React.RefObject<DialogPrimitive.Root.Actions | null>;
   open: boolean;
-  reduceMotion: boolean;
 };
 
 const DialogContext = React.createContext<DialogContextValue | null>(null);
@@ -166,10 +160,9 @@ function resolveBackdropProps(backdropProps: BackdropRenderProps) {
 
 export interface DialogProps
   extends Omit<
-      React.ComponentPropsWithoutRef<typeof DialogPrimitive.Root>,
-      "children" | "defaultOpen" | "onOpenChange" | "open"
-    >,
-    ReducedMotionProp {
+    React.ComponentPropsWithoutRef<typeof DialogPrimitive.Root>,
+    "children" | "defaultOpen" | "onOpenChange" | "open"
+  > {
   children: React.ReactNode;
   defaultOpen?: boolean;
   onOpenChange?: (open: boolean) => void;
@@ -181,21 +174,19 @@ function Dialog({
   defaultOpen = false,
   onOpenChange,
   open: openProp,
-  reducedMotion,
   ...props
 }: DialogProps) {
   const actionsRef = React.useRef<DialogPrimitive.Root.Actions | null>(null);
   const isControlled = openProp !== undefined;
   const [uncontrolledOpen, setUncontrolledOpen] = React.useState(defaultOpen);
   const open = isControlled ? openProp : uncontrolledOpen;
-  const reduceMotion = useResolvedReducedMotion(reducedMotion);
 
   const handleOpenChange = React.useCallback(
     (
       nextOpen: boolean,
       eventDetails: DialogPrimitive.Root.ChangeEventDetails
     ) => {
-      if (!(nextOpen || reduceMotion)) {
+      if (!nextOpen) {
         eventDetails.preventUnmountOnClose();
       }
 
@@ -205,23 +196,21 @@ function Dialog({
         setUncontrolledOpen(nextOpen);
       }
     },
-    [isControlled, onOpenChange, reduceMotion]
+    [isControlled, onOpenChange]
   );
 
   return (
-    <ReducedMotionConfig reducedMotion={reducedMotion}>
-      <DialogContext.Provider value={{ actionsRef, open, reduceMotion }}>
-        <DialogPrimitive.Root
-          {...props}
-          actionsRef={actionsRef}
-          defaultOpen={defaultOpen}
-          onOpenChange={handleOpenChange}
-          open={open}
-        >
-          {children}
-        </DialogPrimitive.Root>
-      </DialogContext.Provider>
-    </ReducedMotionConfig>
+    <DialogContext.Provider value={{ actionsRef, open }}>
+      <DialogPrimitive.Root
+        {...props}
+        actionsRef={actionsRef}
+        defaultOpen={defaultOpen}
+        onOpenChange={handleOpenChange}
+        open={open}
+      >
+        {children}
+      </DialogPrimitive.Root>
+    </DialogContext.Provider>
   );
 }
 
@@ -269,108 +258,105 @@ const DialogPortal = DialogPrimitive.Portal;
 
 export interface DialogContentProps
   extends Omit<
-      React.ComponentPropsWithoutRef<typeof DialogPrimitive.Popup>,
-      "children" | "className" | "render"
-    >,
-    ReducedMotionProp {
+    React.ComponentPropsWithoutRef<typeof DialogPrimitive.Popup>,
+    "children" | "className" | "render"
+  > {
   children: React.ReactNode;
   className?: string;
   open?: boolean;
 }
 
 const DialogContent = React.forwardRef<HTMLDivElement, DialogContentProps>(
-  ({ children, className, open: _open, reducedMotion, ...props }, ref) => {
-    const { actionsRef, open, reduceMotion } = useDialogContext();
+  ({ children, className, open: _open, ...props }, ref) => {
+    const { actionsRef, open } = useDialogContext();
 
     return (
-      <ReducedMotionConfig reducedMotion={reducedMotion}>
-        <DialogPrimitive.Portal>
-          <DialogPrimitive.Backdrop
-            render={(backdropProps) => {
+      <DialogPrimitive.Portal>
+        <DialogPrimitive.Backdrop
+          render={(backdropProps) => {
+            const {
+              backdropClassName,
+              backdropRef,
+              backdropStyle,
+              resolvedBackdropProps,
+            } = resolveBackdropProps(backdropProps);
+
+            return (
+              <motion.div
+                {...resolvedBackdropProps}
+                animate={open ? "visible" : "hidden"}
+                className={cn(
+                  backdropClassName,
+                  "fixed inset-0 z-50 bg-black/52 backdrop-blur-[10px]"
+                )}
+                exit="hidden"
+                initial="hidden"
+                ref={(node) => {
+                  setRef(backdropRef, node);
+                }}
+                style={backdropStyle}
+                transition={{ duration: 0.25, ease: "easeOut" }}
+                variants={overlayVariants}
+              />
+            );
+          }}
+        />
+        <DialogPrimitive.Viewport className="fixed inset-0 z-50 grid place-items-center overflow-y-auto p-4">
+          <DialogPrimitive.Popup
+            {...props}
+            className={className}
+            render={(popupProps) => {
               const {
-                backdropClassName,
-                backdropRef,
-                backdropStyle,
-                resolvedBackdropProps,
-              } = resolveBackdropProps(backdropProps);
+                popupChildren,
+                popupClassName,
+                popupRef,
+                popupStyle,
+                resolvedPopupProps,
+              } = resolvePopupProps(popupProps);
 
               return (
                 <motion.div
-                  {...resolvedBackdropProps}
-                  animate={open ? "visible" : "hidden"}
+                  {...resolvedPopupProps}
+                  animate={open ? "visible" : "exit"}
                   className={cn(
-                    backdropClassName,
-                    "fixed inset-0 z-50 bg-black/52 backdrop-blur-[10px]"
+                    dialogThemeClassName,
+                    dialogContentClassName,
+                    popupClassName
                   )}
-                  exit="hidden"
+                  exit="exit"
                   initial="hidden"
-                  ref={(node) => {
-                    setRef(backdropRef, node);
+                  onAnimationComplete={() => {
+                    if (!open) {
+                      actionsRef.current?.unmount();
+                    }
                   }}
-                  style={backdropStyle}
-                  transition={{ duration: 0.25, ease: "easeOut" }}
-                  variants={overlayVariants}
-                />
+                  ref={(node) => {
+                    setRef(popupRef, node);
+                    setRef(ref, node);
+                  }}
+                  style={popupStyle}
+                  variants={contentVariants}
+                >
+                  {popupChildren}
+                </motion.div>
               );
             }}
-          />
-          <DialogPrimitive.Viewport className="fixed inset-0 z-50 grid place-items-center overflow-y-auto p-4">
-            <DialogPrimitive.Popup
-              {...props}
-              className={className}
-              render={(popupProps) => {
-                const {
-                  popupChildren,
-                  popupClassName,
-                  popupRef,
-                  popupStyle,
-                  resolvedPopupProps,
-                } = resolvePopupProps(popupProps);
-
-                return (
-                  <motion.div
-                    {...resolvedPopupProps}
-                    animate={open ? "visible" : "exit"}
-                    className={cn(
-                      dialogThemeClassName,
-                      dialogContentClassName,
-                      popupClassName
-                    )}
-                    exit="exit"
-                    initial="hidden"
-                    onAnimationComplete={() => {
-                      if (!(open || reduceMotion)) {
-                        actionsRef.current?.unmount();
-                      }
-                    }}
-                    ref={(node) => {
-                      setRef(popupRef, node);
-                      setRef(ref, node);
-                    }}
-                    style={popupStyle}
-                    variants={contentVariants}
-                  >
-                    {popupChildren}
-                  </motion.div>
-                );
-              }}
+          >
+            {React.Children.map(children, (child) =>
+              child == null ? null : (
+                <motion.div variants={childVariants}>{child}</motion.div>
+              )
+            )}
+            <DialogPrimitive.Close
+              className={dialogCloseClassName}
+              type="button"
             >
-              {React.Children.map(children, (child) =>
-                child == null ? null : (
-                  <motion.div variants={childVariants}>{child}</motion.div>
-                )
-              )}
-              <DialogPrimitive.Close
-                className={dialogCloseClassName}
-                type="button"
-              >
-                <X className="h-4 w-4" />
-                <span className="sr-only">Close</span>
-              </DialogPrimitive.Close>
-            </DialogPrimitive.Popup>
-          </DialogPrimitive.Viewport>
-        </DialogPrimitive.Portal>
-      </ReducedMotionConfig>
+              <X className="h-4 w-4" />
+              <span className="sr-only">Close</span>
+            </DialogPrimitive.Close>
+          </DialogPrimitive.Popup>
+        </DialogPrimitive.Viewport>
+      </DialogPrimitive.Portal>
     );
   }
 );

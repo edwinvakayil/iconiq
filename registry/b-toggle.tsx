@@ -5,11 +5,6 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { animate, motion, useMotionValue, useTransform } from "motion/react";
 import * as React from "react";
 
-import {
-  ReducedMotionConfig,
-  type ReducedMotionProp,
-  useResolvedReducedMotion,
-} from "@/lib/reduced-motion";
 import { cn } from "@/lib/utils";
 
 const ICON_REST = 0.93;
@@ -64,9 +59,7 @@ const toggleVariants = cva(
   }
 );
 
-type ToggleProps = TogglePrimitive.Props &
-  VariantProps<typeof toggleVariants> &
-  ReducedMotionProp;
+type ToggleProps = TogglePrimitive.Props & VariantProps<typeof toggleVariants>;
 
 function setRef<T>(ref: React.Ref<T> | undefined, value: T | null) {
   if (typeof ref === "function") {
@@ -106,7 +99,6 @@ const Toggle = React.forwardRef<HTMLButtonElement, ToggleProps>(function Toggle(
     onPointerUp,
     onPressedChange,
     children,
-    reducedMotion,
     ...props
   },
   forwardedRef
@@ -114,7 +106,6 @@ const Toggle = React.forwardRef<HTMLButtonElement, ToggleProps>(function Toggle(
   const isControlled = pressed !== undefined;
   const [uncontrolledPressed, setUncontrolledPressed] =
     React.useState(defaultPressed);
-  const reduceMotion = useResolvedReducedMotion(reducedMotion);
   const isPressed = isControlled ? Boolean(pressed) : uncontrolledPressed;
 
   const fillProgress = useMotionValue(isPressed ? 1 : 0);
@@ -140,15 +131,6 @@ const Toggle = React.forwardRef<HTMLButtonElement, ToggleProps>(function Toggle(
     prevPressedRef.current = isPressed;
     setWipeOrigin(isPressed ? "left center" : "right center");
 
-    if (reduceMotion) {
-      fillProgress.set(isPressed ? 1 : 0);
-      iconScale.set(isPressed ? 1 : ICON_REST);
-      iconScaleX.set(1);
-      iconScaleY.set(1);
-      sheenOpacity.set(0);
-      return;
-    }
-
     animate(fillProgress, isPressed ? 1 : 0, FLUID_FILL);
     animate(iconScale, isPressed ? 1 : ICON_REST, FLUID_ICON);
     runSheenSweep(sheenX, sheenOpacity);
@@ -165,7 +147,6 @@ const Toggle = React.forwardRef<HTMLButtonElement, ToggleProps>(function Toggle(
     iconScaleX,
     iconScaleY,
     isPressed,
-    reduceMotion,
     sheenOpacity,
     sheenX,
   ]);
@@ -190,15 +171,9 @@ const Toggle = React.forwardRef<HTMLButtonElement, ToggleProps>(function Toggle(
   );
 
   const resetTapScale = React.useCallback(() => {
-    if (reduceMotion) {
-      iconScaleX.set(1);
-      iconScaleY.set(1);
-      return;
-    }
-
     animate(iconScaleX, 1, FLUID_SNAP);
     animate(iconScaleY, 1, FLUID_SNAP);
-  }, [iconScaleX, iconScaleY, reduceMotion]);
+  }, [iconScaleX, iconScaleY]);
 
   const handlePointerDown = React.useCallback<
     NonNullable<TogglePrimitive.Props["onPointerDown"]>
@@ -212,12 +187,10 @@ const Toggle = React.forwardRef<HTMLButtonElement, ToggleProps>(function Toggle(
 
       isPointerDownRef.current = true;
 
-      if (!reduceMotion) {
-        animate(iconScaleX, 0.86, FLUID_TAP);
-        animate(iconScaleY, 1.08, FLUID_TAP);
-      }
+      animate(iconScaleX, 0.86, FLUID_TAP);
+      animate(iconScaleY, 1.08, FLUID_TAP);
     },
-    [disabled, iconScaleX, iconScaleY, onPointerDown, reduceMotion]
+    [disabled, iconScaleX, iconScaleY, onPointerDown]
   );
 
   const handlePointerUp = React.useCallback<
@@ -260,59 +233,57 @@ const Toggle = React.forwardRef<HTMLButtonElement, ToggleProps>(function Toggle(
   );
 
   return (
-    <ReducedMotionConfig reducedMotion={reducedMotion}>
-      <TogglePrimitive
-        {...props}
-        className={cn(toggleVariants({ variant, size, className }))}
-        data-slot="toggle"
-        disabled={disabled}
-        onPointerDown={handlePointerDown}
-        onPointerLeave={handlePointerLeave}
-        onPointerUp={handlePointerUp}
-        onPressedChange={handlePressedChange}
-        pressed={pressed}
-        ref={mergeRefs}
-        {...(isControlled ? {} : { defaultPressed })}
+    <TogglePrimitive
+      {...props}
+      className={cn(toggleVariants({ variant, size, className }))}
+      data-slot="toggle"
+      disabled={disabled}
+      onPointerDown={handlePointerDown}
+      onPointerLeave={handlePointerLeave}
+      onPointerUp={handlePointerUp}
+      onPressedChange={handlePressedChange}
+      pressed={pressed}
+      ref={mergeRefs}
+      {...(isControlled ? {} : { defaultPressed })}
+    >
+      <motion.span
+        aria-hidden
+        className="pointer-events-none absolute inset-0 z-0 rounded-[inherit] bg-muted"
+        style={{
+          opacity: fillOpacity,
+          scaleX: fillScaleX,
+          transformOrigin: wipeOrigin,
+        }}
+      />
+      <span
+        aria-hidden
+        className="pointer-events-none absolute inset-0 z-[1] overflow-hidden rounded-[inherit]"
       >
         <motion.span
-          aria-hidden
-          className="pointer-events-none absolute inset-0 z-0 rounded-[inherit] bg-muted"
+          className="absolute inset-y-[-20%] w-[42%] -skew-x-[18deg] bg-gradient-to-r from-transparent via-foreground/18 to-transparent dark:via-foreground/26"
           style={{
-            opacity: fillOpacity,
-            scaleX: fillScaleX,
-            transformOrigin: wipeOrigin,
+            left: sheenLeft,
+            opacity: sheenOpacity,
           }}
         />
-        <span
-          aria-hidden
-          className="pointer-events-none absolute inset-0 z-[1] overflow-hidden rounded-[inherit]"
+      </span>
+      <span className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center">
+        <motion.span
+          className="inline-flex origin-center items-center justify-center"
+          style={{ scale: iconScale }}
         >
           <motion.span
-            className="absolute inset-y-[-20%] w-[42%] -skew-x-[18deg] bg-gradient-to-r from-transparent via-foreground/18 to-transparent dark:via-foreground/26"
+            className="inline-flex origin-center items-center justify-center [&_svg]:block"
             style={{
-              left: sheenLeft,
-              opacity: sheenOpacity,
+              scaleX: iconScaleX,
+              scaleY: iconScaleY,
             }}
-          />
-        </span>
-        <span className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center">
-          <motion.span
-            className="inline-flex origin-center items-center justify-center"
-            style={{ scale: iconScale }}
           >
-            <motion.span
-              className="inline-flex origin-center items-center justify-center [&_svg]:block"
-              style={{
-                scaleX: iconScaleX,
-                scaleY: iconScaleY,
-              }}
-            >
-              {children}
-            </motion.span>
+            {children}
           </motion.span>
-        </span>
-      </TogglePrimitive>
-    </ReducedMotionConfig>
+        </motion.span>
+      </span>
+    </TogglePrimitive>
   );
 });
 

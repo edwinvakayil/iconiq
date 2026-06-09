@@ -5,10 +5,6 @@ import { AnimatePresence, motion } from "motion/react";
 import * as React from "react";
 import { createPortal } from "react-dom";
 
-import {
-  ReducedMotionConfig,
-  type ReducedMotionProp,
-} from "@/lib/reduced-motion";
 import { cn } from "@/lib/utils";
 
 const contextMenuThemeClassName =
@@ -42,7 +38,7 @@ export type ContextMenuItem = {
 type Position = { x: number; y: number };
 type MenuOrigin = "top-left" | "top-right" | "bottom-left" | "bottom-right";
 
-export interface ContextMenuProps extends ReducedMotionProp {
+export interface ContextMenuProps {
   items: ContextMenuItem[];
   children: React.ReactNode;
   className?: string;
@@ -59,7 +55,6 @@ export function ContextMenu({
   children,
   className,
   menuClassName,
-  reducedMotion,
 }: ContextMenuProps) {
   const [open, setOpen] = React.useState(false);
   const [mounted, setMounted] = React.useState(false);
@@ -538,7 +533,7 @@ export function ContextMenu({
     React.isValidElement(children) && children.type !== React.Fragment;
 
   return (
-    <ReducedMotionConfig reducedMotion={reducedMotion}>
+    <>
       {useSlottedTrigger ? (
         <Slot
           aria-expanded={open}
@@ -566,7 +561,7 @@ export function ContextMenu({
         </button>
       )}
       {mounted ? createPortal(menu, document.body) : null}
-    </ReducedMotionConfig>
+    </>
   );
 }
 

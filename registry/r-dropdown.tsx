@@ -5,11 +5,6 @@ import { Check, ChevronDown } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import * as React from "react";
 
-import {
-  ReducedMotionConfig,
-  type ReducedMotionProp,
-  useResolvedReducedMotion,
-} from "@/lib/reduced-motion";
 import { cn } from "@/lib/utils";
 
 const dropdownThemeClassName =
@@ -50,33 +45,21 @@ const POPUP_SPRING = {
 };
 const POPUP_TRANSFORM_ORIGIN = "top center";
 
-function getPopupMotion(reduceMotion: boolean) {
-  if (reduceMotion) {
-    return {
-      animate: { opacity: 1, scale: 1, y: 0 },
-      closed: { opacity: 0, scale: 1, y: 0 },
-      initial: { opacity: 0, scale: 1, y: 0 },
-      openTransition: { duration: 0.12, ease: "easeOut" as const },
-      closedTransition: { duration: 0.1, ease: "easeOut" as const },
-    };
-  }
-
-  return {
-    animate: { opacity: 1, scale: 1, y: 0 },
-    closed: { opacity: 0, scale: 0.985, y: -5 },
-    initial: { opacity: 0, scale: 0.985, y: -5 },
-    openTransition: {
-      opacity: { duration: 0.34, ease: FLUID_EASE },
-      scale: POPUP_SPRING,
-      y: POPUP_SPRING,
-    },
-    closedTransition: {
-      opacity: { duration: 0.22, ease: EXIT_EASE },
-      scale: { duration: 0.22, ease: EXIT_EASE },
-      y: { duration: 0.22, ease: EXIT_EASE },
-    },
-  };
-}
+const popupMotion = {
+  animate: { opacity: 1, scale: 1, y: 0 },
+  closed: { opacity: 0, scale: 0.985, y: -5 },
+  initial: { opacity: 0, scale: 0.985, y: -5 },
+  openTransition: {
+    opacity: { duration: 0.34, ease: FLUID_EASE },
+    scale: POPUP_SPRING,
+    y: POPUP_SPRING,
+  },
+  closedTransition: {
+    opacity: { duration: 0.22, ease: EXIT_EASE },
+    scale: { duration: 0.22, ease: EXIT_EASE },
+    y: { duration: 0.22, ease: EXIT_EASE },
+  },
+};
 
 type DropdownContextValue = {
   contentId: string;
@@ -84,7 +67,6 @@ type DropdownContextValue = {
   hoveredItemId: string | undefined;
   labels: Record<string, string>;
   open: boolean;
-  reduceMotion: boolean;
   setFocusStrategy: (strategy: DropdownFocusStrategy) => void;
   setHoveredItemId: React.Dispatch<React.SetStateAction<string | undefined>>;
   setOpen: (open: boolean) => void;
@@ -227,7 +209,7 @@ function classNameHasToken(className: string | undefined, token: string) {
   return className?.split(CLASSNAME_TOKEN_SPLIT).includes(token) ?? false;
 }
 
-export interface DropdownProps extends ReducedMotionProp {
+export interface DropdownProps {
   children: React.ReactNode;
   className?: string;
   defaultOpen?: boolean;
@@ -247,12 +229,10 @@ export function Dropdown({
   onOpenChange,
   onValueChange,
   open: openProp,
-  reducedMotion,
   value: valueProp,
   variant = "select",
 }: DropdownProps) {
   const triggerRef = React.useRef<HTMLButtonElement>(null);
-  const reduceMotion = useResolvedReducedMotion(reducedMotion);
   const contentId = React.useId();
   const focusStrategyRef = React.useRef<DropdownFocusStrategy>("selected");
   const skipExitAnimationRef = React.useRef(false);
@@ -281,7 +261,6 @@ export function Dropdown({
       hoveredItemId,
       labels,
       open,
-      reduceMotion,
       setFocusStrategy: (strategy: DropdownFocusStrategy) => {
         focusStrategyRef.current = strategy;
       },
@@ -293,49 +272,37 @@ export function Dropdown({
       value,
       variant,
     }),
-    [
-      contentId,
-      hoveredItemId,
-      labels,
-      open,
-      reduceMotion,
-      setOpen,
-      setValue,
-      value,
-      variant,
-    ]
+    [contentId, hoveredItemId, labels, open, setOpen, setValue, value, variant]
   );
 
   return (
-    <ReducedMotionConfig reducedMotion={reducedMotion}>
-      <DropdownContext.Provider value={contextValue}>
-        <DropdownMenuPrimitive.Root
-          modal={false}
-          onOpenChange={(nextOpen) => {
-            if (nextOpen) {
-              skipExitAnimationRef.current = false;
-            }
+    <DropdownContext.Provider value={contextValue}>
+      <DropdownMenuPrimitive.Root
+        modal={false}
+        onOpenChange={(nextOpen) => {
+          if (nextOpen) {
+            skipExitAnimationRef.current = false;
+          }
 
-            setOpen(nextOpen);
+          setOpen(nextOpen);
 
-            if (!nextOpen) {
-              setHoveredItemId(undefined);
-            }
-          }}
-          open={open}
+          if (!nextOpen) {
+            setHoveredItemId(undefined);
+          }
+        }}
+        open={open}
+      >
+        <div
+          className={cn(
+            dropdownThemeClassName,
+            "relative inline-block",
+            className
+          )}
         >
-          <div
-            className={cn(
-              dropdownThemeClassName,
-              "relative inline-block",
-              className
-            )}
-          >
-            {children}
-          </div>
-        </DropdownMenuPrimitive.Root>
-      </DropdownContext.Provider>
-    </ReducedMotionConfig>
+          {children}
+        </div>
+      </DropdownMenuPrimitive.Root>
+    </DropdownContext.Provider>
   );
 }
 
@@ -361,15 +328,8 @@ export const DropdownTrigger = React.forwardRef<
     },
     ref
   ) => {
-    const {
-      contentId,
-      open,
-      reduceMotion,
-      setFocusStrategy,
-      setOpen,
-      triggerRef,
-      variant,
-    } = useDropdownContext("DropdownTrigger");
+    const { contentId, open, setFocusStrategy, setOpen, triggerRef, variant } =
+      useDropdownContext("DropdownTrigger");
 
     return (
       <DropdownMenuPrimitive.Trigger asChild disabled={disabled}>
@@ -430,11 +390,12 @@ export const DropdownTrigger = React.forwardRef<
             <motion.span
               animate={{ rotate: open ? 180 : 0 }}
               className="text-[color:var(--dd-muted-foreground)]"
-              transition={
-                reduceMotion
-                  ? { duration: 0.14, ease: "easeOut" }
-                  : { type: "spring", stiffness: 260, damping: 22, mass: 0.72 }
-              }
+              transition={{
+                type: "spring",
+                stiffness: 260,
+                damping: 22,
+                mass: 0.72,
+              }}
             >
               <ChevronDown className="h-4 w-4" />
             </motion.span>
@@ -489,13 +450,11 @@ export const DropdownContent = React.forwardRef<
   const {
     focusStrategyRef,
     open,
-    reduceMotion,
     setHoveredItemId,
     skipExitAnimationRef,
     value,
   } = useDropdownContext("DropdownContent");
   const contentRef = React.useRef<HTMLDivElement | null>(null);
-  const popupMotion = getPopupMotion(reduceMotion);
   const shouldMatchTriggerWidth = classNameHasToken(className, "w-full");
   const panelVariants = {
     closed: {
@@ -503,9 +462,9 @@ export const DropdownContent = React.forwardRef<
       transition: popupMotion.closedTransition,
     },
     closedInstant: {
-      opacity: reduceMotion ? 0 : popupMotion.closed.opacity,
-      scale: reduceMotion ? 1 : popupMotion.closed.scale,
-      y: reduceMotion ? 0 : popupMotion.closed.y,
+      opacity: popupMotion.closed.opacity,
+      scale: popupMotion.closed.scale,
+      y: popupMotion.closed.y,
       transition: INSTANT_CLOSE_TRANSITION,
     },
     open: {
@@ -647,7 +606,6 @@ export const DropdownItem = React.forwardRef<HTMLDivElement, DropdownItemProps>(
     const {
       contentId,
       hoveredItemId,
-      reduceMotion,
       setHoveredItemId,
       setValue,
       skipExitAnimationRef,
@@ -713,20 +671,21 @@ export const DropdownItem = React.forwardRef<HTMLDivElement, DropdownItemProps>(
             <motion.span
               className={dropdownItemHighlightClassName}
               layoutId={`${contentId}-dropdown-active-item`}
-              transition={
-                reduceMotion
-                  ? { duration: 0.12, ease: "easeOut" }
-                  : { type: "spring", stiffness: 600, damping: 38 }
-              }
+              transition={{
+                type: "spring",
+                stiffness: 600,
+                damping: 38,
+              }}
             />
           ) : null}
           <motion.span
             className="relative z-10 flex min-w-0 flex-1 items-center gap-2 truncate"
-            transition={
-              reduceMotion
-                ? undefined
-                : { type: "spring", stiffness: 360, damping: 28, mass: 0.55 }
-            }
+            transition={{
+              type: "spring",
+              stiffness: 360,
+              damping: 28,
+              mass: 0.55,
+            }}
           >
             {children}
           </motion.span>
@@ -735,11 +694,12 @@ export const DropdownItem = React.forwardRef<HTMLDivElement, DropdownItemProps>(
               animate={{ opacity: 1, scale: 1, y: 0 }}
               className="relative z-10 flex size-5 shrink-0 items-center justify-center text-[color:var(--dd-foreground)]"
               initial={{ opacity: 0, scale: 0.78, y: 1 }}
-              transition={
-                reduceMotion
-                  ? { duration: 0.14, ease: "easeOut" }
-                  : { type: "spring", stiffness: 460, damping: 24, mass: 0.5 }
-              }
+              transition={{
+                type: "spring",
+                stiffness: 460,
+                damping: 24,
+                mass: 0.5,
+              }}
             >
               <Check className="h-4 w-4" />
             </motion.span>

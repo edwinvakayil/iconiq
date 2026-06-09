@@ -6,11 +6,6 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { animate, motion, useMotionValue, useTransform } from "motion/react";
 import * as React from "react";
 
-import {
-  ReducedMotionConfig,
-  type ReducedMotionProp,
-  useResolvedReducedMotion,
-} from "@/lib/reduced-motion";
 import { cn } from "@/lib/utils";
 
 const ICON_REST = 0.93;
@@ -57,7 +52,7 @@ function runSheenSweep(
   });
 }
 
-function useToggleFluidMotion(isPressed: boolean, reduceMotion: boolean) {
+function useToggleFluidMotion(isPressed: boolean) {
   const fillProgress = useMotionValue(isPressed ? 1 : 0);
   const iconScale = useMotionValue(isPressed ? 1 : ICON_REST);
   const iconScaleX = useMotionValue(1);
@@ -81,15 +76,6 @@ function useToggleFluidMotion(isPressed: boolean, reduceMotion: boolean) {
     prevPressedRef.current = isPressed;
     setWipeOrigin(isPressed ? "left center" : "right center");
 
-    if (reduceMotion) {
-      fillProgress.set(isPressed ? 1 : 0);
-      iconScale.set(isPressed ? 1 : ICON_REST);
-      iconScaleX.set(1);
-      iconScaleY.set(1);
-      sheenOpacity.set(0);
-      return;
-    }
-
     animate(fillProgress, isPressed ? 1 : 0, FLUID_FILL);
     animate(iconScale, isPressed ? 1 : ICON_REST, FLUID_ICON);
     runSheenSweep(sheenX, sheenOpacity);
@@ -106,21 +92,14 @@ function useToggleFluidMotion(isPressed: boolean, reduceMotion: boolean) {
     iconScaleX,
     iconScaleY,
     isPressed,
-    reduceMotion,
     sheenOpacity,
     sheenX,
   ]);
 
   const resetTapScale = React.useCallback(() => {
-    if (reduceMotion) {
-      iconScaleX.set(1);
-      iconScaleY.set(1);
-      return;
-    }
-
     animate(iconScaleX, 1, FLUID_SNAP);
     animate(iconScaleY, 1, FLUID_SNAP);
-  }, [iconScaleX, iconScaleY, reduceMotion]);
+  }, [iconScaleX, iconScaleY]);
 
   const handlePointerDown = React.useCallback(
     (event: React.PointerEvent<HTMLButtonElement>, disabled?: boolean) => {
@@ -130,12 +109,10 @@ function useToggleFluidMotion(isPressed: boolean, reduceMotion: boolean) {
 
       isPointerDownRef.current = true;
 
-      if (!reduceMotion) {
-        animate(iconScaleX, 0.86, FLUID_TAP);
-        animate(iconScaleY, 1.08, FLUID_TAP);
-      }
+      animate(iconScaleX, 0.86, FLUID_TAP);
+      animate(iconScaleY, 1.08, FLUID_TAP);
     },
-    [iconScaleX, iconScaleY, reduceMotion]
+    [iconScaleX, iconScaleY]
   );
 
   const handlePointerUp = React.useCallback(() => {
@@ -255,7 +232,6 @@ const ToggleGroupContext = React.createContext<
   VariantProps<typeof toggleGroupItemVariants> & {
     spacing?: number;
     orientation?: "horizontal" | "vertical";
-    reducedMotion?: boolean;
   }
 >({
   size: "default",
@@ -267,7 +243,6 @@ const ToggleGroupContext = React.createContext<
 type FluidToggleGroupItemButtonProps = React.ComponentProps<"button"> & {
   children: React.ReactNode;
   isPressed: boolean;
-  reduceMotion: boolean;
 };
 
 const FluidToggleGroupItemButton = React.forwardRef<
@@ -279,7 +254,6 @@ const FluidToggleGroupItemButton = React.forwardRef<
     className,
     disabled,
     isPressed,
-    reduceMotion,
     onPointerDown,
     onPointerLeave,
     onPointerUp,
@@ -287,7 +261,7 @@ const FluidToggleGroupItemButton = React.forwardRef<
   },
   ref
 ) {
-  const fluidMotion = useToggleFluidMotion(isPressed, reduceMotion);
+  const fluidMotion = useToggleFluidMotion(isPressed);
 
   return (
     <button
@@ -322,45 +296,40 @@ function ToggleGroup({
   size,
   spacing = 1,
   orientation = "horizontal",
-  reducedMotion,
   multiple = true,
   children,
   ...props
 }: ToggleGroupPrimitive.Props &
-  VariantProps<typeof toggleGroupItemVariants> &
-  ReducedMotionProp & {
+  VariantProps<typeof toggleGroupItemVariants> & {
     spacing?: number;
     orientation?: "horizontal" | "vertical";
   }) {
   return (
-    <ReducedMotionConfig reducedMotion={reducedMotion}>
-      <ToggleGroupPrimitive
-        className={cn(
-          "group/toggle-group flex w-fit flex-row items-center gap-[--spacing(var(--gap))] rounded-lg data-vertical:flex-col data-vertical:items-stretch data-[size=sm]:rounded-[min(var(--radius-md),10px)]",
-          className
-        )}
-        data-orientation={orientation}
-        data-size={size}
-        data-slot="toggle-group"
-        data-spacing={spacing}
-        data-variant={variant}
-        multiple={multiple}
-        style={{ "--gap": spacing } as React.CSSProperties}
-        {...props}
+    <ToggleGroupPrimitive
+      className={cn(
+        "group/toggle-group flex w-fit flex-row items-center gap-[--spacing(var(--gap))] rounded-lg data-vertical:flex-col data-vertical:items-stretch data-[size=sm]:rounded-[min(var(--radius-md),10px)]",
+        className
+      )}
+      data-orientation={orientation}
+      data-size={size}
+      data-slot="toggle-group"
+      data-spacing={spacing}
+      data-variant={variant}
+      multiple={multiple}
+      style={{ "--gap": spacing } as React.CSSProperties}
+      {...props}
+    >
+      <ToggleGroupContext.Provider
+        value={{
+          variant,
+          size,
+          spacing,
+          orientation,
+        }}
       >
-        <ToggleGroupContext.Provider
-          value={{
-            variant,
-            size,
-            spacing,
-            orientation,
-            reducedMotion,
-          }}
-        >
-          {children}
-        </ToggleGroupContext.Provider>
-      </ToggleGroupPrimitive>
-    </ReducedMotionConfig>
+        {children}
+      </ToggleGroupContext.Provider>
+    </ToggleGroupPrimitive>
   );
 }
 
@@ -372,7 +341,6 @@ function ToggleGroupItem({
   ...props
 }: TogglePrimitive.Props & VariantProps<typeof toggleGroupItemVariants>) {
   const context = React.useContext(ToggleGroupContext);
-  const reduceMotion = useResolvedReducedMotion(context.reducedMotion);
   const itemClassName = cn(
     "focus:z-10 focus-visible:z-10",
     toggleGroupItemVariants({
@@ -403,7 +371,6 @@ function ToggleGroupItem({
             {...resolvedRenderProps}
             className={cn(itemClassName, renderClassName)}
             isPressed={state.pressed}
-            reduceMotion={reduceMotion}
             ref={renderRef}
           >
             {children}

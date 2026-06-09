@@ -51,35 +51,49 @@ const reviewTasks = [
 ] as const;
 
 export function DrawerPreview() {
-  const [isMobile, setIsMobile] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    const mediaQuery = window.matchMedia("(max-width: 640px)");
-    const syncViewport = () => setIsMobile(mediaQuery.matches);
-
-    syncViewport();
-    mediaQuery.addEventListener("change", syncViewport);
-
-    return () => {
-      mediaQuery.removeEventListener("change", syncViewport);
-    };
+    setMounted(true);
   }, []);
 
-  return (
-    <Drawer direction={isMobile ? "bottom" : "right"}>
-      <p className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1.5 text-balance text-[13px] text-muted-foreground leading-snug tracking-tight sm:text-sm">
-        <span>Review the checklist without leaving the page.</span>
-        <span>Tap</span>
+  const previewSentenceClassName =
+    "flex flex-wrap items-center justify-center gap-x-2 gap-y-1.5 text-balance text-[13px] text-muted-foreground leading-snug tracking-tight sm:text-sm";
+
+  const previewTriggerClassName =
+    "inline-flex h-8 min-h-8 translate-y-px items-center align-middle rounded-md bg-foreground px-3 py-0 font-medium text-[13px] text-background tracking-[-0.01em] transition-[transform,background-color] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-px hover:bg-foreground/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2";
+
+  const previewSentence = (
+    <div className={previewSentenceClassName}>
+      <span>Review the checklist without leaving the page.</span>
+      <span>Tap</span>
+      {mounted ? (
         <DrawerTrigger asChild>
-          <button
-            className="inline-flex h-8 min-h-8 translate-y-px items-center align-middle rounded-md bg-foreground px-3 py-0 font-medium text-[13px] text-background tracking-[-0.01em] transition-[transform,background-color] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-px hover:bg-foreground/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-            type="button"
-          >
+          <button className={previewTriggerClassName} type="button">
             Review
           </button>
         </DrawerTrigger>
-        <span>to continue.</span>
-      </p>
+      ) : (
+        <button className={previewTriggerClassName} type="button">
+          Review
+        </button>
+      )}
+      <span>to continue.</span>
+    </div>
+  );
+
+  if (!mounted) {
+    return (
+      <div className="flex min-h-[280px] w-full items-center justify-center px-4 py-10">
+        {previewSentence}
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex min-h-[280px] w-full items-center justify-center px-4 py-10">
+      <Drawer direction="right">
+        {previewSentence}
       <DrawerContent>
         <DrawerHeader className="pb-7">
           <DrawerTitle>Iconiq registry</DrawerTitle>
@@ -147,7 +161,8 @@ export function DrawerPreview() {
           </div>
         </DrawerFooter>
       </DrawerContent>
-    </Drawer>
+      </Drawer>
+    </div>
   );
 }`;
 
@@ -190,33 +205,43 @@ function getDetails(): DetailItem[] {
 }
 
 function DrawerPreview() {
-  const [isMobile, setIsMobile] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    const mediaQuery = window.matchMedia("(max-width: 640px)");
-    const syncViewport = () => setIsMobile(mediaQuery.matches);
-
-    syncViewport();
-    mediaQuery.addEventListener("change", syncViewport);
-
-    return () => {
-      mediaQuery.removeEventListener("change", syncViewport);
-    };
+    setMounted(true);
   }, []);
+
+  const previewSentence = (
+    <div className={previewSentenceClassName}>
+      <span>Review the checklist without leaving the page.</span>
+      <span>Tap</span>
+      {mounted ? (
+        <DrawerTrigger asChild>
+          <button className={previewTriggerClassName} type="button">
+            Review
+          </button>
+        </DrawerTrigger>
+      ) : (
+        <button className={previewTriggerClassName} type="button">
+          Review
+        </button>
+      )}
+      <span>to continue.</span>
+    </div>
+  );
+
+  if (!mounted) {
+    return (
+      <div className="flex min-h-[280px] w-full items-center justify-center px-4 py-10">
+        {previewSentence}
+      </div>
+    );
+  }
 
   return (
     <div className="flex min-h-[280px] w-full items-center justify-center px-4 py-10">
-      <Drawer direction={isMobile ? "bottom" : "right"}>
-        <p className={previewSentenceClassName}>
-          <span>Review the checklist without leaving the page.</span>
-          <span>Tap</span>
-          <DrawerTrigger asChild>
-            <button className={previewTriggerClassName} type="button">
-              Review
-            </button>
-          </DrawerTrigger>
-          <span>to continue.</span>
-        </p>
+      <Drawer direction="right">
+        {previewSentence}
         <DrawerContent>
           <DrawerHeader className="pb-7">
             <DrawerTitle>Iconiq registry</DrawerTitle>

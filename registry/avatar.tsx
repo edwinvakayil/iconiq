@@ -5,10 +5,6 @@ import { AnimatePresence, motion } from "motion/react";
 import * as React from "react";
 import { createPortal } from "react-dom";
 
-import {
-  ReducedMotionConfig,
-  type ReducedMotionProp,
-} from "@/lib/reduced-motion";
 import { cn } from "@/lib/utils";
 
 const componentThemeClassName =
@@ -20,16 +16,14 @@ type TooltipTriggerProps = React.HTMLAttributes<HTMLElement> & {
 };
 type TooltipTriggerElement = React.ReactElement<TooltipTriggerProps>;
 
-interface AvatarBadgeProps
-  extends React.ComponentProps<"span">,
-    ReducedMotionProp {
+interface AvatarBadgeProps extends React.ComponentProps<"span"> {
   tooltip?: string;
   tooltipSide?: TooltipSide;
   tooltipDelay?: number;
   tooltipClassName?: string;
 }
 
-interface AvatarProps extends AvatarPrimitive.Root.Props, ReducedMotionProp {
+interface AvatarProps extends AvatarPrimitive.Root.Props {
   size?: "default" | "sm" | "lg";
   tooltip?: string;
   tooltipSide?: TooltipSide;
@@ -219,14 +213,12 @@ function AvatarTooltip({
   className,
   content,
   delay = 0.15,
-  reducedMotion,
   side = "right",
 }: {
   children: TooltipTriggerElement;
   className?: string;
   content: string;
   delay?: number;
-  reducedMotion?: boolean;
   side?: TooltipSide;
 }) {
   const [open, setOpen] = React.useState(false);
@@ -333,7 +325,7 @@ function AvatarTooltip({
   });
 
   return (
-    <ReducedMotionConfig reducedMotion={reducedMotion}>
+    <>
       {trigger}
       {typeof document === "undefined"
         ? null
@@ -398,13 +390,12 @@ function AvatarTooltip({
             </AnimatePresence>,
             document.body
           )}
-    </ReducedMotionConfig>
+    </>
   );
 }
 
 function Avatar({
   className,
-  reducedMotion,
   size = "default",
   tabIndex,
   tooltip,
@@ -436,7 +427,6 @@ function Avatar({
       className={tooltipClassName}
       content={normalizedTooltip}
       delay={tooltipDelay}
-      reducedMotion={reducedMotion}
       side={tooltipSide}
     >
       {avatar}
@@ -476,7 +466,6 @@ function AvatarFallback({
 function AvatarBadge({
   "aria-label": ariaLabel,
   className,
-  reducedMotion,
   role,
   tabIndex,
   tooltip,
@@ -515,7 +504,6 @@ function AvatarBadge({
       className={tooltipClassName}
       content={normalizedTooltip}
       delay={tooltipDelay}
-      reducedMotion={reducedMotion}
       side={tooltipSide}
     >
       {badge}

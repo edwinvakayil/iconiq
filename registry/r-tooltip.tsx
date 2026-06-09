@@ -5,10 +5,6 @@ import * as TooltipPrimitive from "@radix-ui/react-tooltip";
 import { AnimatePresence, motion } from "motion/react";
 import * as React from "react";
 
-import {
-  ReducedMotionConfig,
-  type ReducedMotionProp,
-} from "@/lib/reduced-motion";
 import { cn } from "@/lib/utils";
 
 const tooltipThemeClassName =
@@ -25,7 +21,7 @@ type TooltipTriggerElement = React.ReactElement<{
   "aria-describedby"?: string;
 }>;
 
-export interface TooltipProps extends ReducedMotionProp {
+export interface TooltipProps {
   children: TooltipTriggerElement;
   content: string;
   side?: Side;
@@ -53,7 +49,6 @@ export function Tooltip({
   side = "top",
   delay = 0.15,
   className,
-  reducedMotion,
 }: TooltipProps) {
   const [open, setOpen] = React.useState(false);
   const timeoutRef = React.useRef<ReturnType<typeof setTimeout>>(undefined);
@@ -108,84 +103,82 @@ export function Tooltip({
   }
 
   return (
-    <ReducedMotionConfig reducedMotion={reducedMotion}>
-      <TooltipPrimitive.Provider delayDuration={0} skipDelayDuration={0}>
-        <TooltipPrimitive.Root
-          delayDuration={0}
-          onOpenChange={handleOpenChange}
-          open={open}
-        >
-          <TooltipPrimitive.Trigger asChild>
-            <Slot aria-describedby={triggerDescription}>{children}</Slot>
-          </TooltipPrimitive.Trigger>
+    <TooltipPrimitive.Provider delayDuration={0} skipDelayDuration={0}>
+      <TooltipPrimitive.Root
+        delayDuration={0}
+        onOpenChange={handleOpenChange}
+        open={open}
+      >
+        <TooltipPrimitive.Trigger asChild>
+          <Slot aria-describedby={triggerDescription}>{children}</Slot>
+        </TooltipPrimitive.Trigger>
 
-          <AnimatePresence>
-            {open && (
-              <TooltipPrimitive.Portal forceMount>
-                <TooltipPrimitive.Content
-                  align="center"
-                  asChild
-                  avoidCollisions
-                  collisionPadding={12}
-                  forceMount
-                  side={side}
-                  sideOffset={10}
+        <AnimatePresence>
+          {open && (
+            <TooltipPrimitive.Portal forceMount>
+              <TooltipPrimitive.Content
+                align="center"
+                asChild
+                avoidCollisions
+                collisionPadding={12}
+                forceMount
+                side={side}
+                sideOffset={10}
+              >
+                <motion.div
+                  animate={{
+                    opacity: 1,
+                    scale: 1,
+                    filter: "blur(0px)",
+                  }}
+                  className={cn(
+                    tooltipThemeClassName,
+                    tooltipContentClassName,
+                    className
+                  )}
+                  exit={{
+                    opacity: 0,
+                    scale: 0.92,
+                    filter: "blur(4px)",
+                  }}
+                  id={tooltipId}
+                  initial={{
+                    opacity: 0,
+                    scale: 0.92,
+                    filter: "blur(4px)",
+                  }}
+                  role="tooltip"
+                  style={{
+                    transformOrigin:
+                      "var(--radix-tooltip-content-transform-origin)",
+                  }}
+                  transition={{
+                    type: "spring",
+                    stiffness: 400,
+                    damping: 24,
+                    mass: 0.6,
+                  }}
                 >
-                  <motion.div
-                    animate={{
-                      opacity: 1,
-                      scale: 1,
-                      filter: "blur(0px)",
-                    }}
-                    className={cn(
-                      tooltipThemeClassName,
-                      tooltipContentClassName,
-                      className
-                    )}
-                    exit={{
-                      opacity: 0,
-                      scale: 0.92,
-                      filter: "blur(4px)",
-                    }}
-                    id={tooltipId}
-                    initial={{
-                      opacity: 0,
-                      scale: 0.92,
-                      filter: "blur(4px)",
-                    }}
-                    role="tooltip"
-                    style={{
-                      transformOrigin:
-                        "var(--radix-tooltip-content-transform-origin)",
-                    }}
+                  <motion.span
+                    animate={{ scale: 1 }}
+                    className={tooltipArrowClassName}
+                    exit={{ scale: 0 }}
+                    initial={{ scale: 0 }}
                     transition={{
                       type: "spring",
-                      stiffness: 400,
-                      damping: 24,
-                      mass: 0.6,
+                      stiffness: 500,
+                      damping: 28,
+                      delay: 0.03,
                     }}
-                  >
-                    <motion.span
-                      animate={{ scale: 1 }}
-                      className={tooltipArrowClassName}
-                      exit={{ scale: 0 }}
-                      initial={{ scale: 0 }}
-                      transition={{
-                        type: "spring",
-                        stiffness: 500,
-                        damping: 28,
-                        delay: 0.03,
-                      }}
-                    />
-                    {normalizedContent}
-                  </motion.div>
-                </TooltipPrimitive.Content>
-              </TooltipPrimitive.Portal>
-            )}
-          </AnimatePresence>
-        </TooltipPrimitive.Root>
-      </TooltipPrimitive.Provider>
-    </ReducedMotionConfig>
+                  />
+                  {normalizedContent}
+                </motion.div>
+              </TooltipPrimitive.Content>
+            </TooltipPrimitive.Portal>
+          )}
+        </AnimatePresence>
+      </TooltipPrimitive.Root>
+    </TooltipPrimitive.Provider>
   );
 }
 

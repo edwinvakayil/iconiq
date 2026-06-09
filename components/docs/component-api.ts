@@ -225,12 +225,6 @@ const avatarApiDetails: DetailItem[] = [
           "Merged onto the tooltip bubble when the avatar tooltip is enabled.",
       }),
       field({
-        name: "reducedMotion",
-        type: "boolean",
-        description:
-          "Forces the avatar tooltip onto its calmer motion path while still respecting system reduced-motion preferences when unset.",
-      }),
-      field({
         name: "className",
         type: "string",
         description:
@@ -325,12 +319,6 @@ const avatarApiDetails: DetailItem[] = [
         type: "string",
         description:
           "Merged onto the tooltip bubble when the badge tooltip is enabled.",
-      }),
-      field({
-        name: "reducedMotion",
-        type: "boolean",
-        description:
-          "Forces the badge tooltip onto its calmer motion path while still respecting system reduced-motion preferences when unset.",
       }),
       field({
         name: "className",
@@ -434,7 +422,6 @@ const badgeApiDetails: DetailItem[] = [
     ],
     notes: [
       "The component now spreads remaining span props, so ids, data attributes, and click handlers can be attached directly.",
-      "When reduced motion is enabled, the default variant skips the mount and shimmer animation and renders as a static badge.",
     ],
   },
   {
@@ -658,12 +645,6 @@ const chartsApiDetails: DetailItem[] = [
           "Optional fallback size for ResponsiveContainer before the first measure. By default the chart fills its parent (100% width/height) with a debounced resize handler.",
       }),
       field({
-        name: "reducedMotion",
-        type: "boolean",
-        description:
-          "Forces the calmer motion path for the surface reveal, tooltip, legend, and ChartBar timing while still honoring system reduced-motion preferences when unset.",
-      }),
-      field({
         name: "className",
         type: "string",
         description:
@@ -698,7 +679,6 @@ const chartsApiDetails: DetailItem[] = [
     notes: [
       'Use fill="var(--color-desktop)" (or your config key) so bars pick up ChartConfig colors.',
       "Bar growth runs once on first paint; resize uses a debounced container and skips repeat bar animations so narrowing the viewport stays stable.",
-      "When reduced motion is active, bar growth animation is disabled automatically.",
     ],
   },
   {
@@ -792,12 +772,6 @@ const cardApiDetails: DetailItem[] = [
           "Enables the restrained hover lift and stronger surface response intended for clickable or focusable cards.",
       }),
       field({
-        name: "reducedMotion",
-        type: "boolean",
-        description:
-          "Forces the calmer motion path immediately while still honoring a user's system-level reduced motion preference.",
-      }),
-      field({
         name: "className",
         type: "string",
         description:
@@ -829,7 +803,6 @@ const cardApiDetails: DetailItem[] = [
     notes: [
       "When interactive is enabled, hover drives a spring-smoothed motion value so lift, scale, and shadow ease in and out as one fluid surface; compound slots only animate layout when content changes.",
       "interactive only changes the visible surface response: border, shadow, and a very small hover lift. The component does not add button semantics on its own.",
-      "Reduced motion disables the hover lift and asks Motion to use its calmer accessibility path for layout changes.",
     ],
   },
   registryItem("card.json", ["motion"]),
@@ -1060,7 +1033,6 @@ const buttonApiDetails: DetailItem[] = [
       "Standard button attributes such as onClick, aria-*, name, form, and data-* are forwarded to the underlying motion.button.",
       "The local pointer-down handler calls your onPointerDown first, then respects e.defaultPrevented before deciding whether to enter the pressed state or spawn a ripple.",
       "Pointer, keyboard, and blur handlers keep the pressed state in sync so Space and Enter get the same immediate feedback as pointer input.",
-      "Reduced-motion users still get the static visual state changes, but spring motion and ripples are skipped.",
       "animateSize works best on intrinsically sized buttons rather than width-constrained layouts such as w-full.",
       "When you render an icon-only button, add an aria-label so assistive tech still gets an accessible name.",
     ],
@@ -1341,7 +1313,6 @@ const buttonGroupApiDetails: DetailItem[] = [
     ],
     notes: [
       "The control uses radiogroup semantics with arrow-key, Home, and End navigation.",
-      "Reduced-motion users keep the same state changes without the spring transitions.",
     ],
   },
   {
@@ -1593,14 +1564,9 @@ const comboboxApiDetails: DetailItem[] = [
         type: "boolean",
         description: "Controlled popup state. Pair with onOpenChange.",
       }),
-      field({
-        name: "reducedMotion",
-        type: "boolean",
-        description: "Forces the Iconiq motion layer into reduced-motion mode.",
-      }),
     ],
     notes: [
-      "The root wraps Base UI's combobox primitive in the same Iconiq reduced-motion config used by the previous wrapper.",
+      "The root wraps Base UI's combobox primitive with the same Iconiq motion layer used by the previous wrapper.",
       "Filtering, selection, typeahead, keyboard navigation, and clear behavior are delegated to Base UI while the visual treatment stays Iconiq.",
     ],
   },
@@ -1783,11 +1749,6 @@ const autocompleteApiDetails: DetailItem[] = [
         description:
           "Custom equality for object items. Use when items are recreated on each render.",
       }),
-      field({
-        name: "reducedMotion",
-        type: "boolean",
-        description: "Forces the Iconiq motion layer into reduced-motion mode.",
-      }),
     ],
     notes: [
       "Built on Base UI Autocomplete with list filtering, keyboard navigation, and a sliding highlight treatment.",
@@ -1917,12 +1878,6 @@ const contextMenuApiDetails: DetailItem[] = [
         type: "(open: boolean) => void",
         description:
           "Called whenever the trigger, outside interaction, or Escape key changes the open state.",
-      }),
-      field({
-        name: "reducedMotion",
-        type: "boolean",
-        description:
-          "Forces reduced motion for this menu instance, overriding the user system preference.",
       }),
     ],
     notes: [
@@ -2235,7 +2190,6 @@ const drawerApiDetails: DetailItem[] = [
     notes: [
       "Bottom drawers show the handle by default; top, left, and right drawers keep the content surface clean unless you add your own handle.",
       "DrawerContent marks rendered children as non-draggable so selecting text inside the panel does not trigger Vaul's drag-to-close gesture.",
-      "The motion classes include reduced-motion fallbacks that remove the added Tailwind animation layer while leaving Vaul's accessibility semantics intact.",
       "Top and bottom drawers cap at 80vh, while left and right drawers use a three-quarter width with a small-screen max width at the sm breakpoint.",
     ],
   },
@@ -2689,12 +2643,6 @@ const inputOtpApiDetails: DetailItem[] = [
         type: "string",
         description:
           "Legacy alias merged onto the root container alongside `className`.",
-      }),
-      field({
-        name: "reducedMotion",
-        type: "boolean",
-        description:
-          "Force reduced motion for slot animations. Defaults to the user OS preference.",
       }),
     ],
     notes: [
@@ -3233,12 +3181,6 @@ const colorPickerApiDetails: DetailItem[] = [
         description: "Disables picker interaction and lowers shell opacity.",
       }),
       field({
-        name: "reducedMotion",
-        type: "boolean",
-        description:
-          "Forces reduced motion for format-menu animation and decorative pulses.",
-      }),
-      field({
         name: "showEyedropper",
         type: "boolean",
         defaultValue: "true",
@@ -3445,7 +3387,6 @@ const progressApiDetails: DetailItem[] = [
     notes: [
       "Determinate mode uses a spring-smoothed width animation instead of a hard width jump, which keeps status updates feeling more fluid when values change rapidly.",
       "Indeterminate mode uses one minimal left-to-right flow band with a soft fade at the start and end of each pass, so the restart stays visually quiet.",
-      "Reduced motion disables the looping movement and spring settling while keeping the same value formatting, layout, and accessible semantics.",
     ],
   },
   registryItem("progress.json", ["motion"]),
@@ -3600,7 +3541,7 @@ const selectApiDetails: DetailItem[] = [
       }),
     ],
     notes: [
-      "The root wraps the provider primitive in the Iconiq reduced-motion config so child parts share one motion preference.",
+      "The root wraps the provider primitive in the Iconiq motion layer so child parts share one animation setup.",
       "Selection and open state can be controlled or uncontrolled while still preserving primitive keyboard navigation and typeahead.",
     ],
   },
@@ -3980,7 +3921,6 @@ const infiniteRibbonApiDetails: DetailItem[] = [
     notes: [
       "The animated track is marked aria-hidden and a single screen-reader-only copy of children is rendered before it.",
       "The component ships its own keyframes, so no global Tailwind animation extension is required.",
-      "Reduced-motion users receive a single near-instant pass instead of a continuously looping marquee.",
       "Because rotation is applied as an inline transform, wrap the ribbon when you need additional transform utilities on the same element.",
     ],
   },
@@ -4132,7 +4072,7 @@ const verifiedBadgeApiDetails: DetailItem[] = [
     notes: [
       "Extends native `span` props (`id`, `onClick`, `data-*`, tooltips, and other `aria-*` attributes) via prop spreading on the root.",
       "Default color lives on the root span (`text-[hsl(203,89%,57%)]`); scallop paths use `currentColor` so `cn` can override via `className`.",
-      "The `shimmer` variant uses Motion to sweep a highlight across the scallop (0.5s pass, 1.5s pause between repeats) and skips animation when `prefers-reduced-motion` is enabled.",
+      "The `shimmer` variant uses Motion to sweep a highlight across the scallop (0.5s pass, 1.5s pause between repeats).",
       'Root uses `role="img"` with `aria-label`; inner SVG shapes are `aria-hidden`.',
       "Install path is `components/ui/verified-badge.tsx` with the `VerifiedBadge` export.",
     ],
@@ -4187,12 +4127,6 @@ const toggleApiDetails: DetailItem[] = [
           "Disables interaction and dims the control while preserving its pressed appearance.",
       }),
       field({
-        name: "reducedMotion",
-        type: "boolean",
-        description:
-          "Forces reduced-motion transitions for the fill, lift, and press scale regardless of system preference.",
-      }),
-      field({
         name: "className",
         type: "string",
         description:
@@ -4212,7 +4146,7 @@ const toggleApiDetails: DetailItem[] = [
     notes: [
       "The muted fill wipes in from the left when pressed and retracts to the right on release with a heavy spring.",
       "Each state change sends a diagonal sheen across the surface once. Outline keeps the same outer border in both states.",
-      "Icons scale and squash on press with a spring settle. System prefers-reduced-motion skips sheen and shortens transitions.",
+      "Icons scale and squash on press with a spring settle.",
     ],
   },
   registryItem("b-toggle.json", [
@@ -5710,7 +5644,6 @@ const textInertiaApiDetails: DetailItem[] = [
     notes: [
       "The component forwards standard div props except children; the rendered words always come from the text prop.",
       "The root receives an aria-label with the full text, while individual animated word spans are hidden from assistive technology.",
-      "When reduced motion is requested, pointer hovers keep the words static.",
     ],
   },
   {
@@ -5834,7 +5767,6 @@ const typewriterApiDetails: DetailItem[] = [
     ],
     notes: [
       "The rendered text is announced with aria-live=polite so updates can be surfaced without replacing surrounding content.",
-      "When reduced motion is requested, the component renders the final text immediately and hides the cursor.",
     ],
   },
   {

@@ -27,7 +27,6 @@ type ProgressModule = {
     label?: string;
     max?: number;
     min?: number;
-    reducedMotion?: boolean;
     showValue?: boolean;
     value?: number | null;
   }>;

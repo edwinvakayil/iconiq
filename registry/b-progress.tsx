@@ -10,11 +10,6 @@ import {
 } from "motion/react";
 import * as React from "react";
 
-import {
-  ReducedMotionConfig,
-  type ReducedMotionProp,
-  useResolvedReducedMotion,
-} from "@/lib/reduced-motion";
 import { cn } from "@/lib/utils";
 
 const componentThemeClassName =
@@ -43,7 +38,7 @@ const indeterminateTransition = {
   repeat: Number.POSITIVE_INFINITY,
 };
 
-export interface ProgressProps extends ReducedMotionProp {
+export interface ProgressProps {
   ariaLabel?: string;
   className?: string;
   formatValue?: (value: number, percent: number) => string;
@@ -111,13 +106,11 @@ function ProgressHeader({
   displayValue,
   helper,
   label,
-  reduceMotion,
   showValue,
 }: {
   displayValue: string | MotionValue<string>;
   helper?: string;
   label?: string;
-  reduceMotion: boolean;
   showValue: boolean;
 }) {
   if (!(label || helper || showValue)) {
@@ -143,7 +136,7 @@ function ProgressHeader({
         <motion.span
           animate={{ opacity: 1, y: 0 }}
           className="shrink-0 font-medium text-[12px] text-muted-foreground tabular-nums tracking-[-0.02em] sm:text-[13px]"
-          transition={reduceMotion ? { duration: 0 } : shellSpring}
+          transition={shellSpring}
         >
           {displayValue}
         </motion.span>
@@ -161,18 +154,7 @@ function DeterminateFill({ fillScale }: { fillScale: MotionValue<number> }) {
   );
 }
 
-function IndeterminateFill({ reduceMotion }: { reduceMotion: boolean }) {
-  if (reduceMotion) {
-    return (
-      <div
-        aria-hidden
-        className="absolute inset-0 overflow-hidden rounded-full"
-      >
-        <div className="absolute inset-y-0 left-[34%] w-[30%] rounded-full bg-foreground/16 dark:bg-white/[0.12]" />
-      </div>
-    );
-  }
-
+function IndeterminateFill() {
   return (
     <div aria-hidden className="absolute inset-0 overflow-hidden rounded-full">
       <motion.div
@@ -206,10 +188,8 @@ export function Progress({
   max = 100,
   min = 0,
   showValue = true,
-  reducedMotion,
   value = DEFAULT_VALUE,
 }: ProgressProps) {
-  const resolveReducedMotion = useResolvedReducedMotion(reducedMotion);
   const bounds = resolveBounds(min, max);
   const clampedValue =
     value === null
@@ -230,64 +210,55 @@ export function Progress({
   });
 
   React.useEffect(() => {
-    if (clampedValue === null || resolveReducedMotion) {
+    if (clampedValue === null) {
       progressTargetMV.jump(progress);
       smoothProgressMV.jump(progress);
       return;
     }
 
     progressTargetMV.set(progress);
-  }, [
-    clampedValue,
-    progress,
-    progressTargetMV,
-    resolveReducedMotion,
-    smoothProgressMV,
-  ]);
+  }, [clampedValue, progress, progressTargetMV, smoothProgressMV]);
 
   const renderedValue =
     clampedValue === null ? indeterminateLabel : displayValue;
 
   return (
-    <ReducedMotionConfig reducedMotion={reducedMotion}>
-      <ProgressPrimitive.Root
-        aria-label={ariaLabel ?? (label ? undefined : "Progress")}
-        className={cn(componentThemeClassName, "w-full space-y-3", className)}
-        getAriaValueText={(_, actualValue) => {
-          const currentPercent =
-            actualValue === null
-              ? 0
-              : toPercent(actualValue, bounds.min, bounds.max);
-          return resolveAriaValueText(
-            actualValue,
-            currentPercent,
-            indeterminateLabel,
-            getValueLabel,
-            formatValue
-          );
-        }}
-        max={bounds.max}
-        min={bounds.min}
-        value={clampedValue}
-      >
-        <ProgressHeader
-          displayValue={renderedValue}
-          helper={helper}
-          label={label}
-          reduceMotion={resolveReducedMotion}
-          showValue={showValue}
-        />
+    <ProgressPrimitive.Root
+      aria-label={ariaLabel ?? (label ? undefined : "Progress")}
+      className={cn(componentThemeClassName, "w-full space-y-3", className)}
+      getAriaValueText={(_, actualValue) => {
+        const currentPercent =
+          actualValue === null
+            ? 0
+            : toPercent(actualValue, bounds.min, bounds.max);
+        return resolveAriaValueText(
+          actualValue,
+          currentPercent,
+          indeterminateLabel,
+          getValueLabel,
+          formatValue
+        );
+      }}
+      max={bounds.max}
+      min={bounds.min}
+      value={clampedValue}
+    >
+      <ProgressHeader
+        displayValue={renderedValue}
+        helper={helper}
+        label={label}
+        showValue={showValue}
+      />
 
-        <ProgressPrimitive.Track className="relative h-2.5 overflow-hidden rounded-full bg-foreground/8 dark:bg-white/[0.08]">
-          <ProgressPrimitive.Indicator className="absolute inset-y-0 left-0 opacity-0" />
-          {clampedValue === null ? (
-            <IndeterminateFill reduceMotion={resolveReducedMotion} />
-          ) : (
-            <DeterminateFill fillScale={fillScale} />
-          )}
-        </ProgressPrimitive.Track>
-      </ProgressPrimitive.Root>
-    </ReducedMotionConfig>
+      <ProgressPrimitive.Track className="relative h-2.5 overflow-hidden rounded-full bg-foreground/8 dark:bg-white/[0.08]">
+        <ProgressPrimitive.Indicator className="absolute inset-y-0 left-0 opacity-0" />
+        {clampedValue === null ? (
+          <IndeterminateFill />
+        ) : (
+          <DeterminateFill fillScale={fillScale} />
+        )}
+      </ProgressPrimitive.Track>
+    </ProgressPrimitive.Root>
   );
 }
 

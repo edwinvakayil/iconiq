@@ -6,11 +6,6 @@ import { motion } from "motion/react";
 import type * as React from "react";
 import { useEffect, useState } from "react";
 
-import {
-  ReducedMotionConfig,
-  type ReducedMotionProp,
-  useResolvedReducedMotion,
-} from "@/lib/reduced-motion";
 import { cn } from "@/lib/utils";
 
 const componentThemeClassName =
@@ -23,41 +18,34 @@ const springTap = {
   mass: 0.35,
 };
 
-const reducedTransition = { duration: 0.12 } as const;
+const pathEase = [0.65, 0, 0.35, 1] as const;
 
-function getCheckmarkVariants(reduceMotion: boolean) {
-  const pathEase = [0.65, 0, 0.35, 1] as const;
-  const pathTransition = reduceMotion
-    ? { duration: 0.12 }
-    : { duration: 0.3, ease: pathEase };
-
-  return {
-    checked: {
-      pathLength: 1,
-      pathOffset: 0,
-      opacity: 1,
-      transition: {
-        pathLength: pathTransition,
-        opacity: {
-          duration: 0.05,
-          delay: reduceMotion ? 0 : 0.06,
-        },
+const checkmarkVariants = {
+  checked: {
+    pathLength: 1,
+    pathOffset: 0,
+    opacity: 1,
+    transition: {
+      pathLength: { duration: 0.3, ease: pathEase },
+      opacity: {
+        duration: 0.05,
+        delay: 0.06,
       },
     },
-    unchecked: {
-      pathLength: 0,
-      pathOffset: 0,
-      opacity: 0,
-      transition: {
-        pathLength: pathTransition,
-        opacity: {
-          duration: reduceMotion ? 0.06 : 0.1,
-          delay: reduceMotion ? 0 : 0.18,
-        },
+  },
+  unchecked: {
+    pathLength: 0,
+    pathOffset: 0,
+    opacity: 0,
+    transition: {
+      pathLength: { duration: 0.3, ease: pathEase },
+      opacity: {
+        duration: 0.1,
+        delay: 0.18,
       },
     },
-  } as const;
-}
+  },
+} as const;
 
 export interface CheckboxGroupOption {
   description?: string;
@@ -68,7 +56,7 @@ export interface CheckboxGroupOption {
   value: string;
 }
 
-interface CheckboxGroupProps extends ReducedMotionProp {
+interface CheckboxGroupProps {
   className?: string;
   maxVisible?: number;
   onChange?: (value: string[]) => void;
@@ -94,7 +82,6 @@ type CheckboxRootRenderProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
 type CheckboxGroupRowProps = {
   checked: boolean;
   option: CheckboxGroupOption;
-  reduceMotion: boolean;
 };
 
 function setRef<T>(ref: React.Ref<T> | undefined, value: T) {
@@ -173,18 +160,13 @@ function resolveRootRenderProps(rootProps: CheckboxRootRenderProps) {
   };
 }
 
-function CheckboxGroupCopy({
-  option,
-  reduceMotion,
-}: Pick<CheckboxGroupRowProps, "option" | "reduceMotion">) {
+function CheckboxGroupCopy({ option }: Pick<CheckboxGroupRowProps, "option">) {
   return (
     <div
       className={cn(
         "flex min-w-0 flex-col",
-        reduceMotion
-          ? "transition-none"
-          : "transition-transform duration-520 ease-[cubic-bezier(0.22,1,0.36,1)]",
-        !reduceMotion && "group-hover:translate-x-0.5"
+        "transition-transform duration-520 ease-[cubic-bezier(0.22,1,0.36,1)]",
+        "group-hover:translate-x-0.5"
       )}
     >
       <span className="font-medium text-foreground text-sm">
@@ -204,22 +186,15 @@ function CheckboxGroupCopy({
   );
 }
 
-function CheckboxGroupRow({
-  checked,
-  option,
-  reduceMotion,
-}: CheckboxGroupRowProps) {
+function CheckboxGroupRow({ checked, option }: CheckboxGroupRowProps) {
   const disabled = option.disabled;
-  const rowTransition = reduceMotion ? reducedTransition : springTap;
-  const checkmarkVariants = getCheckmarkVariants(reduceMotion);
-  const whileTap =
-    disabled || reduceMotion
-      ? undefined
-      : {
-          scale: 0.985,
-          y: 0,
-          transition: springTap,
-        };
+  const whileTap = disabled
+    ? undefined
+    : {
+        scale: 0.985,
+        y: 0,
+        transition: springTap,
+      };
 
   return (
     <CheckboxPrimitive.Root
@@ -239,9 +214,7 @@ function CheckboxGroupRow({
             {...resolvedRootProps}
             className={cn(
               "group relative flex appearance-none items-center gap-3 rounded-lg px-4 py-3 text-left",
-              reduceMotion
-                ? "transition-colors duration-150"
-                : "transition-[background-color] duration-480 ease-[cubic-bezier(0.22,1,0.36,1)]",
+              "transition-[background-color] duration-480 ease-[cubic-bezier(0.22,1,0.36,1)]",
               "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:ring-offset-2 focus-visible:ring-offset-background",
               "disabled:cursor-not-allowed disabled:opacity-50",
               rootClassName
@@ -250,7 +223,7 @@ function CheckboxGroupRow({
               setRef(rootRef, node);
             }}
             style={rootStyle}
-            transition={rowTransition}
+            transition={springTap}
             whileTap={whileTap}
           >
             {rowChildren}
@@ -316,7 +289,7 @@ function CheckboxGroupRow({
         </div>
       </div>
 
-      <CheckboxGroupCopy option={option} reduceMotion={reduceMotion} />
+      <CheckboxGroupCopy option={option} />
     </CheckboxPrimitive.Root>
   );
 }
@@ -327,13 +300,11 @@ function CheckboxGroup({
   onChange,
   className,
   maxVisible,
-  reducedMotion,
   showMoreLabel = "Show more",
   showLessLabel = "Show less",
 }: CheckboxGroupProps) {
   const [optimisticValue, setOptimisticValue] = useState(value);
   const [expanded, setExpanded] = useState(false);
-  const reduceMotion = useResolvedReducedMotion(reducedMotion);
 
   useEffect(() => {
     setOptimisticValue(value);
@@ -363,49 +334,46 @@ function CheckboxGroup({
   };
 
   return (
-    <ReducedMotionConfig reducedMotion={reducedMotion}>
-      <CheckboxGroupPrimitive
-        className={cn(
-          componentThemeClassName,
-          "flex flex-col gap-1.5",
-          className
-        )}
-        onValueChange={handleValueChange}
-        value={optimisticValue}
-      >
-        {sections.map((section) => (
-          <div className="flex flex-col gap-1" key={section.key}>
-            {section.label ? (
-              <p className="px-4 pt-2 font-medium text-[11px] text-muted-foreground/80 uppercase tracking-[0.16em]">
-                {section.label}
-              </p>
-            ) : null}
+    <CheckboxGroupPrimitive
+      className={cn(
+        componentThemeClassName,
+        "flex flex-col gap-1.5",
+        className
+      )}
+      onValueChange={handleValueChange}
+      value={optimisticValue}
+    >
+      {sections.map((section) => (
+        <div className="flex flex-col gap-1" key={section.key}>
+          {section.label ? (
+            <p className="px-4 pt-2 font-medium text-[11px] text-muted-foreground/80 uppercase tracking-[0.16em]">
+              {section.label}
+            </p>
+          ) : null}
 
-            {section.options.map((option) => (
-              <CheckboxGroupRow
-                checked={optimisticValue.includes(option.value)}
-                key={option.value}
-                option={option}
-                reduceMotion={reduceMotion}
-              />
-            ))}
-          </div>
-        ))}
+          {section.options.map((option) => (
+            <CheckboxGroupRow
+              checked={optimisticValue.includes(option.value)}
+              key={option.value}
+              option={option}
+            />
+          ))}
+        </div>
+      ))}
 
-        {canCollapse && !forcedExpanded ? (
-          <button
-            className={cn(
-              "self-start rounded-md px-4 py-2 font-medium text-muted-foreground text-sm transition-colors hover:text-foreground",
-              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-            )}
-            onClick={() => setExpanded((previous) => !previous)}
-            type="button"
-          >
-            {expanded ? showLessLabel : `${showMoreLabel} (${hiddenCount})`}
-          </button>
-        ) : null}
-      </CheckboxGroupPrimitive>
-    </ReducedMotionConfig>
+      {canCollapse && !forcedExpanded ? (
+        <button
+          className={cn(
+            "self-start rounded-md px-4 py-2 font-medium text-muted-foreground text-sm transition-colors hover:text-foreground",
+            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+          )}
+          onClick={() => setExpanded((previous) => !previous)}
+          type="button"
+        >
+          {expanded ? showLessLabel : `${showMoreLabel} (${hiddenCount})`}
+        </button>
+      ) : null}
+    </CheckboxGroupPrimitive>
   );
 }
 

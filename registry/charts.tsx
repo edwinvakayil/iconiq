@@ -5,11 +5,6 @@ import * as React from "react";
 import type { TooltipValueType } from "recharts";
 import * as RechartsPrimitive from "recharts";
 
-import {
-  ReducedMotionConfig,
-  type ReducedMotionProp,
-  useResolvedReducedMotion,
-} from "@/lib/reduced-motion";
 import { cn } from "@/lib/utils";
 
 const componentThemeClassName =
@@ -64,7 +59,6 @@ export type ChartConfig = Record<
 
 type ChartContextProps = {
   config: ChartConfig;
-  reducedMotion: boolean;
   barAnimationActive: boolean;
 };
 
@@ -86,34 +80,24 @@ function ChartContainer({
   children,
   config,
   initialDimension,
-  reducedMotion,
   ...props
-}: MotionSafeDivProps &
-  ReducedMotionProp & {
-    config: ChartConfig;
-    children: React.ComponentProps<
-      typeof RechartsPrimitive.ResponsiveContainer
-    >["children"];
-    initialDimension?: {
-      width: number;
-      height: number;
-    };
-  }) {
+}: MotionSafeDivProps & {
+  config: ChartConfig;
+  children: React.ComponentProps<
+    typeof RechartsPrimitive.ResponsiveContainer
+  >["children"];
+  initialDimension?: {
+    width: number;
+    height: number;
+  };
+}) {
   const uniqueId = React.useId();
   const chartId = `chart-${id ?? uniqueId.replace(/:/g, "")}`;
-  const resolvedReducedMotion = useResolvedReducedMotion(reducedMotion);
-  const initialBarAnimationDoneRef = React.useRef(resolvedReducedMotion);
+  const initialBarAnimationDoneRef = React.useRef(false);
   const resizeMeasureCountRef = React.useRef(0);
-  const [barAnimationActive, setBarAnimationActive] = React.useState(
-    () => !resolvedReducedMotion
-  );
+  const [barAnimationActive, setBarAnimationActive] = React.useState(true);
 
   React.useEffect(() => {
-    if (resolvedReducedMotion) {
-      setBarAnimationActive(false);
-      return;
-    }
-
     const timeoutId = window.setTimeout(
       () => {
         initialBarAnimationDoneRef.current = true;
@@ -125,7 +109,7 @@ function ChartContainer({
     return () => {
       window.clearTimeout(timeoutId);
     };
-  }, [resolvedReducedMotion]);
+  }, []);
 
   const handleResize = React.useCallback(() => {
     resizeMeasureCountRef.current += 1;
@@ -143,33 +127,30 @@ function ChartContainer({
     <ChartContext.Provider
       value={{
         config,
-        reducedMotion: resolvedReducedMotion,
         barAnimationActive,
       }}
     >
-      <ReducedMotionConfig reducedMotion={reducedMotion}>
-        <div
-          className={cn(
-            componentThemeClassName,
-            "flex aspect-video min-h-[12rem] w-full justify-center text-xs [&_.recharts-cartesian-axis-tick_text]:fill-muted-foreground [&_.recharts-cartesian-grid_line[stroke='#ccc']]:stroke-border/50 [&_.recharts-curve.recharts-tooltip-cursor]:stroke-border [&_.recharts-dot[stroke='#fff']]:stroke-transparent [&_.recharts-layer]:outline-hidden [&_.recharts-polar-grid_[stroke='#ccc']]:stroke-border [&_.recharts-radial-bar-background-sector]:fill-muted [&_.recharts-rectangle.recharts-tooltip-cursor]:fill-muted [&_.recharts-reference-line_[stroke='#ccc']]:stroke-border [&_.recharts-sector[stroke='#fff']]:stroke-transparent [&_.recharts-sector]:outline-hidden [&_.recharts-surface]:outline-hidden",
-            className
-          )}
-          data-chart={chartId}
-          data-slot="chart"
-          {...props}
+      <div
+        className={cn(
+          componentThemeClassName,
+          "flex aspect-video min-h-[12rem] w-full justify-center text-xs [&_.recharts-cartesian-axis-tick_text]:fill-muted-foreground [&_.recharts-cartesian-grid_line[stroke='#ccc']]:stroke-border/50 [&_.recharts-curve.recharts-tooltip-cursor]:stroke-border [&_.recharts-dot[stroke='#fff']]:stroke-transparent [&_.recharts-layer]:outline-hidden [&_.recharts-polar-grid_[stroke='#ccc']]:stroke-border [&_.recharts-radial-bar-background-sector]:fill-muted [&_.recharts-rectangle.recharts-tooltip-cursor]:fill-muted [&_.recharts-reference-line_[stroke='#ccc']]:stroke-border [&_.recharts-sector[stroke='#fff']]:stroke-transparent [&_.recharts-sector]:outline-hidden [&_.recharts-surface]:outline-hidden",
+          className
+        )}
+        data-chart={chartId}
+        data-slot="chart"
+        {...props}
+      >
+        <ChartStyle config={config} id={chartId} />
+        <RechartsPrimitive.ResponsiveContainer
+          debounce={CHART_RESIZE_DEBOUNCE_MS}
+          height="100%"
+          onResize={handleResize}
+          width="100%"
+          {...(initialDimension ? { initialDimension } : {})}
         >
-          <ChartStyle config={config} id={chartId} />
-          <RechartsPrimitive.ResponsiveContainer
-            debounce={CHART_RESIZE_DEBOUNCE_MS}
-            height="100%"
-            onResize={handleResize}
-            width="100%"
-            {...(initialDimension ? { initialDimension } : {})}
-          >
-            {children}
-          </RechartsPrimitive.ResponsiveContainer>
-        </div>
-      </ReducedMotionConfig>
+          {children}
+        </RechartsPrimitive.ResponsiveContainer>
+      </div>
     </ChartContext.Provider>
   );
 }
@@ -307,9 +288,8 @@ function ChartBar({
   /** Staggers bar growth when plotting multiple series (0, 1, 2, …). */
   seriesIndex?: number;
 }) {
-  const { barAnimationActive, reducedMotion } = useChart();
-  const shouldAnimateBars =
-    !reducedMotion && (isAnimationActive ?? barAnimationActive);
+  const { barAnimationActive } = useChart();
+  const shouldAnimateBars = isAnimationActive ?? barAnimationActive;
 
   return (
     <RechartsPrimitive.Bar
@@ -354,7 +334,7 @@ function ChartTooltipContent({
     >,
     "accessibilityLayer"
   >) {
-  const { config, reducedMotion } = useChart();
+  const { config } = useChart();
 
   const tooltipLabel = React.useMemo(() => {
     if (hideLabel || !payload?.length) {
@@ -405,8 +385,8 @@ function ChartTooltipContent({
         "grid min-w-32 items-start gap-1.5 rounded-lg border border-border/50 bg-background px-2.5 py-1.5 text-xs shadow-xl",
         className
       )}
-      initial={{ opacity: reducedMotion ? 1 : 0 }}
-      transition={reducedMotion ? { duration: 0 } : chartTooltipFade}
+      initial={{ opacity: 0 }}
+      transition={chartTooltipFade}
     >
       {nestLabel ? null : tooltipLabel}
       <div className="grid gap-1.5">

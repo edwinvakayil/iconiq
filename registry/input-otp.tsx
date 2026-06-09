@@ -2,12 +2,7 @@
 
 import type { OTPFieldInput, OTPFieldRoot } from "@base-ui/react/otp-field";
 import { OTPFieldPreview as OTPField } from "@base-ui/react/otp-field";
-import {
-  AnimatePresence,
-  MotionConfig,
-  motion,
-  useReducedMotion,
-} from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
 import * as React from "react";
 
 import { cn } from "@/lib/utils";
@@ -39,8 +34,6 @@ const charSpring = {
   mass: 0.8,
 };
 
-const reducedTransition = { duration: 0.12 } as const;
-
 const otpGroupClassName =
   "flex w-full max-w-full items-center justify-center gap-2 sm:gap-3";
 
@@ -54,8 +47,6 @@ type OTPProps = React.ComponentPropsWithoutRef<typeof OTPField.Root> & {
   containerClassName?: string;
   /** @deprecated Use `length` instead. */
   maxLength?: number;
-  /** Force reduced motion for slot animations. Defaults to the user OS preference. */
-  reducedMotion?: boolean;
 };
 
 const otpRootBaseClassName =
@@ -109,21 +100,11 @@ function OTPPlaceholder({
 
 const OTP = React.forwardRef<HTMLDivElement, OTPProps>(
   (
-    {
-      children,
-      className,
-      containerClassName,
-      length,
-      maxLength,
-      reducedMotion,
-      ...props
-    },
+    { children, className, containerClassName, length, maxLength, ...props },
     ref
   ) => {
     const [mounted, setMounted] = React.useState(false);
-    const prefersReducedMotion = useReducedMotion() ?? false;
     const resolvedLength = length ?? maxLength ?? 6;
-    const resolveReducedMotion = reducedMotion ?? prefersReducedMotion;
 
     React.useEffect(() => {
       setMounted(true);
@@ -132,18 +113,14 @@ const OTP = React.forwardRef<HTMLDivElement, OTPProps>(
     return (
       <OTPLengthContext.Provider value={resolvedLength}>
         {mounted ? (
-          <MotionConfig
-            reducedMotion={resolveReducedMotion ? "always" : "user"}
+          <OTPField.Root
+            className={resolveRootClassName(className, containerClassName)}
+            length={resolvedLength}
+            ref={ref}
+            {...props}
           >
-            <OTPField.Root
-              className={resolveRootClassName(className, containerClassName)}
-              length={resolvedLength}
-              ref={ref}
-              {...props}
-            >
-              {children}
-            </OTPField.Root>
-          </MotionConfig>
+            {children}
+          </OTPField.Root>
         ) : (
           <OTPPlaceholder
             className={resolvePlaceholderClassName(className)}
@@ -211,67 +188,49 @@ function resolveSlotClassName(
   return typeof className === "function" ? className(state) : className;
 }
 
-function OTPSlotCharacter({
-  char,
-  index,
-  reduceMotion,
-}: {
-  char: string;
-  index: number;
-  reduceMotion: boolean;
-}) {
+function OTPSlotCharacter({ char, index }: { char: string; index: number }) {
   return (
     <motion.span
       animate={{ opacity: 1, y: 0, scale: 1 }}
       aria-hidden
       className="pointer-events-none inline-block select-none"
-      exit={reduceMotion ? { opacity: 0 } : { opacity: 0, y: -12, scale: 0.7 }}
-      initial={
-        reduceMotion ? { opacity: 0 } : { opacity: 0, y: 12, scale: 0.7 }
-      }
+      exit={{ opacity: 0, y: -12, scale: 0.7 }}
+      initial={{ opacity: 0, y: 12, scale: 0.7 }}
       key={`${index}-${char}`}
-      transition={reduceMotion ? reducedTransition : charSpring}
+      transition={charSpring}
     >
       {char}
     </motion.span>
   );
 }
 
-function OTPSlotCaret({ reduceMotion }: { reduceMotion: boolean }) {
-  const caretPulseTransition = reduceMotion
-    ? { duration: 0.12 }
-    : {
-        duration: 1.2,
-        ease: "easeInOut" as const,
-        repeat: Number.POSITIVE_INFINITY,
-      };
-
-  const caretEnterTransition = reduceMotion
-    ? { duration: 0.12 }
-    : {
-        opacity: { duration: 0.15 },
-        scaleY: {
-          type: "spring" as const,
-          stiffness: 400,
-          damping: 25,
-        },
-      };
-
+function OTPSlotCaret() {
   return (
     <motion.div
       animate={{
         opacity: 1,
         scaleY: 1,
-        transition: caretEnterTransition,
+        transition: {
+          opacity: { duration: 0.15 },
+          scaleY: {
+            type: "spring" as const,
+            stiffness: 400,
+            damping: 25,
+          },
+        },
       }}
       className="pointer-events-none absolute inset-0 flex items-center justify-center"
       exit={{ opacity: 0, scaleY: 0, transition: { duration: 0.1 } }}
       initial={{ opacity: 0, scaleY: 0 }}
     >
       <motion.div
-        animate={reduceMotion ? { opacity: 1 } : { opacity: [1, 0.3, 1] }}
+        animate={{ opacity: [1, 0.3, 1] }}
         className="h-5 w-[2px] rounded-full bg-primary sm:h-6"
-        transition={caretPulseTransition}
+        transition={{
+          duration: 1.2,
+          ease: "easeInOut" as const,
+          repeat: Number.POSITIVE_INFINITY,
+        }}
       />
     </motion.div>
   );
@@ -282,7 +241,6 @@ function OTPSlotSurface({
   inputClassName,
   inputRef,
   inputProps,
-  reduceMotion,
   slotRef,
   state,
   tabIndex,
@@ -291,7 +249,6 @@ function OTPSlotSurface({
   inputClassName?: string;
   inputProps: Omit<OTPSlotInputProps, "className" | "ref" | "tabIndex">;
   inputRef: React.Ref<HTMLInputElement> | undefined;
-  reduceMotion: boolean;
   slotRef: React.Ref<HTMLInputElement>;
   state: OTPSlotState;
   tabIndex: number | undefined;
@@ -313,7 +270,7 @@ function OTPSlotSurface({
         className
       )}
       initial={{ borderColor: "var(--color-border)" }}
-      transition={reduceMotion ? reducedTransition : springTransition}
+      transition={springTransition}
     >
       <input
         {...inputProps}
@@ -331,26 +288,16 @@ function OTPSlotSurface({
       />
 
       <AnimatePresence mode="popLayout">
-        {char ? (
-          <OTPSlotCharacter
-            char={char}
-            index={state.index}
-            reduceMotion={reduceMotion}
-          />
-        ) : null}
+        {char ? <OTPSlotCharacter char={char} index={state.index} /> : null}
       </AnimatePresence>
 
-      <AnimatePresence>
-        {showCaret ? <OTPSlotCaret reduceMotion={reduceMotion} /> : null}
-      </AnimatePresence>
+      <AnimatePresence>{showCaret ? <OTPSlotCaret /> : null}</AnimatePresence>
     </motion.div>
   );
 }
 
 const OTPSlot = React.forwardRef<HTMLInputElement, OTPSlotProps>(
   ({ index: _index, className, ...props }, ref) => {
-    const reduceMotion = useReducedMotion() ?? false;
-
     return (
       <OTPField.Input
         {...props}
@@ -368,7 +315,6 @@ const OTPSlot = React.forwardRef<HTMLInputElement, OTPSlotProps>(
               inputClassName={inputClassName}
               inputProps={resolvedInputProps}
               inputRef={inputRef}
-              reduceMotion={reduceMotion}
               slotRef={ref}
               state={state}
               tabIndex={tabIndex}

@@ -1108,6 +1108,94 @@ function mapRegistryFileForV0(file: RegistryFile, fallbackTarget: string) {
   };
 }
 
+function escapeForSingleQuotedTs(value: string) {
+  return value.replace(/\\/g, "\\\\").replace(/'/g, "\\'");
+}
+
+function buildV0LayoutContent({
+  title,
+  description,
+  needsThemeProvider,
+}: {
+  title: string;
+  description: string;
+  needsThemeProvider: boolean;
+}) {
+  const themeProviderImport = needsThemeProvider
+    ? "import { ThemeProvider } from 'next-themes'\n"
+    : "";
+  const htmlAttrs = needsThemeProvider
+    ? ' lang="en" suppressHydrationWarning'
+    : ' lang="en"';
+  const bodyChildren = needsThemeProvider
+    ? `<ThemeProvider attribute="class" defaultTheme="system" enableSystem storageKey="theme">
+        {children}
+      </ThemeProvider>`
+    : "{children}";
+
+  return `import type { Metadata } from 'next'
+import { Geist } from 'next/font/google'
+${themeProviderImport}
+const geist = Geist({
+  subsets: ['latin'],
+  variable: '--font-sans',
+})
+
+export const metadata: Metadata = {
+  title: '${escapeForSingleQuotedTs(title)}',
+  description: '${escapeForSingleQuotedTs(description)}',
+}
+
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode
+}>) {
+  return (
+    <html${htmlAttrs}>
+      <body className={geist.variable + ' font-sans antialiased'}>
+        ${bodyChildren}
+      </body>
+    </html>
+  )
+}
+`;
+}
+
+async function loadRegistrySource(name: string) {
+  const registryPath = path.join(process.cwd(), "registry", `${name}.tsx`);
+
+  try {
+    return await fs.readFile(registryPath, "utf8");
+  } catch {
+    return null;
+  }
+}
+
+async function resolveRegistryDependencyFileContent(
+  depName: string,
+  file: RegistryFile
+) {
+  if (depName === "iconiq-theme" && file.path === "lib/registry-theme.ts") {
+    try {
+      return await fs.readFile(
+        path.join(process.cwd(), "lib", "registry-theme.ts"),
+        "utf8"
+      );
+    } catch {
+      return file.content;
+    }
+  }
+
+  const registrySource = await loadRegistrySource(depName);
+
+  if (registrySource && file.path === `${depName}.tsx`) {
+    return registrySource;
+  }
+
+  return file.content;
+}
+
 async function loadRegistryDependencyFiles(registryDependencies: string[]) {
   const dependencyFiles: ReturnType<typeof mapRegistryFileForV0>[] = [];
 
@@ -1125,7 +1213,13 @@ async function loadRegistryDependencyFiles(registryDependencies: string[]) {
       const depData = JSON.parse(depFile);
 
       for (const file of (depData.files ?? []) as RegistryFile[]) {
-        dependencyFiles.push(mapRegistryFileForV0(file, file.path));
+        const content = await resolveRegistryDependencyFileContent(
+          depName,
+          file
+        );
+        dependencyFiles.push(
+          mapRegistryFileForV0({ ...file, content }, file.path)
+        );
       }
     } catch (error) {
       console.warn(`Could not load registry dependency ${dep}:`, error);
@@ -1174,8 +1268,14 @@ const getComponentForV0 = async (
 
     const description =
       registryData.description ?? `${name} component from Iconiq`;
+    const registrySource = await loadRegistrySource(name);
     const registryFiles = (registryData.files ?? []).map((file: RegistryFile) =>
-      mapRegistryFileForV0(file, `components/ui/${name}.tsx`)
+      mapRegistryFileForV0(
+        registrySource && file.path === `${name}.tsx`
+          ? { ...file, content: registrySource }
+          : file,
+        `components/ui/${name}.tsx`
+      )
     );
     const dependencyFiles = await loadRegistryDependencyFiles(
       registryData.registryDependencies || []
@@ -1201,33 +1301,13 @@ const getComponentForV0 = async (
         },
         {
           path: "layout.tsx",
-          content: `import type { Metadata } from 'next'
-import { Geist } from 'next/font/google'
-
-const geist = Geist({
-  subsets: ['latin'],
-  variable: '--font-sans',
-})
-
-export const metadata: Metadata = {
-  title: '${registryData.title ?? name}',
-  description: '${description}',
-}
-
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode
-}>) {
-  return (
-    <html lang="en">
-      <body className={geist.variable + ' font-sans antialiased'}>
-        {children}
-      </body>
-    </html>
-  )
-}
-`,
+          content: buildV0LayoutContent({
+            title: registryData.title ?? name,
+            description,
+            needsThemeProvider: (registryData.dependencies ?? []).includes(
+              "next-themes"
+            ),
+          }),
           type: "registry:page",
           target: "app/layout.tsx",
         },

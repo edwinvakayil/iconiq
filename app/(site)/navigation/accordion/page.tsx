@@ -429,12 +429,6 @@ export default function RadixBaseAccordionPage() {
             description:
               "Switches between the standard divided list and the quieter inline plus/minus treatment.",
           },
-          {
-            name: "reducedMotion",
-            type: "boolean",
-            description:
-              "Forces the quieter motion path immediately while still respecting OS-level reduced motion preferences.",
-          },
         ],
         notes: [
           `Current install target: ${provider.libraryLabel}.`,
@@ -488,7 +482,6 @@ export default function RadixBaseAccordionPage() {
       itemSlug="accordion"
       pageUrl="/navigation/accordion"
       preview={provider.preview}
-      reducedMotionSectionPosition="after"
       title="Accordion"
       usageCode={provider.usageCode}
       usageDescription="Use the compound parts directly. Switch libraries above to update the install command, registry JSON, preview code, and generated file set together."

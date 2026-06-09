@@ -3,12 +3,7 @@
 import { Button as ButtonPrimitive } from "@base-ui/react/button";
 import { cva, type VariantProps } from "class-variance-authority";
 import { Loader2 } from "lucide-react";
-import {
-  animate,
-  motion,
-  useMotionValue,
-  useReducedMotion,
-} from "motion/react";
+import { animate, motion, useMotionValue } from "motion/react";
 import * as React from "react";
 
 import { cn } from "@/lib/utils";
@@ -283,17 +278,12 @@ type FlowContentProps = {
   animateEnabled: boolean;
   labels: { idle: string; loading: string; success: string };
   phase: FlowPhase;
-  prefersReducedMotion: boolean;
   size: NonNullable<FluxButtonProps["size"]>;
   successIcon?: React.ReactNode;
 };
 
-function useFlowContentMotion(
-  animateEnabled: boolean,
-  prefersReducedMotion: boolean,
-  phase: FlowPhase
-) {
-  const motionEnabled = animateEnabled && !prefersReducedMotion;
+function useFlowContentMotion(animateEnabled: boolean, phase: FlowPhase) {
+  const motionEnabled = animateEnabled;
   const contentTransition = motionEnabled ? FLUID_CONTENT : NO_TRANSITION;
   const iconTransition = motionEnabled ? FLUID_ICON : NO_TRANSITION;
   const shrinkTransition = motionEnabled ? FLUID_REVEAL : NO_TRANSITION;
@@ -435,12 +425,11 @@ function FlowContent({
   animateEnabled,
   labels,
   phase,
-  prefersReducedMotion,
   size,
   successIcon,
 }: FlowContentProps) {
   const { busyTransition, contentTransition, iconTransition, idleTransition } =
-    useFlowContentMotion(animateEnabled, prefersReducedMotion, phase);
+    useFlowContentMotion(animateEnabled, phase);
 
   const isIdle = phase === "idle";
   const isShrinking = phase === "shrinking";
@@ -519,7 +508,6 @@ const FluxButton = React.forwardRef<HTMLButtonElement, FluxButtonProps>(
     },
     ref
   ) => {
-    const prefersReducedMotion = useReducedMotion() ?? false;
     const resetTimeoutRef = React.useRef<number | null>(null);
     const widthAnimationRef = React.useRef<ReturnType<typeof animate> | null>(
       null
@@ -563,7 +551,7 @@ const FluxButton = React.forwardRef<HTMLButtonElement, FluxButtonProps>(
       layout.height
     );
 
-    const animateEnabled = hasInteracted && !prefersReducedMotion;
+    const animateEnabled = hasInteracted;
     const isBusy = phase !== "idle";
     const isLocked = Boolean(disabled || isBusy);
     const buttonClassName = cn(
@@ -655,13 +643,8 @@ const FluxButton = React.forwardRef<HTMLButtonElement, FluxButtonProps>(
     }, []);
 
     const beginShrink = React.useCallback(() => {
-      if (prefersReducedMotion) {
-        safeSetPhase("idle");
-        return;
-      }
-
       safeSetPhase("shrinking");
-    }, [prefersReducedMotion, safeSetPhase]);
+    }, [safeSetPhase]);
 
     const runAction = React.useCallback(async () => {
       if (phaseRef.current !== "idle" || disabled) {
@@ -808,7 +791,6 @@ const FluxButton = React.forwardRef<HTMLButtonElement, FluxButtonProps>(
                     animateEnabled={hasInteracted}
                     labels={labels}
                     phase={phase}
-                    prefersReducedMotion={prefersReducedMotion}
                     size={resolvedSize}
                     successIcon={successIcon}
                   />

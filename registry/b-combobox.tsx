@@ -6,11 +6,6 @@ import { Check, ChevronDown, ChevronUp, X } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import * as React from "react";
 
-import {
-  ReducedMotionConfig,
-  type ReducedMotionProp,
-  useResolvedReducedMotion,
-} from "@/lib/reduced-motion";
 import { cn } from "@/lib/utils";
 
 const componentThemeClassName =
@@ -19,7 +14,7 @@ const componentThemeClassName =
 type ComboboxRootProps<
   Value,
   Multiple extends boolean | undefined = false,
-> = ComboboxPrimitive.Root.Props<Value, Multiple> & ReducedMotionProp;
+> = ComboboxPrimitive.Root.Props<Value, Multiple>;
 
 const INSTANT_CLOSE_TRANSITION = { duration: 0 } as const;
 
@@ -28,7 +23,6 @@ type ComboboxContextValue = {
   activeHighlightId: string;
   activeValue: unknown;
   open: boolean;
-  reduceMotion: boolean;
   setActiveValue: React.Dispatch<React.SetStateAction<unknown>>;
   setOpen: (open: boolean) => void;
   skipExitAnimationRef: React.MutableRefObject<boolean>;
@@ -150,33 +144,21 @@ const POPUP_SPRING = {
   mass: 0.95,
 };
 
-function getPopupMotion(reduceMotion: boolean) {
-  if (reduceMotion) {
-    return {
-      animate: { opacity: 1, scale: 1, y: 0 },
-      closed: { opacity: 0, scale: 1, y: 0 },
-      initial: { opacity: 0, scale: 1, y: 0 },
-      openTransition: { duration: 0.12, ease: "easeOut" as const },
-      closedTransition: { duration: 0.1, ease: "easeOut" as const },
-    };
-  }
-
-  return {
-    animate: { opacity: 1, scale: 1, y: 0 },
-    closed: { opacity: 0, scale: 0.985, y: -5 },
-    initial: { opacity: 0, scale: 0.985, y: -5 },
-    openTransition: {
-      opacity: { duration: 0.34, ease: FLUID_EASE },
-      scale: POPUP_SPRING,
-      y: POPUP_SPRING,
-    },
-    closedTransition: {
-      opacity: { duration: 0.22, ease: EXIT_EASE },
-      scale: { duration: 0.22, ease: EXIT_EASE },
-      y: { duration: 0.22, ease: EXIT_EASE },
-    },
-  };
-}
+const popupMotion = {
+  animate: { opacity: 1, scale: 1, y: 0 },
+  closed: { opacity: 0, scale: 0.985, y: -5 },
+  initial: { opacity: 0, scale: 0.985, y: -5 },
+  openTransition: {
+    opacity: { duration: 0.34, ease: FLUID_EASE },
+    scale: POPUP_SPRING,
+    y: POPUP_SPRING,
+  },
+  closedTransition: {
+    opacity: { duration: 0.22, ease: EXIT_EASE },
+    scale: { duration: 0.22, ease: EXIT_EASE },
+    y: { duration: 0.22, ease: EXIT_EASE },
+  },
+};
 
 const comboboxListScrollbarClassName =
   "z-10 my-1.5 mr-0.5 w-1 shrink-0 touch-none select-none opacity-0 transition-opacity duration-150 before:absolute before:left-1/2 before:h-full before:w-5 before:-translate-x-1/2 before:content-[''] data-hovering:pointer-events-auto data-hovering:opacity-100 data-scrolling:pointer-events-auto data-scrolling:opacity-100 data-scrolling:duration-0";
@@ -194,10 +176,8 @@ function Combobox<Value, Multiple extends boolean | undefined = false>({
   onOpenChange,
   open: openProp,
   openOnInputClick = false,
-  reducedMotion,
   ...props
 }: ComboboxRootProps<Value, Multiple>) {
-  const reduceMotion = useResolvedReducedMotion(reducedMotion);
   const internalActionsRef =
     React.useRef<ComboboxPrimitive.Root.Actions | null>(null);
   const actionsRef = actionsRefProp ?? internalActionsRef;
@@ -231,50 +211,41 @@ function Combobox<Value, Multiple extends boolean | undefined = false>({
         skipExitAnimationRef.current = false;
       }
 
-      if (!nextOpen && reduceMotion) {
-        requestAnimationFrame(() => {
-          actionsRef.current?.unmount();
-        });
-      }
-
       if (!eventDetails.isCanceled) {
         setOpen(nextOpen);
       }
 
       onOpenChange?.(nextOpen, eventDetails);
     },
-    [actionsRef, onOpenChange, reduceMotion, setOpen]
+    [onOpenChange, setOpen]
   );
 
   return (
-    <ReducedMotionConfig reducedMotion={reducedMotion}>
-      <ComboboxContext.Provider
-        value={{
-          actionsRef,
-          activeHighlightId,
-          activeValue,
-          open,
-          reduceMotion,
-          setActiveValue,
-          setOpen,
-          skipExitAnimationRef,
-        }}
+    <ComboboxContext.Provider
+      value={{
+        actionsRef,
+        activeHighlightId,
+        activeValue,
+        open,
+        setActiveValue,
+        setOpen,
+        skipExitAnimationRef,
+      }}
+    >
+      <ComboboxPrimitive.Root
+        {...props}
+        actionsRef={actionsRef}
+        autoComplete={autoComplete}
+        defaultOpen={defaultOpen}
+        highlightItemOnHover={highlightItemOnHover}
+        modal={modal}
+        onOpenChange={handleOpenChange}
+        open={open}
+        openOnInputClick={openOnInputClick}
       >
-        <ComboboxPrimitive.Root
-          {...props}
-          actionsRef={actionsRef}
-          autoComplete={autoComplete}
-          defaultOpen={defaultOpen}
-          highlightItemOnHover={highlightItemOnHover}
-          modal={modal}
-          onOpenChange={handleOpenChange}
-          open={open}
-          openOnInputClick={openOnInputClick}
-        >
-          {children}
-        </ComboboxPrimitive.Root>
-      </ComboboxContext.Provider>
-    </ReducedMotionConfig>
+        {children}
+      </ComboboxPrimitive.Root>
+    </ComboboxContext.Provider>
   );
 }
 
@@ -394,10 +365,9 @@ function ComboboxContentPanel({
     "children" | "className" | "ref" | "style"
   >;
 }) {
-  const { actionsRef, reduceMotion, skipExitAnimationRef } = useComboboxContext(
+  const { actionsRef, skipExitAnimationRef } = useComboboxContext(
     "ComboboxContentPanel"
   );
-  const popupMotion = getPopupMotion(reduceMotion);
   const skipExitAnimation = !popupState.open && skipExitAnimationRef.current;
 
   return (
@@ -562,7 +532,7 @@ function ComboboxItem({
 }: ComboboxPrimitive.Item.Props & {
   description?: React.ReactNode;
 }) {
-  const { activeHighlightId, activeValue, reduceMotion, setActiveValue } =
+  const { activeHighlightId, activeValue, setActiveValue } =
     useComboboxContext("ComboboxItem");
 
   return (
@@ -584,7 +554,7 @@ function ComboboxItem({
               itemClassName,
               resolveStateClassName(className, itemState)
             )}
-            initial={{ opacity: 0, y: reduceMotion ? 0 : 2 }}
+            initial={{ opacity: 0, y: 2 }}
             onMouseEnter={composeEventHandlers(
               resolvedItemProps.onMouseEnter,
               () => {
@@ -602,7 +572,7 @@ function ComboboxItem({
             }}
             style={itemStyle}
             transition={{
-              duration: reduceMotion ? 0.1 : 0.12,
+              duration: 0.12,
               ease: "easeOut",
             }}
           >

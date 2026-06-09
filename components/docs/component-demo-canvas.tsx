@@ -1,7 +1,7 @@
 "use client";
 
 import { RefreshCw } from "lucide-react";
-import { motion, useReducedMotion } from "motion/react";
+import { motion } from "motion/react";
 import {
   useCallback,
   useEffect,
@@ -54,7 +54,6 @@ export function ComponentDemoCanvas({
     width: 0,
   });
   const tabRailRef = useRef<HTMLDivElement | null>(null);
-  const reduceMotion = useReducedMotion();
   const updateIndicator = useCallback(() => {
     const rail = tabRailRef.current;
 
@@ -154,16 +153,12 @@ export function ComponentDemoCanvas({
             aria-hidden
             className="pointer-events-none absolute -bottom-px z-10 h-px bg-foreground dark:bg-white"
             initial={false}
-            transition={
-              reduceMotion
-                ? { duration: 0 }
-                : {
-                    type: "spring",
-                    stiffness: 360,
-                    damping: 34,
-                    mass: 0.7,
-                  }
-            }
+            transition={{
+              type: "spring",
+              stiffness: 360,
+              damping: 34,
+              mass: 0.7,
+            }}
           />
         </div>
 

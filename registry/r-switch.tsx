@@ -4,11 +4,6 @@ import * as SwitchPrimitive from "@radix-ui/react-switch";
 import { animate, motion, useMotionValue, useTransform } from "motion/react";
 import * as React from "react";
 
-import {
-  ReducedMotionConfig,
-  type ReducedMotionProp,
-  useResolvedReducedMotion,
-} from "@/lib/reduced-motion";
 import { cn } from "@/lib/utils";
 
 const componentThemeClassName =
@@ -25,10 +20,9 @@ const springSnap = { type: "spring" as const, duration: 0.4, bounce: 0.5 };
 
 export interface SwitchProps
   extends Omit<
-      React.ComponentPropsWithoutRef<typeof SwitchPrimitive.Root>,
-      "asChild"
-    >,
-    ReducedMotionProp {
+    React.ComponentPropsWithoutRef<typeof SwitchPrimitive.Root>,
+    "asChild"
+  > {
   label?: string;
   labelSide?: "left" | "right";
 }
@@ -46,7 +40,6 @@ const Switch = React.forwardRef<
       className,
       disabled,
       defaultChecked,
-      reducedMotion,
       ...props
     },
     ref
@@ -62,7 +55,6 @@ const Switch = React.forwardRef<
     const thumbScaleY = useMotionValue(1);
 
     const fillOpacity = useTransform(thumbX, [0, THUMB_TRAVEL], [0, 1]);
-    const reduceMotion = useResolvedReducedMotion(reducedMotion);
 
     const prevChecked = React.useRef(internalChecked);
 
@@ -72,30 +64,15 @@ const Switch = React.forwardRef<
       }
 
       prevChecked.current = internalChecked;
-      if (reduceMotion) {
-        thumbX.set(internalChecked ? THUMB_TRAVEL : 0);
-        return;
-      }
-
       animate(thumbX, internalChecked ? THUMB_TRAVEL : 0, spring);
-    }, [internalChecked, reduceMotion, thumbX]);
+    }, [internalChecked, thumbX]);
 
     const handlePointerDown = () => {
-      if (reduceMotion) {
-        return;
-      }
-
       animate(thumbScaleX, 0.82, springFast);
       animate(thumbScaleY, 1.1, springFast);
     };
 
     const handlePointerUp = () => {
-      if (reduceMotion) {
-        thumbScaleX.set(1);
-        thumbScaleY.set(1);
-        return;
-      }
-
       animate(thumbScaleX, 1, springSnap);
       animate(thumbScaleY, 1, springSnap);
     };
@@ -103,14 +80,6 @@ const Switch = React.forwardRef<
     const handleCheckedChange = (next: boolean) => {
       if (!isControlled) {
         setUncontrolledChecked(next);
-      }
-
-      if (reduceMotion) {
-        thumbScaleX.set(1);
-        thumbScaleY.set(1);
-        thumbX.set(next ? THUMB_TRAVEL : 0);
-        onCheckedChange?.(next);
-        return;
       }
 
       animate(thumbScaleX, 1.15, springFast).then(() => {
@@ -184,45 +153,39 @@ const Switch = React.forwardRef<
     );
 
     if (!label) {
-      return (
-        <ReducedMotionConfig reducedMotion={reducedMotion}>
-          {switchEl}
-        </ReducedMotionConfig>
-      );
+      return switchEl;
     }
 
     return (
-      <ReducedMotionConfig reducedMotion={reducedMotion}>
-        <div
-          className={cn(
-            componentThemeClassName,
-            "flex cursor-pointer select-none items-center gap-2.5",
-            disabled && "cursor-not-allowed opacity-50"
-          )}
-        >
-          {labelSide === "left" ? (
-            <button
-              className="bg-transparent p-0 text-foreground text-sm"
-              disabled={disabled}
-              onClick={toggleFromLabel}
-              type="button"
-            >
-              {label}
-            </button>
-          ) : null}
-          {switchEl}
-          {labelSide === "right" ? (
-            <button
-              className="bg-transparent p-0 text-foreground text-sm"
-              disabled={disabled}
-              onClick={toggleFromLabel}
-              type="button"
-            >
-              {label}
-            </button>
-          ) : null}
-        </div>
-      </ReducedMotionConfig>
+      <div
+        className={cn(
+          componentThemeClassName,
+          "flex cursor-pointer select-none items-center gap-2.5",
+          disabled && "cursor-not-allowed opacity-50"
+        )}
+      >
+        {labelSide === "left" ? (
+          <button
+            className="bg-transparent p-0 text-foreground text-sm"
+            disabled={disabled}
+            onClick={toggleFromLabel}
+            type="button"
+          >
+            {label}
+          </button>
+        ) : null}
+        {switchEl}
+        {labelSide === "right" ? (
+          <button
+            className="bg-transparent p-0 text-foreground text-sm"
+            disabled={disabled}
+            onClick={toggleFromLabel}
+            type="button"
+          >
+            {label}
+          </button>
+        ) : null}
+      </div>
     );
   }
 );

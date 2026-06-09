@@ -25,7 +25,6 @@ type SwitchModule = {
     label?: string;
     labelSide?: "left" | "right";
     onCheckedChange?: (checked: boolean) => void;
-    reducedMotion?: boolean;
   }>;
 };
 
@@ -173,7 +172,7 @@ export default function RadixBaseSwitchPage() {
         dependencyLabel: "@base-ui/react, motion",
         libraryLabel: "Base UI",
         notes: [
-          "Installs a Base UI switch with the same checked, defaultChecked, label, labelSide, and reducedMotion API as the Radix version.",
+          "Installs a Base UI switch with the same checked, defaultChecked, label, and labelSide API as the Radix version.",
           "Uses Base UI switch primitives under the exact same Iconiq track, thumb, and press-motion shell as the core switch component.",
         ],
         ui: BaseSwitch,
@@ -186,7 +185,7 @@ export default function RadixBaseSwitchPage() {
       dependencyLabel: "@radix-ui/react-switch, motion",
       libraryLabel: "Radix UI",
       notes: [
-        "Installs a Radix switch with the same checked, defaultChecked, label, labelSide, and reducedMotion API as the Base UI version.",
+        "Installs a Radix switch with the same checked, defaultChecked, label, and labelSide API as the Base UI version.",
         "Uses Radix switch primitives under the exact same Iconiq track, thumb, and press-motion shell as the core switch component.",
       ],
       ui: RadixSwitch,

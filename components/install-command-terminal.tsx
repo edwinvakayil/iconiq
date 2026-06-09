@@ -1,7 +1,7 @@
 "use client";
 
 import { Check, Copy, Terminal } from "lucide-react";
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
 
@@ -37,7 +37,6 @@ export function InstallCommandTerminal({
   const [copied, setCopied] = useState(false);
   const [, startTransition] = useTransition();
   const { packageName, setPackageName } = usePackageNameContext();
-  const reduceMotion = useReducedMotion() ?? false;
   const highlightLayoutId = `install-package-manager-${eventSlug}`;
 
   const handleCopyToClipboard = () => {
@@ -98,9 +97,7 @@ export function InstallCommandTerminal({
                     <motion.span
                       className="absolute inset-0 rounded-sm bg-muted dark:bg-neutral-800"
                       layoutId={highlightLayoutId}
-                      transition={
-                        reduceMotion ? { duration: 0.12 } : PACKAGE_TAB_SPRING
-                      }
+                      transition={PACKAGE_TAB_SPRING}
                     />
                   ) : null}
                   <span className="relative z-10">{packageManager}</span>
@@ -127,14 +124,10 @@ export function InstallCommandTerminal({
             <motion.pre
               animate={{ opacity: 1, x: 0 }}
               className="not-prose m-0 overflow-x-auto px-4 py-3"
-              exit={reduceMotion ? { opacity: 0 } : { opacity: 0, x: 8 }}
-              initial={reduceMotion ? { opacity: 0 } : { opacity: 0, x: -8 }}
+              exit={{ opacity: 0, x: 8 }}
+              initial={{ opacity: 0, x: -8 }}
               key={packageName}
-              transition={
-                reduceMotion
-                  ? { duration: 0.12 }
-                  : { duration: 0.22, ease: PACKAGE_CONTENT_EASE }
-              }
+              transition={{ duration: 0.22, ease: PACKAGE_CONTENT_EASE }}
             >
               <code className="font-mono text-[#032F62] text-sm dark:text-[#9ECBFF]">
                 {commands[packageName]}

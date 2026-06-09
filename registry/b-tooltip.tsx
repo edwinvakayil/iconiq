@@ -4,10 +4,6 @@ import { Tooltip as TooltipPrimitive } from "@base-ui/react/tooltip";
 import { motion } from "motion/react";
 import * as React from "react";
 
-import {
-  ReducedMotionConfig,
-  type ReducedMotionProp,
-} from "@/lib/reduced-motion";
 import { cn } from "@/lib/utils";
 
 const tooltipThemeClassName =
@@ -31,7 +27,7 @@ type PopupRenderProps = React.HTMLAttributes<HTMLDivElement> & {
   style?: React.CSSProperties;
 };
 
-export interface TooltipProps extends ReducedMotionProp {
+export interface TooltipProps {
   children: TooltipTriggerElement;
   content: string;
   side?: Side;
@@ -98,7 +94,6 @@ export function Tooltip({
   side = "top",
   delay = 0.15,
   className,
-  reducedMotion,
 }: TooltipProps) {
   const [open, setOpen] = React.useState(false);
   const [present, setPresent] = React.useState(false);
@@ -159,118 +154,116 @@ export function Tooltip({
   }
 
   return (
-    <ReducedMotionConfig reducedMotion={reducedMotion}>
-      <TooltipPrimitive.Root
-        actionsRef={actionsRef}
-        disableHoverablePopup
-        onOpenChange={(nextOpen) => {
-          handleOpenChange(nextOpen);
-        }}
-        open={open}
-        triggerId={triggerId}
-      >
-        <TooltipPrimitive.Trigger
-          closeDelay={0}
-          delay={0}
-          id={triggerId}
-          render={React.cloneElement(children, {
-            "aria-describedby": triggerDescription,
-          })}
-        />
+    <TooltipPrimitive.Root
+      actionsRef={actionsRef}
+      disableHoverablePopup
+      onOpenChange={(nextOpen) => {
+        handleOpenChange(nextOpen);
+      }}
+      open={open}
+      triggerId={triggerId}
+    >
+      <TooltipPrimitive.Trigger
+        closeDelay={0}
+        delay={0}
+        id={triggerId}
+        render={React.cloneElement(children, {
+          "aria-describedby": triggerDescription,
+        })}
+      />
 
-        {present ? (
-          <TooltipPrimitive.Portal>
-            <TooltipPrimitive.Positioner
-              align="center"
-              className="z-50 outline-none"
-              collisionPadding={12}
-              side={side}
-              sideOffset={10}
-            >
-              <TooltipPrimitive.Popup
-                render={(popupProps, popupState) => {
-                  const {
-                    popupClassName,
-                    popupRef,
-                    popupStyle,
-                    resolvedPopupProps,
-                  } = resolvePopupProps(popupProps as PopupRenderProps);
-                  const resolvedSide = (popupState.side as Side) ?? side;
+      {present ? (
+        <TooltipPrimitive.Portal>
+          <TooltipPrimitive.Positioner
+            align="center"
+            className="z-50 outline-none"
+            collisionPadding={12}
+            side={side}
+            sideOffset={10}
+          >
+            <TooltipPrimitive.Popup
+              render={(popupProps, popupState) => {
+                const {
+                  popupClassName,
+                  popupRef,
+                  popupStyle,
+                  resolvedPopupProps,
+                } = resolvePopupProps(popupProps as PopupRenderProps);
+                const resolvedSide = (popupState.side as Side) ?? side;
 
-                  return (
-                    <motion.div
-                      {...resolvedPopupProps}
-                      animate={
-                        open
-                          ? {
-                              opacity: 1,
-                              scale: 1,
-                              filter: "blur(0px)",
-                            }
-                          : {
-                              opacity: 0,
-                              scale: 0.92,
-                              filter: "blur(4px)",
-                            }
+                return (
+                  <motion.div
+                    {...resolvedPopupProps}
+                    animate={
+                      open
+                        ? {
+                            opacity: 1,
+                            scale: 1,
+                            filter: "blur(0px)",
+                          }
+                        : {
+                            opacity: 0,
+                            scale: 0.92,
+                            filter: "blur(4px)",
+                          }
+                    }
+                    className={cn(
+                      tooltipThemeClassName,
+                      tooltipContentClassName,
+                      popupClassName,
+                      className
+                    )}
+                    data-side={resolvedSide}
+                    id={tooltipId}
+                    initial={{
+                      opacity: 0,
+                      scale: 0.92,
+                      filter: "blur(4px)",
+                    }}
+                    onAnimationComplete={() => {
+                      if (!open) {
+                        actionsRef.current?.unmount();
+                        setPresent(false);
                       }
-                      className={cn(
-                        tooltipThemeClassName,
-                        tooltipContentClassName,
-                        popupClassName,
-                        className
-                      )}
-                      data-side={resolvedSide}
-                      id={tooltipId}
-                      initial={{
-                        opacity: 0,
-                        scale: 0.92,
-                        filter: "blur(4px)",
-                      }}
-                      onAnimationComplete={() => {
-                        if (!open) {
-                          actionsRef.current?.unmount();
-                          setPresent(false);
-                        }
-                      }}
-                      ref={(node: HTMLDivElement | null) => {
-                        setRef(popupRef, node);
-                      }}
-                      role="tooltip"
-                      style={
-                        {
-                          transformOrigin: "var(--transform-origin)",
-                          ...popupStyle,
-                        } as React.CSSProperties
-                      }
+                    }}
+                    ref={(node: HTMLDivElement | null) => {
+                      setRef(popupRef, node);
+                    }}
+                    role="tooltip"
+                    style={
+                      {
+                        transformOrigin: "var(--transform-origin)",
+                        ...popupStyle,
+                      } as React.CSSProperties
+                    }
+                    transition={{
+                      type: "spring",
+                      stiffness: 400,
+                      damping: 24,
+                      mass: 0.6,
+                    }}
+                  >
+                    <motion.span
+                      animate={{ scale: 1 }}
+                      className={tooltipArrowClassName}
+                      exit={{ scale: 0 }}
+                      initial={{ scale: 0 }}
                       transition={{
                         type: "spring",
-                        stiffness: 400,
-                        damping: 24,
-                        mass: 0.6,
+                        stiffness: 500,
+                        damping: 28,
+                        delay: 0.03,
                       }}
-                    >
-                      <motion.span
-                        animate={{ scale: 1 }}
-                        className={tooltipArrowClassName}
-                        exit={{ scale: 0 }}
-                        initial={{ scale: 0 }}
-                        transition={{
-                          type: "spring",
-                          stiffness: 500,
-                          damping: 28,
-                          delay: 0.03,
-                        }}
-                      />
-                      {normalizedContent}
-                    </motion.div>
-                  );
-                }}
-              />
-            </TooltipPrimitive.Positioner>
-          </TooltipPrimitive.Portal>
-        ) : null}
-      </TooltipPrimitive.Root>
-    </ReducedMotionConfig>
+                    />
+                    {normalizedContent}
+                  </motion.div>
+                );
+              }}
+            />
+          </TooltipPrimitive.Positioner>
+        </TooltipPrimitive.Portal>
+      ) : null}
+    </TooltipPrimitive.Root>
   );
 }
 

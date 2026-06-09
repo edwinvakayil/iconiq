@@ -9,11 +9,6 @@ import {
   useRef,
   useState,
 } from "react";
-import {
-  ReducedMotionConfig,
-  type ReducedMotionProp,
-  useResolvedReducedMotion,
-} from "@/lib/reduced-motion";
 import { cn } from "@/lib/utils";
 
 const componentThemeClassName =
@@ -24,7 +19,7 @@ interface SliderMark {
   label?: string;
 }
 
-interface SliderProps extends ReducedMotionProp {
+interface SliderProps {
   value?: number;
   defaultValue?: number;
   min?: number;
@@ -84,7 +79,6 @@ export function Slider({
   ariaLabel,
   ariaLabelledBy,
   marks,
-  reducedMotion,
 }: SliderProps) {
   const trackRef = useRef<HTMLDivElement>(null);
   const pointerIdRef = useRef<number | null>(null);
@@ -126,7 +120,6 @@ export function Slider({
   const progressMV = useMotionValue(progress);
   const widthPercent = useTransform(progressMV, (p) => `${p}%`);
   const leftPercent = useTransform(progressMV, (p) => `${p}%`);
-  const resolveReducedMotion = useResolvedReducedMotion(reducedMotion);
   const displayValue = useTransform(progressMV, (p) =>
     formatValue
       ? formatValue(
@@ -150,11 +143,6 @@ export function Slider({
   }, [value]);
 
   useEffect(() => {
-    if (resolveReducedMotion) {
-      progressMV.set(progress);
-      return;
-    }
-
     const controls = animate(progressMV, progress, {
       type: "spring",
       stiffness: 180,
@@ -163,7 +151,7 @@ export function Slider({
       restDelta: 0.001,
     });
     return controls.stop;
-  }, [progress, progressMV, resolveReducedMotion]);
+  }, [progress, progressMV]);
 
   const updateValue = useCallback(
     (nextValue: number) => {
@@ -288,122 +276,120 @@ export function Slider({
     : value.toFixed(safeValueDecimals);
 
   return (
-    <ReducedMotionConfig reducedMotion={reducedMotion}>
-      <div className={cn(componentThemeClassName, "w-full select-none")}>
-        {(label || showValue) && (
-          <div className="mb-3 flex items-baseline justify-between">
-            {label && (
-              <span
-                className="font-medium text-muted-foreground text-sm tracking-wide"
-                id={labelId}
-              >
-                {label}
-              </span>
-            )}
-            {showValue && (
-              <motion.span className="font-semibold text-foreground text-sm tabular-nums">
-                {displayValue}
-              </motion.span>
-            )}
-          </div>
-        )}
-
-        <div className="relative">
-          <div
-            aria-label={ariaLabel}
-            aria-labelledby={ariaLabelledBy ?? (label ? labelId : undefined)}
-            aria-orientation="horizontal"
-            aria-valuemax={resolvedMax}
-            aria-valuemin={resolvedMin}
-            aria-valuenow={value}
-            aria-valuetext={formatValue ? formattedValue : undefined}
-            className="relative flex h-11 w-full cursor-pointer items-center rounded-full outline-none focus-visible:outline-2 focus-visible:outline-foreground/35 focus-visible:outline-offset-4"
-            onBlur={() => setIsFocused(false)}
-            onFocus={() => setIsFocused(true)}
-            onKeyDown={handleKeyDown}
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
-            onPointerCancel={finishPointerInteraction}
-            onPointerDown={handlePointerDown}
-            onPointerMove={handlePointerMove}
-            onPointerUp={finishPointerInteraction}
-            ref={trackRef}
-            role="slider"
-            style={{ touchAction: "pan-y" }}
-            tabIndex={0}
-          >
-            <motion.div
-              animate={{ height: active ? 6 : 4 }}
-              className="absolute top-1/2 right-0 left-0 -translate-y-1/2 overflow-hidden rounded-full bg-foreground/15"
-              transition={{
-                type: "spring",
-                stiffness: 200,
-                damping: 28,
-                mass: 0.8,
-              }}
-            />
-
-            <motion.div
-              animate={{ height: active ? 6 : 4 }}
-              className="absolute top-1/2 left-0 origin-left -translate-y-1/2 overflow-hidden rounded-full bg-foreground"
-              style={{ width: widthPercent }}
-              transition={{
-                type: "spring",
-                stiffness: 200,
-                damping: 28,
-                mass: 0.8,
-              }}
-            />
-
-            <motion.div
-              animate={{
-                scale: isDragging ? 1.15 : isHovered ? 1.08 : 1,
-              }}
-              className="absolute top-1/2 -translate-x-1/2 -translate-y-1/2"
-              style={{ left: leftPercent }}
-              transition={{
-                type: "spring",
-                stiffness: 220,
-                damping: 22,
-                mass: 0.7,
-              }}
+    <div className={cn(componentThemeClassName, "w-full select-none")}>
+      {(label || showValue) && (
+        <div className="mb-3 flex items-baseline justify-between">
+          {label && (
+            <span
+              className="font-medium text-muted-foreground text-sm tracking-wide"
+              id={labelId}
             >
-              <div className="relative h-4 w-4 rounded-full border-[1.5px] border-foreground bg-background shadow-sm" />
-            </motion.div>
-          </div>
-
-          {normalizedMarks.length > 0 && (
-            <div
-              aria-hidden
-              className={`pointer-events-none relative mt-2 ${
-                hasMarkLabels ? "h-8" : "h-3"
-              }`}
-            >
-              {normalizedMarks.map((mark) => {
-                const left =
-                  range === 0
-                    ? "0%"
-                    : `${((mark.value - resolvedMin) / range) * 100}%`;
-
-                return (
-                  <div
-                    className="absolute top-0 -translate-x-1/2 text-center"
-                    key={`${mark.value}-${mark.label ?? "tick"}`}
-                    style={{ left }}
-                  >
-                    <span className="mx-auto block h-2 w-px rounded-full bg-foreground/25" />
-                    {mark.label && (
-                      <span className="mt-1 block whitespace-nowrap font-medium text-[11px] text-muted-foreground">
-                        {mark.label}
-                      </span>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
+              {label}
+            </span>
+          )}
+          {showValue && (
+            <motion.span className="font-semibold text-foreground text-sm tabular-nums">
+              {displayValue}
+            </motion.span>
           )}
         </div>
+      )}
+
+      <div className="relative">
+        <div
+          aria-label={ariaLabel}
+          aria-labelledby={ariaLabelledBy ?? (label ? labelId : undefined)}
+          aria-orientation="horizontal"
+          aria-valuemax={resolvedMax}
+          aria-valuemin={resolvedMin}
+          aria-valuenow={value}
+          aria-valuetext={formatValue ? formattedValue : undefined}
+          className="relative flex h-11 w-full cursor-pointer items-center rounded-full outline-none focus-visible:outline-2 focus-visible:outline-foreground/35 focus-visible:outline-offset-4"
+          onBlur={() => setIsFocused(false)}
+          onFocus={() => setIsFocused(true)}
+          onKeyDown={handleKeyDown}
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
+          onPointerCancel={finishPointerInteraction}
+          onPointerDown={handlePointerDown}
+          onPointerMove={handlePointerMove}
+          onPointerUp={finishPointerInteraction}
+          ref={trackRef}
+          role="slider"
+          style={{ touchAction: "pan-y" }}
+          tabIndex={0}
+        >
+          <motion.div
+            animate={{ height: active ? 6 : 4 }}
+            className="absolute top-1/2 right-0 left-0 -translate-y-1/2 overflow-hidden rounded-full bg-foreground/15"
+            transition={{
+              type: "spring",
+              stiffness: 200,
+              damping: 28,
+              mass: 0.8,
+            }}
+          />
+
+          <motion.div
+            animate={{ height: active ? 6 : 4 }}
+            className="absolute top-1/2 left-0 origin-left -translate-y-1/2 overflow-hidden rounded-full bg-foreground"
+            style={{ width: widthPercent }}
+            transition={{
+              type: "spring",
+              stiffness: 200,
+              damping: 28,
+              mass: 0.8,
+            }}
+          />
+
+          <motion.div
+            animate={{
+              scale: isDragging ? 1.15 : isHovered ? 1.08 : 1,
+            }}
+            className="absolute top-1/2 -translate-x-1/2 -translate-y-1/2"
+            style={{ left: leftPercent }}
+            transition={{
+              type: "spring",
+              stiffness: 220,
+              damping: 22,
+              mass: 0.7,
+            }}
+          >
+            <div className="relative h-4 w-4 rounded-full border-[1.5px] border-foreground bg-background shadow-sm" />
+          </motion.div>
+        </div>
+
+        {normalizedMarks.length > 0 && (
+          <div
+            aria-hidden
+            className={`pointer-events-none relative mt-2 ${
+              hasMarkLabels ? "h-8" : "h-3"
+            }`}
+          >
+            {normalizedMarks.map((mark) => {
+              const left =
+                range === 0
+                  ? "0%"
+                  : `${((mark.value - resolvedMin) / range) * 100}%`;
+
+              return (
+                <div
+                  className="absolute top-0 -translate-x-1/2 text-center"
+                  key={`${mark.value}-${mark.label ?? "tick"}`}
+                  style={{ left }}
+                >
+                  <span className="mx-auto block h-2 w-px rounded-full bg-foreground/25" />
+                  {mark.label && (
+                    <span className="mt-1 block whitespace-nowrap font-medium text-[11px] text-muted-foreground">
+                      {mark.label}
+                    </span>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        )}
       </div>
-    </ReducedMotionConfig>
+    </div>
   );
 }

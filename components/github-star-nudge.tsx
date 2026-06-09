@@ -1,12 +1,7 @@
 "use client";
 
 import { Star, X } from "lucide-react";
-import {
-  AnimatePresence,
-  motion,
-  useReducedMotion,
-  type Variants,
-} from "motion/react";
+import { AnimatePresence, motion, type Variants } from "motion/react";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -48,7 +43,6 @@ const nudgeShellVariants: Variants = {
 
 export function GitHubStarNudge() {
   const pathname = usePathname();
-  const prefersReducedMotion = useReducedMotion();
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
@@ -98,8 +92,6 @@ export function GitHubStarNudge() {
     setVisible(false);
   };
 
-  const motionEnabled = !prefersReducedMotion;
-
   return (
     <AnimatePresence>
       {visible ? (
@@ -112,11 +104,11 @@ export function GitHubStarNudge() {
             "supports-[corner-shape:squircle]:corner-squircle supports-[corner-shape:squircle]:rounded-[18px]",
             "sm:right-6 sm:bottom-6"
           )}
-          exit={motionEnabled ? "exit" : { opacity: 0 }}
-          initial={motionEnabled ? "hidden" : { opacity: 1, x: 0, scale: 1 }}
+          exit="exit"
+          initial="hidden"
           role="status"
-          variants={motionEnabled ? nudgeShellVariants : undefined}
-          whileHover={motionEnabled ? { y: -1 } : undefined}
+          variants={nudgeShellVariants}
+          whileHover={{ y: -1 }}
         >
           <button
             aria-label="Dismiss GitHub star prompt"

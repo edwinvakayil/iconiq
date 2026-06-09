@@ -14,42 +14,8 @@ const registryThemeHelperPath = path.join(
   __dirname,
   "../lib/registry-theme.ts"
 );
-const reducedMotionImport = 'from "@/lib/reduced-motion"';
 const registryThemeImport = 'from "@/lib/registry-theme"';
-const reducedMotionModulePath = "@/lib/reduced-motion";
 const iconiqThemeDependency = "@iconiq/iconiq-theme";
-const reactContextImport = 'import { createContext, useContext } from "react";';
-const motionReducedMotionImport =
-  'import { MotionConfig, useReducedMotion } from "motion/react";';
-const reducedMotionInlineSource = `interface ReducedMotionProp {
-  reducedMotion?: boolean;
-}
-
-const ReducedMotionOverrideContext = createContext(false);
-
-function useResolvedReducedMotion(reducedMotion?: boolean) {
-  const reducedMotionOverride = useContext(ReducedMotionOverrideContext);
-  const prefersReducedMotion = useReducedMotion() ?? false;
-
-  return Boolean(
-    reducedMotion || reducedMotionOverride || prefersReducedMotion
-  );
-}
-
-function ReducedMotionConfig({
-  children,
-  reducedMotion,
-}: ReducedMotionProp & {
-  children: import("react").ReactNode;
-}) {
-  const resolvedReducedMotion = useResolvedReducedMotion(reducedMotion);
-
-  return (
-    <MotionConfig reducedMotion={resolvedReducedMotion ? "always" : "user"}>
-      {children}
-    </MotionConfig>
-  );
-}`;
 function buildIconiqThemeSchema(): Schema {
   return {
     $schema: "https://ui.shadcn.com/schema/registry-item.json",
@@ -127,7 +93,7 @@ const REGISTRY_UI_META: Record<
   typewriter: {
     title: "Typewriter",
     description:
-      "Looping typewriter text effect with brief glitch substitutions, a blinking cursor, and reduced-motion fallback.",
+      "Looping typewriter text effect with brief glitch substitutions and a blinking cursor.",
     dependencies: ["motion"],
   },
   drawer: {
@@ -407,7 +373,7 @@ const REGISTRY_UI_META: Record<
   "input-otp": {
     title: "Input OTP",
     description:
-      "Animated one-time password field built on Base UI OTP Field with focus border motion, character entrance, caret pulse, OTPSlots auto-layout, and reduced-motion support.",
+      "Animated one-time password field built on Base UI OTP Field with focus border motion, character entrance, caret pulse, and OTPSlots auto-layout.",
     dependencies: ["@base-ui/react", "motion"],
   },
   infiniteribbon: {
@@ -692,64 +658,8 @@ console.log("\n🔨 Building registry components...\n");
 
 const registryItems: Schema[] = [];
 
-function removeImportStatement(content: string, modulePath: string) {
-  const lines = content.split("\n");
-  const targetLineIndex = lines.findIndex(
-    (line) =>
-      line.includes(`from "${modulePath}"`) ||
-      line.includes(`from '${modulePath}'`)
-  );
-
-  if (targetLineIndex === -1) {
-    return content;
-  }
-
-  let importStartIndex = targetLineIndex;
-
-  while (
-    importStartIndex >= 0 &&
-    !lines[importStartIndex].trimStart().startsWith("import ")
-  ) {
-    importStartIndex -= 1;
-  }
-
-  if (importStartIndex === -1) {
-    return content;
-  }
-
-  lines.splice(importStartIndex, targetLineIndex - importStartIndex + 1);
-
-  return lines.join("\n").replace(/\n{3,}/g, "\n\n");
-}
-
-function insertAfterImports(content: string, snippet: string) {
-  const importMatches = [...content.matchAll(/^import[\s\S]*?;\n?/gm)];
-  const lastImport = importMatches.at(-1);
-
-  if (!lastImport || lastImport.index === undefined) {
-    return `${snippet}\n\n${content}`;
-  }
-
-  const insertionIndex = lastImport.index + lastImport[0].length;
-
-  return `${content.slice(0, insertionIndex)}\n${snippet}\n${content.slice(
-    insertionIndex
-  )}`;
-}
-
 function inlineRegistryHelpers(content: string) {
-  const needsReducedMotion = content.includes(reducedMotionImport);
-
-  if (!needsReducedMotion) {
-    return content;
-  }
-
-  const nextContent = removeImportStatement(content, reducedMotionModulePath);
-
-  return insertAfterImports(
-    nextContent,
-    `${motionReducedMotionImport}\n${reactContextImport}\n\n${reducedMotionInlineSource}`.trim()
-  );
+  return content;
 }
 
 function getRegistryDependencies(

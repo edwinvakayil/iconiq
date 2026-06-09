@@ -1,7 +1,7 @@
 "use client";
 
 import { Check, Copy } from "lucide-react";
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
 import { useMemo, useState } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -189,7 +189,6 @@ export function DocsCodeSnippet({
 }) {
   const [copied, setCopied] = useState(false);
   const tokens = useMemo(() => tokenizeCode(code), [code]);
-  const prefersReducedMotion = useReducedMotion();
 
   const handleCopy = async () => {
     try {
@@ -222,9 +221,7 @@ export function DocsCodeSnippet({
       </pre>
       <motion.div
         animate={
-          prefersReducedMotion || !copied
-            ? undefined
-            : { scale: [1, 0.94, 1.06, 1], y: [0, -1, 0] }
+          copied ? { scale: [1, 0.94, 1.06, 1], y: [0, -1, 0] } : undefined
         }
         className="absolute top-2.5 right-2.5"
         transition={{

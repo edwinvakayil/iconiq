@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useReducedMotion } from "motion/react";
+import { motion } from "motion/react";
 import { createContext, type ReactNode, useContext } from "react";
 
 import type { MotionTier } from "@/lib/motion-tier";
@@ -43,12 +43,8 @@ function getPageRevealTransition(tier: MotionTier, delay = 0) {
   };
 }
 
-function shouldAnimatePageReveal(
-  tier: MotionTier,
-  prefersReducedMotion: boolean | null,
-  inView: boolean
-) {
-  if (prefersReducedMotion || tier === "none") {
+function shouldAnimatePageReveal(tier: MotionTier, inView: boolean) {
+  if (tier === "none") {
     return false;
   }
 
@@ -73,8 +69,7 @@ export function PageReveal({
   inView = false,
 }: PageRevealProps) {
   const tier = useMotionTier();
-  const prefersReducedMotion = useReducedMotion();
-  const animate = shouldAnimatePageReveal(tier, prefersReducedMotion, inView);
+  const animate = shouldAnimatePageReveal(tier, inView);
   const isLite = tier === "lite";
 
   if (!animate) {
@@ -117,9 +112,7 @@ export function PageStagger({
   staggerChildren = 0.06,
 }: PageStaggerProps) {
   const tier = useMotionTier();
-  const prefersReducedMotion = useReducedMotion();
-  const staggerEnabled =
-    !prefersReducedMotion && enabled && tier !== "none" && tier !== "lite";
+  const staggerEnabled = enabled && tier !== "none" && tier !== "lite";
 
   if (!staggerEnabled) {
     return (
@@ -159,10 +152,9 @@ export function PageStaggerItem({
   className?: string;
 }) {
   const tier = useMotionTier();
-  const prefersReducedMotion = useReducedMotion();
   const staggerEnabled = useContext(PageStaggerEnabledContext);
 
-  if (prefersReducedMotion || !staggerEnabled) {
+  if (!staggerEnabled) {
     return <div className={className}>{children}</div>;
   }
 

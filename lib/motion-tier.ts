@@ -6,10 +6,6 @@ export function getMotionTier(): MotionTier {
     return "full";
   }
 
-  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-    return "none";
-  }
-
   const connection = (
     navigator as Navigator & {
       connection?: {

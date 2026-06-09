@@ -33,7 +33,6 @@ type TooltipModule = {
     side?: TooltipSide;
     delay?: number;
     className?: string;
-    reducedMotion?: boolean;
   }>;
 };
 
@@ -266,7 +265,7 @@ export default function RadixBaseTooltipPage() {
         dependencyLabel: "@base-ui/react, motion",
         libraryLabel: "Base UI",
         notes: [
-          "Installs a Base UI tooltip with the same public content, side, delay, and reducedMotion API as the Radix version.",
+          "Installs a Base UI tooltip with the same public content, side, and delay API as the Radix version.",
           "Preserves the same tooltip bubble classes, rotated-square arrow, controlled delay semantics, and spring timing as the core Iconiq tooltip component.",
         ],
         ui: BaseTooltip,
@@ -279,7 +278,7 @@ export default function RadixBaseTooltipPage() {
       dependencyLabel: "@radix-ui/react-tooltip, @radix-ui/react-slot, motion",
       libraryLabel: "Radix UI",
       notes: [
-        "Installs a Radix tooltip with the same public content, side, delay, and reducedMotion API as the Base UI version.",
+        "Installs a Radix tooltip with the same public content, side, and delay API as the Base UI version.",
         "Preserves the same tooltip bubble classes, rotated-square arrow, controlled delay semantics, and spring timing as the core Iconiq tooltip component.",
       ],
       ui: RadixTooltip,

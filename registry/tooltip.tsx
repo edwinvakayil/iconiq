@@ -5,10 +5,6 @@ import { Slot } from "@radix-ui/react-slot";
 import { AnimatePresence, motion } from "motion/react";
 import * as React from "react";
 
-import {
-  ReducedMotionConfig,
-  type ReducedMotionProp,
-} from "@/lib/reduced-motion";
 import { cn } from "@/lib/utils";
 
 const tooltipThemeClassName =
@@ -25,7 +21,7 @@ type TooltipTriggerElement = React.ReactElement<{
   "aria-describedby"?: string;
 }>;
 
-export interface TooltipProps extends ReducedMotionProp {
+export interface TooltipProps {
   children: TooltipTriggerElement;
   content: string;
   side?: Side;
@@ -53,7 +49,6 @@ export function Tooltip({
   side = "top",
   delay = 0.15,
   className,
-  reducedMotion,
 }: TooltipProps) {
   const [open, setOpen] = React.useState(false);
   const timeoutRef = React.useRef<ReturnType<typeof setTimeout>>(undefined);
@@ -99,88 +94,86 @@ export function Tooltip({
   }
 
   return (
-    <ReducedMotionConfig reducedMotion={reducedMotion}>
-      <PopoverPrimitive.Root modal={false} onOpenChange={setOpen} open={open}>
-        <PopoverPrimitive.Anchor asChild>
-          <Slot
-            aria-describedby={triggerDescription}
-            onBlur={handleLeave}
-            onFocus={handleEnter}
-            onMouseEnter={handleEnter}
-            onMouseLeave={handleLeave}
-          >
-            {children}
-          </Slot>
-        </PopoverPrimitive.Anchor>
+    <PopoverPrimitive.Root modal={false} onOpenChange={setOpen} open={open}>
+      <PopoverPrimitive.Anchor asChild>
+        <Slot
+          aria-describedby={triggerDescription}
+          onBlur={handleLeave}
+          onFocus={handleEnter}
+          onMouseEnter={handleEnter}
+          onMouseLeave={handleLeave}
+        >
+          {children}
+        </Slot>
+      </PopoverPrimitive.Anchor>
 
-        <AnimatePresence>
-          {open && (
-            <PopoverPrimitive.Portal forceMount>
-              <PopoverPrimitive.Content
-                align="center"
-                asChild
-                avoidCollisions
-                collisionPadding={12}
-                forceMount
-                onCloseAutoFocus={(event) => event.preventDefault()}
-                onOpenAutoFocus={(event) => event.preventDefault()}
-                side={side}
-                sideOffset={10}
+      <AnimatePresence>
+        {open && (
+          <PopoverPrimitive.Portal forceMount>
+            <PopoverPrimitive.Content
+              align="center"
+              asChild
+              avoidCollisions
+              collisionPadding={12}
+              forceMount
+              onCloseAutoFocus={(event) => event.preventDefault()}
+              onOpenAutoFocus={(event) => event.preventDefault()}
+              side={side}
+              sideOffset={10}
+            >
+              <motion.div
+                animate={{
+                  opacity: 1,
+                  scale: 1,
+                  filter: "blur(0px)",
+                }}
+                className={cn(
+                  tooltipThemeClassName,
+                  tooltipContentClassName,
+                  className
+                )}
+                exit={{
+                  opacity: 0,
+                  scale: 0.92,
+                  filter: "blur(4px)",
+                }}
+                id={tooltipId}
+                initial={{
+                  opacity: 0,
+                  scale: 0.92,
+                  filter: "blur(4px)",
+                }}
+                role="tooltip"
+                style={{
+                  transformOrigin:
+                    "var(--radix-popover-content-transform-origin)",
+                }}
+                transition={{
+                  type: "spring",
+                  stiffness: 400,
+                  damping: 24,
+                  mass: 0.6,
+                }}
               >
-                <motion.div
-                  animate={{
-                    opacity: 1,
-                    scale: 1,
-                    filter: "blur(0px)",
-                  }}
-                  className={cn(
-                    tooltipThemeClassName,
-                    tooltipContentClassName,
-                    className
-                  )}
-                  exit={{
-                    opacity: 0,
-                    scale: 0.92,
-                    filter: "blur(4px)",
-                  }}
-                  id={tooltipId}
-                  initial={{
-                    opacity: 0,
-                    scale: 0.92,
-                    filter: "blur(4px)",
-                  }}
-                  role="tooltip"
-                  style={{
-                    transformOrigin:
-                      "var(--radix-popover-content-transform-origin)",
-                  }}
+                <motion.span
+                  animate={{ scale: 1 }}
+                  className={tooltipArrowClassName}
+                  exit={{ scale: 0 }}
+                  initial={{ scale: 0 }}
                   transition={{
                     type: "spring",
-                    stiffness: 400,
-                    damping: 24,
-                    mass: 0.6,
+                    stiffness: 500,
+                    damping: 28,
+                    delay: 0.03,
                   }}
-                >
-                  <motion.span
-                    animate={{ scale: 1 }}
-                    className={tooltipArrowClassName}
-                    exit={{ scale: 0 }}
-                    initial={{ scale: 0 }}
-                    transition={{
-                      type: "spring",
-                      stiffness: 500,
-                      damping: 28,
-                      delay: 0.03,
-                    }}
-                  />
-                  {normalizedContent}
-                </motion.div>
-              </PopoverPrimitive.Content>
-            </PopoverPrimitive.Portal>
-          )}
-        </AnimatePresence>
-      </PopoverPrimitive.Root>
-    </ReducedMotionConfig>
+                />
+                {normalizedContent}
+              </motion.div>
+            </PopoverPrimitive.Content>
+          </PopoverPrimitive.Portal>
+        )}
+      </AnimatePresence>
+    </PopoverPrimitive.Root>
   );
 }
 

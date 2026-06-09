@@ -36,7 +36,6 @@ type SliderModule = {
     ariaLabel?: string;
     ariaLabelledBy?: string;
     marks?: SliderMark[];
-    reducedMotion?: boolean;
     className?: string;
   }>;
 };

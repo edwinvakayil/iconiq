@@ -24,11 +24,7 @@ export function MotionTierProvider({ children }: { children: ReactNode }) {
 
     applyTier();
 
-    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
-    reducedMotion.addEventListener("change", applyTier);
-
     return () => {
-      reducedMotion.removeEventListener("change", applyTier);
       delete document.documentElement.dataset.motionTier;
     };
   }, []);

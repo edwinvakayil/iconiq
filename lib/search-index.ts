@@ -131,7 +131,7 @@ const componentSummaries: Record<string, string> = {
   "/texts/text-inertia":
     "Pointer-reactive word effect that maps cursor velocity into Motion-powered x, y, and rotation spring movement.",
   "/texts/typewriter":
-    "Animated typewriter text with glitch substitutions, a blinking cursor, looping playback, and reduced-motion fallback.",
+    "Animated typewriter text with glitch substitutions, a blinking cursor, and looping playback.",
 };
 
 const extraComponentKeywordsBySlug: Record<string, string[]> = {

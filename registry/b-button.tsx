@@ -22,11 +22,6 @@ import {
   useState,
 } from "react";
 
-import {
-  ReducedMotionConfig,
-  type ReducedMotionProp,
-  useResolvedReducedMotion,
-} from "@/lib/reduced-motion";
 import { cn } from "@/lib/utils";
 
 const buttonThemeClassName =
@@ -124,28 +119,12 @@ const MAX_RIPPLES = 3;
 const LinkUnderlineLabel = memo(function LinkUnderlineLabel({
   children,
   enabled,
-  reducedMotion,
 }: {
   children: ReactNode;
   enabled: boolean;
-  reducedMotion: boolean;
 }) {
   if (!enabled) {
     return <>{children}</>;
-  }
-
-  if (reducedMotion) {
-    return (
-      <span className="relative inline-block pb-px font-medium text-[1em] leading-[inherit]">
-        <span className="relative z-10" data-link-label>
-          {children}
-        </span>
-        <span
-          aria-hidden
-          className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-muted-foreground/50 transition-colors group-hover/button:bg-foreground"
-        />
-      </span>
-    );
   }
 
   return (
@@ -407,8 +386,7 @@ export type ButtonProps = Omit<
     href?: string;
     icon?: ReactNode;
     iconPosition?: "start" | "end";
-  } & ReducedMotionProp &
-  Pick<
+  } & Pick<
     AnchorHTMLAttributes<HTMLAnchorElement>,
     | "download"
     | "hrefLang"
@@ -441,7 +419,6 @@ const ButtonInner = forwardRef<
       onPointerDown,
       onPointerLeave,
       onPointerUp,
-      reducedMotion,
       size,
       style,
       type = "button",
@@ -457,16 +434,13 @@ const ButtonInner = forwardRef<
     const [horizontalInset, setHorizontalInset] = useState(0);
     const [isPressed, setIsPressed] = useState(false);
     const [ripples, setRipples] = useState<Ripple[]>([]);
-    const resolvedReducedMotion = useResolvedReducedMotion(reducedMotion);
-    const shouldAnimateSize =
-      animateSize && !resolvedReducedMotion && style?.width == null;
+    const shouldAnimateSize = animateSize && style?.width == null;
     const [contentRef, bounds] = useMeasure<HTMLSpanElement>(shouldAnimateSize);
     const resolvedLinkUnderline =
       variant === "link" ? (linkUnderline ?? "motion") : undefined;
-    const useLinkMotionUnderline =
-      resolvedLinkUnderline === "motion" && !resolvedReducedMotion;
+    const useLinkMotionUnderline = resolvedLinkUnderline === "motion";
 
-    const canAnimate = !(disabled || resolvedReducedMotion);
+    const canAnimate = !disabled;
     const allowsRipple = !disableRipple && variant !== "link" && canAnimate;
     const animatedWidth =
       shouldAnimateSize && bounds.width > 0
@@ -609,10 +583,7 @@ const ButtonInner = forwardRef<
     );
 
     const buttonLabel = (
-      <LinkUnderlineLabel
-        enabled={resolvedLinkUnderline === "motion"}
-        reducedMotion={resolvedReducedMotion}
-      >
+      <LinkUnderlineLabel enabled={resolvedLinkUnderline === "motion"}>
         {children}
       </LinkUnderlineLabel>
     );
@@ -671,104 +642,100 @@ const ButtonInner = forwardRef<
       } = omitLinkMotionConflicts(props as AnchorHTMLAttributesForMotion);
 
       return (
-        <ReducedMotionConfig reducedMotion={reducedMotion}>
-          <MotionAnchor
-            {...motionSurfaceProps}
-            {...anchorProps}
-            aria-disabled={disabled || undefined}
-            className={rootClassName}
-            data-slot="button"
-            href={href}
-            onBlur={(e) => {
-              onBlur?.(e);
-              setIsPressed(false);
-            }}
-            onClick={(e) => {
-              if (disabled) {
-                e.preventDefault();
-              }
-              onClick?.(e as React.MouseEvent<HTMLAnchorElement>);
-            }}
-            onKeyDown={(e) => {
-              onKeyDown?.(e);
-
-              if (
-                e.defaultPrevented ||
-                disabled ||
-                e.repeat ||
-                e.key !== "Enter"
-              ) {
-                return;
-              }
-
-              setIsPressed(true);
-            }}
-            onKeyUp={(e) => {
-              onKeyUp?.(e);
-
-              if (e.key === "Enter") {
-                setIsPressed(false);
-              }
-            }}
-            onPointerCancel={handlePointerCancel}
-            onPointerDown={handlePointerDown}
-            onPointerLeave={handlePointerLeave}
-            onPointerUp={handlePointerUp}
-            ref={setButtonRef}
-            style={style}
-            tabIndex={disabled ? -1 : undefined}
-          >
-            {buttonSurface}
-          </MotionAnchor>
-        </ReducedMotionConfig>
-      );
-    }
-
-    return (
-      <ReducedMotionConfig reducedMotion={reducedMotion}>
-        <ButtonPrimitive
+        <MotionAnchor
+          {...motionSurfaceProps}
+          {...anchorProps}
+          aria-disabled={disabled || undefined}
           className={rootClassName}
           data-slot="button"
-          disabled={disabled}
+          href={href}
           onBlur={(e) => {
             onBlur?.(e);
             setIsPressed(false);
           }}
-          onKeyDown={handleKeyDown}
-          onKeyUp={handleKeyUp}
+          onClick={(e) => {
+            if (disabled) {
+              e.preventDefault();
+            }
+            onClick?.(e as React.MouseEvent<HTMLAnchorElement>);
+          }}
+          onKeyDown={(e) => {
+            onKeyDown?.(e);
+
+            if (
+              e.defaultPrevented ||
+              disabled ||
+              e.repeat ||
+              e.key !== "Enter"
+            ) {
+              return;
+            }
+
+            setIsPressed(true);
+          }}
+          onKeyUp={(e) => {
+            onKeyUp?.(e);
+
+            if (e.key === "Enter") {
+              setIsPressed(false);
+            }
+          }}
           onPointerCancel={handlePointerCancel}
           onPointerDown={handlePointerDown}
           onPointerLeave={handlePointerLeave}
           onPointerUp={handlePointerUp}
-          render={(buttonProps) => {
-            const {
-              primitiveClassName,
-              primitiveRef,
-              primitiveStyle,
-              resolvedButtonProps,
-            } = resolvePrimitiveButtonProps(buttonProps);
-
-            return (
-              <motion.button
-                {...resolvedButtonProps}
-                {...motionSurfaceProps}
-                className={primitiveClassName}
-                ref={(node) => {
-                  setButtonRef(node);
-                  setRef(primitiveRef, node);
-                }}
-                style={primitiveStyle}
-                type={type}
-              >
-                {buttonSurface}
-              </motion.button>
-            );
-          }}
+          ref={setButtonRef}
           style={style}
-          type={type}
-          {...props}
-        />
-      </ReducedMotionConfig>
+          tabIndex={disabled ? -1 : undefined}
+        >
+          {buttonSurface}
+        </MotionAnchor>
+      );
+    }
+
+    return (
+      <ButtonPrimitive
+        className={rootClassName}
+        data-slot="button"
+        disabled={disabled}
+        onBlur={(e) => {
+          onBlur?.(e);
+          setIsPressed(false);
+        }}
+        onKeyDown={handleKeyDown}
+        onKeyUp={handleKeyUp}
+        onPointerCancel={handlePointerCancel}
+        onPointerDown={handlePointerDown}
+        onPointerLeave={handlePointerLeave}
+        onPointerUp={handlePointerUp}
+        render={(buttonProps) => {
+          const {
+            primitiveClassName,
+            primitiveRef,
+            primitiveStyle,
+            resolvedButtonProps,
+          } = resolvePrimitiveButtonProps(buttonProps);
+
+          return (
+            <motion.button
+              {...resolvedButtonProps}
+              {...motionSurfaceProps}
+              className={primitiveClassName}
+              ref={(node) => {
+                setButtonRef(node);
+                setRef(primitiveRef, node);
+              }}
+              style={primitiveStyle}
+              type={type}
+            >
+              {buttonSurface}
+            </motion.button>
+          );
+        }}
+        style={style}
+        type={type}
+        {...props}
+      />
     );
   }
 );

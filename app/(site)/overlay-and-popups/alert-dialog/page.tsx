@@ -206,12 +206,6 @@ export default function RadixBaseAlertDialogPage() {
             description:
               "Called whenever the open state changes, regardless of which provider is installed underneath.",
           },
-          {
-            name: "reducedMotion",
-            type: "boolean",
-            description:
-              "Turns the dialog root onto its quieter motion path immediately while still respecting system-level reduced motion preferences.",
-          },
         ],
         notes: [
           `Current install target: ${provider.libraryLabel}.`,

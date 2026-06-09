@@ -31,7 +31,7 @@ import { BreadcrumbJsonLd } from "@/seo/breadcrumb-json-ld";
 import { createMetadata } from "@/seo/metadata";
 
 const typewriterDescription =
-  "Looping typewriter with glitch ticks, cursor, and reduced-motion fallback.";
+  "Looping typewriter with glitch ticks and a blinking cursor.";
 
 export const metadata: Metadata = createMetadata({
   title: "Typewriter",

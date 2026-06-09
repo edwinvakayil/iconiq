@@ -268,12 +268,6 @@ export default function RadixBaseCollapsiblePage() {
             description:
               "Merged onto the rounded card shell that wraps the trigger and content.",
           },
-          {
-            name: "reducedMotion",
-            type: "boolean",
-            description:
-              "Forces the quieter motion path immediately while still respecting system-level reduced motion preferences.",
-          },
         ],
         notes: [
           `Current install target: ${provider.libraryLabel}.`,

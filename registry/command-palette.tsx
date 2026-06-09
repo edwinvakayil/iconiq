@@ -2,7 +2,7 @@
 
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { Command, Monitor, Moon, Search, Sun, X } from "lucide-react";
-import { motion, useReducedMotion } from "motion/react";
+import { motion } from "motion/react";
 import { usePathname, useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
 import * as React from "react";
@@ -185,7 +185,6 @@ function CommandPalette({
   const router = useRouter();
   const pathname = usePathname();
   const { setTheme } = useTheme();
-  const reduceMotion = useReducedMotion() ?? false;
   const paletteId = React.useId().replace(/:/g, "");
 
   const [open, setOpen] = React.useState(false);
@@ -419,11 +418,7 @@ function CommandPalette({
             aria-hidden
             className={commandItemHighlightClassName}
             layoutId={`${paletteId}-active-item`}
-            transition={
-              reduceMotion
-                ? { duration: 0.12, ease: "easeOut" }
-                : { type: "spring", stiffness: 600, damping: 38 }
-            }
+            transition={{ type: "spring", stiffness: 600, damping: 38 }}
           />
         ) : null}
         {item.icon ? (

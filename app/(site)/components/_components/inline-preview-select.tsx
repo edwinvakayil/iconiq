@@ -5,7 +5,6 @@ import { AnimatePresence, motion } from "motion/react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
-import { useResolvedReducedMotion } from "@/lib/reduced-motion";
 import { cn } from "@/lib/utils";
 
 const SOFT_EASE = [0.22, 1, 0.36, 1] as const;
@@ -32,60 +31,46 @@ type InlinePreviewSelectProps<T extends string> = {
   value: T;
 };
 
-function getMenuMotion(reduceMotion: boolean) {
-  if (reduceMotion) {
-    return {
-      animate: { opacity: 1, scale: 1, y: 0 },
-      closed: { opacity: 0, scale: 1, y: 0 },
-      initial: { opacity: 0, scale: 1, y: 0 },
-      openTransition: { duration: 0.12, ease: "easeOut" as const },
-      closedTransition: { duration: 0.1, ease: "easeOut" as const },
-    };
-  }
+const menuMotion = {
+  animate: { opacity: 1, scale: 1, y: 0 },
+  closed: { opacity: 0, scale: 0.985, y: -5 },
+  initial: { opacity: 0, scale: 0.985, y: -5 },
+  openTransition: {
+    opacity: { duration: 0.34, ease: FLUID_EASE },
+    scale: POPUP_SPRING,
+    y: POPUP_SPRING,
+  },
+  closedTransition: {
+    opacity: { duration: 0.22, ease: POPUP_EXIT_EASE },
+    scale: { duration: 0.22, ease: POPUP_EXIT_EASE },
+    y: { duration: 0.22, ease: POPUP_EXIT_EASE },
+  },
+};
 
-  return {
-    animate: { opacity: 1, scale: 1, y: 0 },
-    closed: { opacity: 0, scale: 0.985, y: -5 },
-    initial: { opacity: 0, scale: 0.985, y: -5 },
-    openTransition: {
-      opacity: { duration: 0.34, ease: FLUID_EASE },
-      scale: POPUP_SPRING,
-      y: POPUP_SPRING,
+const menuItemVariants = {
+  exit: (index: number) => ({
+    opacity: 0,
+    transition: {
+      delay: Math.min(index, 4) * 0.01,
+      duration: 0.12,
+      ease: EXIT_EASE,
     },
-    closedTransition: {
-      opacity: { duration: 0.22, ease: POPUP_EXIT_EASE },
-      scale: { duration: 0.22, ease: POPUP_EXIT_EASE },
-      y: { duration: 0.22, ease: POPUP_EXIT_EASE },
+    y: -2,
+  }),
+  hidden: {
+    opacity: 0,
+    y: -4,
+  },
+  visible: (index: number) => ({
+    opacity: 1,
+    transition: {
+      delay: Math.min(index, 4) * 0.02,
+      duration: 0.18,
+      ease: SOFT_EASE,
     },
-  };
-}
-
-function getMenuItemVariants(reduceMotion: boolean) {
-  return {
-    exit: (index: number) => ({
-      opacity: 0,
-      transition: {
-        delay: reduceMotion ? 0 : Math.min(index, 4) * 0.01,
-        duration: reduceMotion ? 0.1 : 0.12,
-        ease: reduceMotion ? ("easeOut" as const) : EXIT_EASE,
-      },
-      y: reduceMotion ? 0 : -2,
-    }),
-    hidden: {
-      opacity: 0,
-      y: reduceMotion ? 0 : -4,
-    },
-    visible: (index: number) => ({
-      opacity: 1,
-      transition: {
-        delay: reduceMotion ? 0 : Math.min(index, 4) * 0.02,
-        duration: reduceMotion ? 0.12 : 0.18,
-        ease: reduceMotion ? ("easeOut" as const) : SOFT_EASE,
-      },
-      y: 0,
-    }),
-  };
-}
+    y: 0,
+  }),
+};
 
 export function InlinePreviewSelect<T extends string>({
   ariaLabel,
@@ -94,7 +79,6 @@ export function InlinePreviewSelect<T extends string>({
   options,
   value,
 }: InlinePreviewSelectProps<T>) {
-  const reduceMotion = useResolvedReducedMotion();
   const [open, setOpen] = useState(false);
   const [menuStyle, setMenuStyle] = useState<{
     left: number;
@@ -103,8 +87,6 @@ export function InlinePreviewSelect<T extends string>({
   } | null>(null);
   const containerRef = useRef<HTMLSpanElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
-  const menuMotion = getMenuMotion(reduceMotion);
-  const menuItemVariants = getMenuItemVariants(reduceMotion);
   const selectedLabel =
     options.find((option) => option.value === value)?.label ?? value;
   const menuSelector = `[data-inline-preview-menu="${menuKey}"]`;
@@ -212,7 +194,7 @@ export function InlinePreviewSelect<T extends string>({
                       animate="visible"
                       custom={index}
                       exit="exit"
-                      initial={reduceMotion ? false : "hidden"}
+                      initial="hidden"
                       key={option.value}
                       role="presentation"
                       variants={menuItemVariants}
@@ -260,11 +242,7 @@ export function InlinePreviewSelect<T extends string>({
           <motion.span
             animate={{ rotate: open ? 180 : 0 }}
             className="inline-flex"
-            transition={
-              reduceMotion
-                ? { duration: 0.12, ease: "easeOut" }
-                : { duration: 0.2, ease: SOFT_EASE }
-            }
+            transition={{ duration: 0.2, ease: SOFT_EASE }}
           >
             <ChevronDownIcon className="size-4 text-muted-foreground" />
           </motion.span>

@@ -5,22 +5,13 @@ import { Bold, Italic, Underline } from "lucide-react";
 import * as React from "react";
 import { createPortal } from "react-dom";
 
-import {
-  ReducedMotionConfig,
-  type ReducedMotionProp,
-  useResolvedReducedMotion,
-} from "@/lib/reduced-motion";
-
 type Pos = { x: number; y: number } | null;
 
-export interface SelectionToolbarProps extends ReducedMotionProp {
+export interface SelectionToolbarProps {
   containerRef: React.RefObject<HTMLElement | null>;
 }
 
-export function SelectionToolbar({
-  containerRef,
-  reducedMotion,
-}: SelectionToolbarProps) {
+export function SelectionToolbar({ containerRef }: SelectionToolbarProps) {
   const [mounted, setMounted] = React.useState(false);
   const [pos, setPos] = React.useState<Pos>(null);
   const [active, setActive] = React.useState({
@@ -29,7 +20,6 @@ export function SelectionToolbar({
     underline: false,
   });
   const toolbarRef = React.useRef<HTMLDivElement>(null);
-  const reduceMotion = useResolvedReducedMotion(reducedMotion);
 
   React.useEffect(() => {
     setMounted(true);
@@ -114,52 +104,47 @@ export function SelectionToolbar({
     return null;
   }
 
-  return (
-    <ReducedMotionConfig reducedMotion={reducedMotion}>
-      {createPortal(
-        <ToolbarPrimitive.Root
-          aria-label="Text formatting"
-          className="z-50 flex items-center gap-1 rounded-lg bg-neutral-800 px-2 py-1.5 shadow-xl ring-1 ring-black/20"
-          onMouseDown={(event) => event.preventDefault()}
-          orientation="horizontal"
-          ref={toolbarRef}
-          style={{
-            position: "fixed",
-            left: pos?.x ?? 0,
-            top: pos?.y ?? 0,
-            transform: `translate(-50%, calc(-100% - 10px)) scale(${visible ? 1 : reduceMotion ? 0.96 : 0.9})`,
-            opacity: visible ? 1 : 0,
-            pointerEvents: visible ? "auto" : "none",
-            transition: reduceMotion
-              ? "opacity 100ms ease, transform 120ms ease"
-              : "opacity 150ms ease, transform 180ms cubic-bezier(0.34, 1.56, 0.64, 1)",
-          }}
-        >
-          <ToolbarButton
-            active={active.bold}
-            label="Bold"
-            onMouseDown={exec("bold")}
-          >
-            <Bold className="h-4 w-4" strokeWidth={2.5} />
-          </ToolbarButton>
-          <ToolbarButton
-            active={active.italic}
-            label="Italic"
-            onMouseDown={exec("italic")}
-          >
-            <Italic className="h-4 w-4" strokeWidth={2.5} />
-          </ToolbarButton>
-          <ToolbarButton
-            active={active.underline}
-            label="Underline"
-            onMouseDown={exec("underline")}
-          >
-            <Underline className="h-4 w-4" strokeWidth={2.5} />
-          </ToolbarButton>
-        </ToolbarPrimitive.Root>,
-        document.body
-      )}
-    </ReducedMotionConfig>
+  return createPortal(
+    <ToolbarPrimitive.Root
+      aria-label="Text formatting"
+      className="z-50 flex items-center gap-1 rounded-lg bg-neutral-800 px-2 py-1.5 shadow-xl ring-1 ring-black/20"
+      onMouseDown={(event) => event.preventDefault()}
+      orientation="horizontal"
+      ref={toolbarRef}
+      style={{
+        position: "fixed",
+        left: pos?.x ?? 0,
+        top: pos?.y ?? 0,
+        transform: `translate(-50%, calc(-100% - 10px)) scale(${visible ? 1 : 0.9})`,
+        opacity: visible ? 1 : 0,
+        pointerEvents: visible ? "auto" : "none",
+        transition:
+          "opacity 150ms ease, transform 180ms cubic-bezier(0.34, 1.56, 0.64, 1)",
+      }}
+    >
+      <ToolbarButton
+        active={active.bold}
+        label="Bold"
+        onMouseDown={exec("bold")}
+      >
+        <Bold className="h-4 w-4" strokeWidth={2.5} />
+      </ToolbarButton>
+      <ToolbarButton
+        active={active.italic}
+        label="Italic"
+        onMouseDown={exec("italic")}
+      >
+        <Italic className="h-4 w-4" strokeWidth={2.5} />
+      </ToolbarButton>
+      <ToolbarButton
+        active={active.underline}
+        label="Underline"
+        onMouseDown={exec("underline")}
+      >
+        <Underline className="h-4 w-4" strokeWidth={2.5} />
+      </ToolbarButton>
+    </ToolbarPrimitive.Root>,
+    document.body
   );
 }
 

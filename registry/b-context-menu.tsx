@@ -6,11 +6,6 @@ import { Check, ChevronRight } from "lucide-react";
 import { motion } from "motion/react";
 import * as React from "react";
 
-import {
-  ReducedMotionConfig,
-  type ReducedMotionProp,
-  useResolvedReducedMotion,
-} from "@/lib/reduced-motion";
 import { cn } from "@/lib/utils";
 
 const contextMenuThemeClassName =
@@ -61,7 +56,6 @@ type ContextMenuContextValue = {
   contentId: string;
   hoveredItemId: string | undefined;
   open: boolean;
-  reduceMotion: boolean;
   setHoveredItemId: React.Dispatch<React.SetStateAction<string | undefined>>;
 };
 
@@ -165,11 +159,11 @@ function resolveItemProps(itemProps: ButtonRenderProps) {
   };
 }
 
-function getActiveHighlightTransition(reduceMotion: boolean) {
-  return reduceMotion
-    ? { duration: 0.12, ease: "easeOut" as const }
-    : { type: "spring" as const, stiffness: 600, damping: 38 };
-}
+const activeHighlightTransition = {
+  type: "spring" as const,
+  stiffness: 600,
+  damping: 38,
+};
 
 function getItemEntranceTransition() {
   return {
@@ -285,24 +279,21 @@ function renderMotionPanel({
 type ContextMenuProps = Omit<
   React.ComponentPropsWithoutRef<typeof ContextMenuPrimitive.Root>,
   "children" | "defaultOpen" | "onOpenChange" | "open"
-> &
-  ReducedMotionProp & {
-    children?: React.ReactNode;
-    defaultOpen?: boolean;
-    onOpenChange?: (open: boolean) => void;
-    open?: boolean;
-  };
+> & {
+  children?: React.ReactNode;
+  defaultOpen?: boolean;
+  onOpenChange?: (open: boolean) => void;
+  open?: boolean;
+};
 
 function ContextMenu({
   children,
   defaultOpen = false,
   onOpenChange,
   open: openProp,
-  reducedMotion,
   ...props
 }: ContextMenuProps) {
   const contentId = React.useId();
-  const reduceMotion = useResolvedReducedMotion(reducedMotion);
   const actionsRef = React.useRef<ContextMenuPrimitive.Root.Actions | null>(
     null
   );
@@ -331,27 +322,24 @@ function ContextMenu({
   }, [open]);
 
   return (
-    <ReducedMotionConfig reducedMotion={reducedMotion}>
-      <ContextMenuContext.Provider
-        value={{
-          actionsRef,
-          contentId,
-          hoveredItemId,
-          open,
-          reduceMotion,
-          setHoveredItemId,
-        }}
+    <ContextMenuContext.Provider
+      value={{
+        actionsRef,
+        contentId,
+        hoveredItemId,
+        open,
+        setHoveredItemId,
+      }}
+    >
+      <ContextMenuPrimitive.Root
+        {...props}
+        actionsRef={actionsRef}
+        onOpenChange={handleOpenChange}
+        open={open}
       >
-        <ContextMenuPrimitive.Root
-          {...props}
-          actionsRef={actionsRef}
-          onOpenChange={handleOpenChange}
-          open={open}
-        >
-          {children}
-        </ContextMenuPrimitive.Root>
-      </ContextMenuContext.Provider>
-    </ReducedMotionConfig>
+        {children}
+      </ContextMenuPrimitive.Root>
+    </ContextMenuContext.Provider>
   );
 }
 ContextMenu.displayName = "ContextMenu";
@@ -537,7 +525,7 @@ function ContextMenuItem({
   variant = "default",
   ...props
 }: ContextMenuItemProps) {
-  const { contentId, hoveredItemId, reduceMotion, setHoveredItemId } =
+  const { contentId, hoveredItemId, setHoveredItemId } =
     useContextMenu("ContextMenuItem");
   const itemId = React.useId();
   const isHovered = hoveredItemId === itemId;
@@ -600,7 +588,7 @@ function ContextMenuItem({
               <motion.div
                 className={contextMenuItemHighlightClassName}
                 layoutId={`${contentId}-context-menu-active`}
-                transition={getActiveHighlightTransition(reduceMotion)}
+                transition={activeHighlightTransition}
               />
             ) : null}
             <span className="relative z-10 flex flex-1 items-center gap-2.5">
@@ -627,8 +615,9 @@ function ContextMenuSubTrigger({
   inset,
   ...props
 }: ContextMenuSubTriggerProps) {
-  const { contentId, hoveredItemId, reduceMotion, setHoveredItemId } =
-    useContextMenu("ContextMenuSubTrigger");
+  const { contentId, hoveredItemId, setHoveredItemId } = useContextMenu(
+    "ContextMenuSubTrigger"
+  );
   const itemId = React.useId();
   const isHovered = hoveredItemId === itemId;
 
@@ -676,7 +665,7 @@ function ContextMenuSubTrigger({
               <motion.div
                 className={contextMenuItemHighlightClassName}
                 layoutId={`${contentId}-context-menu-active`}
-                transition={getActiveHighlightTransition(reduceMotion)}
+                transition={activeHighlightTransition}
               />
             ) : null}
             <span className="relative z-10 flex flex-1 items-center gap-2.5">
@@ -761,8 +750,9 @@ function ContextMenuCheckboxItem({
   inset,
   ...props
 }: ContextMenuCheckboxItemProps) {
-  const { contentId, hoveredItemId, reduceMotion, setHoveredItemId } =
-    useContextMenu("ContextMenuCheckboxItem");
+  const { contentId, hoveredItemId, setHoveredItemId } = useContextMenu(
+    "ContextMenuCheckboxItem"
+  );
   const itemId = React.useId();
   const isHovered = hoveredItemId === itemId;
 
@@ -822,7 +812,7 @@ function ContextMenuCheckboxItem({
               <motion.div
                 className={contextMenuItemHighlightClassName}
                 layoutId={`${contentId}-context-menu-active`}
-                transition={getActiveHighlightTransition(reduceMotion)}
+                transition={activeHighlightTransition}
               />
             ) : null}
             <span className="relative z-10 flex flex-1 items-center gap-2.5">
@@ -855,8 +845,9 @@ function ContextMenuRadioItem({
   inset,
   ...props
 }: ContextMenuRadioItemProps) {
-  const { contentId, hoveredItemId, reduceMotion, setHoveredItemId } =
-    useContextMenu("ContextMenuRadioItem");
+  const { contentId, hoveredItemId, setHoveredItemId } = useContextMenu(
+    "ContextMenuRadioItem"
+  );
   const itemId = React.useId();
   const isHovered = hoveredItemId === itemId;
 
@@ -913,7 +904,7 @@ function ContextMenuRadioItem({
               <motion.div
                 className={contextMenuItemHighlightClassName}
                 layoutId={`${contentId}-context-menu-active`}
-                transition={getActiveHighlightTransition(reduceMotion)}
+                transition={activeHighlightTransition}
               />
             ) : null}
             <span className="relative z-10 flex flex-1 items-center gap-2.5">

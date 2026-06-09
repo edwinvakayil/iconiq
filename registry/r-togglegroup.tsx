@@ -5,11 +5,6 @@ import { animate, motion, useMotionValue, useTransform } from "motion/react";
 import { ToggleGroup as ToggleGroupPrimitive } from "radix-ui";
 import * as React from "react";
 
-import {
-  ReducedMotionConfig,
-  type ReducedMotionProp,
-  useResolvedReducedMotion,
-} from "@/lib/reduced-motion";
 import { cn } from "@/lib/utils";
 
 const ICON_REST = 0.93;
@@ -56,7 +51,7 @@ function runSheenSweep(
   });
 }
 
-function useToggleFluidMotion(isPressed: boolean, reduceMotion: boolean) {
+function useToggleFluidMotion(isPressed: boolean) {
   const fillProgress = useMotionValue(isPressed ? 1 : 0);
   const iconScale = useMotionValue(isPressed ? 1 : ICON_REST);
   const iconScaleX = useMotionValue(1);
@@ -80,15 +75,6 @@ function useToggleFluidMotion(isPressed: boolean, reduceMotion: boolean) {
     prevPressedRef.current = isPressed;
     setWipeOrigin(isPressed ? "left center" : "right center");
 
-    if (reduceMotion) {
-      fillProgress.set(isPressed ? 1 : 0);
-      iconScale.set(isPressed ? 1 : ICON_REST);
-      iconScaleX.set(1);
-      iconScaleY.set(1);
-      sheenOpacity.set(0);
-      return;
-    }
-
     animate(fillProgress, isPressed ? 1 : 0, FLUID_FILL);
     animate(iconScale, isPressed ? 1 : ICON_REST, FLUID_ICON);
     runSheenSweep(sheenX, sheenOpacity);
@@ -105,21 +91,14 @@ function useToggleFluidMotion(isPressed: boolean, reduceMotion: boolean) {
     iconScaleX,
     iconScaleY,
     isPressed,
-    reduceMotion,
     sheenOpacity,
     sheenX,
   ]);
 
   const resetTapScale = React.useCallback(() => {
-    if (reduceMotion) {
-      iconScaleX.set(1);
-      iconScaleY.set(1);
-      return;
-    }
-
     animate(iconScaleX, 1, FLUID_SNAP);
     animate(iconScaleY, 1, FLUID_SNAP);
-  }, [iconScaleX, iconScaleY, reduceMotion]);
+  }, [iconScaleX, iconScaleY]);
 
   const handlePointerDown = React.useCallback(
     (event: React.PointerEvent<HTMLButtonElement>, disabled?: boolean) => {
@@ -129,12 +108,10 @@ function useToggleFluidMotion(isPressed: boolean, reduceMotion: boolean) {
 
       isPointerDownRef.current = true;
 
-      if (!reduceMotion) {
-        animate(iconScaleX, 0.86, FLUID_TAP);
-        animate(iconScaleY, 1.08, FLUID_TAP);
-      }
+      animate(iconScaleX, 0.86, FLUID_TAP);
+      animate(iconScaleY, 1.08, FLUID_TAP);
     },
-    [iconScaleX, iconScaleY, reduceMotion]
+    [iconScaleX, iconScaleY]
   );
 
   const handlePointerUp = React.useCallback(() => {
@@ -254,7 +231,6 @@ const ToggleGroupContext = React.createContext<
   VariantProps<typeof toggleGroupItemVariants> & {
     spacing?: number;
     orientation?: "horizontal" | "vertical";
-    reducedMotion?: boolean;
   }
 >({
   size: "default",
@@ -265,14 +241,13 @@ const ToggleGroupContext = React.createContext<
 
 type MotionToggleGroupItemProps = React.ComponentProps<"button"> & {
   children: React.ReactNode;
-  reduceMotion: boolean;
 };
 
 const MotionToggleGroupItem = React.forwardRef<
   HTMLButtonElement,
   MotionToggleGroupItemProps
 >(function MotionToggleGroupItem(
-  { children, className, reduceMotion, disabled, ...props },
+  { children, className, disabled, ...props },
   ref
 ) {
   const {
@@ -283,7 +258,7 @@ const MotionToggleGroupItem = React.forwardRef<
     ...resolvedProps
   } = props as React.ComponentProps<"button"> & { "data-state"?: "on" | "off" };
   const isSelected = dataState === "on";
-  const fluidMotion = useToggleFluidMotion(isSelected, reduceMotion);
+  const fluidMotion = useToggleFluidMotion(isSelected);
 
   return (
     <button
@@ -313,12 +288,11 @@ const MotionToggleGroupItem = React.forwardRef<
   );
 });
 
-type ToggleGroupSharedProps = VariantProps<typeof toggleGroupItemVariants> &
-  ReducedMotionProp & {
-    spacing?: number;
-    orientation?: "horizontal" | "vertical";
-    className?: string;
-  };
+type ToggleGroupSharedProps = VariantProps<typeof toggleGroupItemVariants> & {
+  spacing?: number;
+  orientation?: "horizontal" | "vertical";
+  className?: string;
+};
 
 type ToggleGroupSingleProps = ToggleGroupSharedProps &
   Omit<
@@ -350,7 +324,6 @@ function ToggleGroup({
   size,
   spacing = 1,
   orientation = "horizontal",
-  reducedMotion,
   type = "multiple",
   children,
   ...props
@@ -365,51 +338,46 @@ function ToggleGroup({
     size,
     spacing,
     orientation,
-    reducedMotion,
   } as const;
 
-  return (
-    <ReducedMotionConfig reducedMotion={reducedMotion}>
-      {type === "single" ? (
-        <ToggleGroupPrimitive.Root
-          className={groupClassName}
-          data-orientation={orientation}
-          data-size={size}
-          data-slot="toggle-group"
-          data-spacing={spacing}
-          data-variant={variant}
-          style={groupStyle}
-          type="single"
-          {...(props as Omit<
-            ToggleGroupSingleProps,
-            keyof ToggleGroupSharedProps | "type"
-          >)}
-        >
-          <ToggleGroupContext.Provider value={contextValue}>
-            {children}
-          </ToggleGroupContext.Provider>
-        </ToggleGroupPrimitive.Root>
-      ) : (
-        <ToggleGroupPrimitive.Root
-          className={groupClassName}
-          data-orientation={orientation}
-          data-size={size}
-          data-slot="toggle-group"
-          data-spacing={spacing}
-          data-variant={variant}
-          style={groupStyle}
-          type="multiple"
-          {...(props as Omit<
-            ToggleGroupMultipleProps,
-            keyof ToggleGroupSharedProps | "type"
-          >)}
-        >
-          <ToggleGroupContext.Provider value={contextValue}>
-            {children}
-          </ToggleGroupContext.Provider>
-        </ToggleGroupPrimitive.Root>
-      )}
-    </ReducedMotionConfig>
+  return type === "single" ? (
+    <ToggleGroupPrimitive.Root
+      className={groupClassName}
+      data-orientation={orientation}
+      data-size={size}
+      data-slot="toggle-group"
+      data-spacing={spacing}
+      data-variant={variant}
+      style={groupStyle}
+      type="single"
+      {...(props as Omit<
+        ToggleGroupSingleProps,
+        keyof ToggleGroupSharedProps | "type"
+      >)}
+    >
+      <ToggleGroupContext.Provider value={contextValue}>
+        {children}
+      </ToggleGroupContext.Provider>
+    </ToggleGroupPrimitive.Root>
+  ) : (
+    <ToggleGroupPrimitive.Root
+      className={groupClassName}
+      data-orientation={orientation}
+      data-size={size}
+      data-slot="toggle-group"
+      data-spacing={spacing}
+      data-variant={variant}
+      style={groupStyle}
+      type="multiple"
+      {...(props as Omit<
+        ToggleGroupMultipleProps,
+        keyof ToggleGroupSharedProps | "type"
+      >)}
+    >
+      <ToggleGroupContext.Provider value={contextValue}>
+        {children}
+      </ToggleGroupContext.Provider>
+    </ToggleGroupPrimitive.Root>
   );
 }
 
@@ -422,7 +390,6 @@ function ToggleGroupItem({
 }: React.ComponentProps<typeof ToggleGroupPrimitive.Item> &
   VariantProps<typeof toggleGroupItemVariants>) {
   const context = React.useContext(ToggleGroupContext);
-  const reduceMotion = useResolvedReducedMotion(context.reducedMotion);
 
   return (
     <ToggleGroupPrimitive.Item asChild {...props}>
@@ -439,7 +406,6 @@ function ToggleGroupItem({
         data-slot="toggle-group-item"
         data-spacing={context.spacing}
         data-variant={context.variant || variant}
-        reduceMotion={reduceMotion}
       >
         {children}
       </MotionToggleGroupItem>

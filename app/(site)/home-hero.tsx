@@ -1,7 +1,7 @@
 "use client";
 
 import { ArrowRight, ChevronRight } from "lucide-react";
-import { motion, useReducedMotion } from "motion/react";
+import { motion } from "motion/react";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
@@ -377,12 +377,6 @@ const heroCtaLinkClassName =
 const heroCtaIconClassName = "size-3.5 sm:size-4";
 
 function HeroCtaArrowIcon({ active }: { active: boolean }) {
-  const reduceMotion = useReducedMotion();
-
-  if (reduceMotion) {
-    return <ChevronRight aria-hidden className={heroCtaIconClassName} />;
-  }
-
   return (
     <span
       aria-hidden
@@ -509,13 +503,12 @@ function HeroAnimatedContent({
 export function HomeHero() {
   const pathname = usePathname();
   const tier = useMotionTier();
-  const prefersReducedMotion = useReducedMotion();
   const [isMounted, setIsMounted] = useState(false);
   const [entranceState, setEntranceState] = useState<"hidden" | "visible">(
     "hidden"
   );
 
-  const motionAllowed = tier !== "none" && prefersReducedMotion !== true;
+  const motionAllowed = tier !== "none";
   const useFullMotion = tier === "full";
   const animateEntrance = isMounted && motionAllowed;
 

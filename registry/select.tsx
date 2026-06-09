@@ -20,11 +20,6 @@ import {
 } from "react";
 import { createPortal } from "react-dom";
 
-import {
-  ReducedMotionConfig,
-  type ReducedMotionProp,
-  useResolvedReducedMotion,
-} from "@/lib/reduced-motion";
 import { cn } from "@/lib/utils";
 
 const componentThemeClassName =
@@ -69,7 +64,7 @@ export interface SelectOption {
   group?: string;
 }
 
-export interface SelectProps extends ReducedMotionProp {
+export interface SelectProps {
   options: SelectOption[];
   value?: string;
   onChange?: (value: string) => void;
@@ -103,7 +98,6 @@ type SelectOptionRowProps = {
   listboxId: string;
   onSelect: (index: number) => void;
   option: SelectOption;
-  reduceMotion: boolean;
   setActiveIndex: Dispatch<SetStateAction<number>>;
   setOptionRef: (index: number, node: HTMLDivElement | null) => void;
   setShowActiveHighlight: Dispatch<SetStateAction<boolean>>;
@@ -116,7 +110,6 @@ type SelectMenuSectionProps = {
   itemVariants: ReturnType<typeof getItemVariants>;
   listboxId: string;
   optionRefs: MutableRefObject<Array<HTMLDivElement | null>>;
-  reduceMotion: boolean;
   section: SelectSection;
   sectionIndex: number;
   selectOption: (index: number, restoreFocus?: boolean) => void;
@@ -140,7 +133,6 @@ type SelectMenuContentProps = {
     duration: number;
     ease: "easeOut" | typeof SOFT_EASE;
   };
-  reduceMotion: boolean;
   runTypeahead: (key: string) => void;
   sections: SelectSection[];
   selectOption: (index: number, restoreFocus?: boolean) => void;
@@ -261,28 +253,28 @@ function scrollOptionIntoView(
   }
 }
 
-function getItemVariants(reduceMotion: boolean) {
+function getItemVariants() {
   return {
     exit: (index: number) => ({
       opacity: 0,
-      y: reduceMotion ? 0 : -2,
+      y: -2,
       transition: {
-        delay: reduceMotion ? 0 : Math.min(index, 4) * 0.01,
-        duration: reduceMotion ? 0.1 : 0.12,
-        ease: reduceMotion ? ("easeOut" as const) : EXIT_EASE,
+        delay: Math.min(index, 4) * 0.01,
+        duration: 0.12,
+        ease: EXIT_EASE,
       },
     }),
     hidden: {
       opacity: 0,
-      y: reduceMotion ? 0 : -4,
+      y: -4,
     },
     visible: (index: number) => ({
       opacity: 1,
       y: 0,
       transition: {
-        delay: reduceMotion ? 0 : Math.min(index, 4) * 0.02,
-        duration: reduceMotion ? 0.12 : 0.18,
-        ease: reduceMotion ? ("easeOut" as const) : SOFT_EASE,
+        delay: Math.min(index, 4) * 0.02,
+        duration: 0.18,
+        ease: SOFT_EASE,
       },
     }),
   };
@@ -479,22 +471,11 @@ function SelectOptionRow({
   listboxId,
   onSelect,
   option,
-  reduceMotion,
   setActiveIndex,
   setOptionRef,
   setShowActiveHighlight,
   showActiveHighlight,
 }: SelectOptionRowProps) {
-  const pressTransition = reduceMotion
-    ? { duration: 0.12, ease: "easeOut" as const }
-    : PRESS_SPRING;
-  const activeTransition = reduceMotion
-    ? { duration: 0.12, ease: "easeOut" as const }
-    : ACTIVE_SPRING;
-  const checkTransition = reduceMotion
-    ? { duration: 0.12, ease: "easeOut" as const }
-    : CHECK_SPRING;
-
   return (
     <motion.div
       animate="visible"
@@ -520,15 +501,15 @@ function SelectOptionRow({
       }}
       role="option"
       title={option.label}
-      transition={pressTransition}
+      transition={PRESS_SPRING}
       variants={itemVariants}
-      whileTap={reduceMotion ? undefined : { scale: 0.985 }}
+      whileTap={{ scale: 0.985 }}
     >
       {showActiveHighlight && isActive ? (
         <motion.span
           className="absolute inset-0 -z-10 rounded-lg bg-accent/70"
           layoutId={activeHighlightId}
-          transition={activeTransition}
+          transition={ACTIVE_SPRING}
         />
       ) : null}
       {option.icon ? (
@@ -545,7 +526,7 @@ function SelectOptionRow({
               className="text-primary"
               exit={{ opacity: 0, scale: 0.8, y: 1 }}
               initial={{ opacity: 0, scale: 0.8, y: 1 }}
-              transition={checkTransition}
+              transition={CHECK_SPRING}
             >
               <Check className="h-4 w-4" />
             </motion.span>
@@ -562,7 +543,6 @@ function SelectMenuSection({
   itemVariants,
   listboxId,
   optionRefs,
-  reduceMotion,
   section,
   sectionIndex,
   selectOption,
@@ -583,7 +563,6 @@ function SelectMenuSection({
       listboxId={listboxId}
       onSelect={selectOption}
       option={option}
-      reduceMotion={reduceMotion}
       setActiveIndex={setActiveIndex}
       setOptionRef={(nextIndex, node) => {
         optionRefs.current[nextIndex] = node;
@@ -621,7 +600,6 @@ function SelectMenuContent({
   options,
   optionRefs,
   panelTransition,
-  reduceMotion,
   runTypeahead,
   sections,
   selectOption,
@@ -648,8 +626,8 @@ function SelectMenuContent({
         componentThemeClassName,
         "z-[300] overflow-hidden rounded-lg border border-border bg-card shadow-lg"
       )}
-      exit={{ opacity: 0, y: reduceMotion ? 0 : -4 }}
-      initial={{ opacity: 0, y: reduceMotion ? 0 : -4 }}
+      exit={{ opacity: 0, y: -4 }}
+      initial={{ opacity: 0, y: -4 }}
       key="select-dropdown"
       ref={menuPanelRef}
       style={panelStyle}
@@ -701,7 +679,6 @@ function SelectMenuContent({
                   key={section.key}
                   listboxId={listboxId}
                   optionRefs={optionRefs}
-                  reduceMotion={reduceMotion}
                   section={section}
                   sectionIndex={sectionIndex}
                   selectOption={selectOption}
@@ -731,9 +708,7 @@ export function Select({
   onChange,
   placeholder = "Select an option…",
   className,
-  reducedMotion,
 }: SelectProps) {
-  const reduceMotion = useResolvedReducedMotion(reducedMotion);
   const generatedId = useId();
   const [activeIndex, setActiveIndex] = useState(0);
   const [mounted, setMounted] = useState(false);
@@ -752,19 +727,10 @@ export function Select({
   const triggerId = `${generatedId}-trigger`;
   const selectedIndex = options.findIndex((option) => option.value === value);
   const selected = selectedIndex >= 0 ? options[selectedIndex] : undefined;
-  const itemVariants = useMemo(
-    () => getItemVariants(reduceMotion),
-    [reduceMotion]
-  );
-  const buttonTransition = reduceMotion
-    ? { duration: 0.1, ease: "easeOut" as const }
-    : PRESS_SPRING;
-  const panelTransition = reduceMotion
-    ? { duration: 0.14, ease: "easeOut" as const }
-    : { duration: 0.22, ease: SOFT_EASE };
-  const chevronTransition = reduceMotion
-    ? { duration: 0.12, ease: "easeOut" as const }
-    : { duration: 0.2, ease: SOFT_EASE };
+  const itemVariants = useMemo(() => getItemVariants(), []);
+  const buttonTransition = PRESS_SPRING;
+  const panelTransition = { duration: 0.22, ease: SOFT_EASE };
+  const chevronTransition = { duration: 0.2, ease: SOFT_EASE };
   const sections = useMemo(() => getSelectSections(options), [options]);
 
   const clearTypeahead = useCallback(() => {
@@ -1016,97 +982,94 @@ export function Select({
   }, [closeMenu, open]);
 
   return (
-    <ReducedMotionConfig reducedMotion={reducedMotion}>
-      <div
-        className={cn(
-          componentThemeClassName,
-          "relative w-72 max-w-full",
-          className
-        )}
+    <div
+      className={cn(
+        componentThemeClassName,
+        "relative w-72 max-w-full",
+        className
+      )}
+    >
+      <motion.button
+        aria-controls={open ? listboxId : undefined}
+        aria-expanded={open}
+        aria-haspopup="listbox"
+        className="flex min-h-11 w-full touch-manipulation items-center justify-between gap-2 rounded-lg border border-border bg-card px-4 py-3 text-left font-medium text-foreground text-sm transition-colors hover:bg-accent/60 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        data-state={open ? "open" : "closed"}
+        id={triggerId}
+        onClick={() => {
+          if (open) {
+            closeMenu(false);
+            return;
+          }
+
+          openInteractionRef.current = "pointer";
+          openMenu(selectedIndex >= 0 ? selectedIndex : 0);
+        }}
+        onKeyDown={(event) => {
+          openInteractionRef.current = "keyboard";
+          handleSelectTriggerKeyDown({
+            closeMenu,
+            event,
+            open,
+            openMenu,
+            optionsLength: options.length,
+            pendingTypeaheadRef,
+            selectedIndex,
+          });
+        }}
+        ref={triggerRef}
+        transition={buttonTransition}
+        type="button"
+        whileTap={{ scale: 0.985 }}
       >
-        <motion.button
-          aria-controls={open ? listboxId : undefined}
-          aria-expanded={open}
-          aria-haspopup="listbox"
-          className="flex min-h-11 w-full touch-manipulation items-center justify-between gap-2 rounded-lg border border-border bg-card px-4 py-3 text-left font-medium text-foreground text-sm transition-colors hover:bg-accent/60 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-          data-state={open ? "open" : "closed"}
-          id={triggerId}
-          onClick={() => {
-            if (open) {
-              closeMenu(false);
-              return;
-            }
-
-            openInteractionRef.current = "pointer";
-            openMenu(selectedIndex >= 0 ? selectedIndex : 0);
-          }}
-          onKeyDown={(event) => {
-            openInteractionRef.current = "keyboard";
-            handleSelectTriggerKeyDown({
-              closeMenu,
-              event,
-              open,
-              openMenu,
-              optionsLength: options.length,
-              pendingTypeaheadRef,
-              selectedIndex,
-            });
-          }}
-          ref={triggerRef}
-          transition={buttonTransition}
-          type="button"
-          whileTap={reduceMotion ? undefined : { scale: 0.985 }}
+        <span
+          className={cn(
+            "min-w-0 flex-1 truncate",
+            selected ? "text-foreground" : "text-muted-foreground"
+          )}
+          title={selected ? selected.label : placeholder}
         >
-          <span
-            className={cn(
-              "min-w-0 flex-1 truncate",
-              selected ? "text-foreground" : "text-muted-foreground"
-            )}
-            title={selected ? selected.label : placeholder}
-          >
-            {selected ? selected.label : placeholder}
-          </span>
-          <motion.span
-            animate={{ rotate: open ? 180 : 0 }}
-            className="shrink-0"
-            transition={chevronTransition}
-          >
-            <ChevronDown className="h-4 w-4 text-muted-foreground" />
-          </motion.span>
-        </motion.button>
+          {selected ? selected.label : placeholder}
+        </span>
+        <motion.span
+          animate={{ rotate: open ? 180 : 0 }}
+          className="shrink-0"
+          transition={chevronTransition}
+        >
+          <ChevronDown className="h-4 w-4 text-muted-foreground" />
+        </motion.span>
+      </motion.button>
 
-        {mounted
-          ? createPortal(
-              <AnimatePresence>
-                {open ? (
-                  <SelectMenuContent
-                    activeIndex={activeIndex}
-                    closeMenu={closeMenu}
-                    itemVariants={itemVariants}
-                    listboxId={listboxId}
-                    listboxRef={listboxRef}
-                    menuPanelRef={menuPanelRef}
-                    menuPosition={menuPosition}
-                    optionRefs={optionRefs}
-                    options={options}
-                    panelTransition={panelTransition}
-                    reduceMotion={reduceMotion}
-                    runTypeahead={runTypeahead}
-                    sections={sections}
-                    selectOption={selectOption}
-                    setActiveIndex={setActiveIndex}
-                    setShowActiveHighlight={setShowActiveHighlight}
-                    showActiveHighlight={showActiveHighlight}
-                    triggerId={triggerId}
-                    value={value}
-                  />
-                ) : null}
-              </AnimatePresence>,
-              document.body
-            )
-          : null}
-      </div>
-    </ReducedMotionConfig>
+      {mounted
+        ? createPortal(
+            <AnimatePresence>
+              {open ? (
+                <SelectMenuContent
+                  activeIndex={activeIndex}
+                  closeMenu={closeMenu}
+                  itemVariants={itemVariants}
+                  listboxId={listboxId}
+                  listboxRef={listboxRef}
+                  menuPanelRef={menuPanelRef}
+                  menuPosition={menuPosition}
+                  optionRefs={optionRefs}
+                  options={options}
+                  panelTransition={panelTransition}
+                  runTypeahead={runTypeahead}
+                  sections={sections}
+                  selectOption={selectOption}
+                  setActiveIndex={setActiveIndex}
+                  setShowActiveHighlight={setShowActiveHighlight}
+                  showActiveHighlight={showActiveHighlight}
+                  triggerId={triggerId}
+                  value={value}
+                />
+              ) : null}
+            </AnimatePresence>,
+            document.body
+          )
+        : null}
+    </div>
   );
 }
 

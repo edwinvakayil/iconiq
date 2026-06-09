@@ -4,10 +4,6 @@ import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { X } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import * as React from "react";
-import {
-  ReducedMotionConfig,
-  type ReducedMotionProp,
-} from "@/lib/reduced-motion";
 import { cn } from "@/lib/utils";
 
 const dialogThemeClassName =
@@ -77,53 +73,51 @@ const DialogContent = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content> & {
     open?: boolean;
-  } & ReducedMotionProp
->(({ className, children, open, reducedMotion, ...props }, ref) => (
-  <ReducedMotionConfig reducedMotion={reducedMotion}>
-    <AnimatePresence>
-      {open && (
-        <DialogPortal forceMount>
-          <DialogPrimitive.Overlay asChild forceMount>
-            <motion.div
-              animate="visible"
-              className="fixed inset-0 z-50 bg-black/45 backdrop-blur-sm dark:bg-black/60"
-              exit="hidden"
-              initial="hidden"
-              transition={{ duration: 0.25, ease: "easeOut" }}
-              variants={overlayVariants}
-            />
-          </DialogPrimitive.Overlay>
-          <DialogPrimitive.Content
-            className="fixed inset-0 z-50 grid place-items-center overflow-y-auto bg-transparent p-4 outline-none"
-            forceMount
-            ref={ref}
-            {...props}
+  }
+>(({ className, children, open, ...props }, ref) => (
+  <AnimatePresence>
+    {open && (
+      <DialogPortal forceMount>
+        <DialogPrimitive.Overlay asChild forceMount>
+          <motion.div
+            animate="visible"
+            className="fixed inset-0 z-50 bg-black/45 backdrop-blur-sm dark:bg-black/60"
+            exit="hidden"
+            initial="hidden"
+            transition={{ duration: 0.25, ease: "easeOut" }}
+            variants={overlayVariants}
+          />
+        </DialogPrimitive.Overlay>
+        <DialogPrimitive.Content
+          className="fixed inset-0 z-50 grid place-items-center overflow-y-auto bg-transparent p-4 outline-none"
+          forceMount
+          ref={ref}
+          {...props}
+        >
+          <motion.div
+            animate="visible"
+            className={cn(
+              dialogThemeClassName,
+              dialogContentClassName,
+              "max-h-[min(90svh,calc(100svh-env(safe-area-inset-top,0px)-env(safe-area-inset-bottom,0px)-2rem))]",
+              className
+            )}
+            exit="exit"
+            initial="hidden"
+            variants={contentVariants}
           >
-            <motion.div
-              animate="visible"
-              className={cn(
-                dialogThemeClassName,
-                dialogContentClassName,
-                "max-h-[min(90svh,calc(100svh-env(safe-area-inset-top,0px)-env(safe-area-inset-bottom,0px)-2rem))]",
-                className
-              )}
-              exit="exit"
-              initial="hidden"
-              variants={contentVariants}
-            >
-              {React.Children.map(children, (child) => (
-                <motion.div variants={childVariants}>{child}</motion.div>
-              ))}
-              <DialogPrimitive.Close className={dialogCloseClassName}>
-                <X className="h-4 w-4" />
-                <span className="sr-only">Close</span>
-              </DialogPrimitive.Close>
-            </motion.div>
-          </DialogPrimitive.Content>
-        </DialogPortal>
-      )}
-    </AnimatePresence>
-  </ReducedMotionConfig>
+            {React.Children.map(children, (child) => (
+              <motion.div variants={childVariants}>{child}</motion.div>
+            ))}
+            <DialogPrimitive.Close className={dialogCloseClassName}>
+              <X className="h-4 w-4" />
+              <span className="sr-only">Close</span>
+            </DialogPrimitive.Close>
+          </motion.div>
+        </DialogPrimitive.Content>
+      </DialogPortal>
+    )}
+  </AnimatePresence>
 ));
 DialogContent.displayName = "DialogContent";
 

@@ -4,11 +4,6 @@ import * as AlertDialogPrimitive from "@radix-ui/react-alert-dialog";
 import { AnimatePresence, motion, type Variants } from "motion/react";
 import * as React from "react";
 
-import {
-  ReducedMotionConfig,
-  type ReducedMotionProp,
-  useResolvedReducedMotion,
-} from "@/lib/reduced-motion";
 import { cn } from "@/lib/utils";
 
 const alertDialogThemeClassName =
@@ -19,7 +14,6 @@ const alertDialogContentClassName =
 
 type AlertDialogContextValue = {
   open: boolean;
-  reduceMotion: boolean;
 };
 
 const AlertDialogContext = React.createContext<AlertDialogContextValue | null>(
@@ -40,87 +34,59 @@ const actionClassName =
 const cancelClassName =
   "inline-flex min-h-11 items-center justify-center rounded-md bg-[color:color-mix(in_oklch,var(--adlg-muted),transparent_45%)] px-4 py-2.5 font-medium text-[14px] text-[color:var(--adlg-muted-foreground)] tracking-[-0.01em] transition-colors duration-150 hover:bg-accent/60 hover:text-[color:var(--adlg-foreground)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:color-mix(in_oklch,var(--adlg-ring),transparent_50%)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--adlg-surface)] disabled:pointer-events-none disabled:opacity-50";
 
-function getContentVariants(reduceMotion: boolean): Variants {
-  if (reduceMotion) {
-    return {
-      hidden: { opacity: 0, y: 12 },
-      visible: {
-        opacity: 1,
-        y: 0,
-        transition: { duration: 0.16, ease: [0.22, 1, 0.36, 1] },
-      },
-      exit: {
-        opacity: 0,
-        y: 8,
-        transition: { duration: 0.12, ease: [0.4, 0, 1, 1] },
-      },
-    };
-  }
+const contentVariants: Variants = {
+  hidden: {
+    opacity: 0,
+    scale: 0.9,
+    y: 26,
+    filter: "blur(10px)",
+  },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    y: 0,
+    filter: "blur(0px)",
+    transition: {
+      type: "spring",
+      stiffness: 280,
+      damping: 24,
+      mass: 0.92,
+      staggerChildren: 0.055,
+      delayChildren: 0.04,
+    },
+  },
+  exit: {
+    opacity: 0,
+    scale: 0.96,
+    y: 12,
+    filter: "blur(4px)",
+    transition: {
+      type: "spring",
+      stiffness: 340,
+      damping: 28,
+      mass: 0.86,
+    },
+  },
+};
 
-  return {
-    hidden: {
-      opacity: 0,
-      scale: 0.9,
-      y: 26,
-      filter: "blur(10px)",
+const childVariants: Variants = {
+  hidden: { opacity: 0, y: 10 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      type: "spring",
+      stiffness: 300,
+      damping: 24,
+      mass: 0.82,
     },
-    visible: {
-      opacity: 1,
-      scale: 1,
-      y: 0,
-      filter: "blur(0px)",
-      transition: {
-        type: "spring",
-        stiffness: 280,
-        damping: 24,
-        mass: 0.92,
-        staggerChildren: 0.055,
-        delayChildren: 0.04,
-      },
-    },
-    exit: {
-      opacity: 0,
-      scale: 0.96,
-      y: 12,
-      filter: "blur(4px)",
-      transition: {
-        type: "spring",
-        stiffness: 340,
-        damping: 28,
-        mass: 0.86,
-      },
-    },
-  };
-}
-
-function getChildVariants(reduceMotion: boolean): Variants {
-  if (reduceMotion) {
-    return {
-      hidden: { opacity: 0 },
-      visible: { opacity: 1, transition: { duration: 0.14 } },
-      exit: { opacity: 0, transition: { duration: 0.1 } },
-    };
-  }
-
-  return {
-    hidden: { opacity: 0, y: 10 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        type: "spring",
-        stiffness: 300,
-        damping: 24,
-        mass: 0.82,
-      },
-    },
-    exit: {
-      opacity: 0,
-      y: -4,
-      transition: { duration: 0.12, ease: [0.4, 0, 1, 1] },
-    },
-  };
-}
+  },
+  exit: {
+    opacity: 0,
+    y: -4,
+    transition: { duration: 0.12, ease: [0.4, 0, 1, 1] },
+  },
+};
 
 function useAlertDialogContext() {
   const context = React.useContext(AlertDialogContext);
@@ -132,7 +98,7 @@ function useAlertDialogContext() {
   return context;
 }
 
-export interface AlertDialogProps extends ReducedMotionProp {
+export interface AlertDialogProps {
   children: React.ReactNode;
   defaultOpen?: boolean;
   onOpenChange?: (open: boolean) => void;
@@ -144,13 +110,11 @@ function AlertDialog({
   defaultOpen = false,
   onOpenChange,
   open: openProp,
-  reducedMotion,
   ...props
 }: AlertDialogProps) {
   const isControlled = openProp !== undefined;
   const [uncontrolledOpen, setUncontrolledOpen] = React.useState(defaultOpen);
   const open = isControlled ? openProp : uncontrolledOpen;
-  const reduceMotion = useResolvedReducedMotion(reducedMotion);
 
   const handleOpenChange = React.useCallback(
     (nextOpen: boolean) => {
@@ -164,18 +128,16 @@ function AlertDialog({
   );
 
   return (
-    <ReducedMotionConfig reducedMotion={reducedMotion}>
-      <AlertDialogContext.Provider value={{ open, reduceMotion }}>
-        <AlertDialogPrimitive.Root
-          {...props}
-          defaultOpen={defaultOpen}
-          onOpenChange={handleOpenChange}
-          open={open}
-        >
-          {children}
-        </AlertDialogPrimitive.Root>
-      </AlertDialogContext.Provider>
-    </ReducedMotionConfig>
+    <AlertDialogContext.Provider value={{ open }}>
+      <AlertDialogPrimitive.Root
+        {...props}
+        defaultOpen={defaultOpen}
+        onOpenChange={handleOpenChange}
+        open={open}
+      >
+        {children}
+      </AlertDialogPrimitive.Root>
+    </AlertDialogContext.Provider>
   );
 }
 
@@ -198,9 +160,7 @@ const AlertDialogContent = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
 >(({ children, className, ...props }, ref) => {
-  const { open, reduceMotion } = useAlertDialogContext();
-  const contentVariants = getContentVariants(reduceMotion);
-  const childVariants = getChildVariants(reduceMotion);
+  const { open } = useAlertDialogContext();
   const {
     onAnimationEnd: _onAnimationEnd,
     onAnimationIteration: _onAnimationIteration,
@@ -221,11 +181,7 @@ const AlertDialogContent = React.forwardRef<
               className="fixed inset-0 z-50 bg-black/52 backdrop-blur-[10px]"
               exit={{ opacity: 0 }}
               initial={{ opacity: 0 }}
-              transition={
-                reduceMotion
-                  ? { duration: 0.14, ease: [0.4, 0, 1, 1] }
-                  : overlayTransition
-              }
+              transition={overlayTransition}
             />
           </AlertDialogPrimitive.Overlay>
           <AlertDialogPrimitive.Content

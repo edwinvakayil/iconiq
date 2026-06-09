@@ -5,11 +5,6 @@ import { ChevronDown } from "lucide-react";
 import { motion, type Transition } from "motion/react";
 import * as React from "react";
 
-import {
-  ReducedMotionConfig,
-  type ReducedMotionProp,
-  useResolvedReducedMotion,
-} from "@/lib/reduced-motion";
 import { cn } from "@/lib/utils";
 
 const componentThemeClassName =
@@ -62,10 +57,7 @@ type PanelRenderProps = React.HTMLAttributes<HTMLDivElement> & {
 type CollapsibleContextValue = {
   disabled?: boolean;
   open: boolean;
-  reduceMotion: boolean;
 };
-
-const settleEase = [0.22, 1, 0.36, 1] as const;
 
 const CollapsibleContext = React.createContext<CollapsibleContextValue | null>(
   null
@@ -144,63 +136,14 @@ function useCollapsibleContext() {
   return context;
 }
 
-function getContentTransition(reduceMotion: boolean) {
-  if (reduceMotion) {
-    return {
-      duration: 0.16,
-      ease: settleEase,
-    };
-  }
+const iconTransition = {
+  type: "spring" as const,
+  stiffness: 360,
+  damping: 24,
+  mass: 0.66,
+};
 
-  return contentShellTransition;
-}
-
-function getMaskTransition(reduceMotion: boolean) {
-  if (reduceMotion) {
-    return {
-      duration: 0.14,
-      ease: settleEase,
-    };
-  }
-
-  return contentMaskTransition;
-}
-
-function getInnerTransition(reduceMotion: boolean) {
-  if (reduceMotion) {
-    return {
-      duration: 0.14,
-      ease: settleEase,
-    };
-  }
-
-  return contentCopyTransition;
-}
-
-function getIconTransition(reduceMotion: boolean) {
-  if (reduceMotion) {
-    return {
-      duration: 0.14,
-      ease: settleEase,
-    };
-  }
-
-  return {
-    type: "spring" as const,
-    stiffness: 360,
-    damping: 24,
-    mass: 0.66,
-  };
-}
-
-function getContentAnimate(open: boolean, reduceMotion: boolean) {
-  if (reduceMotion) {
-    return {
-      height: open ? "auto" : 0,
-      opacity: open ? 1 : 0,
-    };
-  }
-
+function getContentAnimate(open: boolean) {
   return {
     height: open ? "auto" : 0,
     clipPath: open ? "inset(0% 0% 0% 0%)" : "inset(0% 0% 100% 0%)",
@@ -208,27 +151,14 @@ function getContentAnimate(open: boolean, reduceMotion: boolean) {
   };
 }
 
-function getMaskAnimate(open: boolean, reduceMotion: boolean) {
-  if (reduceMotion) {
-    return {
-      opacity: open ? 1 : 0,
-    };
-  }
-
+function getMaskAnimate(open: boolean) {
   return {
     clipPath: open ? "inset(0% 0% 0% 0%)" : "inset(0% 0% 100% 0%)",
     opacity: open ? 1 : 0.68,
   };
 }
 
-function getInnerAnimate(open: boolean, reduceMotion: boolean) {
-  if (reduceMotion) {
-    return {
-      opacity: open ? 1 : 0,
-      y: 0,
-    };
-  }
-
+function getInnerAnimate(open: boolean) {
   return {
     scale: open ? 1 : 0.996,
     opacity: open ? 1 : 0,
@@ -294,9 +224,7 @@ function resolvePanelProps(panelProps: PanelRenderProps) {
   };
 }
 
-export interface CollapsibleProps
-  extends React.HTMLAttributes<HTMLDivElement>,
-    ReducedMotionProp {
+export interface CollapsibleProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
   defaultOpen?: boolean;
   disabled?: boolean;
@@ -313,7 +241,6 @@ const Collapsible = React.forwardRef<HTMLDivElement, CollapsibleProps>(
       disabled = false,
       onOpenChange,
       open: openProp,
-      reducedMotion,
       ...props
     },
     ref
@@ -321,7 +248,6 @@ const Collapsible = React.forwardRef<HTMLDivElement, CollapsibleProps>(
     const isControlled = openProp !== undefined;
     const [uncontrolledOpen, setUncontrolledOpen] = React.useState(defaultOpen);
     const open = isControlled ? openProp : uncontrolledOpen;
-    const reduceMotion = useResolvedReducedMotion(reducedMotion);
 
     const handleOpenChange = React.useCallback(
       (nextOpen: boolean) => {
@@ -335,26 +261,24 @@ const Collapsible = React.forwardRef<HTMLDivElement, CollapsibleProps>(
     );
 
     return (
-      <ReducedMotionConfig reducedMotion={reducedMotion}>
-        <CollapsibleContext.Provider value={{ disabled, open, reduceMotion }}>
-          <CollapsiblePrimitive.Root
-            className={cn(
-              componentThemeClassName,
-              "block w-full min-w-0 overflow-hidden border-border/60 border-b bg-transparent",
-              className
-            )}
-            disabled={disabled}
-            onOpenChange={(nextOpen) => {
-              handleOpenChange(nextOpen);
-            }}
-            open={open}
-            ref={ref}
-            {...props}
-          >
-            {children}
-          </CollapsiblePrimitive.Root>
-        </CollapsibleContext.Provider>
-      </ReducedMotionConfig>
+      <CollapsibleContext.Provider value={{ disabled, open }}>
+        <CollapsiblePrimitive.Root
+          className={cn(
+            componentThemeClassName,
+            "block w-full min-w-0 overflow-hidden border-border/60 border-b bg-transparent",
+            className
+          )}
+          disabled={disabled}
+          onOpenChange={(nextOpen) => {
+            handleOpenChange(nextOpen);
+          }}
+          open={open}
+          ref={ref}
+          {...props}
+        >
+          {children}
+        </CollapsiblePrimitive.Root>
+      </CollapsibleContext.Provider>
     );
   }
 );
@@ -365,7 +289,7 @@ const CollapsibleTrigger = React.forwardRef<
   HTMLButtonElement,
   ButtonHTMLAttributesForMotion
 >(({ children, className, type = "button", ...props }, ref) => {
-  const { disabled, open, reduceMotion } = useCollapsibleContext();
+  const { disabled, open } = useCollapsibleContext();
 
   return (
     <CollapsiblePrimitive.Trigger
@@ -394,7 +318,7 @@ const CollapsibleTrigger = React.forwardRef<
             transition={triggerPressTransition}
             type={type}
             whileTap={
-              disabled || reduceMotion
+              disabled
                 ? undefined
                 : { scale: 0.992, y: 0, transition: triggerPressTransition }
             }
@@ -406,11 +330,11 @@ const CollapsibleTrigger = React.forwardRef<
             <motion.span
               animate={{
                 rotate: open ? 180 : 0,
-                scale: open && !reduceMotion ? 1.04 : 1,
-                y: open && !reduceMotion ? 1 : 0,
+                scale: open ? 1.04 : 1,
+                y: open ? 1 : 0,
               }}
               className="inline-flex shrink-0 items-center justify-center text-muted-foreground"
-              transition={getIconTransition(reduceMotion)}
+              transition={iconTransition}
             >
               <ChevronDown className="h-4 w-4" strokeWidth={2.2} />
             </motion.span>
@@ -427,7 +351,7 @@ const CollapsibleContent = React.forwardRef<
   HTMLDivElement,
   DivHTMLAttributesForMotion
 >(({ children, className, ...props }, ref) => {
-  const { open, reduceMotion } = useCollapsibleContext();
+  const { open } = useCollapsibleContext();
 
   return (
     <CollapsiblePrimitive.Panel
@@ -439,7 +363,7 @@ const CollapsibleContent = React.forwardRef<
         return (
           <motion.div
             {...resolvedPanelProps}
-            animate={getContentAnimate(open, reduceMotion)}
+            animate={getContentAnimate(open)}
             aria-hidden={!open}
             className={cn(
               "origin-top overflow-hidden will-change-[height,opacity,clip-path]",
@@ -453,20 +377,20 @@ const CollapsibleContent = React.forwardRef<
               setRef(ref, node);
             }}
             style={panelStyle}
-            transition={getContentTransition(reduceMotion)}
+            transition={contentShellTransition}
             {...props}
           >
             <motion.div
-              animate={getMaskAnimate(open, reduceMotion)}
+              animate={getMaskAnimate(open)}
               className="overflow-hidden will-change-[clip-path,opacity]"
               initial={false}
-              transition={getMaskTransition(reduceMotion)}
+              transition={contentMaskTransition}
             >
               <motion.div
-                animate={getInnerAnimate(open, reduceMotion)}
+                animate={getInnerAnimate(open)}
                 className="pr-8 pb-3 text-muted-foreground text-sm leading-6 will-change-transform"
                 initial={false}
-                transition={getInnerTransition(reduceMotion)}
+                transition={contentCopyTransition}
               >
                 {children}
               </motion.div>

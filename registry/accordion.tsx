@@ -4,11 +4,6 @@ import * as AccordionPrimitive from "@radix-ui/react-accordion";
 import { AnimatePresence, motion, type Transition } from "motion/react";
 import * as React from "react";
 
-import {
-  ReducedMotionConfig,
-  type ReducedMotionProp,
-  useResolvedReducedMotion,
-} from "@/lib/reduced-motion";
 import { cn } from "@/lib/utils";
 
 const componentThemeClassName =
@@ -22,7 +17,7 @@ export interface AccordionItem {
 
 export type AccordionVariant = "default" | "quiet";
 
-export interface AccordionProps extends ReducedMotionProp {
+export interface AccordionProps {
   items: AccordionItem[];
   className?: string;
   multiple?: boolean;
@@ -71,7 +66,6 @@ type AccordionRowProps = {
   item: AccordionItem;
   index: number;
   isOpen: boolean;
-  reduceMotion: boolean;
 };
 
 function getRowClassName(index: number) {
@@ -110,88 +104,64 @@ function AccordionContent({
   contentCopy,
   isOpen,
   maskClassName,
-  reduceMotion,
   wrapClassName,
 }: {
   contentCopy: React.ReactNode;
   isOpen: boolean;
   maskClassName: string;
-  reduceMotion: boolean;
   wrapClassName: string;
 }) {
   return (
     <AnimatePresence initial={false}>
       {isOpen ? (
-        reduceMotion ? (
-          <AccordionPrimitive.Content forceMount>
+        <AccordionPrimitive.Content asChild forceMount>
+          <motion.div
+            animate={{
+              height: "auto",
+              opacity: 1,
+              clipPath: "inset(0% 0% 0% 0%)",
+            }}
+            className="overflow-hidden"
+            exit={{
+              height: 0,
+              opacity: 0,
+              clipPath: "inset(0% 0% 100% 0%)",
+            }}
+            initial={{
+              height: 0,
+              opacity: 0,
+              clipPath: "inset(0% 0% 100% 0%)",
+            }}
+            transition={contentShellTransition}
+          >
             <div className={wrapClassName}>
-              <div className={maskClassName}>{contentCopy}</div>
+              <motion.div
+                animate={{
+                  clipPath: "inset(0% 0% 0% 0%)",
+                  opacity: 1,
+                }}
+                className={maskClassName}
+                exit={{
+                  clipPath: "inset(0% 100% 0% 0%)",
+                  opacity: 0.68,
+                }}
+                initial={{
+                  clipPath: "inset(0% 100% 0% 0%)",
+                  opacity: 0.68,
+                }}
+                transition={contentMaskTransition}
+              >
+                {contentCopy}
+              </motion.div>
             </div>
-          </AccordionPrimitive.Content>
-        ) : (
-          <AccordionPrimitive.Content asChild forceMount>
-            <motion.div
-              animate={{
-                height: "auto",
-                opacity: 1,
-                clipPath: "inset(0% 0% 0% 0%)",
-              }}
-              className="overflow-hidden"
-              exit={{
-                height: 0,
-                opacity: 0,
-                clipPath: "inset(0% 0% 100% 0%)",
-              }}
-              initial={{
-                height: 0,
-                opacity: 0,
-                clipPath: "inset(0% 0% 100% 0%)",
-              }}
-              transition={contentShellTransition}
-            >
-              <div className={wrapClassName}>
-                <motion.div
-                  animate={{
-                    clipPath: "inset(0% 0% 0% 0%)",
-                    opacity: 1,
-                  }}
-                  className={maskClassName}
-                  exit={{
-                    clipPath: "inset(0% 100% 0% 0%)",
-                    opacity: 0.68,
-                  }}
-                  initial={{
-                    clipPath: "inset(0% 100% 0% 0%)",
-                    opacity: 0.68,
-                  }}
-                  transition={contentMaskTransition}
-                >
-                  {contentCopy}
-                </motion.div>
-              </div>
-            </motion.div>
-          </AccordionPrimitive.Content>
-        )
+          </motion.div>
+        </AccordionPrimitive.Content>
       ) : null}
     </AnimatePresence>
   );
 }
 
-function AccordionTriggerLabel({
-  reduceMotion,
-  title,
-}: {
-  reduceMotion: boolean;
-  title: string;
-}) {
-  if (reduceMotion) {
-    return (
-      <span className="pr-4 font-medium text-[15px] text-foreground leading-6 tracking-[-0.02em] sm:text-base">
-        {title}
-      </span>
-    );
-  }
-
+function AccordionTriggerLabel({ title }: { title: string }) {
   return (
     <motion.span
       animate={{ x: 0 }}
@@ -229,15 +199,8 @@ function AccordionTriggerIndicator({ isOpen }: { isOpen: boolean }) {
   );
 }
 
-function AccordionRow({
-  item,
-  index,
-  isOpen,
-  reduceMotion,
-}: AccordionRowProps) {
-  const contentCopy = reduceMotion ? (
-    <div className={getContentCopyClassName()}>{item.content}</div>
-  ) : (
+function AccordionRow({ item, index, isOpen }: AccordionRowProps) {
+  const contentCopy = (
     <motion.div
       animate={{
         opacity: 1,
@@ -282,10 +245,7 @@ function AccordionRow({
               getTriggerClassName(isOpen)
             )}
           >
-            <AccordionTriggerLabel
-              reduceMotion={reduceMotion}
-              title={item.title}
-            />
+            <AccordionTriggerLabel title={item.title} />
             <AccordionTriggerIndicator isOpen={isOpen} />
           </AccordionPrimitive.Trigger>
         </AccordionPrimitive.Header>
@@ -294,7 +254,6 @@ function AccordionRow({
           contentCopy={contentCopy}
           isOpen={isOpen}
           maskClassName={getContentMaskClassName()}
-          reduceMotion={reduceMotion}
           wrapClassName={getContentWrapClassName()}
         />
       </motion.div>
@@ -306,16 +265,12 @@ function AccordionQuietRow({
   index,
   item,
   isOpen,
-  reduceMotion,
 }: {
   index: number;
   item: AccordionItem;
   isOpen: boolean;
-  reduceMotion: boolean;
 }) {
-  const contentCopy = reduceMotion ? (
-    <div className={getQuietContentClassName()}>{item.content}</div>
-  ) : (
+  const contentCopy = (
     <motion.div
       animate={{
         opacity: 1,
@@ -374,7 +329,6 @@ function AccordionQuietRow({
           contentCopy={contentCopy}
           isOpen={isOpen}
           maskClassName={getQuietContentMaskClassName()}
-          reduceMotion={reduceMotion}
           wrapClassName={getQuietContentWrapClassName()}
         />
       </motion.div>
@@ -386,12 +340,10 @@ export function Accordion({
   items,
   className,
   multiple = false,
-  reducedMotion,
   variant = "default",
 }: AccordionProps) {
   const [openItems, setOpenItems] = React.useState<string[]>([]);
   const isQuiet = variant === "quiet";
-  const reduceMotion = useResolvedReducedMotion(reducedMotion);
   const rows = items.map((item, index) =>
     isQuiet ? (
       <AccordionQuietRow
@@ -399,7 +351,6 @@ export function Accordion({
         isOpen={openItems.includes(item.id)}
         item={item}
         key={item.id}
-        reduceMotion={reduceMotion}
       />
     ) : (
       <AccordionRow
@@ -407,45 +358,40 @@ export function Accordion({
         isOpen={openItems.includes(item.id)}
         item={item}
         key={item.id}
-        reduceMotion={reduceMotion}
       />
     )
   );
 
   if (multiple) {
     return (
-      <ReducedMotionConfig reducedMotion={reducedMotion}>
-        <AccordionPrimitive.Root
-          className={cn(
-            componentThemeClassName,
-            "mx-auto w-full max-w-2xl",
-            className
-          )}
-          onValueChange={setOpenItems}
-          type="multiple"
-          value={openItems}
-        >
-          {rows}
-        </AccordionPrimitive.Root>
-      </ReducedMotionConfig>
-    );
-  }
-
-  return (
-    <ReducedMotionConfig reducedMotion={reducedMotion}>
       <AccordionPrimitive.Root
         className={cn(
           componentThemeClassName,
           "mx-auto w-full max-w-2xl",
           className
         )}
-        collapsible
-        onValueChange={(value) => setOpenItems(value ? [value] : [])}
-        type="single"
-        value={openItems[0]}
+        onValueChange={setOpenItems}
+        type="multiple"
+        value={openItems}
       >
         {rows}
       </AccordionPrimitive.Root>
-    </ReducedMotionConfig>
+    );
+  }
+
+  return (
+    <AccordionPrimitive.Root
+      className={cn(
+        componentThemeClassName,
+        "mx-auto w-full max-w-2xl",
+        className
+      )}
+      collapsible
+      onValueChange={(value) => setOpenItems(value ? [value] : [])}
+      type="single"
+      value={openItems[0]}
+    >
+      {rows}
+    </AccordionPrimitive.Root>
   );
 }

@@ -6,10 +6,6 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { motion } from "motion/react";
 import * as React from "react";
 
-import {
-  type ReducedMotionProp,
-  useResolvedReducedMotion,
-} from "@/lib/reduced-motion";
 import { cn } from "@/lib/utils";
 
 const componentThemeClassName =
@@ -111,14 +107,14 @@ const contentSizeStyles: Record<ButtonGroupSize, string> = {
   lg: "gap-2 [&_svg]:size-4 [&_svg]:shrink-0",
 };
 
-interface ButtonProps extends MotionSafeButtonProps, ReducedMotionProp {
+interface ButtonProps extends MotionSafeButtonProps {
   children: React.ReactNode;
   disableRipple?: boolean;
   size?: ButtonGroupSize;
   showBorder?: boolean;
 }
 
-interface RippleButtonProps extends MotionSafeButtonProps, ReducedMotionProp {
+interface RippleButtonProps extends MotionSafeButtonProps {
   children: React.ReactNode;
   className?: string;
   contentClassName?: string;
@@ -161,19 +157,17 @@ const RippleButton = React.forwardRef<HTMLButtonElement, RippleButtonProps>(
       disabled,
       disableRipple,
       onPointerDown,
-      reducedMotion,
       type = "button",
       ...props
     },
     ref
   ) => {
     const [ripples, setRipples] = React.useState<Ripple[]>([]);
-    const prefersReducedMotion = useResolvedReducedMotion(reducedMotion);
 
     const handlePointerDown = (e: React.PointerEvent<HTMLButtonElement>) => {
       onPointerDown?.(e);
 
-      if (disabled || disableRipple || e.button !== 0 || prefersReducedMotion) {
+      if (disabled || disableRipple || e.button !== 0) {
         return;
       }
 
@@ -260,7 +254,6 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       disableRipple = false,
       showBorder = true,
       size = "md",
-      reducedMotion,
       ...props
     },
     ref
@@ -277,7 +270,6 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         )}
         contentClassName={contentSizeStyles[size]}
         disableRipple={disableRipple}
-        reducedMotion={reducedMotion}
         ref={ref}
         {...props}
       >
@@ -288,7 +280,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 );
 Button.displayName = "Button";
 
-interface IconButtonProps extends MotionSafeButtonProps, ReducedMotionProp {
+interface IconButtonProps extends MotionSafeButtonProps {
   children: React.ReactNode;
   disableRipple?: boolean;
   size?: ButtonGroupSize;
@@ -303,7 +295,6 @@ const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
       disableRipple = false,
       showBorder = true,
       size = "md",
-      reducedMotion,
       ...props
     },
     ref
@@ -320,7 +311,6 @@ const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
         )}
         contentClassName={contentSizeStyles[size]}
         disableRipple={disableRipple}
-        reducedMotion={reducedMotion}
         ref={ref}
         {...props}
       >
@@ -401,7 +391,6 @@ function ButtonGroupSeparator({
 interface ButtonGroupItemsProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
   disableRipple?: boolean;
-  reducedMotion?: boolean;
   showDividers?: boolean;
   size?: ButtonGroupSize;
 }
@@ -418,13 +407,11 @@ function ButtonGroupItems({
   className,
   disableRipple = false,
   onPointerLeave,
-  reducedMotion,
   role = "group",
   showDividers = true,
   size = "md",
   ...props
 }: ButtonGroupItemsProps) {
-  const prefersReducedMotion = useResolvedReducedMotion(reducedMotion);
   const [activeHoverIndex, setActiveHoverIndex] = React.useState<number | null>(
     null
   );
@@ -435,7 +422,7 @@ function ButtonGroupItems({
     (child): child is ButtonGroupChild =>
       React.isValidElement<MotionSafeButtonProps>(child)
   );
-  const usesSharedHover = !(showDividers || prefersReducedMotion);
+  const usesSharedHover = !showDividers;
 
   const updateHoverFrame = React.useCallback((index: number) => {
     const node = itemRefs.current[index];
@@ -575,7 +562,6 @@ function ButtonGroupItems({
               }
             }}
             onPointerLeave={childOnPointerLeave}
-            reducedMotion={reducedMotion}
             ref={(node) => {
               itemRefs.current[index] = node;
             }}
@@ -590,7 +576,7 @@ function ButtonGroupItems({
 }
 
 // Segmented control variant with animated indicator
-interface SegmentedControlProps extends ReducedMotionProp {
+interface SegmentedControlProps {
   options: string[];
   value?: string;
   onChange?: (value: string) => void;
@@ -609,10 +595,8 @@ function SegmentedControl({
   ariaLabelledBy,
   className,
   layoutId = "segmented-indicator",
-  reducedMotion,
   size = "md",
 }: SegmentedControlProps) {
-  const prefersReducedMotion = useResolvedReducedMotion(reducedMotion);
   const [selected, setSelected] = React.useState(value ?? options[0] ?? "");
   const [isHovered, setIsHovered] = React.useState<string | null>(null);
   const buttonRefs = React.useRef<Array<HTMLButtonElement | null>>([]);
@@ -736,34 +720,26 @@ function SegmentedControl({
             }}
             role="radio"
             tabIndex={isSelected ? 0 : -1}
-            transition={
-              prefersReducedMotion
-                ? { duration: 0 }
-                : {
-                    type: "spring",
-                    stiffness: 420,
-                    damping: 32,
-                  }
-            }
+            transition={{
+              type: "spring",
+              stiffness: 420,
+              damping: 32,
+            }}
             type="button"
-            whileTap={prefersReducedMotion ? undefined : { scale: 0.985 }}
+            whileTap={{ scale: 0.985 }}
           >
             {isSelected && (
               <motion.span
                 aria-hidden
                 className="absolute inset-0 z-0 rounded-md bg-muted shadow-sm"
                 initial={false}
-                layoutId={prefersReducedMotion ? undefined : layoutId}
-                transition={
-                  prefersReducedMotion
-                    ? { duration: 0 }
-                    : {
-                        type: "spring",
-                        stiffness: 500,
-                        damping: 36,
-                        mass: 0.8,
-                      }
-                }
+                layoutId={layoutId}
+                transition={{
+                  type: "spring",
+                  stiffness: 500,
+                  damping: 36,
+                  mass: 0.8,
+                }}
               />
             )}
             <motion.span
@@ -774,14 +750,10 @@ function SegmentedControl({
               aria-hidden
               className="pointer-events-none absolute inset-0 z-0 rounded-md bg-muted/50"
               initial={false}
-              transition={
-                prefersReducedMotion
-                  ? { duration: 0 }
-                  : {
-                      duration: 0.14,
-                      ease: [0.22, 1, 0.36, 1],
-                    }
-              }
+              transition={{
+                duration: 0.14,
+                ease: [0.22, 1, 0.36, 1],
+              }}
             />
             <span className="relative z-10">{option}</span>
           </motion.button>

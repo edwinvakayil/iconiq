@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useReducedMotion } from "motion/react";
+import { motion } from "motion/react";
 import {
   useCallback,
   useEffect,
@@ -36,7 +36,6 @@ type FileTabTriggerProps = {
   file: RegistryFile;
   index: number;
   activeFileId: string;
-  reduceMotion: boolean;
   getFileId: (file: RegistryFile, index: number) => string;
   fileLabel: (file: RegistryFile, index: number) => string;
   onSelect: (id: string) => void;
@@ -46,33 +45,26 @@ function FileTabTrigger({
   file,
   index,
   activeFileId,
-  reduceMotion,
   getFileId,
   fileLabel,
   onSelect,
 }: FileTabTriggerProps) {
   const id = getFileId(file, index);
   const isActive = activeFileId === id;
-  const springTransition = reduceMotion
-    ? { duration: 0 }
-    : {
-        type: "spring" as const,
-        stiffness: 380,
-        damping: 30,
-        mass: 0.7,
-      };
-  const labelAnimation = reduceMotion
-    ? undefined
-    : {
-        opacity: isActive ? 1 : 0.74,
-        y: isActive ? -0.5 : 0,
-      };
-  const labelTransition = reduceMotion
-    ? { duration: 0 }
-    : {
-        duration: 0.18,
-        ease: [0.22, 1, 0.36, 1] as const,
-      };
+  const springTransition = {
+    type: "spring" as const,
+    stiffness: 380,
+    damping: 30,
+    mass: 0.7,
+  };
+  const labelAnimation = {
+    opacity: isActive ? 1 : 0.74,
+    y: isActive ? -0.5 : 0,
+  };
+  const labelTransition = {
+    duration: 0.18,
+    ease: [0.22, 1, 0.36, 1] as const,
+  };
 
   return (
     <motion.button
@@ -86,7 +78,7 @@ function FileTabTrigger({
       onClick={() => onSelect(id)}
       transition={springTransition}
       type="button"
-      whileTap={reduceMotion ? undefined : { y: 1 }}
+      whileTap={{ y: 1 }}
     >
       <motion.span
         animate={labelAnimation}
@@ -109,7 +101,6 @@ function RegistrySourceCode({ componentName }: { componentName: string }) {
   const [files, setFiles] = useState<RegistryFile[]>([]);
   const [status, setStatus] = useState<"loading" | "done" | "error">("loading");
   const fileRailRef = useRef<HTMLDivElement | null>(null);
-  const reduceMotion = useReducedMotion() ?? false;
 
   const getFileId = useCallback(
     (file: RegistryFile, index: number) =>
@@ -265,7 +256,6 @@ function RegistrySourceCode({ componentName }: { componentName: string }) {
                   index={index}
                   key={getFileId(file, index)}
                   onSelect={setActiveFileId}
-                  reduceMotion={reduceMotion}
                 />
               ))}
             </div>
@@ -278,16 +268,12 @@ function RegistrySourceCode({ componentName }: { componentName: string }) {
               aria-hidden
               className="pointer-events-none absolute -bottom-px z-10 h-px bg-foreground"
               initial={false}
-              transition={
-                reduceMotion
-                  ? { duration: 0 }
-                  : {
-                      type: "spring",
-                      stiffness: 420,
-                      damping: 34,
-                      mass: 0.75,
-                    }
-              }
+              transition={{
+                type: "spring",
+                stiffness: 420,
+                damping: 34,
+                mass: 0.75,
+              }}
             />
           </div>
         </div>
@@ -316,7 +302,6 @@ export function ComponentInstallationTabs({
     width: 0,
   });
   const tabRailRef = useRef<HTMLDivElement | null>(null);
-  const reduceMotion = useReducedMotion() ?? false;
   const updateIndicator = useCallback(() => {
     const rail = tabRailRef.current;
 
@@ -415,16 +400,12 @@ export function ComponentInstallationTabs({
           aria-hidden
           className="pointer-events-none absolute -bottom-px z-10 h-px bg-foreground dark:bg-white"
           initial={false}
-          transition={
-            reduceMotion
-              ? { duration: 0 }
-              : {
-                  type: "spring",
-                  stiffness: 360,
-                  damping: 34,
-                  mass: 0.7,
-                }
-          }
+          transition={{
+            type: "spring",
+            stiffness: 360,
+            damping: 34,
+            mass: 0.7,
+          }}
         />
       </div>
 

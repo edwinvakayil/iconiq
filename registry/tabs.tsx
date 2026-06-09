@@ -3,10 +3,6 @@
 import { motion } from "motion/react";
 import * as React from "react";
 
-import {
-  ReducedMotionConfig,
-  type ReducedMotionProp,
-} from "@/lib/reduced-motion";
 import { cn } from "@/lib/utils";
 
 const componentThemeClassName =
@@ -192,9 +188,7 @@ function collectTabsContentElements(
   return elements;
 }
 
-export interface TabsProps
-  extends React.HTMLAttributes<HTMLDivElement>,
-    ReducedMotionProp {
+export interface TabsProps extends React.HTMLAttributes<HTMLDivElement> {
   activationMode?: "automatic" | "manual";
   defaultValue?: string;
   onValueChange?: (value: string) => void;
@@ -207,7 +201,6 @@ export function Tabs({
   className,
   defaultValue,
   onValueChange,
-  reducedMotion,
   value: valueProp,
   ...props
 }: TabsProps) {
@@ -323,81 +316,79 @@ export function Tabs({
   );
 
   return (
-    <ReducedMotionConfig reducedMotion={reducedMotion}>
-      <TabsContext.Provider value={contextValue}>
-        <div
-          className={cn(componentThemeClassName, "w-full", className)}
-          {...props}
-        >
-          {children}
-          {activeContent ? (
-            <div className="relative mt-10">
-              <motion.div
-                animate={{
-                  height:
-                    contentBounds.height > 0 ? contentBounds.height : "auto",
-                }}
-                className="overflow-hidden"
-                initial={false}
-                transition={{
-                  damping: 30,
-                  mass: 0.9,
-                  stiffness: 260,
-                  type: "spring",
-                }}
-              >
-                <div ref={contentRef}>
-                  <motion.div
-                    animate={{
-                      filter: "blur(0px)",
-                      opacity: 1,
-                      scale: 1,
-                      y: 0,
-                    }}
-                    className="w-full"
-                    initial={
-                      hasMountedRef.current
-                        ? {
-                            filter: "blur(7px)",
-                            opacity: 0.72,
-                            scale: 0.988,
-                            y: 8,
-                          }
-                        : false
-                    }
-                    key={activeContent.props.value}
-                    layout
-                    style={{ willChange: "filter, opacity, transform" }}
-                    transition={{
-                      damping: 24,
-                      mass: 0.85,
-                      stiffness: 220,
-                      type: "spring",
-                      filter: { duration: 0.24, ease: [0.22, 1, 0.36, 1] },
-                      opacity: { duration: 0.18, ease: "easeOut" },
-                    }}
+    <TabsContext.Provider value={contextValue}>
+      <div
+        className={cn(componentThemeClassName, "w-full", className)}
+        {...props}
+      >
+        {children}
+        {activeContent ? (
+          <div className="relative mt-10">
+            <motion.div
+              animate={{
+                height:
+                  contentBounds.height > 0 ? contentBounds.height : "auto",
+              }}
+              className="overflow-hidden"
+              initial={false}
+              transition={{
+                damping: 30,
+                mass: 0.9,
+                stiffness: 260,
+                type: "spring",
+              }}
+            >
+              <div ref={contentRef}>
+                <motion.div
+                  animate={{
+                    filter: "blur(0px)",
+                    opacity: 1,
+                    scale: 1,
+                    y: 0,
+                  }}
+                  className="w-full"
+                  initial={
+                    hasMountedRef.current
+                      ? {
+                          filter: "blur(7px)",
+                          opacity: 0.72,
+                          scale: 0.988,
+                          y: 8,
+                        }
+                      : false
+                  }
+                  key={activeContent.props.value}
+                  layout
+                  style={{ willChange: "filter, opacity, transform" }}
+                  transition={{
+                    damping: 24,
+                    mass: 0.85,
+                    stiffness: 220,
+                    type: "spring",
+                    filter: { duration: 0.24, ease: [0.22, 1, 0.36, 1] },
+                    opacity: { duration: 0.18, ease: "easeOut" },
+                  }}
+                >
+                  <div
+                    {...activePanelProps}
+                    aria-labelledby={getTriggerId(
+                      baseId,
+                      activeContent.props.value
+                    )}
+                    className={activeContentClassName}
+                    id={getContentId(baseId, activeContent.props.value)}
+                    ref={(node) => setRefValue(activeContentRef, node)}
+                    role="tabpanel"
                   >
-                    <div
-                      {...activePanelProps}
-                      aria-labelledby={getTriggerId(
-                        baseId,
-                        activeContent.props.value
-                      )}
-                      className={activeContentClassName}
-                      id={getContentId(baseId, activeContent.props.value)}
-                      ref={(node) => setRefValue(activeContentRef, node)}
-                      role="tabpanel"
-                    >
-                      {activeContentChildren}
-                    </div>
-                  </motion.div>
-                </div>
-              </motion.div>
-            </div>
-          ) : null}
-        </div>
-      </TabsContext.Provider>
-    </ReducedMotionConfig>
+                    {activeContentChildren}
+                  </div>
+                </motion.div>
+              </div>
+            </motion.div>
+          </div>
+        ) : null}
+      </div>
+    </TabsContext.Provider>
   );
 }
 

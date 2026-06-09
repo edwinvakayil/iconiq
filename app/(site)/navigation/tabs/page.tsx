@@ -46,7 +46,6 @@ type TabsModule = {
     className?: string;
     defaultValue?: string;
     onValueChange?: (value: string) => void;
-    reducedMotion?: boolean;
     value?: string;
   }>;
   TabsContent: ComponentType<{

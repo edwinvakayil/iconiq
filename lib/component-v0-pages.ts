@@ -450,7 +450,7 @@ export function BadgePreview() {
 export const chartsPreviewCode = `"use client";
 
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
 import { useState } from "react";
 import {
   BarChart,
@@ -503,7 +503,6 @@ const chartPreviewClassName = "mx-auto w-full max-w-lg";
 
 export function ChartsPreview() {
   const [slideIndex, setSlideIndex] = useState(0);
-  const reduceMotion = useReducedMotion() ?? false;
   const activeSlide = chartSlides[slideIndex];
 
   const goToSlide = (nextIndex: number) => {

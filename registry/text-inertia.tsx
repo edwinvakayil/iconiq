@@ -11,7 +11,6 @@ import {
   useRef,
 } from "react";
 
-import { useResolvedReducedMotion } from "@/lib/reduced-motion";
 import { cn } from "@/lib/utils";
 
 export type TextInertiaProps = Omit<
@@ -52,14 +51,12 @@ function InertiaWord({
   children,
   index,
   intensity,
-  reducedMotion,
   velocityRef,
   wordClassName,
 }: {
   children: string;
   index: number;
   intensity: number;
-  reducedMotion: boolean;
   velocityRef: RefObject<PointerVelocity>;
   wordClassName?: string;
 }) {
@@ -94,10 +91,6 @@ function InertiaWord({
   );
 
   const handlePointerEnter = () => {
-    if (reducedMotion) {
-      return;
-    }
-
     const direction = index % 2 === 0 ? 1 : -1;
     const velocity = velocityRef.current;
     const xKick = clamp(
@@ -154,7 +147,6 @@ export default function TextInertia({
   onPointerMove,
   ...props
 }: TextInertiaProps) {
-  const reducedMotion = useResolvedReducedMotion();
   const velocityRef = useRef<PointerVelocity>({ x: 0, y: 0 });
   const lastPointRef = useRef<{ x: number; y: number } | null>(null);
   const words = useMemo(
@@ -204,7 +196,6 @@ export default function TextInertia({
           index={index}
           intensity={intensity}
           key={`${word}-${index}`}
-          reducedMotion={reducedMotion}
           velocityRef={velocityRef}
           wordClassName={wordClassName}
         >

@@ -25,7 +25,6 @@ import * as RadixSelectionToolbar from "@/registry/r-selection-toolbar";
 type SelectionToolbarModule = {
   SelectionToolbar: ComponentType<{
     containerRef: React.RefObject<HTMLElement | null>;
-    reducedMotion?: boolean;
   }>;
 };
 

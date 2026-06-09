@@ -29,13 +29,6 @@ const ribbonAnimationStyles = `
     transform: translateX(0);
   }
 }
-
-@media (prefers-reduced-motion: reduce) {
-  .iconiq-infinite-ribbon-track {
-    animation-duration: 1ms !important;
-    animation-iteration-count: 1 !important;
-  }
-}
 `;
 
 export function InfiniteRibbon({

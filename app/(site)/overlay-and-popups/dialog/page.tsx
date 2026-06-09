@@ -20,7 +20,6 @@ type DialogModule = {
     defaultOpen?: boolean;
     onOpenChange?: (open: boolean) => void;
     open?: boolean;
-    reducedMotion?: boolean;
   }>;
   DialogClose: ComponentType<{
     asChild?: boolean;
@@ -29,7 +28,6 @@ type DialogModule = {
   DialogContent: ComponentType<{
     children: ReactNode;
     open?: boolean;
-    reducedMotion?: boolean;
   }>;
   DialogDescription: ComponentType<{
     children: ReactNode;
@@ -310,12 +308,6 @@ export default function RadixBaseDialogPage() {
             description:
               "Called whenever the open state changes, regardless of which provider is installed underneath.",
           },
-          {
-            name: "reducedMotion",
-            type: "boolean",
-            description:
-              "Turns the dialog onto its quieter motion path immediately while still respecting system-level reduced motion preferences.",
-          },
         ],
         notes: [
           `Current install target: ${provider.libraryLabel}.`,
@@ -337,7 +329,7 @@ export default function RadixBaseDialogPage() {
           },
           {
             name: "DialogContent",
-            type: "Dialog popup props + { open?: boolean; reducedMotion?: boolean }",
+            type: "Dialog popup props + { open?: boolean }",
             description:
               "Visible modal card wrapper. className is merged onto the animated surface, and the optional open prop can mirror the root state when you want explicit parity with the original dialog usage.",
           },

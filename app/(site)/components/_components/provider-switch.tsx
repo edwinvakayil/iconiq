@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useReducedMotion } from "motion/react";
+import { motion } from "motion/react";
 
 import {
   BaseUILogo,
@@ -54,7 +54,6 @@ export function ProviderSwitch({
   mutedTrigger?: boolean;
   muteActiveDisabledOption?: boolean;
 }) {
-  const reduceMotion = useReducedMotion() ?? false;
   const activeIndex = Math.max(
     0,
     providerOptions.findIndex((option) => option.key === selectedProvider)
@@ -70,7 +69,7 @@ export function ProviderSwitch({
         animate={{ x: `${activeIndex * 100}%` }}
         aria-hidden
         className="absolute inset-y-0 left-0 z-0 h-full w-1/2 bg-background dark:bg-[#1d1d1b]"
-        transition={reduceMotion ? { duration: 0 } : slideSpring}
+        transition={slideSpring}
       />
 
       {providerOptions.map((option, index) => {
@@ -102,7 +101,7 @@ export function ProviderSwitch({
             role="radio"
             title={option.label}
             type="button"
-            whileTap={reduceMotion || isDisabled ? undefined : { scale: 0.96 }}
+            whileTap={isDisabled ? undefined : { scale: 0.96 }}
           >
             <Logo className={option.logoClassName} />
           </motion.button>

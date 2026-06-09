@@ -4,11 +4,6 @@ import { Switch as SwitchPrimitive } from "@base-ui/react/switch";
 import { animate, motion, useMotionValue, useTransform } from "motion/react";
 import * as React from "react";
 
-import {
-  ReducedMotionConfig,
-  type ReducedMotionProp,
-  useResolvedReducedMotion,
-} from "@/lib/reduced-motion";
 import { cn } from "@/lib/utils";
 
 const componentThemeClassName =
@@ -23,7 +18,7 @@ const spring = { type: "spring" as const, duration: 0.35, bounce: 0.3 };
 const springFast = { type: "spring" as const, duration: 0.15, bounce: 0 };
 const springSnap = { type: "spring" as const, duration: 0.4, bounce: 0.5 };
 
-export interface SwitchProps extends ReducedMotionProp {
+export interface SwitchProps {
   "aria-label"?: string;
   checked?: boolean;
   className?: string;
@@ -68,7 +63,6 @@ const Switch = React.forwardRef<HTMLButtonElement, SwitchProps>(
       name,
       onCheckedChange,
       readOnly,
-      reducedMotion,
       required,
       value,
     },
@@ -85,7 +79,6 @@ const Switch = React.forwardRef<HTMLButtonElement, SwitchProps>(
     const thumbScaleY = useMotionValue(1);
 
     const fillOpacity = useTransform(thumbX, [0, THUMB_TRAVEL], [0, 1]);
-    const reduceMotion = useResolvedReducedMotion(reducedMotion);
 
     const prevChecked = React.useRef(internalChecked);
     const buttonRef = React.useRef<HTMLButtonElement | null>(null);
@@ -96,30 +89,15 @@ const Switch = React.forwardRef<HTMLButtonElement, SwitchProps>(
       }
 
       prevChecked.current = internalChecked;
-      if (reduceMotion) {
-        thumbX.set(internalChecked ? THUMB_TRAVEL : 0);
-        return;
-      }
-
       animate(thumbX, internalChecked ? THUMB_TRAVEL : 0, spring);
-    }, [internalChecked, reduceMotion, thumbX]);
+    }, [internalChecked, thumbX]);
 
     const handlePointerDown = () => {
-      if (reduceMotion) {
-        return;
-      }
-
       animate(thumbScaleX, 0.82, springFast);
       animate(thumbScaleY, 1.1, springFast);
     };
 
     const handlePointerUp = () => {
-      if (reduceMotion) {
-        thumbScaleX.set(1);
-        thumbScaleY.set(1);
-        return;
-      }
-
       animate(thumbScaleX, 1, springSnap);
       animate(thumbScaleY, 1, springSnap);
     };
@@ -127,14 +105,6 @@ const Switch = React.forwardRef<HTMLButtonElement, SwitchProps>(
     const handleCheckedChange = (next: boolean) => {
       if (!isControlled) {
         setUncontrolledChecked(next);
-      }
-
-      if (reduceMotion) {
-        thumbScaleX.set(1);
-        thumbScaleY.set(1);
-        thumbX.set(next ? THUMB_TRAVEL : 0);
-        onCheckedChange?.(next);
-        return;
       }
 
       animate(thumbScaleX, 1.15, springFast).then(() => {
@@ -286,45 +256,39 @@ const Switch = React.forwardRef<HTMLButtonElement, SwitchProps>(
     );
 
     if (!label) {
-      return (
-        <ReducedMotionConfig reducedMotion={reducedMotion}>
-          {switchEl}
-        </ReducedMotionConfig>
-      );
+      return switchEl;
     }
 
     return (
-      <ReducedMotionConfig reducedMotion={reducedMotion}>
-        <div
-          className={cn(
-            componentThemeClassName,
-            "flex cursor-pointer select-none items-center gap-2.5",
-            disabled && "cursor-not-allowed opacity-50"
-          )}
-        >
-          {labelSide === "left" ? (
-            <button
-              className="bg-transparent p-0 text-foreground text-sm"
-              disabled={disabled}
-              onClick={toggleFromLabel}
-              type="button"
-            >
-              {label}
-            </button>
-          ) : null}
-          {switchEl}
-          {labelSide === "right" ? (
-            <button
-              className="bg-transparent p-0 text-foreground text-sm"
-              disabled={disabled}
-              onClick={toggleFromLabel}
-              type="button"
-            >
-              {label}
-            </button>
-          ) : null}
-        </div>
-      </ReducedMotionConfig>
+      <div
+        className={cn(
+          componentThemeClassName,
+          "flex cursor-pointer select-none items-center gap-2.5",
+          disabled && "cursor-not-allowed opacity-50"
+        )}
+      >
+        {labelSide === "left" ? (
+          <button
+            className="bg-transparent p-0 text-foreground text-sm"
+            disabled={disabled}
+            onClick={toggleFromLabel}
+            type="button"
+          >
+            {label}
+          </button>
+        ) : null}
+        {switchEl}
+        {labelSide === "right" ? (
+          <button
+            className="bg-transparent p-0 text-foreground text-sm"
+            disabled={disabled}
+            onClick={toggleFromLabel}
+            type="button"
+          >
+            {label}
+          </button>
+        ) : null}
+      </div>
     );
   }
 );

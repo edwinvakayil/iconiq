@@ -5,10 +5,6 @@ import { Check, ChevronDown } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import * as React from "react";
 
-import {
-  type ReducedMotionProp,
-  useResolvedReducedMotion,
-} from "@/lib/reduced-motion";
 import { cn } from "@/lib/utils";
 
 const componentThemeClassName =
@@ -34,14 +30,14 @@ function clamp(value: number, min: number, max: number) {
   return Math.min(Math.max(value, min), max);
 }
 
-function getContentMotion(reduceMotion: boolean) {
+function getContentMotion() {
   return {
     animate: { opacity: 1, y: 0 },
-    exit: { opacity: 0, y: reduceMotion ? 0 : -4 },
-    initial: { opacity: 0, y: reduceMotion ? 0 : -4 },
+    exit: { opacity: 0, y: -4 },
+    initial: { opacity: 0, y: -4 },
     transition: {
-      duration: reduceMotion ? 0.16 : 0.25,
-      ease: reduceMotion ? ("easeOut" as const) : SOFT_EASE,
+      duration: 0.25,
+      ease: SOFT_EASE,
     },
   };
 }
@@ -76,15 +72,15 @@ function getResolvedPlacement(
   return { maxHeight };
 }
 
-function getInnerContentMotion(reduceMotion: boolean) {
+function getInnerContentMotion() {
   return {
     animate: { opacity: 1, y: 0 },
-    exit: { opacity: 0, y: reduceMotion ? 0 : -2 },
-    initial: { opacity: 0, y: reduceMotion ? 0 : 3 },
+    exit: { opacity: 0, y: -2 },
+    initial: { opacity: 0, y: 3 },
     transition: {
-      delay: reduceMotion ? 0 : 0.03,
-      duration: reduceMotion ? 0.12 : 0.18,
-      ease: reduceMotion ? ("easeOut" as const) : SOFT_EASE,
+      delay: 0.03,
+      duration: 0.18,
+      ease: SOFT_EASE,
     },
   };
 }
@@ -104,7 +100,6 @@ type DropdownContextValue = {
   containerRef: React.RefObject<HTMLDivElement | null>;
   labels: Record<string, string>;
   open: boolean;
-  reduceMotion: boolean;
   setActiveItemId: (id: string | null) => void;
   setFocusStrategy: (strategy: DropdownFocusStrategy) => void;
   setOpen: (open: boolean) => void;
@@ -258,7 +253,7 @@ function useControllableState<T>({
   return [value, setValue] as const;
 }
 
-export interface DropdownProps extends ReducedMotionProp {
+export interface DropdownProps {
   children: React.ReactNode;
   className?: string;
   defaultOpen?: boolean;
@@ -278,13 +273,11 @@ export function Dropdown({
   onOpenChange,
   onValueChange,
   open: openProp,
-  reducedMotion,
   value: valueProp,
   variant = "select",
 }: DropdownProps) {
   const containerRef = React.useRef<HTMLDivElement>(null);
   const triggerRef = React.useRef<HTMLButtonElement>(null);
-  const reduceMotion = useResolvedReducedMotion(reducedMotion);
   const contentId = React.useId();
   const focusStrategyRef = React.useRef<DropdownFocusStrategy>("selected");
   const typeaheadRef = React.useRef("");
@@ -592,7 +585,6 @@ export function Dropdown({
       containerRef,
       labels,
       open,
-      reduceMotion,
       setActiveItemId,
       setFocusStrategy: (strategy: DropdownFocusStrategy) => {
         focusStrategyRef.current = strategy;
@@ -603,17 +595,7 @@ export function Dropdown({
       value,
       variant,
     }),
-    [
-      activeItemId,
-      contentId,
-      labels,
-      open,
-      reduceMotion,
-      setOpen,
-      setValue,
-      value,
-      variant,
-    ]
+    [activeItemId, contentId, labels, open, setOpen, setValue, value, variant]
   );
 
   return (
@@ -657,15 +639,8 @@ export const DropdownTrigger = React.forwardRef<
     },
     ref
   ) => {
-    const {
-      contentId,
-      open,
-      reduceMotion,
-      setFocusStrategy,
-      setOpen,
-      triggerRef,
-      variant,
-    } = useDropdownContext("DropdownTrigger");
+    const { contentId, open, setFocusStrategy, setOpen, triggerRef, variant } =
+      useDropdownContext("DropdownTrigger");
 
     return (
       <motion.button
@@ -679,7 +654,7 @@ export const DropdownTrigger = React.forwardRef<
         )}
         data-state={open ? "open" : "closed"}
         disabled={disabled}
-        layout={reduceMotion ? false : "size"}
+        layout="size"
         onClick={(event) => {
           onClick?.(event);
 
@@ -727,7 +702,7 @@ export const DropdownTrigger = React.forwardRef<
       >
         <motion.span
           className="flex min-w-0 flex-1 items-center gap-2"
-          layout={reduceMotion ? false : "position"}
+          layout="position"
         >
           {children}
         </motion.span>
@@ -735,11 +710,12 @@ export const DropdownTrigger = React.forwardRef<
           <motion.span
             animate={{ rotate: open ? 180 : 0 }}
             className="text-muted-foreground"
-            transition={
-              reduceMotion
-                ? { duration: 0.14, ease: "easeOut" }
-                : { type: "spring", stiffness: 260, damping: 22, mass: 0.72 }
-            }
+            transition={{
+              type: "spring",
+              stiffness: 260,
+              damping: 22,
+              mass: 0.72,
+            }}
           >
             <ChevronDown className="h-4 w-4" />
           </motion.span>
@@ -788,7 +764,7 @@ export const DropdownContent = React.forwardRef<
     { align = "start", children, className, sideOffset = 8, style, ...props },
     ref
   ) => {
-    const { containerRef, contentId, open, reduceMotion, triggerRef, variant } =
+    const { containerRef, contentId, open, triggerRef, variant } =
       useDropdownContext("DropdownContent");
     const shellRef = React.useRef<HTMLDivElement | null>(null);
     const [position, setPosition] = React.useState<{
@@ -872,8 +848,8 @@ export const DropdownContent = React.forwardRef<
       };
     }, [containerRef, open, triggerRef, updatePosition]);
 
-    const contentMotion = getContentMotion(reduceMotion);
-    const innerContentMotion = getInnerContentMotion(reduceMotion);
+    const contentMotion = getContentMotion();
+    const innerContentMotion = getInnerContentMotion();
 
     return (
       <AnimatePresence>
@@ -959,7 +935,6 @@ export const DropdownItem = React.forwardRef<HTMLDivElement, DropdownItemProps>(
   ) => {
     const {
       activeItemId,
-      reduceMotion,
       setActiveItemId,
       setOpen,
       setValue,
@@ -1006,11 +981,12 @@ export const DropdownItem = React.forwardRef<HTMLDivElement, DropdownItemProps>(
       <>
         <motion.span
           className="relative z-10 flex min-w-0 flex-1 items-center gap-2 truncate"
-          transition={
-            reduceMotion
-              ? undefined
-              : { type: "spring", stiffness: 360, damping: 28, mass: 0.55 }
-          }
+          transition={{
+            type: "spring",
+            stiffness: 360,
+            damping: 28,
+            mass: 0.55,
+          }}
         >
           {children}
         </motion.span>
@@ -1019,11 +995,12 @@ export const DropdownItem = React.forwardRef<HTMLDivElement, DropdownItemProps>(
             animate={{ opacity: 1, scale: 1, y: 0 }}
             className="relative z-10 flex size-5 shrink-0 items-center justify-center text-foreground"
             initial={{ opacity: 0, scale: 0.78, y: 1 }}
-            transition={
-              reduceMotion
-                ? { duration: 0.14, ease: "easeOut" }
-                : { type: "spring", stiffness: 460, damping: 24, mass: 0.5 }
-            }
+            transition={{
+              type: "spring",
+              stiffness: 460,
+              damping: 24,
+              mass: 0.5,
+            }}
           >
             <Check className="h-4 w-4" />
           </motion.span>
