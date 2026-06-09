@@ -30,6 +30,8 @@ const componentSummaries: Record<string, string> = {
     "Avatar docs in the Display & Content section for the compound Base UI avatar with image, fallback, badge, group, and count parts.",
   "/display-and-content/badge":
     "Badge docs in the Display & Content section, using the shared Iconiq badge install with provider options visible but disabled.",
+  "/navigation/command-palette":
+    "Radix dialog command menu with grouped search, keyboard shortcuts, navigation items, and optional theme switching.",
   "/navigation/breadcrumbs":
     "Breadcrumbs docs in the Navigation section for the compound Base UI render-compatible trail with animated items, separators, current page, and ellipsis parts.",
   "/buttons-and-actions/button":
@@ -134,6 +136,14 @@ const componentSummaries: Record<string, string> = {
 
 const extraComponentKeywordsBySlug: Record<string, string[]> = {
   card: ["panel", "surface", "container"],
+  "command-palette": [
+    "command menu",
+    "command palette",
+    "search",
+    "keyboard shortcut",
+    "cmd k",
+    "navigation",
+  ],
   charts: ["chart", "recharts", "bar chart", "data visualization", "graph"],
   "color-picker": [
     "color picker",

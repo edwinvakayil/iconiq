@@ -4692,6 +4692,86 @@ const fileTreeApiDetails: DetailItem[] = [
   registryItem("file-tree.json", ["@base-ui/react", "motion", "lucide-react"]),
 ];
 
+const commandPaletteApiDetails: DetailItem[] = [
+  {
+    id: "command-palette",
+    title: "CommandPalette",
+    summary:
+      "Keyboard-first command menu built on Radix Dialog with grouped items, fuzzy search, arrow-key navigation, and optional built-in theme actions.",
+    fields: [
+      field({
+        name: "groups",
+        type: "CommandMenuGroupDef[]",
+        defaultValue: "[]",
+        description:
+          "Grouped command items. Each group has a heading and an items array with label, optional href or action, icon, keywords, and description.",
+      }),
+      field({
+        name: "showThemeGroup",
+        type: "boolean",
+        defaultValue: "true",
+        description:
+          "When true, appends Light, Dark, and System theme actions that call next-themes setTheme.",
+      }),
+      field({
+        name: "placeholder",
+        type: "string",
+        defaultValue: '"Search components, pages, actions…"',
+        description: "Placeholder copy for the search field.",
+      }),
+      field({
+        name: "shortcutKey",
+        type: "string",
+        defaultValue: '"k"',
+        description:
+          "Letter used with Cmd on macOS or Ctrl elsewhere to toggle the palette globally.",
+      }),
+      field({
+        name: "contentDelay",
+        type: "number",
+        defaultValue: "150",
+        description:
+          "Milliseconds to wait before revealing the results panel after the dialog opens.",
+      }),
+      field({
+        name: "trigger",
+        type: "React.ReactNode",
+        description:
+          "Custom trigger node. When provided, it replaces the default search button and receives an open handler.",
+      }),
+      field({
+        name: "triggerProps",
+        type: "CommandMenuTriggerProps",
+        description:
+          "Props for the default trigger button, including label, shortcut badge visibility, and className.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description: "Merged onto the dialog content panel.",
+      }),
+      field({
+        name: "emptyMessage",
+        type: "string",
+        defaultValue: '"No results found."',
+        description: "Copy shown when the current query matches no items.",
+      }),
+    ],
+    notes: [
+      "Items with href navigate through Next.js router.push. Items with action run a callback and close the palette.",
+      "Search matches every whitespace-separated term against the label, description, and keywords haystack.",
+      "The palette closes automatically on route changes when used inside a Next.js App Router app.",
+      "Requires next-themes ThemeProvider when showThemeGroup is enabled.",
+    ],
+  },
+  registryItem("command-palette.json", [
+    "@radix-ui/react-dialog",
+    "lucide-react",
+    "motion",
+    "next-themes",
+  ]),
+];
+
 const faqProApiDetails: DetailItem[] = [
   {
     id: "faq-pro",
@@ -5929,6 +6009,7 @@ export {
   colorPickerApiDetails,
   autocompleteApiDetails,
   comboboxApiDetails,
+  commandPaletteApiDetails,
   contextMenuApiDetails,
   drawerApiDetails,
   diaTextApiDetails,

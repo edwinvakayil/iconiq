@@ -309,6 +309,17 @@ const REGISTRY_UI_META: Record<
       "Compound Alert, AlertTitle, and AlertDescription parts with optional icons, legacy prop support, polite live announcements, and inline or toast behavior.",
     dependencies: ["motion", "class-variance-authority"],
   },
+  "command-palette": {
+    title: "Command Palette",
+    description:
+      "Radix dialog command menu with grouped search, keyboard shortcuts, navigation items, custom triggers, and optional theme switching.",
+    dependencies: [
+      "@radix-ui/react-dialog",
+      "lucide-react",
+      "motion",
+      "next-themes",
+    ],
+  },
   breadcrumbs: {
     title: "Breadcrumbs",
     description:

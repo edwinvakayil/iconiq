@@ -7,13 +7,13 @@ type CommandMenuGroupDef =
 type CommandPaletteProps =
   import("@/registry/command-palette").CommandPaletteProps;
 
-function CommandMenu(props: CommandPaletteProps) {
-  return <RegistryCommandPalette {...props} />;
-}
-
 function CommandPalette(props: CommandPaletteProps) {
   return <RegistryCommandPalette {...props} />;
 }
 
-export { CommandMenu, CommandPalette };
+function CommandMenu(props: CommandPaletteProps) {
+  return <RegistryCommandPalette {...props} />;
+}
+
+export { CommandPalette, CommandMenu };
 export type { CommandMenuGroupDef, CommandPaletteProps };

@@ -594,6 +594,26 @@
       ]
     },
     {
+      "name": "command-palette",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": [
+        "@radix-ui/react-dialog",
+        "lucide-react",
+        "motion",
+        "next-themes"
+      ],
+      "devDependencies": [],
+      "title": "Command Palette",
+      "description": "Radix dialog command menu with grouped search, keyboard shortcuts, navigation items, custom triggers, and optional theme switching.",
+      "files": [
+        {
+          "path": "command-palette.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "context-menu",
       "type": "registry:ui",
       "registryDependencies": [],

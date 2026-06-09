@@ -56,6 +56,7 @@ export const SITE_SECTIONS = [
     children: [
       { label: "Accordion", href: "/navigation/accordion" },
       { label: "Breadcrumbs", href: "/navigation/breadcrumbs" },
+      { label: "Command Palette", href: "/navigation/command-palette" },
       { label: "FAQ Pro", href: "/navigation/faq-pro" },
       { label: "File Tree", href: "/navigation/file-tree" },
       { label: "Tabs", href: "/navigation/tabs" },

@@ -1031,6 +1031,38 @@ export function TerminalHeadline() {
     </TextTypewriter>
   );
 }`),
+  "command-palette": buildV0Page(`"use client";
+
+import { Home } from "lucide-react";
+
+import {
+  CommandPalette,
+  type CommandMenuGroupDef,
+} from "@/components/ui/command-palette";
+
+const groups: CommandMenuGroupDef[] = [
+  {
+    heading: "Pages",
+    items: [
+      {
+        label: "Overview",
+        href: "/",
+        icon: Home,
+        description: "Return to the docs home page.",
+      },
+    ],
+  },
+];
+
+export function CommandPalettePreview() {
+  return (
+    <CommandPalette
+      groups={groups}
+      placeholder="Search pages, components, actions…"
+      triggerProps={{ label: "Open command palette" }}
+    />
+  );
+}`),
   "morph-texts": buildV0Page(`"use client";
 
 import { MorphText } from "@/components/ui/morph-texts";
