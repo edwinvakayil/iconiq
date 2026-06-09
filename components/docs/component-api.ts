@@ -5647,6 +5647,83 @@ const textInertiaApiDetails: DetailItem[] = [
   registryItem("text-inertia.json", ["motion"]),
 ];
 
+const morphTextsApiDetails: DetailItem[] = [
+  {
+    id: "morph-texts",
+    title: "MorphText",
+    summary:
+      "Cycling headline treatment that morphs between words with blur, scale, and an SVG goo filter while optionally revealing subtext beneath the rotator.",
+    fields: [
+      field({
+        name: "words",
+        type: "string[]",
+        required: true,
+        description:
+          "Words or short phrases to cycle through. The component advances to the next entry on each interval tick.",
+      }),
+      field({
+        name: "interval",
+        type: "number",
+        defaultValue: "3000",
+        description:
+          "Milliseconds each word stays active before the next morph transition begins.",
+      }),
+      field({
+        name: "subtext",
+        type: "string",
+        description:
+          "Optional supporting line rendered below the morphing word with a delayed fade-up entrance.",
+      }),
+      field({
+        name: "fontSize",
+        type: "string",
+        defaultValue: '"clamp(3rem, 15vw, 10rem)"',
+        description:
+          "CSS font-size value applied to the morphing headline container.",
+      }),
+      field({
+        name: "fontFamily",
+        type: "string",
+        defaultValue: '"Space Grotesk", sans-serif',
+        description:
+          "CSS font-family value applied to the headline and subtext.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description:
+          "Merged onto the root wrapper for layout and color overrides.",
+      }),
+      field({
+        name: "textClassName",
+        type: "string",
+        description:
+          "Merged onto the morphing text container when you need local typography overrides.",
+      }),
+      field({
+        name: "subtextClassName",
+        type: "string",
+        description: "Merged onto the optional subtext element.",
+      }),
+    ],
+    notes: [
+      "The active word is announced through aria-live=polite so screen readers can follow the rotation.",
+      "Each instance generates a unique SVG filter id so multiple MorphText components can coexist on one page.",
+    ],
+  },
+  {
+    id: "morph-texts-motion",
+    title: "Morph transition behavior",
+    summary:
+      "Word changes are driven by AnimatePresence and Motion variants that overlap enter and exit states so the goo filter can blend the outgoing and incoming text.",
+    notes: [
+      "Enter and exit animate opacity, blur, and scale over roughly 0.9 seconds with an ease-in-out curve.",
+      "When only one word is provided, the interval timer is skipped and the headline stays static.",
+    ],
+  },
+  registryItem("morph-texts.json", ["motion"]),
+];
+
 const typewriterApiDetails: DetailItem[] = [
   {
     id: "typewriter",
@@ -5885,6 +5962,7 @@ export {
   tabsApiDetails,
   toggleApiDetails,
   toggleGroupApiDetails,
+  morphTextsApiDetails,
   textInertiaApiDetails,
   typewriterApiDetails,
   typographyApiDetails,

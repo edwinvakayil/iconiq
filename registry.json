@@ -818,6 +818,21 @@
       ]
     },
     {
+      "name": "morph-texts",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": ["motion"],
+      "devDependencies": [],
+      "title": "Morph Text",
+      "description": "Cycling headline words with a goo-filter morph transition powered by Motion.",
+      "files": [
+        {
+          "path": "morph-texts.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "popover",
       "type": "registry:ui",
       "registryDependencies": [],

@@ -106,6 +106,12 @@ const REGISTRY_UI_META: Record<
       "Animated inline text reveal with a sweeping gradient band, repeat controls, and optional fixed-width rotation for motion-driven typography.",
     dependencies: ["motion"],
   },
+  "morph-texts": {
+    title: "Morph Text",
+    description:
+      "Cycling headline words with a goo-filter morph transition powered by Motion.",
+    dependencies: ["motion"],
+  },
   "shimmer-text": {
     title: "Shimmer Text",
     description:

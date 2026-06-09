@@ -1031,6 +1031,25 @@ export function TerminalHeadline() {
     </TextTypewriter>
   );
 }`),
+  "morph-texts": buildV0Page(`"use client";
+
+import { MorphText } from "@/components/ui/morph-texts";
+
+export function HeroMorph() {
+  return (
+    <p className="max-w-4xl font-light text-2xl text-foreground tracking-tight sm:text-4xl">
+      Build software that feels{" "}
+      <MorphText
+        fontFamily="inherit"
+        fontSize="1em"
+        interval={2800}
+        textClassName="font-semibold"
+        words={["fast", "fluid", "alive"]}
+      />
+      .
+    </p>
+  );
+}`),
 };
 
 type RegistryFile = {
