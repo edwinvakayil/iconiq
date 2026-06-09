@@ -41,6 +41,15 @@ const charSpring = {
 
 const reducedTransition = { duration: 0.12 } as const;
 
+const otpGroupClassName =
+  "flex w-full max-w-full items-center justify-center gap-2 sm:gap-3";
+
+const otpSlotClassName =
+  "relative flex size-11 shrink-0 items-center justify-center rounded-lg border-2 font-medium text-lg tabular-nums sm:size-14 sm:text-xl";
+
+const otpPlaceholderSlotClassName =
+  "size-11 shrink-0 rounded-lg border-2 border-border bg-background sm:size-14";
+
 type OTPProps = React.ComponentPropsWithoutRef<typeof OTPField.Root> & {
   containerClassName?: string;
   /** @deprecated Use `length` instead. */
@@ -49,7 +58,8 @@ type OTPProps = React.ComponentPropsWithoutRef<typeof OTPField.Root> & {
   reducedMotion?: boolean;
 };
 
-const otpRootBaseClassName = "flex items-center gap-3 data-disabled:opacity-50";
+const otpRootBaseClassName =
+  "flex w-full max-w-full items-center justify-center gap-2 data-disabled:opacity-50 sm:gap-3";
 
 function resolveRootClassName(
   className: OTPProps["className"],
@@ -82,13 +92,13 @@ function OTPPlaceholder({
   return (
     <div
       aria-hidden
-      className={cn("flex items-center gap-3", containerClassName, className)}
+      className={cn(otpGroupClassName, containerClassName, className)}
       ref={placeholderRef}
     >
-      <div className="flex items-center gap-3">
+      <div className={otpGroupClassName}>
         {Array.from({ length }, (_, index) => (
           <div
-            className="h-14 w-14 rounded-lg border-2 border-border bg-background"
+            className={otpPlaceholderSlotClassName}
             key={`otp-placeholder-${index}`}
           />
         ))}
@@ -152,11 +162,7 @@ const OTPGroup = React.forwardRef<
   React.ElementRef<"div">,
   React.ComponentPropsWithoutRef<"div">
 >(({ className, ...props }, ref) => (
-  <div
-    className={cn("flex items-center gap-3", className)}
-    ref={ref}
-    {...props}
-  />
+  <div className={cn(otpGroupClassName, className)} ref={ref} {...props} />
 ));
 OTPGroup.displayName = "OTPGroup";
 
@@ -264,7 +270,7 @@ function OTPSlotCaret({ reduceMotion }: { reduceMotion: boolean }) {
     >
       <motion.div
         animate={reduceMotion ? { opacity: 1 } : { opacity: [1, 0.3, 1] }}
-        className="h-6 w-[2px] rounded-full bg-primary"
+        className="h-5 w-[2px] rounded-full bg-primary sm:h-6"
         transition={caretPulseTransition}
       />
     </motion.div>
@@ -300,7 +306,7 @@ function OTPSlotSurface({
         borderColor: isActive ? "var(--color-primary)" : "var(--color-border)",
       }}
       className={cn(
-        "relative flex h-14 w-14 items-center justify-center rounded-lg border-2 font-medium text-xl tabular-nums",
+        otpSlotClassName,
         "bg-background text-foreground",
         state.disabled && "cursor-not-allowed opacity-50",
         state.readOnly && "cursor-default",
@@ -312,7 +318,7 @@ function OTPSlotSurface({
       <input
         {...inputProps}
         className={cn(
-          "absolute inset-0 z-10 cursor-text opacity-0",
+          "absolute inset-0 z-10 cursor-text touch-manipulation opacity-0",
           state.disabled && "cursor-not-allowed",
           state.readOnly && "cursor-default",
           inputClassName
@@ -399,7 +405,7 @@ const OTPSeparator = React.forwardRef<
             setRef(ref, node);
           }}
         >
-          <svg fill="none" height="12" viewBox="0 0 12 12" width="12">
+          <svg className="size-2.5 sm:size-3" fill="none" viewBox="0 0 12 12">
             <circle cx="2" cy="6" fill="currentColor" r="1.5" />
             <circle cx="10" cy="6" fill="currentColor" r="1.5" />
           </svg>
