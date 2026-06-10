@@ -11,6 +11,7 @@ import {
   useState,
 } from "react";
 
+import { DeferredMount } from "@/components/deferred-mount";
 import { DocsCodeSnippet } from "@/components/docs/code-snippet";
 import { OpenInV0Button } from "@/components/docs/open-in-v0-button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -190,7 +191,16 @@ export function ComponentDemoCanvas({
             className="flex h-full w-full items-center justify-center"
             key={previewKey}
           >
-            {preview}
+            <DeferredMount
+              fallback={
+                <div
+                  aria-hidden
+                  className="h-24 w-full max-w-sm rounded-lg bg-muted/35"
+                />
+              }
+            >
+              {preview}
+            </DeferredMount>
           </div>
         </div>
       </TabsContent>

@@ -358,31 +358,32 @@
 
 .page-transition-shell {
   contain: layout style;
+  content-visibility: auto;
   min-height: 0;
   width: 100%;
   min-width: 0;
 }
 
 @supports (view-transition-name: none) {
-  ::view-transition-group(.page-fade) {
-    animation-duration: 180ms;
+  html[data-page-transition="page"] ::view-transition-group(root) {
+    animation-duration: 140ms;
     animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
   }
 
-  ::view-transition-old(.page-fade),
-  ::view-transition-new(.page-fade) {
+  html[data-page-transition="page"] ::view-transition-old(root),
+  html[data-page-transition="page"] ::view-transition-new(root) {
     mix-blend-mode: normal;
   }
 
-  ::view-transition-old(.page-fade) {
-    animation-duration: 120ms;
+  html[data-page-transition="page"] ::view-transition-old(root) {
+    animation-duration: 90ms;
     animation-fill-mode: both;
     animation-name: page-fade-out;
     animation-timing-function: cubic-bezier(0.4, 0, 1, 1);
   }
 
-  ::view-transition-new(.page-fade) {
-    animation-duration: 160ms;
+  html[data-page-transition="page"] ::view-transition-new(root) {
+    animation-duration: 120ms;
     animation-fill-mode: both;
     animation-name: page-fade-in;
     animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
@@ -410,18 +411,18 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  ::view-transition-group(.page-fade),
-  ::view-transition-old(.page-fade),
-  ::view-transition-new(.page-fade) {
+  html[data-page-transition="page"] ::view-transition-group(root),
+  html[data-page-transition="page"] ::view-transition-old(root),
+  html[data-page-transition="page"] ::view-transition-new(root) {
     animation: none !important;
   }
 }
 
-html[data-motion-tier="lite"] ::view-transition-group(.page-fade),
-html[data-motion-tier="lite"] ::view-transition-old(.page-fade),
-html[data-motion-tier="lite"] ::view-transition-new(.page-fade),
-html[data-motion-tier="none"] ::view-transition-group(.page-fade),
-html[data-motion-tier="none"] ::view-transition-old(.page-fade),
-html[data-motion-tier="none"] ::view-transition-new(.page-fade) {
+html[data-motion-tier="lite"] ::view-transition-group(root),
+html[data-motion-tier="lite"] ::view-transition-old(root),
+html[data-motion-tier="lite"] ::view-transition-new(root),
+html[data-motion-tier="none"] ::view-transition-group(root),
+html[data-motion-tier="none"] ::view-transition-old(root),
+html[data-motion-tier="none"] ::view-transition-new(root) {
   animation: none !important;
 }
