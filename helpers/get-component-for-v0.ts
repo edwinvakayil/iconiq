@@ -150,6 +150,18 @@ export function ButtonGroupDemo() {
     "    </div>\n" +
     "  )\n" +
     "}\n",
+  "date-picker":
+    '"use client";\n\n' +
+    `import { useState } from "react"\n` +
+    `import { DatePicker } from "@/components/ui/date-picker"\n\n` +
+    "export default function Page() {\n" +
+    "  const [value, setValue] = useState<Date | undefined>(new Date())\n" +
+    "  return (\n" +
+    '    <div className="flex min-h-svh items-center justify-center p-8">\n' +
+    "      <DatePicker onChange={setValue} value={value} />\n" +
+    "    </div>\n" +
+    "  )\n" +
+    "}\n",
   checkbox:
     '"use client";\n\n' +
     `import { Checkbox } from "@/components/ui/checkbox"\n` +
@@ -1103,6 +1115,18 @@ function parseRegistryDependencyName(dep: string) {
   return dep;
 }
 
+function resolveRegistryFileTarget(depName: string, file: RegistryFile) {
+  if (file.target) {
+    return file.target;
+  }
+
+  if (file.type === "registry:lib" || file.path.startsWith("lib/")) {
+    return file.path;
+  }
+
+  return `components/ui/${depName}.tsx`;
+}
+
 function mapRegistryFileForV0(file: RegistryFile, fallbackTarget: string) {
   return {
     path: file.path,
@@ -1200,11 +1224,21 @@ async function resolveRegistryDependencyFileContent(
   return file.content;
 }
 
-async function loadRegistryDependencyFiles(registryDependencies: string[]) {
+async function loadRegistryDependencyFiles(
+  registryDependencies: string[],
+  visited = new Set<string>()
+) {
   const dependencyFiles: ReturnType<typeof mapRegistryFileForV0>[] = [];
 
   for (const dep of registryDependencies) {
     const depName = parseRegistryDependencyName(dep);
+
+    if (visited.has(depName)) {
+      continue;
+    }
+
+    visited.add(depName);
+
     const depFilePath = path.join(
       process.cwd(),
       "public",
@@ -1222,7 +1256,19 @@ async function loadRegistryDependencyFiles(registryDependencies: string[]) {
           file
         );
         dependencyFiles.push(
-          mapRegistryFileForV0({ ...file, content }, file.path)
+          mapRegistryFileForV0(
+            { ...file, content },
+            resolveRegistryFileTarget(depName, file)
+          )
+        );
+      }
+
+      const nestedDependencies = (depData.registryDependencies ??
+        []) as string[];
+
+      if (nestedDependencies.length > 0) {
+        dependencyFiles.push(
+          ...(await loadRegistryDependencyFiles(nestedDependencies, visited))
         );
       }
     } catch (error) {
