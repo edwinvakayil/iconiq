@@ -97,7 +97,7 @@ const componentSummaries: Record<string, string> = {
   "/display-and-content/table":
     "Table docs in the Display & Content section, using the shared Iconiq table install with the provider options visible but disabled.",
   "/navigation/tabs":
-    "Tabs docs in the Navigation section with a provider switch that swaps between Base UI and Radix UI registry entries.",
+    "Tabs docs in the Navigation section for segmented Radix tabs with a sliding active pill and controlled state.",
   "/overlay-and-popups/tooltip":
     "Tooltip docs in the Overlay & Popups section with a provider switch that swaps between Base UI and Radix UI registry entries.",
   "/buttons-and-actions/icon-bar":

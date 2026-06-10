@@ -1374,10 +1374,10 @@
       "name": "tabs",
       "type": "registry:ui",
       "registryDependencies": [],
-      "dependencies": ["motion"],
+      "dependencies": ["@radix-ui/react-tabs", "motion"],
       "devDependencies": [],
       "title": "Tabs",
-      "description": "Clean segmented tabs with active-state surfaces, keyboard navigation, and straightforward panel switching.",
+      "description": "Segmented tabs with a sliding active pill, mix-blend label treatment, and Radix keyboard navigation.",
       "files": [
         {
           "path": "tabs.tsx",

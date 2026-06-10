@@ -620,8 +620,8 @@ const REGISTRY_UI_META: Record<
   tabs: {
     title: "Tabs",
     description:
-      "Clean segmented tabs with active-state surfaces, keyboard navigation, and straightforward panel switching.",
-    dependencies: ["motion"],
+      "Segmented tabs with a sliding active pill, mix-blend label treatment, and Radix keyboard navigation.",
+    dependencies: ["@radix-ui/react-tabs", "motion"],
   },
   typography: {
     title: "Typography",

@@ -875,6 +875,7 @@ export function SeparatorPreview() {
     "}\n",
   tabs:
     '"use client";\n\n' +
+    'import { useState } from "react";\n' +
     "import {\n" +
     "  Tabs,\n" +
     "  TabsContent,\n" +
@@ -882,22 +883,23 @@ export function SeparatorPreview() {
     "  TabsTrigger,\n" +
     `} from "@/components/ui/tabs"\n\n` +
     "export default function Page() {\n" +
+    '  const [value, setValue] = useState("overview");\n\n' +
     "  return (\n" +
     '    <div className="mx-auto flex min-h-svh w-full max-w-3xl items-center justify-center p-8">\n' +
-    '      <Tabs className="w-full" defaultValue="overview">\n' +
+    "      <Tabs value={value} onValueChange={setValue}>\n" +
     "        <TabsList>\n" +
     '          <TabsTrigger value="overview">Overview</TabsTrigger>\n' +
     '          <TabsTrigger value="activity">Activity</TabsTrigger>\n' +
     '          <TabsTrigger value="files">Files</TabsTrigger>\n' +
     "        </TabsList>\n" +
     '        <TabsContent value="overview">\n' +
-    '          <p className="text-sm text-muted-foreground">A concise summary for the current workspace.</p>\n' +
+    '          <p className="p-4 text-sm text-muted-foreground">A concise summary for the current workspace.</p>\n' +
     "        </TabsContent>\n" +
     '        <TabsContent value="activity">\n' +
-    '          <p className="text-sm text-muted-foreground">Recent updates, comments, and handoff notes.</p>\n' +
+    '          <p className="p-4 text-sm text-muted-foreground">Recent updates, comments, and handoff notes.</p>\n' +
     "        </TabsContent>\n" +
     '        <TabsContent value="files">\n' +
-    '          <p className="text-sm text-muted-foreground">Attached assets and supporting documents.</p>\n' +
+    '          <p className="p-4 text-sm text-muted-foreground">Attached assets and supporting documents.</p>\n' +
     "        </TabsContent>\n" +
     "      </Tabs>\n" +
     "    </div>\n" +

@@ -5078,7 +5078,7 @@ const tabsApiDetails: DetailItem[] = [
     id: "tabs",
     title: "Tabs",
     summary:
-      "Root wrapper for measured tabs with controlled or uncontrolled state, spring-smoothed panel sizing, and a forgiving fallback when values do not match content.",
+      "Radix tabs root with a shared spring transition config for the sliding active pill. Supports controlled and uncontrolled usage.",
     fields: [
       field({
         name: "children",
@@ -5091,13 +5091,12 @@ const tabsApiDetails: DetailItem[] = [
         name: "defaultValue",
         type: "string",
         description:
-          "Initial active tab value for uncontrolled usage. Invalid values fall back to the first declared TabsContent.",
+          "Initial active tab for uncontrolled usage when you do not manage value in React state.",
       }),
       field({
         name: "value",
         type: "string",
-        description:
-          "Controlled active tab value. Invalid values fall back to the first declared TabsContent.",
+        description: "Controlled active tab value.",
       }),
       field({
         name: "onValueChange",
@@ -5106,30 +5105,21 @@ const tabsApiDetails: DetailItem[] = [
           "Called when a trigger activates a different tab through click or keyboard interaction.",
       }),
       field({
-        name: "activationMode",
-        type: '"manual" | "automatic"',
-        defaultValue: '"manual"',
-        description:
-          "Controls keyboard behavior. In manual mode arrow keys move focus and Enter or Space activates the focused tab. In automatic mode focus movement also changes the active tab.",
-      }),
-      field({
         name: "className",
         type: "string",
-        description:
-          "Merged onto the root wrapper around the list and content panels.",
+        description: "Merged onto the Radix tabs root wrapper.",
       }),
     ],
     notes: [
-      "The root measures the active panel and animates the outer container height, which helps tab sets with uneven content avoid layout jumps.",
-      "TabsContent elements act as declarative panel definitions. The root collects them and renders only the active panel into the animated shell.",
-      "Development builds warn when value or defaultValue does not match any TabsContent.",
+      "Each Tabs instance uses a unique layoutId so multiple tab bars on one page do not share pill animations.",
+      "Use controlled state with value and onValueChange, or pass defaultValue for uncontrolled usage.",
     ],
   },
   {
     id: "tabs-list",
     title: "TabsList",
     summary:
-      "Inline trigger rail with a spring-driven underline indicator and horizontal overflow support for longer tab sets.",
+      "Full-width segmented rail with rounded neutral background and padding for the trigger row.",
     fields: [
       field({
         name: "children",
@@ -5143,15 +5133,14 @@ const tabsApiDetails: DetailItem[] = [
       }),
     ],
     notes: [
-      "The active underline measures the selected trigger width and offset, then follows it with spring motion.",
-      "The list can scroll horizontally instead of compressing trigger hit areas when labels get wider.",
+      "Uses a rounded neutral surface in light and dark mode with overflow hidden so the active pill stays clipped cleanly.",
     ],
   },
   {
     id: "tabs-trigger",
     title: "TabsTrigger",
     summary:
-      "Interactive tab button with touch-friendly sizing, quicker hover feedback, a visible keyboard focus ring, and coordination with the shared underline.",
+      "Interactive tab button with a shared layoutId pill behind the active trigger and mix-blend-exclusion label treatment.",
     fields: [
       field({
         name: "value",
@@ -5180,15 +5169,15 @@ const tabsApiDetails: DetailItem[] = [
       }),
     ],
     notes: [
-      "In the default `manual` activation mode, arrow keys move focus without switching content. Press Enter or Space to activate the focused tab.",
-      'If you want selection-on-focus behavior, set `activationMode="automatic"` on the Tabs root.',
+      "The active trigger renders a motion.div with layoutId active-tab-bg that slides between tabs with spring motion.",
+      "Inactive triggers fade slightly on hover while keeping the label readable through mix-blend-exclusion.",
     ],
   },
   {
     id: "tabs-content",
     title: "TabsContent",
     summary:
-      "Declarative panel definition tied to a matching trigger value and rendered through the root's animated panel shell.",
+      "Radix content panel tied to a matching trigger value below the tab list.",
     fields: [
       field({
         name: "value",
@@ -5205,16 +5194,15 @@ const tabsApiDetails: DetailItem[] = [
       field({
         name: "className",
         type: "string",
-        description:
-          "Merged onto the rendered active panel element when this content value is selected.",
+        description: "Merged onto the rendered content panel element.",
       }),
     ],
     notes: [
-      "TabsContent itself does not render a live wrapper where it is declared. The root collects these elements and mounts only the active panel.",
-      "Standard div attributes such as data-*, aria-*, id, style, and event handlers are forwarded to the rendered panel element.",
+      "Radix handles mounting and visibility for the active panel.",
+      "Standard Radix content props such as forceMount are forwarded through the primitive.",
     ],
   },
-  registryItem("tabs.json", ["motion"]),
+  registryItem("tabs.json", ["@radix-ui/react-tabs", "motion"]),
 ];
 
 const tableApiDetails: DetailItem[] = [

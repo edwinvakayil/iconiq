@@ -120,7 +120,7 @@ const DOCS_COMPONENT_NAME_BY_HREF: Record<string, string> = {
   "/layout-and-toolbars/selection-toolbar": "b-selection-toolbar",
   "/inputs-and-forms/slider": "b-slider",
   "/inputs-and-forms/switch": "b-switch",
-  "/navigation/tabs": "b-tabs",
+  "/navigation/tabs": "tabs",
   "/overlay-and-popups/tooltip": "b-tooltip",
 };
 
