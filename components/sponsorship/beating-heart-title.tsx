@@ -7,8 +7,8 @@ import { SITE } from "@/constants";
 export function BeatingHeartTitle() {
   return (
     <p className="max-w-2xl text-[15px] text-secondary leading-7">
-      When {SITE.NAME} helps your work, small contributions keep docs, examples,
-      and motion details moving forward{" "}
+      This is a community project at heart. If {SITE.NAME} helps your work,
+      passing it along is more than enough{" "}
       <motion.span
         animate={{
           scale: [1, 1.2, 1, 1.15, 1],

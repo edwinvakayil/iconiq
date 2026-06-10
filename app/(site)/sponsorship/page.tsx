@@ -1,25 +1,44 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-import { docsPageShellClassName } from "@/components/docs/docs-page-layout";
+import { DocsPageRail } from "@/components/docs/component-page-rail";
+import {
+  docsPageArticleClassName,
+  docsPageBodyClassName,
+  docsPageDescriptionClassName,
+  docsPageGridClassName,
+  docsPageLinkListClassName,
+  docsPageListClassName,
+  docsPageSectionClassName,
+  docsPageSectionTitleClassName,
+  docsPageShellClassName,
+  docsPageTitleClassName,
+} from "@/components/docs/docs-page-layout";
 import {
   PageReveal,
   PageStagger,
   PageStaggerItem,
 } from "@/components/page-reveal";
 import { BeatingHeartTitle } from "@/components/sponsorship/beating-heart-title";
-import { BuyMeACoffeeEmbed } from "@/components/sponsorship/buy-me-a-coffee-embed";
 import { LINK, SITE } from "@/constants";
 import { createMetadata } from "@/seo/metadata";
 
+const sponsorshipTagline =
+  "Built to give something back to the community—not to get paid for it.";
+
 export const metadata: Metadata = createMetadata({
   title: `Sponsor ${SITE.NAME}`,
-  description: `Support the development of ${SITE.NAME} — a free open-source library of motion-powered React components. Your support helps keep the project growing.`,
+  description: `${SITE.NAME} is a free, open-source UI library built to give back to the community. Optional support helps keep the project maintained.`,
   canonical: "/sponsorship",
   ogTitle: `Sponsor ${SITE.NAME} | Support Open Source`,
 });
 
-const supportAreas = [
+const sections = [
+  { id: "intention", label: "The intention" },
+  { id: "community", label: "Community" },
+];
+
+const projectFocus = [
   "Documentation, guides, and examples that match how people actually build.",
   "Bug fixes, accessibility passes, and interaction polish across components.",
   "Room to prototype new primitives and keep the registry workflow smooth.",
@@ -29,113 +48,116 @@ export default function SponsorshipPage() {
   return (
     <main className="min-w-0 flex-1">
       <div className={docsPageShellClassName}>
-        <article className="w-full min-w-0 max-w-none">
-          <PageStagger delayChildren={0.04}>
-            <PageStaggerItem>
-              <header className="space-y-3">
-                <div className="max-w-3xl space-y-2">
-                  <h1 className="scroll-m-20 font-semibold text-3xl text-foreground tracking-tighter">
-                    Sponsor {SITE.NAME}
-                  </h1>
-                  <p className="max-w-3xl text-base text-muted-foreground">
-                    {SITE.NAME} is free and open source—motion-aware React
-                    components you install through the shadcn registry as local
-                    files. Sponsorship and community signals help keep that work
-                    sustainable.
+        <div className={docsPageGridClassName}>
+          <div className="min-w-0">
+            <article className={docsPageArticleClassName}>
+              <PageStagger delayChildren={0.04}>
+                <PageStaggerItem>
+                  <header className="space-y-3">
+                    <div className="max-w-3xl space-y-2">
+                      <h1 className={docsPageTitleClassName}>
+                        Sponsor {SITE.NAME}
+                      </h1>
+                      <p className={docsPageDescriptionClassName}>
+                        {sponsorshipTagline}
+                      </p>
+                    </div>
+                  </header>
+                </PageStaggerItem>
+              </PageStagger>
+
+              <div className={docsPageBodyClassName}>
+                <PageReveal inView>
+                  <p>
+                    I did not start {SITE.NAME} to get paid for what I am doing.
+                    The only intention behind it is to put something useful back
+                    into the open-source community—the same way other projects
+                    helped me when I was learning to build interfaces.
                   </p>
-                </div>
-              </header>
-            </PageStaggerItem>
-          </PageStagger>
+                </PageReveal>
 
-          <div className="mt-10 max-w-3xl space-y-8 text-[15px] text-secondary leading-7">
-            <PageReveal inView>
-              <div className="space-y-4">
-                <p>
-                  The goal is simple: ship interfaces that feel trustworthy and
-                  editable, without hiding the implementation behind a package
-                  wall. That takes ongoing time—writing, reviewing, and refining
-                  the same details you would care about inside your own product.
-                </p>
-                <p>
-                  If {SITE.NAME} saves you a sprint here or there, or makes UI
-                  work a little more enjoyable, you are already part of the
-                  story. Optional support just makes it easier to keep the
-                  library honest and up to date for everyone else who discovers
-                  it next.
-                </p>
+                <PageReveal inView>
+                  <p>
+                    {SITE.NAME} is free and open source—UI with minimal motion,
+                    built for people who prefer calm, standard interfaces. You
+                    install them through the shadcn registry as local files. If
+                    it saves you a sprint or makes UI work a little more
+                    enjoyable, that is already enough. Anything beyond that is
+                    just a way to keep giving to the people who find it next.
+                  </p>
+                </PageReveal>
+
+                <PageReveal inView>
+                  <section className={docsPageSectionClassName} id="intention">
+                    <h2 className={docsPageSectionTitleClassName}>
+                      The intention
+                    </h2>
+                    <p>
+                      This is volunteer work for the community. Time goes into
+                      the same details you would care about inside your own
+                      product—nothing is held back behind a paywall.
+                    </p>
+                    <ul className={docsPageListClassName}>
+                      {projectFocus.map((item) => (
+                        <li key={item}>{item}</li>
+                      ))}
+                    </ul>
+                  </section>
+                </PageReveal>
+
+                <PageReveal inView>
+                  <BeatingHeartTitle />
+                </PageReveal>
+
+                <PageReveal inView>
+                  <section className={docsPageSectionClassName} id="community">
+                    <h2 className={docsPageSectionTitleClassName}>Community</h2>
+                    <p>
+                      There is no expectation of payment. If you want to help
+                      the project reach more builders, these are the simplest
+                      ways to show up.
+                    </p>
+                    <ul className={docsPageLinkListClassName}>
+                      <li>
+                        <a
+                          className="text-foreground underline underline-offset-4 transition-colors hover:text-muted-foreground"
+                          href={LINK.GITHUB}
+                          rel="noreferrer"
+                          target="_blank"
+                        >
+                          Star on GitHub
+                        </a>
+                      </li>
+                      <li>
+                        <a
+                          className="text-foreground underline underline-offset-4 transition-colors hover:text-muted-foreground"
+                          href={LINK.TWITTER}
+                          rel="noreferrer"
+                          target="_blank"
+                        >
+                          Follow on X
+                        </a>
+                      </li>
+                      <li>
+                        <Link
+                          className="text-foreground underline underline-offset-4 transition-colors hover:text-muted-foreground"
+                          href="/installation"
+                        >
+                          Share the installation guide
+                        </Link>
+                      </li>
+                    </ul>
+                  </section>
+                </PageReveal>
               </div>
-            </PageReveal>
-
-            <PageReveal inView>
-              <section className="space-y-4">
-                <h2 className="text-2xl text-foreground tracking-tight">
-                  What support helps cover
-                </h2>
-                <ul className="list-disc space-y-2 pl-6 text-foreground/90 marker:text-muted-foreground">
-                  {supportAreas.map((item) => (
-                    <li key={item}>{item}</li>
-                  ))}
-                </ul>
-              </section>
-            </PageReveal>
-
-            <PageReveal inView>
-              <BeatingHeartTitle />
-            </PageReveal>
-
-            <PageReveal inView>
-              <section className="space-y-4">
-                <h2 className="text-2xl text-foreground tracking-tight">
-                  Ways to support
-                </h2>
-                <p>
-                  None of this requires a big gesture. Stars improve
-                  discoverability, social posts help teams find the project, and
-                  a coffee-sized tip occasionally buys a focused evening of
-                  implementation work.
-                </p>
-                <ul className="space-y-3">
-                  <li>
-                    <a
-                      className="text-foreground underline underline-offset-4 transition-colors hover:text-muted-foreground"
-                      href={LINK.GITHUB}
-                      rel="noreferrer"
-                      target="_blank"
-                    >
-                      Star on GitHub
-                    </a>{" "}
-                    — helps others find the repo.
-                  </li>
-                  <li>
-                    <a
-                      className="text-foreground underline underline-offset-4 transition-colors hover:text-muted-foreground"
-                      href={LINK.TWITTER}
-                      rel="noreferrer"
-                      target="_blank"
-                    >
-                      Follow on X
-                    </a>{" "}
-                    for release notes and previews.
-                  </li>
-                  <li>
-                    <Link
-                      className="text-foreground underline underline-offset-4 transition-colors hover:text-muted-foreground"
-                      href="/installation"
-                    >
-                      Share the installation guide
-                    </Link>{" "}
-                    when {SITE.NAME} fits someone&apos;s stack.
-                  </li>
-                </ul>
-                <p className="text-muted-foreground text-sm leading-6">
-                  You can also leave a one-off tip on Buy Me a Coffee.
-                </p>
-                <BuyMeACoffeeEmbed />
-              </section>
-            </PageReveal>
+            </article>
           </div>
-        </article>
+
+          <DocsPageRail
+            editHref={`${LINK.GITHUB}/edit/main/app/(site)/sponsorship/page.tsx`}
+            sections={sections}
+          />
+        </div>
       </div>
     </main>
   );
