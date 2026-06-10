@@ -1236,6 +1236,21 @@
       ]
     },
     {
+      "name": "rolling-digits",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": ["motion"],
+      "devDependencies": [],
+      "title": "Rolling Digits",
+      "description": "Spring-animated digit counter with blur and scale.",
+      "files": [
+        {
+          "path": "rolling-digits.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "select",
       "type": "registry:ui",
       "registryDependencies": [],

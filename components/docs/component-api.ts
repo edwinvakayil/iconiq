@@ -4898,6 +4898,131 @@ const spinnerApiDetails: DetailItem[] = [
   registryItem("spinner.json", ["motion"]),
 ];
 
+const rollingDigitsApiDetails: DetailItem[] = [
+  {
+    id: "rolling-digits",
+    title: "RollingDigits",
+    summary:
+      "Inline animated counter that swaps digits with spring-driven blur, scale, and vertical motion while exiting the previous character.",
+    fields: [
+      field({
+        name: "value",
+        type: "number",
+        required: true,
+        description:
+          "Target number to display. The component rounds to the nearest integer before formatting.",
+      }),
+      field({
+        name: "pad",
+        type: "number",
+        description:
+          "Minimum digit width passed to `String.padStart`. Useful for clock-style or fixed-width counters.",
+      }),
+      field({
+        name: "animationDelay",
+        type: "number",
+        defaultValue: "80",
+        description:
+          "Milliseconds between queued value steps when `value` changes faster than the animation can finish.",
+      }),
+      field({
+        name: "startOnView",
+        type: "boolean",
+        defaultValue: "true",
+        description:
+          "When true, playback waits until the component enters the viewport once before animating from zero.",
+      }),
+      field({
+        name: "locale",
+        type: "boolean",
+        description:
+          "When true, formats the rounded value with `toLocaleString()` before splitting digits.",
+      }),
+      field({
+        name: "format",
+        type: "(value: number) => string",
+        description:
+          "Custom formatter that runs before padding. Overrides `locale` when both are provided.",
+      }),
+      field({
+        name: "gap",
+        type: "number",
+        defaultValue: "2",
+        description: "Pixel gap between rendered characters in the digit row.",
+      }),
+      field({
+        name: "direction",
+        type: '"dynamic" | "up" | "down"',
+        defaultValue: "dynamic",
+        description:
+          "Controls whether incoming digits slide up or down. `dynamic` compares the previous and next digit values.",
+      }),
+      field({
+        name: "enterStiffness",
+        type: "number",
+        defaultValue: "170",
+        description: "Spring stiffness for incoming digit motion.",
+      }),
+      field({
+        name: "enterDamping",
+        type: "number",
+        defaultValue: "10",
+        description: "Spring damping for incoming digit motion.",
+      }),
+      field({
+        name: "exitStiffness",
+        type: "number",
+        defaultValue: "170",
+        description: "Spring stiffness for outgoing digit motion.",
+      }),
+      field({
+        name: "exitDamping",
+        type: "number",
+        defaultValue: "15",
+        description: "Spring damping for outgoing digit motion.",
+      }),
+      field({
+        name: "enterY",
+        type: "number",
+        defaultValue: "32",
+        description: "Vertical offset in pixels used when a digit enters.",
+      }),
+      field({
+        name: "enterBlur",
+        type: "number",
+        defaultValue: "52",
+        description: "Peak blur in pixels applied when a digit enters.",
+      }),
+      field({
+        name: "enterScale",
+        type: "number",
+        defaultValue: "0.7",
+        description: "Starting scale applied when a digit enters.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description:
+          "Merged onto the outer inline-flex span that wraps the readable and visual layers.",
+      }),
+      field({
+        name: "digitClassName",
+        type: "string",
+        description:
+          "Merged onto each animated digit cell wrapper for per-digit styling.",
+      }),
+    ],
+    notes: [
+      "Non-digit characters from locale separators or custom formatters render as static spans and do not animate.",
+      "The visual layer is `aria-hidden`; screen readers receive the formatted number through an `sr-only` span.",
+      "When `startOnView` is enabled, the ticker displays zero until the container crosses the viewport threshold (`once: true`, `amount: 0.6`).",
+      "Each digit keeps a short exit queue so the previous character can blur and slide out while the next one springs into place.",
+      "Layer symbols such as `%` or `$` beside the component in your layout, or include them through `format`.",
+    ],
+  },
+  registryItem("rolling-digits.json", ["motion"]),
+];
+
 const skeletonApiDetails: DetailItem[] = [
   {
     id: "skeleton",
@@ -5976,6 +6101,7 @@ export {
   toggleApiDetails,
   toggleGroupApiDetails,
   morphTextsApiDetails,
+  rollingDigitsApiDetails,
   textInertiaApiDetails,
   typewriterApiDetails,
   typographyApiDetails,

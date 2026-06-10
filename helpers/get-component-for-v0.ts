@@ -13,6 +13,7 @@ import {
   ensureV0Page,
   getComponentV0Page,
   infiniteRibbonPreviewCode,
+  rollingDigitsPreviewCode,
   skeletonPreviewCode,
   themeTogglePreviewCode,
   verifiedBadgePreviewCode,
@@ -89,6 +90,7 @@ export function AccordionPreview() {
   infiniteribbon: buildV0Page(infiniteRibbonPreviewCode),
   "theme-toggle": buildV0Page(themeTogglePreviewCode),
   "verified-badge": buildV0Page(verifiedBadgePreviewCode),
+  "rolling-digits": buildV0Page(rollingDigitsPreviewCode),
   carousel: buildV0Page(carouselPreviewCode),
   "button-group": buildV0Page(`"use client";
 

@@ -72,6 +72,7 @@ export const SITE_SECTIONS = [
       { label: "Card", href: "/display-and-content/card" },
       { label: "Carousel", href: "/display-and-content/carousel" },
       { label: "Charts", href: "/display-and-content/charts" },
+      { label: "Rolling Digits", href: "/display-and-content/rolling-digits" },
       { label: "Progress", href: "/display-and-content/progress" },
       { label: "Skeleton", href: "/display-and-content/skeleton" },
       { label: "Spinner", href: "/display-and-content/spinner" },

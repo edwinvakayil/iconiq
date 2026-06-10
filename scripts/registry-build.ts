@@ -96,6 +96,11 @@ const REGISTRY_UI_META: Record<
       "Looping typewriter text effect with brief glitch substitutions and a blinking cursor.",
     dependencies: ["motion"],
   },
+  "rolling-digits": {
+    title: "Rolling Digits",
+    description: "Spring-animated digit counter with blur and scale.",
+    dependencies: ["motion"],
+  },
   drawer: {
     title: "Drawer",
     description:

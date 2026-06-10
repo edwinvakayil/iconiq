@@ -809,6 +809,35 @@ ${demo}
 
 export const carouselPreviewCode = buildCarouselPreviewCode("video", "v0");
 
+export const rollingDigitsPreviewCode = `"use client";
+
+import { useEffect, useState } from "react";
+import { RollingDigits } from "@/components/ui/rolling-digits";
+
+export default function Page() {
+  const [days, setDays] = useState(12);
+
+  useEffect(() => {
+    const interval = window.setInterval(() => {
+      setDays((current) => (current <= 0 ? 12 : current - 1));
+    }, 2000);
+
+    return () => window.clearInterval(interval);
+  }, []);
+
+  return (
+    <div className="flex min-h-svh items-center justify-center bg-background p-8">
+      <p className="flex max-w-xl flex-wrap items-center justify-center gap-x-1.5 gap-y-2 text-balance text-center font-medium text-lg leading-snug dark:text-neutral-100">
+        <span>Early access opens in</span>
+        <span aria-hidden className="inline-flex translate-y-px items-center align-middle">
+          <RollingDigits value={days} pad={2} startOnView={false} />
+        </span>
+        <span>days.</span>
+      </p>
+    </div>
+  );
+}`;
+
 export const verifiedBadgePreviewCode = `"use client";
 
 import { VerifiedBadge } from "@/components/ui/verified-badge";
@@ -955,6 +984,7 @@ const COMPONENT_PREVIEW_OVERRIDES: Record<string, string> = {
   infiniteribbon: infiniteRibbonPreviewCode,
   "theme-toggle": themeTogglePreviewCode,
   "verified-badge": verifiedBadgePreviewCode,
+  "rolling-digits": rollingDigitsPreviewCode,
   carousel: carouselPreviewCode,
   skeleton: skeletonPreviewCode,
 };
