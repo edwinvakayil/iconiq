@@ -1079,6 +1079,21 @@ export function CommandPalettePreview() {
     />
   );
 }`),
+  "reveal-text": buildV0Page(`"use client";
+
+import { RevealText } from "@/components/ui/reveal-text";
+
+export function HeroReveal() {
+  return (
+    <RevealText
+      as="h2"
+      className="font-semibold text-xl tracking-tight sm:text-2xl"
+      split="word"
+      text="Design meets motion, one word at a time"
+      whileInView
+    />
+  );
+}`),
   "morph-texts": buildV0Page(`"use client";
 
 import { MorphText } from "@/components/ui/morph-texts";

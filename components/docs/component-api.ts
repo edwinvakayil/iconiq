@@ -5659,6 +5659,113 @@ const diaTextApiDetails: DetailItem[] = [
   registryItem("dia-text.json", ["motion"]),
 ];
 
+const revealTextApiDetails: DetailItem[] = [
+  {
+    id: "reveal-text",
+    title: "RevealText",
+    summary:
+      "Staggered text reveal that animates each word or character upward with blur and opacity, with optional viewport-triggered playback and reduced-motion fallbacks.",
+    fields: [
+      field({
+        name: "text",
+        type: "string | string[]",
+        required: true,
+        description:
+          "Copy to reveal. Pass one string or multiple lines; each line renders on its own block row.",
+      }),
+      field({
+        name: "as",
+        type: "React.ElementType",
+        defaultValue: '"span"',
+        description:
+          "Root element type for the reveal container while preserving the same split and stagger behavior.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description:
+          "Merged onto the root container for typography, spacing, and layout overrides.",
+      }),
+      field({
+        name: "split",
+        type: '"word" | "char"',
+        defaultValue: '"word"',
+        description:
+          "Controls whether the animation staggers by word or by individual character.",
+      }),
+      field({
+        name: "stagger",
+        type: "number",
+        defaultValue: "0.09",
+        description:
+          "Delay in seconds added between each word or character in the sequence.",
+      }),
+      field({
+        name: "delay",
+        type: "number",
+        defaultValue: "0",
+        description:
+          "Base delay in seconds before the first unit begins animating.",
+      }),
+      field({
+        name: "blur",
+        type: "number",
+        defaultValue: "12",
+        description:
+          "Starting blur amount in pixels for each unit before it settles into focus.",
+      }),
+      field({
+        name: "yOffset",
+        type: "string | number",
+        defaultValue: '"40%"',
+        description:
+          "Starting vertical offset for each unit. Accepts Motion-friendly values such as percentages or pixel lengths.",
+      }),
+      field({
+        name: "spring",
+        type: "{ stiffness?: number; damping?: number; mass?: number }",
+        description:
+          "Optional spring overrides for the vertical settle motion on each unit.",
+      }),
+      field({
+        name: "once",
+        type: "boolean",
+        defaultValue: "true",
+        description:
+          "When whileInView is enabled, controls whether the in-view trigger should fire only once.",
+      }),
+      field({
+        name: "whileInView",
+        type: "boolean",
+        defaultValue: "false",
+        description:
+          "When true, the reveal waits until the root enters the viewport before animating.",
+      }),
+      field({
+        name: "children",
+        type: "React.ReactNode",
+        description:
+          "Optional content rendered after the animated text lines inside the root container.",
+      }),
+    ],
+    notes: [
+      "Reduced-motion users receive a shorter opacity-only reveal while preserving readable timing.",
+      "Duplicate words or characters on the same line receive stable keys so repeated units still animate independently.",
+    ],
+  },
+  {
+    id: "reveal-text-motion",
+    title: "Reveal transition behavior",
+    summary:
+      "Each unit animates y, opacity, and filter on independent timelines so the blur fade can trail slightly behind the spring settle.",
+    notes: [
+      "Word mode preserves spaces between tokens with non-breaking space spans.",
+      "Character mode uses Array.from so multi-byte characters split correctly.",
+    ],
+  },
+  registryItem("reveal-text.json", ["motion"]),
+];
+
 const shimmerTextApiDetails: DetailItem[] = [
   {
     id: "shimmer-text",
@@ -6089,6 +6196,7 @@ export {
   toggleApiDetails,
   toggleGroupApiDetails,
   morphTextsApiDetails,
+  revealTextApiDetails,
   rollingDigitsApiDetails,
   textInertiaApiDetails,
   typewriterApiDetails,

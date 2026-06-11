@@ -78,6 +78,12 @@ const REGISTRY_UI_META: Record<
       "Cycling headline words with a goo-filter morph transition powered by Motion.",
     dependencies: ["motion"],
   },
+  "reveal-text": {
+    title: "Reveal Text",
+    description:
+      "Staggered word or character reveal with spring lift, blur fade, and optional scroll-triggered playback.",
+    dependencies: ["motion"],
+  },
   "shimmer-text": {
     title: "Shimmer Text",
     description:

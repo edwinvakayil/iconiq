@@ -126,6 +126,8 @@ const componentSummaries: Record<string, string> = {
     "Single typography primitive for headings, labels, paragraphs, subheadings, and documentation copy.",
   "/texts/dia-text":
     "Animated text reveal with a sweeping gradient band, repeat controls, and optional fixed-width rotation.",
+  "/texts/reveal-text":
+    "Staggered word or character reveal with spring lift, blur fade, and optional scroll-triggered playback.",
   "/texts/morph-texts":
     "Cycling headline words with a goo-filter morph transition powered by Motion.",
   "/texts/shimmer-text":
@@ -156,6 +158,14 @@ const extraComponentKeywordsBySlug: Record<string, string[]> = {
     "swatch",
   ],
   "dia-text": ["text", "text reveal", "animated text"],
+  "reveal-text": [
+    "text",
+    "reveal text",
+    "text reveal",
+    "staggered text",
+    "scroll reveal",
+    "animated text",
+  ],
   "morph-texts": [
     "text",
     "morph text",

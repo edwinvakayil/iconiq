@@ -1236,6 +1236,21 @@
       ]
     },
     {
+      "name": "reveal-text",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": ["motion"],
+      "devDependencies": [],
+      "title": "Reveal Text",
+      "description": "Staggered word or character reveal with spring lift, blur fade, and optional scroll-triggered playback.",
+      "files": [
+        {
+          "path": "reveal-text.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "rolling-digits",
       "type": "registry:ui",
       "registryDependencies": [],

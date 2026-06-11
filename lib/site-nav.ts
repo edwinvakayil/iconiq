@@ -108,6 +108,7 @@ export const SITE_SECTIONS = [
     label: "Texts",
     children: [
       { label: "Dia Text", href: "/texts/dia-text" },
+      { label: "Reveal Text", href: "/texts/reveal-text" },
       { label: "Morph Text", href: "/texts/morph-texts" },
       { label: "Shimmer Text", href: "/texts/shimmer-text" },
       { label: "Text Inertia", href: "/texts/text-inertia" },
