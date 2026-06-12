@@ -463,7 +463,7 @@ function CommandPalette({
           <DialogPrimitive.Overlay className="fixed inset-0 z-[220] bg-background/55 backdrop-blur-sm" />
           <DialogPrimitive.Content
             className={cn(
-              "fixed inset-x-4 top-[calc(var(--nav-stack-height-mobile)+0.75rem)] z-[221] overflow-hidden rounded-2xl border border-border/80 bg-background shadow-[0_28px_90px_rgba(10,10,10,0.12)] outline-none sm:inset-x-6 lg:top-[calc(var(--nav-stack-height-desktop)+1rem)] lg:left-1/2 lg:w-[min(680px,calc(100vw-2rem))] lg:-translate-x-1/2",
+              "fixed inset-x-4 top-[calc(var(--nav-stack-height-mobile)+0.75rem+env(safe-area-inset-top,0px))] z-[221] flex max-h-[calc(100dvh-var(--nav-stack-height-mobile)-1.5rem-env(safe-area-inset-top,0px)-env(safe-area-inset-bottom,0px))] flex-col overflow-hidden rounded-2xl border border-border/80 bg-background shadow-[0_28px_90px_rgba(10,10,10,0.12)] outline-none sm:inset-x-6 lg:top-[calc(var(--nav-stack-height-desktop)+1rem)] lg:left-1/2 lg:max-h-[min(560px,calc(100dvh-var(--nav-stack-height-desktop)-2rem))] lg:w-[min(680px,calc(100vw-2rem))] lg:-translate-x-1/2",
               className
             )}
             onOpenAutoFocus={(event) => {
@@ -478,14 +478,20 @@ function CommandPalette({
               Search pages and components, or switch the site theme.
             </DialogPrimitive.Description>
 
-            <div className="flex items-center gap-3 border-border/70 border-b px-4 py-3">
+            <div className="flex shrink-0 items-center gap-3 border-border/70 border-b px-4 py-3">
               <Search className="size-4 shrink-0 text-muted-foreground" />
               <input
-                className="w-full bg-transparent text-foreground text-sm outline-none placeholder:text-muted-foreground"
+                autoCapitalize="off"
+                autoCorrect="off"
+                className="w-full min-w-0 touch-manipulation bg-transparent text-[16px] text-foreground leading-normal outline-none placeholder:text-muted-foreground md:text-sm"
+                enterKeyHint="search"
+                inputMode="search"
                 onChange={(event) => setQuery(event.target.value)}
                 onKeyDown={handleListKeyDown}
                 placeholder={placeholder}
                 ref={inputRef}
+                spellCheck={false}
+                type="search"
                 value={query}
               />
               <SearchShortcutBadge
@@ -505,14 +511,15 @@ function CommandPalette({
             </div>
 
             <div
-              className="overflow-hidden transition-all duration-300 ease-out"
-              style={{
-                maxHeight: showContent ? "420px" : "0px",
-                opacity: showContent ? 1 : 0,
-              }}
+              className={cn(
+                "min-h-0 overflow-hidden transition-[max-height,opacity] duration-300 ease-out",
+                showContent
+                  ? "max-h-[min(420px,calc(100dvh-var(--nav-stack-height-mobile)-7.5rem-env(safe-area-inset-top,0px)-env(safe-area-inset-bottom,0px)))] opacity-100 lg:max-h-[420px]"
+                  : "max-h-0 opacity-0"
+              )}
             >
               <div
-                className="max-h-[420px] overflow-y-auto p-2"
+                className="h-full max-h-[inherit] overflow-y-auto overscroll-contain p-2 [-webkit-overflow-scrolling:touch]"
                 onKeyDown={handleListKeyDown}
               >
                 {resolvedItems.length === 0 ? (

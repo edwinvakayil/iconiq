@@ -15,6 +15,7 @@ import {
   useMemo,
   useRef,
   useState,
+  useSyncExternalStore,
 } from "react";
 
 import { cn } from "@/lib/utils";
@@ -26,8 +27,10 @@ const DEFAULT_SPRING = { stiffness: 140, damping: 26, mass: 1.2 };
 const WORD_SPLIT_REGEX = /\s+/;
 const IN_VIEW_OPTIONS = {
   amount: "some" as const,
-  margin: "0px 0px -8% 0px" as const,
+  margin: "0px 0px -4% 0px" as const,
 };
+const REVEAL_READY_TIMEOUT_MS = 500;
+const COARSE_POINTER_QUERY = "(pointer: coarse)";
 
 export interface RevealTextProps {
   text: string | string[];
@@ -134,7 +137,12 @@ function RevealTextUnit(props: RevealTextUnitProps) {
   return (
     <motion.span
       animate={animate}
-      className="inline-block transform-gpu will-change-transform"
+      className={cn(
+        "inline-block transform-gpu",
+        props.useBlur
+          ? "will-change-[transform,opacity,filter]"
+          : "will-change-[transform,opacity]"
+      )}
       initial={initial}
       transition={transition}
     >
@@ -146,26 +154,45 @@ function RevealTextUnit(props: RevealTextUnitProps) {
   );
 }
 
-function useBlurMotionEnabled() {
-  const [blurEnabled, setBlurEnabled] = useState(true);
+function subscribeCoarsePointer(onStoreChange: () => void) {
+  const coarseMedia = window.matchMedia(COARSE_POINTER_QUERY);
+  coarseMedia.addEventListener("change", onStoreChange);
 
-  useEffect(() => {
-    const update = () => {
-      const coarsePointer = window.matchMedia("(pointer: coarse)").matches;
-      setBlurEnabled(!coarsePointer);
-    };
+  return () => {
+    coarseMedia.removeEventListener("change", onStoreChange);
+  };
+}
 
-    update();
+function getCoarsePointerSnapshot() {
+  return window.matchMedia(COARSE_POINTER_QUERY).matches;
+}
 
-    const coarseMedia = window.matchMedia("(pointer: coarse)");
-    coarseMedia.addEventListener("change", update);
+function getCoarsePointerServerSnapshot() {
+  return false;
+}
 
-    return () => {
-      coarseMedia.removeEventListener("change", update);
-    };
-  }, []);
+function useCoarsePointer() {
+  return useSyncExternalStore(
+    subscribeCoarsePointer,
+    getCoarsePointerSnapshot,
+    getCoarsePointerServerSnapshot
+  );
+}
 
-  return blurEnabled;
+function isElementVisible(node: HTMLElement) {
+  const rect = node.getBoundingClientRect();
+  if (rect.width === 0 || rect.height === 0) return false;
+
+  const viewHeight =
+    window.innerHeight || document.documentElement.clientHeight;
+  const viewWidth = window.innerWidth || document.documentElement.clientWidth;
+
+  return (
+    rect.bottom > 0 &&
+    rect.right > 0 &&
+    rect.top < viewHeight &&
+    rect.left < viewWidth
+  );
 }
 
 function useRevealReady(
@@ -192,33 +219,27 @@ function useRevealReady(
     const node = ref.current;
     if (!node) return;
 
-    const isVisible = () => {
-      const rect = node.getBoundingClientRect();
-      if (rect.width === 0 || rect.height === 0) return false;
-
-      const viewHeight =
-        window.innerHeight || document.documentElement.clientHeight;
-      const viewWidth =
-        window.innerWidth || document.documentElement.clientWidth;
-
-      return (
-        rect.bottom > 0 &&
-        rect.right > 0 &&
-        rect.top < viewHeight &&
-        rect.left < viewWidth
-      );
-    };
-
-    if (isVisible()) {
+    if (isElementVisible(node)) {
       setReady(true);
       return;
     }
 
     const frame = requestAnimationFrame(() => {
-      if (isVisible()) setReady(true);
+      if (node && isElementVisible(node)) {
+        setReady(true);
+      }
     });
 
-    return () => cancelAnimationFrame(frame);
+    const timeout = window.setTimeout(() => {
+      if (node && isElementVisible(node)) {
+        setReady(true);
+      }
+    }, REVEAL_READY_TIMEOUT_MS);
+
+    return () => {
+      cancelAnimationFrame(frame);
+      window.clearTimeout(timeout);
+    };
   }, [enabled, ready, ref]);
 
   return ready;
@@ -279,8 +300,8 @@ export function RevealText({
   const ref = useRef<HTMLElement>(null);
   const wasInView = useRef(false);
   const reduceMotion = useReducedMotion();
-  const blurMotionEnabled = useBlurMotionEnabled();
-  const useBlur = blurMotionEnabled && !reduceMotion && blur > 0;
+  const isCoarsePointer = useCoarsePointer();
+  const useBlur = !(isCoarsePointer || reduceMotion) && blur > 0;
   const inView = useInView(ref, { ...IN_VIEW_OPTIONS, once });
   const inViewReady = useRevealReady(ref, whileInView, inView);
   const [replayKey, setReplayKey] = useState(0);
@@ -335,7 +356,7 @@ export function RevealText({
   }
 
   const animatedContent = (
-    <span key={replayKey}>
+    <span key={`${replayKey}-${isCoarsePointer ? "touch" : "fine"}`}>
       {lineKeys.map((lineKey) => (
         <span className="block" key={lineKey}>
           {(unitsByLine.get(lineKey) ?? []).map((unit) => (
