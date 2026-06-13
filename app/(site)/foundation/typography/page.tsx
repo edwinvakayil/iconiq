@@ -18,6 +18,7 @@ import {
 } from "@/components/docs/page-shell";
 import { LINK } from "@/constants";
 import { buildV0Page } from "@/lib/component-v0-pages";
+import { cn } from "@/lib/utils";
 import {
   TYPOGRAPHY_GROUPS,
   TYPOGRAPHY_SAMPLE_TEXT,
@@ -62,7 +63,12 @@ function TypographyDocsSection({
 }) {
   return (
     <section className="scroll-mt-32" id={id}>
-      <h2 className="mt-16 border-border/80 border-b pb-4 font-semibold text-xl tracking-tight first:mt-0">
+      <h2
+        className={cn(
+          "mt-16 border-border/80 border-b pb-4 text-xl tracking-tight first:mt-0",
+          title === "Props" ? "font-black" : "font-semibold"
+        )}
+      >
         {title}
       </h2>
       <div className="pt-6">{children}</div>
@@ -139,17 +145,7 @@ function TypographyScaleSection() {
 }
 
 function TypographyPropsSection() {
-  return (
-    <div className="space-y-8">
-      <p className="max-w-3xl text-[14px] text-muted-foreground leading-6">
-        Pass a single <code className="font-mono text-[13px]">variant</code> to
-        apply the scale. Override the rendered element with{" "}
-        <code className="font-mono text-[13px]">as</code> when the default tag
-        does not fit the layout.
-      </p>
-      <DetailLedger details={typographyApiDetails} />
-    </div>
-  );
+  return <DetailLedger details={typographyApiDetails} />;
 }
 
 export default function TypographyPage() {
