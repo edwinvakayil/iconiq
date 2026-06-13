@@ -122,7 +122,12 @@ function getPanelWidth(viewportWidth: number) {
 }
 
 function useCompactViewport() {
-  const [isCompact, setIsCompact] = useState(false);
+  const [isCompact, setIsCompact] = useState(() => {
+    if (typeof window === "undefined") return false;
+
+    return window.matchMedia(`(max-width: ${COMPACT_VIEWPORT_WIDTH - 1}px)`)
+      .matches;
+  });
 
   useEffect(() => {
     const mediaQuery = window.matchMedia(
@@ -874,9 +879,13 @@ function DropdownSubmenu({
   });
   const isActive = activeItemId === itemId || isOpen;
   const flyoutSubmenuMotion = getFlyoutSubmenuMotion(submenuPosition.origin);
+  const wasCompactRef = useRef<boolean | null>(null);
 
   useEffect(() => {
-    if (isCompact && isOpen) {
+    const previousCompact = wasCompactRef.current;
+    wasCompactRef.current = isCompact;
+
+    if (previousCompact === false && isCompact && isOpen) {
       onOpenChange(false);
     }
   }, [isCompact, isOpen, onOpenChange]);
