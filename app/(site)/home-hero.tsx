@@ -422,7 +422,7 @@ function HeroViewComponentsButton() {
   return (
     <Button
       className={heroCtaPrimaryClassName}
-      href="/buttons-and-actions/icon-bar"
+      href="/blocks/prompt-box"
       icon={<HeroCtaArrowIcon active={active} />}
       iconPosition="end"
       onBlur={() => setActive(false)}
