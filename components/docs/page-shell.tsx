@@ -377,21 +377,14 @@ function ComponentSection({
   id,
   title,
   children,
-  titleClassName,
 }: {
   id: string;
   title: string;
   children: ReactNode;
-  titleClassName?: string;
 }) {
   return (
     <section className="scroll-mt-32" id={id}>
-      <h2
-        className={cn(
-          "mt-16 border-border/80 border-b pb-4 text-xl tracking-tight first:mt-0",
-          titleClassName ?? "font-semibold"
-        )}
-      >
+      <h2 className="mt-16 border-border/80 border-b pb-4 font-semibold text-xl tracking-tight first:mt-0">
         {title}
       </h2>
       <div className="pt-6">{children}</div>
@@ -406,55 +399,52 @@ function DetailMetaValue({ value }: { value: ReactNode }) {
     typeof value === "boolean"
   ) {
     return (
-      <code className="font-mono text-[11px] text-foreground/90 leading-5">
+      <code className="font-mono text-[12px] text-muted-foreground leading-5">
         {String(value)}
       </code>
     );
   }
 
   return (
-    <span className="text-[11px] text-foreground/90 leading-5">{value}</span>
-  );
-}
-
-function DetailPropRow({ field }: { field: DetailField }) {
-  const showMeta = field.required || field.defaultValue !== undefined;
-
-  return (
-    <div className="py-5 first:pt-0 last:pb-0">
-      <div className="flex flex-wrap items-baseline gap-x-2.5 gap-y-1">
-        <code className="font-mono text-[14px] text-foreground">
-          {field.name}
-        </code>
-        {field.type ? (
-          <span className="font-mono text-[12px] text-muted-foreground leading-5">
-            {field.type}
-          </span>
-        ) : null}
-      </div>
-      {showMeta ? (
-        <p className="mt-1.5 font-mono text-[11px] text-muted-foreground leading-5">
-          {field.required ? "Required" : null}
-          {field.required && field.defaultValue !== undefined ? " · " : null}
-          {field.defaultValue !== undefined ? (
-            <>
-              Default <DetailMetaValue value={field.defaultValue} />
-            </>
-          ) : null}
-        </p>
-      ) : null}
-      <p className="mt-2.5 text-[15px] text-secondary leading-6">
-        {field.description}
-      </p>
-    </div>
+    <span className="font-mono text-[12px] text-muted-foreground leading-5">
+      {value}
+    </span>
   );
 }
 
 function DetailFields({ fields }: { fields: DetailField[] }) {
   return (
-    <div className="divide-y divide-border/50">
+    <div className="divide-y divide-border/50 border-border/50 border-t">
       {fields.map((field) => (
-        <DetailPropRow field={field} key={String(field.name)} />
+        <div
+          className="grid gap-4 py-5 md:grid-cols-[minmax(0,220px)_minmax(0,1fr)] md:gap-10"
+          key={String(field.name)}
+        >
+          <div className="space-y-2">
+            <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1">
+              <code className="font-mono text-[14px] text-foreground">
+                {field.name}
+              </code>
+              {field.type ? <DetailMetaValue value={field.type} /> : null}
+            </div>
+            {field.required || field.defaultValue !== undefined ? (
+              <p className="font-mono text-[11px] text-muted-foreground leading-5">
+                {field.required ? "Required" : null}
+                {field.required && field.defaultValue !== undefined
+                  ? " · "
+                  : null}
+                {field.defaultValue !== undefined ? (
+                  <>
+                    Default <DetailMetaValue value={field.defaultValue} />
+                  </>
+                ) : null}
+              </p>
+            ) : null}
+          </div>
+          <div className="text-[15px] text-secondary leading-6">
+            {field.description}
+          </div>
+        </div>
       ))}
     </div>
   );
@@ -463,12 +453,19 @@ function DetailFields({ fields }: { fields: DetailField[] }) {
 function DetailNotes({
   itemId,
   notes,
+  showDivider = true,
 }: {
   itemId: string;
   notes: ReactNode[];
+  showDivider?: boolean;
 }) {
   return (
-    <div className="mt-6 space-y-2.5 border-border/50 border-t border-dotted pt-5">
+    <div
+      className={cn(
+        "space-y-2.5",
+        showDivider && "border-border/50 border-t border-dotted pt-5"
+      )}
+    >
       {notes.map((note, index) => (
         <p
           className="text-[14px] text-muted-foreground leading-6"
@@ -481,28 +478,57 @@ function DetailNotes({
   );
 }
 
-function DetailLedger({ details }: { details: DetailItem[] }) {
-  const documentedDetails = details.filter((item) => item.fields?.length);
-  const multipleGroups = documentedDetails.length > 1;
+function DetailSection({ item }: { item: DetailItem }) {
+  const lead = item.summary ?? item.content;
+  const fields = item.fields ?? [];
+  const notes = item.notes ?? [];
 
-  if (documentedDetails.length === 0) {
+  if (!lead && fields.length === 0 && notes.length === 0) {
     return null;
   }
 
   return (
-    <div className={multipleGroups ? "space-y-14" : undefined}>
-      {documentedDetails.map((item) => (
-        <section key={item.id}>
-          {multipleGroups ? (
-            <h3 className="mb-6 font-mono text-[11px] text-muted-foreground uppercase tracking-[0.18em]">
-              {item.title}
-            </h3>
-          ) : null}
-          <DetailFields fields={item.fields ?? []} />
-          {item.notes?.length ? (
-            <DetailNotes itemId={item.id} notes={item.notes} />
-          ) : null}
-        </section>
+    <section>
+      <h3 className="mb-5 font-medium text-[17px] text-foreground tracking-[-0.02em]">
+        {item.title}
+      </h3>
+      <div className="space-y-6">
+        {lead ? (
+          <p className="text-[15px] text-secondary leading-6">{lead}</p>
+        ) : null}
+        {fields.length > 0 ? <DetailFields fields={fields} /> : null}
+        {notes.length > 0 ? (
+          <DetailNotes
+            itemId={item.id}
+            notes={notes}
+            showDivider={Boolean(lead || fields.length)}
+          />
+        ) : null}
+      </div>
+    </section>
+  );
+}
+
+function DetailLedger({ details }: { details: DetailItem[] }) {
+  const sections = details
+    .map((item, index) => ({ item, index }))
+    .filter(({ item }) => {
+      const lead = item.summary ?? item.content;
+      return (
+        Boolean(lead) ||
+        Boolean(item.fields?.length) ||
+        Boolean(item.notes?.length)
+      );
+    });
+
+  if (sections.length === 0) {
+    return null;
+  }
+
+  return (
+    <div className="space-y-12">
+      {sections.map(({ item, index }) => (
+        <DetailSection item={item} key={`${item.id}-${index}`} />
       ))}
     </div>
   );
@@ -710,11 +736,7 @@ function ComponentDocsPage({
                   </ComponentSection>
                 ))}
 
-                <ComponentSection
-                  id="props"
-                  title="Props"
-                  titleClassName="font-black"
-                >
+                <ComponentSection id="props" title="Props">
                   <DetailLedger details={details} />
                 </ComponentSection>
               </div>

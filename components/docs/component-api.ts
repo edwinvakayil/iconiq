@@ -425,6 +425,55 @@ const badgeApiDetails: DetailItem[] = [
     ],
   },
   {
+    id: "badge-variants",
+    title: "badgeVariants",
+    summary:
+      "CVA recipe exported alongside Badge for reusing badge styling on custom elements.",
+    fields: [
+      field({
+        name: "variant",
+        type: '"default" | "dot"',
+        defaultValue: '"default"',
+        description: "Chooses between the filled badge and dot badge recipes.",
+      }),
+      field({
+        name: "size",
+        type: '"sm" | "md" | "lg"',
+        defaultValue: '"md"',
+        description: "Controls height, padding, gap, and label size.",
+      }),
+      field({
+        name: "color",
+        type: "BadgeColor",
+        defaultValue: '"gray"',
+        description: "Preset palette token applied by the badge recipe.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description:
+          "Optional classes merged after the generated recipe classes.",
+      }),
+    ],
+  },
+  {
+    id: "badge-colors",
+    title: "badgeColors",
+    summary:
+      "Preset color token map used by Badge and badgeVariants for palette-consistent fills and dot treatments.",
+    fields: [
+      field({
+        name: "keys",
+        type: "BadgeColor",
+        description:
+          "Named palette tokens such as gray, blue, green, amber, red, and purple.",
+      }),
+    ],
+    notes: [
+      "Use the exported BadgeColor type when you want compile-time checks for supported palette tokens.",
+    ],
+  },
+  {
     id: "badge-visuals",
     title: "Visual behavior",
     summary:
@@ -683,9 +732,28 @@ const chartsApiDetails: DetailItem[] = [
   },
   {
     id: "chart-tooltip",
-    title: "ChartTooltip & ChartTooltipContent",
+    title: "ChartTooltip",
     summary:
-      "Recharts tooltip primitive plus a styled content shell with a soft spring entrance and dashed, dot, or line indicators.",
+      "Recharts tooltip primitive wired to the shared Iconiq chart tooltip content shell.",
+    fields: [
+      field({
+        name: "content",
+        type: "ReactNode | ComponentType",
+        description:
+          "Tooltip renderer. Defaults to ChartTooltipContent when omitted.",
+      }),
+      field({
+        name: "cursor",
+        type: "boolean | object",
+        description: "Recharts cursor configuration for hover feedback.",
+      }),
+    ],
+  },
+  {
+    id: "chart-tooltip-content",
+    title: "ChartTooltipContent",
+    summary:
+      "Styled tooltip content shell with a soft spring entrance and dashed, dot, or line indicators.",
     fields: [
       field({
         name: "indicator",
@@ -721,9 +789,29 @@ const chartsApiDetails: DetailItem[] = [
   },
   {
     id: "chart-legend",
-    title: "ChartLegend & ChartLegendContent",
+    title: "ChartLegend",
     summary:
-      "Legend primitive with a quiet fade-and-rise entrance that matches the chart surface motion.",
+      "Recharts legend primitive wired to the shared Iconiq legend content shell.",
+    fields: [
+      field({
+        name: "content",
+        type: "ReactNode | ComponentType",
+        description:
+          "Legend renderer. Defaults to ChartLegendContent when omitted.",
+      }),
+      field({
+        name: "verticalAlign",
+        type: '"top" | "bottom"',
+        defaultValue: '"bottom"',
+        description: "Adjusts legend spacing relative to the chart.",
+      }),
+    ],
+  },
+  {
+    id: "chart-legend-content",
+    title: "ChartLegendContent",
+    summary:
+      "Legend content shell with a quiet fade-and-rise entrance that matches the chart surface motion.",
     fields: [
       field({
         name: "hideIcon",
@@ -777,6 +865,18 @@ const cardApiDetails: DetailItem[] = [
         description:
           "Merged onto the root card surface for local spacing, border, or layout adjustments without replacing the slot API.",
       }),
+      field({
+        name: "onHoverStart",
+        type: "() => void",
+        description:
+          "Called when interactive hover feedback begins from pointer, focus, or keyboard focus within the card.",
+      }),
+      field({
+        name: "onHoverEnd",
+        type: "() => void",
+        description:
+          "Called when interactive hover feedback ends after pointer leave and focus exits the card.",
+      }),
     ],
     notes: [
       "The root forwards standard div props, so you can attach ids, aria attributes, data attributes, and event handlers directly.",
@@ -785,14 +885,128 @@ const cardApiDetails: DetailItem[] = [
     ],
   },
   {
-    id: "card-slots",
-    title: "Compound slots",
+    id: "card-header",
+    title: "CardHeader",
     summary:
-      "The card keeps its API intentionally small by exposing lightweight structural parts instead of many styling props.",
+      "Top header grid for title, description, and an optional trailing CardAction.",
+    fields: [
+      field({
+        name: "children",
+        type: "ReactNode",
+        required: true,
+        description:
+          "Compose CardTitle, CardDescription, and optional CardAction inside the header grid.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description: "Merged onto the header grid wrapper.",
+      }),
+    ],
     notes: [
-      "CardHeader arranges the title, description, and optional CardAction in a compact grid so status pills and actions align naturally without extra wrappers.",
-      "CardTitle and CardDescription stay neutral div-based slots, which makes them easy to pair with links, badges, metrics, or richer inline content.",
-      "CardContent is the flexible middle section for body copy, media, stats, and custom layouts, while CardFooter adds a quieter separated surface for supporting actions or context.",
+      "The header uses a compact grid so status pills and actions align naturally without extra wrappers.",
+    ],
+  },
+  {
+    id: "card-title",
+    title: "CardTitle",
+    summary: "Primary heading slot with default title typography.",
+    fields: [
+      field({
+        name: "children",
+        type: "ReactNode",
+        required: true,
+        description:
+          "Heading content for the card. Works with links, badges, metrics, or richer inline content.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description: "Merged with the default title typography classes.",
+      }),
+    ],
+  },
+  {
+    id: "card-description",
+    title: "CardDescription",
+    summary: "Secondary supporting copy beneath the title.",
+    fields: [
+      field({
+        name: "children",
+        type: "ReactNode",
+        required: true,
+        description:
+          "Supporting description or excerpt text rendered with muted body styling.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description: "Merged with the muted description typography classes.",
+      }),
+    ],
+  },
+  {
+    id: "card-action",
+    title: "CardAction",
+    summary:
+      "Optional trailing action slot aligned to the top-right of CardHeader.",
+    fields: [
+      field({
+        name: "children",
+        type: "ReactNode",
+        required: true,
+        description:
+          "Action content such as a menu trigger, status pill, or compact control.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description: "Merged with the default action placement classes.",
+      }),
+    ],
+  },
+  {
+    id: "card-content",
+    title: "CardContent",
+    summary:
+      "Flexible middle section for body copy, media, stats, and custom layouts.",
+    fields: [
+      field({
+        name: "children",
+        type: "ReactNode",
+        required: true,
+        description:
+          "Main card body content rendered inside the padded content slot.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description: "Merged with the default horizontal padding classes.",
+      }),
+    ],
+  },
+  {
+    id: "card-footer",
+    title: "CardFooter",
+    summary:
+      "Bottom section for supporting actions, metadata, or contextual labels.",
+    fields: [
+      field({
+        name: "children",
+        type: "ReactNode",
+        required: true,
+        description:
+          "Footer content rendered on a quieter separated surface beneath the body.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description:
+          "Merged with the default footer surface and spacing classes.",
+      }),
+    ],
+    notes: [
+      "Adding CardFooter trims the root card bottom padding automatically.",
     ],
   },
   {
@@ -1041,7 +1255,29 @@ const buttonApiDetails: DetailItem[] = [
     id: "button-variants",
     title: "buttonVariants",
     summary:
-      "The CVA recipe is exported alongside the component so matching button classes can be reused on links or custom wrappers.",
+      "The CVA recipe exported alongside the component so matching button classes can be reused on links or custom wrappers.",
+    fields: [
+      field({
+        name: "variant",
+        type: '"default" | "destructive" | "outline" | "secondary" | "ghost" | "link"',
+        defaultValue: '"default"',
+        description:
+          "Visual recipe passed to the CVA helper when composing classes outside the Button component.",
+      }),
+      field({
+        name: "size",
+        type: '"default" | "xs" | "sm" | "lg" | "icon" | "icon-xs" | "icon-sm" | "icon-lg"',
+        defaultValue: '"default"',
+        description:
+          "Size token passed to the CVA helper for text and icon-only button recipes.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description:
+          "Optional classes merged after the generated variant and size classes.",
+      }),
+    ],
     notes: [
       "Variants ship with six visual states and eight size tokens, including icon-only sizes.",
       "Because buttonVariants is a plain CVA export, you can compose it independently from the Button component when you do not want a motion.button element.",
@@ -1645,27 +1881,53 @@ const comboboxApiDetails: DetailItem[] = [
     ],
   },
   {
-    id: "combobox-list-item",
-    title: "ComboboxList and ComboboxItem",
+    id: "combobox-list",
+    title: "ComboboxList",
     summary:
-      "Scrollable item list and animated rows with the previous active highlight, description layout, and selected checkmark spring.",
+      "Scrollable item list rendered inside ComboboxContent with the previous max-height and motion treatment.",
     fields: [
       field({
-        name: "ComboboxList.children",
+        name: "children",
         type: "ReactNode | ((item, index) => ReactNode)",
+        required: true,
         description:
           "Render explicit children or a render function when using the root items prop.",
       }),
       field({
-        name: "ComboboxItem.value",
+        name: "className",
+        type: "string",
+        description: "Merged with the default list spacing and scroll classes.",
+      }),
+    ],
+  },
+  {
+    id: "combobox-item",
+    title: "ComboboxItem",
+    summary:
+      "Animated row with active highlight, optional description layout, and selected checkmark spring.",
+    fields: [
+      field({
+        name: "value",
         type: "Item",
+        required: true,
         description: "Stable value used by Base UI for selection.",
       }),
       field({
-        name: "ComboboxItem.description",
+        name: "children",
+        type: "ReactNode",
+        required: true,
+        description: "Primary item label content.",
+      }),
+      field({
+        name: "description",
         type: "ReactNode",
         description:
           "Optional secondary line rendered below the item label, matching the prior option description UI.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description: "Merged with the default row layout and motion classes.",
       }),
     ],
     notes: [
@@ -1817,6 +2079,25 @@ const autocompleteApiDetails: DetailItem[] = [
         type: "number",
         defaultValue: "6",
         description: "Distance between the input and the popup.",
+      }),
+    ],
+  },
+  {
+    id: "autocomplete-list",
+    title: "AutocompleteList",
+    summary: "Scrollable suggestion list rendered inside AutocompleteContent.",
+    fields: [
+      field({
+        name: "children",
+        type: "ReactNode | ((item, index) => ReactNode)",
+        required: true,
+        description:
+          "Render explicit AutocompleteItem children or a render function when using the root items prop.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description: "Merged with the default list spacing and scroll classes.",
       }),
     ],
   },
@@ -2127,44 +2408,173 @@ const drawerApiDetails: DetailItem[] = [
     ],
   },
   {
-    id: "drawer-parts",
-    title: "Compound parts",
+    id: "drawer-trigger",
+    title: "DrawerTrigger",
     summary:
-      "The registry entry exports the familiar shadcn-style DrawerTrigger, DrawerPortal, DrawerOverlay, DrawerContent, DrawerClose, DrawerHeader, DrawerFooter, DrawerTitle, and DrawerDescription parts.",
+      "Opens the drawer from a button, link, or custom interactive target.",
     fields: [
       field({
-        name: "DrawerTrigger",
-        type: "Vaul Trigger props",
+        name: "asChild",
+        type: "boolean",
         description:
-          "Opens the drawer. Use asChild when a local button or link should remain the visible trigger element.",
+          "Use when a local button or link should remain the visible trigger element.",
       }),
       field({
-        name: "DrawerContent",
-        type: "Vaul Content props",
-        description:
-          "Portals the overlay and animated panel, applies direction-aware layout classes, and renders the optional bottom drag handle.",
+        name: "children",
+        type: "ReactNode",
+        required: true,
+        description: "Interactive content rendered by the trigger primitive.",
       }),
+    ],
+  },
+  {
+    id: "drawer-portal",
+    title: "DrawerPortal",
+    summary:
+      "Portal wrapper for drawer overlay and panel content. DrawerContent composes it automatically in the common path.",
+    fields: [
       field({
-        name: "DrawerClose",
-        type: "Vaul Close props",
+        name: "children",
+        type: "ReactNode",
+        required: true,
         description:
-          "Closes the drawer. Use asChild to turn an existing footer action into the close control.",
-      }),
-      field({
-        name: "DrawerHeader / DrawerFooter",
-        type: "div props",
-        description:
-          "Layout helpers for the title area and bottom action area. Both merge className with the default spacing.",
-      }),
-      field({
-        name: "DrawerTitle / DrawerDescription",
-        type: "Vaul Title and Description props",
-        description:
-          "Accessible heading and helper text parts forwarded to Vaul's dialog title and description primitives.",
+          "Overlay and panel content rendered outside the page flow.",
       }),
     ],
     notes: [
       "DrawerPortal is kept as an exported part for API symmetry, while DrawerContent composes it automatically for the common overlay-plus-panel path.",
+    ],
+  },
+  {
+    id: "drawer-overlay",
+    title: "DrawerOverlay",
+    summary: "Full-screen overlay rendered behind the drawer panel.",
+    fields: [
+      field({
+        name: "className",
+        type: "string",
+        description: "Merged with the default overlay tint and blur classes.",
+      }),
+    ],
+  },
+  {
+    id: "drawer-content",
+    title: "DrawerContent",
+    summary:
+      "Portals the overlay and animated panel, applies direction-aware layout classes, and renders the optional bottom drag handle.",
+    fields: [
+      field({
+        name: "children",
+        type: "ReactNode",
+        required: true,
+        description: "Drawer body content rendered inside the animated panel.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description:
+          "Merged with the direction-aware panel geometry and surface classes.",
+      }),
+    ],
+    notes: [
+      "DrawerContent marks rendered children as non-draggable so selecting text inside the panel does not trigger Vaul's drag-to-close gesture.",
+    ],
+  },
+  {
+    id: "drawer-close",
+    title: "DrawerClose",
+    summary: "Closes the drawer from a button or custom interactive target.",
+    fields: [
+      field({
+        name: "asChild",
+        type: "boolean",
+        description:
+          "Use asChild to turn an existing footer action into the close control.",
+      }),
+      field({
+        name: "children",
+        type: "ReactNode",
+        required: true,
+        description: "Interactive content rendered by the close primitive.",
+      }),
+    ],
+  },
+  {
+    id: "drawer-header",
+    title: "DrawerHeader",
+    summary: "Layout helper for the title area at the top of the drawer panel.",
+    fields: [
+      field({
+        name: "children",
+        type: "ReactNode",
+        required: true,
+        description:
+          "Header content such as DrawerTitle and DrawerDescription.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description: "Merged with the default header spacing classes.",
+      }),
+    ],
+  },
+  {
+    id: "drawer-footer",
+    title: "DrawerFooter",
+    summary:
+      "Layout helper for actions or supporting context at the bottom of the drawer.",
+    fields: [
+      field({
+        name: "children",
+        type: "ReactNode",
+        required: true,
+        description: "Footer actions or supporting context.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description: "Merged with the default footer spacing classes.",
+      }),
+    ],
+  },
+  {
+    id: "drawer-title",
+    title: "DrawerTitle",
+    summary:
+      "Accessible heading part forwarded to Vaul's dialog title primitive.",
+    fields: [
+      field({
+        name: "children",
+        type: "ReactNode",
+        required: true,
+        description: "Drawer heading content.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description: "Merged with the default title typography classes.",
+      }),
+    ],
+  },
+  {
+    id: "drawer-description",
+    title: "DrawerDescription",
+    summary:
+      "Accessible helper text part forwarded to Vaul's dialog description primitive.",
+    fields: [
+      field({
+        name: "children",
+        type: "ReactNode",
+        required: true,
+        description: "Supporting description copy beneath the drawer title.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description: "Merged with the default description typography classes.",
+      }),
+    ],
+    notes: [
       "DrawerTitle and DrawerDescription should be included inside DrawerHeader when the panel needs accessible labeling.",
     ],
   },
@@ -2872,40 +3282,102 @@ const dialogApiDetails: DetailItem[] = [
     ],
   },
   {
-    id: "dialog-trigger-close",
-    title: "DialogTrigger and DialogClose",
+    id: "dialog-trigger",
+    title: "DialogTrigger",
     summary:
-      "These exports are direct Radix aliases used to open or close the dialog from any custom element.",
+      "Radix trigger export used to open the dialog from any custom element.",
     fields: [
       field({
         name: "asChild",
         type: "boolean",
         description:
-          "Lets you turn a custom button or link into the trigger or close control without adding an extra wrapper element.",
+          "Lets you turn a custom button or link into the trigger without adding an extra wrapper element.",
       }),
       field({
         name: "children",
         type: "ReactNode",
         required: true,
-        description:
-          "Interactive content rendered by the trigger or close primitive.",
+        description: "Interactive content rendered by the trigger primitive.",
       }),
     ],
     notes: [
-      "Because both exports come directly from Radix, they also accept the remaining primitive props for event handling and accessibility wiring.",
+      "Because DialogTrigger comes directly from Radix, it also accepts the remaining primitive props for event handling and accessibility wiring.",
     ],
   },
   {
-    id: "dialog-layout-helpers",
-    title: "DialogHeader and DialogFooter",
+    id: "dialog-close",
+    title: "DialogClose",
     summary:
-      "Layout helpers used to structure dialog content without changing dialog behavior.",
+      "Radix close export used to dismiss the dialog from any custom control.",
+    fields: [
+      field({
+        name: "asChild",
+        type: "boolean",
+        description:
+          "Lets you turn an existing button or link into the close control without adding an extra wrapper element.",
+      }),
+      field({
+        name: "children",
+        type: "ReactNode",
+        required: true,
+        description: "Interactive content rendered by the close primitive.",
+      }),
+    ],
+    notes: [
+      "DialogContent also renders its own close button in the top-right corner using DialogClose and the Lucide X icon.",
+    ],
+  },
+  {
+    id: "dialog-portal",
+    title: "DialogPortal",
+    summary:
+      "Radix portal export for rendering dialog content outside the current DOM hierarchy.",
     fields: [
       field({
         name: "children",
         type: "ReactNode",
         required: true,
-        description: "Content rendered inside the helper container.",
+        description:
+          "Portal content such as overlay and dialog panel primitives.",
+      }),
+      field({
+        name: "container",
+        type: "HTMLElement",
+        description:
+          "Optional mount target for the portal. Defaults to document.body.",
+      }),
+    ],
+  },
+  {
+    id: "dialog-header",
+    title: "DialogHeader",
+    summary: "Layout helper for the title area at the top of dialog content.",
+    fields: [
+      field({
+        name: "children",
+        type: "ReactNode",
+        required: true,
+        description: "Content rendered inside the header container.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description:
+          "Merged onto the helper wrapper so spacing and alignment can be adjusted per dialog.",
+      }),
+    ],
+  },
+  {
+    id: "dialog-footer",
+    title: "DialogFooter",
+    summary:
+      "Layout helper for actions or supporting context at the bottom of dialog content.",
+    fields: [
+      field({
+        name: "children",
+        type: "ReactNode",
+        required: true,
+        description: "Content rendered inside the footer container.",
       }),
       field({
         name: "className",
@@ -2915,29 +3387,51 @@ const dialogApiDetails: DetailItem[] = [
       }),
     ],
     notes: [
-      "Both helpers accept the normal div HTML attribute surface in addition to className and children.",
+      "Both header and footer helpers accept the normal div HTML attribute surface in addition to className and children.",
     ],
   },
   {
-    id: "dialog-text-helpers",
-    title: "DialogTitle and DialogDescription",
+    id: "dialog-title",
+    title: "DialogTitle",
     summary:
-      "Semantic text helpers that forward to the matching Radix title and description primitives.",
+      "Semantic title helper forwarded to the matching Radix title primitive.",
     fields: [
       field({
         name: "children",
         type: "ReactNode",
         required: true,
         description:
-          "Text or inline markup rendered inside the title or description primitive.",
+          "Text or inline markup rendered inside the title primitive.",
       }),
       field({
         name: "className",
         type: "string",
-        description: "Merged with the default title or description styles.",
+        description: "Merged with the default title styles.",
       }),
     ],
-    notes: ["Both helpers forward refs to the underlying Radix primitives."],
+  },
+  {
+    id: "dialog-description",
+    title: "DialogDescription",
+    summary:
+      "Semantic description helper forwarded to the matching Radix description primitive.",
+    fields: [
+      field({
+        name: "children",
+        type: "ReactNode",
+        required: true,
+        description:
+          "Text or inline markup rendered inside the description primitive.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description: "Merged with the default description styles.",
+      }),
+    ],
+    notes: [
+      "Both title and description helpers forward refs to the underlying Radix primitives.",
+    ],
   },
   registryItem("dialog.json", [
     "@radix-ui/react-dialog",
@@ -3132,9 +3626,9 @@ const popoverApiDetails: DetailItem[] = [
   },
   {
     id: "popover-trigger",
-    title: "PopoverTrigger and PopoverAnchor",
+    title: "PopoverTrigger",
     summary:
-      "`PopoverTrigger` is a light wrapper around the Radix trigger with a larger default hit area when not using `asChild`, while `PopoverAnchor` remains the Radix positioning anchor.",
+      "Light wrapper around the Radix trigger with a larger default hit area when not using asChild.",
     fields: [
       field({
         name: "asChild",
@@ -3146,13 +3640,34 @@ const popoverApiDetails: DetailItem[] = [
         name: "children",
         type: "ReactNode",
         required: true,
-        description:
-          "Interactive or layout content rendered by the trigger or anchor primitive.",
+        description: "Interactive content rendered by the trigger primitive.",
       }),
     ],
     notes: [
-      "Both exports still accept the remaining primitive props for event handling and accessibility wiring.",
-      "When you render an icon-only trigger with `asChild`, keep the interactive target around 40-44px so the hit area stays comfortable on touch and pointer devices.",
+      "When you render an icon-only trigger with asChild, keep the interactive target around 40-44px so the hit area stays comfortable on touch and pointer devices.",
+    ],
+  },
+  {
+    id: "popover-anchor",
+    title: "PopoverAnchor",
+    summary:
+      "Radix positioning anchor used when the popover should attach to a non-trigger element.",
+    fields: [
+      field({
+        name: "asChild",
+        type: "boolean",
+        description:
+          "Lets you render your own anchor element without adding an extra DOM node.",
+      }),
+      field({
+        name: "children",
+        type: "ReactNode",
+        required: true,
+        description: "Layout content rendered by the anchor primitive.",
+      }),
+    ],
+    notes: [
+      "PopoverAnchor still accepts the remaining primitive props for event handling and accessibility wiring.",
     ],
   },
   {
@@ -3743,14 +4258,84 @@ const selectApiDetails: DetailItem[] = [
     ],
   },
   {
-    id: "select-groups",
-    title: "Groups, labels, separators, and scroll buttons",
-    summary:
-      "Supporting parts for structured menus: SelectGroup, SelectLabel, SelectSeparator, SelectScrollUpButton, and SelectScrollDownButton.",
+    id: "select-group",
+    title: "SelectGroup",
+    summary: "Section wrapper for grouped options inside SelectContent.",
+    fields: [
+      field({
+        name: "children",
+        type: "ReactNode",
+        required: true,
+        description:
+          "SelectItem rows or nested option content rendered inside the grouped section.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description: "Merged with the default grouped section spacing classes.",
+      }),
+    ],
     notes: [
       "SelectGroup adds the same section spacing as the previous grouped option renderer.",
-      "SelectLabel keeps the compact uppercase section label treatment.",
+    ],
+  },
+  {
+    id: "select-label",
+    title: "SelectLabel",
+    summary: "Compact section label rendered above grouped SelectItem rows.",
+    fields: [
+      field({
+        name: "children",
+        type: "ReactNode",
+        required: true,
+        description: "Section label text rendered above a SelectGroup.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description:
+          "Merged with the uppercase section label typography classes.",
+      }),
+    ],
+    notes: ["SelectLabel keeps the compact uppercase section label treatment."],
+  },
+  {
+    id: "select-separator",
+    title: "SelectSeparator",
+    summary: "Non-interactive divider between item clusters inside the menu.",
+    fields: [
+      field({
+        name: "className",
+        type: "string",
+        description: "Merged with the default border-token divider classes.",
+      }),
+    ],
+    notes: [
       "SelectSeparator renders a non-interactive border-token divider between item clusters.",
+    ],
+  },
+  {
+    id: "select-scroll-up",
+    title: "SelectScrollUpButton",
+    summary: "Scroll affordance rendered above long SelectContent lists.",
+    fields: [
+      field({
+        name: "className",
+        type: "string",
+        description: "Merged with the default scroll button layout classes.",
+      }),
+    ],
+  },
+  {
+    id: "select-scroll-down",
+    title: "SelectScrollDownButton",
+    summary: "Scroll affordance rendered below long SelectContent lists.",
+    fields: [
+      field({
+        name: "className",
+        type: "string",
+        description: "Merged with the default scroll button layout classes.",
+      }),
     ],
   },
   registryItem("select.json", ["motion", "lucide-react"]),

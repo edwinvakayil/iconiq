@@ -18,7 +18,6 @@ import {
 } from "@/components/docs/page-shell";
 import { LINK } from "@/constants";
 import { buildV0Page } from "@/lib/component-v0-pages";
-import { cn } from "@/lib/utils";
 import {
   TYPOGRAPHY_GROUPS,
   TYPOGRAPHY_SAMPLE_TEXT,
@@ -63,12 +62,7 @@ function TypographyDocsSection({
 }) {
   return (
     <section className="scroll-mt-32" id={id}>
-      <h2
-        className={cn(
-          "mt-16 border-border/80 border-b pb-4 text-xl tracking-tight first:mt-0",
-          title === "Props" ? "font-black" : "font-semibold"
-        )}
-      >
+      <h2 className="mt-16 border-border/80 border-b pb-4 font-semibold text-xl tracking-tight first:mt-0">
         {title}
       </h2>
       <div className="pt-6">{children}</div>
