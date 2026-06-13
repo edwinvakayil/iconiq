@@ -369,7 +369,7 @@ const heroCtaRowClassName =
   "mt-8 flex flex-wrap items-center justify-start gap-2 sm:gap-3";
 
 const heroCtaPrimaryClassName =
-  "h-9 gap-1.5 px-3 text-sm leading-5 sm:h-10 sm:px-4 sm:text-base sm:leading-5 has-data-[icon=inline-end]:pr-2.5 has-data-[icon=inline-start]:pl-2.5 sm:has-data-[icon=inline-end]:pr-3.5 sm:has-data-[icon=inline-start]:pl-3.5";
+  "h-9 gap-1.5 px-3 text-sm leading-5 shadow-[0_10px_20px_-4px_color-mix(in_srgb,var(--accent-pro)_38%,transparent)] hover:shadow-[0_12px_24px_-4px_color-mix(in_srgb,var(--accent-pro)_48%,transparent)] focus-visible:shadow-[0_12px_24px_-4px_color-mix(in_srgb,var(--accent-pro)_48%,transparent)] sm:h-10 sm:px-4 sm:text-base sm:leading-5 has-data-[icon=inline-end]:pr-2.5 has-data-[icon=inline-start]:pl-2.5 sm:has-data-[icon=inline-end]:pr-3.5 sm:has-data-[icon=inline-start]:pl-3.5";
 
 const heroCtaLinkClassName =
   "h-9 px-0 text-sm leading-5 sm:h-10 sm:text-base sm:leading-5";
