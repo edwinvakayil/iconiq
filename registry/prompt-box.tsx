@@ -13,7 +13,7 @@ import {
   useRef,
   useState,
 } from "react";
-import { createPortal } from "react-dom";
+import { createPortal, flushSync } from "react-dom";
 
 const TRANSITION = {
   type: "spring" as const,
@@ -29,7 +29,7 @@ const MIN_TEXTAREA_PANEL_HEIGHT = MIN_EXPANDED_HEIGHT - FOOTER_HEIGHT;
 const MAX_TEXTAREA_PANEL_HEIGHT = MAX_EXPANDED_HEIGHT - FOOTER_HEIGHT;
 
 const promptFieldClassName =
-  "w-full border-0 bg-transparent text-sm leading-[17px] text-foreground shadow-none outline-none placeholder:font-medium placeholder:text-muted-foreground focus:outline-none focus-visible:outline-none focus-visible:ring-0";
+  "w-full border-0 bg-transparent text-base leading-5 text-foreground shadow-none outline-none placeholder:font-medium placeholder:text-muted-foreground focus:outline-none focus-visible:outline-none focus-visible:ring-0 sm:text-sm sm:leading-[17px]";
 
 const promptFieldCollapsedClassName = `absolute inset-x-0 top-0 ${promptFieldClassName}`;
 
@@ -400,7 +400,7 @@ type SubmenuPosition = {
   origin: SubmenuOrigin;
 };
 
-function getMainDropdownMotion(side: DropdownSide) {
+function getMainDropdownMotion(side: DropdownSide, instantClose = false) {
   const offsetY = side === "bottom" ? -10 : 10;
 
   return {
@@ -411,33 +411,35 @@ function getMainDropdownMotion(side: DropdownSide) {
     },
     exit: {
       opacity: 0,
-      scale: 0.98,
-      y: offsetY * 0.65,
+      scale: instantClose ? 1 : 0.98,
+      y: instantClose ? 0 : offsetY * 0.65,
     },
     initial: {
       opacity: 0,
       scale: 0.96,
       y: offsetY,
     },
-    transition: dropdownPanelSpring,
+    transition: instantClose ? { duration: 0 } : dropdownPanelSpring,
   };
 }
 
-function getMainDropdownInnerMotion(side: DropdownSide) {
+function getMainDropdownInnerMotion(side: DropdownSide, instantClose = false) {
   const offsetY = side === "bottom" ? 5 : -5;
 
   return {
     animate: { opacity: 1, y: 0 },
-    exit: { opacity: 0, y: offsetY * 0.5 },
+    exit: { opacity: 0, y: instantClose ? 0 : offsetY * 0.5 },
     initial: { opacity: 0, y: offsetY },
-    transition: {
-      duration: 0.22,
-      ease: [0.22, 1, 0.36, 1] as const,
-    },
+    transition: instantClose
+      ? { duration: 0 }
+      : {
+          duration: 0.22,
+          ease: [0.22, 1, 0.36, 1] as const,
+        },
   };
 }
 
-function getFlyoutSubmenuMotion(origin: SubmenuOrigin) {
+function getFlyoutSubmenuMotion(origin: SubmenuOrigin, instantClose = false) {
   const offsetX = origin === "right" ? -12 : 12;
 
   return {
@@ -448,27 +450,15 @@ function getFlyoutSubmenuMotion(origin: SubmenuOrigin) {
     },
     exit: {
       opacity: 0,
-      scale: 0.98,
-      x: offsetX * 0.55,
+      scale: instantClose ? 1 : 0.98,
+      x: instantClose ? 0 : offsetX * 0.55,
     },
     initial: {
       opacity: 0,
       scale: 0.96,
       x: offsetX,
     },
-    transition: dropdownPanelSpring,
-  };
-}
-
-function getInlineSubmenuMotion() {
-  return {
-    animate: { height: "auto", opacity: 1 },
-    exit: { height: 0, opacity: 0 },
-    initial: { height: 0, opacity: 0 },
-    transition: {
-      opacity: { duration: 0.16, ease: "easeOut" as const },
-      height: dropdownPanelSpring,
-    },
+    transition: instantClose ? { duration: 0 } : dropdownPanelSpring,
   };
 }
 
@@ -725,30 +715,9 @@ function SubmenuInlinePanel({
   isOpen: boolean;
   submenuOptions: ReactNode;
 }) {
-  const inlineSubmenuMotion = getInlineSubmenuMotion();
+  if (!isOpen) return null;
 
-  return (
-    <AnimatePresence initial={false}>
-      {isOpen ? (
-        <motion.div
-          animate={inlineSubmenuMotion.animate}
-          className="overflow-hidden"
-          exit={inlineSubmenuMotion.exit}
-          initial={inlineSubmenuMotion.initial}
-          transition={inlineSubmenuMotion.transition}
-        >
-          <motion.div
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -4 }}
-            initial={{ opacity: 0, y: 4 }}
-            transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
-          >
-            <div className="px-1 pb-1">{submenuOptions}</div>
-          </motion.div>
-        </motion.div>
-      ) : null}
-    </AnimatePresence>
-  );
+  return <div className="px-1 pb-1">{submenuOptions}</div>;
 }
 
 function SubmenuFlyoutPanel({
@@ -911,6 +880,16 @@ function DropdownSubmenu({
     [isOpen, onOpenChange]
   );
 
+  const handleOptionSelect = useCallback(
+    (value: string) => {
+      flushSync(() => {
+        onOpenChange(false);
+      });
+      onSelect(value);
+    },
+    [onOpenChange, onSelect]
+  );
+
   const submenuOptions = (
     <div className="space-y-0.5">
       {group.options.map((option) => (
@@ -919,7 +898,7 @@ function DropdownSubmenu({
           highlightLayoutId={submenuHighlightLayoutId}
           key={option.value}
           label={option.label}
-          onSelect={() => onSelect(option.value)}
+          onSelect={() => handleOptionSelect(option.value)}
           selected={selectedValue === option.value}
           setActiveItemId={setActiveItemId}
         />
@@ -1104,7 +1083,9 @@ function SettingsDropdown({
   const triggerRef = useRef<HTMLButtonElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
   const prefersHover = usePrefersHover();
+  const isCompact = useCompactViewport();
   const mounted = useIsMounted();
+  const [instantDismiss, setInstantDismiss] = useState(false);
 
   const handleOpenChange = useCallback(
     (nextOpen: boolean) => {
@@ -1117,6 +1098,34 @@ function SettingsDropdown({
       }
     },
     [onOpenChange]
+  );
+
+  const dismissDropdown = useCallback(
+    (instant = false) => {
+      if (instant) {
+        setInstantDismiss(true);
+      }
+      handleOpenChange(false);
+    },
+    [handleOpenChange]
+  );
+
+  useEffect(() => {
+    if (open) {
+      setInstantDismiss(false);
+    }
+  }, [open]);
+
+  const handleSubmenuSelect = useCallback(
+    (groupId: string, value: string) => {
+      onValueChange(groupId, value);
+      setOpenSubmenuId(null);
+
+      if (!isCompact) {
+        dismissDropdown(true);
+      }
+    },
+    [dismissDropdown, isCompact, onValueChange]
   );
 
   const updatePosition = useCallback(() => {
@@ -1196,8 +1205,14 @@ function SettingsDropdown({
   const effortLevel = normalizeEffortLevel(
     effortGroupId ? (values[effortGroupId] ?? "medium") : "medium"
   );
-  const mainDropdownMotion = getMainDropdownMotion(position.side);
-  const mainDropdownInnerMotion = getMainDropdownInnerMotion(position.side);
+  const mainDropdownMotion = getMainDropdownMotion(
+    position.side,
+    instantDismiss
+  );
+  const mainDropdownInnerMotion = getMainDropdownInnerMotion(
+    position.side,
+    instantDismiss
+  );
 
   return (
     <>
@@ -1330,8 +1345,7 @@ function SettingsDropdown({
                               setOpenSubmenuId(nextOpen ? group.id : null);
                             }}
                             onSelect={(value) => {
-                              onValueChange(group.id, value);
-                              handleOpenChange(false);
+                              handleSubmenuSelect(group.id, value);
                             }}
                             selectedValue={values[group.id] ?? ""}
                             setActiveItemId={setActiveItemId}
@@ -1361,8 +1375,7 @@ function SettingsDropdown({
                               );
                             }}
                             onSelect={(value) => {
-                              onValueChange(group.id, value);
-                              handleOpenChange(false);
+                              handleSubmenuSelect(group.id, value);
                             }}
                             selectedValue={values[group.id] ?? ""}
                             setActiveItemId={setActiveItemId}
@@ -1403,7 +1416,9 @@ function PlusMenuDropdown({
   });
   const triggerRef = useRef<HTMLButtonElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
+  const isCompact = useCompactViewport();
   const mounted = useIsMounted();
+  const [instantDismiss, setInstantDismiss] = useState(false);
 
   const handleOpenChange = useCallback(
     (nextOpen: boolean) => {
@@ -1417,6 +1432,22 @@ function PlusMenuDropdown({
     },
     [onOpenChange]
   );
+
+  const dismissDropdown = useCallback(
+    (instant = false) => {
+      if (instant) {
+        setInstantDismiss(true);
+      }
+      handleOpenChange(false);
+    },
+    [handleOpenChange]
+  );
+
+  useEffect(() => {
+    if (open) {
+      setInstantDismiss(false);
+    }
+  }, [open]);
 
   const updatePosition = useCallback(() => {
     const trigger = triggerRef.current;
@@ -1486,8 +1517,14 @@ function PlusMenuDropdown({
     handleOpenChange(true);
   }, [handleOpenChange, open, updatePosition]);
 
-  const mainDropdownMotion = getMainDropdownMotion(position.side);
-  const mainDropdownInnerMotion = getMainDropdownInnerMotion(position.side);
+  const mainDropdownMotion = getMainDropdownMotion(
+    position.side,
+    instantDismiss
+  );
+  const mainDropdownInnerMotion = getMainDropdownInnerMotion(
+    position.side,
+    instantDismiss
+  );
 
   return (
     <>
@@ -1577,7 +1614,11 @@ function PlusMenuDropdown({
                             }}
                             onSelect={(value) => {
                               item.onOptionSelect?.(value);
-                              handleOpenChange(false);
+                              setOpenSubmenuId(null);
+
+                              if (!isCompact) {
+                                dismissDropdown(true);
+                              }
                             }}
                             selectedValue=""
                             setActiveItemId={setActiveItemId}
@@ -1908,7 +1949,7 @@ export function PromptInput({
               render={(props) => (
                 <textarea
                   {...props}
-                  className={`${props.className ?? ""} ${promptFieldClassName} block h-full min-h-0 w-full resize-none pt-4 pr-14 pl-5 leading-[17px] outline-none ${isPanelScrollable ? "overflow-y-auto overscroll-contain" : "overflow-hidden"}`}
+                  className={`${props.className ?? ""} ${promptFieldClassName} block h-full min-h-0 w-full resize-none pt-4 pr-14 pl-5 outline-none ${isPanelScrollable ? "overflow-y-auto overscroll-contain" : "overflow-hidden"}`}
                   onKeyDown={(event) => {
                     props.onKeyDown?.(event);
                     handleTextareaKeyDown(event);
