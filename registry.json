@@ -868,6 +868,21 @@
       ]
     },
     {
+      "name": "prompt-box",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": ["@base-ui/react", "motion", "lucide-react"],
+      "devDependencies": [],
+      "title": "Prompt Box",
+      "description": "Spring-animated AI prompt with model controls and voice or send.",
+      "files": [
+        {
+          "path": "prompt-box.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "r-accordion",
       "type": "registry:ui",
       "registryDependencies": [],

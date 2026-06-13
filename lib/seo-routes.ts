@@ -79,6 +79,17 @@ const SECTION_FALLBACK_SEO: Record<string, RouteSeo> = {
       "Browse Iconiq UI input and form components with live previews, shadcn install commands, and matching Base UI or Radix registry entries.",
     keywords: ["iconiq ui forms", "react input components", "shadcn registry"],
   },
+  Blocks: {
+    title: "Blocks",
+    description:
+      "Browse Iconiq UI block components — composed interface patterns with live previews, shadcn install commands, and editable registry source files.",
+    keywords: [
+      "iconiq ui blocks",
+      "react ui blocks",
+      "composed react components",
+      "shadcn registry",
+    ],
+  },
   "Overlay & Popups": {
     title: "Overlay & Popups",
     description:
@@ -180,6 +191,7 @@ for (const section of SITE_SECTIONS) {
       child.href,
       section.label === "Buttons & Actions" ||
         section.label === "Inputs & Forms" ||
+        section.label === "Blocks" ||
         section.label === "Overlay & Popups" ||
         section.label === "Navigation" ||
         section.label === "Display & Content" ||

@@ -72,6 +72,8 @@ const componentSummaries: Record<string, string> = {
     "File upload docs in the Inputs & Forms section, using the shared Iconiq file upload install with provider options visible but disabled.",
   "/inputs-and-forms/input-otp":
     "Input OTP docs in the Inputs & Forms section with Base UI OTP Field slots, spring focus motion, character entrance, and a blinking caret on the active cell.",
+  "/blocks/prompt-box":
+    "Prompt box docs in the Blocks section with a compact-to-expanded AI prompt field, spring resize, model footer controls, and send or voice actions.",
   "/overlay-and-popups/hover-card":
     "Hover card docs in the Overlay & Popups section with a provider switch that swaps between a Base UI popover-backed install and a Radix Hover Card primitive install.",
   "/overlay-and-popups/popover":
@@ -181,6 +183,15 @@ const extraComponentKeywordsBySlug: Record<string, string[]> = {
     "pin",
     "2fa",
     "auth code",
+  ],
+  "prompt-box": [
+    "prompt",
+    "chat input",
+    "ai input",
+    "message box",
+    "composer",
+    "textarea",
+    "ask anything",
   ],
   infiniteribbon: [
     "infinite ribbon",

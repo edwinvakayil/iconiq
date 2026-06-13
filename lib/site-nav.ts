@@ -11,6 +11,10 @@ export const BASE_LINKS = [
 
 export const SITE_SECTIONS = [
   {
+    label: "Blocks",
+    children: [{ label: "Prompt Box", href: "/blocks/prompt-box" }],
+  },
+  {
     label: "Buttons & Actions",
     children: [
       { label: "Button", href: "/buttons-and-actions/button" },
@@ -20,6 +24,32 @@ export const SITE_SECTIONS = [
       { label: "Toggle", href: "/buttons-and-actions/toggle" },
       { label: "Toggle Group", href: "/buttons-and-actions/toggle-group" },
     ],
+  },
+  {
+    label: "Display & Content",
+    children: [
+      { label: "Avatar", href: "/display-and-content/avatar" },
+      { label: "Badge", href: "/display-and-content/badge" },
+      { label: "Calendar", href: "/display-and-content/calendar" },
+      { label: "Card", href: "/display-and-content/card" },
+      { label: "Carousel", href: "/display-and-content/carousel" },
+      { label: "Charts", href: "/display-and-content/charts" },
+      { label: "Date Picker", href: "/display-and-content/date-picker" },
+      { label: "Progress", href: "/display-and-content/progress" },
+      { label: "Rolling Digits", href: "/display-and-content/rolling-digits" },
+      { label: "Skeleton", href: "/display-and-content/skeleton" },
+      { label: "Spinner", href: "/display-and-content/spinner" },
+      { label: "Table", href: "/display-and-content/table" },
+      { label: "Verified Badge", href: "/display-and-content/verified-badge" },
+    ],
+  },
+  {
+    label: "Feedback & Alerts",
+    children: [{ label: "Alert", href: "/feedback-and-alerts/alert" }],
+  },
+  {
+    label: "Foundation",
+    children: [{ label: "Typography", href: "/foundation/typography" }],
   },
   {
     label: "Inputs & Forms",
@@ -39,16 +69,15 @@ export const SITE_SECTIONS = [
     ],
   },
   {
-    label: "Overlay & Popups",
+    label: "Layout & Toolbars",
     children: [
-      { label: "Alert Dialog", href: "/overlay-and-popups/alert-dialog" },
-      { label: "Context Menu", href: "/overlay-and-popups/context-menu" },
-      { label: "Dialog", href: "/overlay-and-popups/dialog" },
-      { label: "Drawer", href: "/overlay-and-popups/drawer" },
-      { label: "Dropdown", href: "/overlay-and-popups/dropdown" },
-      { label: "Hover Card", href: "/overlay-and-popups/hover-card" },
-      { label: "Popover", href: "/overlay-and-popups/popover" },
-      { label: "Tooltip", href: "/overlay-and-popups/tooltip" },
+      { label: "Collapsible", href: "/layout-and-toolbars/collapsible" },
+      { label: "Infinite Ribbon", href: "/layout-and-toolbars/infiniteribbon" },
+      {
+        label: "Selection Toolbar",
+        href: "/layout-and-toolbars/selection-toolbar",
+      },
+      { label: "Separator", href: "/layout-and-toolbars/separator" },
     ],
   },
   {
@@ -63,37 +92,16 @@ export const SITE_SECTIONS = [
     ],
   },
   {
-    label: "Display & Content",
+    label: "Overlay & Popups",
     children: [
-      { label: "Avatar", href: "/display-and-content/avatar" },
-      { label: "Badge", href: "/display-and-content/badge" },
-      { label: "Calendar", href: "/display-and-content/calendar" },
-      { label: "Date Picker", href: "/display-and-content/date-picker" },
-      { label: "Card", href: "/display-and-content/card" },
-      { label: "Carousel", href: "/display-and-content/carousel" },
-      { label: "Charts", href: "/display-and-content/charts" },
-      { label: "Rolling Digits", href: "/display-and-content/rolling-digits" },
-      { label: "Progress", href: "/display-and-content/progress" },
-      { label: "Skeleton", href: "/display-and-content/skeleton" },
-      { label: "Spinner", href: "/display-and-content/spinner" },
-      { label: "Table", href: "/display-and-content/table" },
-      { label: "Verified Badge", href: "/display-and-content/verified-badge" },
-    ],
-  },
-  {
-    label: "Feedback & Alerts",
-    children: [{ label: "Alert", href: "/feedback-and-alerts/alert" }],
-  },
-  {
-    label: "Layout & Toolbars",
-    children: [
-      { label: "Collapsible", href: "/layout-and-toolbars/collapsible" },
-      {
-        label: "Selection Toolbar",
-        href: "/layout-and-toolbars/selection-toolbar",
-      },
-      { label: "Separator", href: "/layout-and-toolbars/separator" },
-      { label: "Infinite Ribbon", href: "/layout-and-toolbars/infiniteribbon" },
+      { label: "Alert Dialog", href: "/overlay-and-popups/alert-dialog" },
+      { label: "Context Menu", href: "/overlay-and-popups/context-menu" },
+      { label: "Dialog", href: "/overlay-and-popups/dialog" },
+      { label: "Drawer", href: "/overlay-and-popups/drawer" },
+      { label: "Dropdown", href: "/overlay-and-popups/dropdown" },
+      { label: "Hover Card", href: "/overlay-and-popups/hover-card" },
+      { label: "Popover", href: "/overlay-and-popups/popover" },
+      { label: "Tooltip", href: "/overlay-and-popups/tooltip" },
     ],
   },
   {
@@ -101,15 +109,11 @@ export const SITE_SECTIONS = [
     children: [{ label: "Radial Button", href: "/special-one/radial-button" }],
   },
   {
-    label: "Foundation",
-    children: [{ label: "Typography", href: "/foundation/typography" }],
-  },
-  {
     label: "Texts",
     children: [
       { label: "Dia Text", href: "/texts/dia-text" },
-      { label: "Reveal Text", href: "/texts/reveal-text" },
       { label: "Morph Text", href: "/texts/morph-texts" },
+      { label: "Reveal Text", href: "/texts/reveal-text" },
       { label: "Shimmer Text", href: "/texts/shimmer-text" },
       { label: "Text Inertia", href: "/texts/text-inertia" },
       { label: "Typewriter", href: "/texts/typewriter" },

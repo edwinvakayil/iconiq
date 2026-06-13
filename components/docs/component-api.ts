@@ -2731,6 +2731,77 @@ const inputOtpApiDetails: DetailItem[] = [
   registryItem("input-otp.json", ["@base-ui/react", "motion"]),
 ];
 
+const promptBoxApiDetails: DetailItem[] = [
+  {
+    id: "prompt-input",
+    title: "PromptInput",
+    summary:
+      "Expandable prompt surface that grows from a compact pill into a textarea with model controls, attachment action, and send or voice affordances.",
+    fields: [
+      field({
+        name: "onSubmit",
+        type: "(value: string) => void",
+        description:
+          "Called with the trimmed prompt when the user presses Enter without Shift or clicks the send button.",
+      }),
+      field({
+        name: "placeholder",
+        type: "string",
+        description:
+          "Placeholder copy for the collapsed and expanded prompt field.",
+      }),
+      field({
+        name: "menuActions",
+        type: "PromptMenuAction[]",
+        description:
+          "Optional dropdown actions rendered above setting groups. Each action has `label`, optional `icon`, and `onSelect`.",
+      }),
+      field({
+        name: "plusMenuItems",
+        type: "PromptPlusMenuItem[]",
+        description:
+          "Items for the plus-button add menu. Actions use `onSelect` with optional `shortcut`. Submenus pass `options` and `onOptionSelect`.",
+      }),
+      field({
+        name: "settingGroups",
+        type: "PromptSettingGroup[]",
+        description:
+          'Grouped settings for the footer menu. Use `display: "featured"` for a selected summary row, `display: "submenu"` for a value row with flyout, and `moreMenuLabel` for an extra picker row (e.g. More models). Options support optional `description` text.',
+      }),
+      field({
+        name: "settings",
+        type: "Record<string, string>",
+        description:
+          "Controlled map of selected values keyed by setting group id.",
+      }),
+      field({
+        name: "defaultSettings",
+        type: "Record<string, string>",
+        description:
+          "Initial selected values for uncontrolled usage, keyed by setting group id.",
+      }),
+      field({
+        name: "onSettingsChange",
+        type: "(settings: Record<string, string>) => void",
+        description:
+          "Called when the user picks a new option in any settings group.",
+      }),
+    ],
+    notes: [
+      "Built on Base UI Input — collapsed state uses a read-only field, expanded state renders a textarea through the `render` prop.",
+      "Click the collapsed field to expand and focus the prompt input.",
+      "Press Enter to submit when the field has content; Shift+Enter inserts a newline.",
+      "The expanded surface starts compact and grows with your prompt up to 300px, then scrolls inside the textarea.",
+      "Press Escape or blur away with an empty draft to collapse back to the compact pill.",
+      "The settings menu shows optional `menuActions`, then featured model rows, submenu rows with current values, and optional more-menu flyouts separated by dividers.",
+      "The plus button opens an optional add menu when `plusMenuItems` is provided. Items support icons, keyboard shortcuts, and nested submenus.",
+      "The footer reveals the settings popover and plus add menu while expanded.",
+      "The trailing action button shows a microphone icon when empty and an arrow icon once text is entered.",
+    ],
+  },
+  registryItem("prompt-box.json", ["@base-ui/react", "motion", "lucide-react"]),
+];
+
 const dialogApiDetails: DetailItem[] = [
   {
     id: "dialog-root",
@@ -6180,6 +6251,7 @@ export {
   faqProApiDetails,
   fileTreeApiDetails,
   popoverApiDetails,
+  promptBoxApiDetails,
   accordionApiDetails,
   progressApiDetails,
   radioGroupApiDetails,

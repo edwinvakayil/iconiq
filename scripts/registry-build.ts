@@ -582,6 +582,12 @@ const REGISTRY_UI_META: Record<
       "Compound file tree with nested FileTreeItem rows, Base UI Button folder toggles, extension-aware icons, hover highlight tracking, and optional blue emphasis for new files.",
     dependencies: ["@base-ui/react", "motion", "lucide-react"],
   },
+  "prompt-box": {
+    title: "Prompt Box",
+    description:
+      "Spring-animated AI prompt with model controls and voice or send.",
+    dependencies: ["@base-ui/react", "motion", "lucide-react"],
+  },
   popover: {
     title: "Popover",
     description:

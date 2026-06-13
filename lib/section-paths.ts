@@ -2,6 +2,7 @@
 export const SECTION_PATH_PREFIX = {
   "Buttons & Actions": "/buttons-and-actions",
   "Inputs & Forms": "/inputs-and-forms",
+  Blocks: "/blocks",
   "Overlay & Popups": "/overlay-and-popups",
   Navigation: "/navigation",
   "Display & Content": "/display-and-content",
@@ -17,6 +18,7 @@ export type SectionLabel = keyof typeof SECTION_PATH_PREFIX;
 export const DOCS_SECTION_SEGMENTS = [
   "buttons-and-actions",
   "inputs-and-forms",
+  "blocks",
   "overlay-and-popups",
   "navigation",
   "display-and-content",

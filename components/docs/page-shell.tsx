@@ -111,6 +111,7 @@ function DocsBreadcrumbs({
       "components",
       "foundation",
       "getting started",
+      "blocks",
       "buttons & actions",
       "inputs & forms",
       "overlay & popups",
