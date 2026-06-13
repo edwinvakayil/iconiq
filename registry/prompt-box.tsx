@@ -31,7 +31,7 @@ const MAX_TEXTAREA_PANEL_HEIGHT = MAX_EXPANDED_HEIGHT - FOOTER_HEIGHT;
 const promptFieldClassName =
   "w-full border-0 bg-transparent text-base leading-5 text-foreground shadow-none outline-none placeholder:font-medium placeholder:text-muted-foreground focus:outline-none focus-visible:outline-none focus-visible:ring-0 sm:text-sm sm:leading-[17px]";
 
-const promptFieldCollapsedClassName = `absolute inset-x-0 top-0 ${promptFieldClassName}`;
+const promptFieldCollapsedClassName = promptFieldClassName;
 
 export type PromptSettingOption = {
   value: string;
@@ -1960,10 +1960,14 @@ export function PromptInput({
             />
           </motion.div>
         ) : (
-          <motion.div className="absolute inset-x-0 top-0" key="placeholder">
+          <motion.div
+            className="absolute inset-x-0 top-0 flex items-center px-5"
+            key="placeholder"
+            style={{ height: COLLAPSED_HEIGHT }}
+          >
             <InputPrimitive
               aria-label="Open prompt input"
-              className={`${promptFieldCollapsedClassName} cursor-text px-5 py-[15.5px] font-medium text-muted-foreground`}
+              className={`${promptFieldCollapsedClassName} block h-5 min-w-0 flex-1 cursor-text border-0 bg-transparent p-0 font-medium text-muted-foreground leading-5 sm:h-auto sm:leading-[17px]`}
               onMouseDown={(event) => {
                 event.preventDefault();
                 expand();
