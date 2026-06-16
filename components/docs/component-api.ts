@@ -6536,6 +6536,71 @@ const textInertiaApiDetails: DetailItem[] = [
   registryItem("text-inertia.json", ["motion"]),
 ];
 
+const textLoopApiDetails: DetailItem[] = [
+  {
+    id: "text-loop",
+    title: "TextLoop",
+    summary:
+      "Cycling text treatment that advances through child items on an interval, animating each change with a vertical slide and fade.",
+    fields: [
+      field({
+        name: "children",
+        type: "React.ReactNode[]",
+        required: true,
+        description:
+          "The items to cycle through. Pass each entry as a separate child element so you can control typography and markup per item.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description:
+          "Merged onto the root wrapper for local typography, spacing, or alignment classes.",
+      }),
+      field({
+        name: "interval",
+        type: "number",
+        defaultValue: "1",
+        description:
+          "Seconds each item stays visible before advancing to the next child.",
+      }),
+      field({
+        name: "transition",
+        type: "Transition",
+        defaultValue: "{ duration: 0.3 }",
+        description:
+          "Motion transition applied to each enter and exit animation between items.",
+      }),
+      field({
+        name: "variants",
+        type: "Variants",
+        description:
+          "Optional Motion variants that override the default vertical slide and fade behavior.",
+      }),
+      field({
+        name: "onIndexChange",
+        type: "(index: number) => void",
+        description:
+          "Called whenever the active item changes, with the zero-based index of the newly visible child.",
+      }),
+    ],
+    notes: [
+      "The component renders nothing when no children are provided.",
+      "AnimatePresence uses popLayout mode so outgoing and incoming items can overlap during the transition.",
+    ],
+  },
+  {
+    id: "text-loop-motion",
+    title: "Loop and transition behavior",
+    summary:
+      "An internal interval increments a loop key on each tick, and the active child is resolved with modulo arithmetic so the sequence repeats indefinitely.",
+    notes: [
+      "Default motion variants slide the incoming item up from 100% while the outgoing item exits toward -100%.",
+      "The exported useLoop hook exposes the same interval-driven key increment if you want to build a custom rotator around the same timing primitive.",
+    ],
+  },
+  registryItem("text-loop.json", ["motion"]),
+];
+
 const morphTextsApiDetails: DetailItem[] = [
   {
     id: "morph-texts",
@@ -6856,6 +6921,7 @@ export {
   revealTextApiDetails,
   rollingDigitsApiDetails,
   textInertiaApiDetails,
+  textLoopApiDetails,
   typewriterApiDetails,
   typographyApiDetails,
   tooltipApiDetails,

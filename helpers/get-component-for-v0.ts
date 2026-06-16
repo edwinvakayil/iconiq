@@ -1033,6 +1033,23 @@ export function StatusLine() {
     </TextShimmer>
   );
 }`),
+  "text-loop": buildV0Page(`"use client";
+
+import { TextLoop } from "@/components/ui/text-loop";
+
+export function RotatingHeadline() {
+  return (
+    <p className="max-w-4xl font-light text-lg text-foreground tracking-tight sm:text-xl">
+      <TextLoop interval={1}>
+        <span>Design</span>
+        <span>Build</span>
+        <span>Ship</span>
+        <span>Iterate</span>
+      </TextLoop>{" "}
+      software that ships faster.
+    </p>
+  );
+}`),
   "text-inertia": buildV0Page(`"use client";
 
 import TextInertia from "@/components/ui/text-inertia";

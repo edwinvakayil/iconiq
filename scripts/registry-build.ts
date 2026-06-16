@@ -90,6 +90,12 @@ const REGISTRY_UI_META: Record<
       "Animated shimmer text with a sweeping highlight band, adjustable spread, and configurable loop speed for emphasis-heavy copy.",
     dependencies: ["motion"],
   },
+  "text-loop": {
+    title: "Text Loop",
+    description:
+      "Cycling text with vertical slide transitions—pass your own items and interval for rotating headlines or status copy.",
+    dependencies: ["motion"],
+  },
   "text-inertia": {
     title: "Text Inertia",
     description:

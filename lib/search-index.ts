@@ -134,6 +134,8 @@ const componentSummaries: Record<string, string> = {
     "Cycling headline words with a goo-filter morph transition powered by Motion.",
   "/texts/shimmer-text":
     "Animated shimmer text with a moving highlight band, adjustable speed, and spread-based emphasis.",
+  "/texts/text-loop":
+    "Cycling text with vertical slide transitions—pass your own items and interval for rotating headlines.",
   "/texts/text-inertia":
     "Pointer-reactive word effect that maps cursor velocity into Motion-powered x, y, and rotation spring movement.",
   "/texts/typewriter":
@@ -224,6 +226,14 @@ const extraComponentKeywordsBySlug: Record<string, string[]> = {
   ],
   "shimmer-text": ["text", "shimmer", "text shimmer", "animated text"],
   skeleton: ["loading", "placeholder", "shimmer"],
+  "text-loop": [
+    "text",
+    "loop",
+    "cycling text",
+    "rotating text",
+    "animated text",
+    "text carousel",
+  ],
   "text-inertia": [
     "text",
     "inertia",

@@ -1431,6 +1431,21 @@
       ]
     },
     {
+      "name": "text-loop",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": ["motion"],
+      "devDependencies": [],
+      "title": "Text Loop",
+      "description": "Cycling text with vertical slide transitions—pass your own items and interval for rotating headlines or status copy.",
+      "files": [
+        {
+          "path": "text-loop.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "theme-toggle",
       "type": "registry:ui",
       "registryDependencies": [],
