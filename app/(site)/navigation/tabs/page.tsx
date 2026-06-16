@@ -2,7 +2,10 @@
 
 import { useState } from "react";
 
-import { SharedPrimitiveProviderSwitch } from "@/app/(site)/components/_components/provider-switch";
+import {
+  type PrimitiveProvider,
+  ProviderSwitch,
+} from "@/app/(site)/components/_components/provider-switch";
 import { tabsApiDetails } from "@/components/docs/component-api";
 import { ComponentDocsPage } from "@/components/docs/page-shell";
 import { LINK } from "@/constants";
@@ -31,6 +34,10 @@ const tabSections = [
     value: "files",
   },
 ] as const;
+
+function handleProviderSelect(_provider: PrimitiveProvider) {
+  return undefined;
+}
 
 const usageCode = `"use client";
 
@@ -142,7 +149,13 @@ export default function TabsPage() {
       description="Sectioned panels for switching between related views."
       details={tabsApiDetails}
       editHref={`${LINK.GITHUB}/edit/main/app/(site)/navigation/tabs/page.tsx`}
-      headerActions={<SharedPrimitiveProviderSwitch />}
+      headerActions={
+        <ProviderSwitch
+          disabledProviders={["base"]}
+          onSelect={handleProviderSelect}
+          selectedProvider="radix"
+        />
+      }
       pageUrl="/navigation/tabs"
       preview={<TabsPreview />}
       previewCode={usageCode}
