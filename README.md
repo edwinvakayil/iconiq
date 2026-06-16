@@ -4,6 +4,12 @@ shadcn/ui primitives you own, Subtle motion animations you feel—paste a compon
 
 ![hero](public/iconiqui.png)
 
+<br />
+<br />
+<a href="https://vercel.com/open-source-program">
+  <img alt="Vercel OSS Program" src="https://vercel.com/oss/program-badge-2026.svg" />
+</a>
+
 ## Documentation
 
 Visit https://iconiqui.com/installation to view the documentation. 
