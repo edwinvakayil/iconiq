@@ -838,6 +838,21 @@
       ]
     },
     {
+      "name": "liquid-marquee",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": [],
+      "devDependencies": [],
+      "title": "Liquid Marquee",
+      "description": "Marquee with liquid distortion and edge fades.",
+      "files": [
+        {
+          "path": "liquid-marquee.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "morph-texts",
       "type": "registry:ui",
       "registryDependencies": [],
