@@ -2,7 +2,7 @@
 
 shadcn/ui primitives you own, Subtle motion animations you feel—paste a component, tune the tokens, and ship without the boilerplate hunt.
 
-![hero](public/og.png)
+![hero](public/iconiqui.png)
 
 ## Documentation
 
