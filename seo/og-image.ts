@@ -1,11 +1,11 @@
 import { SITE } from "@/constants";
 
-const OG_IMAGE_WIDTH = 1200;
-const OG_IMAGE_HEIGHT = 630;
-const OG_IMAGE_ALT = `${SITE.NAME} — Motion-Powered React Components`;
+const OG_IMAGE_WIDTH = 1672;
+const OG_IMAGE_HEIGHT = 941;
+const OG_IMAGE_ALT = `${SITE.NAME} — Design System`;
 
-const openGraphImagePath = "/opengraph-image";
-const twitterImagePath = "/twitter-image";
+const openGraphImagePath = "/iconiqui.png";
+const twitterImagePath = "/iconiqui.png";
 
 function getSocialImageUrl(path: string) {
   return new URL(path, SITE.URL).href;

@@ -4,7 +4,7 @@ const SITE = {
   LOGO: "iconiq.",
   URL: "https://iconiqui.com",
   GOOGLE_SITE_VERIFICATION: "Q0ClgYhHbG0_wpdPrrl4AaoNekaLVmjgT-nIp_-sD7Y",
-  OG_IMAGE: "/opengraph-image",
+  OG_IMAGE: "/iconiqui.png",
   AUTHOR: {
     NAME: "Edwin Vakayil",
     TWITTER: "@edwinvakayil",
