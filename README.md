@@ -10,6 +10,7 @@ shadcn/ui primitives you own, Subtle motion animations you feel—paste a compon
 </a>
 
 <br />
+
 ## Documentation
 
 Visit https://iconiqui.com/installation to view the documentation. 
