@@ -3,7 +3,6 @@
 shadcn/ui primitives you own, Subtle motion animations you feel—paste a component, tune the tokens, and ship without the boilerplate hunt.
 
 ![hero](public/iconiqui.png)
-
 <br />
 <br />
 <a href="https://vercel.com/open-source-program">
