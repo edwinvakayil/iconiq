@@ -663,6 +663,12 @@ const REGISTRY_UI_META: Record<
       "Loading indicator with an animated ring or bouncing dots. Motion; uses primary and muted theme tokens.",
     dependencies: ["motion"],
   },
+  "status-dot": {
+    title: "Status Dot",
+    description:
+      "Rippling status dot with deployment states and optional label.",
+    dependencies: ["motion"],
+  },
   switch: {
     title: "Switch",
     description:

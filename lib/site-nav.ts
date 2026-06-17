@@ -40,6 +40,7 @@ export const SITE_SECTIONS = [
       { label: "Rolling Digits", href: "/display-and-content/rolling-digits" },
       { label: "Skeleton", href: "/display-and-content/skeleton" },
       { label: "Spinner", href: "/display-and-content/spinner" },
+      { label: "Status Dot", href: "/display-and-content/status-dot" },
       { label: "Table", href: "/display-and-content/table" },
       { label: "Verified Badge", href: "/display-and-content/verified-badge" },
     ],

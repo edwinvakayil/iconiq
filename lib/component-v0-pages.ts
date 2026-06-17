@@ -873,6 +873,24 @@ export default function Page() {
   );
 }`;
 
+export const statusDotPreviewCode = `"use client";
+
+import { StatusDot } from "@/components/ui/status-dot";
+
+export default function Page() {
+  return (
+    <div className="flex min-h-svh items-center justify-center bg-background p-8">
+      <p className="flex max-w-2xl flex-wrap items-center justify-center gap-x-2 gap-y-2 text-balance text-center font-medium text-lg text-neutral-800 leading-snug tracking-tight sm:text-xl dark:text-neutral-100">
+        <span>Right now, production is</span>
+        <span className="inline-flex translate-y-px items-center align-middle">
+          <StatusDot state="READY" />
+        </span>
+        <span>live for every region.</span>
+      </p>
+    </div>
+  );
+}`;
+
 export const liquidMarqueePreviewCode = `"use client";
 
 import { LiquidMarquee } from "@/components/ui/liquid-marquee";
@@ -1022,6 +1040,7 @@ const COMPONENT_PREVIEW_OVERRIDES: Record<string, string> = {
   "rolling-digits": rollingDigitsPreviewCode,
   carousel: carouselPreviewCode,
   skeleton: skeletonPreviewCode,
+  "status-dot": statusDotPreviewCode,
 };
 
 export function getComponentV0Page(

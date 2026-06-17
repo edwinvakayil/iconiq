@@ -96,6 +96,8 @@ const componentSummaries: Record<string, string> = {
     "Slider docs in the Inputs & Forms section with a provider switch that swaps between Base UI and Radix UI registry entries.",
   "/display-and-content/spinner":
     "Spinner docs in the Display & Content section, using the shared Iconiq spinner install with provider options visible but disabled.",
+  "/display-and-content/status-dot":
+    "Status dot docs with a rippling deployment state indicator and optional label.",
   "/inputs-and-forms/switch":
     "Switch docs in the Inputs & Forms section with a provider switch that swaps between Base UI and Radix UI registry entries.",
   "/display-and-content/table":
@@ -237,6 +239,15 @@ const extraComponentKeywordsBySlug: Record<string, string[]> = {
   ],
   "shimmer-text": ["text", "shimmer", "text shimmer", "animated text"],
   skeleton: ["loading", "placeholder", "shimmer"],
+  "status-dot": [
+    "status dot",
+    "deployment",
+    "build status",
+    "ready",
+    "queued",
+    "pipeline",
+    "vercel",
+  ],
   "text-loop": [
     "text",
     "loop",

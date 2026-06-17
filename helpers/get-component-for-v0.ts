@@ -16,6 +16,7 @@ import {
   liquidMarqueePreviewCode,
   rollingDigitsPreviewCode,
   skeletonPreviewCode,
+  statusDotPreviewCode,
   themeTogglePreviewCode,
   verifiedBadgePreviewCode,
 } from "@/lib/component-v0-pages";
@@ -470,6 +471,7 @@ export function DrawerPreview() {
     "}\n",
   badge: buildV0Page(badgePreviewCode),
   skeleton: buildV0Page(skeletonPreviewCode),
+  "status-dot": buildV0Page(statusDotPreviewCode),
   select:
     '"use client";\n\n' +
     'import { useState } from "react";\n\n' +
