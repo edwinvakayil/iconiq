@@ -1389,7 +1389,7 @@
       "name": "status-dot",
       "type": "registry:ui",
       "registryDependencies": [],
-      "dependencies": ["motion"],
+      "dependencies": [],
       "devDependencies": [],
       "title": "Status Dot",
       "description": "Rippling status dot with deployment states and optional label.",

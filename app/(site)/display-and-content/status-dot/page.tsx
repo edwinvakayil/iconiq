@@ -87,7 +87,7 @@ export default function StatusDotPage() {
       preview={<StatusDotPreview />}
       previewClassName="overflow-visible"
       previewCode={statusDotPreviewCode}
-      previewDescription="Pick a deployment state inline and watch the pulsing dot and sentence ending update together."
+      previewDescription="Pick a deployment state inline and watch the rippling dot and sentence ending update together."
       title="Status Dot"
       usageCode={usageCode}
       usageDescription="Pass a `state` preset for color and default copy, or override the label when you need custom deployment messaging."

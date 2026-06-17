@@ -5559,7 +5559,7 @@ const statusDotApiDetails: DetailItem[] = [
     id: "status-dot",
     title: "StatusDot",
     summary:
-      "Compact status row with a rippling dot and optional label, using Motion to expand a soft halo from the state color.",
+      "Compact status row with a rippling dot and optional label, using CSS keyframes for a stable halo animation in light and dark mode.",
     fields: [
       field({
         name: "state",
@@ -5578,11 +5578,11 @@ const statusDotApiDetails: DetailItem[] = [
     notes: [
       "Each state maps to a fixed color token suited for deployment dashboards and build logs.",
       "Ripple strength adapts through CSS `dark:` visibility layers, so theme changes do not require JavaScript observers.",
-      "Ripple motion is disabled automatically when `prefers-reduced-motion: reduce` is enabled.",
+      "Ripple motion uses CSS keyframes for reliable playback in production and disables when `prefers-reduced-motion: reduce` is enabled.",
       "Pass an empty string for `label` to render a dot-only indicator; the default state label is still exposed to screen readers.",
     ],
   },
-  registryItem("status-dot.json", ["motion"]),
+  registryItem("status-dot.json", []),
 ];
 
 const liquidMarqueeApiDetails: DetailItem[] = [

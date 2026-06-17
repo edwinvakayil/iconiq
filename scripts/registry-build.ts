@@ -667,7 +667,6 @@ const REGISTRY_UI_META: Record<
     title: "Status Dot",
     description:
       "Rippling status dot with deployment states and optional label.",
-    dependencies: ["motion"],
   },
   switch: {
     title: "Switch",
