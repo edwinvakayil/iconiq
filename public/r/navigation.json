@@ -352,16 +352,6 @@
           "slug": "text-loop",
           "label": "Text Loop",
           "href": "/texts/text-loop"
-        },
-        {
-          "slug": "text-inertia",
-          "label": "Text Inertia",
-          "href": "/texts/text-inertia"
-        },
-        {
-          "slug": "typewriter",
-          "label": "Typewriter",
-          "href": "/texts/typewriter"
         }
       ]
     }
