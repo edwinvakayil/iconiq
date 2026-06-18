@@ -40,6 +40,8 @@ const LINK = {
   GITHUB: "https://github.com/edwinvakayil/iconiq",
   MOTION: "https://motion.dev",
   BUYMEACOFFEE: "https://buymeacoffee.com/edwinvakayil",
+  VSCODE_MARKETPLACE:
+    "https://marketplace.visualstudio.com/items?itemName=IconiqUI.iconiq-ui",
 } as const;
 
 const PACKAGE_MANAGER = {

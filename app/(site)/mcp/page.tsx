@@ -139,10 +139,10 @@ export default function McpPage() {
                           title="MCP"
                         />
                         <Link
-                          aria-label="Go to Installation"
+                          aria-label="Go to Marketplace"
                           className={pagerButtonClassName}
-                          href="/installation"
-                          title="Installation"
+                          href="/marketplace"
+                          title="Marketplace"
                         >
                           <ChevronLeft className="size-4" />
                         </Link>
@@ -355,13 +355,13 @@ export default function McpPage() {
                 <nav className="flex items-center justify-between border-border/80 border-t pt-12">
                   <Link
                     className="group flex max-w-40 flex-col gap-1 text-muted-foreground text-sm transition-colors hover:text-foreground"
-                    href="/installation"
+                    href="/marketplace"
                   >
                     <span className="text-muted-foreground/75 transition-colors group-hover:text-muted-foreground">
                       Previous
                     </span>
                     <span className="truncate font-medium text-foreground">
-                      Installation
+                      Marketplace
                     </span>
                   </Link>
                   <Link

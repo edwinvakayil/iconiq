@@ -42,6 +42,16 @@ const GUIDE_SEO: Record<string, RouteSeo> = {
       "registry install",
     ],
   },
+  "/marketplace": {
+    title: "Marketplace",
+    description:
+      "Install the Iconiq UI VS Code extension from the Marketplace. Usage details live in the extension README.",
+    keywords: [
+      "iconiq ui vscode extension",
+      "vscode marketplace",
+      "shadcn registry extension",
+    ],
+  },
   "/mcp": {
     title: "MCP",
     description:

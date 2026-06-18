@@ -144,6 +144,8 @@ const GUIDE_SUMMARIES: Record<string, string> = {
     "Product overview, design principles, and the delivery model behind the Iconiq component library.",
   "/installation":
     "Installation guide for the shadcn registry flow, direct registry JSON URLs, and sample component entries.",
+  "/marketplace":
+    "VS Code Marketplace install page for the Iconiq UI extension, with links to the extension README and registry guides.",
   "/mcp":
     "MCP setup guide for connecting Iconiq to AI coding tools through the shadcn registry workflow.",
 };

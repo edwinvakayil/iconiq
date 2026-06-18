@@ -1,6 +1,13 @@
 "use client";
 
-import { BookOpen, type LucideIcon, Plug2, Terminal, Type } from "lucide-react";
+import {
+  BookOpen,
+  type LucideIcon,
+  Plug2,
+  Store,
+  Terminal,
+  Type,
+} from "lucide-react";
 
 import {
   MotionNavigationMenu,
@@ -35,6 +42,12 @@ const gettingStartedEntries: NavEntry[] = [
     label: "Installation",
     description: "Install the registry and wire components into your app.",
     href: "/installation",
+  },
+  {
+    icon: Store,
+    label: "Marketplace",
+    description: "Browse and install components from the VS Code extension.",
+    href: "/marketplace",
   },
   {
     icon: Plug2,

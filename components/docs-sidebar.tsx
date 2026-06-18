@@ -8,6 +8,7 @@ import { SECTION_PATH_PREFIX } from "@/lib/section-paths";
 const DOCS_PREFIXES = [
   "/introduction",
   "/installation",
+  "/marketplace",
   "/mcp",
   "/components",
   "/radix-base-ui",
