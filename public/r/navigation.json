@@ -1,0 +1,377 @@
+{
+  "sections": [
+    {
+      "label": "Blocks",
+      "items": [
+        {
+          "slug": "prompt-box",
+          "label": "Prompt Box",
+          "href": "/blocks/prompt-box"
+        }
+      ]
+    },
+    {
+      "label": "Buttons & Actions",
+      "items": [
+        {
+          "slug": "button",
+          "label": "Button",
+          "href": "/buttons-and-actions/button"
+        },
+        {
+          "slug": "button-group",
+          "label": "Button Group",
+          "href": "/buttons-and-actions/button-group"
+        },
+        {
+          "slug": "flux-button",
+          "label": "Flux Button",
+          "href": "/buttons-and-actions/flux-button"
+        },
+        {
+          "slug": "icon-bar",
+          "label": "Icon Bar",
+          "href": "/buttons-and-actions/icon-bar"
+        },
+        {
+          "slug": "toggle",
+          "label": "Toggle",
+          "href": "/buttons-and-actions/toggle"
+        },
+        {
+          "slug": "toggle-group",
+          "label": "Toggle Group",
+          "href": "/buttons-and-actions/toggle-group"
+        }
+      ]
+    },
+    {
+      "label": "Display & Content",
+      "items": [
+        {
+          "slug": "avatar",
+          "label": "Avatar",
+          "href": "/display-and-content/avatar"
+        },
+        {
+          "slug": "badge",
+          "label": "Badge",
+          "href": "/display-and-content/badge"
+        },
+        {
+          "slug": "calendar",
+          "label": "Calendar",
+          "href": "/display-and-content/calendar"
+        },
+        {
+          "slug": "card",
+          "label": "Card",
+          "href": "/display-and-content/card"
+        },
+        {
+          "slug": "carousel",
+          "label": "Carousel",
+          "href": "/display-and-content/carousel"
+        },
+        {
+          "slug": "charts",
+          "label": "Charts",
+          "href": "/display-and-content/charts"
+        },
+        {
+          "slug": "date-picker",
+          "label": "Date Picker",
+          "href": "/display-and-content/date-picker"
+        },
+        {
+          "slug": "liquid-marquee",
+          "label": "Liquid Marquee",
+          "href": "/display-and-content/liquid-marquee"
+        },
+        {
+          "slug": "progress",
+          "label": "Progress",
+          "href": "/display-and-content/progress"
+        },
+        {
+          "slug": "rolling-digits",
+          "label": "Rolling Digits",
+          "href": "/display-and-content/rolling-digits"
+        },
+        {
+          "slug": "skeleton",
+          "label": "Skeleton",
+          "href": "/display-and-content/skeleton"
+        },
+        {
+          "slug": "spinner",
+          "label": "Spinner",
+          "href": "/display-and-content/spinner"
+        },
+        {
+          "slug": "status-dot",
+          "label": "Status Dot",
+          "href": "/display-and-content/status-dot"
+        },
+        {
+          "slug": "table",
+          "label": "Table",
+          "href": "/display-and-content/table"
+        },
+        {
+          "slug": "verified-badge",
+          "label": "Verified Badge",
+          "href": "/display-and-content/verified-badge"
+        }
+      ]
+    },
+    {
+      "label": "Feedback & Alerts",
+      "items": [
+        {
+          "slug": "alert",
+          "label": "Alert",
+          "href": "/feedback-and-alerts/alert"
+        }
+      ]
+    },
+    {
+      "label": "Foundation",
+      "items": [
+        {
+          "slug": "typography",
+          "label": "Typography",
+          "href": "/foundation/typography"
+        }
+      ]
+    },
+    {
+      "label": "Inputs & Forms",
+      "items": [
+        {
+          "slug": "autocomplete",
+          "label": "Autocomplete",
+          "href": "/inputs-and-forms/autocomplete"
+        },
+        {
+          "slug": "checkbox",
+          "label": "Checkbox",
+          "href": "/inputs-and-forms/checkbox"
+        },
+        {
+          "slug": "checkbox-group",
+          "label": "Checkbox Group",
+          "href": "/inputs-and-forms/checkbox-group"
+        },
+        {
+          "slug": "color-picker",
+          "label": "Color Picker",
+          "href": "/inputs-and-forms/color-picker"
+        },
+        {
+          "slug": "combobox",
+          "label": "Combobox",
+          "href": "/inputs-and-forms/combobox"
+        },
+        {
+          "slug": "file-upload",
+          "label": "File Upload",
+          "href": "/inputs-and-forms/file-upload"
+        },
+        {
+          "slug": "input-otp",
+          "label": "Input OTP",
+          "href": "/inputs-and-forms/input-otp"
+        },
+        {
+          "slug": "radio-group",
+          "label": "Radio Group",
+          "href": "/inputs-and-forms/radio-group"
+        },
+        {
+          "slug": "select",
+          "label": "Select",
+          "href": "/inputs-and-forms/select"
+        },
+        {
+          "slug": "slider",
+          "label": "Slider",
+          "href": "/inputs-and-forms/slider"
+        },
+        {
+          "slug": "switch",
+          "label": "Switch",
+          "href": "/inputs-and-forms/switch"
+        },
+        {
+          "slug": "theme-toggle",
+          "label": "Theme Toggle",
+          "href": "/inputs-and-forms/theme-toggle"
+        }
+      ]
+    },
+    {
+      "label": "Layout & Toolbars",
+      "items": [
+        {
+          "slug": "collapsible",
+          "label": "Collapsible",
+          "href": "/layout-and-toolbars/collapsible"
+        },
+        {
+          "slug": "infiniteribbon",
+          "label": "Infinite Ribbon",
+          "href": "/layout-and-toolbars/infiniteribbon"
+        },
+        {
+          "slug": "selection-toolbar",
+          "label": "Selection Toolbar",
+          "href": "/layout-and-toolbars/selection-toolbar"
+        },
+        {
+          "slug": "separator",
+          "label": "Separator",
+          "href": "/layout-and-toolbars/separator"
+        }
+      ]
+    },
+    {
+      "label": "Navigation",
+      "items": [
+        {
+          "slug": "accordion",
+          "label": "Accordion",
+          "href": "/navigation/accordion"
+        },
+        {
+          "slug": "breadcrumbs",
+          "label": "Breadcrumbs",
+          "href": "/navigation/breadcrumbs"
+        },
+        {
+          "slug": "command-palette",
+          "label": "Command Palette",
+          "href": "/navigation/command-palette"
+        },
+        {
+          "slug": "faq-pro",
+          "label": "FAQ Pro",
+          "href": "/navigation/faq-pro"
+        },
+        {
+          "slug": "file-tree",
+          "label": "File Tree",
+          "href": "/navigation/file-tree"
+        },
+        {
+          "slug": "tabs",
+          "label": "Tabs",
+          "href": "/navigation/tabs"
+        }
+      ]
+    },
+    {
+      "label": "Overlay & Popups",
+      "items": [
+        {
+          "slug": "alert-dialog",
+          "label": "Alert Dialog",
+          "href": "/overlay-and-popups/alert-dialog"
+        },
+        {
+          "slug": "context-menu",
+          "label": "Context Menu",
+          "href": "/overlay-and-popups/context-menu"
+        },
+        {
+          "slug": "dialog",
+          "label": "Dialog",
+          "href": "/overlay-and-popups/dialog"
+        },
+        {
+          "slug": "drawer",
+          "label": "Drawer",
+          "href": "/overlay-and-popups/drawer"
+        },
+        {
+          "slug": "dropdown",
+          "label": "Dropdown",
+          "href": "/overlay-and-popups/dropdown"
+        },
+        {
+          "slug": "hover-card",
+          "label": "Hover Card",
+          "href": "/overlay-and-popups/hover-card"
+        },
+        {
+          "slug": "popover",
+          "label": "Popover",
+          "href": "/overlay-and-popups/popover"
+        },
+        {
+          "slug": "tooltip",
+          "label": "Tooltip",
+          "href": "/overlay-and-popups/tooltip"
+        }
+      ]
+    },
+    {
+      "label": "Special One",
+      "items": [
+        {
+          "slug": "radial-button",
+          "label": "Radial Button",
+          "href": "/special-one/radial-button"
+        }
+      ]
+    },
+    {
+      "label": "Texts",
+      "items": [
+        {
+          "slug": "dia-text",
+          "label": "Dia Text",
+          "href": "/texts/dia-text"
+        },
+        {
+          "slug": "morph-texts",
+          "label": "Morph Text",
+          "href": "/texts/morph-texts"
+        },
+        {
+          "slug": "reveal-text",
+          "label": "Reveal Text",
+          "href": "/texts/reveal-text"
+        },
+        {
+          "slug": "shimmer-text",
+          "label": "Shimmer Text",
+          "href": "/texts/shimmer-text"
+        },
+        {
+          "slug": "text-loop",
+          "label": "Text Loop",
+          "href": "/texts/text-loop"
+        },
+        {
+          "slug": "text-inertia",
+          "label": "Text Inertia",
+          "href": "/texts/text-inertia"
+        },
+        {
+          "slug": "typewriter",
+          "label": "Typewriter",
+          "href": "/texts/typewriter"
+        }
+      ]
+    }
+  ],
+  "fallbackCategory": "More Components",
+  "aliases": {
+    "radiogroup": "radio-group",
+    "selectiontoolbar": "selection-toolbar",
+    "togglegroup": "toggle-group",
+    "b-togglegroup": "toggle-group",
+    "r-togglegroup": "toggle-group"
+  }
+}

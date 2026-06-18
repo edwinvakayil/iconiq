@@ -2,6 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { SITE } from "../constants";
+import { SITE_SECTIONS } from "../lib/site-nav";
 import { components } from "./registry-components";
 import type { Schema } from "./registry-schema";
 
@@ -9,6 +10,10 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const registryComponents = path.join(__dirname, "../public/r");
 const registryIndexPath = path.join(__dirname, "../public/r/registry.json");
+const registryNavigationPath = path.join(
+  __dirname,
+  "../public/r/navigation.json"
+);
 const registryRootPath = path.join(__dirname, "../registry.json");
 const registryThemeHelperPath = path.join(
   __dirname,
@@ -16,6 +21,30 @@ const registryThemeHelperPath = path.join(
 );
 const registryThemeImport = 'from "@/lib/registry-theme"';
 const iconiqThemeDependency = "@iconiq/iconiq-theme";
+
+const NAVIGATION_ALIASES: Record<string, string> = {
+  radiogroup: "radio-group",
+  selectiontoolbar: "selection-toolbar",
+  togglegroup: "toggle-group",
+  "b-togglegroup": "toggle-group",
+  "r-togglegroup": "toggle-group",
+};
+
+function buildNavigationManifest() {
+  return {
+    sections: SITE_SECTIONS.map((section) => ({
+      label: section.label,
+      items: section.children.map((child) => ({
+        slug: child.href.split("/").pop() ?? child.href,
+        label: child.label,
+        href: child.href,
+      })),
+    })),
+    fallbackCategory: "More Components",
+    aliases: NAVIGATION_ALIASES,
+  };
+}
+
 function buildIconiqThemeSchema(): Schema {
   return {
     $schema: "https://ui.shadcn.com/schema/registry-item.json",
@@ -787,8 +816,13 @@ const registryIndex = {
 const registryIndexJson = JSON.stringify(registryIndex, null, 2);
 fs.writeFileSync(registryIndexPath, registryIndexJson);
 fs.writeFileSync(registryRootPath, registryIndexJson);
+fs.writeFileSync(
+  registryNavigationPath,
+  `${JSON.stringify(buildNavigationManifest(), null, 2)}\n`
+);
 
 console.log(
   `✅ Built ${components.length} registry components and iconiq-theme`
 );
-console.log("✅ Updated registry.json\n");
+console.log("✅ Updated registry.json");
+console.log("✅ Updated navigation.json\n");
