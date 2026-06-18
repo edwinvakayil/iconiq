@@ -119,8 +119,6 @@ export const SITE_SECTIONS = [
       { label: "Reveal Text", href: "/texts/reveal-text" },
       { label: "Shimmer Text", href: "/texts/shimmer-text" },
       { label: "Text Loop", href: "/texts/text-loop" },
-      { label: "Text Inertia", href: "/texts/text-inertia" },
-      { label: "Typewriter", href: "/texts/typewriter" },
     ],
   },
 ] as const;
