@@ -73,7 +73,7 @@ Install: ${LINK.VSCODE_MARKETPLACE}
 
 ## Compatible editors
 
-Built on the standard VS Code extension API — runs in Visual Studio Code, Cursor, Windsurf, and other compatible forks. AI coding tools such as GitHub Copilot, Cline, and Roo Code work alongside the sidebar. For agent-driven installs, see ${SITE.URL}/mcp.`;
+Built on the standard VS Code extension API — runs in Visual Studio Code, Cursor, Antigravity, and other compatible forks. AI coding tools such as GitHub Copilot, Cline, and Roo Code work alongside the sidebar. For agent-driven installs, see ${SITE.URL}/mcp.`;
 
 export default function MarketplacePage() {
   return (
@@ -183,7 +183,7 @@ export default function MarketplacePage() {
                     <p>
                       Built on the standard VS Code extension API — runs in
                       Visual Studio Code, <strong>Cursor</strong>,{" "}
-                      <strong>Windsurf</strong>, and other compatible forks.
+                      <strong>Antigravity</strong>, and other compatible forks.
                     </p>
                     <p>
                       AI coding tools such as GitHub Copilot, Cline, and Roo
