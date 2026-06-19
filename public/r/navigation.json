@@ -179,6 +179,11 @@
           "href": "/inputs-and-forms/file-upload"
         },
         {
+          "slug": "input",
+          "label": "Input",
+          "href": "/inputs-and-forms/input"
+        },
+        {
           "slug": "input-otp",
           "label": "Input OTP",
           "href": "/inputs-and-forms/input-otp"

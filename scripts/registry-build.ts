@@ -160,6 +160,11 @@ const REGISTRY_UI_META: Record<
       "Drag-and-drop file uploader with click-to-browse fallback, queued file rows, image previews, built-in progress states, and optional change callbacks.",
     dependencies: ["motion", "lucide-react"],
   },
+  input: {
+    title: "Input",
+    description: "Input with a spring-animated caret.",
+    dependencies: ["@base-ui/react/input", "motion"],
+  },
   accordion: {
     title: "Accordion",
     description:

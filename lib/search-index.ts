@@ -74,6 +74,8 @@ const componentSummaries: Record<string, string> = {
     "Dropdown docs in the Overlay & Popups section, using a Radix Dropdown Menu implementation that preserves the exact Iconiq dropdown shell and motion.",
   "/inputs-and-forms/file-upload":
     "File upload docs in the Inputs & Forms section, using the shared Iconiq file upload install with provider options visible but disabled.",
+  "/inputs-and-forms/input":
+    "Input docs in the Inputs & Forms section for a text field with a spring-animated caret.",
   "/inputs-and-forms/input-otp":
     "Input OTP docs in the Inputs & Forms section with Base UI OTP Field slots, spring focus motion, character entrance, and a blinking caret on the active cell.",
   "/blocks/prompt-box":

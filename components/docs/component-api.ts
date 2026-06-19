@@ -2993,6 +2993,118 @@ const fileUploadApiDetails: DetailItem[] = [
   registryItem("file-upload.json", ["motion", "lucide-react"]),
 ];
 
+const inputApiDetails: DetailItem[] = [
+  {
+    id: "input",
+    title: "Input",
+    summary: "Input with a spring-animated caret.",
+    fields: [
+      field({
+        name: "value",
+        type: "string",
+        description:
+          "Controlled input value. Pair with `onValueChange` or `onChange` when the parent owns the text.",
+      }),
+      field({
+        name: "defaultValue",
+        type: "string",
+        description: "Initial value for uncontrolled usage.",
+      }),
+      field({
+        name: "onValueChange",
+        type: "(value: string, eventDetails: InputChangeEventDetails) => void",
+        description:
+          "Base UI change handler with the next string value and event metadata. Preferred for controlled forms.",
+      }),
+      field({
+        name: "onChange",
+        type: "React.ChangeEventHandler<HTMLInputElement>",
+        description:
+          "Native change handler fired after typing, paste, cut, or autofill.",
+      }),
+      field({
+        name: "type",
+        type: "React.HTMLInputTypeAttribute",
+        defaultValue: "text",
+        description:
+          "Native input type. Smooth caret is disabled for `file` and `hidden`. Password mode measures bullet glyphs for caret placement.",
+      }),
+      field({
+        name: "label",
+        type: "React.ReactNode",
+        description:
+          "Optional field label rendered above the control with an associated `htmlFor` id.",
+      }),
+      field({
+        name: "labelClassName",
+        type: "string",
+        description: "Classes merged onto the optional label element.",
+      }),
+      field({
+        name: "placeholder",
+        type: "string",
+        defaultValue: "input",
+        description: "Placeholder shown when the field is empty.",
+      }),
+      field({
+        name: "fontSize",
+        type: "number",
+        description:
+          "Optional pixel font size override for the inner field. Defaults to the standard `text-sm` input sizing.",
+      }),
+      field({
+        name: "spring",
+        type: "{ stiffness?: number; damping?: number; mass?: number }",
+        description:
+          "Spring config for caret movement. Defaults to stiffness 500, damping 30, mass 0.5.",
+      }),
+      field({
+        name: "wrapperClassName",
+        type: "string",
+        description:
+          "Classes merged onto the outer label wrapper when `label` is provided, or onto the input shell when no label is set.",
+      }),
+      field({
+        name: "id",
+        type: "string",
+        description:
+          "Optional id forwarded to the input. A generated id is used when omitted so labels stay associated.",
+      }),
+      field({
+        name: "className",
+        type: "string | ((state: InputState) => string)",
+        description:
+          "Classes merged onto the native input element. Base UI also supports a state callback.",
+      }),
+      field({
+        name: "style",
+        type: "React.CSSProperties | ((state: InputState) => React.CSSProperties)",
+        description:
+          "Inline styles merged onto the native input element. Base UI also supports a state callback.",
+      }),
+      field({
+        name: "render",
+        type: "React.ReactElement | ((props: React.ComponentProps<'input'>) => React.ReactElement)",
+        description:
+          "Base UI render override for the native input element. Custom renders replace the default caret wiring.",
+      }),
+      field({
+        name: "disabled",
+        type: "boolean",
+        defaultValue: "false",
+        description: "Disables interaction on the native input.",
+      }),
+    ],
+    notes: [
+      "Built on `@base-ui/react/input` and works with Base UI `Field` for labels, descriptions, and validation state.",
+      "Uses a hidden measurement span to position the caret across fonts, password bullets, and horizontal scroll.",
+      "Respects `prefers-reduced-motion` by snapping the caret spring when motion is reduced.",
+      "Standard input attributes such as `autoComplete`, `name`, `readOnly`, `required`, `aria-*`, and `data-*` are forwarded to the native element.",
+    ],
+  },
+  registryItem("input.json", ["@base-ui/react/input", "motion"]),
+];
+
 const inputOtpApiDetails: DetailItem[] = [
   {
     id: "otp",
@@ -6974,6 +7086,7 @@ export {
   fileUploadApiDetails,
   hoverCardApiDetails,
   iconBarApiDetails,
+  inputApiDetails,
   inputOtpApiDetails,
   infiniteRibbonApiDetails,
   carouselApiDetails,

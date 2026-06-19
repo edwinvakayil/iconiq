@@ -63,6 +63,7 @@ export const SITE_SECTIONS = [
       { label: "Color Picker", href: "/inputs-and-forms/color-picker" },
       { label: "Combobox", href: "/inputs-and-forms/combobox" },
       { label: "File Upload", href: "/inputs-and-forms/file-upload" },
+      { label: "Input", href: "/inputs-and-forms/input" },
       { label: "Input OTP", href: "/inputs-and-forms/input-otp" },
       { label: "Radio Group", href: "/inputs-and-forms/radio-group" },
       { label: "Select", href: "/inputs-and-forms/select" },

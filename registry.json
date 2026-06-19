@@ -838,6 +838,21 @@
       ]
     },
     {
+      "name": "input",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": ["@base-ui/react/input", "motion"],
+      "devDependencies": [],
+      "title": "Input",
+      "description": "Input with a spring-animated caret.",
+      "files": [
+        {
+          "path": "input.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "liquid-marquee",
       "type": "registry:ui",
       "registryDependencies": [],
