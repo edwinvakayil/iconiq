@@ -754,7 +754,7 @@ export const Calendar = ({
       <div
         style={{
           position: "relative",
-          overflow: picker === "year" ? "visible" : "hidden",
+          overflow: "hidden",
           marginTop: dimensions.monthTopMargin,
         }}
       >
@@ -861,18 +861,13 @@ export const Calendar = ({
                 top: 0,
                 left: 0,
                 right: 0,
-                ...(picker === "year"
-                  ? { bottom: "auto", height: "fit-content" }
-                  : { bottom: 0 }),
+                bottom: 0,
                 boxSizing: "border-box",
                 background: palette.popoverBackground,
                 border: palette.popoverBorder,
                 borderRadius: dimensions.cardRadius - 4,
                 boxShadow: palette.popoverShadow,
-                padding:
-                  picker === "year"
-                    ? `${dimensions.cardPadding - 4}px ${dimensions.cardPadding - 2}px ${dimensions.cardPadding - 2}px`
-                    : dimensions.cardPadding - 2,
+                padding: dimensions.cardPadding - 2,
                 zIndex: 20,
                 display: "flex",
                 flexDirection: "column",
@@ -1110,7 +1105,7 @@ const YearPickerCell = ({
       onClick={() => onSelect(year)}
       style={{
         minHeight: dimensions.dayCellMinHeight,
-        padding: "0 4px",
+        padding: "0 6px",
         borderRadius: dimensions.dayCellRadius,
         border: "none",
         background: active ? palette.selectedGradient : "transparent",
@@ -1176,7 +1171,7 @@ const YearPicker = ({
     <div
       aria-label="Select year"
       role="dialog"
-      style={{ display: "flex", flexDirection: "column", gap: 6 }}
+      style={{ display: "flex", flexDirection: "column", gap: 4, flex: 1 }}
     >
       <div
         style={{
@@ -1230,6 +1225,8 @@ const YearPicker = ({
           display: "grid",
           gridTemplateColumns: "repeat(3, 1fr)",
           gap: 4,
+          flex: 1,
+          alignContent: "space-evenly",
         }}
       >
         {Array.from({ length: YEAR_GRID_SIZE }, (_, i) => pageStart + i).map(
