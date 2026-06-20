@@ -5,7 +5,6 @@ import {
   motion,
   useReducedMotion,
   useSpring,
-  useTransform,
 } from "motion/react";
 import { useEffect, useMemo, useRef, useState } from "react";
 
@@ -138,11 +137,9 @@ const TIME_MOTION = {
   enterDamping: 16,
   exitStiffness: 220,
   exitDamping: 20,
-  enterY: 20,
-  enterBlur: 28,
-  enterScale: 0.78,
-  exitScale: 0.72,
-  exitBlur: "8px",
+  enterY: 16,
+  enterScale: 0.84,
+  exitScale: 0.84,
 } as const;
 
 let exitId = 0;
@@ -494,8 +491,6 @@ function RollingDigit({
   const y = useSpring(0, springConfig);
   const opacity = useSpring(1, springConfig);
   const scale = useSpring(1, springConfig);
-  const blur = useSpring(0, springConfig);
-  const filter = useTransform(blur, (value) => `blur(${value}px)`);
 
   useEffect(() => {
     if (!animate) {
@@ -530,19 +525,17 @@ function RollingDigit({
           exitY: up ? -TIME_MOTION.enterY : TIME_MOTION.enterY,
         },
       ];
-      return next.length > 3 ? next.slice(-3) : next;
+      return next.length > 1 ? next.slice(-1) : next;
     });
 
     y.jump(up ? TIME_MOTION.enterY : -TIME_MOTION.enterY);
     opacity.jump(0);
     scale.jump(TIME_MOTION.enterScale);
-    blur.jump(TIME_MOTION.enterBlur);
 
     y.set(0);
     opacity.set(1);
     scale.set(1);
-    blur.set(0);
-  }, [animate, char, blur, opacity, scale, y]);
+  }, [animate, char, opacity, scale, y]);
 
   if (!animate) {
     return <span className={className}>{char}</span>;
@@ -551,7 +544,7 @@ function RollingDigit({
   return (
     <span
       className={cn(
-        "relative grid place-items-center [&>*]:col-start-1 [&>*]:row-start-1",
+        "relative isolate grid place-items-center overflow-hidden [&>*]:col-start-1 [&>*]:row-start-1",
         className
       )}
     >
@@ -561,11 +554,11 @@ function RollingDigit({
             animate={{
               opacity: 0,
               scale: TIME_MOTION.exitScale,
-              filter: `blur(${TIME_MOTION.exitBlur})`,
               y: exitY,
             }}
             aria-hidden
-            initial={{ opacity: 1, scale: 1, filter: "blur(0px)", y: 0 }}
+            className="[backface-visibility:hidden]"
+            initial={{ opacity: 1, scale: 1, y: 0 }}
             key={id}
             onAnimationComplete={() =>
               setExitQueue((queue) => queue.filter((item) => item.id !== id))
@@ -580,15 +573,18 @@ function RollingDigit({
           </motion.span>
         ))}
       </AnimatePresence>
-      <motion.span style={{ opacity, scale, filter, y }}>{char}</motion.span>
+      <motion.span
+        className="[backface-visibility:hidden]"
+        style={{ opacity, scale, y }}
+      >
+        {char}
+      </motion.span>
     </span>
   );
 }
 
 function FluidColon({
   char,
-  live,
-  animate,
   className,
 }: {
   char: string;
@@ -596,26 +592,7 @@ function FluidColon({
   animate: boolean;
   className?: string;
 }) {
-  if (!(animate && live)) {
-    return <span className={cn("inline-block", className)}>{char}</span>;
-  }
-
-  return (
-    <motion.span
-      animate={{
-        opacity: [0.42, 1, 0.42],
-        scale: [0.92, 1.06, 0.92],
-      }}
-      className={cn("inline-block origin-center", className)}
-      transition={{
-        duration: 1.8,
-        ease: [0.45, 0.05, 0.25, 1],
-        repeat: Number.POSITIVE_INFINITY,
-      }}
-    >
-      {char}
-    </motion.span>
-  );
+  return <span className={cn("inline-block", className)}>{char}</span>;
 }
 
 function FadingGlyph({
@@ -634,10 +611,10 @@ function FadingGlyph({
   return (
     <AnimatePresence initial={false} mode="popLayout">
       <motion.span
-        animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+        animate={{ opacity: 1, y: 0 }}
         className={className}
-        exit={{ opacity: 0, y: -6, filter: "blur(6px)" }}
-        initial={{ opacity: 0, y: 6, filter: "blur(6px)" }}
+        exit={{ opacity: 0, y: -4 }}
+        initial={{ opacity: 0, y: 4 }}
         key={char}
         transition={{
           type: "spring",
@@ -757,10 +734,10 @@ export function Timezone({
   return (
     <AnimatePresence initial={false} mode="wait">
       <motion.time
-        animate={{ opacity: 1, y: 0, filter: "blur(0px)", scale: 1 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
         className={timeClassName}
         dateTime={dateTime}
-        exit={{ opacity: 0, y: -8, filter: "blur(10px)", scale: 0.96 }}
+        exit={{ opacity: 0, y: -6, scale: 0.98 }}
         initial={false}
         key={clockKey}
         suppressHydrationWarning
