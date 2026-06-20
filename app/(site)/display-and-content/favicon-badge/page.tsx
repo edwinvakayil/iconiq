@@ -1,8 +1,8 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { motion } from "motion/react";
+import { useLayoutEffect, useMemo, useRef, useState } from "react";
 
-import { InlinePreviewSelect } from "@/app/(site)/components/_components/inline-preview-select";
 import { SharedPrimitiveProviderSwitch } from "@/app/(site)/components/_components/provider-switch";
 import { faviconBadgeApiDetails } from "@/components/docs/component-api";
 import { ComponentDocsPage } from "@/components/docs/page-shell";
@@ -11,19 +11,114 @@ import { faviconBadgePreviewCode } from "@/lib/component-v0-pages";
 import { cn } from "@/lib/utils";
 import { FaviconBadge } from "@/registry/favicon-badge";
 
-type FaviconBadgeSize = "sm" | "md" | "lg";
-
-const sizeOptions: { label: string; value: FaviconBadgeSize }[] = [
-  { value: "sm", label: "Small" },
-  { value: "md", label: "Medium" },
-  { value: "lg", label: "Large" },
-];
-
 const previewSentenceClassName =
   "flex flex-wrap items-center justify-center gap-x-2 gap-y-2 text-balance font-medium text-lg text-neutral-800 leading-snug tracking-tight sm:text-xl dark:text-neutral-100";
 
-const controlInputClassName =
-  "min-w-[8.5rem] rounded-md border border-border bg-background px-2.5 py-1.5 text-sm text-foreground outline-none transition-colors focus-visible:outline-none";
+const inlineWebsiteTextClassName =
+  "font-medium text-lg leading-snug tracking-tight sm:text-xl";
+
+const inlineWebsiteInputClassName =
+  "relative z-10 border-0 bg-transparent p-0 text-neutral-800 caret-transparent outline-none placeholder:text-muted-foreground focus-visible:outline-none dark:text-neutral-100";
+
+function BlinkingCaret({ left }: { left: number }) {
+  return (
+    <motion.span
+      animate={{ opacity: [1, 1, 0, 0] }}
+      aria-hidden
+      className="pointer-events-none absolute top-1/2 h-[0.92em] w-px -translate-y-1/2 bg-neutral-800 dark:bg-neutral-100"
+      style={{ left }}
+      transition={{
+        duration: 1,
+        ease: "linear",
+        repeat: Number.POSITIVE_INFINITY,
+        times: [0, 0.49, 0.5, 1],
+      }}
+    />
+  );
+}
+
+function InlineWebsiteField({
+  onChange,
+  value,
+}: {
+  onChange: (value: string) => void;
+  value: string;
+}) {
+  const inputRef = useRef<HTMLInputElement>(null);
+  const valueMeasureRef = useRef<HTMLSpanElement>(null);
+  const fieldMeasureRef = useRef<HTMLSpanElement>(null);
+  const [valueWidth, setValueWidth] = useState(0);
+  const [fieldWidth, setFieldWidth] = useState(0);
+
+  const placeholder = "your site";
+  const fieldMeasureText = value || placeholder;
+
+  useLayoutEffect(() => {
+    const measure = () => {
+      setValueWidth(valueMeasureRef.current?.offsetWidth ?? 0);
+      setFieldWidth(fieldMeasureRef.current?.offsetWidth ?? 0);
+    };
+
+    measure();
+    window.addEventListener("resize", measure);
+
+    return () => window.removeEventListener("resize", measure);
+  });
+
+  const caretLeft = value ? valueWidth : 0;
+  const inputWidth = Math.max(fieldWidth, 12);
+
+  return (
+    <span
+      className="group relative inline-block translate-y-px cursor-text align-baseline"
+      onClick={() => inputRef.current?.focus()}
+      onKeyDown={(event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          inputRef.current?.focus();
+        }
+      }}
+      role="presentation"
+    >
+      <span
+        aria-hidden
+        className={cn(
+          "pointer-events-none invisible absolute whitespace-pre",
+          inlineWebsiteTextClassName
+        )}
+        ref={valueMeasureRef}
+      >
+        {value}
+      </span>
+      <span
+        aria-hidden
+        className={cn(
+          "pointer-events-none invisible absolute whitespace-pre",
+          inlineWebsiteTextClassName
+        )}
+        ref={fieldMeasureRef}
+      >
+        {fieldMeasureText}
+      </span>
+      <input
+        aria-label="Website"
+        className={cn(inlineWebsiteInputClassName, inlineWebsiteTextClassName)}
+        onChange={(event) => onChange(event.target.value)}
+        placeholder={placeholder}
+        ref={inputRef}
+        spellCheck={false}
+        style={{ width: inputWidth }}
+        type="text"
+        value={value}
+      />
+      <span
+        aria-hidden
+        className="pointer-events-none absolute bottom-0 left-0 h-px origin-left scale-x-0 bg-neutral-800 transition-transform duration-200 group-focus-within:scale-x-100 dark:bg-neutral-100"
+        style={{ width: inputWidth }}
+      />
+      <BlinkingCaret left={caretLeft} />
+    </span>
+  );
+}
 
 const usageCode = `"use client";
 
@@ -35,110 +130,43 @@ export function FaviconBadgePreview() {
   );
 }`;
 
-function buildPreviewCode({
-  label,
-  size,
-  website,
-}: {
-  label: string;
-  size: FaviconBadgeSize;
-  website: string;
-}) {
-  const trimmedLabel = label.trim();
-  const labelProp = trimmedLabel ? `\n      label="${trimmedLabel}"` : "";
-
+function buildPreviewCode(website: string) {
   return `"use client";
 
 import { FaviconBadge } from "@/components/ui/favicon-badge";
 
 export function FaviconBadgePreview() {
   return (
-    <FaviconBadge
-      website="${website}"${labelProp}
-      size="${size}"
-    />
+    <FaviconBadge website="${website}" size="md" />
   );
 }`;
 }
 
-type FaviconBadgePreviewProps = {
-  label: string;
-  onLabelChange: (label: string) => void;
-  onSizeChange: (size: FaviconBadgeSize) => void;
-  onWebsiteChange: (website: string) => void;
-  size: FaviconBadgeSize;
-  website: string;
-};
-
 function FaviconBadgePreview({
-  label,
-  onLabelChange,
-  onSizeChange,
   onWebsiteChange,
-  size,
   website,
-}: FaviconBadgePreviewProps) {
-  const badgeLabel = label.trim() || undefined;
-
+}: {
+  onWebsiteChange: (website: string) => void;
+  website: string;
+}) {
   return (
-    <div className="flex min-h-[14rem] w-full flex-col items-center justify-center gap-6 px-4 py-10">
-      <fieldset
-        aria-label="Favicon badge preview controls"
-        className="m-0 flex w-full max-w-xl flex-wrap items-end justify-center gap-3 border-0 p-0"
-      >
-        <label className="flex min-w-[10rem] flex-1 flex-col gap-1.5 text-left text-muted-foreground text-xs">
-          Website
-          <input
-            className={controlInputClassName}
-            onChange={(event) => onWebsiteChange(event.target.value)}
-            placeholder="iconiqui.com"
-            value={website}
-          />
-        </label>
-        <label className="flex min-w-[8rem] flex-1 flex-col gap-1.5 text-left text-muted-foreground text-xs">
-          Label
-          <input
-            className={controlInputClassName}
-            onChange={(event) => onLabelChange(event.target.value)}
-            placeholder="Optional"
-            value={label}
-          />
-        </label>
-        <div className="flex flex-col gap-1.5 text-left text-muted-foreground text-xs">
-          Size
-          <InlinePreviewSelect
-            ariaLabel="Favicon badge size"
-            menuKey="favicon-badge-size-menu"
-            onChange={onSizeChange}
-            options={sizeOptions}
-            value={size}
-          />
-        </div>
-      </fieldset>
-
-      <p className={cn(previewSentenceClassName, "max-w-2xl text-center")}>
+    <div className="flex min-h-[14rem] w-full items-center justify-center px-4 py-10">
+      <div className={cn(previewSentenceClassName, "max-w-2xl text-center")}>
         <span>Attributed to</span>
         <span className="inline-flex translate-y-px align-middle">
-          <FaviconBadge label={badgeLabel} size={size} website={website} />
+          <FaviconBadge size="md" website={website} />
         </span>
         <span>for</span>
-        <span className="font-medium text-foreground">
-          {website || "your site"}
-        </span>
+        <InlineWebsiteField onChange={onWebsiteChange} value={website} />
         <span>.</span>
-      </p>
+      </div>
     </div>
   );
 }
 
 export default function FaviconBadgePage() {
   const [website, setWebsite] = useState("iconiqui.com");
-  const [label, setLabel] = useState("");
-  const [size, setSize] = useState<FaviconBadgeSize>("md");
-  const previewCode = useMemo(
-    () => buildPreviewCode({ website, label, size }),
-    [label, size, website]
-  );
+  const previewCode = useMemo(() => buildPreviewCode(website), [website]);
 
   return (
     <ComponentDocsPage
@@ -154,18 +182,11 @@ export default function FaviconBadgePage() {
       headerActions={<SharedPrimitiveProviderSwitch />}
       pageUrl="/display-and-content/favicon-badge"
       preview={
-        <FaviconBadgePreview
-          label={label}
-          onLabelChange={setLabel}
-          onSizeChange={setSize}
-          onWebsiteChange={setWebsite}
-          size={size}
-          website={website}
-        />
+        <FaviconBadgePreview onWebsiteChange={setWebsite} website={website} />
       }
       previewClassName="min-h-[14rem] overflow-visible"
       previewCode={previewCode}
-      previewDescription="Edit the website, optional label, and size inline to see the favicon badge update live."
+      previewDescription="Edit the website inline in the sentence to see the favicon badge update live."
       title="Favicon Badge"
       usageCode={usageCode}
       usageDescription={
