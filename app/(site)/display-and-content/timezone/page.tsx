@@ -32,7 +32,7 @@ export function TimezonePreview() {
       <span>Right now in</span>
       <span>San Francisco</span>
       <span>it is</span>
-      <Timezone live zone="San Francisco" />
+      <Timezone live zone="San Francisco" zoneName="abbreviation" />
       <span>for the west coast team.</span>
     </p>
   );
@@ -82,7 +82,7 @@ export default function TimezonePage() {
       previewDescription="Pick a city inline and watch the live clock update in the sentence."
       title="Timezone"
       usageCode={usageCode}
-      usageDescription="Pass a city alias like `San Francisco` or an IANA timezone such as `America/Los_Angeles`. Use `live` when you want second-level updates."
+      usageDescription='Pass a city alias like `San Francisco` or an IANA timezone such as `America/Los_Angeles`. Use `zoneName="abbreviation"` for IST/EST-style labels, or `zoneName="offset"` for GMT offset labels.'
       v0PageCode={timezonePreviewCode}
     />
   );

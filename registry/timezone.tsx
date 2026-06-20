@@ -18,6 +18,12 @@ export interface TimezoneProps {
   format?: "12h" | "24h";
   /** Show the short timezone abbreviation, such as PST or PDT. */
   showAbbreviation?: boolean;
+  /**
+   * How the timezone label is rendered when `showAbbreviation` is true.
+   * `abbreviation` shows letter codes like IST or EST.
+   * `offset` shows offset labels like GMT+5:30.
+   */
+  zoneName?: "abbreviation" | "offset";
   /** Update every second instead of every minute. */
   live?: boolean;
   className?: string;
@@ -93,6 +99,39 @@ const FALLBACK_TIMEZONES = [
 const DEFAULT_LOCALE = "en-US";
 const DIGIT_PATTERN = /\d/;
 const COLON_PATTERN = /[:.]/;
+const LETTER_ABBREV = /^[A-Z]{2,5}$/;
+const GMT_OFFSET_PATTERN = /GMT([+-])(\d{1,2})(?::(\d{2}))?/;
+
+/** [standard, daylight?] */
+const ABBREVIATION_FALLBACK: Record<string, readonly [string, string?]> = {
+  "America/Anchorage": ["AKST", "AKDT"],
+  "America/Chicago": ["CST", "CDT"],
+  "America/Denver": ["MST", "MDT"],
+  "America/Los_Angeles": ["PST", "PDT"],
+  "America/New_York": ["EST", "EDT"],
+  "America/Phoenix": ["MST"],
+  "America/Toronto": ["EST", "EDT"],
+  "America/Vancouver": ["PST", "PDT"],
+  "Asia/Dubai": ["GST"],
+  "Asia/Hong_Kong": ["HKT"],
+  "Asia/Kolkata": ["IST"],
+  "Asia/Seoul": ["KST"],
+  "Asia/Singapore": ["SGT"],
+  "Asia/Tokyo": ["JST"],
+  "Australia/Melbourne": ["AEST", "AEDT"],
+  "Australia/Sydney": ["AEST", "AEDT"],
+  "Etc/GMT": ["GMT"],
+  "Etc/UTC": ["UTC"],
+  "Europe/Amsterdam": ["CET", "CEST"],
+  "Europe/Berlin": ["CET", "CEST"],
+  "Europe/London": ["GMT", "BST"],
+  "Europe/Madrid": ["CET", "CEST"],
+  "Europe/Paris": ["CET", "CEST"],
+  "Europe/Rome": ["CET", "CEST"],
+  "Pacific/Auckland": ["NZST", "NZDT"],
+  "Pacific/Honolulu": ["HST"],
+  UTC: ["UTC"],
+};
 
 const TIME_MOTION = {
   enterStiffness: 210,
@@ -276,12 +315,98 @@ function useNow(live: boolean) {
   return now;
 }
 
+function parseOffsetMinutes(date: Date, timeZone: string) {
+  try {
+    const part =
+      new Intl.DateTimeFormat("en-US", {
+        timeZone,
+        timeZoneName: "longOffset",
+      })
+        .formatToParts(date)
+        .find((segment) => segment.type === "timeZoneName")?.value ?? "";
+
+    const match = part.match(GMT_OFFSET_PATTERN);
+    if (!match) {
+      return 0;
+    }
+
+    const sign = match[1] === "-" ? -1 : 1;
+    return sign * (Number(match[2]) * 60 + Number(match[3] ?? 0));
+  } catch {
+    return 0;
+  }
+}
+
+function isDaylightSaving(date: Date, timeZone: string) {
+  const year = date.getUTCFullYear();
+  const winter = new Date(Date.UTC(year, 0, 15, 12));
+  const summer = new Date(Date.UTC(year, 6, 15, 12));
+  const winterOffset = parseOffsetMinutes(winter, timeZone);
+  const summerOffset = parseOffsetMinutes(summer, timeZone);
+
+  if (winterOffset === summerOffset) {
+    return false;
+  }
+
+  return (
+    parseOffsetMinutes(date, timeZone) === Math.max(winterOffset, summerOffset)
+  );
+}
+
+function readTimeZoneNamePart(
+  date: Date,
+  timeZone: string,
+  locale: string,
+  timeZoneName: Intl.DateTimeFormatOptions["timeZoneName"]
+) {
+  try {
+    return new Intl.DateTimeFormat(locale, {
+      timeZone,
+      timeZoneName,
+      hour: "numeric",
+    })
+      .formatToParts(date)
+      .find((part) => part.type === "timeZoneName")?.value;
+  } catch {
+    return new Intl.DateTimeFormat(DEFAULT_LOCALE, {
+      timeZone,
+      timeZoneName,
+      hour: "numeric",
+    })
+      .formatToParts(date)
+      .find((part) => part.type === "timeZoneName")?.value;
+  }
+}
+
+function getTimezoneAbbreviation(date: Date, timeZone: string, locale: string) {
+  const intlShort = readTimeZoneNamePart(date, timeZone, locale, "short");
+  if (intlShort && LETTER_ABBREV.test(intlShort)) {
+    return intlShort;
+  }
+
+  const entry = ABBREVIATION_FALLBACK[timeZone];
+  if (entry) {
+    const [standard, daylight] = entry;
+    if (daylight && isDaylightSaving(date, timeZone)) {
+      return daylight;
+    }
+    return standard;
+  }
+
+  return intlShort ?? "";
+}
+
+function getTimezoneOffsetLabel(date: Date, timeZone: string, locale: string) {
+  return readTimeZoneNamePart(date, timeZone, locale, "shortOffset") ?? "";
+}
+
 function formatTimezoneTime({
   date,
   locale,
   timeZone,
   format,
   showAbbreviation,
+  zoneName,
   live,
 }: {
   date: Date;
@@ -289,6 +414,7 @@ function formatTimezoneTime({
   timeZone: string;
   format: "12h" | "24h";
   showAbbreviation: boolean;
+  zoneName: "abbreviation" | "offset";
   live: boolean;
 }) {
   const options: Intl.DateTimeFormatOptions = {
@@ -297,14 +423,25 @@ function formatTimezoneTime({
     minute: "2-digit",
     second: live ? "2-digit" : undefined,
     hour12: format === "12h",
-    timeZoneName: showAbbreviation ? "short" : undefined,
   };
 
+  let label: string;
   try {
-    return new Intl.DateTimeFormat(locale, options).format(date);
+    label = new Intl.DateTimeFormat(locale, options).format(date);
   } catch {
-    return new Intl.DateTimeFormat(DEFAULT_LOCALE, options).format(date);
+    label = new Intl.DateTimeFormat(DEFAULT_LOCALE, options).format(date);
   }
+
+  if (!showAbbreviation) {
+    return label;
+  }
+
+  const zoneLabel =
+    zoneName === "abbreviation"
+      ? getTimezoneAbbreviation(date, timeZone, locale)
+      : getTimezoneOffsetLabel(date, timeZone, locale);
+
+  return zoneLabel ? `${label} ${zoneLabel}` : label;
 }
 
 function toTimezoneDateTime(date: Date, timeZone: string) {
@@ -564,6 +701,7 @@ export function Timezone({
   zone,
   format = "12h",
   showAbbreviation = true,
+  zoneName = "abbreviation",
   live = false,
   className,
   locale = DEFAULT_LOCALE,
@@ -592,10 +730,11 @@ export function Timezone({
     timeZone: resolvedZone,
     format,
     showAbbreviation,
+    zoneName,
     live,
   });
   const dateTime = toTimezoneDateTime(now, resolvedZone);
-  const clockKey = `${resolvedZone}-${format}-${showAbbreviation ? "abbr" : "plain"}-${live ? "live" : "minute"}`;
+  const clockKey = `${resolvedZone}-${format}-${showAbbreviation ? zoneName : "plain"}-${live ? "live" : "minute"}`;
   const timeClassName = cn(
     "inline-flex origin-center text-inherit tabular-nums tracking-tight",
     className

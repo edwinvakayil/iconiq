@@ -5791,8 +5791,14 @@ const timezoneApiDetails: DetailItem[] = [
         name: "showAbbreviation",
         type: "boolean",
         defaultValue: "true",
+        description: "When true, appends a timezone label after the clock.",
+      }),
+      field({
+        name: "zoneName",
+        type: '"abbreviation" | "offset"',
+        defaultValue: '"abbreviation"',
         description:
-          "When true, appends the short timezone name such as PST or PDT.",
+          "Controls the label style when `showAbbreviation` is true. `abbreviation` renders IST, EST, or PST. `offset` renders GMT-style labels such as GMT+5:30.",
       }),
       field({
         name: "live",
