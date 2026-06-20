@@ -124,6 +124,11 @@
           "href": "/display-and-content/table"
         },
         {
+          "slug": "timezone",
+          "label": "Timezone",
+          "href": "/display-and-content/timezone"
+        },
+        {
           "slug": "verified-badge",
           "label": "Verified Badge",
           "href": "/display-and-content/verified-badge"

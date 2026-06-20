@@ -18,6 +18,7 @@ import {
   skeletonPreviewCode,
   statusDotPreviewCode,
   themeTogglePreviewCode,
+  timezonePreviewCode,
   verifiedBadgePreviewCode,
 } from "@/lib/component-v0-pages";
 
@@ -472,6 +473,7 @@ export function DrawerPreview() {
   badge: buildV0Page(badgePreviewCode),
   skeleton: buildV0Page(skeletonPreviewCode),
   "status-dot": buildV0Page(statusDotPreviewCode),
+  timezone: buildV0Page(timezonePreviewCode),
   select:
     '"use client";\n\n' +
     'import { useState } from "react";\n\n' +

@@ -5766,6 +5766,68 @@ const statusDotApiDetails: DetailItem[] = [
   registryItem("status-dot.json", []),
 ];
 
+const timezoneApiDetails: DetailItem[] = [
+  {
+    id: "timezone",
+    title: "Timezone",
+    summary:
+      "Inline live clock that resolves friendly city names or IANA timezone strings, then animates digit changes with fluid spring rolls and pulsing separators.",
+    fields: [
+      field({
+        name: "zone",
+        type: "string",
+        required: true,
+        description:
+          "City alias such as `San Francisco`, common shorthand like `NYC`, region/city IANA paths such as `Africa/Cairo`, or any of the 400+ IANA timezones from `Intl.supportedValuesOf('timeZone')`.",
+      }),
+      field({
+        name: "format",
+        type: '"12h" | "24h"',
+        defaultValue: '"12h"',
+        description:
+          "Controls whether the clock renders with a 12-hour or 24-hour display.",
+      }),
+      field({
+        name: "showAbbreviation",
+        type: "boolean",
+        defaultValue: "true",
+        description:
+          "When true, appends the short timezone name such as PST or PDT.",
+      }),
+      field({
+        name: "live",
+        type: "boolean",
+        defaultValue: "false",
+        description:
+          "When true, updates every second and includes seconds in the formatted output.",
+      }),
+      field({
+        name: "locale",
+        type: "string",
+        defaultValue: '"en-US"',
+        description:
+          "Locale passed to `Intl.DateTimeFormat` for number and time formatting.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description:
+          "Optional class names applied to the rendered `time` element.",
+      }),
+    ],
+    notes: [
+      "City aliases normalize spacing and casing, so values like `San fransico` still resolve to `America/Los_Angeles`.",
+      "All IANA timezones from the runtime environment are indexed automatically, including full paths like `Pacific/Kiritimati` and unique city slugs like `Africa/Abidjan`.",
+      "The clock uses `suppressHydrationWarning` and client-side ticking so SSR and hydration stay stable in Next.js apps.",
+      "Digit motion, colon pulses, and zone transitions automatically disable when `prefers-reduced-motion: reduce` is enabled.",
+      "The component renders a semantic `time` element with a machine-readable `dateTime` value in the target timezone.",
+      "By default the clock refreshes once per minute. Pass `live` for second-level updates in dashboards or hero copy.",
+      "Unknown zones render a compact destructive fallback label instead of throwing during render.",
+    ],
+  },
+  registryItem("timezone.json", ["motion"]),
+];
+
 const liquidMarqueeApiDetails: DetailItem[] = [
   {
     id: "liquid-marquee",
@@ -7179,6 +7241,7 @@ export {
   sliderApiDetails,
   spinnerApiDetails,
   statusDotApiDetails,
+  timezoneApiDetails,
   switchApiDetails,
   tableApiDetails,
   tabsApiDetails,

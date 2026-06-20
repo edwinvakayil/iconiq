@@ -708,6 +708,12 @@ const REGISTRY_UI_META: Record<
     description:
       "Rippling status dot with deployment states and optional label.",
   },
+  timezone: {
+    title: "Timezone",
+    description:
+      "Inline live clock for city aliases or IANA timezones with fluid digit rolls, pulsing separators, and spring transitions.",
+    dependencies: ["motion"],
+  },
   switch: {
     title: "Switch",
     description:

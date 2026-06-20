@@ -1521,6 +1521,21 @@
       ]
     },
     {
+      "name": "timezone",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": ["motion"],
+      "devDependencies": [],
+      "title": "Timezone",
+      "description": "Inline live clock for city aliases or IANA timezones with fluid digit rolls, pulsing separators, and spring transitions.",
+      "files": [
+        {
+          "path": "timezone.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "tooltip",
       "type": "registry:ui",
       "registryDependencies": [],

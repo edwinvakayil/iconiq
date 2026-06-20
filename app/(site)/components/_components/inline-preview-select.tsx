@@ -27,7 +27,7 @@ type InlinePreviewSelectProps<T extends string> = {
   ariaLabel: string;
   menuKey: string;
   onChange: (value: T) => void;
-  options: InlinePreviewSelectOption<T>[];
+  options: readonly InlinePreviewSelectOption<T>[];
   value: T;
 };
 
@@ -244,7 +244,7 @@ export function InlinePreviewSelect<T extends string>({
             className="inline-flex"
             transition={{ duration: 0.2, ease: SOFT_EASE }}
           >
-            <ChevronDownIcon className="size-4 text-muted-foreground" />
+            <ChevronDownIcon className="size-[0.85em] text-muted-foreground" />
           </motion.span>
         </button>
       </span>

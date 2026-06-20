@@ -104,6 +104,8 @@ const componentSummaries: Record<string, string> = {
     "Spinner docs in the Display & Content section, using the shared Iconiq spinner install with provider options visible but disabled.",
   "/display-and-content/status-dot":
     "Status dot docs with a rippling deployment state indicator and optional label.",
+  "/display-and-content/timezone":
+    "Timezone docs in the Display & Content section for an inline live clock with city aliases and IANA timezone support.",
   "/inputs-and-forms/switch":
     "Switch docs in the Inputs & Forms section with a provider switch that swaps between Base UI and Radix UI registry entries.",
   "/display-and-content/table":
@@ -261,6 +263,17 @@ const extraComponentKeywordsBySlug: Record<string, string[]> = {
     "queued",
     "pipeline",
     "vercel",
+  ],
+  timezone: [
+    "timezone",
+    "clock",
+    "city time",
+    "san francisco",
+    "new york",
+    "london",
+    "iana",
+    "world clock",
+    "local time",
   ],
   "text-loop": [
     "text",

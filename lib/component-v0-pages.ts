@@ -1008,6 +1008,24 @@ export default function Page() {
   );
 }`;
 
+export const timezonePreviewCode = `"use client";
+
+import { Timezone } from "@/components/ui/timezone";
+
+export default function Page() {
+  return (
+    <div className="flex min-h-svh items-center justify-center bg-background p-8">
+      <p className="flex max-w-2xl flex-wrap items-baseline justify-center gap-x-2 gap-y-2 text-balance text-center font-medium text-sm text-neutral-800 leading-snug tracking-tight sm:text-base dark:text-neutral-100">
+        <span>Right now in</span>
+        <span>San Francisco</span>
+        <span>it is</span>
+        <Timezone live zone="San Francisco" />
+        <span>for the west coast team.</span>
+      </p>
+    </div>
+  );
+}`;
+
 export const statusDotPreviewCode = `"use client";
 
 import { StatusDot } from "@/components/ui/status-dot";
@@ -1177,6 +1195,7 @@ const COMPONENT_PREVIEW_OVERRIDES: Record<string, string> = {
   carousel: carouselPreviewCode,
   skeleton: skeletonPreviewCode,
   "status-dot": statusDotPreviewCode,
+  timezone: timezonePreviewCode,
 };
 
 export function getComponentV0Page(

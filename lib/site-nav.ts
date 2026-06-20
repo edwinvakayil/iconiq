@@ -44,6 +44,7 @@ export const SITE_SECTIONS = [
       { label: "Spinner", href: "/display-and-content/spinner" },
       { label: "Status Dot", href: "/display-and-content/status-dot" },
       { label: "Table", href: "/display-and-content/table" },
+      { label: "Timezone", href: "/display-and-content/timezone" },
       { label: "Verified Badge", href: "/display-and-content/verified-badge" },
     ],
   },
