@@ -5979,8 +5979,8 @@ const rollingDigitsApiDetails: DetailItem[] = [
       field({
         name: "enterBlur",
         type: "number",
-        defaultValue: "52",
-        description: "Peak blur in pixels applied when a digit enters.",
+        description:
+          "Deprecated. Blur is no longer applied; digit motion uses transform and opacity for Safari-safe rendering.",
       }),
       field({
         name: "enterScale",
@@ -6005,7 +6005,8 @@ const rollingDigitsApiDetails: DetailItem[] = [
       "Non-digit characters from locale separators or custom formatters render as static spans and do not animate.",
       "The visual layer is `aria-hidden`; screen readers receive the formatted number through an `sr-only` span.",
       "When `startOnView` is enabled, the ticker displays zero until the container crosses the viewport threshold (`once: true`, `amount: 0.6`).",
-      "Each digit keeps a short exit queue so the previous character can blur and slide out while the next one springs into place.",
+      "Each digit keeps a short exit queue so the previous character can slide out while the next one springs into place.",
+      "Digit rolls use transform and opacity only so Safari and other WebKit browsers avoid filter-blur compositing glitches.",
       "Layer symbols such as `%` or `$` beside the component in your layout, or include them through `format`.",
     ],
   },

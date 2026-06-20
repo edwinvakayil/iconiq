@@ -1,12 +1,6 @@
 "use client";
 
-import {
-  AnimatePresence,
-  motion,
-  useInView,
-  useSpring,
-  useTransform,
-} from "motion/react";
+import { AnimatePresence, motion, useInView, useSpring } from "motion/react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { cn } from "@/lib/utils";
@@ -29,6 +23,7 @@ export interface RollingDigitsProps {
   exitDamping?: number;
   direction?: "dynamic" | "up" | "down";
   enterY?: number;
+  /** @deprecated Blur is no longer applied. Kept for backward compatibility. */
   enterBlur?: number;
   enterScale?: number;
 }
@@ -44,6 +39,7 @@ interface RollingDigitsTextProps {
   exitDamping?: number;
   direction?: "dynamic" | "up" | "down";
   enterY?: number;
+  /** @deprecated Blur is no longer applied. Kept for backward compatibility. */
   enterBlur?: number;
   enterScale?: number;
   animationDelay?: number;
@@ -65,10 +61,8 @@ const DIGIT_MOTION_DEFAULTS = {
   exitDamping: 15,
   direction: "dynamic" as const,
   enterY: 32,
-  enterBlur: 52,
-  enterScale: 0.7,
-  exitBlur: "10px",
-  exitScale: 0.7,
+  enterScale: 0.84,
+  exitScale: 0.84,
 };
 
 function isDigitChar(char: string) {
@@ -99,7 +93,6 @@ function DigitCell({
   exitDamping = DIGIT_MOTION_DEFAULTS.exitDamping,
   direction = DIGIT_MOTION_DEFAULTS.direction,
   enterY = DIGIT_MOTION_DEFAULTS.enterY,
-  enterBlur = DIGIT_MOTION_DEFAULTS.enterBlur,
   enterScale = DIGIT_MOTION_DEFAULTS.enterScale,
 }: {
   char: string;
@@ -122,8 +115,6 @@ function DigitCell({
   const y = useSpring(0, springConfig);
   const opacity = useSpring(1, springConfig);
   const scale = useSpring(1, springConfig);
-  const blur = useSpring(0, springConfig);
-  const filter = useTransform(blur, (v) => `blur(${v}px)`);
 
   useEffect(() => {
     if (!isDigit) return;
@@ -146,30 +137,17 @@ function DigitCell({
     const id = exitId++;
     setExitQueue((q) => {
       const next = [...q, { id, char: prev, exitY: up ? -enterY : enterY }];
-      return next.length > 3 ? next.slice(-3) : next;
+      return next.length > 1 ? next.slice(-1) : next;
     });
 
     y.jump(up ? enterY : -enterY);
     opacity.jump(0);
     scale.jump(enterScale);
-    blur.jump(enterBlur);
 
     y.set(0);
     opacity.set(1);
     scale.set(1);
-    blur.set(0);
-  }, [
-    char,
-    isDigit,
-    direction,
-    enterY,
-    enterBlur,
-    enterScale,
-    y,
-    opacity,
-    scale,
-    blur,
-  ]);
+  }, [char, direction, enterScale, enterY, isDigit, opacity, scale, y]);
 
   if (!isDigit) {
     return <span className={className}>{char}</span>;
@@ -178,7 +156,7 @@ function DigitCell({
   return (
     <div
       className={cn(
-        "relative grid place-items-center [&>*]:col-start-1 [&>*]:row-start-1",
+        "relative isolate grid place-items-center overflow-hidden [&>*]:col-start-1 [&>*]:row-start-1",
         className
       )}
     >
@@ -188,11 +166,11 @@ function DigitCell({
             animate={{
               opacity: 0,
               scale: DIGIT_MOTION_DEFAULTS.exitScale,
-              filter: `blur(${DIGIT_MOTION_DEFAULTS.exitBlur})`,
               y: exitY,
             }}
             aria-hidden
-            initial={{ opacity: 1, scale: 1, filter: "blur(0px)", y: 0 }}
+            className="[backface-visibility:hidden]"
+            initial={{ opacity: 1, scale: 1, y: 0 }}
             key={id}
             onAnimationComplete={() =>
               setExitQueue((q) => q.filter((item) => item.id !== id))
@@ -207,7 +185,12 @@ function DigitCell({
           </motion.span>
         ))}
       </AnimatePresence>
-      <motion.span style={{ opacity, scale, filter, y }}>{char}</motion.span>
+      <motion.span
+        className="[backface-visibility:hidden]"
+        style={{ opacity, scale, y }}
+      >
+        {char}
+      </motion.span>
     </div>
   );
 }
@@ -223,7 +206,6 @@ function RollingDigitsText({
   exitDamping,
   direction,
   enterY,
-  enterBlur,
   enterScale,
   animationDelay = 80,
 }: RollingDigitsTextProps) {
@@ -283,7 +265,6 @@ function RollingDigitsText({
           char={char}
           className={digitClassName}
           direction={direction}
-          enterBlur={enterBlur}
           enterDamping={enterDamping}
           enterScale={enterScale}
           enterStiffness={enterStiffness}
@@ -315,7 +296,6 @@ export function RollingDigits({
   exitDamping,
   direction,
   enterY,
-  enterBlur,
   enterScale,
 }: RollingDigitsProps) {
   const containerRef = useRef<HTMLSpanElement>(null);
@@ -353,7 +333,6 @@ export function RollingDigits({
           animationDelay={resolvedAnimationDelay}
           digitClassName={digitClassName}
           direction={direction}
-          enterBlur={enterBlur}
           enterDamping={enterDamping}
           enterScale={enterScale}
           enterStiffness={enterStiffness}
