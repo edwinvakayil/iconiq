@@ -719,6 +719,21 @@
       ]
     },
     {
+      "name": "favicon-badge",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": ["motion", "lucide-react"],
+      "devDependencies": [],
+      "title": "Favicon Badge",
+      "description": "Circular website favicon badge with optional label text, spring entrance animation, and Google favicon resolution.",
+      "files": [
+        {
+          "path": "favicon-badge.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "file-tree",
       "type": "registry:ui",
       "registryDependencies": [],

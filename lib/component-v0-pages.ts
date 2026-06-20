@@ -838,6 +838,21 @@ export default function Page() {
   );
 }`;
 
+export const faviconBadgePreviewCode = `"use client";
+
+import { FaviconBadge } from "@/components/ui/favicon-badge";
+
+export default function Page() {
+  return (
+    <div className="flex min-h-svh items-center justify-center bg-background p-8">
+      <div className="flex flex-wrap items-center justify-center gap-5">
+        <FaviconBadge website="iconiqui.com" />
+        <FaviconBadge website="iconiqui.com" label="iconiq" />
+      </div>
+    </div>
+  );
+}`;
+
 export const verifiedBadgePreviewCode = `"use client";
 
 import { VerifiedBadge } from "@/components/ui/verified-badge";
@@ -1036,6 +1051,7 @@ const COMPONENT_PREVIEW_OVERRIDES: Record<string, string> = {
   infiniteribbon: infiniteRibbonPreviewCode,
   "liquid-marquee": liquidMarqueePreviewCode,
   "theme-toggle": themeTogglePreviewCode,
+  "favicon-badge": faviconBadgePreviewCode,
   "verified-badge": verifiedBadgePreviewCode,
   "rolling-digits": rollingDigitsPreviewCode,
   carousel: carouselPreviewCode,

@@ -469,6 +469,12 @@ const REGISTRY_UI_META: Record<
     description: "X-style verified badge with shimmer or static variants.",
     dependencies: ["motion"],
   },
+  "favicon-badge": {
+    title: "Favicon Badge",
+    description:
+      "Circular website favicon badge with optional label text, spring entrance animation, and Google favicon resolution.",
+    dependencies: ["motion", "lucide-react"],
+  },
   "r-accordion": {
     title: "Accordion (Radix UI)",
     description:

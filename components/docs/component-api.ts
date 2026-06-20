@@ -4802,6 +4802,75 @@ const carouselApiDetails: DetailItem[] = [
   registryItem("carousel.json", ["embla-carousel-react", "lucide-react"]),
 ];
 
+const faviconBadgeApiDetails: DetailItem[] = [
+  {
+    id: "favicon-badge",
+    title: "FaviconBadge",
+    summary:
+      "Inline circular badge that resolves a website favicon from a domain or URL, with an optional text label and spring entrance animation.",
+    fields: [
+      field({
+        name: "website",
+        type: "string",
+        required: true,
+        description:
+          "Domain or full URL used to resolve the favicon. Values such as `iconiqui.com` or `https://www.iconiqui.com` are normalized to a hostname.",
+      }),
+      field({
+        name: "label",
+        type: "string",
+        description:
+          "Optional label rendered beside the circular favicon badge. When omitted, only the badge is shown and the domain is exposed to screen readers.",
+      }),
+      field({
+        name: "faviconSize",
+        type: "16 | 32 | 64 | 128",
+        defaultValue: "64",
+        description:
+          "Pixel size requested from Google's favicon service. Higher values can improve clarity on retina displays.",
+      }),
+      field({
+        name: "size",
+        type: '"sm" | "md" | "lg"',
+        defaultValue: '"md"',
+        description:
+          "Visual scale for the circular favicon badge container. Label text stays at the standard `text-sm` size.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description: "Merged onto the root inline-flex wrapper.",
+      }),
+      field({
+        name: "badgeClassName",
+        type: "string",
+        description:
+          "Merged onto the circular favicon container for local border, background, or sizing overrides.",
+      }),
+      field({
+        name: "labelClassName",
+        type: "string",
+        description: "Merged onto the optional label when `label` is provided.",
+      }),
+    ],
+    notes: [
+      "Extends native `span` props (`id`, `onClick`, `data-*`, and other `aria-*` attributes) via prop spreading on the root.",
+      "Favicons are resolved from Google and DuckDuckGo icon services after `extractDomain` normalizes the `website` value.",
+      "The component preloads favicons with cancellation-safe `Image()` requests and falls back through multiple providers before showing the `Globe` placeholder.",
+      'When `label` is omitted, the root uses `role="img"` with an `aria-label` derived from the label, domain, or raw `website` value.',
+      "Exports `extractDomain`, `getFaviconUrl`, and `FaviconBadgeSize` for reuse in search fields or attribution rows.",
+      "Install path is `components/ui/favicon-badge.tsx` with named and default `FaviconBadge` exports. Requires `@/lib/utils` (`cn`).",
+    ],
+  },
+  registryItem(
+    "favicon-badge.json",
+    ["motion", "lucide-react"],
+    [
+      "Requires the local `cn` helper from `@/lib/utils`, which is included in a standard shadcn setup.",
+    ]
+  ),
+];
+
 const verifiedBadgeApiDetails: DetailItem[] = [
   {
     id: "verified-badge",
@@ -7093,6 +7162,7 @@ export {
   radialButtonApiDetails,
   fluxButtonApiDetails,
   themeToggleApiDetails,
+  faviconBadgeApiDetails,
   verifiedBadgeApiDetails,
   faqProApiDetails,
   fileTreeApiDetails,

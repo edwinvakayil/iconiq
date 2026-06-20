@@ -84,6 +84,11 @@
           "href": "/display-and-content/date-picker"
         },
         {
+          "slug": "favicon-badge",
+          "label": "Favicon Badge",
+          "href": "/display-and-content/favicon-badge"
+        },
+        {
           "slug": "liquid-marquee",
           "label": "Liquid Marquee",
           "href": "/display-and-content/liquid-marquee"

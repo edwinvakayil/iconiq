@@ -44,6 +44,8 @@ const componentSummaries: Record<string, string> = {
     "Calendar docs in the Display & Content section, using the shared Iconiq calendar install with month/year picking, fluid date-grid motion, and provider options visible but disabled.",
   "/display-and-content/date-picker":
     "Date picker docs in the Display & Content section with a collapsible trigger and the shared Iconiq Calendar panel, spring open motion, and close-on-select behavior.",
+  "/display-and-content/favicon-badge":
+    "Circular website favicon badge in the Display & Content section with optional label text and spring entrance animation.",
   "/display-and-content/charts":
     "Charts docs in the Display & Content section, using the shared Iconiq Recharts shell with provider options visible but disabled because there is no Radix UI or Base UI variant.",
   "/display-and-content/rolling-digits":
@@ -186,6 +188,14 @@ const extraComponentKeywordsBySlug: Record<string, string[]> = {
     "animated text",
   ],
   "file-upload": ["upload"],
+  "favicon-badge": [
+    "favicon",
+    "website badge",
+    "domain badge",
+    "site icon",
+    "attribution",
+    "logo badge",
+  ],
   "input-otp": [
     "otp",
     "one-time password",
