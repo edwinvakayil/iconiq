@@ -16,6 +16,9 @@ export const docsPageDescriptionClassName =
 export const docsPageBodyClassName =
   "mt-10 space-y-8 text-[17px] text-secondary leading-7";
 
+export const guidePageBodyClassName =
+  "space-y-8 text-[15px] text-zinc-600 leading-relaxed dark:text-zinc-400";
+
 export const docsPageSectionClassName = "scroll-mt-28 space-y-5";
 
 export const docsPageSectionTitleClassName =

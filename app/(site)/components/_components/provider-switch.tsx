@@ -62,7 +62,7 @@ export function ProviderSwitch({
   return (
     <div
       aria-label="Primitive"
-      className="relative mr-2 inline-flex h-8 w-16 shrink-0 overflow-hidden rounded-md bg-transparent dark:bg-[var(--secondary-bg)]"
+      className="relative inline-flex h-8 w-16 shrink-0 overflow-hidden rounded-md bg-transparent dark:bg-[var(--secondary-bg)]"
       role="radiogroup"
     >
       <motion.div

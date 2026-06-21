@@ -1,7 +1,11 @@
 import type { Metadata } from "next";
 
 import { SITE } from "@/constants";
-import { BASE_LINKS, SITE_SECTIONS } from "@/lib/site-nav";
+import {
+  BASE_LINKS,
+  getHomeNavSectionLinks,
+  SITE_SECTIONS,
+} from "@/lib/site-nav";
 import { createMetadata } from "@/seo/metadata";
 
 type RouteSeo = {
@@ -63,12 +67,6 @@ const GUIDE_SEO: Record<string, RouteSeo> = {
     description:
       "Support Iconiq UI development and help keep the open-source component library maintained.",
     keywords: ["sponsor iconiq ui", "open source sponsorship"],
-  },
-  "/foundation/typography": {
-    title: "Typography",
-    description:
-      "Typography scales, semantic text styles, and foundation tokens used across Iconiq UI documentation and components.",
-    keywords: ["iconiq ui typography", "design tokens", "type scale"],
   },
 };
 
@@ -152,12 +150,6 @@ const SECTION_FALLBACK_SEO: Record<string, RouteSeo> = {
       "Signature Iconiq UI components with distinctive motion, layout, and interaction patterns beyond standard primitives.",
     keywords: ["iconiq ui special components", "motion ui patterns"],
   },
-  Foundation: {
-    title: "Foundation",
-    description:
-      "Foundation scales and shared design primitives that shape Iconiq UI interfaces and documentation.",
-    keywords: ["iconiq ui foundation", "design system foundation"],
-  },
   Texts: {
     title: "Text Effects",
     description:
@@ -225,9 +217,11 @@ export const SITELINK_ROUTES = [
   { name: SITE.NAME, href: "/" },
   { name: "Introduction", href: "/introduction" },
   { name: "Installation", href: "/installation" },
+  ...getHomeNavSectionLinks().map((section) => ({
+    name: section.featuredName,
+    href: section.href,
+  })),
   { name: "Button", href: "/buttons-and-actions/button" },
-  { name: "Dialog", href: "/overlay-and-popups/dialog" },
-  { name: "Accordion", href: "/navigation/accordion" },
   { name: "MCP", href: "/mcp" },
 ] as const;
 

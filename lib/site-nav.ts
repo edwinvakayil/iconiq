@@ -53,10 +53,6 @@ export const SITE_SECTIONS = [
     children: [{ label: "Alert", href: "/feedback-and-alerts/alert" }],
   },
   {
-    label: "Foundation",
-    children: [{ label: "Typography", href: "/foundation/typography" }],
-  },
-  {
     label: "Inputs & Forms",
     children: [
       { label: "Autocomplete", href: "/inputs-and-forms/autocomplete" },
@@ -126,11 +122,25 @@ export const SITE_SECTIONS = [
   },
 ] as const;
 
+export const HOME_NAV_SECTION_LABELS = [
+  "Display & Content",
+  "Inputs & Forms",
+  "Texts",
+] as const;
+
+export function getHomeNavSectionLinks() {
+  return HOME_NAV_SECTION_LABELS.map((label) => {
+    const section = SITE_SECTIONS.find((entry) => entry.label === label);
+    const firstChild = section?.children[0];
+
+    return {
+      label,
+      href: firstChild?.href ?? "/",
+      featuredName: firstChild?.label ?? label,
+    };
+  });
+}
+
 /** Section headings (h2/h3) per page for "On this page" anchor links. */
-export const PAGE_SECTIONS: Record<string, { label: string; id: string }[]> = {
-  "/foundation/typography": [
-    { label: "Installation", id: "installation" },
-    { label: "Scale", id: "scale" },
-    { label: "Props", id: "props" },
-  ],
-};
+export const PAGE_SECTIONS: Record<string, { label: string; id: string }[]> =
+  {};

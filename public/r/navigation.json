@@ -146,16 +146,6 @@
       ]
     },
     {
-      "label": "Foundation",
-      "items": [
-        {
-          "slug": "typography",
-          "label": "Typography",
-          "href": "/foundation/typography"
-        }
-      ]
-    },
-    {
       "label": "Inputs & Forms",
       "items": [
         {

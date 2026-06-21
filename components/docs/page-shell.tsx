@@ -1,19 +1,24 @@
 import { ArrowLeft, ArrowRight, ChevronRight } from "lucide-react";
 import Link from "next/link";
 import type { ReactNode } from "react";
-
-import { ComponentDemoCanvas } from "@/components/docs/component-demo-canvas";
-import { ComponentInstallationTabs } from "@/components/docs/component-installation-tabs";
-import { ComponentPageRail } from "@/components/docs/component-page-rail";
+import { DocsFileStructure } from "@/components/docs/split/docs-file-structure";
+import { DocsHomeButton } from "@/components/docs/split/docs-home-button";
+import { DocsLeftColumn } from "@/components/docs/split/docs-left-column";
 import {
-  docsPageArticleClassName,
-  docsPageDescriptionClassName,
-  docsPageGridClassName,
-  docsPageShellClassName,
-  docsPageTitleClassName,
-} from "@/components/docs/docs-page-layout";
-import { PageCopyActions } from "@/components/docs/page-copy-actions";
-import { getComponentV0Page } from "@/lib/component-v0-pages";
+  DocsPreviewWrapper,
+  type VariantItem,
+} from "@/components/docs/split/docs-preview-wrapper";
+import { DocsPropsTable } from "@/components/docs/split/docs-props-table";
+import { DocsSection } from "@/components/docs/split/docs-section";
+import {
+  ComponentDocsSidebarShell,
+  DocsSidebarDesktopAnchor,
+  DocsSidebarMobileAnchor,
+  FloatingDocsSidebarLazy,
+} from "@/components/docs/split/floating-docs-sidebar-lazy";
+import { InstallCommand } from "@/components/docs/split/install-command";
+import { PageContextMenu } from "@/components/docs/split/page-context-menu";
+import { SplitUsageCode } from "@/components/docs/split/split-usage-code";
 import { nodeToText } from "@/lib/node-to-text";
 import { SECTION_PATH_PREFIX } from "@/lib/section-paths";
 import { SITE_SECTIONS } from "@/lib/site-nav";
@@ -134,7 +139,7 @@ function DocsBreadcrumbs({
   if (usesEditorialBreadcrumb) {
     return (
       <nav aria-label="Breadcrumb" className={cn("mb-4", className)}>
-        <ol className="flex flex-wrap items-center gap-1.5 break-words text-[15px] text-muted-foreground sm:gap-2.5">
+        <ol className="flex flex-wrap items-center gap-1.5 break-words text-base text-muted-foreground sm:gap-2.5">
           {visibleItems.map((item, index) => {
             const isLast = index === visibleItems.length - 1;
             const hasLaterDesktopVisibleItem = visibleItems
@@ -185,7 +190,7 @@ function DocsBreadcrumbs({
 
   return (
     <nav aria-label="Breadcrumb" className={cn("mb-4", className)}>
-      <ol className="flex flex-wrap items-center gap-2 font-mono text-[13px] text-muted-foreground tracking-[0.12em]">
+      <ol className="flex flex-wrap items-center gap-2 font-mono text-[15px] text-muted-foreground tracking-[0.12em]">
         {visibleItems.map((item, index) => {
           const isLast = index === visibleItems.length - 1;
           const hasLaterDesktopVisibleItem = visibleItems
@@ -412,13 +417,19 @@ function DetailMetaValue({ value }: { value: ReactNode }) {
   );
 }
 
-function DetailFields({ fields }: { fields: DetailField[] }) {
+function DetailFields({
+  fields,
+  itemId,
+}: {
+  fields: DetailField[];
+  itemId: string;
+}) {
   return (
     <div className="divide-y divide-border/50 border-border/50 border-t">
-      {fields.map((field) => (
+      {fields.map((field, index) => (
         <div
           className="grid gap-4 py-5 md:grid-cols-[minmax(0,220px)_minmax(0,1fr)] md:gap-10"
-          key={String(field.name)}
+          key={`${itemId}-${String(field.name)}-${index}`}
         >
           <div className="space-y-2">
             <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1">
@@ -496,7 +507,9 @@ function DetailSection({ item }: { item: DetailItem }) {
         {lead ? (
           <p className="text-[15px] text-secondary leading-6">{lead}</p>
         ) : null}
-        {fields.length > 0 ? <DetailFields fields={fields} /> : null}
+        {fields.length > 0 ? (
+          <DetailFields fields={fields} itemId={item.id} />
+        ) : null}
         {notes.length > 0 ? (
           <DetailNotes
             itemId={item.id}
@@ -532,6 +545,34 @@ function DetailLedger({ details }: { details: DetailItem[] }) {
       ))}
     </div>
   );
+}
+
+function detailItemsToProps(details: DetailItem[]) {
+  const props: {
+    id: string;
+    name: string;
+    type: string;
+    default?: string;
+    description: string;
+  }[] = [];
+
+  for (const item of details) {
+    for (const field of item.fields ?? []) {
+      const name = nodeToText(field.name);
+      props.push({
+        id: `${item.id}-${name}`,
+        name,
+        type: nodeToText(field.type) || "—",
+        default:
+          field.defaultValue !== undefined
+            ? nodeToText(field.defaultValue)
+            : undefined,
+        description: nodeToText(field.description),
+      });
+    }
+  }
+
+  return props;
 }
 
 function buildComponentPageCopyContent({
@@ -570,16 +611,86 @@ function buildComponentPageCopyContent({
   return lines.join("\n").trim();
 }
 
+function GuideDocsPage({
+  breadcrumbs,
+  title,
+  description,
+  pageUrl,
+  children,
+  headerActions,
+}: {
+  breadcrumbs: BreadcrumbItem[];
+  title: string;
+  description: ReactNode;
+  pageUrl: string;
+  children: ReactNode;
+  headerActions?: ReactNode;
+}) {
+  return (
+    <>
+      <BreadcrumbJsonLd currentPath={pageUrl} items={breadcrumbs} />
+      <div
+        className="flex h-full min-h-screen w-full flex-col text-foreground lg:h-screen"
+        data-docs-layout
+      >
+        <DocsLeftColumn fullWidth>
+          <div className="w-full px-5 pt-8 pb-40 lg:pt-10 lg:pr-10 lg:pl-8">
+            <header className="pb-6">
+              <div className="flex w-full items-center gap-2.5">
+                <FloatingDocsSidebarLazy />
+                <nav
+                  aria-label="Breadcrumb"
+                  className="flex min-w-0 flex-1 items-center gap-1.5 font-normal text-[15px] text-zinc-500 tracking-[-0.01em] dark:text-zinc-400"
+                >
+                  <Link
+                    className="shrink-0 transition-colors hover:text-zinc-800 dark:hover:text-zinc-200"
+                    href="/introduction"
+                  >
+                    Getting Started
+                  </Link>
+                  <ChevronRight
+                    aria-hidden
+                    className="size-3.5 shrink-0 opacity-50"
+                  />
+                  <span className="truncate font-medium text-zinc-900 dark:text-zinc-100">
+                    {title}
+                  </span>
+                </nav>
+                <DocsHomeButton />
+              </div>
+
+              <div className="max-w-3xl">
+                <div className="mt-10 flex flex-wrap items-end gap-x-4 gap-y-3">
+                  <h1 className="font-bold text-[2.5rem] text-zinc-900 leading-[1.08] tracking-[-0.03em] dark:text-zinc-50">
+                    {title}
+                  </h1>
+                  {headerActions ? (
+                    <div className="shrink-0">{headerActions}</div>
+                  ) : null}
+                </div>
+
+                <p className="mt-3 max-w-2xl text-[15px] text-zinc-600 leading-relaxed dark:text-zinc-400">
+                  {description}
+                </p>
+              </div>
+            </header>
+
+            <div className="max-w-3xl">{children}</div>
+          </div>
+        </DocsLeftColumn>
+      </div>
+    </>
+  );
+}
+
 function ComponentDocsPage({
   breadcrumbs,
-  eyebrow = "",
   title,
   description,
   componentName,
   itemSlug,
   pageUrl,
   preview,
-  previewCode,
   usageCode,
   usageDescription,
   details,
@@ -587,9 +698,14 @@ function ComponentDocsPage({
   extraSections = [],
   installationContent,
   headerActions,
-  editHref,
   previewClassName,
-  v0PageCode,
+  examples = [],
+  fullWidthPreview = false,
+  hideDefaultPreviewVariant = false,
+  installDescription,
+  installPath,
+  releasedAt,
+  showPageActions = false,
 }: {
   breadcrumbs: BreadcrumbItem[];
   eyebrow?: string;
@@ -615,8 +731,14 @@ function ComponentDocsPage({
   previewClassName?: string;
   headerActions?: ReactNode;
   editHref?: string;
+  examples?: VariantItem[];
+  fullWidthPreview?: boolean;
+  hideDefaultPreviewVariant?: boolean;
+  installPath?: string;
+  releasedAt?: string;
+  showPageActions?: boolean;
 }) {
-  const sectionLabel = breadcrumbs[1]?.label ?? "Components";
+  const navSectionLabel = breadcrumbs[1]?.label ?? "Components";
   const resolvedItemSlug = itemSlug ?? componentName;
   const pageCopyContent = buildComponentPageCopyContent({
     title,
@@ -627,28 +749,17 @@ function ComponentDocsPage({
     details,
   });
 
-  const sectionLinks = [
-    ...preInstallationSections.map((section) => ({
-      id: section.id,
-      label: section.title,
-    })),
-    { id: "installation", label: "Installation" },
-    ...extraSections.map((section) => ({
-      id: section.id,
-      label: section.title,
-    })),
-    { id: "props", label: "Props" },
-  ];
-
-  const demoCode = previewCode ?? usageCode;
-  const resolvedV0PageCode =
-    v0PageCode ??
-    (getComponentV0Page(componentName, demoCode) ||
-      getComponentV0Page(componentName));
   const resolvedPageUrl =
     pageUrl ??
     breadcrumbs.at(-1)?.href ??
-    inferDocsPageUrl(sectionLabel, resolvedItemSlug);
+    inferDocsPageUrl(navSectionLabel, resolvedItemSlug);
+
+  const propsTable = detailItemsToProps(details);
+  const variantCodes = examples.map((example) => example.code || "");
+  const variantTitles = examples.map((example) => example.title);
+  const sectionCrumb = breadcrumbs.at(-2);
+  const sectionLabel =
+    sectionCrumb?.label ?? breadcrumbs[1]?.label ?? "Components";
 
   return (
     <>
@@ -659,102 +770,164 @@ function ComponentDocsPage({
         pageUrl={resolvedPageUrl}
         title={title}
       />
-      <div className={docsPageShellClassName}>
-        <BreadcrumbJsonLd currentPath={resolvedPageUrl} items={breadcrumbs} />
-        <div className={docsPageGridClassName}>
-          <main className="min-w-0">
-            <article className={docsPageArticleClassName}>
-              <header className="space-y-6">
-                <div className="space-y-3">
-                  <DocsBreadcrumbs items={breadcrumbs} />
-                  <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-                    <div className="max-w-3xl space-y-2">
-                      {eyebrow ? (
-                        <p className="font-mono text-[11px] text-muted-foreground uppercase tracking-[0.28em]">
-                          {eyebrow}
-                        </p>
-                      ) : null}
-                      <h1 className={docsPageTitleClassName}>{title}</h1>
-                      <p className={docsPageDescriptionClassName}>
-                        {description}
-                      </p>
-                    </div>
-
-                    <div className="flex shrink-0 items-center gap-2 self-start">
-                      {headerActions}
-                      <PageCopyActions
-                        componentName={componentName}
-                        pageContent={pageCopyContent}
-                        pageUrl={resolvedPageUrl}
-                        title={title}
-                        v0PageCode={resolvedV0PageCode || undefined}
-                      />
-                      <SectionPager
-                        itemSlug={resolvedItemSlug}
-                        sectionLabel={sectionLabel}
-                      />
-                    </div>
-                  </div>
+      <BreadcrumbJsonLd currentPath={resolvedPageUrl} items={breadcrumbs} />
+      <ComponentDocsSidebarShell>
+        <div
+          className="flex h-full min-h-screen w-full flex-col text-foreground lg:h-screen lg:flex-row"
+          data-docs-layout
+        >
+          <DocsLeftColumn>
+            <div className="w-full px-5 pt-8 pb-40 lg:pt-10 lg:pr-10 lg:pl-8">
+              <header className="pb-14 lg:pb-16">
+                <div className="flex w-full items-center gap-2.5">
+                  <DocsSidebarDesktopAnchor />
+                  <nav
+                    aria-label="Breadcrumb"
+                    className="flex min-w-0 flex-1 items-center gap-1.5 font-normal text-[15px] text-zinc-500 tracking-[-0.01em] dark:text-zinc-400"
+                  >
+                    {sectionCrumb?.href ? (
+                      <Link
+                        className="shrink-0 transition-colors hover:text-zinc-800 dark:hover:text-zinc-200"
+                        href={sectionCrumb.href}
+                      >
+                        {sectionLabel}
+                      </Link>
+                    ) : (
+                      <span className="shrink-0">{sectionLabel}</span>
+                    )}
+                    <ChevronRight
+                      aria-hidden
+                      className="size-3.5 shrink-0 opacity-50"
+                    />
+                    <span className="truncate font-medium text-zinc-900 dark:text-zinc-100">
+                      {title}
+                    </span>
+                  </nav>
+                  <DocsHomeButton />
                 </div>
 
-                <div className="space-y-4">
-                  <ComponentDemoCanvas
-                    code={demoCode}
-                    componentName={componentName}
-                    preview={preview}
-                    previewClassName={previewClassName}
-                    v0PageCode={resolvedV0PageCode || undefined}
-                  />
+                <div className="max-w-3xl">
+                  <div className="mt-10 flex flex-wrap items-end gap-x-4 gap-y-3">
+                    <h1 className="font-bold text-[2.5rem] text-zinc-900 leading-[1.08] tracking-[-0.03em] dark:text-zinc-50">
+                      {title}
+                    </h1>
+                    {headerActions ? (
+                      <div className="shrink-0">{headerActions}</div>
+                    ) : null}
+                  </div>
+
+                  <p className="mt-3 max-w-2xl text-[15px] text-zinc-600 leading-relaxed dark:text-zinc-400">
+                    {description}
+                  </p>
+
+                  {releasedAt ? (
+                    <p className="mt-4 text-[13px] text-zinc-400 leading-5 dark:text-zinc-500">
+                      Released {releasedAt}
+                    </p>
+                  ) : null}
+
+                  {showPageActions ? (
+                    <div className="mt-5">
+                      <PageContextMenu
+                        content={pageCopyContent}
+                        pageUrl={resolvedPageUrl}
+                      />
+                    </div>
+                  ) : null}
                 </div>
               </header>
 
-              <div className="mt-14 space-y-14">
+              <div className="max-w-3xl space-y-14 lg:space-y-16">
                 {preInstallationSections.map((section) => (
-                  <ComponentSection
+                  <DocsSection
                     id={section.id}
                     key={section.id}
                     title={section.title}
                   >
                     {section.content}
-                  </ComponentSection>
+                  </DocsSection>
                 ))}
 
-                <ComponentSection id="installation" title="Installation">
-                  <div className="space-y-5">
-                    <ComponentInstallationTabs componentName={componentName} />
-                    {installationContent}
-                  </div>
-                </ComponentSection>
+                <DocsSection id="installation" title="Installation">
+                  {installDescription ? (
+                    <div className="text-[14px] text-zinc-600 leading-6 dark:text-zinc-400">
+                      {installDescription}
+                    </div>
+                  ) : null}
+                  <InstallCommand
+                    component={componentName}
+                    key={componentName}
+                  />
+                  {installationContent}
+                </DocsSection>
+
+                <DocsSection id="file-structure" title="File Structure">
+                  <DocsFileStructure
+                    componentName={componentName}
+                    installPath={installPath}
+                    key={componentName}
+                  />
+                </DocsSection>
+
+                <DocsSection id="usage" title="Usage">
+                  <SplitUsageCode
+                    hideDefaultTab={hideDefaultPreviewVariant}
+                    key={componentName}
+                    usageCode={usageCode}
+                    variantCodes={variantCodes}
+                    variantTitles={variantTitles}
+                  />
+                </DocsSection>
 
                 {extraSections.map((section) => (
-                  <ComponentSection
+                  <DocsSection
                     id={section.id}
                     key={section.id}
                     title={section.title}
                   >
                     {section.content}
-                  </ComponentSection>
+                  </DocsSection>
                 ))}
 
-                <ComponentSection id="props" title="Props">
-                  <DetailLedger details={details} />
-                </ComponentSection>
+                {propsTable.length > 0 ? (
+                  <DocsSection id="api-reference" title="Props">
+                    <DocsPropsTable key={componentName} props={propsTable} />
+                  </DocsSection>
+                ) : (
+                  <DocsSection id="api-reference" title="API Reference">
+                    <DetailLedger details={details} key={componentName} />
+                  </DocsSection>
+                )}
               </div>
 
-              <SectionPrevNextNav
-                itemSlug={resolvedItemSlug}
-                sectionLabel={sectionLabel}
-              />
-            </article>
-          </main>
+              <div className="h-12" />
+            </div>
+          </DocsLeftColumn>
 
-          <ComponentPageRail
-            componentName={componentName}
-            editHref={editHref}
-            sections={sectionLinks}
-          />
+          <div
+            className="z-20 order-first flex flex-1 flex-col bg-[#f3f4f6] lg:sticky lg:top-0 lg:order-last lg:h-full lg:max-w-1/2 lg:basis-1/2 dark:bg-[#080808]"
+            data-docs-right-column
+          >
+            <div
+              className="relative h-[55vh] w-full overflow-hidden p-4 lg:h-full lg:pt-3 lg:pr-3 lg:pb-3 lg:pl-1.5"
+              data-docs-preview-shell
+            >
+              <DocsSidebarMobileAnchor />
+              <DocsPreviewWrapper
+                fullWidthPreview={fullWidthPreview}
+                hideDefaultVariant={hideDefaultPreviewVariant}
+                key={componentName}
+                previewClassName={previewClassName}
+                sourceCodeFilename={`${componentName}.tsx`}
+                sourceCodeKey={componentName}
+                variants={examples}
+              >
+                {preview}
+              </DocsPreviewWrapper>
+            </div>
+          </div>
         </div>
-      </div>
+      </ComponentDocsSidebarShell>
     </>
   );
 }
@@ -762,9 +935,11 @@ function ComponentDocsPage({
 export {
   DocsBreadcrumbs,
   ComponentDocsPage,
+  GuideDocsPage,
   ComponentSection as DocsSection,
   DetailLedger,
   SectionPager,
   SectionPrevNextNav,
 };
 export type { BreadcrumbItem, DetailField, DetailItem };
+export type { VariantItem } from "@/components/docs/split/docs-preview-wrapper";

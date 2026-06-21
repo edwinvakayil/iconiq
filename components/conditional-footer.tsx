@@ -4,11 +4,14 @@ import { motion } from "motion/react";
 import { usePathname } from "next/navigation";
 
 import { Footer } from "@/components/footer";
+import { isSplitDocsPage } from "@/lib/is-component-doc-page";
 
 export function ConditionalFooter() {
   const pathname = usePathname();
 
-  if (pathname === "/sponsorship") return null;
+  if (pathname === "/sponsorship" || isSplitDocsPage(pathname)) {
+    return null;
+  }
 
   return (
     <motion.div

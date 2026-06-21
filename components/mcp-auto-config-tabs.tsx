@@ -1,10 +1,10 @@
 "use client";
 
-import { type McpClient, McpInitBlock } from "@/components/mcp-init-block";
+import { McpInitCommand } from "@/components/docs/split/mcp-init-command";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 type AutoClientConfig = {
-  id: McpClient;
+  id: "claude" | "cursor" | "vscode" | "codex";
   label: string;
   description: string;
   note?: string;
@@ -63,7 +63,7 @@ export function McpAutoConfigTabs({ className }: { className?: string }) {
           value={client.id}
         >
           <p>{client.description}</p>
-          <McpInitBlock className="max-w-[720px]" client={client.id} />
+          <McpInitCommand client={client.id} />
           {client.note ? (
             <p className="text-muted-foreground text-sm">{client.note}</p>
           ) : null}

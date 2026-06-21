@@ -64,6 +64,10 @@
   --nav-menu-surface: #f4f4f5;
   --nav-menu-item-hover: #e4e4e7;
 
+  --shadow-card:
+    inset 0 1px 0 rgb(255 255 255 / 88%), inset 0 -1px 0 rgb(0 0 0 / 5%), 0 1px
+    1px rgb(0 0 0 / 3%), 0 8px 24px rgb(0 0 0 / 4%);
+
   --radius: 0.4rem;
 }
 .dark {
@@ -354,6 +358,54 @@
     width: 0;
     height: 0;
   }
+
+  .shadow-card {
+    box-shadow: var(--shadow-card);
+  }
+
+  .usage-code-scrollbar-none {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .usage-code-scrollbar-none::-webkit-scrollbar {
+    display: none;
+    width: 0;
+    height: 0;
+  }
+}
+
+html[data-route-split-docs] .root-content {
+  padding-top: 0;
+}
+
+html[data-route-split-docs] .page-transition-shell {
+  min-height: 100vh;
+  height: 100vh;
+}
+
+html[data-route-split-docs] [data-code-block] pre {
+  margin: 0;
+  background: transparent !important;
+}
+
+html[data-route-split-docs] [data-code-block] .shiki {
+  background: transparent !important;
+}
+
+html[data-route-split-docs] [data-code-block] .shiki,
+html[data-route-split-docs] [data-code-block] .shiki span {
+  background-color: transparent !important;
+  color: var(--shiki-light) !important;
+}
+
+.dark html[data-route-split-docs] [data-code-block] .shiki,
+.dark html[data-route-split-docs] [data-code-block] .shiki span {
+  color: var(--shiki-dark) !important;
+}
+
+html[data-route-split-docs] [data-code-block] .shiki code {
+  display: block;
 }
 
 .page-transition-shell {

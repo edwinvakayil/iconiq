@@ -10,8 +10,9 @@ import { HomeHeaderNav } from "@/components/home-header-nav";
 import { SiteSearch } from "@/components/site-search";
 import { SiteThemeToggle } from "@/components/ui/site-theme-toggle";
 import { LINK } from "@/constants";
+import { isSplitDocsPage } from "@/lib/is-component-doc-page";
 import { recordGithubClick } from "@/lib/record-github-click";
-import { BASE_LINKS, SITE_SECTIONS } from "@/lib/site-nav";
+import { SITE_SECTIONS } from "@/lib/site-nav";
 import { cn } from "@/lib/utils";
 import { Popover, PopoverContent, PopoverTrigger } from "@/registry/popover";
 
@@ -34,22 +35,13 @@ type GitHubStarsCache = {
   fetchedAt: number;
 };
 
-const mobileNavSections: HeaderSection[] = [
-  {
-    title: "Getting Started",
-    items: BASE_LINKS.filter((item) => item.href !== "/").map((item) => ({
-      label: item.label,
-      href: item.href,
-    })),
-  },
-  ...SITE_SECTIONS.map((section) => ({
-    title: section.label,
-    items: section.children.map((item) => ({
-      label: item.label,
-      href: item.href,
-    })),
+const mobileNavSections: HeaderSection[] = SITE_SECTIONS.map((section) => ({
+  title: section.label,
+  items: section.children.map((item) => ({
+    label: item.label,
+    href: item.href,
   })),
-];
+}));
 
 function formatStarCount(n: number): string {
   if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1)}M`;
@@ -240,6 +232,10 @@ export function Header() {
       .catch(() => undefined);
   }, []);
 
+  if (isSplitDocsPage(pathname)) {
+    return null;
+  }
+
   return (
     <header
       className={cn(
@@ -251,7 +247,7 @@ export function Header() {
       <div className="flex h-14 w-full items-center justify-between gap-4 px-4">
         <div className="flex items-center">
           <div className="flex min-w-0 items-center gap-3">
-            <MobileNav className="md:hidden" />
+            {isHome ? null : <MobileNav className="md:hidden" />}
             <BrandHeaderLink />
             {isHome ? <HomeHeaderNav className="hidden lg:flex" /> : null}
           </div>
@@ -260,7 +256,9 @@ export function Header() {
         <div className="flex items-center gap-2 lg:gap-3">
           <SiteSearch variant="desktop" />
           <GitHubStarsLink starCount={starCount} />
-          <SiteThemeToggle className="size-8 rounded-md text-neutral-950 hover:bg-accent hover:text-foreground dark:text-white dark:hover:bg-input/20 dark:hover:text-white" />
+          {isHome ? null : (
+            <SiteThemeToggle className="size-8 rounded-md text-neutral-950 hover:bg-accent hover:text-foreground dark:text-white dark:hover:bg-input/20 dark:hover:text-white" />
+          )}
         </div>
       </div>
     </header>

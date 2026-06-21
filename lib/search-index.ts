@@ -1,4 +1,4 @@
-import { BASE_LINKS, SITE_SECTIONS } from "@/lib/site-nav";
+import { SITE_SECTIONS } from "@/lib/site-nav";
 
 type SearchItem = {
   href: string;
@@ -7,18 +7,6 @@ type SearchItem = {
   section: string;
   summary: string;
   type: "component" | "page";
-};
-
-const pageSummaries: Record<string, string> = {
-  "/": "Overview of the React component library, registry workflow, and implementation model.",
-  "/introduction":
-    "What Iconiq is, how the library works, and why teams adopt editable component files.",
-  "/installation":
-    "Installation steps for adding components through the shadcn registry workflow.",
-  "/marketplace":
-    "VS Code Marketplace page for the Iconiq UI extension with install link and pointers to the extension README.",
-  "/mcp":
-    "MCP setup guide for connecting Iconiq to shadcn-compatible AI coding tools and registry installs.",
 };
 
 const componentSummaries: Record<string, string> = {
@@ -136,8 +124,6 @@ const componentSummaries: Record<string, string> = {
     "X-style verified badge in the Display & Content section with shimmer or static variants.",
   "/display-and-content/carousel":
     "Embla-powered carousel in the Display & Content section with aspect-ratio presets and horizontal or vertical slides.",
-  "/foundation/typography":
-    "Single typography primitive for headings, labels, paragraphs, subheadings, and documentation copy.",
   "/texts/dia-text":
     "Animated text reveal with a sweeping gradient band, repeat controls, and optional fixed-width rotation.",
   "/texts/reveal-text":
@@ -291,14 +277,6 @@ const extraComponentKeywordsBySlug: Record<string, string[]> = {
     "animated words",
     "motion text",
   ],
-  typography: [
-    "type scale",
-    "heading",
-    "label",
-    "paragraph",
-    "subheading",
-    "foundation",
-  ],
   typewriter: [
     "text",
     "typewriter",
@@ -325,22 +303,6 @@ function createKeywords(...values: string[]) {
   );
 }
 
-const pageItems: SearchItem[] = BASE_LINKS.map((item) => ({
-  href: item.href,
-  keywords: createKeywords(
-    item.label,
-    item.href,
-    "overview",
-    "getting started"
-  ),
-  label: item.label,
-  section: "Getting Started",
-  summary:
-    pageSummaries[item.href] ??
-    "Documentation page in the Iconiq getting started section.",
-  type: "page",
-}));
-
 const componentItems: SearchItem[] = SITE_SECTIONS.flatMap((section) =>
   section.children.map((item) => {
     const slug = item.href.split("/").pop() ?? item.href;
@@ -364,4 +326,4 @@ const componentItems: SearchItem[] = SITE_SECTIONS.flatMap((section) =>
   })
 );
 
-export const SEARCH_ITEMS: SearchItem[] = [...pageItems, ...componentItems];
+export const SEARCH_ITEMS: SearchItem[] = componentItems;

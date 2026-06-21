@@ -2,7 +2,8 @@
 
 import { MoonIcon, SunIcon } from "lucide-react";
 import { useTheme } from "next-themes";
-import { useCallback, useEffect } from "react";
+import { useCallback } from "react";
+import { useThemeKeyboardShortcut } from "@/hooks/use-theme-keyboard-shortcut";
 import { cn } from "@/lib/utils";
 
 type SiteThemeToggleProps = {
@@ -19,30 +20,7 @@ const SiteThemeToggle = ({ className }: SiteThemeToggleProps) => {
     setTheme(nextTheme);
   }, [nextTheme, setTheme]);
 
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      const target = event.target;
-      const isEditableTarget =
-        target instanceof HTMLInputElement ||
-        target instanceof HTMLTextAreaElement ||
-        target instanceof HTMLSelectElement ||
-        (target instanceof HTMLElement && target.isContentEditable);
-
-      if (isEditableTarget) return;
-      if (event.metaKey || event.ctrlKey || event.altKey || event.shiftKey)
-        return;
-      if (event.repeat) return;
-      if (event.key.toLowerCase() !== "d") return;
-
-      handleChangeTheme();
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [handleChangeTheme]);
+  useThemeKeyboardShortcut();
 
   return (
     <button

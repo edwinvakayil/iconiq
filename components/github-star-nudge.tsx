@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
 import { LINK, SITE } from "@/constants";
+import { isSplitDocsPage } from "@/lib/is-component-doc-page";
 import { recordGithubClick } from "@/lib/record-github-click";
 import { cn } from "@/lib/utils";
 
@@ -83,7 +84,7 @@ export function GitHubStarNudge() {
     };
   }, [pathname]);
 
-  if (pathname === "/") {
+  if (pathname === "/" || isSplitDocsPage(pathname)) {
     return null;
   }
 

@@ -178,6 +178,31 @@ function tokenizeCode(code: string): HighlightToken[] {
   return tokens;
 }
 
+export function HighlightedCode({
+  code,
+  className,
+}: {
+  code: string;
+  className?: string;
+}) {
+  const tokens = useMemo(() => tokenizeCode(code), [code]);
+
+  return (
+    <code
+      className={cn("block min-w-full whitespace-pre font-mono", className)}
+    >
+      {tokens.map((token, index) => (
+        <span
+          className={tokenClassNames[token.kind]}
+          key={`${token.kind}-${index}`}
+        >
+          {token.value}
+        </span>
+      ))}
+    </code>
+  );
+}
+
 export function DocsCodeSnippet({
   code,
   className,
@@ -188,7 +213,6 @@ export function DocsCodeSnippet({
   maxHeightClassName?: string;
 }) {
   const [copied, setCopied] = useState(false);
-  const tokens = useMemo(() => tokenizeCode(code), [code]);
 
   const handleCopy = async () => {
     try {
@@ -208,16 +232,10 @@ export function DocsCodeSnippet({
           maxHeightClassName
         )}
       >
-        <code className="block min-w-full whitespace-pre px-5 py-4">
-          {tokens.map((token, index) => (
-            <span
-              className={tokenClassNames[token.kind]}
-              key={`${token.kind}-${index}`}
-            >
-              {token.value}
-            </span>
-          ))}
-        </code>
+        <HighlightedCode
+          className="px-5 py-4 text-[15px] leading-6"
+          code={code}
+        />
       </pre>
       <motion.div
         animate={
