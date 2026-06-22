@@ -222,7 +222,7 @@ export function DocsPreviewVariantBar({
   }
 
   return (
-    <div className="pointer-events-none absolute bottom-0 left-0 z-10 p-3 sm:p-4">
+    <div className="pointer-events-none absolute right-0 bottom-0 z-10 p-3 sm:p-4">
       <div
         aria-label="Preview variants"
         className="pointer-events-auto flex max-w-[min(100vw-2rem,36rem)] items-center gap-0.5 overflow-x-auto rounded-2xl border border-border/40 bg-white/75 p-1 shadow-[0_8px_32px_rgba(0,0,0,0.08)] backdrop-blur-xl [-ms-overflow-style:none] [scrollbar-width:none] dark:border-white/[0.06] dark:bg-[#121212]/80 [&::-webkit-scrollbar]:hidden"

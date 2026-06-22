@@ -7,7 +7,6 @@ import {
   ProviderSwitch,
 } from "@/app/(site)/components/_components/provider-switch";
 import { progressApiDetails } from "@/components/docs/component-api";
-import { ComponentDemoCanvas } from "@/components/docs/component-demo-canvas";
 import {
   ComponentDocsPage,
   type DetailItem,
@@ -257,26 +256,12 @@ export default function RadixBaseProgressPage() {
   }, [selectedProvider]);
 
   const details = useMemo(() => getDetails(provider), [provider]);
-  const extraSections = useMemo(
+  const examples = useMemo(
     () => [
       {
-        id: "indeterminate",
-        title: "Indeterminate state",
-        content: (
-          <div className="space-y-3">
-            <p className="text-muted-foreground text-sm">
-              Pass <code>value=&#123;null&#125;</code> to switch from a measured
-              fill to the animated sweep while the final completion amount is
-              still unknown.
-            </p>
-            <ComponentDemoCanvas
-              code={provider.indeterminateUsageCode}
-              componentName={provider.componentName}
-              preview={<IndeterminatePreview ui={provider.ui} />}
-              v0PageCode={provider.indeterminateUsageCode}
-            />
-          </div>
-        ),
+        title: "Indeterminate",
+        preview: <IndeterminatePreview ui={provider.ui} />,
+        code: provider.indeterminateUsageCode,
       },
     ],
     [provider]
@@ -289,7 +274,7 @@ export default function RadixBaseProgressPage() {
       description="Determinate and indeterminate progress—with subtle motion."
       details={details}
       editHref={`${LINK.GITHUB}/edit/main/app/(site)/display-and-content/progress/page.tsx`}
-      extraSections={extraSections}
+      examples={examples}
       headerActions={
         <ProviderSwitch
           onSelect={setSelectedProvider}

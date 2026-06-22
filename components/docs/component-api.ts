@@ -5835,58 +5835,6 @@ const timezoneApiDetails: DetailItem[] = [
   registryItem("timezone.json", ["motion"]),
 ];
 
-const liquidMarqueeApiDetails: DetailItem[] = [
-  {
-    id: "liquid-marquee",
-    title: "LiquidMarquee",
-    summary:
-      "Seamless horizontal marquee that duplicates its children into a looping track, animates with requestAnimationFrame, and applies an SVG liquid distortion filter with gradient edge fades.",
-    fields: [
-      field({
-        name: "children",
-        type: "React.ReactNode",
-        required: true,
-        description:
-          "Content rendered twice inside the scrolling track. A single horizontal row of labels, logos, or cards works best.",
-      }),
-      field({
-        name: "speed",
-        type: "number",
-        defaultValue: "45",
-        description:
-          "Scroll speed in pixels per second. Higher values move the track faster.",
-      }),
-      field({
-        name: "direction",
-        type: '"left" | "right"',
-        defaultValue: "left",
-        description:
-          "Sets the scroll direction. `left` moves content toward the left edge; `right` reverses the flow.",
-      }),
-      field({
-        name: "className",
-        type: "string",
-        description:
-          "Optional class names merged onto the overflow container for height, spacing, or background styling.",
-      }),
-      field({
-        name: "pauseOnHover",
-        type: "boolean",
-        defaultValue: "true",
-        description:
-          "When true, pointer hover pauses the animation until the cursor leaves the marquee.",
-      }),
-    ],
-    notes: [
-      "The track duplicates `children` once to create a seamless loop and resets position when one copy scrolls fully out of view.",
-      "Liquid distortion is powered by inline SVG filters (`feTurbulence` + `feDisplacementMap`) applied to the moving track.",
-      "Gradient masks on the left and right edges use `from-background`, so the fade matches your page surface color.",
-      "Multiple instances on one page share the same SVG filter ids; keep one marquee per view or fork the filter ids if you need several on the same screen.",
-    ],
-  },
-  registryItem("liquid-marquee.json", []),
-];
-
 const rollingDigitsApiDetails: DetailItem[] = [
   {
     id: "rolling-digits",
@@ -7257,7 +7205,6 @@ export {
   toggleGroupApiDetails,
   morphTextsApiDetails,
   revealTextApiDetails,
-  liquidMarqueeApiDetails,
   rollingDigitsApiDetails,
   textInertiaApiDetails,
   textLoopApiDetails,

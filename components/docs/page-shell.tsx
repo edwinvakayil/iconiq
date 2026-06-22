@@ -8,6 +8,7 @@ import {
   DocsPreviewWrapper,
   type VariantItem,
 } from "@/components/docs/split/docs-preview-wrapper";
+import { DocsPropsContact } from "@/components/docs/split/docs-props-contact";
 import { DocsPropsTable } from "@/components/docs/split/docs-props-table";
 import { DocsSection } from "@/components/docs/split/docs-section";
 import {
@@ -898,6 +899,8 @@ function ComponentDocsPage({
                     <DetailLedger details={details} key={componentName} />
                   </DocsSection>
                 )}
+
+                <DocsPropsContact />
               </div>
 
               <div className="h-12" />
@@ -905,7 +908,7 @@ function ComponentDocsPage({
           </DocsLeftColumn>
 
           <div
-            className="z-20 order-first flex flex-1 flex-col bg-[#f3f4f6] lg:sticky lg:top-0 lg:order-last lg:h-full lg:max-w-1/2 lg:basis-1/2 dark:bg-[#080808]"
+            className="z-20 order-first flex flex-1 flex-col bg-white lg:sticky lg:top-0 lg:order-last lg:h-full lg:max-w-1/2 lg:basis-1/2 dark:bg-[#080808]"
             data-docs-right-column
           >
             <div

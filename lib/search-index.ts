@@ -38,8 +38,6 @@ const componentSummaries: Record<string, string> = {
     "Charts docs in the Display & Content section, using the shared Iconiq Recharts shell with provider options visible but disabled because there is no Radix UI or Base UI variant.",
   "/display-and-content/rolling-digits":
     "Rolling digits docs in the Display & Content section for a spring-animated digit counter with blur and scale.",
-  "/display-and-content/liquid-marquee":
-    "Liquid marquee docs with liquid distortion and edge fades.",
   "/display-and-content/card":
     "Card docs in the Display & Content section, using the shared Iconiq card install with provider options visible but disabled because there is no Radix UI or Base UI variant.",
   "/inputs-and-forms/checkbox":
@@ -216,15 +214,6 @@ const extraComponentKeywordsBySlug: Record<string, string[]> = {
     "count up",
     "stat",
     "metric",
-  ],
-  "liquid-marquee": [
-    "liquid marquee",
-    "marquee",
-    "ticker",
-    "scrolling",
-    "logo strip",
-    "announcement",
-    "distortion",
   ],
   carousel: ["slider", "slideshow", "embla", "slides", "gallery"],
   progress: ["progress bar", "loading bar", "meter"],

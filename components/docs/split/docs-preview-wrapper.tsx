@@ -208,7 +208,7 @@ export function DocsPreviewWrapper({
   return (
     <div
       className={cn(
-        "relative flex h-full w-full flex-col overflow-hidden bg-[#f3f4f6] dark:bg-[#080808]"
+        "relative flex h-full w-full flex-col overflow-hidden rounded-xl border border-zinc-200 bg-white lg:rounded-2xl dark:border-zinc-800 dark:bg-[#121212]"
       )}
       ref={previewRef}
     >
@@ -227,7 +227,7 @@ export function DocsPreviewWrapper({
 
       <div
         className={cn(
-          "flex h-full w-full overflow-auto bg-[#f3f4f6] [-ms-overflow-style:none] [scrollbar-width:none] dark:bg-[#080808] [&::-webkit-scrollbar]:hidden",
+          "flex h-full w-full overflow-auto bg-white [-ms-overflow-style:none] [scrollbar-width:none] dark:bg-[#121212] [&::-webkit-scrollbar]:hidden",
           !fullWidthPreview && "items-center justify-center"
         )}
       >

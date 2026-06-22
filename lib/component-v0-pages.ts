@@ -1044,40 +1044,6 @@ export default function Page() {
   );
 }`;
 
-export const liquidMarqueePreviewCode = `"use client";
-
-import { LiquidMarquee } from "@/components/ui/liquid-marquee";
-
-const items = [
-  "Vercel",
-  "Next.js",
-  "V0",
-  "shadcn/ui",
-  "TypeScript",
-  "Motion",
-  "Radix UI",
-  "Base UI",
-];
-
-export default function Page() {
-  return (
-    <div className="flex min-h-svh w-full items-center bg-background px-6 py-20">
-      <LiquidMarquee className="w-full" pauseOnHover speed={55}>
-        <div className="flex items-center gap-10 px-5">
-          {items.map((item) => (
-            <span
-              key={item}
-              className="whitespace-nowrap font-medium text-foreground text-lg tracking-tight"
-            >
-              {item}
-            </span>
-          ))}
-        </div>
-      </LiquidMarquee>
-    </div>
-  );
-}`;
-
 export const infiniteRibbonPreviewCode = `"use client";
 
 import { InfiniteRibbon } from "@/components/ui/infiniteribbon";
@@ -1187,7 +1153,6 @@ const COMPONENT_PREVIEW_OVERRIDES: Record<string, string> = {
   charts: chartsPreviewCode,
   card: cardPreviewCode,
   infiniteribbon: infiniteRibbonPreviewCode,
-  "liquid-marquee": liquidMarqueePreviewCode,
   "theme-toggle": themeTogglePreviewCode,
   "favicon-badge": faviconBadgePreviewCode,
   "verified-badge": verifiedBadgePreviewCode,

@@ -7,7 +7,6 @@ import {
   type PrimitiveProvider,
   ProviderSwitch,
 } from "@/app/(site)/components/_components/provider-switch";
-import { ComponentDemoCanvas } from "@/components/docs/component-demo-canvas";
 import {
   ComponentDocsPage,
   type DetailItem,
@@ -441,25 +440,12 @@ export default function RadixBaseAccordionPage() {
     [provider]
   );
 
-  const extraSections = useMemo(
+  const examples = useMemo(
     () => [
       {
-        id: "quiet-variant",
-        title: "Quiet variant",
-        content: (
-          <div className="space-y-3">
-            <p className="text-muted-foreground text-sm">
-              Use <code>variant="quiet"</code> for the lighter inline disclosure
-              style while keeping the same compound Accordion API.
-            </p>
-            <ComponentDemoCanvas
-              code={provider.installationPreviewCode}
-              componentName={provider.componentName}
-              preview={provider.installationPreview}
-              v0PageCode={provider.installationPreviewCode}
-            />
-          </div>
-        ),
+        title: "Quiet",
+        preview: provider.installationPreview,
+        code: provider.installationPreviewCode,
       },
     ],
     [provider]
@@ -472,7 +458,7 @@ export default function RadixBaseAccordionPage() {
       description="Stacked sections for showing and hiding related content."
       details={details}
       editHref={`${LINK.GITHUB}/edit/main/app/(site)/navigation/accordion/page.tsx`}
-      extraSections={extraSections}
+      examples={examples}
       headerActions={
         <ProviderSwitch
           onSelect={setSelectedProvider}

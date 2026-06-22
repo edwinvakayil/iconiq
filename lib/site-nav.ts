@@ -37,7 +37,6 @@ export const SITE_SECTIONS = [
       { label: "Charts", href: "/display-and-content/charts" },
       { label: "Date Picker", href: "/display-and-content/date-picker" },
       { label: "Favicon Badge", href: "/display-and-content/favicon-badge" },
-      { label: "Liquid Marquee", href: "/display-and-content/liquid-marquee" },
       { label: "Progress", href: "/display-and-content/progress" },
       { label: "Rolling Digits", href: "/display-and-content/rolling-digits" },
       { label: "Skeleton", href: "/display-and-content/skeleton" },

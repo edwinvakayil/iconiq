@@ -65,7 +65,7 @@ function applyFixedRect(
   previewShell.style.height = `${rect.height}px`;
   previewShell.style.zIndex = "60";
   previewShell.style.padding = padding;
-  previewShell.classList.add("bg-[#f3f4f6]", "dark:bg-[#080808]");
+  previewShell.classList.add("bg-white", "dark:bg-[#080808]");
 }
 
 function clearFixedStyles(
@@ -87,7 +87,7 @@ function clearFixedStyles(
     previewShell.style.removeProperty(prop);
   }
 
-  previewShell.classList.remove("bg-[#f3f4f6]", "dark:bg-[#080808]");
+  previewShell.classList.remove("bg-white", "dark:bg-[#080808]");
   cacheSplitPreviewRect();
 }
 

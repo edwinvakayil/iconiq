@@ -432,10 +432,6 @@ const REGISTRY_UI_META: Record<
     description:
       "Full-width looping announcement ribbon with repeated content, optional reverse direction, and diagonal rotation controls.",
   },
-  "liquid-marquee": {
-    title: "Liquid Marquee",
-    description: "Marquee with liquid distortion and edge fades.",
-  },
   "radial-button": {
     title: "Radial Button",
     description:
