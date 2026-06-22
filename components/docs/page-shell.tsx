@@ -635,33 +635,15 @@ function GuideDocsPage({
         data-docs-layout
       >
         <DocsLeftColumn fullWidth>
-          <div className="w-full px-5 pt-8 pb-40 lg:pt-10 lg:pr-10 lg:pl-8">
+          <div className="mx-auto w-full max-w-3xl px-5 pt-8 pb-40 lg:pt-10">
             <header className="pb-6">
-              <div className="flex w-full items-center gap-2.5">
+              <div className="flex w-full items-center justify-between gap-2.5">
                 <FloatingDocsSidebarLazy />
-                <nav
-                  aria-label="Breadcrumb"
-                  className="flex min-w-0 flex-1 items-center gap-1.5 font-normal text-[15px] text-zinc-500 tracking-[-0.01em] dark:text-zinc-400"
-                >
-                  <Link
-                    className="shrink-0 transition-colors hover:text-zinc-800 dark:hover:text-zinc-200"
-                    href="/introduction"
-                  >
-                    Getting Started
-                  </Link>
-                  <ChevronRight
-                    aria-hidden
-                    className="size-3.5 shrink-0 opacity-50"
-                  />
-                  <span className="truncate font-medium text-zinc-900 dark:text-zinc-100">
-                    {title}
-                  </span>
-                </nav>
                 <DocsHomeButton />
               </div>
 
-              <div className="max-w-3xl">
-                <div className="mt-10 flex flex-wrap items-end gap-x-4 gap-y-3">
+              <div>
+                <div className="mt-8 flex flex-wrap items-end gap-x-4 gap-y-3">
                   <h1 className="font-bold text-[2.5rem] text-zinc-900 leading-[1.08] tracking-[-0.03em] dark:text-zinc-50">
                     {title}
                   </h1>
@@ -676,7 +658,7 @@ function GuideDocsPage({
               </div>
             </header>
 
-            <div className="max-w-3xl">{children}</div>
+            {children}
           </div>
         </DocsLeftColumn>
       </div>
