@@ -51,7 +51,7 @@ const Footer = () => {
             :)
           </p>
           <p className="text-[14px] text-muted-foreground leading-7 tracking-[-0.02em]">
-            Inspired by{" "}
+            Credits to{" "}
             <a
               className="font-medium text-foreground underline underline-offset-4 transition-colors hover:text-neutral-600 dark:hover:text-neutral-300"
               href="https://skipper-ui.com"
