@@ -14,6 +14,7 @@ import {
   CardContent,
   CardDescription,
   CardFooter,
+  CardMedia,
   CardTitle,
 } from "@/registry/card";
 
@@ -45,7 +46,7 @@ const previewSentenceClassName =
 const previewContentClassName =
   "flex w-full flex-col items-center gap-4 text-center";
 const cardClassName =
-  "w-full max-w-[16rem] overflow-hidden rounded-[0.95rem] border border-border/80 bg-background pt-0 text-left shadow-[0_18px_48px_-36px_rgba(15,23,42,0.22)] sm:max-w-[17.5rem]";
+  "w-full max-w-[16rem] border border-border/80 bg-background pt-0 text-left shadow-[0_18px_48px_-36px_rgba(15,23,42,0.22)] sm:max-w-[17.5rem]";
 const tagClassName =
   "inline-flex items-center rounded-md bg-muted px-2 py-0.5 font-medium text-[11px] text-foreground";
 
@@ -73,16 +74,16 @@ function CardPreview() {
     <div className="flex w-full items-center justify-center px-4 py-6">
       <div className={previewContentClassName}>
         <Card className={cardClassName} interactive>
-          <div className="px-[1.5px] pt-[1.5px]">
+          <CardMedia>
             <Image
               alt="Red and purple gradient artwork"
-              className="aspect-[4/2.25] w-full rounded-[0.75rem] object-cover"
+              className="aspect-[4/2.25] w-full object-cover"
               height={4000}
               sizes="(max-width: 640px) 100vw, 17.5rem"
               src={artworkSrc}
               width={6000}
             />
-          </div>
+          </CardMedia>
 
           <CardContent className="space-y-3 px-3.5 pt-3 pb-0 text-left">
             <div className="flex items-center justify-between gap-2">

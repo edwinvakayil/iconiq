@@ -27,10 +27,23 @@ import { cn } from "@/lib/utils";
 const buttonThemeClassName =
   "[--button-destructive:#dc2626] [--button-input:#e3e7ec] [--button-primary-foreground:#ffffff] [--button-ring:rgba(17,17,17,0.16)] [--button-ripple:color-mix(in_oklch,var(--foreground),transparent_52%)] [--button-secondary:#eceff3] [--button-secondary-foreground:#111111] dark:[--button-destructive:#f87171] dark:[--button-input:#2b2a25] dark:[--button-primary-foreground:#111111] dark:[--button-ring:rgba(246,243,236,0.18)] dark:[--button-ripple:color-mix(in_oklch,var(--foreground),transparent_30%)] dark:[--button-secondary:#2a2a27] dark:[--button-secondary-foreground:#f6f3ec]";
 
+const buttonCornerClassName =
+  "rounded-lg supports-[corner-shape:squircle]:corner-squircle supports-[corner-shape:squircle]:rounded-[11px]";
+
+const buttonCornerXsClassName =
+  "rounded-[min(var(--radius-md),10px)] supports-[corner-shape:squircle]:corner-squircle supports-[corner-shape:squircle]:rounded-[12px]";
+
+const buttonCornerSmClassName =
+  "rounded-[min(var(--radius-md),12px)] supports-[corner-shape:squircle]:corner-squircle supports-[corner-shape:squircle]:rounded-[14px]";
+
+const buttonGroupCornerClassName =
+  "in-data-[slot=button-group]:rounded-lg in-data-[slot=button-group]:supports-[corner-shape:squircle]:corner-squircle in-data-[slot=button-group]:supports-[corner-shape:squircle]:rounded-[11px]";
+
 const buttonVariants = cva(
   cn(
     buttonThemeClassName,
-    "group/button relative inline-flex shrink-0 cursor-pointer touch-manipulation select-none items-center justify-center overflow-hidden whitespace-nowrap rounded-lg border border-transparent bg-clip-padding font-medium text-sm no-underline outline-none transition-[background-color,border-color,color,box-shadow] focus-visible:border-[color:var(--button-ring)] focus-visible:ring-3 focus-visible:ring-[color:color-mix(in_oklch,var(--button-ring),transparent_50%)] active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-[color:var(--button-destructive)] aria-invalid:ring-3 aria-invalid:ring-[color:color-mix(in_oklch,var(--button-destructive),transparent_80%)] dark:aria-invalid:border-[color:color-mix(in_oklch,var(--button-destructive),transparent_50%)] dark:aria-invalid:ring-[color:color-mix(in_oklch,var(--button-destructive),transparent_60%)] [&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0"
+    buttonCornerClassName,
+    "group/button relative inline-flex shrink-0 cursor-pointer touch-manipulation select-none items-center justify-center overflow-hidden whitespace-nowrap border border-transparent bg-clip-padding font-medium text-sm no-underline outline-none transition-[background-color,border-color,color,box-shadow] focus-visible:border-[color:var(--button-ring)] focus-visible:ring-3 focus-visible:ring-[color:color-mix(in_oklch,var(--button-ring),transparent_50%)] active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-[color:var(--button-destructive)] aria-invalid:ring-3 aria-invalid:ring-[color:color-mix(in_oklch,var(--button-destructive),transparent_80%)] dark:aria-invalid:border-[color:color-mix(in_oklch,var(--button-destructive),transparent_50%)] dark:aria-invalid:ring-[color:color-mix(in_oklch,var(--button-destructive),transparent_60%)] [&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0"
   ),
   {
     variants: {
@@ -54,14 +67,28 @@ const buttonVariants = cva(
       size: {
         default:
           "h-8 gap-1.5 px-2.5 has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2",
-        xs: "h-6 gap-1 in-data-[slot=button-group]:rounded-lg rounded-[min(var(--radius-md),10px)] px-2 text-xs has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 [&_svg:not([class*='size-'])]:size-3",
-        sm: "h-7 gap-1 in-data-[slot=button-group]:rounded-lg rounded-[min(var(--radius-md),12px)] px-2.5 text-[0.8rem] has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 [&_svg:not([class*='size-'])]:size-3.5",
+        xs: cn(
+          "h-6 gap-1 px-2 text-xs has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 [&_svg:not([class*='size-'])]:size-3",
+          buttonGroupCornerClassName,
+          buttonCornerXsClassName
+        ),
+        sm: cn(
+          "h-7 gap-1 px-2.5 text-[0.8rem] has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 [&_svg:not([class*='size-'])]:size-3.5",
+          buttonGroupCornerClassName,
+          buttonCornerSmClassName
+        ),
         lg: "h-10 gap-1.5 px-4 text-base leading-5 has-data-[icon=inline-end]:pr-3.5 has-data-[icon=inline-start]:pl-3.5",
         icon: "size-8",
-        "icon-xs":
-          "size-6 in-data-[slot=button-group]:rounded-lg rounded-[min(var(--radius-md),10px)] [&_svg:not([class*='size-'])]:size-3",
-        "icon-sm":
-          "size-7 in-data-[slot=button-group]:rounded-lg rounded-[min(var(--radius-md),12px)]",
+        "icon-xs": cn(
+          "size-6 [&_svg:not([class*='size-'])]:size-3",
+          buttonGroupCornerClassName,
+          buttonCornerXsClassName
+        ),
+        "icon-sm": cn(
+          "size-7",
+          buttonGroupCornerClassName,
+          buttonCornerSmClassName
+        ),
         "icon-lg": "size-9",
       },
     },

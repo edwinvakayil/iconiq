@@ -6,6 +6,12 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { cn } from "@/lib/utils";
 
+const controlCornerClassName =
+  "rounded-lg supports-[corner-shape:squircle]:corner-squircle supports-[corner-shape:squircle]:rounded-[11px]";
+
+const controlCornerInheritClassName =
+  "rounded-[inherit] supports-[corner-shape:squircle]:[corner-shape:inherit]";
+
 const FORMAT_OPTIONS = ["HEX", "RGB", "HSL", "OKLCH"] as const;
 const FORMAT_MENU_SOFT_EASE = [0.22, 1, 0.36, 1] as const;
 const HEX_HASH_PREFIX = /^#/;
@@ -14,13 +20,13 @@ const HEX_RGBA_PATTERN = /^[0-9A-F]{8}$/;
 const HEX_INPUT_SANITIZE_PATTERN = /[^0-9a-fA-F]/g;
 
 const formatMenuPanelClassName =
-  "absolute top-full left-0 z-50 mt-1.5 w-28 origin-top-left overflow-hidden rounded-lg border border-[color:var(--color-border)] bg-[color:var(--color-card)] p-1 text-[color:var(--color-card-foreground)] shadow-[0_10px_28px_-20px_rgba(15,23,42,0.28)] dark:shadow-[0_12px_32px_-22px_rgba(0,0,0,0.5)]";
+  "absolute top-full left-0 z-50 mt-1.5 w-28 origin-top-left overflow-hidden border border-[color:var(--color-border)] bg-[color:var(--color-card)] p-1 text-[color:var(--color-card-foreground)] shadow-[0_10px_28px_-20px_rgba(15,23,42,0.28)] dark:shadow-[0_12px_32px_-22px_rgba(0,0,0,0.5)]";
 
 const formatMenuItemClassName =
-  "relative w-full rounded-lg px-3 py-1.5 text-left text-sm outline-none transition-[color,transform] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)]";
+  "relative w-full px-3 py-1.5 text-left text-sm outline-none transition-[color,transform] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)]";
 
 const formatMenuHighlightClassName =
-  "absolute inset-0 rounded-lg bg-[color:var(--color-accent)]";
+  "absolute inset-0 bg-[color:var(--color-accent)]";
 
 const formatMenuHighlightTransition = {
   type: "spring" as const,
@@ -761,13 +767,19 @@ export function ColorPicker({
       aria-disabled={disabled || undefined}
       className={cn(
         componentThemeClassName,
-        "relative isolate w-[300px] max-w-full overflow-visible rounded-lg border border-border bg-card p-3.5 shadow-[0_10px_28px_-18px_rgba(15,23,42,0.16)] dark:shadow-[0_12px_32px_-20px_rgba(0,0,0,0.35)]",
+        controlCornerClassName,
+        "relative isolate w-[300px] max-w-full overflow-visible border border-border bg-card p-3.5 shadow-[0_10px_28px_-18px_rgba(15,23,42,0.16)] dark:shadow-[0_12px_32px_-20px_rgba(0,0,0,0.35)]",
         disabled && "pointer-events-none opacity-60",
         className
       )}
       data-slot="color-picker"
     >
-      <div className="pointer-events-none absolute -inset-10 overflow-hidden rounded-lg opacity-[0.12] blur-2xl motion-reduce:opacity-0">
+      <div
+        className={cn(
+          "pointer-events-none absolute -inset-10 overflow-hidden opacity-[0.12] blur-2xl motion-reduce:opacity-0",
+          controlCornerClassName
+        )}
+      >
         <div
           className="absolute top-[20%] left-[20%] h-32 w-32 animate-pulse rounded-full motion-reduce:animate-none"
           style={{
@@ -786,7 +798,10 @@ export function ColorPicker({
 
       <div className="relative">
         <div
-          className="relative h-40 w-full cursor-crosshair touch-none select-none overflow-hidden rounded-lg transition-[background-color] duration-300"
+          className={cn(
+            "relative h-40 w-full cursor-crosshair touch-none select-none overflow-hidden transition-[background-color] duration-300",
+            controlCornerClassName
+          )}
           onPointerDown={(event) => {
             dragRef.current = "sv";
             isDraggingSvRef.current = true;
@@ -888,7 +903,8 @@ export function ColorPicker({
               aria-expanded={formatOpen}
               aria-haspopup="listbox"
               className={cn(
-                "flex items-center gap-1 rounded-md px-1 py-0.5 hover:bg-[color:var(--color-accent)] hover:text-foreground",
+                "flex items-center gap-1 px-1 py-0.5 hover:bg-[color:var(--color-accent)] hover:text-foreground",
+                controlCornerClassName,
                 formatTriggerTransitionClassName
               )}
               onClick={() => setFormatOpen((open) => !open)}
@@ -909,7 +925,10 @@ export function ColorPicker({
               {formatOpen ? (
                 <motion.div
                   {...formatMenuMotion}
-                  className={formatMenuPanelClassName}
+                  className={cn(
+                    formatMenuPanelClassName,
+                    controlCornerClassName
+                  )}
                   role="listbox"
                 >
                   {FORMAT_OPTIONS.map((option, index) => {
@@ -924,6 +943,7 @@ export function ColorPicker({
                         aria-selected={isSelected}
                         className={cn(
                           formatMenuItemClassName,
+                          controlCornerClassName,
                           isSelected || isHovered
                             ? "text-foreground"
                             : "text-muted-foreground"
@@ -940,7 +960,10 @@ export function ColorPicker({
                       >
                         {showHighlight ? (
                           <motion.span
-                            className={formatMenuHighlightClassName}
+                            className={cn(
+                              formatMenuHighlightClassName,
+                              controlCornerInheritClassName
+                            )}
                             layoutId="color-picker-format-highlight"
                             transition={formatMenuHighlightTransition}
                           />

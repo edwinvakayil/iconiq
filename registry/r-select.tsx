@@ -8,20 +8,34 @@ import * as React from "react";
 
 import { cn } from "@/lib/utils";
 
+const controlCornerClassName =
+  "rounded-lg supports-[corner-shape:squircle]:corner-squircle supports-[corner-shape:squircle]:rounded-[11px]";
+
+const controlCornerInheritClassName =
+  "rounded-[inherit] supports-[corner-shape:squircle]:[corner-shape:inherit]";
+
 const selectThemeClassName =
   "[--sel-surface:#ffffff] [--sel-foreground:#111111] [--sel-border:#e3e7ec] [--sel-ring:rgba(17,17,17,0.16)] [--sel-muted-foreground:#6d7480] [--sel-accent:#f3f5f8] dark:[--sel-surface:#111111] dark:[--sel-foreground:#f6f3ec] dark:[--sel-border:#2b2a25] dark:[--sel-ring:rgba(246,243,236,0.18)] dark:[--sel-muted-foreground:#9a958a] dark:[--sel-accent:#1a1a18] [--color-accent:var(--sel-accent)] [--color-accent-foreground:var(--sel-foreground)]";
 
-const selectTriggerClassName =
-  "flex min-h-11 w-full touch-manipulation items-center justify-between gap-2 rounded-lg border border-[color:var(--sel-border)] bg-[color:var(--sel-surface)] px-4 py-3 text-left font-medium text-[color:var(--sel-foreground)] text-sm transition-colors hover:bg-accent/60 focus:outline-none focus-visible:ring-2 focus-visible:ring-[color:color-mix(in_oklch,var(--sel-ring),transparent_50%)] disabled:cursor-not-allowed disabled:opacity-50 data-placeholder:text-[color:var(--sel-muted-foreground)]";
+const selectTriggerClassName = cn(
+  controlCornerClassName,
+  "flex min-h-11 w-full touch-manipulation items-center justify-between gap-2 border border-[color:var(--sel-border)] bg-[color:var(--sel-surface)] px-4 py-3 text-left font-medium text-[color:var(--sel-foreground)] text-sm transition-colors hover:bg-accent/60 focus:outline-none focus-visible:ring-2 focus-visible:ring-[color:color-mix(in_oklch,var(--sel-ring),transparent_50%)] disabled:cursor-not-allowed disabled:opacity-50 data-placeholder:text-[color:var(--sel-muted-foreground)]"
+);
 
-const selectPanelChromeClassName =
-  "z-[300] overflow-hidden rounded-lg border border-[color:color-mix(in_oklch,var(--sel-border,#e3e7ec),transparent_40%)] bg-[var(--sel-surface,#ffffff)] text-[var(--sel-foreground,#111111)] shadow-none dark:border-[color:color-mix(in_oklch,var(--sel-border,#2b2a25),transparent_40%)] dark:bg-[var(--sel-surface,#111111)] dark:text-[var(--sel-foreground,#f6f3ec)]";
+const selectPanelChromeClassName = cn(
+  controlCornerClassName,
+  "z-[300] overflow-hidden border border-[color:color-mix(in_oklch,var(--sel-border,#e3e7ec),transparent_40%)] bg-[var(--sel-surface,#ffffff)] text-[var(--sel-foreground,#111111)] shadow-none dark:border-[color:color-mix(in_oklch,var(--sel-border,#2b2a25),transparent_40%)] dark:bg-[var(--sel-surface,#111111)] dark:text-[var(--sel-foreground,#f6f3ec)]"
+);
 
-const selectItemClassName =
-  "group relative isolate flex min-h-11 cursor-pointer touch-manipulation select-none items-center gap-3 rounded-lg py-2.5 pr-8 pl-3 text-[color:var(--sel-foreground)] text-sm outline-none transition-colors";
+const selectItemClassName = cn(
+  controlCornerClassName,
+  "group relative isolate flex min-h-11 cursor-pointer touch-manipulation select-none items-center gap-3 py-2.5 pr-8 pl-3 text-[color:var(--sel-foreground)] text-sm outline-none transition-colors"
+);
 
-const selectItemHighlightClassName =
-  "absolute inset-0 -z-10 rounded-lg bg-accent/60";
+const selectItemHighlightClassName = cn(
+  controlCornerInheritClassName,
+  "absolute inset-0 -z-10 bg-accent/60"
+);
 
 const selectListScrollbarClassName =
   "z-10 flex w-2 shrink-0 touch-none select-none bg-transparent p-px opacity-0 transition-opacity duration-150 data-[state=visible]:pointer-events-auto data-[state=visible]:opacity-100";

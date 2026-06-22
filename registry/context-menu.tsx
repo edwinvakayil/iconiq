@@ -7,17 +7,32 @@ import { createPortal } from "react-dom";
 
 import { cn } from "@/lib/utils";
 
+const controlCornerClassName =
+  "rounded-lg supports-[corner-shape:squircle]:corner-squircle supports-[corner-shape:squircle]:rounded-[11px]";
+
+const controlCornerInheritClassName =
+  "rounded-[inherit] supports-[corner-shape:squircle]:[corner-shape:inherit]";
+
 const contextMenuThemeClassName =
   "[--cm-surface:#ffffff] [--cm-foreground:#111111] [--cm-border:#e3e7ec] [--cm-muted-foreground:#6d7480] [--cm-accent:#f3f5f8] [--color-accent:var(--cm-accent)] [--color-accent-foreground:var(--cm-accent-foreground)] [--cm-accent-foreground:#111111] [--cm-destructive:#dc2626] [--cm-ring:rgba(17,17,17,0.16)] dark:[--cm-surface:#111111] dark:[--cm-foreground:#f6f3ec] dark:[--cm-border:#2b2a25] dark:[--cm-muted-foreground:#9a958a] dark:[--cm-accent:#1a1a18] [--color-accent:var(--cm-accent)] [--color-accent-foreground:var(--cm-accent-foreground)] dark:[--cm-accent-foreground:#f6f3ec] dark:[--cm-destructive:#f87171] dark:[--cm-ring:rgba(246,243,236,0.18)]";
 
-const contextMenuPanelClassName =
-  "rounded-lg border border-[color:color-mix(in_oklch,var(--cm-border),transparent_40%)] bg-[color:var(--cm-surface)] p-1.5 text-[color:var(--cm-foreground)] shadow-2xl";
+const contextMenuPanelClassName = cn(
+  controlCornerClassName,
+  "border border-[color:color-mix(in_oklch,var(--cm-border),transparent_40%)] bg-[color:var(--cm-surface)] p-1.5 text-[color:var(--cm-foreground)] shadow-2xl"
+);
 
 const contextMenuTriggerClassName =
   "outline-none focus-visible:ring-2 focus-visible:ring-[color:color-mix(in_oklch,var(--cm-ring),transparent_50%)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--cm-surface)]";
 
-const contextMenuItemHighlightClassName =
-  "absolute inset-0 rounded-lg bg-[color:var(--cm-accent)]";
+const contextMenuItemHighlightClassName = cn(
+  controlCornerInheritClassName,
+  "absolute inset-0 bg-[color:var(--cm-accent)]"
+);
+
+const contextMenuItemClassName = cn(
+  controlCornerClassName,
+  "relative flex w-full cursor-pointer items-center gap-2.5 px-3 py-2.5 text-left font-medium text-sm outline-none transition-colors"
+);
 
 const contextMenuItemDefaultClassName =
   "text-[color:color-mix(in_oklch,var(--cm-foreground),transparent_15%)] hover:bg-accent/60";
@@ -585,7 +600,7 @@ function MenuItem({
       animate={{ opacity: 1, x: 0 }}
       aria-disabled={item.disabled}
       className={cn(
-        "relative flex w-full cursor-pointer items-center gap-2.5 rounded-lg px-3 py-2.5 text-left font-medium text-sm outline-none transition-colors",
+        contextMenuItemClassName,
         "disabled:cursor-not-allowed disabled:opacity-40",
         item.destructive
           ? contextMenuItemDestructiveClassName

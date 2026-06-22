@@ -6,11 +6,19 @@ import * as React from "react";
 
 import { cn } from "@/lib/utils";
 
+const controlCornerClassName =
+  "rounded-lg supports-[corner-shape:squircle]:corner-squircle supports-[corner-shape:squircle]:rounded-[11px]";
+
+const surfaceCornerClassName =
+  "rounded-lg supports-[corner-shape:squircle]:corner-squircle supports-[corner-shape:squircle]:rounded-[12px]";
+
 const alertDialogThemeClassName =
   "[--adlg-surface:#ffffff] [--adlg-foreground:#111111] [--adlg-border:#e3e7ec] [--adlg-ring:rgba(17,17,17,0.16)] [--adlg-muted-foreground:#6d7480] [--adlg-muted:#f5f7fa] [--adlg-action-surface:#111111] [--adlg-action-foreground:#ffffff] [--color-accent:var(--adlg-muted)] [--color-accent-foreground:var(--adlg-foreground)] dark:[--adlg-surface:#0a0a0a] dark:[--adlg-foreground:#f6f3ec] dark:[--adlg-border:#2b2a25] dark:[--adlg-ring:rgba(246,243,236,0.18)] dark:[--adlg-muted-foreground:#9a958a] dark:[--adlg-muted:#1a1a18] dark:[--adlg-action-surface:#f6f3ec] dark:[--adlg-action-foreground:#111111]";
 
-const alertDialogContentClassName =
-  "relative flex w-[min(100%,34rem)] max-w-xl flex-col gap-5 rounded-lg border border-[color:color-mix(in_oklch,var(--adlg-border),transparent_25%)] bg-[color:color-mix(in_oklch,var(--adlg-surface),transparent_4%)] p-6 text-[color:var(--adlg-foreground)] shadow-[0_32px_120px_rgba(15,23,42,0.18)] outline-none supports-[backdrop-filter]:bg-[color:color-mix(in_oklch,var(--adlg-surface),transparent_8%)] sm:p-7";
+const alertDialogContentClassName = cn(
+  surfaceCornerClassName,
+  "relative flex w-[min(100%,34rem)] max-w-xl flex-col gap-5 border border-[color:color-mix(in_oklch,var(--adlg-border),transparent_25%)] bg-[color:color-mix(in_oklch,var(--adlg-surface),transparent_4%)] p-6 text-[color:var(--adlg-foreground)] shadow-[0_32px_120px_rgba(15,23,42,0.18)] outline-none supports-[backdrop-filter]:bg-[color:color-mix(in_oklch,var(--adlg-surface),transparent_8%)] sm:p-7"
+);
 
 type AlertDialogContextValue = {
   actionsRef: React.RefObject<AlertDialogPrimitive.Root.Actions | null>;
@@ -26,14 +34,20 @@ const overlayTransition = {
   ease: [0.16, 1, 0.3, 1],
 } as const;
 
-const triggerClassName =
-  "inline-flex min-h-11 items-center justify-center rounded-md bg-[color:var(--adlg-action-surface)] px-4 py-2.5 font-medium text-[14px] text-[color:var(--adlg-action-foreground)] tracking-[-0.01em] transition-[transform,background-color] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-px hover:bg-[color:color-mix(in_oklch,var(--adlg-action-surface),transparent_10%)] active:translate-y-0 active:bg-[color:color-mix(in_oklch,var(--adlg-action-surface),transparent_20%)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:color-mix(in_oklch,var(--adlg-ring),transparent_50%)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--adlg-surface)] disabled:pointer-events-none disabled:opacity-50";
+const triggerClassName = cn(
+  controlCornerClassName,
+  "inline-flex min-h-11 items-center justify-center bg-[color:var(--adlg-action-surface)] px-4 py-2.5 font-medium text-[14px] text-[color:var(--adlg-action-foreground)] tracking-[-0.01em] transition-[transform,background-color] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-px hover:bg-[color:color-mix(in_oklch,var(--adlg-action-surface),transparent_10%)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:color-mix(in_oklch,var(--adlg-ring),transparent_50%)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--adlg-surface)] active:translate-y-0 active:bg-[color:color-mix(in_oklch,var(--adlg-action-surface),transparent_20%)] disabled:pointer-events-none disabled:opacity-50"
+);
 
-const actionClassName =
-  "inline-flex min-h-11 items-center justify-center rounded-md bg-rose-600 px-4 py-2.5 font-medium text-[14px] text-white tracking-[-0.01em] transition-[transform,filter] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-px hover:brightness-95 active:translate-y-0 active:brightness-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-500 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50";
+const actionClassName = cn(
+  controlCornerClassName,
+  "inline-flex min-h-11 items-center justify-center bg-rose-600 px-4 py-2.5 font-medium text-[14px] text-white tracking-[-0.01em] transition-[transform,filter] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-px hover:brightness-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-500 focus-visible:ring-offset-2 active:translate-y-0 active:brightness-90 disabled:pointer-events-none disabled:opacity-50"
+);
 
-const cancelClassName =
-  "inline-flex min-h-11 items-center justify-center rounded-md bg-[color:color-mix(in_oklch,var(--adlg-muted),transparent_45%)] px-4 py-2.5 font-medium text-[14px] text-[color:var(--adlg-muted-foreground)] tracking-[-0.01em] transition-colors duration-150 hover:bg-accent/60 hover:text-[color:var(--adlg-foreground)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:color-mix(in_oklch,var(--adlg-ring),transparent_50%)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--adlg-surface)] disabled:pointer-events-none disabled:opacity-50";
+const cancelClassName = cn(
+  controlCornerClassName,
+  "inline-flex min-h-11 items-center justify-center bg-[color:color-mix(in_oklch,var(--adlg-muted),transparent_45%)] px-4 py-2.5 font-medium text-[14px] text-[color:var(--adlg-muted-foreground)] tracking-[-0.01em] transition-colors duration-150 hover:bg-accent/60 hover:text-[color:var(--adlg-foreground)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:color-mix(in_oklch,var(--adlg-ring),transparent_50%)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--adlg-surface)] disabled:pointer-events-none disabled:opacity-50"
+);
 
 function setRef<T>(ref: React.Ref<T> | undefined, value: T) {
   if (typeof ref === "function") {

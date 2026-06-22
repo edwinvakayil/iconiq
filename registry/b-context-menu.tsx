@@ -8,13 +8,21 @@ import * as React from "react";
 
 import { cn } from "@/lib/utils";
 
+const controlCornerClassName =
+  "rounded-lg supports-[corner-shape:squircle]:corner-squircle supports-[corner-shape:squircle]:rounded-[11px]";
+
+const controlCornerInheritClassName =
+  "rounded-[inherit] supports-[corner-shape:squircle]:[corner-shape:inherit]";
+
 const contextMenuThemeClassName =
   "[--cm-surface:#ffffff] [--cm-foreground:#111111] [--cm-border:#e3e7ec] [--cm-muted-foreground:#6d7480] [--cm-accent:#f3f5f8] [--color-accent:var(--cm-accent)] [--color-accent-foreground:var(--cm-accent-foreground)] [--cm-accent-foreground:#111111] [--cm-destructive:#dc2626] [--cm-ring:rgba(17,17,17,0.16)] dark:[--cm-surface:#111111] dark:[--cm-foreground:#f6f3ec] dark:[--cm-border:#2b2a25] dark:[--cm-muted-foreground:#9a958a] dark:[--cm-accent:#1a1a18] [--color-accent:var(--cm-accent)] [--color-accent-foreground:var(--cm-accent-foreground)] dark:[--cm-accent-foreground:#f6f3ec] dark:[--cm-destructive:#f87171] dark:[--cm-ring:rgba(246,243,236,0.18)]";
 
 const ITEM_HEIGHT = 44;
 
-const contextMenuPanelChromeClassName =
-  "z-50 min-w-[232px] overflow-hidden rounded-lg border border-[color:color-mix(in_oklch,var(--cm-border),transparent_40%)] bg-[color:var(--cm-surface)] text-[color:var(--cm-foreground)] shadow-2xl";
+const contextMenuPanelChromeClassName = cn(
+  controlCornerClassName,
+  "z-50 min-w-[232px] overflow-hidden border border-[color:color-mix(in_oklch,var(--cm-border),transparent_40%)] bg-[color:var(--cm-surface)] text-[color:var(--cm-foreground)] shadow-2xl"
+);
 
 const contextMenuPanelScrollbarClassName =
   "z-10 my-1.5 mr-0.5 w-1 shrink-0 touch-none select-none opacity-0 transition-opacity duration-150 before:absolute before:left-1/2 before:h-full before:w-5 before:-translate-x-1/2 before:content-[''] data-hovering:pointer-events-auto data-hovering:opacity-100 data-scrolling:pointer-events-auto data-scrolling:opacity-100 data-scrolling:duration-0";
@@ -25,8 +33,25 @@ const contextMenuPanelThumbClassName =
 const contextMenuTriggerClassName =
   "select-none outline-none focus-visible:ring-2 focus-visible:ring-[color:color-mix(in_oklch,var(--cm-ring),transparent_50%)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--cm-surface)]";
 
-const contextMenuItemHighlightClassName =
-  "absolute inset-0 rounded-lg bg-[color:var(--cm-accent)]";
+const contextMenuItemHighlightClassName = cn(
+  controlCornerInheritClassName,
+  "absolute inset-0 bg-[color:var(--cm-accent)]"
+);
+
+const contextMenuItemClassName = cn(
+  controlCornerClassName,
+  "group/context-menu-item relative flex w-full cursor-pointer items-center gap-2.5 px-3 py-2.5 text-left font-medium text-sm outline-none transition-colors"
+);
+
+const contextMenuSubTriggerClassName = cn(
+  controlCornerClassName,
+  "relative flex w-full cursor-pointer items-center gap-2.5 px-3 py-2.5 text-left font-medium text-sm outline-none transition-colors"
+);
+
+const contextMenuIndicatorItemClassName = cn(
+  controlCornerClassName,
+  "relative flex w-full cursor-pointer items-center gap-2.5 py-2.5 pr-8 pl-3 text-left font-medium text-sm outline-none transition-colors"
+);
 
 const contextMenuItemDefaultClassName =
   "text-[color:color-mix(in_oklch,var(--cm-foreground),transparent_15%)] hover:bg-accent/60";
@@ -545,7 +570,7 @@ function ContextMenuItem({
             animate={{ opacity: 1, x: 0 }}
             aria-disabled={disabled}
             className={cn(
-              "group/context-menu-item relative flex w-full cursor-pointer items-center gap-2.5 rounded-lg px-3 py-2.5 text-left font-medium text-sm outline-none transition-colors",
+              contextMenuItemClassName,
               "disabled:cursor-not-allowed disabled:opacity-40",
               isDestructive
                 ? contextMenuItemDestructiveClassName
@@ -632,7 +657,7 @@ function ContextMenuSubTrigger({
             {...resolvedItemProps}
             animate={{ opacity: 1, x: 0 }}
             className={cn(
-              "relative flex w-full cursor-pointer items-center gap-2.5 rounded-lg px-3 py-2.5 text-left font-medium text-sm outline-none transition-colors",
+              contextMenuSubTriggerClassName,
               contextMenuItemDefaultClassName,
               contextMenuSubTriggerOpenClassName,
               inset && "pl-7",
@@ -770,7 +795,7 @@ function ContextMenuCheckboxItem({
             animate={{ opacity: disabled ? 0.5 : 1, x: 0 }}
             aria-disabled={disabled}
             className={cn(
-              "relative flex w-full cursor-pointer items-center gap-2.5 rounded-lg py-2.5 pr-8 pl-3 text-left font-medium text-sm outline-none transition-colors",
+              contextMenuIndicatorItemClassName,
               contextMenuItemDefaultClassName,
               "disabled:cursor-not-allowed data-[disabled]:pointer-events-none",
               inset && "pl-7",
@@ -864,7 +889,7 @@ function ContextMenuRadioItem({
             animate={{ opacity: 1, x: 0 }}
             aria-disabled={disabled}
             className={cn(
-              "relative flex w-full cursor-pointer items-center gap-2.5 rounded-lg py-2.5 pr-8 pl-3 text-left font-medium text-sm outline-none transition-colors",
+              contextMenuIndicatorItemClassName,
               contextMenuItemDefaultClassName,
               "disabled:cursor-not-allowed disabled:opacity-40",
               inset && "pl-7",

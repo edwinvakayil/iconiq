@@ -8,6 +8,9 @@ import { useEffect, useId, useRef, useState } from "react";
 import { Calendar, type CalendarProps } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
 
+const datePickerTriggerCornerClassName =
+  "rounded-lg supports-[corner-shape:squircle]:corner-squircle supports-[corner-shape:squircle]:rounded-[11px]";
+
 export type DatePickerProps = {
   value?: Date | null;
   onChange?: (date: Date) => void;
@@ -109,7 +112,10 @@ export function AnimatedDatePicker({
         aria-label={
           selected ? `Selected date, ${format(selected, "PPPP")}` : placeholder
         }
-        className="group flex w-full items-center rounded-lg border border-border bg-card px-4 py-3 text-left text-foreground text-sm transition-all hover:border-foreground/30"
+        className={cn(
+          "group flex w-full items-center border border-border bg-card px-4 py-3 text-left text-foreground text-sm transition-all hover:border-foreground/30",
+          datePickerTriggerCornerClassName
+        )}
         onClick={() => setOpen((current) => !current)}
         type="button"
       >

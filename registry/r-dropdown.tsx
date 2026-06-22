@@ -7,20 +7,32 @@ import * as React from "react";
 
 import { cn } from "@/lib/utils";
 
+const controlCornerClassName =
+  "rounded-lg supports-[corner-shape:squircle]:corner-squircle supports-[corner-shape:squircle]:rounded-[11px]";
+
+const controlCornerInheritClassName =
+  "rounded-[inherit] supports-[corner-shape:squircle]:[corner-shape:inherit]";
+
 const dropdownThemeClassName =
   "[--dd-surface:#ffffff] [--dd-foreground:#111111] [--dd-border:#e3e7ec] [--dd-ring:rgba(17,17,17,0.16)] [--dd-muted-foreground:#6d7480] [--dd-accent:#f3f5f8] [--color-accent:var(--dd-accent)] [--color-accent-foreground:var(--dd-foreground)] dark:[--dd-surface:#111111] dark:[--dd-foreground:#f6f3ec] dark:[--dd-border:#2b2a25] dark:[--dd-ring:rgba(246,243,236,0.18)] dark:[--dd-muted-foreground:#9a958a] dark:[--dd-accent:#1a1a18] [--color-accent:var(--dd-accent)] [--color-accent-foreground:var(--dd-foreground)]";
 
-const dropdownTriggerClassName =
-  "flex min-h-11 w-full items-center justify-between gap-2 rounded-lg border border-[color:var(--dd-border)] bg-[color:var(--dd-surface)] px-4 py-3 text-left font-medium text-[color:var(--dd-foreground)] text-sm transition-colors hover:bg-accent/60 focus:outline-none focus-visible:ring-2 focus-visible:ring-[color:color-mix(in_oklch,var(--dd-ring),transparent_50%)]";
+const dropdownTriggerBaseClassName =
+  "flex min-h-11 w-full items-center justify-between gap-2 border border-[color:var(--dd-border)] bg-[color:var(--dd-surface)] px-4 py-3 text-left font-medium text-[color:var(--dd-foreground)] text-sm transition-colors hover:bg-accent/60 focus:outline-none focus-visible:ring-2 focus-visible:ring-[color:color-mix(in_oklch,var(--dd-ring),transparent_50%)]";
 
-const dropdownPanelClassName =
-  "z-[300] min-w-[12rem] max-w-[calc(100vw-1.5rem)] overflow-hidden rounded-lg border border-[color:color-mix(in_oklch,var(--dd-border),transparent_40%)] bg-[color:var(--dd-surface)] outline-none";
+const dropdownPanelClassName = cn(
+  controlCornerClassName,
+  "z-[300] min-w-[12rem] max-w-[calc(100vw-1.5rem)] overflow-hidden border border-[color:color-mix(in_oklch,var(--dd-border),transparent_40%)] bg-[color:var(--dd-surface)] outline-none"
+);
 
-const dropdownItemClassName =
-  "relative flex min-h-11 w-full scroll-m-1 items-center justify-between gap-3 rounded-lg px-3 py-2.5 text-left text-[color:var(--dd-foreground)] text-sm outline-none transition-colors focus-visible:text-[color:var(--dd-foreground)] focus-visible:outline-none";
+const dropdownItemClassName = cn(
+  controlCornerClassName,
+  "relative flex min-h-11 w-full scroll-m-1 items-center justify-between gap-3 px-3 py-2.5 text-left text-[color:var(--dd-foreground)] text-sm outline-none transition-colors focus-visible:text-[color:var(--dd-foreground)] focus-visible:outline-none"
+);
 
-const dropdownItemHighlightClassName =
-  "absolute inset-0 rounded-lg bg-[color:var(--dd-accent)]";
+const dropdownItemHighlightClassName = cn(
+  controlCornerInheritClassName,
+  "absolute inset-0 bg-[color:var(--dd-accent)]"
+);
 
 const dropdownListScrollClassName =
   "min-h-0 overflow-y-auto overscroll-contain p-1.5 pr-1 outline-none [scrollbar-color:color-mix(in_oklch,var(--dd-muted-foreground,#6d7480),transparent_55%)_transparent] [scrollbar-width:thin] [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-[color:color-mix(in_oklch,var(--dd-muted-foreground,#6d7480),transparent_55%)] [&::-webkit-scrollbar-track]:bg-transparent";
@@ -310,6 +322,8 @@ export interface DropdownTriggerProps
   extends Omit<React.ComponentPropsWithoutRef<"button">, "children"> {
   children?: React.ReactNode;
   showChevron?: boolean;
+  /** Keep circular avatar triggers unchanged — skips squircle corner styling. */
+  triggerShape?: "default" | "avatar";
 }
 
 export const DropdownTrigger = React.forwardRef<
@@ -324,6 +338,7 @@ export const DropdownTrigger = React.forwardRef<
       onKeyDown,
       onPointerDown,
       showChevron = true,
+      triggerShape = "default",
       ...props
     },
     ref
@@ -338,7 +353,8 @@ export const DropdownTrigger = React.forwardRef<
           aria-expanded={open}
           aria-haspopup={variant === "action" ? "menu" : "listbox"}
           className={cn(
-            dropdownTriggerClassName,
+            dropdownTriggerBaseClassName,
+            triggerShape !== "avatar" && controlCornerClassName,
             disabled && "cursor-not-allowed opacity-60",
             className
           )}

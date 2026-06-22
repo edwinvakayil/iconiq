@@ -2,6 +2,11 @@ import { Bold, Italic, Underline } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
+import { cn } from "@/lib/utils";
+
+const controlCornerClassName =
+  "rounded-lg supports-[corner-shape:squircle]:corner-squircle supports-[corner-shape:squircle]:rounded-[11px]";
+
 type Pos = { x: number; y: number } | null;
 
 export function SelectionToolbar({
@@ -99,7 +104,10 @@ export function SelectionToolbar({
   return createPortal(
     <div
       aria-label="Text formatting"
-      className="z-50 flex items-center gap-1 rounded-lg bg-neutral-800 px-2 py-1.5 shadow-xl ring-1 ring-black/20"
+      className={cn(
+        "z-50 flex items-center gap-1 bg-neutral-800 px-2 py-1.5 shadow-xl ring-1 ring-black/20",
+        controlCornerClassName
+      )}
       onMouseDown={(e) => e.preventDefault()}
       ref={toolbarRef}
       role="toolbar"
@@ -155,9 +163,11 @@ function ToolbarButton({
     <button
       aria-label={label}
       aria-pressed={active}
-      className={`flex h-8 w-8 items-center justify-center rounded-lg text-neutral-200 transition-colors hover:bg-neutral-700 hover:text-white ${
-        active ? "bg-neutral-700 text-white" : ""
-      }`}
+      className={cn(
+        "flex h-8 w-8 items-center justify-center text-neutral-200 transition-colors hover:bg-neutral-700 hover:text-white",
+        controlCornerClassName,
+        active && "bg-neutral-700 text-white"
+      )}
       onMouseDown={onMouseDown}
       type="button"
     >

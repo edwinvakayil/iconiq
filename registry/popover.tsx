@@ -6,14 +6,24 @@ import * as React from "react";
 
 import { cn } from "@/lib/utils";
 
+const controlCornerClassName =
+  "rounded-lg supports-[corner-shape:squircle]:corner-squircle supports-[corner-shape:squircle]:rounded-[11px]";
+
+const surfaceCornerClassName =
+  "rounded-lg supports-[corner-shape:squircle]:corner-squircle supports-[corner-shape:squircle]:rounded-[12px]";
+
 const popoverThemeClassName =
   "[--po-surface:#ffffff] [--po-foreground:#111111] [--po-border:#e3e7ec] [--po-ring:rgba(17,17,17,0.16)] dark:[--po-surface:#111111] dark:[--po-foreground:#f6f3ec] dark:[--po-border:#2b2a25] dark:[--po-ring:rgba(246,243,236,0.18)]";
 
-const popoverPanelClassName =
-  "z-50 w-72 transform-gpu rounded-lg border border-[color:var(--po-border)] bg-[color:var(--po-surface)] p-4 text-[color:var(--po-foreground)] shadow-lg outline-none will-change-[transform,opacity,filter]";
+const popoverPanelClassName = cn(
+  surfaceCornerClassName,
+  "z-50 w-72 transform-gpu border border-[color:var(--po-border)] bg-[color:var(--po-surface)] p-4 text-[color:var(--po-foreground)] shadow-lg outline-none will-change-[transform,opacity,filter]"
+);
 
-const popoverTriggerClassName =
-  "inline-flex min-h-11 min-w-11 touch-manipulation items-center justify-center rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:color-mix(in_oklch,var(--po-ring),transparent_50%)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--po-surface)]";
+const popoverTriggerClassName = cn(
+  controlCornerClassName,
+  "inline-flex min-h-11 min-w-11 touch-manipulation items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:color-mix(in_oklch,var(--po-ring),transparent_50%)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--po-surface)]"
+);
 
 type Side = "top" | "right" | "bottom" | "left";
 

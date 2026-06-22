@@ -7,6 +7,18 @@ import * as React from "react";
 
 import { cn } from "@/lib/utils";
 
+const controlCornerClassName =
+  "rounded-[min(var(--radius-md),12px)] supports-[corner-shape:squircle]:corner-squircle supports-[corner-shape:squircle]:rounded-[14px]";
+
+const otpGroupClassName =
+  "flex w-full max-w-full items-center justify-center gap-2 sm:gap-3";
+
+const otpSlotBaseClassName =
+  "relative flex size-11 shrink-0 items-center justify-center overflow-hidden border-2 font-medium text-lg tabular-nums sm:size-14 sm:text-xl";
+
+const otpPlaceholderSlotBaseClassName =
+  "size-11 shrink-0 overflow-hidden border-2 border-border bg-background sm:size-14";
+
 const OTPLengthContext = React.createContext(6);
 
 function setRef<T>(ref: React.Ref<T> | undefined, value: T) {
@@ -33,15 +45,6 @@ const charSpring = {
   damping: 30,
   mass: 0.8,
 };
-
-const otpGroupClassName =
-  "flex w-full max-w-full items-center justify-center gap-2 sm:gap-3";
-
-const otpSlotClassName =
-  "relative flex size-11 shrink-0 items-center justify-center rounded-lg border-2 font-medium text-lg tabular-nums sm:size-14 sm:text-xl";
-
-const otpPlaceholderSlotClassName =
-  "size-11 shrink-0 rounded-lg border-2 border-border bg-background sm:size-14";
 
 type OTPProps = React.ComponentPropsWithoutRef<typeof OTPField.Root> & {
   containerClassName?: string;
@@ -89,7 +92,10 @@ function OTPPlaceholder({
       <div className={otpGroupClassName}>
         {Array.from({ length }, (_, index) => (
           <div
-            className={otpPlaceholderSlotClassName}
+            className={cn(
+              controlCornerClassName,
+              otpPlaceholderSlotBaseClassName
+            )}
             key={`otp-placeholder-${index}`}
           />
         ))}
@@ -263,7 +269,8 @@ function OTPSlotSurface({
         borderColor: isActive ? "var(--color-primary)" : "var(--color-border)",
       }}
       className={cn(
-        otpSlotClassName,
+        controlCornerClassName,
+        otpSlotBaseClassName,
         "bg-background text-foreground",
         state.disabled && "cursor-not-allowed opacity-50",
         state.readOnly && "cursor-default",

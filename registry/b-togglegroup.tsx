@@ -8,6 +8,21 @@ import * as React from "react";
 
 import { cn } from "@/lib/utils";
 
+const toggleCornerClassName =
+  "rounded-lg supports-[corner-shape:squircle]:corner-squircle supports-[corner-shape:squircle]:rounded-[11px]";
+
+const toggleCornerSmClassName =
+  "rounded-[min(var(--radius-md),12px)] supports-[corner-shape:squircle]:corner-squircle supports-[corner-shape:squircle]:rounded-[14px]";
+
+const toggleGroupCornerClassName =
+  "rounded-lg supports-[corner-shape:squircle]:corner-squircle supports-[corner-shape:squircle]:rounded-[11px]";
+
+const toggleGroupCornerSmClassName =
+  "data-[size=sm]:rounded-[min(var(--radius-md),10px)] data-[size=sm]:supports-[corner-shape:squircle]:corner-squircle data-[size=sm]:supports-[corner-shape:squircle]:rounded-[12px]";
+
+const toggleFillClassName =
+  "pointer-events-none absolute inset-0 z-0 rounded-[inherit] bg-muted supports-[corner-shape:squircle]:[corner-shape:inherit]";
+
 const ICON_REST = 0.93;
 
 const FLUID_FILL = {
@@ -60,11 +75,9 @@ function useToggleFluidMotion(isPressed: boolean) {
   const sheenX = useMotionValue(-0.4);
   const sheenOpacity = useMotionValue(0);
 
-  const fillScaleX = useTransform(fillProgress, [0, 1], [0, 1]);
-  const fillOpacity = useTransform(fillProgress, [0, 0.1, 1], [0, 0.92, 1]);
+  const fillOpacity = useTransform(fillProgress, [0, 1], [0, 1]);
   const sheenLeft = useTransform(sheenX, (value) => `${value * 100}%`);
 
-  const [wipeOrigin, setWipeOrigin] = React.useState("left center");
   const prevPressedRef = React.useRef(isPressed);
   const isPointerDownRef = React.useRef(false);
 
@@ -74,7 +87,6 @@ function useToggleFluidMotion(isPressed: boolean) {
     }
 
     prevPressedRef.current = isPressed;
-    setWipeOrigin(isPressed ? "left center" : "right center");
 
     animate(fillProgress, isPressed ? 1 : 0, FLUID_FILL);
     animate(iconScale, isPressed ? 1 : ICON_REST, FLUID_ICON);
@@ -135,8 +147,6 @@ function useToggleFluidMotion(isPressed: boolean) {
 
   return {
     fillOpacity,
-    fillScaleX,
-    wipeOrigin,
     sheenLeft,
     sheenOpacity,
     iconScale,
@@ -151,8 +161,6 @@ function useToggleFluidMotion(isPressed: boolean) {
 function ToggleFluidMotionLayers({
   children,
   fillOpacity,
-  fillScaleX,
-  wipeOrigin,
   sheenLeft,
   sheenOpacity,
   iconScale,
@@ -165,11 +173,9 @@ function ToggleFluidMotionLayers({
     <>
       <motion.span
         aria-hidden
-        className="pointer-events-none absolute inset-0 z-0 rounded-[inherit] bg-muted"
+        className={toggleFillClassName}
         style={{
           opacity: fillOpacity,
-          scaleX: fillScaleX,
-          transformOrigin: wipeOrigin,
         }}
       />
       <span
@@ -205,7 +211,10 @@ function ToggleFluidMotionLayers({
 }
 
 const toggleGroupItemVariants = cva(
-  "relative inline-flex shrink-0 items-center justify-center gap-1 overflow-hidden whitespace-nowrap rounded-lg font-medium text-sm outline-none transition-colors focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 [&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0",
+  cn(
+    toggleCornerClassName,
+    "relative inline-flex shrink-0 items-center justify-center gap-1 overflow-hidden whitespace-nowrap font-medium text-sm outline-none transition-colors focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 [&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0"
+  ),
   {
     variants: {
       variant: {
@@ -217,7 +226,10 @@ const toggleGroupItemVariants = cva(
       size: {
         default:
           "h-8 min-w-8 px-2.5 has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2",
-        sm: "h-7 min-w-7 rounded-[min(var(--radius-md),12px)] px-2.5 text-[0.8rem] has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 [&_svg:not([class*='size-'])]:size-3.5",
+        sm: cn(
+          "h-7 min-w-7 px-2.5 text-[0.8rem] has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 [&_svg:not([class*='size-'])]:size-3.5",
+          toggleCornerSmClassName
+        ),
         lg: "h-9 min-w-9 px-2.5 has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2",
       },
     },
@@ -307,7 +319,9 @@ function ToggleGroup({
   return (
     <ToggleGroupPrimitive
       className={cn(
-        "group/toggle-group flex w-fit flex-row items-center gap-[--spacing(var(--gap))] rounded-lg data-vertical:flex-col data-vertical:items-stretch data-[size=sm]:rounded-[min(var(--radius-md),10px)]",
+        "group/toggle-group flex w-fit flex-row items-center gap-[--spacing(var(--gap))] data-vertical:flex-col data-vertical:items-stretch",
+        toggleGroupCornerClassName,
+        toggleGroupCornerSmClassName,
         className
       )}
       data-orientation={orientation}

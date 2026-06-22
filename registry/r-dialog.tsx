@@ -7,14 +7,44 @@ import * as React from "react";
 
 import { cn } from "@/lib/utils";
 
+const controlCornerClassName =
+  "rounded-lg supports-[corner-shape:squircle]:corner-squircle supports-[corner-shape:squircle]:rounded-[11px]";
+
+const surfaceCornerClassName =
+  "rounded-lg supports-[corner-shape:squircle]:corner-squircle supports-[corner-shape:squircle]:rounded-[12px]";
+
 const dialogThemeClassName =
   "[--dlg-surface:#ffffff] [--dlg-foreground:#111111] [--dlg-border:#e3e7ec] [--dlg-ring:rgba(17,17,17,0.16)] [--dlg-muted-foreground:#6d7480] [--dlg-muted:#f5f7fa] [--color-accent:var(--dlg-muted)] [--color-accent-foreground:var(--dlg-foreground)] dark:[--dlg-surface:#0a0a0a] dark:[--dlg-foreground:#f6f3ec] dark:[--dlg-border:#2b2a25] dark:[--dlg-ring:rgba(246,243,236,0.18)] dark:[--dlg-muted-foreground:#9a958a] dark:[--dlg-muted:#1a1a18]";
 
-const dialogContentClassName =
-  "relative flex w-[min(100%,34rem)] max-w-xl flex-col gap-5 rounded-lg border border-[color:color-mix(in_oklch,var(--dlg-border),transparent_25%)] bg-[color:color-mix(in_oklch,var(--dlg-surface),transparent_4%)] p-6 text-[color:var(--dlg-foreground)] shadow-[0_32px_120px_rgba(15,23,42,0.18)] outline-none supports-[backdrop-filter]:bg-[color:color-mix(in_oklch,var(--dlg-surface),transparent_8%)] sm:p-7";
+const dialogContentClassName = cn(
+  surfaceCornerClassName,
+  "relative flex w-[min(100%,34rem)] max-w-xl flex-col gap-5 border border-[color:color-mix(in_oklch,var(--dlg-border),transparent_25%)] bg-[color:color-mix(in_oklch,var(--dlg-surface),transparent_4%)] p-6 text-[color:var(--dlg-foreground)] shadow-[0_32px_120px_rgba(15,23,42,0.18)] outline-none supports-[backdrop-filter]:bg-[color:color-mix(in_oklch,var(--dlg-surface),transparent_8%)] sm:p-7"
+);
 
-const dialogCloseClassName =
-  "absolute top-4 right-4 inline-flex h-9 w-9 items-center justify-center rounded-md text-[color:var(--dlg-muted-foreground)] transition-colors hover:bg-accent/60 hover:text-[color:var(--dlg-foreground)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:color-mix(in_oklch,var(--dlg-ring),transparent_50%)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--dlg-surface)]";
+const dialogCloseClassName = cn(
+  controlCornerClassName,
+  "absolute top-4 right-4 inline-flex h-9 w-9 items-center justify-center text-[color:var(--dlg-muted-foreground)] transition-colors hover:bg-accent/60 hover:text-[color:var(--dlg-foreground)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:color-mix(in_oklch,var(--dlg-ring),transparent_50%)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--dlg-surface)]"
+);
+
+const dialogTriggerClassName = cn(
+  controlCornerClassName,
+  "inline-flex items-center justify-center bg-[color:var(--dlg-foreground)] px-4 py-2.5 font-medium text-[14px] text-[color:var(--dlg-surface)] tracking-[-0.01em] transition-[transform,background-color] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-px hover:bg-[color:color-mix(in_oklch,var(--dlg-foreground),transparent_10%)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:color-mix(in_oklch,var(--dlg-ring),transparent_50%)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--dlg-surface)] disabled:pointer-events-none disabled:opacity-50"
+);
+
+const dialogTriggerSmClassName = cn(
+  controlCornerClassName,
+  "inline-flex h-8 min-h-8 translate-y-px items-center bg-[color:var(--dlg-foreground)] px-3 py-0 font-medium text-[13px] text-[color:var(--dlg-surface)] tracking-[-0.01em] transition-[transform,background-color] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-px hover:bg-[color:color-mix(in_oklch,var(--dlg-foreground),transparent_10%)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:color-mix(in_oklch,var(--dlg-ring),transparent_50%)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--dlg-surface)] disabled:pointer-events-none disabled:opacity-50"
+);
+
+const dialogCancelClassName = cn(
+  controlCornerClassName,
+  "inline-flex min-h-11 items-center justify-center bg-[color:color-mix(in_oklch,var(--dlg-muted),transparent_45%)] px-4 py-2.5 font-medium text-[14px] text-[color:var(--dlg-muted-foreground)] tracking-[-0.01em] transition-colors duration-150 hover:bg-accent/60 hover:text-[color:var(--dlg-foreground)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:color-mix(in_oklch,var(--dlg-ring),transparent_50%)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--dlg-surface)] disabled:pointer-events-none disabled:opacity-50"
+);
+
+const dialogActionClassName = cn(
+  controlCornerClassName,
+  "inline-flex min-h-11 items-center justify-center bg-[color:var(--dlg-foreground)] px-4 py-2.5 font-medium text-[14px] text-[color:var(--dlg-surface)] tracking-[-0.01em] transition-[transform,background-color] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-px hover:bg-[color:color-mix(in_oklch,var(--dlg-foreground),transparent_10%)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:color-mix(in_oklch,var(--dlg-ring),transparent_50%)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--dlg-surface)] disabled:pointer-events-none disabled:opacity-50"
+);
 
 const overlayVariants = {
   hidden: { opacity: 0 },
@@ -291,6 +321,36 @@ const DialogDescription = React.forwardRef<
 });
 DialogDescription.displayName = "DialogDescription";
 
+const DialogCancel = React.forwardRef<
+  HTMLButtonElement,
+  React.ButtonHTMLAttributes<HTMLButtonElement>
+>(({ className, type = "button", ...props }, ref) => {
+  return (
+    <DialogPrimitive.Close
+      className={cn(dialogCancelClassName, className)}
+      ref={ref}
+      type={type}
+      {...props}
+    />
+  );
+});
+DialogCancel.displayName = "DialogCancel";
+
+const DialogAction = React.forwardRef<
+  HTMLButtonElement,
+  React.ButtonHTMLAttributes<HTMLButtonElement>
+>(({ className, type = "button", ...props }, ref) => {
+  return (
+    <DialogPrimitive.Close
+      className={cn(dialogActionClassName, className)}
+      ref={ref}
+      type={type}
+      {...props}
+    />
+  );
+});
+DialogAction.displayName = "DialogAction";
+
 export {
   Dialog,
   DialogTrigger,
@@ -301,4 +361,11 @@ export {
   DialogFooter,
   DialogTitle,
   DialogDescription,
+  DialogAction,
+  DialogCancel,
+  dialogActionClassName,
+  dialogCancelClassName,
+  dialogThemeClassName,
+  dialogTriggerClassName,
+  dialogTriggerSmClassName,
 };

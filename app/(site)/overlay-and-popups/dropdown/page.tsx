@@ -77,6 +77,7 @@ export function DropdownPreview() {
           aria-label="Open profile menu"
           className="mx-auto h-11 w-11 overflow-hidden rounded-full border-border/80 bg-[url('/assets/av1.png')] bg-center bg-cover p-0 shadow-none"
           showChevron={false}
+          triggerShape="avatar"
         >
           <span className="sr-only">Open profile menu</span>
         </DropdownTrigger>
@@ -196,6 +197,7 @@ function DropdownPreview() {
               aria-label="Open profile menu"
               className="mx-auto h-11 w-11 overflow-hidden rounded-full border-border/80 bg-[url('/assets/av1.png')] bg-center bg-cover p-0 shadow-none"
               showChevron={false}
+              triggerShape="avatar"
             >
               <span className="sr-only">Open profile menu</span>
             </DropdownTrigger>

@@ -22,8 +22,14 @@ import { createPortal } from "react-dom";
 
 import { cn } from "@/lib/utils";
 
+const alertCornerClassName =
+  "rounded-lg supports-[corner-shape:squircle]:corner-squircle supports-[corner-shape:squircle]:rounded-[11px]";
+
 const alertVariants = cva(
-  "relative grid w-full grid-cols-[0_1fr] items-start gap-y-0.5 rounded-lg border border-foreground/8 px-3.5 py-2.5 text-sm has-[>svg]:grid-cols-[calc(var(--spacing)*4)_1fr] has-[>svg]:gap-x-3 [&>svg]:size-4 [&>svg]:translate-y-0.5 [&>svg]:text-current",
+  cn(
+    alertCornerClassName,
+    "relative grid w-full grid-cols-[0_1fr] items-start gap-y-0.5 border border-foreground/8 px-3.5 py-2.5 text-sm has-[>svg]:grid-cols-[calc(var(--spacing)*4)_1fr] has-[>svg]:gap-x-3 [&>svg]:size-4 [&>svg]:translate-y-0.5 [&>svg]:text-current"
+  ),
   {
     variants: {
       appearance: {
@@ -554,7 +560,7 @@ function AlertDismissButton({
     <motion.button
       aria-label="Dismiss alert"
       className={cn(
-        "relative -my-2 -mr-2 inline-flex size-10 shrink-0 items-center justify-center self-start rounded-md transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+        "supports-[corner-shape:squircle]:corner-squircle relative -my-2 -mr-2 inline-flex size-10 shrink-0 items-center justify-center self-start rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring supports-[corner-shape:squircle]:rounded-[11px]",
         getDismissButtonClasses(appearance),
         className
       )}

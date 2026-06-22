@@ -21,6 +21,14 @@ type DialogModule = {
     onOpenChange?: (open: boolean) => void;
     open?: boolean;
   }>;
+  DialogAction: ComponentType<{
+    children: ReactNode;
+    className?: string;
+  }>;
+  DialogCancel: ComponentType<{
+    children: ReactNode;
+    className?: string;
+  }>;
   DialogClose: ComponentType<{
     asChild?: boolean;
     children: ReactNode;
@@ -45,6 +53,9 @@ type DialogModule = {
     asChild?: boolean;
     children: ReactNode;
   }>;
+  dialogThemeClassName: string;
+  dialogTriggerClassName: string;
+  dialogTriggerSmClassName: string;
 };
 
 type ProviderConfig = {
@@ -56,50 +67,22 @@ type ProviderConfig = {
   usageCode: string;
 };
 
-const triggerButtonClassName =
-  "inline-flex items-center justify-center rounded-md bg-foreground px-4 py-2.5 font-medium text-[14px] text-background tracking-[-0.01em] transition-[transform,background-color] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-px hover:bg-foreground/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2";
-
-const cancelButtonClassName =
-  "inline-flex min-h-11 items-center justify-center rounded-md bg-muted/55 px-4 py-2.5 font-medium text-[14px] text-muted-foreground tracking-[-0.01em] transition-colors duration-150 hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2";
-
-const actionButtonClassName =
-  "inline-flex min-h-11 items-center justify-center rounded-md bg-foreground px-4 py-2.5 font-medium text-[14px] text-background tracking-[-0.01em] transition-[transform,background-color] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-px hover:bg-foreground/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2";
-
-const previewSentenceClassName =
-  "flex flex-wrap items-center justify-center gap-x-2 gap-y-1.5 text-balance text-[13px] text-muted-foreground leading-snug tracking-tight sm:text-sm";
-
-const previewTriggerClassName =
-  "inline-flex h-8 min-h-8 translate-y-px items-center align-middle rounded-md bg-foreground px-3 py-0 font-medium text-[13px] text-background tracking-[-0.01em] transition-[transform,background-color] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-px hover:bg-foreground/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2";
-
-const breadcrumbs = [
-  { label: "Docs", href: "/" },
-  { label: "Overlay & Popups" },
-  { label: "Dialog" },
-];
-
 const usageCodeByProvider: Record<ProviderConfig["componentName"], string> = {
   "b-dialog": `"use client";
 
 import { useState } from "react";
 import {
   Dialog,
-  DialogClose,
+  DialogAction,
+  DialogCancel,
   DialogContent,
   DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
+  dialogTriggerClassName,
 } from "@/components/ui/b-dialog";
-
-const triggerButtonClassName =
-  "${triggerButtonClassName}";
-
-const cancelButtonClassName =
-  "${cancelButtonClassName}";
-
-const actionButtonClassName =
-  "${actionButtonClassName}";
 
 export function DialogPreview() {
   const [open, setOpen] = useState(false);
@@ -107,7 +90,7 @@ export function DialogPreview() {
   return (
     <Dialog onOpenChange={setOpen} open={open}>
       <DialogTrigger asChild>
-        <button className={triggerButtonClassName} type="button">
+        <button className={dialogTriggerClassName} type="button">
           Open dialog
         </button>
       </DialogTrigger>
@@ -120,16 +103,8 @@ export function DialogPreview() {
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
-          <DialogClose asChild>
-            <button className={cancelButtonClassName} type="button">
-              Cancel
-            </button>
-          </DialogClose>
-          <DialogClose asChild>
-            <button className={actionButtonClassName} type="button">
-              Continue
-            </button>
-          </DialogClose>
+          <DialogCancel>Cancel</DialogCancel>
+          <DialogAction>Continue</DialogAction>
         </DialogFooter>
       </DialogContent>
     </Dialog>
@@ -140,23 +115,16 @@ export function DialogPreview() {
 import { useState } from "react";
 import {
   Dialog,
-  DialogClose,
+  DialogAction,
+  DialogCancel,
   DialogContent,
   DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
+  dialogTriggerClassName,
 } from "@/components/ui/r-dialog";
-
-const triggerButtonClassName =
-  "${triggerButtonClassName}";
-
-const cancelButtonClassName =
-  "${cancelButtonClassName}";
-
-const actionButtonClassName =
-  "${actionButtonClassName}";
 
 export function DialogPreview() {
   const [open, setOpen] = useState(false);
@@ -164,7 +132,7 @@ export function DialogPreview() {
   return (
     <Dialog onOpenChange={setOpen} open={open}>
       <DialogTrigger asChild>
-        <button className={triggerButtonClassName} type="button">
+        <button className={dialogTriggerClassName} type="button">
           Open dialog
         </button>
       </DialogTrigger>
@@ -177,16 +145,8 @@ export function DialogPreview() {
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
-          <DialogClose asChild>
-            <button className={cancelButtonClassName} type="button">
-              Cancel
-            </button>
-          </DialogClose>
-          <DialogClose asChild>
-            <button className={actionButtonClassName} type="button">
-              Continue
-            </button>
-          </DialogClose>
+          <DialogCancel>Cancel</DialogCancel>
+          <DialogAction>Continue</DialogAction>
         </DialogFooter>
       </DialogContent>
     </Dialog>
@@ -194,54 +154,60 @@ export function DialogPreview() {
 }`,
 };
 
+const previewSentenceClassName =
+  "flex flex-wrap items-center justify-center gap-x-2 gap-y-1.5 text-balance text-[13px] text-muted-foreground leading-snug tracking-tight sm:text-sm";
+
+const breadcrumbs = [
+  { label: "Docs", href: "/" },
+  { label: "Overlay & Popups" },
+  { label: "Dialog" },
+];
+
 function DialogPreview({ ui }: { ui: DialogModule }) {
   const {
     Dialog,
-    DialogClose,
+    DialogAction,
+    DialogCancel,
     DialogContent,
     DialogDescription,
     DialogFooter,
     DialogHeader,
     DialogTitle,
     DialogTrigger,
+    dialogThemeClassName,
+    dialogTriggerSmClassName,
   } = ui;
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="flex min-h-[18rem] items-center justify-center p-6">
-      <Dialog onOpenChange={setOpen} open={open}>
-        <p className={previewSentenceClassName}>
-          <span>This goes live for the team.</span>
-          <span>Tap</span>
-          <DialogTrigger asChild>
-            <button className={previewTriggerClassName} type="button">
-              Publish
-            </button>
-          </DialogTrigger>
-          <span>to continue.</span>
-        </p>
-        <DialogContent open={open}>
-          <DialogHeader>
-            <DialogTitle>Confirm publish</DialogTitle>
-            <DialogDescription>
-              This sends the draft live for everyone on the team. You can still
-              roll back from history afterward.
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter>
-            <DialogClose asChild>
-              <button className={cancelButtonClassName} type="button">
-                Cancel
+    <div className={dialogThemeClassName}>
+      <div className="flex min-h-[18rem] items-center justify-center p-6">
+        <Dialog onOpenChange={setOpen} open={open}>
+          <p className={previewSentenceClassName}>
+            <span>This goes live for the team.</span>
+            <span>Tap</span>
+            <DialogTrigger asChild>
+              <button className={dialogTriggerSmClassName} type="button">
+                Publish
               </button>
-            </DialogClose>
-            <DialogClose asChild>
-              <button className={actionButtonClassName} type="button">
-                Continue
-              </button>
-            </DialogClose>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+            </DialogTrigger>
+            <span>to continue.</span>
+          </p>
+          <DialogContent open={open}>
+            <DialogHeader>
+              <DialogTitle>Confirm publish</DialogTitle>
+              <DialogDescription>
+                This sends the draft live for everyone on the team. You can
+                still roll back from history afterward.
+              </DialogDescription>
+            </DialogHeader>
+            <DialogFooter>
+              <DialogCancel>Cancel</DialogCancel>
+              <DialogAction>Continue</DialogAction>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      </div>
     </div>
   );
 }
@@ -326,6 +292,18 @@ export default function RadixBaseDialogPage() {
             type: "ButtonHTMLAttributes<HTMLButtonElement> & { asChild?: boolean }",
             description:
               "Open and close controls. Both installs support asChild so you can turn custom buttons into trigger or dismiss elements without changing the outer API.",
+          },
+          {
+            name: "DialogAction / DialogCancel",
+            type: "ButtonHTMLAttributes<HTMLButtonElement>",
+            description:
+              "Styled footer buttons with squircle corners. Both close the dialog on click, matching the alert dialog action pattern.",
+          },
+          {
+            name: "dialogTriggerClassName / dialogTriggerSmClassName",
+            type: "string",
+            description:
+              "Exported trigger button class strings with squircle corners for custom asChild triggers.",
           },
           {
             name: "DialogContent",

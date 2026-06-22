@@ -7,6 +7,15 @@ import * as React from "react";
 
 import { cn } from "@/lib/utils";
 
+const toggleCornerClassName =
+  "rounded-lg supports-[corner-shape:squircle]:corner-squircle supports-[corner-shape:squircle]:rounded-[11px]";
+
+const toggleCornerSmClassName =
+  "rounded-[min(var(--radius-md),12px)] supports-[corner-shape:squircle]:corner-squircle supports-[corner-shape:squircle]:rounded-[14px]";
+
+const toggleFillClassName =
+  "pointer-events-none absolute inset-0 z-0 rounded-[inherit] bg-muted supports-[corner-shape:squircle]:[corner-shape:inherit]";
+
 const ICON_REST = 0.93;
 
 const FLUID_FILL = {
@@ -38,7 +47,10 @@ const FLUID_SHEEN = {
 };
 
 const toggleVariants = cva(
-  "group/toggle relative inline-flex items-center justify-center gap-1 overflow-hidden whitespace-nowrap rounded-lg font-medium text-sm outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0",
+  cn(
+    toggleCornerClassName,
+    "group/toggle relative inline-flex items-center justify-center gap-1 overflow-hidden whitespace-nowrap font-medium text-sm outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0"
+  ),
   {
     variants: {
       variant: {
@@ -48,7 +60,10 @@ const toggleVariants = cva(
       size: {
         default:
           "h-8 min-w-8 px-2.5 has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2",
-        sm: "h-7 min-w-7 rounded-[min(var(--radius-md),12px)] px-2.5 text-[0.8rem] has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 [&_svg:not([class*='size-'])]:size-3.5",
+        sm: cn(
+          "h-7 min-w-7 px-2.5 text-[0.8rem] has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 [&_svg:not([class*='size-'])]:size-3.5",
+          toggleCornerSmClassName
+        ),
         lg: "h-9 min-w-9 px-2.5 has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2",
       },
     },
@@ -116,11 +131,9 @@ const Toggle = React.forwardRef<HTMLButtonElement, ToggleProps>(function Toggle(
   const sheenX = useMotionValue(-0.4);
   const sheenOpacity = useMotionValue(0);
 
-  const fillScaleX = useTransform(fillProgress, [0, 1], [0, 1]);
-  const fillOpacity = useTransform(fillProgress, [0, 0.1, 1], [0, 0.92, 1]);
+  const fillOpacity = useTransform(fillProgress, [0, 1], [0, 1]);
   const sheenLeft = useTransform(sheenX, (value) => `${value * 100}%`);
 
-  const [wipeOrigin, setWipeOrigin] = React.useState("left center");
   const prevPressedRef = React.useRef(isPressed);
   const isPointerDownRef = React.useRef(false);
 
@@ -130,7 +143,6 @@ const Toggle = React.forwardRef<HTMLButtonElement, ToggleProps>(function Toggle(
     }
 
     prevPressedRef.current = isPressed;
-    setWipeOrigin(isPressed ? "left center" : "right center");
 
     animate(fillProgress, isPressed ? 1 : 0, FLUID_FILL);
     animate(iconScale, isPressed ? 1 : ICON_REST, FLUID_ICON);
@@ -245,11 +257,9 @@ const Toggle = React.forwardRef<HTMLButtonElement, ToggleProps>(function Toggle(
     >
       <motion.span
         aria-hidden
-        className="pointer-events-none absolute inset-0 z-0 rounded-[inherit] bg-muted"
+        className={toggleFillClassName}
         style={{
           opacity: fillOpacity,
-          scaleX: fillScaleX,
-          transformOrigin: wipeOrigin,
         }}
       />
       <span

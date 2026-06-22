@@ -8,6 +8,12 @@ import * as React from "react";
 
 import { cn } from "@/lib/utils";
 
+const controlCornerClassName =
+  "rounded-lg supports-[corner-shape:squircle]:corner-squircle supports-[corner-shape:squircle]:rounded-[11px]";
+
+const controlCornerInheritClassName =
+  "rounded-[inherit] supports-[corner-shape:squircle]:[corner-shape:inherit]";
+
 const componentThemeClassName =
   "[--ic-background:#ffffff] [--ic-foreground:#111111] [--ic-primary:#111111] [--ic-secondary:#646b75] [--ic-surface-border:#e9edf2] [--ic-border:#e3e7ec] [--ic-card:#ffffff] [--ic-card-foreground:#111111] [--ic-muted:#f5f7fa] [--ic-muted-foreground:#6d7480] [--ic-accent:#f3f5f8] [--color-accent:var(--ic-accent)] [--color-accent-foreground:var(--ic-accent-foreground)] [--ic-accent-foreground:#111111] [--ic-input:#e3e7ec] [--ic-ring:rgba(17,17,17,0.16)] [--ic-destructive:#dc2626] [--ic-paper:#fcfcfd] [--ic-popover-foreground:#111111] [--ic-brand:#0ea5e9] [--ic-brand-soft:#bae6fd] [--ic-shadow-soft:0_18px_38px_-24px_rgba(15,23,42,0.35)] [--ic-chart-1:oklch(0.52_0.19_254)] [--ic-chart-2:oklch(0.74_0.11_232)] [--ic-chart-3:oklch(0.42_0.16_262)] [--ic-chart-4:oklch(0.84_0.07_228)] [--ic-chart-5:oklch(0.62_0.14_240)] [--color-background:var(--ic-background)] [--color-foreground:var(--ic-foreground)] [--color-primary:var(--ic-primary)] [--color-secondary:var(--ic-secondary)] [--color-border:var(--ic-border)] [--color-card:var(--ic-card)] [--color-card-foreground:var(--ic-card-foreground)] [--color-muted:var(--ic-muted)] [--color-muted-foreground:var(--ic-muted-foreground)] [--color-accent:var(--ic-accent)] [--color-accent-foreground:var(--ic-accent-foreground)] [--color-input:var(--ic-input)] [--color-ring:var(--ic-ring)] [--color-destructive:var(--ic-destructive)] [--color-paper:var(--ic-paper)] [--color-popover-foreground:var(--ic-popover-foreground)] [--color-brand:var(--ic-brand)] [--color-brand-soft:var(--ic-brand-soft)] [--color-chart-1:var(--ic-chart-1)] [--color-chart-2:var(--ic-chart-2)] [--color-chart-3:var(--ic-chart-3)] [--color-chart-4:var(--ic-chart-4)] [--color-chart-5:var(--ic-chart-5)] dark:[--ic-background:#111111] dark:[--ic-foreground:#f6f3ec] dark:[--ic-primary:#f6f3ec] dark:[--ic-secondary:#cbc6bb] dark:[--ic-surface-border:#2a2a25] dark:[--ic-border:#2b2a25] dark:[--ic-card:#111111] dark:[--ic-card-foreground:#f6f3ec] dark:[--ic-muted:#171716] dark:[--ic-muted-foreground:#9a958a] dark:[--ic-accent:#1a1a18] [--color-accent:var(--ic-accent)] [--color-accent-foreground:var(--ic-accent-foreground)] dark:[--ic-accent-foreground:#f6f3ec] dark:[--ic-input:#2b2a25] dark:[--ic-ring:rgba(246,243,236,0.18)] dark:[--ic-destructive:#f87171] dark:[--ic-paper:#171716] dark:[--ic-popover-foreground:#f6f3ec] dark:[--ic-brand:#38bdf8] dark:[--ic-brand-soft:#0c4a6e] dark:[--ic-shadow-soft:0_20px_44px_-28px_rgba(0,0,0,0.6)] dark:[--ic-chart-1:oklch(0.68_0.17_250)] dark:[--ic-chart-2:oklch(0.82_0.09_225)] dark:[--ic-chart-3:oklch(0.58_0.15_260)] dark:[--ic-chart-4:oklch(0.75_0.12_235)] dark:[--ic-chart-5:oklch(0.88_0.06_220)]";
 
@@ -336,7 +342,8 @@ function AutocompleteInput({
     <AutocompletePrimitive.InputGroup
       className={cn(
         componentThemeClassName,
-        "group flex h-11 w-full items-center gap-1.5 rounded-lg border border-input bg-background px-3 text-base transition-all sm:text-sm",
+        controlCornerClassName,
+        "group flex h-11 w-full items-center gap-1.5 border border-input bg-background px-3 text-base transition-all sm:text-sm",
         "hover:border-ring/40",
         "focus-within:border-ring focus-within:ring-1 focus-within:ring-ring/25",
         disabled && "cursor-not-allowed opacity-50",
@@ -438,7 +445,8 @@ function AutocompleteContentPanel({
         animate={isPopupVisible ? popupMotion.animate : popupMotion.closed}
         className={cn(
           componentThemeClassName,
-          "w-[var(--anchor-width)] max-w-[var(--available-width)] transform-gpu overflow-hidden rounded-lg border border-neutral-200/60 bg-white text-neutral-900 shadow-none dark:border-neutral-700/60 dark:bg-neutral-950 dark:text-neutral-100",
+          controlCornerClassName,
+          "w-[var(--anchor-width)] max-w-[var(--available-width)] transform-gpu overflow-hidden border border-neutral-200/60 bg-white text-neutral-900 shadow-none dark:border-neutral-700/60 dark:bg-neutral-950 dark:text-neutral-100",
           popupClassName,
           resolveStateClassName(className, popupState)
         )}
@@ -613,7 +621,8 @@ function AutocompleteItem({
           <motion.div
             {...resolvedItemProps}
             className={cn(
-              "relative flex cursor-pointer select-none items-start rounded-lg px-2.5 py-2 text-foreground text-sm",
+              "relative flex cursor-pointer select-none items-start px-2.5 py-2 text-foreground text-sm",
+              controlCornerClassName,
               itemClassName,
               resolveStateClassName(className, itemState)
             )}
@@ -636,7 +645,10 @@ function AutocompleteItem({
           >
             {showHighlight ? (
               <motion.div
-                className="absolute inset-0 rounded-lg bg-accent"
+                className={cn(
+                  "absolute inset-0 bg-accent",
+                  controlCornerInheritClassName
+                )}
                 layoutId={activeHighlightId}
                 transition={HIGHLIGHT_SPRING}
               />

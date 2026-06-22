@@ -3,6 +3,7 @@
 import { Camera, FolderKanban, Paperclip } from "lucide-react";
 import { useMemo } from "react";
 
+import { ProviderSwitch } from "@/app/(site)/components/_components/provider-switch";
 import { promptBoxApiDetails } from "@/components/docs/component-api";
 import {
   ComponentDocsPage,
@@ -205,11 +206,16 @@ function getDetails(): DetailItem[] {
       ...item,
       notes: [
         "Dependencies: @base-ui/react, motion, lucide-react.",
+        "This page documents the Base UI install only. Prompt Box uses the Base UI Input primitive for the prompt field.",
         "The generated registry file is /r/prompt-box.json.",
       ],
       registryPath: "prompt-box.json",
     };
   });
+}
+
+function handleProviderSelect() {
+  return undefined;
 }
 
 export default function PromptBoxPage() {
@@ -227,6 +233,13 @@ export default function PromptBoxPage() {
       details={details}
       detailsDescription="PromptInput starts as a compact pill and expands into a textarea with a pinned footer for customizable settings groups. Enter submits when the field has content, Escape collapses when empty, and blur collapses when there is no draft."
       editHref={`${LINK.GITHUB}/edit/main/app/(site)/blocks/prompt-box/page.tsx`}
+      headerActions={
+        <ProviderSwitch
+          disabledProviders={["radix"]}
+          onSelect={handleProviderSelect}
+          selectedProvider="base"
+        />
+      }
       itemSlug="prompt-box"
       pageUrl="/blocks/prompt-box"
       preview={<PromptBoxPreview />}
