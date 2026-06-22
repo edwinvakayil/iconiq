@@ -277,13 +277,9 @@ export function resolveTimezone(zone: string) {
 }
 
 function useNow(live: boolean) {
-  const [now, setNow] = useState(() => new Date());
+  const [now, setNow] = useState<Date | null>(null);
 
   useEffect(() => {
-    if (typeof window === "undefined") {
-      return;
-    }
-
     const update = () => setNow(new Date());
     update();
 
@@ -701,6 +697,27 @@ export function Timezone({
     );
   }
 
+  const timeClassName = cn(
+    "inline-flex origin-center text-inherit tabular-nums tracking-tight",
+    className
+  );
+  const title = `${zone} (${resolvedZone})`;
+
+  if (!now) {
+    return (
+      <time
+        className={timeClassName}
+        dateTime=""
+        suppressHydrationWarning
+        title={title}
+      >
+        <span aria-hidden className="inline-block min-w-[8ch] opacity-0">
+          00:00:00
+        </span>
+      </time>
+    );
+  }
+
   const label = formatTimezoneTime({
     date: now,
     locale,
@@ -712,11 +729,6 @@ export function Timezone({
   });
   const dateTime = toTimezoneDateTime(now, resolvedZone);
   const clockKey = `${resolvedZone}-${format}-${showAbbreviation ? zoneName : "plain"}-${live ? "live" : "minute"}`;
-  const timeClassName = cn(
-    "inline-flex origin-center text-inherit tabular-nums tracking-tight",
-    className
-  );
-  const title = `${zone} (${resolvedZone})`;
 
   if (!animate) {
     return (

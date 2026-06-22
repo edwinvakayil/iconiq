@@ -28,13 +28,13 @@ const usageCode = `import { Timezone } from "@/components/ui/timezone";
 
 export function TimezonePreview() {
   return (
-    <p className="flex max-w-2xl flex-wrap items-baseline justify-center gap-x-2 gap-y-2 text-balance text-center font-medium text-sm leading-snug tracking-tight sm:text-base dark:text-neutral-100">
+    <div className="flex max-w-2xl flex-wrap items-baseline justify-center gap-x-2 gap-y-2 text-balance text-center font-medium text-sm leading-snug tracking-tight sm:text-base dark:text-neutral-100">
       <span>Right now in</span>
       <span>San Francisco</span>
       <span>it is</span>
       <Timezone live zone="San Francisco" zoneName="abbreviation" />
       <span>for the west coast team.</span>
-    </p>
+    </div>
   );
 }`;
 
@@ -44,7 +44,7 @@ function TimezonePreview() {
   return (
     <div className="flex min-h-[260px] w-full items-center justify-center px-4 py-8">
       <div className="mx-auto max-w-2xl text-center">
-        <p className={previewSentenceClassName}>
+        <div className={previewSentenceClassName}>
           <span>Right now in</span>
           <InlinePreviewSelect
             ariaLabel="Timezone city"
@@ -56,7 +56,7 @@ function TimezonePreview() {
           <span>it is</span>
           <Timezone live zone={zone} />
           <span>for the distributed team.</span>
-        </p>
+        </div>
       </div>
     </div>
   );

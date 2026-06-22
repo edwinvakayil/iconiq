@@ -827,13 +827,13 @@ export default function Page() {
 
   return (
     <div className="flex min-h-svh items-center justify-center bg-background p-8">
-      <p className="flex max-w-xl flex-wrap items-center justify-center gap-x-1.5 gap-y-2 text-balance text-center font-medium text-lg leading-snug dark:text-neutral-100">
+      <div className="flex max-w-xl flex-wrap items-center justify-center gap-x-1.5 gap-y-2 text-balance text-center font-medium text-lg leading-snug dark:text-neutral-100">
         <span>Early access opens in</span>
         <span aria-hidden className="inline-flex translate-y-px items-center align-middle">
           <RollingDigits value={days} pad={2} startOnView={false} />
         </span>
         <span>days.</span>
-      </p>
+      </div>
     </div>
   );
 }`;
@@ -1015,13 +1015,13 @@ import { Timezone } from "@/components/ui/timezone";
 export default function Page() {
   return (
     <div className="flex min-h-svh items-center justify-center bg-background p-8">
-      <p className="flex max-w-2xl flex-wrap items-baseline justify-center gap-x-2 gap-y-2 text-balance text-center font-medium text-sm text-neutral-800 leading-snug tracking-tight sm:text-base dark:text-neutral-100">
+      <div className="flex max-w-2xl flex-wrap items-baseline justify-center gap-x-2 gap-y-2 text-balance text-center font-medium text-sm text-neutral-800 leading-snug tracking-tight sm:text-base dark:text-neutral-100">
         <span>Right now in</span>
         <span>San Francisco</span>
         <span>it is</span>
         <Timezone live zone="San Francisco" zoneName="abbreviation" />
         <span>for the west coast team.</span>
-      </p>
+      </div>
     </div>
   );
 }`;

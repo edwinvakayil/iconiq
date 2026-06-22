@@ -1,7 +1,24 @@
+import Image from "next/image";
+
+const VERCEL_OSS_BADGE_SRC = "/vercel-oss-program-badge-2026.svg";
+
+function VercelOssBadge() {
+  return (
+    <Image
+      alt="Vercel OSS Program"
+      className="h-5 w-auto"
+      height={24}
+      src={VERCEL_OSS_BADGE_SRC}
+      unoptimized
+      width={240}
+    />
+  );
+}
+
 const Footer = () => {
   return (
     <footer className="w-full border-neutral-200/50 border-t bg-background dark:border-neutral-800/50 dark:bg-background">
-      <div className="mx-auto w-full max-w-[1480px] px-4 py-5 sm:px-6 sm:py-6 lg:px-10">
+      <div className="mx-auto flex w-full max-w-[1480px] flex-col gap-4 px-4 py-5 sm:flex-row sm:items-center sm:justify-between sm:px-6 sm:py-6 lg:px-10">
         <p className="text-[14px] text-muted-foreground leading-7 tracking-[-0.02em]">
           Built by{" "}
           <a
@@ -23,6 +40,10 @@ const Footer = () => {
           </a>{" "}
           :)
         </p>
+
+        <div className="flex shrink-0 items-center sm:justify-end">
+          <VercelOssBadge />
+        </div>
       </div>
     </footer>
   );

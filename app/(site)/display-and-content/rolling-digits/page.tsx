@@ -40,13 +40,13 @@ export function RollingDigitsPreview() {
   }, []);
 
   return (
-    <p className="flex max-w-xl flex-wrap items-center justify-center gap-x-1.5 gap-y-2 text-balance text-center font-medium text-lg leading-snug dark:text-neutral-100">
+    <div className="flex max-w-xl flex-wrap items-center justify-center gap-x-1.5 gap-y-2 text-balance text-center font-medium text-lg leading-snug dark:text-neutral-100">
       <span>Early access opens in</span>
       <span aria-hidden className="inline-flex translate-y-px items-center align-middle">
         <RollingDigits value={days} pad={2} startOnView={false} />
       </span>
       <span>days.</span>
-    </p>
+    </div>
   );
 }`;
 
@@ -63,13 +63,13 @@ function RollingDigitsPreview() {
 
   return (
     <div className="flex min-h-[260px] items-center justify-center px-4 py-8">
-      <p className={cn(previewSentenceClassName)}>
+      <div className={cn(previewSentenceClassName)}>
         <span>Early access opens in</span>
         <span aria-hidden className={tickerWrapClassName}>
           <RollingDigits value={days} {...previewTickerProps} />
         </span>
         <span>days.</span>
-      </p>
+      </div>
     </div>
   );
 }

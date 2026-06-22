@@ -1,8 +1,8 @@
 "use client";
 
-import { Building2, Cloud, GraduationCap, Sun } from "lucide-react";
 import Link from "next/link";
 import { type ReactNode, useEffect, useState } from "react";
+import { FaviconBadgeLivePreview } from "@/components/favicon-badge-live-preview";
 import { HomeFeaturedShowcaseExtended } from "@/components/home-featured-showcase-extended";
 import {
   Avatar,
@@ -13,7 +13,6 @@ import {
 } from "@/registry/avatar";
 import type { CheckboxGroupOption } from "@/registry/b-checkbox-group";
 import { DiaText } from "@/registry/dia-text";
-import { IconBar, IconBarItem } from "@/registry/icon-bar";
 import { Accordion, type AccordionItem } from "@/registry/r-accordion";
 import { Progress } from "@/registry/r-progress";
 import type { RadioOption } from "@/registry/r-radio-group";
@@ -134,6 +133,14 @@ function ShowcaseCard({
   );
 }
 
+function HomeFaviconBadgeShowcase() {
+  const [website, setWebsite] = useState("iconiqui.com");
+
+  return (
+    <FaviconBadgeLivePreview onWebsiteChange={setWebsite} website={website} />
+  );
+}
+
 export function HomeFeaturedShowcase() {
   const [selectedRadio, setSelectedRadio] = useState("source");
   const [selectedCheckboxes, setSelectedCheckboxes] = useState<string[]>([
@@ -174,17 +181,10 @@ export function HomeFeaturedShowcase() {
 
         <ShowcaseCard
           className="lg:col-span-6"
-          href="/buttons-and-actions/icon-bar"
-          title="Icon Bar"
+          href="/display-and-content/favicon-badge"
+          title="Favicon Badge"
         >
-          <div className="flex w-full items-center justify-center px-4">
-            <IconBar>
-              <IconBarItem icon={Building2} label="Office" />
-              <IconBarItem icon={GraduationCap} label="School" />
-              <IconBarItem icon={Sun} label="Sunny" />
-              <IconBarItem icon={Cloud} label="Cloudy" />
-            </IconBar>
-          </div>
+          <HomeFaviconBadgeShowcase />
         </ShowcaseCard>
 
         <ShowcaseCard

@@ -1,18 +1,30 @@
 "use client";
 
 import Link from "next/link";
-import type { ReactNode } from "react";
+import { type ReactNode, useEffect, useState } from "react";
+import { InlinePreviewSelect } from "@/app/(site)/components/_components/inline-preview-select";
 import {
   CheckboxGroup,
   type CheckboxGroupOption,
 } from "@/registry/b-checkbox-group";
 import { Badge } from "@/registry/badge";
-import { Button } from "@/registry/button";
 import { Calendar } from "@/registry/calendar";
 import { RadioGroup, type RadioOption } from "@/registry/r-radio-group";
+import { RollingDigits } from "@/registry/rolling-digits";
 import { Slider } from "@/registry/slider";
 import { Switch } from "@/registry/switch";
-import { Tooltip } from "@/registry/tooltip";
+import { Timezone } from "@/registry/timezone";
+
+const timezoneZoneOptions = [
+  { value: "San Francisco", label: "San Francisco" },
+  { value: "New York", label: "New York" },
+  { value: "London", label: "London" },
+  { value: "India", label: "India" },
+  { value: "Tokyo", label: "Tokyo" },
+  { value: "Sydney", label: "Sydney" },
+] as const;
+
+type HomeTimezoneZone = (typeof timezoneZoneOptions)[number]["value"];
 
 function ShowcaseCard({
   title,
@@ -42,6 +54,55 @@ function ShowcaseCard({
         </Link>
       </div>
     </article>
+  );
+}
+
+function HomeRollingDigitsShowcase() {
+  const [days, setDays] = useState(12);
+
+  useEffect(() => {
+    const interval = window.setInterval(() => {
+      setDays((current) => (current <= 0 ? 12 : current - 1));
+    }, 2000);
+
+    return () => window.clearInterval(interval);
+  }, []);
+
+  return (
+    <div className="flex min-h-[150px] w-full items-center justify-center px-4">
+      <div className="flex max-w-sm flex-wrap items-center justify-center gap-x-1.5 gap-y-2 text-balance text-center font-medium text-foreground text-lg leading-snug tracking-tight">
+        <span>Early access opens in</span>
+        <span
+          aria-hidden
+          className="inline-flex translate-y-px items-center align-middle"
+        >
+          <RollingDigits pad={2} startOnView={false} value={days} />
+        </span>
+        <span>days.</span>
+      </div>
+    </div>
+  );
+}
+
+function HomeTimezoneShowcase() {
+  const [zone, setZone] = useState<HomeTimezoneZone>("San Francisco");
+
+  return (
+    <div className="flex min-h-[150px] w-full items-center justify-center px-4">
+      <div className="flex max-w-2xl flex-wrap items-baseline justify-center gap-x-2 gap-y-2 text-balance text-center font-medium text-foreground text-sm leading-snug tracking-tight sm:text-base">
+        <span>Right now in</span>
+        <InlinePreviewSelect
+          ariaLabel="Timezone city"
+          menuKey="home-timezone-zone-menu"
+          onChange={setZone}
+          options={timezoneZoneOptions}
+          value={zone}
+        />
+        <span>it is</span>
+        <Timezone live zone={zone} />
+        <span>for the distributed team.</span>
+      </div>
+    </div>
   );
 }
 
@@ -76,25 +137,11 @@ export function HomeFeaturedShowcaseExtended({
       </ShowcaseCard>
 
       <div className="grid gap-4 lg:col-span-8 lg:grid-cols-2">
-        <ShowcaseCard href="/overlay-and-popups/tooltip" title="Tooltip">
-          <div className="flex min-h-[150px] w-full items-center justify-center px-4">
-            <p className="max-w-sm text-center font-sans text-[15px] text-foreground leading-relaxed">
-              Hover the{" "}
-              <Tooltip
-                content="Quick context on hover."
-                delay={0.12}
-                side="top"
-              >
-                <button
-                  className="rounded-lg px-0.5 font-medium text-sky-700 underline decoration-sky-500/40 decoration-dotted underline-offset-[5px] transition-colors hover:text-sky-600 dark:text-sky-400 dark:hover:text-sky-300"
-                  type="button"
-                >
-                  trigger
-                </button>
-              </Tooltip>{" "}
-              to preview the floating label.
-            </p>
-          </div>
+        <ShowcaseCard
+          href="/display-and-content/rolling-digits"
+          title="Rolling Digits"
+        >
+          <HomeRollingDigitsShowcase />
         </ShowcaseCard>
 
         <ShowcaseCard href="/display-and-content/badge" title="Badge">
@@ -105,21 +152,10 @@ export function HomeFeaturedShowcaseExtended({
 
         <ShowcaseCard
           className="lg:col-span-2"
-          href="/buttons-and-actions/button"
-          title="Button"
+          href="/display-and-content/timezone"
+          title="Timezone"
         >
-          <div className="flex w-full max-w-[360px] flex-wrap items-center justify-center gap-2.5">
-            <Button size="sm">Default</Button>
-            <Button size="sm" variant="outline">
-              Outline
-            </Button>
-            <Button size="sm" variant="secondary">
-              Secondary
-            </Button>
-            <Button size="sm" variant="ghost">
-              Ghost
-            </Button>
-          </div>
+          <HomeTimezoneShowcase />
         </ShowcaseCard>
       </div>
 
