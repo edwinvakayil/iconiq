@@ -7,11 +7,16 @@ import * as React from "react";
 
 import { cn } from "@/lib/utils";
 
+const controlCornerClassName =
+  "rounded-lg supports-[corner-shape:squircle]:corner-squircle supports-[corner-shape:squircle]:rounded-[11px]";
+
 const tooltipThemeClassName =
   "[--tt-surface:#111111] [--tt-foreground:#ffffff] dark:[--tt-surface:#f6f3ec] dark:[--tt-foreground:#111111]";
 
-const tooltipContentClassName =
-  "group/tooltip pointer-events-none relative z-50 max-w-60 whitespace-normal rounded-lg bg-[color:var(--tt-surface)] px-3 py-1.5 font-medium text-[color:var(--tt-foreground)] text-xs leading-snug shadow-[0_4px_24px_-4px_rgba(0,0,0,0.25)]";
+const tooltipContentClassName = cn(
+  controlCornerClassName,
+  "group/tooltip pointer-events-none relative z-50 max-w-60 whitespace-normal bg-[color:var(--tt-surface)] px-3 py-1.5 font-medium text-[color:var(--tt-foreground)] text-xs leading-snug shadow-[0_4px_24px_-4px_rgba(0,0,0,0.25)]"
+);
 
 const tooltipArrowClassName =
   "absolute h-2 w-2 rotate-45 bg-[color:var(--tt-surface)] group-data-[side=bottom]/tooltip:-top-1 group-data-[side=left]/tooltip:top-1/2 group-data-[side=right]/tooltip:top-1/2 group-data-[side=left]/tooltip:-right-1 group-data-[side=top]/tooltip:-bottom-1 group-data-[side=bottom]/tooltip:left-1/2 group-data-[side=right]/tooltip:-left-1 group-data-[side=top]/tooltip:left-1/2 group-data-[side=bottom]/tooltip:-translate-x-1/2 group-data-[side=top]/tooltip:-translate-x-1/2 group-data-[side=left]/tooltip:-translate-y-1/2 group-data-[side=right]/tooltip:-translate-y-1/2";
