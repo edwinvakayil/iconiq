@@ -54,11 +54,11 @@ const Footer = () => {
             Inspired by{" "}
             <a
               className="font-medium text-foreground underline underline-offset-4 transition-colors hover:text-neutral-600 dark:hover:text-neutral-300"
-              href="https://unlumen.com"
+              href="https://skipper-ui.com"
               rel="noopener noreferrer"
               target="_blank"
             >
-              unlumen.com
+              Skipper UI
             </a>
           </p>
         </div>
