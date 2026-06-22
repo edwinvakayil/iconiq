@@ -23,6 +23,8 @@ function getPreviewPadding(isMobile: boolean) {
   };
 }
 
+const MIN_COLLAPSE_HEIGHT = 40;
+
 function getCollapsedTargetRect(
   layout: Element,
   isMobile: boolean
@@ -37,11 +39,18 @@ function getCollapsedTargetRect(
   }
 
   if (isMobile) {
+    const height = Math.min(col.height, window.innerHeight * 0.55);
+
+    // While expanded the shell is fixed, so the column often collapses to ~0.
+    if (height < MIN_COLLAPSE_HEIGHT) {
+      return null;
+    }
+
     return {
       top: col.top,
       left: col.left,
       width: col.width,
-      height: Math.min(col.height, window.innerHeight * 0.55),
+      height,
     };
   }
 
@@ -51,6 +60,37 @@ function getCollapsedTargetRect(
     width: col.width - 18,
     height: col.height - 24,
   };
+}
+
+function resolveCollapseTarget(
+  layout: Element,
+  isMobile: boolean,
+  splitPreviewRectRef: React.MutableRefObject<PreviewRect | null>
+): PreviewRect | null {
+  const cached = splitPreviewRectRef.current;
+  const live = getCollapsedTargetRect(layout, isMobile);
+
+  if (isMobile) {
+    if (cached && cached.height >= MIN_COLLAPSE_HEIGHT) {
+      return cached;
+    }
+
+    return live ?? cached;
+  }
+
+  return live ?? cached;
+}
+
+function reserveRightColumnSpace(previewShell: HTMLElement, height: number) {
+  previewShell
+    .closest<HTMLElement>("[data-docs-right-column]")
+    ?.style.setProperty("min-height", `${height}px`);
+}
+
+function releaseRightColumnSpace(previewShell: HTMLElement) {
+  previewShell
+    .closest<HTMLElement>("[data-docs-right-column]")
+    ?.style.removeProperty("min-height");
 }
 
 function applyFixedRect(
@@ -88,6 +128,7 @@ function clearFixedStyles(
   }
 
   previewShell.classList.remove("bg-white", "dark:bg-[#080808]");
+  releaseRightColumnSpace(previewShell);
   cacheSplitPreviewRect();
 }
 
@@ -100,6 +141,7 @@ function expandPreviewShell(
 ) {
   const from = toPreviewRect(previewShell.getBoundingClientRect());
   splitPreviewRectRef.current = from;
+  reserveRightColumnSpace(previewShell, from.height);
 
   applyFixedRect(previewShell, from, splitPadding);
   previewShell.getBoundingClientRect();
@@ -129,10 +171,9 @@ function collapsePreviewShell(
   splitPreviewRectRef: React.MutableRefObject<PreviewRect | null>,
   cacheSplitPreviewRect: () => void
 ) {
-  const target =
-    getCollapsedTargetRect(layout, isMobile) ?? splitPreviewRectRef.current;
+  const target = resolveCollapseTarget(layout, isMobile, splitPreviewRectRef);
 
-  if (!target) {
+  if (!target || target.height < MIN_COLLAPSE_HEIGHT) {
     clearFixedStyles(previewShell, cacheSplitPreviewRect);
     return undefined;
   }
@@ -142,16 +183,39 @@ function collapsePreviewShell(
     applyFixedRect(previewShell, target, splitPadding);
   });
 
-  const onTransitionEnd = (event: TransitionEvent) => {
-    if (event.target !== previewShell || event.propertyName !== "width") {
+  let finished = false;
+  let timeoutId = 0;
+
+  const finishCollapse = () => {
+    if (finished) {
       return;
     }
 
+    finished = true;
+    window.clearTimeout(timeoutId);
+    previewShell.removeEventListener("transitionend", onTransitionEnd);
     clearFixedStyles(previewShell, cacheSplitPreviewRect);
   };
 
+  const onTransitionEnd = (event: TransitionEvent) => {
+    if (event.target !== previewShell) {
+      return;
+    }
+
+    if (event.propertyName !== "width" && event.propertyName !== "height") {
+      return;
+    }
+
+    finishCollapse();
+  };
+
   previewShell.addEventListener("transitionend", onTransitionEnd);
-  return onTransitionEnd;
+  timeoutId = window.setTimeout(finishCollapse, PREVIEW_EXPAND_MS + 80);
+
+  return () => {
+    window.clearTimeout(timeoutId);
+    previewShell.removeEventListener("transitionend", onTransitionEnd);
+  };
 }
 
 export function usePreviewShellExpand({
@@ -180,7 +244,7 @@ export function usePreviewShellExpand({
       getPreviewPadding(isMobile);
     const transition = `top ${PREVIEW_EXPAND_MS}ms ${PREVIEW_EXPAND_EASING}, left ${PREVIEW_EXPAND_MS}ms ${PREVIEW_EXPAND_EASING}, width ${PREVIEW_EXPAND_MS}ms ${PREVIEW_EXPAND_EASING}, height ${PREVIEW_EXPAND_MS}ms ${PREVIEW_EXPAND_EASING}, padding ${PREVIEW_EXPAND_MS}ms ${PREVIEW_EXPAND_EASING}`;
 
-    let onTransitionEnd: ((event: TransitionEvent) => void) | undefined;
+    let cleanupCollapse: (() => void) | undefined;
 
     if (isExpanded) {
       expandPreviewShell(
@@ -191,7 +255,7 @@ export function usePreviewShellExpand({
         splitPreviewRectRef
       );
     } else if (previewShell.style.position === "fixed" && layout) {
-      onTransitionEnd = collapsePreviewShell(
+      cleanupCollapse = collapsePreviewShell(
         previewShell,
         layout,
         isMobile,
@@ -205,9 +269,7 @@ export function usePreviewShellExpand({
     }
 
     return () => {
-      if (onTransitionEnd) {
-        previewShell.removeEventListener("transitionend", onTransitionEnd);
-      }
+      cleanupCollapse?.();
     };
   }, [cacheSplitPreviewRect, isExpanded, previewRef, splitPreviewRectRef]);
 }
