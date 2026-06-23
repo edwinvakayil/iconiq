@@ -192,8 +192,13 @@ const REGISTRY_UI_META: Record<
   "b-button": {
     title: "Button (Base UI)",
     description:
-      "Button with the same Iconiq API layered over the Base UI button primitive, preserving the original ripple, press spring, hover lift, and intrinsic-width animation.",
-    dependencies: ["@base-ui/react", "motion", "class-variance-authority"],
+      "Button with embedded Iconiq theme tokens, optional loading, href link rendering, ripple, press spring, hover lift, and intrinsic-width animation over the Base UI button primitive.",
+    dependencies: [
+      "@base-ui/react",
+      "class-variance-authority",
+      "lucide-react",
+      "motion",
+    ],
   },
   "b-collapsible": {
     title: "Collapsible (Base UI)",

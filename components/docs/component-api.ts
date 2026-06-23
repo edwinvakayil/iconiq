@@ -1167,7 +1167,7 @@ const buttonApiDetails: DetailItem[] = [
     id: "button",
     title: "Button",
     summary:
-      "Base UI button with the shadcn-style variant recipe, spring press feedback, optional intrinsic width animation, and Motion ripple layer.",
+      "Base UI button with embedded Iconiq theme tokens, shadcn-style variants, spring press feedback, optional loading state, link rendering, and Motion ripple layer.",
     fields: [
       field({
         name: "variant",
@@ -1198,6 +1198,37 @@ const buttonApiDetails: DetailItem[] = [
           "Animates the button width with a spring as its intrinsic content changes, which is useful for labels like Continue, Saving..., and Saved on the same control.",
       }),
       field({
+        name: "loading",
+        type: "boolean",
+        defaultValue: "false",
+        description:
+          "Locks the control, sets aria-busy, crossfades the label and icon into a spring-animated spinner, and suppresses ripples until loading finishes.",
+      }),
+      field({
+        name: "loadingIcon",
+        type: "ReactNode",
+        description:
+          "Optional spinner or status icon shown while loading is true. Defaults to a Lucide Loader2 icon with animate-spin.",
+      }),
+      field({
+        name: "href",
+        type: "string",
+        description:
+          "When set, renders an animated anchor instead of a button. Disabled and loading states use aria-disabled, tabIndex -1, and click prevention.",
+      }),
+      field({
+        name: "target",
+        type: "string",
+        description:
+          'Anchor target such as "_blank". When the target opens a new tab, rel automatically gains noopener and noreferrer unless you already supplied them.',
+      }),
+      field({
+        name: "rel",
+        type: "string",
+        description:
+          "Optional anchor rel attribute. Merged with noopener noreferrer when target includes _blank.",
+      }),
+      field({
         name: "disableRipple",
         type: "boolean",
         defaultValue: "false",
@@ -1209,26 +1240,32 @@ const buttonApiDetails: DetailItem[] = [
         type: '"button" | "submit" | "reset"',
         defaultValue: "button",
         description:
-          "Passed directly to the underlying motion.button so the component does not submit forms accidentally by default.",
+          "Passed to the underlying button element so the component does not submit forms accidentally by default. Ignored for href links.",
       }),
       field({
         name: "children",
         type: "ReactNode",
         description:
-          "Content rendered above the ripple layer inside a z-10 span.",
+          "Label content rendered above the ripple layer inside a z-10 span.",
       }),
       field({
         name: "icon",
         type: "ReactNode",
         description:
-          "Optional icon rendered inline with the label. Nested SVGs inherit the built-in 1rem sizing utility.",
+          "Optional icon rendered inline with the label. Nested SVGs inherit the built-in size utility and variant-aware icon color.",
+      }),
+      field({
+        name: "iconLabel",
+        type: "string",
+        description:
+          "Convenience prop that sets aria-label, which is required for icon-only sizes when no visible text children are present.",
       }),
       field({
         name: "iconPosition",
         type: '"start" | "end"',
         defaultValue: '"start"',
         description:
-          "Chooses whether the optional icon renders before or after the button text inside the same inline content row.",
+          "Chooses whether the optional icon renders before or after the button text inside the same inline content row. Loading always renders at the start.",
       }),
       field({
         name: "className",
@@ -1240,15 +1277,17 @@ const buttonApiDetails: DetailItem[] = [
         name: "disabled",
         type: "boolean",
         description:
-          "Native disabled state. It also prevents ripple creation because the pointer-down handler exits early.",
+          "Native disabled state. Combines with loading to lock interaction and prevent ripple creation.",
       }),
     ],
     notes: [
-      "Standard button attributes such as onClick, aria-*, name, form, and data-* are forwarded to the underlying motion.button.",
+      "The component ships embedded Iconiq theme tokens so primary, border, accent, and destructive colors resolve correctly without a separate theme install.",
+      "Standard button attributes such as onClick, aria-*, name, form, and data-* are forwarded to the rendered button or anchor.",
+      "href mode renders a motion-enhanced anchor; button mode renders Base UI Button with a motion.button surface via the render prop.",
       "The local pointer-down handler calls your onPointerDown first, then respects e.defaultPrevented before deciding whether to enter the pressed state or spawn a ripple.",
       "Pointer, keyboard, and blur handlers keep the pressed state in sync so Space and Enter get the same immediate feedback as pointer input.",
       "animateSize works best on intrinsically sized buttons rather than width-constrained layouts such as w-full.",
-      "When you render an icon-only button, add an aria-label so assistive tech still gets an accessible name.",
+      "Icon-only sizes log a development warning when neither iconLabel nor aria-label is provided.",
     ],
   },
   {
@@ -1263,6 +1302,13 @@ const buttonApiDetails: DetailItem[] = [
         defaultValue: '"default"',
         description:
           "Visual recipe passed to the CVA helper when composing classes outside the Button component.",
+      }),
+      field({
+        name: "linkUnderline",
+        type: '"motion" | "static"',
+        defaultValue: '"motion" (when variant is link)',
+        description:
+          "Link variant only. Pass through the same underline mode used by the Button component.",
       }),
       field({
         name: "size",
@@ -1281,13 +1327,16 @@ const buttonApiDetails: DetailItem[] = [
     notes: [
       "Variants ship with six visual states and eight size tokens, including icon-only sizes.",
       "Because buttonVariants is a plain CVA export, you can compose it independently from the Button component when you do not want a motion.button element.",
+      "The recipe includes the same embedded Iconiq theme tokens as the Button root.",
     ],
   },
-  registryItem("b-button.json", [
-    "@base-ui/react",
-    "motion",
-    "class-variance-authority",
-  ]),
+  registryItem(
+    "b-button.json",
+    ["@base-ui/react", "motion", "class-variance-authority", "lucide-react"],
+    [
+      "Theme tokens are embedded in the component, so colors resolve out of the box without installing iconiq-theme separately.",
+    ]
+  ),
 ];
 
 const buttonGroupApiDetails: DetailItem[] = [

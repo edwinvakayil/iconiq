@@ -112,10 +112,15 @@
       "name": "b-button",
       "type": "registry:ui",
       "registryDependencies": [],
-      "dependencies": ["@base-ui/react", "motion", "class-variance-authority"],
+      "dependencies": [
+        "@base-ui/react",
+        "class-variance-authority",
+        "lucide-react",
+        "motion"
+      ],
       "devDependencies": [],
       "title": "Button (Base UI)",
-      "description": "Button with the same Iconiq API layered over the Base UI button primitive, preserving the original ripple, press spring, hover lift, and intrinsic-width animation.",
+      "description": "Button with embedded Iconiq theme tokens, optional loading, href link rendering, ripple, press spring, hover lift, and intrinsic-width animation over the Base UI button primitive.",
       "files": [
         {
           "path": "b-button.tsx",
