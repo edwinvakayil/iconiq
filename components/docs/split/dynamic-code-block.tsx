@@ -16,6 +16,7 @@ interface DynamicCodeBlockProps {
   variantCodes?: string[];
   variantTitles?: string[];
   hideDefaultTab?: boolean;
+  hideVariantTabs?: boolean;
 }
 
 export function DynamicCodeBlock({
@@ -24,8 +25,10 @@ export function DynamicCodeBlock({
   variantCodes = [],
   variantTitles = [],
   hideDefaultTab = false,
+  hideVariantTabs = false,
 }: DynamicCodeBlockProps) {
-  const { activeVariantIndex, setActiveVariantIndex } = useDocStore();
+  const { activeVariantIndex, playgroundCode, setActiveVariantIndex } =
+    useDocStore();
 
   const tabs = React.useMemo(() => {
     const items: { id: string; label: string }[] = [];
@@ -46,9 +49,10 @@ export function DynamicCodeBlock({
   }, [activeVariantIndex, hideDefaultTab, tabs]);
 
   const rawCodeToUse =
-    activeVariantIndex === -1
+    playgroundCode ??
+    (activeVariantIndex === -1
       ? originalCode
-      : variantCodes[activeVariantIndex] || originalCode;
+      : variantCodes[activeVariantIndex] || originalCode);
 
   const { contentRef, contentHeight, wrapperProps } = useSmoothCodeHeight(
     rawCodeToUse,
@@ -88,15 +92,17 @@ export function DynamicCodeBlock({
     setActiveVariantIndex(Number(id));
   };
 
+  const showVariantTabs = !hideVariantTabs && tabs.length > 1;
+
   return (
     <DocsCodePanel
       activeTab={activeTab}
       className={className}
       copyCode={rawCodeToUse.trim()}
       icon={Code2}
-      onTabChange={handleTabChange}
+      onTabChange={showVariantTabs ? handleTabChange : undefined}
       tabListAriaLabel="Example variant"
-      tabs={tabs.length > 1 ? tabs : undefined}
+      tabs={showVariantTabs ? tabs : undefined}
     >
       <div
         {...wrapperProps}

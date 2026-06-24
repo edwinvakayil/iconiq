@@ -104,42 +104,16 @@ import {
   IconButton,
 } from "@/components/ui/button-group";
 
-const previewWrapClassName =
-  "mx-auto flex max-w-full flex-wrap justify-center gap-2";
-const previewStackClassName =
-  "mx-auto flex max-w-full flex-col items-center gap-3";
-const buttonClassName =
-  "border-border bg-background px-3 hover:bg-muted hover:text-foreground";
-const iconButtonClassName =
-  "border-border bg-background p-0 text-muted-foreground hover:bg-muted hover:text-foreground [&_svg]:size-3.5";
-
 export function ButtonGroupDemo() {
   return (
-    <div className={previewStackClassName}>
-      <p className="text-center text-muted-foreground text-sm">
-        Review the latest project changes before sharing them with your team.
-      </p>
-      <div className={previewWrapClassName}>
-        <ButtonGroup>
-          <Button className={buttonClassName} size="sm">
-            Edit
-          </Button>
-          <Button className={buttonClassName} size="sm">
-            Preview
-          </Button>
-          <Button className={buttonClassName} size="sm">
-            Publish
-          </Button>
-          <IconButton
-            aria-label="More project actions"
-            className={iconButtonClassName}
-            size="sm"
-          >
-            <MoreHorizontalIcon />
-          </IconButton>
-        </ButtonGroup>
-      </div>
-    </div>
+    <ButtonGroup aria-label="Project actions" size="sm">
+      <Button>Edit</Button>
+      <Button>Preview</Button>
+      <Button>Publish</Button>
+      <IconButton aria-label="More project actions">
+        <MoreHorizontalIcon />
+      </IconButton>
+    </ButtonGroup>
   );
 }`),
   calendar:

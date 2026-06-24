@@ -1344,7 +1344,7 @@ const buttonGroupApiDetails: DetailItem[] = [
     id: "button-group-button",
     title: "Button",
     summary:
-      "Compact bordered action button with muted idle text, darker hover text, optional ripple feedback, and shadcn-style size controls.",
+      "Compact bordered action button with muted idle text, darker hover text, optional ripple feedback, variants, and shadcn-style size controls.",
     fields: [
       field({
         name: "children",
@@ -1364,7 +1364,14 @@ const buttonGroupApiDetails: DetailItem[] = [
         type: '"sm" | "md" | "lg"',
         defaultValue: '"md"',
         description:
-          "Compacts or expands the control while keeping the same toolbar-style border and hover treatment.",
+          "Compacts or expands the control. Inherits the ButtonGroup size when the button is rendered inside a group.",
+      }),
+      field({
+        name: "variant",
+        type: '"default" | "destructive" | "ghost" | "outline"',
+        defaultValue: '"default"',
+        description:
+          "Visual treatment for the action. Destructive is useful for delete or irreversible actions inside a toolbar.",
       }),
       field({
         name: "disableRipple",
@@ -1378,11 +1385,12 @@ const buttonGroupApiDetails: DetailItem[] = [
         type: "boolean",
         defaultValue: "true",
         description:
-          "Removes the outer border when set to false, which is useful for quieter toolbar-style actions.",
+          "Adds a standalone border when the button is used outside ButtonGroup. Inside ButtonGroup, the wrapper supplies the outer border and dividers instead.",
       }),
     ],
     notes: [
       "Most standard button props such as type, disabled, onClick, name, value, aria-*, and data-* are forwarded to the underlying motion button.",
+      "Inside ButtonGroup, individual borders are omitted so default and ghost variants sit flush in one connected surface.",
       "The public prop surface intentionally leaves out the native drag and CSS animation callback props because they conflict with Motion's own handler names.",
     ],
   },
@@ -1390,7 +1398,7 @@ const buttonGroupApiDetails: DetailItem[] = [
     id: "button-group-icon-button",
     title: "IconButton",
     summary:
-      "Icon-only toolbar action that shares the same compact border, muted idle tone, and optional ripple behavior as Button.",
+      "Icon-only toolbar action that shares the same compact border, muted idle tone, variants, and optional ripple behavior as Button.",
     fields: [
       field({
         name: "children",
@@ -1410,7 +1418,14 @@ const buttonGroupApiDetails: DetailItem[] = [
         type: '"sm" | "md" | "lg"',
         defaultValue: '"md"',
         description:
-          "Controls the square footprint of the icon button without changing its general look and feel.",
+          "Controls the square footprint of the icon button. Inherits the ButtonGroup size when rendered inside a group.",
+      }),
+      field({
+        name: "variant",
+        type: '"default" | "destructive" | "ghost" | "outline"',
+        defaultValue: '"default"',
+        description:
+          "Matches the Button variant surface for icon-only actions.",
       }),
       field({
         name: "disableRipple",
@@ -1431,7 +1446,7 @@ const buttonGroupApiDetails: DetailItem[] = [
     id: "button-group-layout",
     title: "ButtonGroup",
     summary:
-      "Slot-aware flex wrapper for arranging adjacent controls with horizontal or vertical rounding rules.",
+      "Slot-aware flex wrapper for arranging adjacent controls with horizontal or vertical rounding rules and shared size context.",
     fields: [
       field({
         name: "children",
@@ -1446,6 +1461,13 @@ const buttonGroupApiDetails: DetailItem[] = [
         defaultValue: '"horizontal"',
         description:
           "Chooses the grouped rounding and shared-border direction used by buttonGroupVariants.",
+      }),
+      field({
+        name: "size",
+        type: '"sm" | "md" | "lg"',
+        defaultValue: '"md"',
+        description:
+          "Shared density for Button, IconButton, and ButtonGroupText children unless a child overrides size locally.",
       }),
       field({
         name: "className",
@@ -1545,35 +1567,67 @@ const buttonGroupApiDetails: DetailItem[] = [
       }),
     ],
     notes: [
-      "Only valid React elements are rendered. Non-element children are ignored.",
+      "Only valid React elements are rendered. Non-element children are ignored and warned about in development.",
       "The child node itself is not preserved; ButtonGroupItems reads each child's props and children, then renders a fresh motion button for that slot.",
-      "When showDividers is false, hover feedback moves as a shared spring layer between items instead of flashing independently on each button.",
+      "When showDividers is false, hover feedback moves as a shared spring layer between items and re-measures on resize.",
+      'Uses data-slot="button-group-items" so it can sit inside ButtonGroup without breaking connected layout rules.',
     ],
   },
   {
     id: "segmented-control",
     title: "SegmentedControl",
     summary:
-      "String-based segmented selector with compact sizing, keyboard support, muted idle labels, and a spring-driven selected indicator.",
+      "Segmented selector with string or rich option objects, compact sizing, keyboard support, RTL-aware navigation, form name support, and a spring-driven selected indicator.",
     fields: [
       field({
         name: "options",
-        type: "string[]",
+        type: "Array<string | { value: string; label?: ReactNode; disabled?: boolean; icon?: ReactNode }>",
         required: true,
         description:
-          "Ordered list of visible segments. The first option becomes the uncontrolled initial selection when value is not provided.",
+          "Ordered list of segments. Each entry can be a plain string or an object with a stable value, optional label, icon, and disabled flag.",
       }),
       field({
         name: "value",
         type: "string",
         description:
-          "Controlled selected option. When provided, the internal state syncs to this prop through an effect.",
+          "Controlled selected value. When provided, the internal state syncs to this prop through an effect.",
       }),
       field({
         name: "onChange",
         type: "(value: string) => void",
         description:
-          "Called with the selected option whenever a segment is pressed.",
+          "Called with the selected value whenever a segment is pressed or moved to with the keyboard.",
+      }),
+      field({
+        name: "ariaLabel",
+        type: "string",
+        description:
+          "Accessible name for the radiogroup. Provide this or ariaLabelledBy so screen readers can identify the control.",
+      }),
+      field({
+        name: "ariaLabelledBy",
+        type: "string",
+        description:
+          "ID of an external label element that names the radiogroup. Use when a visible label already exists in the page.",
+      }),
+      field({
+        name: "name",
+        type: "string",
+        description:
+          "When provided, renders a hidden input so the selected value can participate in native form submission.",
+      }),
+      field({
+        name: "disabled",
+        type: "boolean",
+        defaultValue: "false",
+        description: "Disables the entire control and every segment inside it.",
+      }),
+      field({
+        name: "orientation",
+        type: '"horizontal" | "vertical"',
+        defaultValue: '"horizontal"',
+        description:
+          "Layout direction for the segmented shell and the primary arrow-key axis.",
       }),
       field({
         name: "className",
@@ -1584,9 +1638,8 @@ const buttonGroupApiDetails: DetailItem[] = [
       field({
         name: "layoutId",
         type: "string",
-        defaultValue: '"segmented-indicator"',
         description:
-          "Motion layout id used by the selected indicator. Override it when you render multiple segmented controls on the same page and want isolated indicator motion.",
+          "Optional Motion layout id for the selected indicator. When omitted, a unique id is generated per instance so multiple controls on one page do not share indicator motion.",
       }),
       field({
         name: "size",
@@ -1598,6 +1651,8 @@ const buttonGroupApiDetails: DetailItem[] = [
     ],
     notes: [
       "The control uses radiogroup semantics with arrow-key, Home, and End navigation.",
+      "Arrow-left and arrow-right reverse automatically in RTL layouts.",
+      "Disabled options are skipped while moving selection with the keyboard.",
     ],
   },
   {
@@ -1607,6 +1662,7 @@ const buttonGroupApiDetails: DetailItem[] = [
       "Each export keeps the same tactile feel, but the default presentation is now much more compact and toolbar-like.",
     notes: [
       "Button, IconButton, and ButtonGroupItems all default to muted text that darkens on hover, which better matches compact shadcn-style controls.",
+      "ButtonGroup applies embedded theme tokens once at the group root so nested buttons do not repeat the full token block.",
       "The ButtonGroup wrapper uses the exported buttonGroupVariants CVA recipe, while existing motion-powered controls keep their ripple and shared-hover behavior.",
       "Ripple feedback can now be turned off per surface, which is useful when you want a quieter desktop toolbar feel.",
       "SegmentedControl keeps motion focused on selection changes rather than entrance effects, so the control feels faster and less oversized.",

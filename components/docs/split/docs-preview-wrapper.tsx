@@ -4,7 +4,7 @@ import { useDragControls } from "motion/react";
 import * as React from "react";
 
 import {
-  DocsPreviewPersonalizeDrawer,
+  DocsPreviewSettingsMorph,
   DocsPreviewSourceDrawer,
   DocsPreviewToolbar,
   DocsPreviewVariantBar,
@@ -28,7 +28,10 @@ import type { CommandMenuGroupDef } from "@/registry/command-palette";
 interface DocsPreviewWrapperProps {
   children: React.ReactNode;
   fullWidthPreview?: boolean;
-  personalizeContent?: React.ReactNode;
+  personalizeContent?:
+    | React.ReactNode
+    | ((props: { onClose: () => void }) => React.ReactNode);
+  personalizeTitle?: string;
   sourceCodeFilename?: string;
   sourceCodeKey?: string;
   variants?: VariantItem[];
@@ -68,6 +71,7 @@ export function DocsPreviewWrapper({
   children,
   fullWidthPreview,
   personalizeContent,
+  personalizeTitle = "Settings",
   sourceCodeFilename,
   sourceCodeKey,
   variants = [],
@@ -160,13 +164,26 @@ export function DocsPreviewWrapper({
     });
   }, []);
 
-  const handleOpenPersonalize = React.useCallback(() => {
-    if (isExpanded) {
-      setIsExpanded(false);
-    }
-    setShowPersonalize(true);
-    setShowSource(false);
-  }, [isExpanded]);
+  const handleClosePersonalize = React.useCallback(() => {
+    setShowPersonalize(false);
+  }, []);
+
+  const handleTogglePersonalize = React.useCallback(() => {
+    setShowPersonalize((current) => {
+      const next = !current;
+
+      if (next) {
+        setShowSource(false);
+      }
+
+      return next;
+    });
+  }, []);
+
+  const resolvedPersonalizeContent =
+    typeof personalizeContent === "function"
+      ? personalizeContent({ onClose: handleClosePersonalize })
+      : personalizeContent;
 
   const handleCopySource = React.useCallback(async () => {
     await navigator.clipboard.writeText(sourceCode);
@@ -195,10 +212,12 @@ export function DocsPreviewWrapper({
     splitPreviewRectRef,
   });
 
+  const variantPreview =
+    resolvedActiveVariant >= 0
+      ? variants[resolvedActiveVariant]?.preview
+      : undefined;
   const activePreview =
-    resolvedActiveVariant === -1
-      ? children
-      : variants[resolvedActiveVariant]?.preview;
+    variantPreview === undefined ? children : variantPreview;
 
   const isFullWidth =
     fullWidthPreview ||
@@ -215,13 +234,10 @@ export function DocsPreviewWrapper({
       <DocsPreviewToolbar
         hasSourceCode={hasSourceCode}
         isExpanded={isExpanded}
-        onOpenPersonalize={handleOpenPersonalize}
         onReload={() => setKey((current) => current + 1)}
         onSourceToggle={handleSourceToggle}
         onToggleExpanded={handleToggleExpanded}
-        personalizeContent={personalizeContent}
         searchGroups={searchGroups}
-        showPersonalize={showPersonalize}
         showSource={showSource}
       />
 
@@ -250,20 +266,23 @@ export function DocsPreviewWrapper({
         </div>
       </div>
 
-      <DocsPreviewVariantBar
-        hideDefaultVariant={hideDefaultVariant}
-        onSelectVariant={setActiveVariant}
-        resolvedActiveVariant={resolvedActiveVariant}
-        variants={variants}
-      />
-
-      {personalizeContent ? (
-        <DocsPreviewPersonalizeDrawer
-          mounted={mounted}
-          onClose={() => setShowPersonalize(false)}
-          personalizeContent={personalizeContent}
-          showPersonalize={showPersonalize}
+      {personalizeContent ? null : (
+        <DocsPreviewVariantBar
+          hideDefaultVariant={hideDefaultVariant}
+          onSelectVariant={setActiveVariant}
+          resolvedActiveVariant={resolvedActiveVariant}
+          variants={variants}
         />
+      )}
+
+      {resolvedPersonalizeContent ? (
+        <DocsPreviewSettingsMorph
+          onToggle={handleTogglePersonalize}
+          show={showPersonalize}
+          title={personalizeTitle}
+        >
+          {resolvedPersonalizeContent}
+        </DocsPreviewSettingsMorph>
       ) : null}
 
       <DocsPreviewSourceDrawer

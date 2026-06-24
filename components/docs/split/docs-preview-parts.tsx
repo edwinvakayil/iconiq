@@ -18,6 +18,7 @@ import {
   type PanInfo,
 } from "motion/react";
 import type { ReactNode } from "react";
+import * as React from "react";
 import * as ReactDOM from "react-dom";
 
 import { CommandMenu } from "@/components/command-menu";
@@ -29,7 +30,7 @@ import type { CommandMenuGroupDef } from "@/registry/command-palette";
 
 export interface VariantItem {
   title: string;
-  preview: ReactNode;
+  preview?: ReactNode;
   code?: string;
   fullWidth?: boolean;
 }
@@ -66,10 +67,7 @@ export function DocsPreviewToolbar({
   onReload,
   onSourceToggle,
   onToggleExpanded,
-  onOpenPersonalize,
-  personalizeContent,
   searchGroups,
-  showPersonalize,
   showSource,
 }: {
   hasSourceCode: boolean;
@@ -77,10 +75,7 @@ export function DocsPreviewToolbar({
   onReload: () => void;
   onSourceToggle: () => void;
   onToggleExpanded: () => void;
-  onOpenPersonalize: () => void;
-  personalizeContent?: ReactNode;
   searchGroups: CommandMenuGroupDef[];
-  showPersonalize: boolean;
   showSource: boolean;
 }) {
   return (
@@ -114,19 +109,6 @@ export function DocsPreviewToolbar({
             type="button"
           >
             <CodeXml className="size-4" />
-          </button>
-        </PreviewToolbarCell>
-      ) : null}
-
-      {personalizeContent ? (
-        <PreviewToolbarCell active={showPersonalize}>
-          <button
-            aria-label="Personalize"
-            className={previewToolbarIconClass}
-            onClick={onOpenPersonalize}
-            type="button"
-          >
-            <SlidersHorizontal className="size-4" />
           </button>
         </PreviewToolbarCell>
       ) : null}
@@ -247,6 +229,218 @@ export function DocsPreviewVariantBar({
           </PreviewVariantTab>
         ))}
       </div>
+    </div>
+  );
+}
+
+const SETTINGS_COLLAPSED_SIZE = 44;
+const SETTINGS_EXPANDED_WIDTH = 352;
+const SETTINGS_MORPH_SPRING = {
+  type: "spring" as const,
+  stiffness: 400,
+  damping: 38,
+  mass: 0.92,
+};
+
+function getSettingsPanelMaxHeight() {
+  if (typeof window === "undefined") {
+    return 448;
+  }
+
+  return Math.min(448, window.innerHeight * 0.56);
+}
+
+function getSettingsPanelWidth() {
+  if (typeof window === "undefined") {
+    return SETTINGS_EXPANDED_WIDTH;
+  }
+
+  return Math.min(SETTINGS_EXPANDED_WIDTH, window.innerWidth - 32);
+}
+
+export function DocsPreviewSettingsToggle({
+  active,
+  onClick,
+}: {
+  active: boolean;
+  onClick: () => void;
+}) {
+  return (
+    <div className="pointer-events-none absolute right-0 bottom-0 z-10 p-3 sm:p-4">
+      <button
+        aria-label={active ? "Close settings" : "Open settings"}
+        aria-pressed={active}
+        className={cn(
+          "pointer-events-auto flex size-11 items-center justify-center rounded-full border border-border/40 bg-white/80 text-foreground/70 shadow-[0_8px_32px_rgba(0,0,0,0.08)] backdrop-blur-xl transition-all ease-in-out hover:text-foreground active:scale-95 dark:border-white/[0.06] dark:bg-[#121212]/80",
+          active &&
+            "bg-foreground text-background dark:bg-zinc-100 dark:text-zinc-900"
+        )}
+        onClick={onClick}
+        type="button"
+      >
+        <SlidersHorizontal className="size-4" />
+      </button>
+    </div>
+  );
+}
+
+export function DocsPreviewSettingsPanel({
+  children,
+  show,
+  title,
+}: {
+  children: ReactNode;
+  show: boolean;
+  title: string;
+}) {
+  return (
+    <AnimatePresence>
+      {show ? (
+        <motion.aside
+          animate={{ opacity: 1, y: 0 }}
+          aria-label={`${title} settings`}
+          className="pointer-events-auto absolute right-4 bottom-4 z-40 max-h-[min(28rem,56%)] w-[min(calc(100%-2rem),22rem)]"
+          exit={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 20 }}
+          transition={{ type: "spring", stiffness: 420, damping: 34 }}
+        >
+          {children}
+        </motion.aside>
+      ) : null}
+    </AnimatePresence>
+  );
+}
+
+export function DocsPreviewSettingsMorph({
+  children,
+  onToggle,
+  show,
+  title,
+}: {
+  children: ReactNode;
+  onToggle: () => void;
+  show: boolean;
+  title: string;
+}) {
+  const contentRef = React.useRef<HTMLDivElement>(null);
+  const [expandedHeight, setExpandedHeight] = React.useState(
+    SETTINGS_COLLAPSED_SIZE
+  );
+  const [expandedWidth, setExpandedWidth] = React.useState(
+    SETTINGS_EXPANDED_WIDTH
+  );
+
+  const measurePanel = React.useCallback(() => {
+    setExpandedWidth(getSettingsPanelWidth());
+
+    const node = contentRef.current;
+
+    if (!node) {
+      return;
+    }
+
+    setExpandedHeight(Math.min(node.scrollHeight, getSettingsPanelMaxHeight()));
+  }, []);
+
+  React.useLayoutEffect(() => {
+    if (!show) {
+      return;
+    }
+
+    const node = contentRef.current;
+
+    if (!node) {
+      return;
+    }
+
+    const previousVisibility = node.style.visibility;
+    const previousPointerEvents = node.style.pointerEvents;
+    node.style.visibility = "visible";
+    node.style.pointerEvents = "none";
+
+    measurePanel();
+
+    node.style.visibility = previousVisibility;
+    node.style.pointerEvents = previousPointerEvents;
+  }, [measurePanel, show]);
+
+  React.useEffect(() => {
+    if (!show) {
+      return;
+    }
+
+    measurePanel();
+    window.addEventListener("resize", measurePanel);
+
+    const node = contentRef.current;
+    const resizeObserver =
+      typeof ResizeObserver !== "undefined" && node
+        ? new ResizeObserver(() => measurePanel())
+        : null;
+
+    if (resizeObserver && node) {
+      resizeObserver.observe(node);
+    }
+
+    return () => {
+      window.removeEventListener("resize", measurePanel);
+      resizeObserver?.disconnect();
+    };
+  }, [measurePanel, show]);
+
+  const targetHeight = show ? expandedHeight : SETTINGS_COLLAPSED_SIZE;
+
+  return (
+    <div className="pointer-events-none absolute right-4 bottom-4 z-40">
+      <motion.div
+        animate={{
+          borderRadius: show ? 22 : SETTINGS_COLLAPSED_SIZE / 2,
+          height: targetHeight,
+          width: show ? expandedWidth : SETTINGS_COLLAPSED_SIZE,
+        }}
+        aria-label={show ? `${title} settings` : undefined}
+        className="pointer-events-auto overflow-hidden border border-black/[0.06] bg-[#f5f5f5] shadow-[0_20px_48px_-28px_rgba(0,0,0,0.35)] will-change-[width,height,border-radius] dark:border-white/[0.08] dark:bg-[#0f0f0f] dark:shadow-none"
+        role={show ? "dialog" : undefined}
+        style={{ transformOrigin: "100% 100%" }}
+        transition={SETTINGS_MORPH_SPRING}
+      >
+        <motion.button
+          animate={{
+            opacity: show ? 0 : 1,
+            scale: show ? 0.86 : 1,
+          }}
+          aria-label="Open settings"
+          className="absolute inset-0 z-10 flex items-center justify-center text-foreground/70"
+          onClick={onToggle}
+          style={{ pointerEvents: show ? "none" : "auto" }}
+          tabIndex={show ? -1 : 0}
+          transition={{ duration: 0.14, ease: [0.4, 0, 0.2, 1] }}
+          type="button"
+        >
+          <SlidersHorizontal className="size-4" />
+        </motion.button>
+
+        <motion.div
+          animate={{
+            opacity: show ? 1 : 0,
+          }}
+          aria-hidden={!show}
+          className="absolute inset-x-0 top-0 w-full overflow-y-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          ref={contentRef}
+          style={{
+            maxHeight: getSettingsPanelMaxHeight(),
+            pointerEvents: show ? "auto" : "none",
+            visibility: show ? "visible" : "hidden",
+          }}
+          transition={{
+            delay: show ? 0.09 : 0,
+            duration: 0.16,
+            ease: [0.16, 1, 0.3, 1],
+          }}
+        >
+          {children}
+        </motion.div>
+      </motion.div>
     </div>
   );
 }

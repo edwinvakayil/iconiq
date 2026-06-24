@@ -7,6 +7,7 @@ interface SplitUsageCodeProps {
   variantCodes?: string[];
   variantTitles?: string[];
   hideDefaultTab?: boolean;
+  hideVariantTabs?: boolean;
 }
 
 export function SplitUsageCode({
@@ -14,6 +15,7 @@ export function SplitUsageCode({
   variantCodes = [],
   variantTitles = [],
   hideDefaultTab = false,
+  hideVariantTabs = false,
 }: SplitUsageCodeProps) {
   const trimmedUsageCode = usageCode.trim();
 
@@ -25,6 +27,7 @@ export function SplitUsageCode({
     <div className="usage-code-scrollbar-none">
       <DynamicCodeBlock
         hideDefaultTab={hideDefaultTab}
+        hideVariantTabs={hideVariantTabs}
         originalCode={trimmedUsageCode}
         variantCodes={variantCodes}
         variantTitles={variantTitles}

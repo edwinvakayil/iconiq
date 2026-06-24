@@ -682,6 +682,8 @@ function ComponentDocsPage({
   installationContent,
   headerActions,
   previewClassName,
+  previewPersonalize,
+  previewPersonalizeTitle,
   examples = [],
   fullWidthPreview = false,
   hideDefaultPreviewVariant = false,
@@ -712,6 +714,10 @@ function ComponentDocsPage({
   actionDescription?: ReactNode;
   railNotes?: string[];
   previewClassName?: string;
+  previewPersonalize?:
+    | ReactNode
+    | ((props: { onClose: () => void }) => ReactNode);
+  previewPersonalizeTitle?: string;
   headerActions?: ReactNode;
   editHref?: string;
   examples?: VariantItem[];
@@ -855,6 +861,7 @@ function ComponentDocsPage({
                 <DocsSection id="usage" title="Usage">
                   <SplitUsageCode
                     hideDefaultTab={hideDefaultPreviewVariant}
+                    hideVariantTabs={examples.length > 0}
                     key={componentName}
                     usageCode={usageCode}
                     variantCodes={variantCodes}
@@ -902,6 +909,8 @@ function ComponentDocsPage({
                 fullWidthPreview={fullWidthPreview}
                 hideDefaultVariant={hideDefaultPreviewVariant}
                 key={componentName}
+                personalizeContent={previewPersonalize}
+                personalizeTitle={previewPersonalizeTitle}
                 previewClassName={previewClassName}
                 sourceCodeFilename={`${componentName}.tsx`}
                 sourceCodeKey={componentName}
