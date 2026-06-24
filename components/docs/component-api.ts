@@ -5056,17 +5056,16 @@ const toggleApiDetails: DetailItem[] = [
           "Visual treatment. Outline adds a border for toolbar or segmented layouts.",
       }),
       field({
-        name: "size",
-        type: '"default" | "sm" | "lg"',
-        defaultValue: '"default"',
-        description:
-          "Height, padding, and icon sizing preset for compact toolbars or larger action rows.",
-      }),
-      field({
         name: "disabled",
         type: "boolean",
         description:
           "Disables interaction and dims the control while preserving its pressed appearance.",
+      }),
+      field({
+        name: "children",
+        type: "React.ReactNode",
+        description:
+          "Icon, text label, or icon-plus-label content. Children sit in normal document flow so labels expand the control width naturally.",
       }),
       field({
         name: "className",
@@ -5076,7 +5075,9 @@ const toggleApiDetails: DetailItem[] = [
       }),
     ],
     notes: [
-      "Use aria-label or visible text when the toggle contains only an icon.",
+      "Use aria-label when the toggle contains only an icon. Visible text or icon-plus-label children do not need a separate aria-label.",
+      "Off-state copy uses muted foreground; pressed state shifts to foreground for clearer toolbar contrast.",
+      "Use className to adjust footprint for icon-only controls, such as fixed square dimensions in toolbars.",
       "Additional primitive props such as value, name, and form attributes are forwarded to the root button.",
     ],
   },
@@ -5103,26 +5104,33 @@ const toggleGroupApiDetails: DetailItem[] = [
     id: "toggle-group",
     title: "ToggleGroup",
     summary:
-      "Root container for a connected set of toggle buttons with shared variant, size, spacing, and orientation settings.",
+      "Root container for toggle buttons with shared variant, spacing, and orientation. Use spacing={0} for a connected segmented layout.",
     fields: [
       field({
         name: "type",
         type: '"single" | "multiple"',
         defaultValue: '"multiple"',
         description:
-          "Selection mode. Multiple allows several active items by default; single keeps one pressed item at a time.",
+          "Radix selection mode. Multiple allows several active items by default; single keeps one pressed item at a time.",
+      }),
+      field({
+        name: "multiple",
+        type: "boolean",
+        defaultValue: "true",
+        description:
+          "Base UI selection mode. Pass multiple={false} for single selection; true keeps several active items.",
       }),
       field({
         name: "value",
         type: "string | string[]",
         description:
-          "Controlled selection. Pass a string for single mode or a string array for multiple mode.",
+          "Controlled selection. Radix uses a string in single mode and a string array in multiple mode. Base UI always uses a string array.",
       }),
       field({
         name: "defaultValue",
         type: "string | string[]",
         description:
-          "Initial selection for uncontrolled usage in the matching single or multiple mode.",
+          "Initial selection for uncontrolled usage. Match the selection mode and value shape for your installed primitive.",
       }),
       field({
         name: "onValueChange",
@@ -5138,30 +5146,29 @@ const toggleGroupApiDetails: DetailItem[] = [
           "Shared visual treatment applied to every item unless an item overrides it locally.",
       }),
       field({
-        name: "size",
-        type: '"default" | "sm" | "lg"',
-        defaultValue: '"default"',
-        description:
-          "Shared height, padding, and icon sizing preset for all group items.",
-      }),
-      field({
         name: "spacing",
         type: "number",
         defaultValue: "1",
         description:
-          "Gap between items in spacing units. Defaults to 1 (4px). Set to 0 to remove the gap.",
+          "Gap between items in spacing units. Defaults to 1 (4px). Set to 0 for a connected outline shell with one outer border and internal dividers.",
       }),
       field({
         name: "orientation",
         type: '"horizontal" | "vertical"',
         defaultValue: '"horizontal"',
         description:
-          "Layout direction for the group. Vertical stacks items and adjusts connected border handling.",
+          "Layout direction for the group. Also sets aria-orientation and connected divider direction when spacing={0}.",
       }),
       field({
         name: "disabled",
         type: "boolean",
         description: "Disables the entire group and all nested items.",
+      }),
+      field({
+        name: "aria-label",
+        type: "string",
+        description:
+          "Accessible name for the group. Required when items are icon-only and no visible group label is present.",
       }),
       field({
         name: "className",
@@ -5171,9 +5178,10 @@ const toggleGroupApiDetails: DetailItem[] = [
       }),
     ],
     notes: [
-      "Default spacing is 4px between items. Pass spacing={0} to remove the gap entirely.",
+      "Default spacing is 4px between items. Pass spacing={0} for a connected outline shell with one outer border and internal dividers between items.",
       "Each item uses the same fluid wipe fill, sheen sweep, and icon press feedback as the standalone Toggle component.",
-      "Group items inherit variant and size from context but can override either prop locally.",
+      "Group items inherit variant from context but can override it locally. Use className on items to adjust footprint for icon-only controls.",
+      "Radix installs use type; Base UI installs use multiple. Both default to multi-select.",
     ],
   },
   {
@@ -5196,16 +5204,16 @@ const toggleGroupApiDetails: DetailItem[] = [
           "Optional local override for the shared group variant treatment.",
       }),
       field({
-        name: "size",
-        type: '"default" | "sm" | "lg"',
-        description:
-          "Optional local override for the shared group size preset.",
-      }),
-      field({
         name: "disabled",
         type: "boolean",
         description:
           "Disables this item without affecting the rest of the group.",
+      }),
+      field({
+        name: "aria-label",
+        type: "string",
+        description:
+          "Accessible name for icon-only items. Omit when the item already contains visible text.",
       }),
       field({
         name: "className",
@@ -5216,12 +5224,12 @@ const toggleGroupApiDetails: DetailItem[] = [
       field({
         name: "children",
         type: "ReactNode",
-        description:
-          "Icon or label content rendered inside the item. Pair icon-only items with aria-label.",
+        description: "Icon or label content rendered inside the item.",
       }),
     ],
     notes: [
       "Items share the standalone toggle fluid motion system: liquid wipe fill, sheen sweep, and icon press squeeze.",
+      "Supports aria-invalid styling for form validation parity with the standalone Toggle component.",
     ],
   },
   registryItem("b-togglegroup.json", [

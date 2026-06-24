@@ -13,11 +13,8 @@ const toggleCornerClassName =
 const toggleCornerSmClassName =
   "rounded-[min(var(--radius-md),12px)] supports-[corner-shape:squircle]:corner-squircle supports-[corner-shape:squircle]:rounded-[14px]";
 
-const toggleGroupCornerClassName =
-  "rounded-lg supports-[corner-shape:squircle]:corner-squircle supports-[corner-shape:squircle]:rounded-[11px]";
-
-const toggleGroupCornerSmClassName =
-  "data-[size=sm]:rounded-[min(var(--radius-md),10px)] data-[size=sm]:supports-[corner-shape:squircle]:corner-squircle data-[size=sm]:supports-[corner-shape:squircle]:rounded-[12px]";
+const togglePressedTextRadix =
+  "text-muted-foreground data-[state=on]:text-foreground";
 
 const toggleFillClassName =
   "pointer-events-none absolute inset-0 z-0 rounded-[inherit] bg-muted supports-[corner-shape:squircle]:[corner-shape:inherit]";
@@ -64,6 +61,48 @@ function runSheenSweep(
     duration: 0.58,
     ease: [0.4, 0, 0.2, 1],
   });
+}
+
+function resolveIsPressed({
+  isPressed,
+  "data-state": dataState,
+  "data-pressed": dataPressed,
+  "aria-pressed": ariaPressed,
+}: {
+  isPressed?: boolean;
+  "data-state"?: string;
+  "data-pressed"?: string | boolean;
+  "aria-pressed"?: boolean | "true" | "false" | "mixed";
+}) {
+  if (isPressed !== undefined) {
+    return isPressed;
+  }
+
+  if (dataState === "on") {
+    return true;
+  }
+
+  if (dataState === "off") {
+    return false;
+  }
+
+  if (dataPressed === true || dataPressed === "true" || dataPressed === "") {
+    return true;
+  }
+
+  if (dataPressed === false || dataPressed === "false") {
+    return false;
+  }
+
+  if (ariaPressed === true || ariaPressed === "true") {
+    return true;
+  }
+
+  if (ariaPressed === false || ariaPressed === "false") {
+    return false;
+  }
+
+  return false;
 }
 
 function useToggleFluidMotion(isPressed: boolean) {
@@ -189,13 +228,13 @@ function ToggleFluidMotionLayers({
           }}
         />
       </span>
-      <span className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center">
+      <span className="relative z-10 inline-flex items-center justify-center gap-[inherit] [&_svg]:shrink-0">
         <motion.span
-          className="inline-flex origin-center items-center justify-center"
+          className="inline-flex origin-center items-center justify-center gap-[inherit]"
           style={{ scale: iconScale }}
         >
           <motion.span
-            className="inline-flex origin-center items-center justify-center [&_svg]:block"
+            className="inline-flex origin-center items-center justify-center gap-[inherit] [&_svg]:block"
             style={{
               scaleX: iconScaleX,
               scaleY: iconScaleY,
@@ -209,18 +248,102 @@ function ToggleFluidMotionLayers({
   );
 }
 
+type FluidToggleButtonProps = React.ComponentProps<"button"> & {
+  children: React.ReactNode;
+  isPressed?: boolean;
+  "data-pressed"?: string | boolean;
+  "data-state"?: "on" | "off" | string;
+};
+
+const FluidToggleButton = React.forwardRef<
+  HTMLButtonElement,
+  FluidToggleButtonProps
+>(function FluidToggleButton(
+  {
+    children,
+    className,
+    disabled,
+    isPressed: isPressedProp,
+    onPointerDown,
+    onPointerLeave,
+    onPointerUp,
+    type = "button",
+    "aria-pressed": ariaPressed,
+    "data-pressed": dataPressed,
+    "data-state": dataState,
+    ...props
+  },
+  ref
+) {
+  const isPressed = resolveIsPressed({
+    isPressed: isPressedProp,
+    "aria-pressed": ariaPressed,
+    "data-pressed": dataPressed,
+    "data-state": dataState,
+  });
+  const fluidMotion = useToggleFluidMotion(isPressed);
+
+  return (
+    <button
+      aria-pressed={ariaPressed}
+      className={className}
+      data-pressed={dataPressed}
+      data-state={dataState}
+      disabled={disabled}
+      onPointerDown={(event) => {
+        onPointerDown?.(event);
+        fluidMotion.handlePointerDown(event, disabled);
+      }}
+      onPointerLeave={(event) => {
+        onPointerLeave?.(event);
+        fluidMotion.handlePointerLeave();
+      }}
+      onPointerUp={(event) => {
+        onPointerUp?.(event);
+        fluidMotion.handlePointerUp();
+      }}
+      ref={ref}
+      type={type}
+      {...props}
+    >
+      <ToggleFluidMotionLayers {...fluidMotion}>
+        {children}
+      </ToggleFluidMotionLayers>
+    </button>
+  );
+});
+
+FluidToggleButton.displayName = "FluidToggleButton";
+const toggleGroupRootClassName = cn(
+  "group/toggle-group flex w-fit flex-row items-center gap-[--spacing(var(--gap))] data-vertical:flex-col data-vertical:items-stretch",
+  "data-[spacing=0]:overflow-hidden",
+  "data-[spacing=0]:rounded-lg",
+  "data-[spacing=0]:supports-[corner-shape:squircle]:corner-squircle",
+  "data-[spacing=0]:supports-[corner-shape:squircle]:rounded-[11px]",
+  "data-[spacing=0]:has-[>[data-slot=toggle-group-item][data-variant=outline]]:border",
+  "data-[spacing=0]:has-[>[data-slot=toggle-group-item][data-variant=outline]]:border-input",
+  "data-[spacing=0]:[&>[data-slot=toggle-group-item]]:rounded-none",
+  "data-[spacing=0]:[&>[data-slot=toggle-group-item]]:supports-[corner-shape:squircle]:rounded-none",
+  "data-[spacing=0]:has-[>[data-slot=toggle-group-item][data-variant=outline]]:[&>[data-slot=toggle-group-item][data-variant=outline]]:border-0",
+  "data-[spacing=0]:has-[>[data-slot=toggle-group-item][data-variant=outline]]:data-horizontal:[&>[data-slot=toggle-group-item][data-variant=outline]~[data-slot=toggle-group-item][data-variant=outline]]:border-l",
+  "data-[spacing=0]:has-[>[data-slot=toggle-group-item][data-variant=outline]]:data-horizontal:[&>[data-slot=toggle-group-item][data-variant=outline]~[data-slot=toggle-group-item][data-variant=outline]]:border-input",
+  "data-[spacing=0]:has-[>[data-slot=toggle-group-item][data-variant=outline]]:data-vertical:[&>[data-slot=toggle-group-item][data-variant=outline]~[data-slot=toggle-group-item][data-variant=outline]]:border-t",
+  "data-[spacing=0]:has-[>[data-slot=toggle-group-item][data-variant=outline]]:data-vertical:[&>[data-slot=toggle-group-item][data-variant=outline]~[data-slot=toggle-group-item][data-variant=outline]]:border-input"
+);
+
 const toggleGroupItemVariants = cva(
   cn(
     toggleCornerClassName,
-    "relative inline-flex shrink-0 items-center justify-center gap-1 overflow-hidden whitespace-nowrap font-medium text-sm outline-none transition-colors focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 [&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0"
+    "relative inline-flex shrink-0 cursor-pointer items-center justify-center gap-1 overflow-hidden whitespace-nowrap font-medium text-sm outline-none transition-colors focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0"
   ),
   {
     variants: {
       variant: {
-        default:
-          "bg-transparent text-muted-foreground data-[state=on]:text-foreground",
-        outline:
-          "border border-input bg-transparent text-muted-foreground data-[state=on]:text-foreground",
+        default: cn("bg-transparent", togglePressedTextRadix),
+        outline: cn(
+          "border border-input bg-transparent",
+          togglePressedTextRadix
+        ),
       },
       size: {
         default:
@@ -249,55 +372,6 @@ const ToggleGroupContext = React.createContext<
   variant: "default",
   spacing: 1,
   orientation: "horizontal",
-});
-
-type MotionToggleGroupItemProps = React.ComponentProps<"button"> & {
-  children: React.ReactNode;
-};
-
-const MotionToggleGroupItem = React.forwardRef<
-  HTMLButtonElement,
-  MotionToggleGroupItemProps
->(function MotionToggleGroupItem(
-  { children, className, disabled, ...props },
-  ref
-) {
-  const {
-    onPointerDown,
-    onPointerLeave,
-    onPointerUp,
-    "data-state": dataState,
-    ...resolvedProps
-  } = props as React.ComponentProps<"button"> & { "data-state"?: "on" | "off" };
-  const isSelected = dataState === "on";
-  const fluidMotion = useToggleFluidMotion(isSelected);
-
-  return (
-    <button
-      className={className}
-      disabled={disabled}
-      onPointerDown={(event) => {
-        onPointerDown?.(event);
-        fluidMotion.handlePointerDown(event, disabled);
-      }}
-      onPointerLeave={(event) => {
-        onPointerLeave?.(event);
-        fluidMotion.handlePointerLeave();
-      }}
-      onPointerUp={(event) => {
-        onPointerUp?.(event);
-        fluidMotion.handlePointerUp();
-      }}
-      ref={ref}
-      type="button"
-      {...resolvedProps}
-      data-state={dataState}
-    >
-      <ToggleFluidMotionLayers {...fluidMotion}>
-        {children}
-      </ToggleFluidMotionLayers>
-    </button>
-  );
 });
 
 type ToggleGroupSharedProps = VariantProps<typeof toggleGroupItemVariants> & {
@@ -330,22 +404,27 @@ type ToggleGroupMultipleProps = ToggleGroupSharedProps &
 
 type ToggleGroupProps = ToggleGroupSingleProps | ToggleGroupMultipleProps;
 
-function ToggleGroup({
-  className,
-  variant,
-  size,
-  spacing = 1,
-  orientation = "horizontal",
-  type = "multiple",
-  children,
-  ...props
-}: ToggleGroupProps) {
-  const groupClassName = cn(
-    "group/toggle-group flex w-fit flex-row items-center gap-[--spacing(var(--gap))] data-vertical:flex-col data-vertical:items-stretch",
-    toggleGroupCornerClassName,
-    toggleGroupCornerSmClassName,
-    className
-  );
+type ToggleGroupItemProps = React.ComponentProps<
+  typeof ToggleGroupPrimitive.Item
+> &
+  VariantProps<typeof toggleGroupItemVariants>;
+
+const ToggleGroup = React.forwardRef<
+  React.ComponentRef<typeof ToggleGroupPrimitive.Root>,
+  ToggleGroupProps
+>(function ToggleGroup(
+  {
+    className,
+    variant,
+    size,
+    spacing = 1,
+    orientation = "horizontal",
+    type = "multiple",
+    children,
+    ...props
+  },
+  ref
+) {
   const groupStyle = { "--gap": spacing } as React.CSSProperties;
   const contextValue = {
     variant,
@@ -353,61 +432,68 @@ function ToggleGroup({
     spacing,
     orientation,
   } as const;
+  const sharedRootProps = {
+    "aria-orientation": orientation,
+    className: cn(toggleGroupRootClassName, className),
+    "data-horizontal": orientation === "horizontal" ? "" : undefined,
+    "data-orientation": orientation,
+    "data-size": size,
+    "data-slot": "toggle-group",
+    "data-spacing": spacing,
+    "data-variant": variant,
+    "data-vertical": orientation === "vertical" ? "" : undefined,
+    ref,
+    style: groupStyle,
+  } as const;
+  const content = (
+    <ToggleGroupContext.Provider value={contextValue}>
+      {children}
+    </ToggleGroupContext.Provider>
+  );
 
-  return type === "single" ? (
+  if (type === "single") {
+    return (
+      <ToggleGroupPrimitive.Root
+        type="single"
+        {...sharedRootProps}
+        {...(props as Omit<
+          ToggleGroupSingleProps,
+          keyof ToggleGroupSharedProps | "type"
+        >)}
+      >
+        {content}
+      </ToggleGroupPrimitive.Root>
+    );
+  }
+
+  return (
     <ToggleGroupPrimitive.Root
-      className={groupClassName}
-      data-orientation={orientation}
-      data-size={size}
-      data-slot="toggle-group"
-      data-spacing={spacing}
-      data-variant={variant}
-      style={groupStyle}
-      type="single"
-      {...(props as Omit<
-        ToggleGroupSingleProps,
-        keyof ToggleGroupSharedProps | "type"
-      >)}
-    >
-      <ToggleGroupContext.Provider value={contextValue}>
-        {children}
-      </ToggleGroupContext.Provider>
-    </ToggleGroupPrimitive.Root>
-  ) : (
-    <ToggleGroupPrimitive.Root
-      className={groupClassName}
-      data-orientation={orientation}
-      data-size={size}
-      data-slot="toggle-group"
-      data-spacing={spacing}
-      data-variant={variant}
-      style={groupStyle}
       type="multiple"
+      {...sharedRootProps}
       {...(props as Omit<
         ToggleGroupMultipleProps,
         keyof ToggleGroupSharedProps | "type"
       >)}
     >
-      <ToggleGroupContext.Provider value={contextValue}>
-        {children}
-      </ToggleGroupContext.Provider>
+      {content}
     </ToggleGroupPrimitive.Root>
   );
-}
+});
 
-function ToggleGroupItem({
-  className,
-  children,
-  variant = "default",
-  size = "default",
-  ...props
-}: React.ComponentProps<typeof ToggleGroupPrimitive.Item> &
-  VariantProps<typeof toggleGroupItemVariants>) {
+ToggleGroup.displayName = "ToggleGroup";
+
+const ToggleGroupItem = React.forwardRef<
+  HTMLButtonElement,
+  ToggleGroupItemProps
+>(function ToggleGroupItem(
+  { className, children, variant = "default", size = "default", ...props },
+  ref
+) {
   const context = React.useContext(ToggleGroupContext);
 
   return (
     <ToggleGroupPrimitive.Item asChild {...props}>
-      <MotionToggleGroupItem
+      <FluidToggleButton
         className={cn(
           "focus:z-10 focus-visible:z-10",
           toggleGroupItemVariants({
@@ -420,11 +506,15 @@ function ToggleGroupItem({
         data-slot="toggle-group-item"
         data-spacing={context.spacing}
         data-variant={context.variant || variant}
+        ref={ref}
       >
         {children}
-      </MotionToggleGroupItem>
+      </FluidToggleButton>
     </ToggleGroupPrimitive.Item>
   );
-}
+});
+
+ToggleGroupItem.displayName = "ToggleGroupItem";
 
 export { ToggleGroup, ToggleGroupItem, toggleGroupItemVariants };
+export type { ToggleGroupItemProps, ToggleGroupProps };
