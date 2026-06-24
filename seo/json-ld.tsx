@@ -352,7 +352,7 @@ const HomePageWebPageJsonLd = () => {
     "@context": "https://schema.org",
     "@type": "WebPage",
     "@id": `${SITE.URL}/`,
-    name: `${SITE.NAME} | Open Source React Component Library`,
+    name: `${SITE.NAME} | Design System for Modern Interfaces`,
     description: SITE.DESCRIPTION.LONG,
     url: SITE.URL,
     inLanguage: "en-US",

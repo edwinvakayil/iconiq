@@ -16,7 +16,7 @@ type RouteSeo = {
 
 const GUIDE_SEO: Record<string, RouteSeo> = {
   "/": {
-    title: `${SITE.NAME} | Open Source React Component Library`,
+    title: `${SITE.NAME} | Design System for Modern Interfaces`,
     description:
       "Iconiq UI is an open-source React component library with motion-powered primitives, shadcn registry installs, and editable source files for modern interfaces.",
     keywords: [
