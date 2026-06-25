@@ -724,8 +724,8 @@ const REGISTRY_UI_META: Record<
   avatar: {
     title: "Avatar",
     description:
-      "Compound Base UI avatar with image, fallback, green tooltip-enabled badge, grouped stack, overflow count, and responsive sizes.",
-    dependencies: ["@base-ui/react", "motion"],
+      "Compound Base UI avatar with image, fallback, variant status badge, grouped stack, overflow count, auto initials, and tooltip-enabled status hints.",
+    dependencies: ["@base-ui/react", "@radix-ui/react-slot", "motion"],
   },
 };
 

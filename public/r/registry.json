@@ -37,10 +37,10 @@
       "name": "avatar",
       "type": "registry:ui",
       "registryDependencies": [],
-      "dependencies": ["@base-ui/react", "motion"],
+      "dependencies": ["@base-ui/react", "@radix-ui/react-slot", "motion"],
       "devDependencies": [],
       "title": "Avatar",
-      "description": "Compound Base UI avatar with image, fallback, green tooltip-enabled badge, grouped stack, overflow count, and responsive sizes.",
+      "description": "Compound Base UI avatar with image, fallback, variant status badge, grouped stack, overflow count, auto initials, and tooltip-enabled status hints.",
       "files": [
         {
           "path": "avatar.tsx",

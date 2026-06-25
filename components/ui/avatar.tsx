@@ -1,70 +1,74 @@
 "use client";
 
-import { Avatar as AvatarBase } from "@base-ui/react/avatar";
-import type { VariantProps } from "class-variance-authority";
-import { cva } from "class-variance-authority";
-import type * as React from "react";
+import type { ComponentPropsWithoutRef, ElementRef } from "react";
+import * as React from "react";
+import {
+  Avatar as RegistryAvatar,
+  AvatarBadge as RegistryAvatarBadge,
+  AvatarFallback as RegistryAvatarFallback,
+  AvatarGroup as RegistryAvatarGroup,
+  AvatarGroupCount as RegistryAvatarGroupCount,
+  AvatarImage as RegistryAvatarImage,
+  getAvatarInitials as registryGetAvatarInitials,
+} from "@/registry/avatar";
 
-import { cn } from "@/lib/utils";
+export type {
+  AvatarBadgeProps,
+  AvatarBadgeVariant,
+  AvatarProps,
+  AvatarSize,
+} from "@/registry/avatar";
 
-const avatarVariants = cva(
-  "relative flex shrink-0 overflow-hidden rounded-full",
-  {
-    variants: {
-      size: {
-        sm: "size-7 text-sm",
-        md: "size-10",
-        lg: "size-12 text-lg",
-      },
-    },
-    defaultVariants: {
-      size: "md",
-    },
-  }
+type AvatarProps = import("@/registry/avatar").AvatarProps;
+type AvatarBadgeProps = import("@/registry/avatar").AvatarBadgeProps;
+
+const Avatar = React.forwardRef<ElementRef<typeof RegistryAvatar>, AvatarProps>(
+  (props, ref) => <RegistryAvatar {...props} ref={ref} />
 );
+Avatar.displayName = "Avatar";
 
-function Avatar({
-  className,
-  size,
-  ...props
-}: React.ComponentProps<typeof AvatarBase.Root> &
-  VariantProps<typeof avatarVariants>) {
-  return (
-    <AvatarBase.Root
-      className={cn(avatarVariants({ size }), className)}
-      data-slot="avatar"
-      {...props}
-    />
-  );
+const AvatarImage = React.forwardRef<
+  ElementRef<typeof RegistryAvatarImage>,
+  ComponentPropsWithoutRef<typeof RegistryAvatarImage>
+>((props, ref) => <RegistryAvatarImage {...props} ref={ref} />);
+AvatarImage.displayName = "AvatarImage";
+
+const AvatarFallback = React.forwardRef<
+  ElementRef<typeof RegistryAvatarFallback>,
+  ComponentPropsWithoutRef<typeof RegistryAvatarFallback>
+>((props, ref) => <RegistryAvatarFallback {...props} ref={ref} />);
+AvatarFallback.displayName = "AvatarFallback";
+
+const AvatarBadge = React.forwardRef<
+  ElementRef<typeof RegistryAvatarBadge>,
+  AvatarBadgeProps
+>((props, ref) => <RegistryAvatarBadge {...props} ref={ref} />);
+AvatarBadge.displayName = "AvatarBadge";
+
+const AvatarGroup = React.forwardRef<
+  ElementRef<typeof RegistryAvatarGroup>,
+  ComponentPropsWithoutRef<typeof RegistryAvatarGroup>
+>((props, ref) => <RegistryAvatarGroup {...props} ref={ref} />);
+AvatarGroup.displayName = "AvatarGroup";
+
+const AvatarGroupCount = React.forwardRef<
+  ElementRef<typeof RegistryAvatarGroupCount>,
+  ComponentPropsWithoutRef<typeof RegistryAvatarGroupCount>
+>((props, ref) => <RegistryAvatarGroupCount {...props} ref={ref} />);
+AvatarGroupCount.displayName = "AvatarGroupCount";
+
+function getAvatarInitials(
+  ...args: Parameters<typeof registryGetAvatarInitials>
+) {
+  return registryGetAvatarInitials(...args);
 }
 
-function AvatarImage({
-  className,
-  ...props
-}: React.ComponentProps<typeof AvatarBase.Image>) {
-  return (
-    <AvatarBase.Image
-      className={cn("size-full object-cover", className)}
-      data-slot="avatar-image"
-      {...props}
-    />
-  );
-}
-
-function AvatarFallback({
-  className,
-  ...props
-}: React.ComponentProps<typeof AvatarBase.Fallback>) {
-  return (
-    <AvatarBase.Fallback
-      className={cn(
-        "flex size-full select-none items-center justify-center rounded-full bg-muted",
-        className
-      )}
-      data-slot="avatar-fallback"
-      {...props}
-    />
-  );
-}
-
-export { Avatar, AvatarImage, AvatarFallback };
+export {
+  Avatar,
+  AvatarBadge,
+  AvatarFallback,
+  AvatarGroup,
+  AvatarGroupCount,
+  AvatarImage,
+  getAvatarInitials,
+};

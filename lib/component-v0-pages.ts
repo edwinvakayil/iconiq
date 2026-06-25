@@ -383,31 +383,33 @@ export const avatarPreviewCode = `import {
   AvatarBadge,
   AvatarFallback,
   AvatarGroup,
+  AvatarGroupCount,
   AvatarImage,
 } from "@/components/ui/avatar";
 
 export function AvatarPreview() {
   return (
-    <div className="flex items-center gap-10">
-      <Avatar size="lg" tooltip="online">
+    <div className="flex flex-wrap items-center gap-8">
+      <Avatar aria-label="shadcn/ui, online" tooltip="Online now">
         <AvatarImage src="/assets/shadcn.jpg" alt="shadcn/ui" />
         <AvatarFallback>SU</AvatarFallback>
-        <AvatarBadge />
+        <AvatarBadge variant="online" />
       </Avatar>
 
       <AvatarGroup>
-        <Avatar size="lg">
+        <Avatar size="default">
           <AvatarImage src="/assets/av1.png" alt="Avatar 1" />
           <AvatarFallback>A1</AvatarFallback>
         </Avatar>
-        <Avatar size="lg">
+        <Avatar size="default">
           <AvatarImage src="/assets/av3.png" alt="Avatar 3" />
           <AvatarFallback>A3</AvatarFallback>
         </Avatar>
-        <Avatar size="lg">
+        <Avatar size="default">
           <AvatarImage src="/assets/av2.png" alt="Avatar 2" />
           <AvatarFallback>A2</AvatarFallback>
         </Avatar>
+        <AvatarGroupCount>+3</AvatarGroupCount>
       </AvatarGroup>
     </div>
   );

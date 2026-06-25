@@ -225,6 +225,25 @@ const avatarApiDetails: DetailItem[] = [
           "Merged onto the tooltip bubble when the avatar tooltip is enabled.",
       }),
       field({
+        name: "name",
+        type: "string",
+        description:
+          "Optional display name used by AvatarFallback to auto-generate initials when children are omitted.",
+      }),
+      field({
+        name: "asChild",
+        type: "boolean",
+        defaultValue: "false",
+        description:
+          "Merge avatar props onto the child element via Radix Slot, useful for link or button triggers.",
+      }),
+      field({
+        name: "aria-label",
+        type: "string",
+        description:
+          "Accessible name for the avatar. Defaults to the tooltip string when tooltip is set.",
+      }),
+      field({
         name: "className",
         type: "string",
         description:
@@ -234,6 +253,7 @@ const avatarApiDetails: DetailItem[] = [
     notes: [
       'The root renders data-slot="avatar" and data-size so grouped stacks and badges can respond to the selected size.',
       "The root keeps a circular border overlay with dark/light blend handling and accepts the full Base UI Root props surface.",
+      "Put tooltip on Avatar when the whole avatar should expose the status hint. Put tooltip on AvatarBadge when only the badge should be interactive.",
     ],
   },
   {
@@ -287,13 +307,26 @@ const avatarApiDetails: DetailItem[] = [
     id: "avatar-badge",
     title: "AvatarBadge",
     summary:
-      "Absolute green status badge that scales with the root Avatar size. Add tooltip to Avatar when the whole avatar should expose the status hint.",
+      "Absolute status badge that scales with the root Avatar size. Use variant for preset presence colors or tooltip for badge-only status hints.",
     fields: [
+      field({
+        name: "variant",
+        type: '"online" | "offline" | "busy" | "away"',
+        defaultValue: '"online"',
+        description:
+          "Preset status color mapped to theme-friendly green, muted, destructive, and amber tokens.",
+      }),
+      field({
+        name: "aria-label",
+        type: "string",
+        description:
+          "Accessible status label. Defaults to the tooltip string or the variant label such as Online or Busy.",
+      }),
       field({
         name: "children",
         type: "ReactNode",
         description:
-          "Optional icon or status mark. Small avatars hide nested SVGs automatically.",
+          "Optional icon or status mark. Icons scale down on small avatars instead of disappearing.",
       }),
       field({
         name: "tooltip",
@@ -368,7 +401,11 @@ const avatarApiDetails: DetailItem[] = [
       }),
     ],
   },
-  registryItem("avatar.json", ["@base-ui/react", "motion"]),
+  registryItem("avatar.json", [
+    "@base-ui/react",
+    "@radix-ui/react-slot",
+    "motion",
+  ]),
 ];
 
 const badgeApiDetails: DetailItem[] = [
