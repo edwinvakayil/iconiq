@@ -415,17 +415,8 @@ export function AvatarPreview() {
   );
 }`;
 
-/** Badge docs preview uses custom tone objects (not in usageCode). */
+/** Badge docs preview for v0 export. */
 export const badgePreviewCode = `import { Badge } from "@/components/ui/badge";
-
-const launchBadgeTone = {
-  className:
-    "[--badge-bg:#ccfbf1] [--badge-fg:#115e59] dark:[--badge-bg:#99f6e4] dark:[--badge-fg:#134e4a]",
-  style: {
-    backgroundColor: "var(--badge-bg)",
-    color: "var(--badge-fg)",
-  },
-};
 
 export function BadgePreview() {
   return (
@@ -433,9 +424,7 @@ export function BadgePreview() {
       <p className="flex flex-wrap items-center justify-center gap-x-2 gap-y-2 text-balance text-center font-medium text-lg text-neutral-800 leading-snug tracking-tight sm:text-xl dark:text-neutral-100">
         <span>This update is</span>
         <span className="inline-flex translate-y-px align-middle">
-          <Badge {...launchBadgeTone} color="teal">
-            Early Access
-          </Badge>
+          <Badge color="teal">Early Access</Badge>
         </span>
         <span>and</span>
         <span className="inline-flex translate-y-px align-middle">

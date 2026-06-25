@@ -422,10 +422,14 @@
       "name": "badge",
       "type": "registry:ui",
       "registryDependencies": [],
-      "dependencies": ["motion", "class-variance-authority"],
+      "dependencies": [
+        "motion",
+        "class-variance-authority",
+        "@radix-ui/react-slot"
+      ],
       "devDependencies": [],
       "title": "Badge",
-      "description": "Preset-color badge with an animated default fill, a quieter dot variant, and compact size controls. Motion + CVA.",
+      "description": "Preset-color badge with tinted fills, semantic aliases, animated default shimmer, dot variant, dismiss controls, and reduced-motion aware motion. Motion + CVA + Slot.",
       "files": [
         {
           "path": "badge.tsx",

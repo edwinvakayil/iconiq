@@ -413,7 +413,7 @@ const badgeApiDetails: DetailItem[] = [
     id: "badge",
     title: "Badge",
     summary:
-      "Compact label pill with a shimmer-enabled default variant, a quieter dot variant, and preset color tokens.",
+      "Compact label pill with tinted fills, a shimmer-enabled default variant, a quieter dot variant, semantic color aliases, and optional icon or dismiss controls.",
     fields: [
       field({
         name: "children",
@@ -445,10 +445,50 @@ const badgeApiDetails: DetailItem[] = [
       }),
       field({
         name: "color",
-        type: "BadgeColor",
+        type: "BadgeColorProp",
         defaultValue: '"gray"',
         description:
-          "Picks a preset palette token. The default variant turns it into a tinted fill, while the dot variant uses it for the status dot and border tint.",
+          "Picks a preset palette token or semantic alias (`success`, `warning`, `error`, `info`). Each token sets matched background and foreground tones for light and dark mode.",
+      }),
+      field({
+        name: "icon",
+        type: "ReactNode",
+        description:
+          'Optional leading icon rendered before the label on the default variant only. Ignored when `variant="dot"` or when `onDismiss` is provided.',
+      }),
+      field({
+        name: "onDismiss",
+        type: "() => void",
+        description:
+          'When provided on the default variant, renders a dismiss button after the label for removable filter chips. Ignored when `variant="dot"` or when `icon` is provided.',
+      }),
+      field({
+        name: "dismissLabel",
+        type: "string",
+        defaultValue: '"Remove"',
+        description:
+          "Accessible label for the dismiss button when `onDismiss` is enabled.",
+      }),
+      field({
+        name: "animate",
+        type: "boolean",
+        defaultValue: "true",
+        description:
+          "Controls the default variant mount fade/scale entrance and the dot variant status pulse. Use with `shimmer={false}` on the default variant when you want a one-time entrance without the looping sweep. Automatically disabled when `prefers-reduced-motion` is set.",
+      }),
+      field({
+        name: "shimmer",
+        type: "boolean",
+        defaultValue: "true",
+        description:
+          "Controls the default variant shimmer sweep independently of the mount entrance. Automatically disabled when `prefers-reduced-motion` is set.",
+      }),
+      field({
+        name: "asChild",
+        type: "boolean",
+        defaultValue: "false",
+        description:
+          "Merges badge styles onto the child element, such as an anchor, via Radix Slot.",
       }),
       field({
         name: "waveColor",
@@ -458,14 +498,19 @@ const badgeApiDetails: DetailItem[] = [
       }),
     ],
     notes: [
-      "The component now spreads remaining span props, so ids, data attributes, and click handlers can be attached directly.",
+      'The root renders `data-slot="badge"` and spreads remaining span props, so ids, data attributes, and click handlers can be attached directly.',
+      'Interactive badges with `onClick` receive `role="button"`, `tabIndex={0}`, and Enter/Space keyboard activation. The dismiss button is a separate focusable control.',
+      "When `asChild` is true, badge styles merge onto the single child element without shimmer, dot, icon, or dismiss layers.",
+      "`icon` and `onDismiss` are mutually exclusive on the default variant.",
+      "Use Badge for inline labels and chips. Use Status Dot for deployment-style ripple states. Use AvatarBadge for avatar presence dots.",
+      "Install path is `components/ui/badge.tsx` with named and default `Badge` exports. Requires `@/lib/utils` (`cn`).",
     ],
   },
   {
     id: "badge-variants",
     title: "badgeVariants",
     summary:
-      "CVA recipe exported alongside Badge for reusing badge styling on custom elements.",
+      "CVA recipe exported alongside Badge for reusing badge layout, color tokens, and interactive focus styles on custom elements.",
     fields: [
       field({
         name: "variant",
@@ -482,8 +527,15 @@ const badgeApiDetails: DetailItem[] = [
       field({
         name: "color",
         type: "BadgeColor",
-        defaultValue: '"gray"',
-        description: "Preset palette token applied by the badge recipe.",
+        description:
+          "Resolved palette token passed to `getBadgeColorVariables()` when reusing badge color tokens outside the component.",
+      }),
+      field({
+        name: "interactive",
+        type: "boolean",
+        defaultValue: "false",
+        description:
+          "Adds pointer cursor and focus ring styles for clickable badge roots.",
       }),
       field({
         name: "className",
@@ -497,7 +549,7 @@ const badgeApiDetails: DetailItem[] = [
     id: "badge-colors",
     title: "badgeColors",
     summary:
-      "Preset color token map used by Badge and badgeVariants for palette-consistent fills and dot treatments.",
+      "Preset color hex map used by Badge tone generation for palette-consistent fills and dot treatments.",
     fields: [
       field({
         name: "keys",
@@ -507,21 +559,32 @@ const badgeApiDetails: DetailItem[] = [
       }),
     ],
     notes: [
-      "Use the exported BadgeColor type when you want compile-time checks for supported palette tokens.",
+      "Use the exported `BadgeColor`, `BadgeSemanticColor`, and `BadgeColorProp` types for compile-time checks.",
+      "`badgeSemanticColors` maps `success`, `warning`, `error`, and `info` to palette tokens. Prefer the semantic names in UI pickers instead of their duplicate palette entries (`green`, `amber`, `red`, `blue`).",
+      "`getBadgePlaygroundColorOptions()` filters palette colors that already have a semantic alias.",
+      "`resolveBadgeColor()` normalizes semantic aliases before styling.",
+      "`getBadgeColorVariables()` sets `--badge-bg`, `--badge-fg`, `--badge-dot`, and `--badge-border` inline so palette tones apply reliably in light and dark mode.",
     ],
   },
   {
     id: "badge-visuals",
     title: "Visual behavior",
     summary:
-      "The default variant keeps the original spring-in shimmer treatment, while the dot variant adds a subtle status pulse.",
+      "The default variant keeps the spring-in shimmer treatment, while the dot variant adds a subtle status pulse. Motion respects reduced-motion preferences.",
     notes: [
-      "The default badge fades and scales from 0.95 to 1 on mount over 0.3 seconds.",
-      "Its shimmer travels from left to right over 2 seconds, waits 1.5 seconds, then repeats indefinitely.",
+      "The default badge fades and scales from 0.95 to 1 on mount over 0.3 seconds when `animate` is true.",
+      "Its shimmer travels from left to right over 2 seconds, waits 1.5 seconds, then repeats indefinitely when `shimmer` is true.",
       "The dot variant omits the shimmer layer, sizes its leading status dot to match the chosen badge size, and gives it a gentle repeating blink.",
+      "All entrance, shimmer, and dot pulse animations are skipped when `prefers-reduced-motion` is enabled.",
     ],
   },
-  registryItem("badge.json", ["motion", "class-variance-authority"]),
+  registryItem(
+    "badge.json",
+    ["motion", "class-variance-authority", "@radix-ui/react-slot"],
+    [
+      "Requires the local `cn` helper from `@/lib/utils`, which is included in a standard shadcn setup.",
+    ]
+  ),
 ];
 
 const calendarApiDetails: DetailItem[] = [

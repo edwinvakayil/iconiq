@@ -80,8 +80,12 @@ const REGISTRY_UI_META: Record<
   badge: {
     title: "Badge",
     description:
-      "Preset-color badge with an animated default fill, a quieter dot variant, and compact size controls. Motion + CVA.",
-    dependencies: ["motion", "class-variance-authority"],
+      "Preset-color badge with tinted fills, semantic aliases, animated default shimmer, dot variant, dismiss controls, and reduced-motion aware motion. Motion + CVA + Slot.",
+    dependencies: [
+      "motion",
+      "class-variance-authority",
+      "@radix-ui/react-slot",
+    ],
   },
   combobox: {
     title: "Combobox",

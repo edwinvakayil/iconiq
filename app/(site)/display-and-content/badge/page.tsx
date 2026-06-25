@@ -1,23 +1,14 @@
 "use client";
 
 import { SharedPrimitiveProviderSwitch } from "@/app/(site)/components/_components/provider-switch";
+import { BadgePlaygroundProvider } from "@/app/(site)/display-and-content/badge/_components/badge-playground";
 import { badgeApiDetails } from "@/components/docs/component-api";
-import { ComponentDocsPage } from "@/components/docs/page-shell";
+import {
+  ComponentDocsPage,
+  type VariantItem,
+} from "@/components/docs/page-shell";
 import { LINK } from "@/constants";
-import { badgePreviewCode } from "@/lib/component-v0-pages";
-import { Badge } from "@/registry/badge";
-
-const launchBadgeTone = {
-  className:
-    "[--badge-bg:#ccfbf1] [--badge-fg:#115e59] dark:[--badge-bg:#99f6e4] dark:[--badge-fg:#134e4a]",
-  style: {
-    backgroundColor: "var(--badge-bg)",
-    color: "var(--badge-fg)",
-  },
-} as const;
-
-const previewSentenceClassName =
-  "flex flex-wrap items-center justify-center gap-x-2 gap-y-2 text-balance font-medium text-lg text-neutral-800 leading-snug tracking-tight sm:text-xl dark:text-neutral-100";
+import * as BadgeModule from "@/registry/badge";
 
 const usageCode = `import { Badge } from "@/components/ui/badge";
 
@@ -35,48 +26,106 @@ export function BadgePreview() {
   );
 }`;
 
-function BadgePreview() {
+const badgeExamples: VariantItem[] = [
+  {
+    title: "Sizes",
+    code: `import { Badge } from "@/components/ui/badge";
+
+export function BadgeSizes() {
   return (
-    <div className="flex min-h-[260px] items-center justify-center px-4 py-8">
-      <p className={previewSentenceClassName}>
-        <span>This update is</span>
-        <span className="inline-flex translate-y-px align-middle">
-          <Badge {...launchBadgeTone} color="teal">
-            Early Access
-          </Badge>
-        </span>
-        <span>and</span>
-        <span className="inline-flex translate-y-px align-middle">
-          <Badge color="blue" variant="dot">
-            On Track
-          </Badge>
-        </span>
-        <span>.</span>
-      </p>
+    <div className="flex flex-wrap items-center gap-3">
+      <Badge color="indigo" size="sm">
+        Small
+      </Badge>
+      <Badge color="indigo">Medium</Badge>
+      <Badge color="indigo" size="lg">
+        Large
+      </Badge>
     </div>
   );
-}
+}`,
+  },
+  {
+    title: "Semantic colors",
+    code: `import { Badge } from "@/components/ui/badge";
+
+export function BadgeSemantic() {
+  return (
+    <div className="flex flex-wrap items-center gap-3">
+      <Badge color="success">Success</Badge>
+      <Badge color="warning">Warning</Badge>
+      <Badge color="error">Error</Badge>
+      <Badge color="info">Info</Badge>
+    </div>
+  );
+}`,
+  },
+  {
+    title: "Dismissible",
+    code: `"use client";
+
+import { Badge } from "@/components/ui/badge";
+
+export function BadgeDismissible() {
+  return (
+    <Badge color="purple" onDismiss={() => console.log("dismissed")}>
+      Design
+    </Badge>
+  );
+}`,
+  },
+  {
+    title: "As link",
+    code: `import { Badge } from "@/components/ui/badge";
+
+export function BadgeLink() {
+  return (
+    <Badge asChild color="blue">
+      <a href="/changelog">Changelog</a>
+    </Badge>
+  );
+}`,
+  },
+];
 
 export default function BadgePage() {
   return (
-    <ComponentDocsPage
-      breadcrumbs={[
-        { label: "Docs", href: "/" },
-        { label: "Display & Content" },
-        { label: "Badge" },
-      ]}
-      componentName="badge"
-      description="Compact status labels with default and dot variants."
-      details={badgeApiDetails}
-      editHref={`${LINK.GITHUB}/edit/main/app/(site)/display-and-content/badge/page.tsx`}
-      headerActions={<SharedPrimitiveProviderSwitch />}
-      pageUrl="/display-and-content/badge"
-      preview={<BadgePreview />}
-      previewCode={badgePreviewCode}
-      previewDescription="Default badges and a dot variant inline in one short sentence."
-      title="Badge"
-      usageCode={usageCode}
-      usageDescription='Start with the default badge, switch to `variant="dot"` for a quieter status label, then tune size, color, and shimmer through the API panel.'
-    />
+    <BadgePlaygroundProvider
+      BadgeModule={BadgeModule}
+      importPath="@/components/ui/badge"
+    >
+      {({ preview, renderSettings }) => (
+        <ComponentDocsPage
+          breadcrumbs={[
+            { label: "Docs", href: "/" },
+            { label: "Display & Content" },
+            { label: "Badge" },
+          ]}
+          componentName="badge"
+          description="Compact status labels with tinted fills, dot variants, semantic colors, and optional dismiss controls."
+          details={badgeApiDetails}
+          editHref={`${LINK.GITHUB}/edit/main/app/(site)/display-and-content/badge/page.tsx`}
+          examples={badgeExamples}
+          headerActions={<SharedPrimitiveProviderSwitch />}
+          itemSlug="badge"
+          pageUrl="/display-and-content/badge"
+          preview={preview}
+          previewClassName="min-h-[18rem] overflow-visible"
+          previewDescription="Use the playground to switch patterns, variants, colors, and motion settings."
+          previewPersonalize={({ onClose }) => renderSettings(onClose)}
+          previewPersonalizeTitle="Badge"
+          railNotes={[
+            "Use Badge for inline status labels and filter chips in copy or toolbars.",
+            "Use Status Dot when you need deployment-style ripple states with optional labels.",
+            "Use AvatarBadge for presence dots that scale with Avatar size.",
+            "Set animate={false} or shimmer={false} when rendering dense badge lists.",
+          ]}
+          title="Badge"
+          usageCode={usageCode}
+          usageDescription='Start with the default badge, switch to variant="dot" for a quieter status label, then tune size, color, icon, and motion through the API panel.'
+          v0PageCode={usageCode}
+        />
+      )}
+    </BadgePlaygroundProvider>
   );
 }
