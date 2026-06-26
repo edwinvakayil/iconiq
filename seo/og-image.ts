@@ -4,11 +4,14 @@ const OG_IMAGE_WIDTH = 1672;
 const OG_IMAGE_HEIGHT = 941;
 const OG_IMAGE_ALT = `${SITE.NAME} — Design System`;
 
-const openGraphImagePath = "/iconiqui.png";
-const twitterImagePath = "/iconiqui.png";
+const openGraphImagePath = SITE.OG_IMAGE;
+const twitterImagePath = SITE.OG_IMAGE;
 
-function getSocialImageUrl(path: string) {
-  return new URL(path, SITE.URL).href;
+function getSocialImageUrl(path: string = openGraphImagePath) {
+  const url = new URL(path, SITE.URL);
+  url.searchParams.set("v", SITE.OG_IMAGE_VERSION);
+
+  return url.href;
 }
 
 const openGraphImageMetadata = {

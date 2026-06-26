@@ -5,6 +5,8 @@ const SITE = {
   URL: "https://iconiqui.com",
   GOOGLE_SITE_VERIFICATION: "Q0ClgYhHbG0_wpdPrrl4AaoNekaLVmjgT-nIp_-sD7Y",
   OG_IMAGE: "/iconiqui.png",
+  /** Bump when replacing the social preview image so crawlers fetch a fresh asset. */
+  OG_IMAGE_VERSION: "2",
   AUTHOR: {
     NAME: "Edwin Vakayil",
     TWITTER: "@edwinvakayil",
