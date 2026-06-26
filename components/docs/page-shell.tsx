@@ -9,7 +9,10 @@ import {
   type VariantItem,
 } from "@/components/docs/split/docs-preview-wrapper";
 import { DocsPropsContact } from "@/components/docs/split/docs-props-contact";
-import { DocsPropsTable } from "@/components/docs/split/docs-props-table";
+import {
+  type DocsPropGroup,
+  DocsPropsTable,
+} from "@/components/docs/split/docs-props-table";
 import { DocsSection } from "@/components/docs/split/docs-section";
 import {
   ComponentDocsSidebarShell,
@@ -548,32 +551,46 @@ function DetailLedger({ details }: { details: DetailItem[] }) {
   );
 }
 
-function detailItemsToProps(details: DetailItem[]) {
-  const props: {
-    id: string;
-    name: string;
-    type: string;
-    default?: string;
-    description: string;
-  }[] = [];
+function detailItemsToPropGroups(details: DetailItem[]): DocsPropGroup[] {
+  const groups: DocsPropGroup[] = [];
 
   for (const item of details) {
-    for (const field of item.fields ?? []) {
-      const name = nodeToText(field.name);
-      props.push({
-        id: `${item.id}-${name}`,
-        name,
-        type: nodeToText(field.type) || "—",
-        default:
-          field.defaultValue !== undefined
-            ? nodeToText(field.defaultValue)
-            : undefined,
-        description: nodeToText(field.description),
-      });
+    const fields = item.fields ?? [];
+    if (fields.length === 0) {
+      continue;
     }
+
+    groups.push({
+      id: item.id,
+      title: item.title,
+      props: fields.map((field) => {
+        const name = nodeToText(field.name);
+
+        return {
+          id: `${item.id}-${name}`,
+          name,
+          type: nodeToText(field.type) || "—",
+          default:
+            field.defaultValue !== undefined
+              ? nodeToText(field.defaultValue)
+              : undefined,
+          description: nodeToText(field.description),
+        };
+      }),
+    });
   }
 
-  return props;
+  return groups;
+}
+
+function detailItemsForSupplementaryLedger(details: DetailItem[]) {
+  return details.filter((item) => {
+    const hasFields = Boolean(item.fields?.length);
+    const hasLead = Boolean(item.summary ?? item.content);
+    const hasNotes = Boolean(item.notes?.length);
+
+    return !hasFields && (hasLead || hasNotes);
+  });
 }
 
 function buildComponentPageCopyContent({
@@ -743,7 +760,8 @@ function ComponentDocsPage({
     breadcrumbs.at(-1)?.href ??
     inferDocsPageUrl(navSectionLabel, resolvedItemSlug);
 
-  const propsTable = detailItemsToProps(details);
+  const propGroups = detailItemsToPropGroups(details);
+  const supplementaryDetails = detailItemsForSupplementaryLedger(details);
   const variantCodes = examples.map((example) => example.code || "");
   const variantTitles = examples.map((example) => example.title);
   const sectionCrumb = breadcrumbs.at(-2);
@@ -879,9 +897,17 @@ function ComponentDocsPage({
                   </DocsSection>
                 ))}
 
-                {propsTable.length > 0 ? (
+                {propGroups.length > 0 ? (
                   <DocsSection id="api-reference" title="Props">
-                    <DocsPropsTable key={componentName} props={propsTable} />
+                    <DocsPropsTable groups={propGroups} key={componentName} />
+                    {supplementaryDetails.length > 0 ? (
+                      <div className="mt-12">
+                        <DetailLedger
+                          details={supplementaryDetails}
+                          key={`${componentName}-supplementary`}
+                        />
+                      </div>
+                    ) : null}
                   </DocsSection>
                 ) : (
                   <DocsSection id="api-reference" title="API Reference">

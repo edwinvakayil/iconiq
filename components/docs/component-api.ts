@@ -1045,6 +1045,13 @@ const cardApiDetails: DetailItem[] = [
           "Enables the restrained hover lift and stronger surface response intended for clickable or focusable cards.",
       }),
       field({
+        name: "asChild",
+        type: "boolean",
+        defaultValue: "false",
+        description:
+          "Merges the card surface classes and interaction handlers onto the single child element, which is useful for link or button cards.",
+      }),
+      field({
         name: "className",
         type: "string",
         description:
@@ -1067,6 +1074,8 @@ const cardApiDetails: DetailItem[] = [
       "The root forwards standard div props, so you can attach ids, aria attributes, data attributes, and event handlers directly.",
       "Cards with a direct leading image automatically remove top padding and inherit the root radius on the first and last image edges.",
       "Footer-aware padding is handled by the card itself, so adding CardFooter trims the bottom padding without extra wrapper logic.",
+      "For whole-card navigation, prefer asChild with a single anchor or button child instead of nesting interactive controls inside a second clickable wrapper.",
+      "Keep nested buttons or links inside a non-wrapped card shell to avoid invalid interactive nesting.",
     ],
   },
   {
@@ -1109,6 +1118,13 @@ const cardApiDetails: DetailItem[] = [
         type: "string",
         description: "Merged with the default title typography classes.",
       }),
+      field({
+        name: "as",
+        type: '"h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "div" | "span"',
+        defaultValue: '"h3"',
+        description:
+          "Semantic heading element used for the title. Defaults to h3 for accessible card headings.",
+      }),
     ],
   },
   {
@@ -1127,6 +1143,13 @@ const cardApiDetails: DetailItem[] = [
         name: "className",
         type: "string",
         description: "Merged with the muted description typography classes.",
+      }),
+      field({
+        name: "as",
+        type: '"p" | "div" | "span"',
+        defaultValue: '"p"',
+        description:
+          "Semantic text element used for the description. Defaults to p for accessible supporting copy.",
       }),
     ],
   },
@@ -1195,6 +1218,99 @@ const cardApiDetails: DetailItem[] = [
     ],
   },
   {
+    id: "card-image",
+    title: "CardImage",
+    summary:
+      "Next.js Image slot with the shared inset media frame, default fill sizing, and card-aware radius handling. Always renders next/image.",
+    fields: [
+      field({
+        name: "alt",
+        type: "string",
+        required: true,
+        description: "Accessible alternative text for the image.",
+      }),
+      field({
+        name: "src",
+        type: "string",
+        required: true,
+        description: "Image source passed through to next/image.",
+      }),
+      field({
+        name: "inset",
+        type: "boolean",
+        defaultValue: "true",
+        description:
+          "When true, wraps the image in the padded card media frame. Set false for edge-to-edge media.",
+      }),
+      field({
+        name: "fill",
+        type: "boolean",
+        description:
+          "Uses fill layout when true. Defaults to fill when width and height are both omitted.",
+      }),
+      field({
+        name: "sizes",
+        type: "string",
+        defaultValue: '"(max-width: 768px) 100vw, 400px"',
+        description:
+          "Responsive sizes hint forwarded to next/image for better loading performance.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description: "Merged onto the rendered image element.",
+      }),
+    ],
+    notes: [
+      "CardImage always renders next/image and requires a Next.js app.",
+      "Use CardMedia instead for video, charts, embeds, or other non-image leading media.",
+      "Fill images default to a 16:10 aspect ratio unless you override it with className.",
+    ],
+  },
+  {
+    id: "card-media",
+    title: "CardMedia",
+    summary:
+      "Media slot for video, charts, embeds, or other custom leading media blocks.",
+    fields: [
+      field({
+        name: "children",
+        type: "ReactNode",
+        required: true,
+        description:
+          "Non-image media content such as video, a chart container, or an embed.",
+      }),
+      field({
+        name: "inset",
+        type: "boolean",
+        defaultValue: "true",
+        description:
+          "When true, wraps children in the padded card media frame. Set false for edge-to-edge media.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description: "Merged onto the outer media wrapper.",
+      }),
+    ],
+    notes: [
+      "Use CardImage for static card artwork and photos.",
+      "Both CardImage and CardMedia use the card-image slot so the root card can trim top padding automatically.",
+    ],
+  },
+  {
+    id: "card-clickable",
+    title: "Clickable card recipes",
+    summary:
+      "Patterns for whole-card navigation and cards that contain separate interactive controls.",
+    notes: [
+      'Whole-card link: <Card asChild interactive><a href="/post">...</a></Card>.',
+      'Whole-card button: <Card asChild interactive><button type="button">...</button></Card>.',
+      "Card with its own CTA: keep Card unwrapped and place buttons or links inside CardContent or CardFooter.",
+      "Do not wrap a card that already contains buttons or links in another anchor or button via asChild.",
+    ],
+  },
+  {
     id: "card-motion",
     title: "Motion and interaction model",
     summary:
@@ -1202,9 +1318,18 @@ const cardApiDetails: DetailItem[] = [
     notes: [
       "When interactive is enabled, hover drives a spring-smoothed motion value so lift, scale, and shadow ease in and out as one fluid surface; compound slots only animate layout when content changes.",
       "interactive only changes the visible surface response: border, shadow, and a very small hover lift. The component does not add button semantics on its own.",
+      "prefers-reduced-motion disables spring hover and layout transitions. Interactive cards still get border and surface feedback through CSS.",
+      "asChild cards use CSS-based hover lift instead of spring transforms so the merged anchor or button remains the interactive root. Lift is also skipped when prefers-reduced-motion is enabled.",
     ],
   },
-  registryItem("card.json", ["motion"]),
+  registryItem(
+    "card.json",
+    ["motion", "@radix-ui/react-slot"],
+    [
+      "CardImage requires a Next.js project because it always renders next/image.",
+      "Use CardMedia for non-image leading media such as video, charts, or embeds.",
+    ]
+  ),
 ];
 
 const breadcrumbsApiDetails: DetailItem[] = [

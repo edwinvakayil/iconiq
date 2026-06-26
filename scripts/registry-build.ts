@@ -380,8 +380,8 @@ const REGISTRY_UI_META: Record<
   card: {
     title: "Card",
     description:
-      "Compound card surface with optional interactive lift, Motion-smoothed layout transitions, and shared header, action, content, and footer slots.",
-    dependencies: ["motion"],
+      "Compound card surface with optional interactive lift, Motion-smoothed layout transitions, asChild link support, semantic title slots, and shared header, action, content, and footer slots.",
+    dependencies: ["motion", "@radix-ui/react-slot"],
   },
   "color-picker": {
     title: "Color Picker",

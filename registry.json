@@ -501,10 +501,10 @@
       "name": "card",
       "type": "registry:ui",
       "registryDependencies": [],
-      "dependencies": ["motion"],
+      "dependencies": ["motion", "@radix-ui/react-slot"],
       "devDependencies": [],
       "title": "Card",
-      "description": "Compound card surface with optional interactive lift, Motion-smoothed layout transitions, and shared header, action, content, and footer slots.",
+      "description": "Compound card surface with optional interactive lift, Motion-smoothed layout transitions, asChild link support, semantic title slots, and shared header, action, content, and footer slots.",
       "files": [
         {
           "path": "card.tsx",
