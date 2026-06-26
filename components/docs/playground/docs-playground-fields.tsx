@@ -146,8 +146,8 @@ export function DocsPlaygroundSegmentedField<T extends string>({
   }
 
   return (
-    <PlaygroundRow className="gap-2 px-3">
-      <span className="w-[4.5rem] shrink-0 font-medium text-[#5c5c61] text-[13px] dark:text-[#a1a1a6]">
+    <PlaygroundRow className="flex-nowrap gap-3 px-3">
+      <span className="shrink-0 whitespace-nowrap font-medium text-[#5c5c61] text-[13px] dark:text-[#a1a1a6]">
         {label}
       </span>
       {segments}
@@ -157,23 +157,27 @@ export function DocsPlaygroundSegmentedField<T extends string>({
 
 export function DocsPlaygroundToggleField({
   checked,
+  disabled = false,
   label,
   onChange,
 }: {
   checked: boolean;
+  disabled?: boolean;
   label: string;
   onChange: (checked: boolean) => void;
 }) {
   return (
-    <DocsPlaygroundSegmentedField
-      label={label}
-      onChange={(next) => onChange(next === "on")}
-      options={[
-        { label: "off", value: "off" },
-        { label: "on", value: "on" },
-      ]}
-      value={checked ? "on" : "off"}
-    />
+    <div className={disabled ? "pointer-events-none opacity-45" : undefined}>
+      <DocsPlaygroundSegmentedField
+        label={label}
+        onChange={(next) => onChange(next === "on")}
+        options={[
+          { label: "off", value: "off" },
+          { label: "on", value: "on" },
+        ]}
+        value={checked ? "on" : "off"}
+      />
+    </div>
   );
 }
 

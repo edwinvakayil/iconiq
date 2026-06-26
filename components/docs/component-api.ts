@@ -592,25 +592,48 @@ const calendarApiDetails: DetailItem[] = [
     id: "calendar",
     title: "Calendar",
     summary:
-      "shadcn-style animated monthly calendar with controlled/uncontrolled month state, day selection, and direct month/year picking.",
+      "Animated monthly calendar with single-day or range selection, bounds, modifiers, locale-aware labels, and direct month/year picking.",
     fields: [
       field({
-        name: "selected",
-        type: "Date",
+        name: "mode",
+        type: '"single" | "range"',
+        defaultValue: '"single"',
         description:
-          "Controlled selected day. When provided, the highlighted day is always derived from this prop.",
+          "Selection model. Use single for one date or range for start/end selection.",
+      }),
+      field({
+        name: "selected",
+        type: "Date | null",
+        description:
+          "Controlled selected day for single mode. Pass null to clear the highlight.",
       }),
       field({
         name: "defaultSelected",
-        type: "Date",
+        type: "Date | null",
         description:
-          "Initial selected day for uncontrolled usage when selected is not provided.",
+          "Initial selected day for uncontrolled single mode when selected is not provided.",
       }),
       field({
         name: "onSelect",
-        type: "(date: Date) => void",
+        type: "(date: Date | null) => void",
         description:
-          "Called when the user picks any interactive day, including visible outside-month days.",
+          "Called when the user picks a day in single mode, including visible outside-month days.",
+      }),
+      field({
+        name: "range",
+        type: "CalendarRange",
+        description:
+          "Controlled range for range mode. Shape is `{ from?: Date; to?: Date }`.",
+      }),
+      field({
+        name: "defaultRange",
+        type: "CalendarRange",
+        description: "Initial range for uncontrolled range mode.",
+      }),
+      field({
+        name: "onRangeSelect",
+        type: "(range: CalendarRange) => void",
+        description: "Called when the user updates the range in range mode.",
       }),
       field({
         name: "month",
@@ -634,13 +657,31 @@ const calendarApiDetails: DetailItem[] = [
         name: "disabled",
         type: "(date: Date) => boolean",
         description:
-          "Marks dates as non-interactive. Disabled days keep the same visuals but cannot be selected.",
+          "Marks dates as non-interactive in addition to minDate/maxDate bounds.",
+      }),
+      field({
+        name: "minDate",
+        type: "Date",
+        description:
+          "Earliest selectable day. Also disables month navigation into fully out-of-range months.",
+      }),
+      field({
+        name: "maxDate",
+        type: "Date",
+        description:
+          "Latest selectable day. Also disables month navigation into fully out-of-range months.",
       }),
       field({
         name: "locale",
         type: "Locale",
         description:
-          "Optional date-fns locale used for month labels, weekday headers, selected-date copy, and spoken date labels.",
+          "Optional date-fns locale used for month labels, weekday headers, and spoken date labels.",
+      }),
+      field({
+        name: "labels",
+        type: "Partial<CalendarLabels>",
+        description:
+          "Override built-in English UI and accessibility strings such as Today, Clear, and picker labels.",
       }),
       field({
         name: "size",
@@ -666,12 +707,55 @@ const calendarApiDetails: DetailItem[] = [
         description:
           "Optional upper bound for selectable years in the year picker.",
       }),
+      field({
+        name: "showOutsideDays",
+        type: "boolean",
+        defaultValue: "true",
+        description:
+          "Whether leading and trailing days from adjacent months are rendered in the grid.",
+      }),
+      field({
+        name: "fixedWeeks",
+        type: "boolean",
+        defaultValue: "false",
+        description:
+          "Pads the month grid to six weeks for consistent height. Only applies when showOutsideDays is true.",
+      }),
+      field({
+        name: "modifiers",
+        type: "Record<string, (date: Date) => boolean>",
+        description:
+          "Named matchers that render marker dots under matching days.",
+      }),
+      field({
+        name: "modifierLabels",
+        type: "Record<string, string>",
+        description:
+          "Human-readable names for modifier keys, appended to spoken day labels.",
+      }),
+      field({
+        name: "id",
+        type: "string",
+        description:
+          "Optional root id used for heading and live-region relationships.",
+      }),
+      field({
+        name: "name",
+        type: "string",
+        description:
+          "Optional native form field name. Renders a hidden input in single mode.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description: "Optional class names applied to the root surface.",
+      }),
     ],
     notes: [
-      "Controlled mode: pass selected/month and respond to onSelect/onMonthChange.",
-      "Uncontrolled mode: omit selected/month and optionally seed with defaultSelected/defaultMonth.",
-      "The month and year labels open overlay pickers, so users can jump without losing the existing date-grid motion.",
-      "When no defaults are provided, the visible month starts from today and selection stays empty until the user picks a date.",
+      "Controlled mode: pass selected/month or range/month and respond to the matching change handlers.",
+      "Uncontrolled mode: omit the controlled value props and optionally seed with defaultSelected, defaultRange, or defaultMonth.",
+      "Pair with the date-picker registry entry when you need a collapsible trigger instead of an always-visible grid.",
+      "Pass stable disabled and modifiers callbacks in production to avoid unnecessary focus resets.",
     ],
   },
   {
@@ -680,22 +764,23 @@ const calendarApiDetails: DetailItem[] = [
     summary:
       "The grid is rebuilt with date-fns whenever the visible month changes.",
     notes: [
-      "The rendered range runs from startOfWeek(startOfMonth(currentMonth)) through endOfWeek(endOfMonth(currentMonth)), so leading and trailing days from adjacent months are always visible.",
-      "Days outside the active month remain visible for context and can still be selected. Choosing one switches the visible month and selects that day, unless the date is marked unavailable through disabled.",
-      "Weekday headers and the grid start day now follow the provided locale/weekStartsOn settings instead of being hardcoded to English Sunday-first output.",
+      "The rendered range runs from startOfWeek(startOfMonth(currentMonth)) through endOfWeek(endOfMonth(currentMonth)). fixedWeeks pads the grid to six rows only when showOutsideDays is enabled.",
+      "Days outside the active month remain visible by default and can still be selected. Choosing one switches the visible month and selects that day, unless the date is unavailable.",
+      "Weekday headers and the grid start day follow the provided locale and weekStartsOn settings.",
+      "Selected days are highlighted even when they appear as outside-month cells in the current grid.",
     ],
   },
   {
     id: "calendar-motion-a11y",
-    title: "Motion and interaction model",
+    title: "Motion and accessibility",
     summary:
-      "Month transitions, selected-day changes, and the live selection summary each animate independently.",
+      "Motion, keyboard support, and screen-reader semantics are built into the grid and picker overlays.",
     notes: [
-      "Prev and next controls are real buttons with aria-label values, and each in-month day is rendered as a button with hover and tap motion.",
-      "Month/year picker overlays use the same smooth easing as the date grid, while directional grid changes keep the existing staggered day entrance.",
-      "The selected day highlight uses a shared layoutId of selected-day so the active surface glides between dates instead of remounting abruptly.",
-      "Keyboard users can move through the month with arrow keys, Home/End, and PageUp/PageDown, while the calendar exposes clearer spoken date labels and a live selected-date summary.",
-      "This is still not a full calendar input primitive: there is no range or multi-select mode.",
+      "The root uses role=application with a role=grid date table, aria-selected day buttons, and a polite live selection summary.",
+      "Keyboard users can move through days with arrow keys, Home/End, PageUp/PageDown, and select with Enter or Space.",
+      "Month and year overlays trap focus, support arrow-key grid navigation, and return focus to the trigger on Escape.",
+      "Theme colors come from CSS variables, so the surface follows light/dark mode without client-side palette hydration.",
+      "Animations respect prefers-reduced-motion through useReducedMotion().",
     ],
   },
   registryItem("calendar.json", ["motion", "lucide-react", "date-fns"]),
@@ -742,7 +827,7 @@ const datePickerApiDetails: DetailItem[] = [
         name: "calendarProps",
         type: "Omit<CalendarProps, 'selected' | 'defaultSelected' | 'onSelect' | 'month' | 'onMonthChange'>",
         description:
-          "Props forwarded to the embedded Calendar, such as size, locale, disabled, weekStartsOn, minYear, and maxYear.",
+          "Props forwarded to the embedded Calendar, such as size, locale, disabled, bounds, modifiers, weekStartsOn, minYear, and maxYear.",
       }),
     ],
     notes: [

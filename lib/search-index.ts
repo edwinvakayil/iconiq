@@ -29,7 +29,7 @@ const componentSummaries: Record<string, string> = {
   "/buttons-and-actions/button-group":
     "Button group docs in the Buttons & Actions section, using the shared Iconiq button group install with provider options visible but disabled.",
   "/display-and-content/calendar":
-    "Calendar docs in the Display & Content section, using the shared Iconiq calendar install with month/year picking, fluid date-grid motion, and provider options visible but disabled.",
+    "Calendar docs in the Display & Content section with single and range selection, bounds, modifiers, locale labels, playground controls, and DatePicker pairing.",
   "/display-and-content/date-picker":
     "Date picker docs in the Display & Content section with a collapsible trigger and the shared Iconiq Calendar panel, spring open motion, and close-on-select behavior.",
   "/display-and-content/favicon-badge":
