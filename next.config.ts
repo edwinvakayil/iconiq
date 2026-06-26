@@ -17,7 +17,7 @@ const nextConfig: NextConfig = {
   async headers() {
     return [
       {
-        source: "/iconiqui.png",
+        source: "/iconiq-ui.png",
         headers: [
           {
             key: "Cache-Control",
