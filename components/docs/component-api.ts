@@ -5115,7 +5115,7 @@ const carouselApiDetails: DetailItem[] = [
     id: "carousel",
     title: "Carousel",
     summary:
-      "Root carousel region wired to Embla. Provides context for content, items, and navigation controls plus ArrowLeft and ArrowRight keyboard handling.",
+      "Root carousel region wired to Embla. Exposes scroll state through `useCarousel`, supports responsive nav placement, optional autoplay, and keyboard navigation for horizontal and vertical layouts.",
     fields: [
       field({
         name: "orientation",
@@ -5132,21 +5132,42 @@ const carouselApiDetails: DetailItem[] = [
           "Sets the slide viewport shape on `CarouselContent`. Use presets like `video` (16:9) and `square`, or pass a custom ratio string such as `21/9`.",
       }),
       field({
+        name: "navPlacement",
+        type: '"outside" | "responsive"',
+        defaultValue: "responsive",
+        description:
+          "Positions previous and next controls. `responsive` places controls below the carousel on the right on mobile and outside the track from `sm` upward.",
+      }),
+      field({
+        name: "autoplay",
+        type: "boolean | number",
+        description:
+          "When enabled, advances slides on a timer. Pass a number for the delay in milliseconds. Pair with `opts={{ loop: true }}` for continuous playback.",
+      }),
+      field({
         name: "opts",
-        type: "EmblaCarouselOptions",
+        type: "CarouselOptions",
         description:
           "Forwarded Embla options such as `align`, `loop`, or `slidesToScroll`. The root merges `axis` from `orientation`.",
       }),
       field({
         name: "plugins",
-        type: "EmblaCarouselPluginType[]",
-        description: "Optional Embla plugins passed to `useEmblaCarousel`.",
+        type: "CarouselPlugin",
+        description:
+          "Optional Embla plugins passed to `useEmblaCarousel`, such as `embla-carousel-autoplay`.",
       }),
       field({
         name: "setApi",
         type: "(api: CarouselApi) => void",
         description:
           "Optional callback that receives the Embla API instance after mount for external index or dot indicators.",
+      }),
+      field({
+        name: "aria-label",
+        type: "string",
+        defaultValue: "Carousel",
+        description:
+          'Accessible label for the root `role="region"` carousel wrapper.',
       }),
       field({
         name: "className",
@@ -5156,9 +5177,11 @@ const carouselApiDetails: DetailItem[] = [
       }),
     ],
     notes: [
-      "Install path is `components/ui/carousel.tsx`. Exports include `Carousel`, `CarouselContent`, `CarouselItem`, `CarouselPrevious`, `CarouselNext`, `useCarousel`, and `CarouselApi`.",
-      "Previous and next buttons are absolutely positioned outside the track (`-left-12` / `-right-12` horizontally). Leave horizontal padding in your preview or page layout so controls stay visible.",
-      "Requires the Iconiq `button` primitive (or your own `Button` at `@/components/ui/button`) for the navigation controls.",
+      "Install path is `components/ui/carousel.tsx`. Exports include `Carousel`, `CarouselContent`, `CarouselItem`, `CarouselPrevious`, `CarouselNext`, `useCarousel`, `CarouselApi`, `CarouselOptions`, and `CarouselPlugin`.",
+      "Navigation controls are self-contained icon buttons — no separate button registry item is required.",
+      "The root region is focusable (`tabIndex={0}`) and announces the active slide through an `aria-live` region.",
+      "Custom aspect ratios are applied with inline `aspect-ratio` styles so Tailwind does not need safelisted arbitrary classes.",
+      'With `navPlacement="outside"` or `"responsive"` at `sm+`, add horizontal padding to the carousel wrapper so controls stay visible.',
     ],
   },
   {
@@ -5179,7 +5202,7 @@ const carouselApiDetails: DetailItem[] = [
     id: "carousel-item",
     title: "CarouselItem",
     summary:
-      "Single slide wrapper sized to `basis-full` with directional padding between siblings.",
+      "Single slide wrapper sized to `basis-full` with directional padding between siblings. Inactive slides are marked `aria-hidden`.",
     fields: [
       field({
         name: "className",
@@ -5192,25 +5215,47 @@ const carouselApiDetails: DetailItem[] = [
     id: "carousel-navigation",
     title: "CarouselPrevious / CarouselNext",
     summary:
-      "Outline icon buttons that call `scrollPrev` and `scrollNext` and disable when Embla cannot scroll further.",
+      "Self-contained icon buttons that call `scrollPrev` and `scrollNext` and disable when Embla cannot scroll further.",
     fields: [
-      field({
-        name: "variant",
-        type: "Button variant",
-        defaultValue: "outline",
-        description: "Forwarded to the underlying `Button` component.",
-      }),
-      field({
-        name: "size",
-        type: "Button size",
-        defaultValue: "icon",
-        description: "Forwarded to the underlying `Button` component.",
-      }),
       field({
         name: "className",
         type: "string",
         description:
           "Optional class names merged onto the control for local offsets or sizing.",
+      }),
+    ],
+  },
+  {
+    id: "use-carousel",
+    title: "useCarousel",
+    summary:
+      "Hook for custom indicators or synced UI. Must be used inside `Carousel`.",
+    fields: [
+      field({
+        name: "selectedIndex",
+        type: "number",
+        description: "Zero-based index of the active scroll snap.",
+      }),
+      field({
+        name: "scrollSnapCount",
+        type: "number",
+        description: "Total number of scroll snaps reported by Embla.",
+      }),
+      field({
+        name: "scrollTo",
+        type: "(index: number) => void",
+        description: "Scrolls directly to the requested snap index.",
+      }),
+      field({
+        name: "scrollPrev / scrollNext",
+        type: "() => void",
+        description: "Moves to the previous or next snap.",
+      }),
+      field({
+        name: "api",
+        type: "CarouselApi",
+        description:
+          "Underlying Embla API instance when you need lower-level control.",
       }),
     ],
   },

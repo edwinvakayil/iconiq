@@ -519,7 +519,7 @@
       "dependencies": ["embla-carousel-react", "lucide-react"],
       "devDependencies": [],
       "title": "Carousel",
-      "description": "Embla-powered carousel with aspect-ratio presets and horizontal or vertical slides. Built with embla-carousel-react and Lucide.",
+      "description": "Embla-powered carousel with aspect-ratio presets, responsive navigation placement, and horizontal or vertical slides. Built with embla-carousel-react and Lucide.",
       "files": [
         {
           "path": "carousel.tsx",

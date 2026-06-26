@@ -746,7 +746,7 @@ const carouselPreviewSlidesCode = `const slides = [
 ] as const;`;
 
 function buildCarouselDemoMarkup(aspectRatio: string) {
-  return `    <Carousel aspectRatio="${aspectRatio}" className="w-full max-w-md sm:max-w-lg">
+  return `    <Carousel aspectRatio="${aspectRatio}" className="w-full max-w-md sm:max-w-lg sm:px-12">
       <CarouselContent>
         {slides.map((slide) => (
           <CarouselItem key={slide}>

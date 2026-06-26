@@ -466,7 +466,7 @@ const REGISTRY_UI_META: Record<
   carousel: {
     title: "Carousel",
     description:
-      "Embla-powered carousel with aspect-ratio presets and horizontal or vertical slides. Built with embla-carousel-react and Lucide.",
+      "Embla-powered carousel with aspect-ratio presets, responsive navigation placement, and horizontal or vertical slides. Built with embla-carousel-react and Lucide.",
     dependencies: ["embla-carousel-react", "lucide-react"],
   },
   "verified-badge": {
