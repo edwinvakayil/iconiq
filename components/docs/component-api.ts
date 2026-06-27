@@ -7052,7 +7052,7 @@ const tableApiDetails: DetailItem[] = [
         type: "ReactNode",
         required: true,
         description:
-          "Compose TableHeader, TableBody, TableRow, TableHead, TableCell, and optional helper primitives inside the root.",
+          "Compose TableHeader, TableBody, TableFooter, TableRow, TableHead, TableCell, and optional helper primitives inside the root.",
       }),
       field({
         name: "columns",
@@ -7063,6 +7063,20 @@ const tableApiDetails: DetailItem[] = [
           "Shared grid-template-columns value applied to every header and body row so the native table semantics still keep the custom grid layout aligned.",
       }),
       field({
+        name: "size",
+        type: '"default" | "compact"',
+        defaultValue: "default",
+        description:
+          "Controls row density by tightening header and body cell padding across the table.",
+      }),
+      field({
+        name: "stickyHeader",
+        type: "boolean",
+        defaultValue: "false",
+        description:
+          "When true, TableHeader stays pinned while the surrounding scroll container moves.",
+      }),
+      field({
         name: "className",
         type: "string",
         description:
@@ -7071,9 +7085,9 @@ const tableApiDetails: DetailItem[] = [
     ],
     notes: [
       "The canonical JSX export is `Table`, and the lowercase `table` alias still ships for backward compatibility.",
-      "The file also exports `TABLE_DEFAULT_COLUMNS`, `TableAlign`, `TableRowVariant`, and `TableSortDirection` for stronger TypeScript reuse in app code.",
+      "The file also exports `TABLE_DEFAULT_COLUMNS`, `TableAlign`, `TableRowVariant`, `TableSize`, `TableSortDirection`, and `TableSortState` for stronger TypeScript reuse in app code.",
       "The registry component no longer owns demo data, search state, or add/remove actions. Those behaviors are expected to live in app code.",
-      "The installed primitive now renders a native table, header, body, rows, and cells while preserving the original grid-driven layout API.",
+      "In development, TableRow warns when the rendered cell count does not match the configured columns string.",
     ],
   },
   {
@@ -7088,6 +7102,12 @@ const tableApiDetails: DetailItem[] = [
         required: true,
         description:
           "Usually a search field, actions, filters, or bulk controls placed above the table.",
+      }),
+      field({
+        name: "tableId",
+        type: "string",
+        description:
+          "Optional id of the related table, exposed through aria-controls for toolbar controls.",
       }),
       field({
         name: "className",
@@ -7109,6 +7129,12 @@ const tableApiDetails: DetailItem[] = [
         description: "Usually one header TableRow.",
       }),
       field({
+        name: "sticky",
+        type: "boolean",
+        description:
+          "Overrides the root stickyHeader setting for this header section.",
+      }),
+      field({
         name: "className",
         type: "string",
         description: "Merged onto the header wrapper.",
@@ -7126,7 +7152,7 @@ const tableApiDetails: DetailItem[] = [
         type: "ReactNode",
         required: true,
         description:
-          "One or more TableRow elements, plus optional TableEmpty when no rows are visible.",
+          "One or more TableRow elements, plus optional TableEmpty or TableLoading when no rows are visible or data is still loading.",
       }),
       field({
         name: "className",
@@ -7136,6 +7162,27 @@ const tableApiDetails: DetailItem[] = [
     ],
     notes: [
       "Exit animations for removed rows only run when body rows are rendered as direct children of TableBody.",
+      "Row motion respects prefers-reduced-motion automatically.",
+    ],
+  },
+  {
+    id: "table-footer",
+    title: "TableFooter",
+    summary:
+      "Native table footer wrapper for totals, pagination, and bulk actions below the body rows.",
+    fields: [
+      field({
+        name: "children",
+        type: "ReactNode",
+        required: true,
+        description:
+          "Usually one footer TableRow containing TablePagination or summary cells.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description: "Merged onto the footer wrapper.",
+      }),
     ],
   },
   {
@@ -7165,6 +7212,13 @@ const tableApiDetails: DetailItem[] = [
           "When true, body rows get the muted hover wash. Defaults to false so informational rows do not imply clickability.",
       }),
       field({
+        name: "selected",
+        type: "boolean",
+        defaultValue: "false",
+        description:
+          'Applies selected styling and exposes data-state="selected" for active row selection.',
+      }),
+      field({
         name: "className",
         type: "string",
         description:
@@ -7179,28 +7233,34 @@ const tableApiDetails: DetailItem[] = [
     ],
     notes: [
       "Every row reads the shared columns string from Table and applies it as grid-template-columns.",
-      'Rows expose `data-slot="table-row"`, plus `data-variant` and `data-hoverable`, which makes local styling overrides easier after installation.',
+      'Rows expose `data-slot="table-row"`, plus `data-variant`, `data-hoverable`, and `data-selected`, which makes local styling overrides easier after installation.',
     ],
   },
   {
     id: "table-head",
     title: "TableHead",
     summary:
-      "Native header cell wrapper for labels, sort buttons, and right-aligned controls.",
+      "Native header cell wrapper for labels, sort buttons, and aligned controls.",
     fields: [
       field({
         name: "align",
-        type: '"left" | "right"',
+        type: '"left" | "center" | "right"',
         defaultValue: "left",
         description:
-          "Controls left or right alignment for the header cell content.",
+          "Controls left, center, or right alignment for the header cell content.",
+      }),
+      field({
+        name: "sortDirection",
+        type: '"asc" | "desc" | "none"',
+        description:
+          'Explicit aria-sort source for sortable columns. Pass "none" on inactive sortable headers.',
       }),
       field({
         name: "children",
         type: "ReactNode",
         required: true,
         description:
-          "Header label or a custom control such as TableSortButton. When used with TableSortButton, the column header also receives the correct aria-sort state.",
+          "Header label or a custom control such as TableSortButton.",
       }),
       field({
         name: "className",
@@ -7217,9 +7277,10 @@ const tableApiDetails: DetailItem[] = [
     fields: [
       field({
         name: "align",
-        type: '"left" | "right"',
+        type: '"left" | "center" | "right"',
         defaultValue: "left",
-        description: "Controls left or right alignment for the cell content.",
+        description:
+          "Controls left, center, or right alignment for the cell content.",
       }),
       field({
         name: "children",
@@ -7231,6 +7292,63 @@ const tableApiDetails: DetailItem[] = [
         name: "className",
         type: "string",
         description: "Merged onto the cell wrapper.",
+      }),
+    ],
+  },
+  {
+    id: "table-select-head",
+    title: "TableSelectHead",
+    summary:
+      "Checkbox header cell helper for select-all row selection columns.",
+    fields: [
+      field({
+        name: "checked",
+        type: "boolean",
+        defaultValue: "false",
+        description: "Controlled checked state for the select-all checkbox.",
+      }),
+      field({
+        name: "indeterminate",
+        type: "boolean",
+        defaultValue: "false",
+        description:
+          "Shows the mixed selection state when only some visible rows are selected.",
+      }),
+      field({
+        name: "onCheckedChange",
+        type: "(checked: boolean) => void",
+        description: "Called when the select-all checkbox toggles.",
+      }),
+      field({
+        name: "aria-label",
+        type: "string",
+        defaultValue: '"Select all rows"',
+        description: "Accessible name for the select-all checkbox.",
+      }),
+    ],
+  },
+  {
+    id: "table-select-cell",
+    title: "TableSelectCell",
+    summary: "Checkbox body cell helper for per-row selection columns.",
+    fields: [
+      field({
+        name: "checked",
+        type: "boolean",
+        defaultValue: "false",
+        description: "Controlled checked state for the row checkbox.",
+      }),
+      field({
+        name: "onCheckedChange",
+        type: "(checked: boolean) => void",
+        description: "Called when the row checkbox toggles.",
+      }),
+      field({
+        name: "aria-label",
+        type: "string",
+        required: true,
+        description:
+          "Accessible name for the row checkbox, such as the row title.",
       }),
     ],
   },
@@ -7278,6 +7396,29 @@ const tableApiDetails: DetailItem[] = [
           "You can still override animate, initial, transition, or className when customizing the empty state row.",
       }),
     ],
+    notes: [
+      "The empty row uses the same grid column template as body rows so the message stays aligned with the table layout.",
+    ],
+  },
+  {
+    id: "table-loading",
+    title: "TableLoading",
+    summary:
+      "Placeholder body rows with pulse bars for async loading states inside TableBody.",
+    fields: [
+      field({
+        name: "rows",
+        type: "number",
+        defaultValue: "3",
+        description: "Number of placeholder rows to render.",
+      }),
+      field({
+        name: "TableRow props",
+        type: 'Omit<TableRowProps, "children" | "variant">',
+        description:
+          "Optional TableRow props such as index or className passed to each loading row.",
+      }),
+    ],
   },
   {
     id: "table-sort-button",
@@ -7301,7 +7442,7 @@ const tableApiDetails: DetailItem[] = [
       }),
       field({
         name: "align",
-        type: '"left" | "right"',
+        type: '"left" | "center" | "right"',
         defaultValue: "left",
         description:
           "Keeps the sort button aligned with the header cell it lives in, including full-width right-aligned targets.",
@@ -7313,6 +7454,12 @@ const tableApiDetails: DetailItem[] = [
         description: "Visible sort label.",
       }),
       field({
+        name: "aria-label",
+        type: "string",
+        description:
+          "Optional override for the generated sort label announced to screen readers.",
+      }),
+      field({
         name: "className",
         type: "string",
         description: "Merged onto the button wrapper.",
@@ -7320,6 +7467,57 @@ const tableApiDetails: DetailItem[] = [
     ],
     notes: [
       "The helper defaults to type='button', so it stays safe inside forms.",
+      "When children is plain text, an aria-label is generated automatically from the active sort direction.",
+    ],
+  },
+  {
+    id: "table-pagination",
+    title: "TablePagination",
+    summary:
+      "Pagination helper with previous/next controls and optional range copy, placed below the table.",
+    fields: [
+      field({
+        name: "align",
+        type: '"left" | "center" | "right"',
+        defaultValue: "right",
+        description:
+          "Aligns the page summary and previous/next controls as a group below the table.",
+      }),
+      field({
+        name: "page",
+        type: "number",
+        required: true,
+        description: "Current one-based page index.",
+      }),
+      field({
+        name: "pageCount",
+        type: "number",
+        required: true,
+        description: "Total number of available pages.",
+      }),
+      field({
+        name: "onPageChange",
+        type: "(page: number) => void",
+        required: true,
+        description: "Called when the previous or next control changes pages.",
+      }),
+      field({
+        name: "pageSize",
+        type: "number",
+        description:
+          "Used with totalItems to render a range label such as 1–5 of 12.",
+      }),
+      field({
+        name: "totalItems",
+        type: "number",
+        description: "Total item count shown in the optional range label.",
+      }),
+      field({
+        name: "showPageInfo",
+        type: "boolean",
+        defaultValue: "true",
+        description: "Toggles the range or page summary text.",
+      }),
     ],
   },
   registryItem("table.json", ["motion", "lucide-react"]),
