@@ -61,10 +61,10 @@ const alertApiDetails: DetailItem[] = [
       }),
       field({
         name: "appearance",
-        type: '"default" | "destructive" | "warning"',
+        type: '"default" | "success" | "info" | "destructive" | "warning"',
         defaultValue: '"default"',
         description:
-          "Visual tone for the alert surface. Destructive shifts toward error colors; warning uses a warm amber surface with muted description text.",
+          "Visual tone for the alert surface. Success and info use semantic green and blue surfaces; destructive shifts toward error colors; warning uses a warm amber surface with muted description text.",
       }),
       field({
         name: "size",
@@ -107,6 +107,32 @@ const alertApiDetails: DetailItem[] = [
           "Auto-dismiss delay in milliseconds. Passing 0 disables the timer; compound inline alerts default to no timer so static notices stay visible.",
       }),
       field({
+        name: "open",
+        type: "boolean",
+        description:
+          "Controlled visibility. Pair with onOpenChange when parent state should own whether the alert is shown.",
+      }),
+      field({
+        name: "defaultOpen",
+        type: "boolean",
+        defaultValue: "true",
+        description:
+          "Initial visibility for uncontrolled usage. Ignored when open is provided.",
+      }),
+      field({
+        name: "onOpenChange",
+        type: "(open: boolean) => void",
+        description:
+          "Called when visibility changes from dismissal, timeout, Escape, or the close button.",
+      }),
+      field({
+        name: "titleLines",
+        type: '1 | 2 | 3 | "none"',
+        defaultValue: "1",
+        description:
+          "Maximum title lines before truncation. Pass none to allow the title to wrap freely.",
+      }),
+      field({
         name: "onDismiss",
         type: "() => void",
         description:
@@ -117,8 +143,10 @@ const alertApiDetails: DetailItem[] = [
       "Use size for preset widths or pass width for a custom max width. md defaults to 400px.",
       "Every positioned alert snaps to a full-width top placement on small screens, then switches to the requested corner at the sm breakpoint.",
       'Inline alerts use role="alert"; toast alerts use role="status" with aria-live="polite" and keep title and message linked with aria-labelledby and aria-describedby.',
-      "The alert keeps its own visible state internally when dismissal is enabled, so toast usage is designed for fire-and-forget notifications rather than parent-controlled open state.",
+      "The alert keeps its own visible state internally when dismissal is enabled, so toast usage is designed for fire-and-forget notifications unless you pass open and onOpenChange.",
       "Hovering or focusing the alert pauses auto-dismiss, which gives people more time to read and makes the close target less stressful to hit.",
+      "Dismissible alerts also close on Escape. Toast alerts stack vertically per corner with a soft shadow for contrast over page content.",
+      "Motion falls back to opacity-only transitions when prefers-reduced-motion is enabled.",
     ],
   },
   {
@@ -163,6 +191,26 @@ const alertApiDetails: DetailItem[] = [
     ],
   },
   {
+    id: "alert-action",
+    title: "AlertAction",
+    summary:
+      "Optional action row for the compound alert API. Renders beneath the description in the content column.",
+    fields: [
+      field({
+        name: "children",
+        type: "ReactNode",
+        required: true,
+        description:
+          "Follow-up controls such as a single button or text link. Keep actions concise.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description: "Merged with the action row layout classes.",
+      }),
+    ],
+  },
+  {
     id: "alert-lifecycle",
     title: "Motion and lifecycle",
     summary:
@@ -171,6 +219,7 @@ const alertApiDetails: DetailItem[] = [
       "Entry uses long fluid easing on opacity, vertical drift, scale, and blur so the alert settles in rather than snapping.",
       "Exit keeps the same direction with a softer, slightly slower fade so dismissal still feels continuous.",
       "Child text and the icon only fade on exit, which keeps the container motion cohesive.",
+      "prefers-reduced-motion swaps blur, scale, and drift for short opacity fades on the container, text, and icon.",
       "The timeout effect is cleared on cleanup, so unmounting or rerendering the alert does not leak timers.",
       "When position is set, the component waits until after mount before calling createPortal to avoid touching document during server render.",
       "Dismissal callbacks wait until the exit transition completes, so parent cleanup does not cut off the visual exit early.",

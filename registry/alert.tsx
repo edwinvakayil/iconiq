@@ -1,7 +1,12 @@
 "use client";
 
 import { cva, type VariantProps } from "class-variance-authority";
-import { AnimatePresence, motion, type Variants } from "motion/react";
+import {
+  AnimatePresence,
+  motion,
+  useReducedMotion,
+  type Variants,
+} from "motion/react";
 import {
   Children,
   type ComponentPropsWithoutRef,
@@ -11,6 +16,7 @@ import {
   forwardRef,
   isValidElement,
   type ReactNode,
+  type Ref,
   useCallback,
   useContext,
   useEffect,
@@ -34,6 +40,9 @@ const alertVariants = cva(
     variants: {
       appearance: {
         default: "bg-card text-card-foreground",
+        success:
+          "border-emerald-200 bg-emerald-50 text-emerald-950 *:data-[slot=alert-description]:text-emerald-800/80 dark:border-emerald-800/70 dark:bg-emerald-950/40 dark:text-emerald-50 dark:*:data-[slot=alert-description]:text-emerald-100/75 [&>svg]:text-emerald-700 dark:[&>svg]:text-emerald-300",
+        info: "border-sky-200 bg-sky-50 text-sky-950 *:data-[slot=alert-description]:text-sky-800/80 dark:border-sky-800/70 dark:bg-sky-950/40 dark:text-sky-50 dark:*:data-[slot=alert-description]:text-sky-100/75 [&>svg]:text-sky-700 dark:[&>svg]:text-sky-300",
         destructive:
           "bg-card text-destructive *:data-[slot=alert-description]:text-destructive/90 [&>svg]:text-current",
         warning:
@@ -81,7 +90,74 @@ const ALERT_TOAST_SIZE_CLASS: Record<AlertSize, string> = {
   xl: "max-w-full sm:max-w-[560px]",
 };
 
-function resolveAlertWidth({
+const ALERT_TOAST_STACK_GAP = 12;
+const ALERT_TOAST_STACK_HEIGHT = 72;
+
+type ToastRegistration = {
+  id: string;
+  position: AlertPosition;
+};
+
+let alertToastRegistry: ToastRegistration[] = [];
+const alertToastListeners = new Set<() => void>();
+
+function notifyAlertToastListeners() {
+  for (const listener of alertToastListeners) {
+    listener();
+  }
+}
+
+function registerAlertToast(id: string, position: AlertPosition) {
+  alertToastRegistry = [...alertToastRegistry, { id, position }];
+  notifyAlertToastListeners();
+}
+
+function unregisterAlertToast(id: string) {
+  alertToastRegistry = alertToastRegistry.filter((entry) => entry.id !== id);
+  notifyAlertToastListeners();
+}
+
+function subscribeAlertToasts(listener: () => void) {
+  alertToastListeners.add(listener);
+
+  return () => {
+    alertToastListeners.delete(listener);
+  };
+}
+
+export function getAlertToastStackIndex(
+  id: string,
+  position: AlertPosition,
+  registry: ToastRegistration[] = alertToastRegistry
+): number {
+  const sameCorner = registry.filter((entry) => entry.position === position);
+  const index = sameCorner.findIndex((entry) => entry.id === id);
+
+  return index < 0 ? 0 : index;
+}
+
+export function resolveAlertToastStackOffset({
+  position,
+  stackIndex,
+}: {
+  position: AlertPosition;
+  stackIndex: number;
+}): CSSProperties {
+  if (stackIndex <= 0) {
+    return {};
+  }
+
+  const offset =
+    stackIndex * (ALERT_TOAST_STACK_HEIGHT + ALERT_TOAST_STACK_GAP);
+
+  if (position.startsWith("top")) {
+    return { top: `calc(1rem + ${offset}px)` };
+  }
+
+  return { bottom: `calc(1rem + ${offset}px)` };
+}
+
+export function resolveAlertWidth({
   size = DEFAULT_ALERT_SIZE,
   width,
   variant,
@@ -124,8 +200,12 @@ function resolveAlertWidth({
 type AlertContextValue = {
   descriptionId: string;
   hasIcon: boolean;
+  reduceMotion: boolean;
   titleId: string;
+  titleLines: AlertTitleLines;
 };
+
+export type AlertTitleLines = 1 | 2 | 3 | "none";
 
 const AlertContext = createContext<AlertContextValue | null>(null);
 
@@ -159,6 +239,13 @@ export interface AlertProps
   position?: AlertPosition;
   /** Auto-dismiss after this many milliseconds. Defaults to 5 000. Pass 0 to disable. */
   timeout?: number;
+  /** Controlled visibility. Pair with onOpenChange for parent-managed alerts. */
+  open?: boolean;
+  /** Initial visibility when uncontrolled. Defaults to true. */
+  defaultOpen?: boolean;
+  onOpenChange?: (open: boolean) => void;
+  /** Max title lines before truncation. Defaults to 1. Pass "none" to allow wrapping. */
+  titleLines?: AlertTitleLines;
   onDismiss?: () => void;
 }
 
@@ -190,6 +277,23 @@ const positionClasses: Record<AlertPosition, string> = {
     "fixed top-4 inset-x-4 sm:inset-x-auto sm:top-auto sm:bottom-4 sm:left-auto sm:right-4",
 };
 
+export interface AlertActionProps extends MotionDivProps {
+  children?: ReactNode;
+}
+
+function getAlertTitleLineClampClass(titleLines: AlertTitleLines) {
+  switch (titleLines) {
+    case "none":
+      return undefined;
+    case 2:
+      return "line-clamp-2";
+    case 3:
+      return "line-clamp-3";
+    default:
+      return "line-clamp-1";
+  }
+}
+
 /** Vertical travel only — kept small so motion reads as a drift, not a snap. */
 function getAlertMotionOffset(position?: AlertPosition): { y: number } {
   if (!position) {
@@ -202,7 +306,28 @@ function getAlertMotionOffset(position?: AlertPosition): { y: number } {
 const FLUID_EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
 const FLUID_EXIT_EASE: [number, number, number, number] = [0.4, 0, 0.2, 1];
 
-function getContainerVariants(position?: AlertPosition): Variants {
+function getReducedMotionContainerVariants(): Variants {
+  return {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: { duration: 0.15 },
+    },
+    exit: {
+      opacity: 0,
+      transition: { duration: 0.1 },
+    },
+  };
+}
+
+function getContainerVariants(
+  position?: AlertPosition,
+  reduceMotion = false
+): Variants {
+  if (reduceMotion) {
+    return getReducedMotionContainerVariants();
+  }
+
   const { y: dy } = getAlertMotionOffset(position);
 
   return {
@@ -251,6 +376,11 @@ const childVariants: Variants = {
   },
 };
 
+const reducedMotionChildVariants: Variants = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { duration: 0.15 } },
+};
+
 /** Icon eases in with the same fluid curve as the container. */
 const iconVariants: Variants = {
   hidden: { opacity: 0, scale: 0.92 },
@@ -261,21 +391,38 @@ const iconVariants: Variants = {
   },
 };
 
+const reducedMotionIconVariants: Variants = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { duration: 0.15 } },
+};
+
+function getChildVariants(reduceMotion: boolean) {
+  return reduceMotion ? reducedMotionChildVariants : childVariants;
+}
+
+function getIconVariants(reduceMotion: boolean) {
+  return reduceMotion ? reducedMotionIconVariants : iconVariants;
+}
+
 const AlertTitle = forwardRef<HTMLDivElement, AlertTitleProps>(
   ({ children, className, id, ...props }, ref) => {
     const context = useContext(AlertContext);
+    const titleLineClampClass = getAlertTitleLineClampClass(
+      context?.titleLines ?? 1
+    );
 
     return (
       <motion.div
         className={cn(
-          "line-clamp-1 min-h-4 font-medium tracking-tight",
+          "min-h-4 font-medium tracking-tight",
+          titleLineClampClass,
           context?.hasIcon ? "col-start-2" : "col-start-1",
           className
         )}
         data-slot="alert-title"
         id={id ?? context?.titleId}
         ref={ref}
-        variants={childVariants}
+        variants={getChildVariants(context?.reduceMotion ?? false)}
         {...props}
       >
         {children}
@@ -300,7 +447,7 @@ const AlertDescription = forwardRef<HTMLDivElement, AlertDescriptionProps>(
         data-slot="alert-description"
         id={id ?? context?.descriptionId}
         ref={ref}
-        variants={childVariants}
+        variants={getChildVariants(context?.reduceMotion ?? false)}
         {...props}
       >
         {children}
@@ -310,6 +457,30 @@ const AlertDescription = forwardRef<HTMLDivElement, AlertDescriptionProps>(
 );
 
 AlertDescription.displayName = "AlertDescription";
+
+const AlertAction = forwardRef<HTMLDivElement, AlertActionProps>(
+  ({ children, className, ...props }, ref) => {
+    const context = useContext(AlertContext);
+
+    return (
+      <motion.div
+        className={cn(
+          "mt-2 flex flex-wrap items-center gap-2",
+          context?.hasIcon ? "col-start-2" : "col-start-1",
+          className
+        )}
+        data-slot="alert-action"
+        ref={ref}
+        variants={getChildVariants(context?.reduceMotion ?? false)}
+        {...props}
+      >
+        {children}
+      </motion.div>
+    );
+  }
+);
+
+AlertAction.displayName = "AlertAction";
 
 function isAlertTitleChild(child: ReactNode) {
   if (!isValidElement(child)) {
@@ -333,29 +504,64 @@ function isAlertDescriptionChild(child: ReactNode) {
   );
 }
 
-function isAlertTextChild(child: ReactNode) {
-  return isAlertTitleChild(child) || isAlertDescriptionChild(child);
+function isAlertActionChild(child: ReactNode) {
+  if (!isValidElement(child)) {
+    return false;
+  }
+
+  return (
+    child.type === AlertAction ||
+    getComponentDisplayName(child.type) === AlertAction.displayName
+  );
 }
 
 function splitAlertChildren(children: ReactNode) {
   const childArray = Children.toArray(children);
   const [firstChild, ...remainingChildren] = childArray;
 
-  if (firstChild && !isAlertTextChild(firstChild)) {
-    return {
-      contentChildren: remainingChildren,
-      leadingIcon: firstChild,
-    };
+  let leadingIcon: ReactNode = null;
+  let contentChildren = childArray;
+
+  if (
+    firstChild &&
+    !isAlertTitleChild(firstChild) &&
+    !isAlertDescriptionChild(firstChild) &&
+    !isAlertActionChild(firstChild)
+  ) {
+    leadingIcon = firstChild;
+    contentChildren = remainingChildren;
   }
 
+  const actionChildren = contentChildren.filter(isAlertActionChild);
+  const textChildren = contentChildren.filter(
+    (child) => !isAlertActionChild(child)
+  );
+
   return {
-    contentChildren: childArray,
-    leadingIcon: null,
+    actionChildren,
+    contentChildren: textChildren,
+    leadingIcon,
   };
 }
 
-function useAlertLifecycle(timeout: number, onDismiss?: () => void) {
-  const [visible, setVisible] = useState(true);
+function useAlertLifecycle({
+  defaultOpen = true,
+  onDismiss,
+  onOpenChange,
+  open,
+  showDismiss,
+  timeout,
+}: {
+  defaultOpen?: boolean;
+  onDismiss?: () => void;
+  onOpenChange?: (open: boolean) => void;
+  open?: boolean;
+  showDismiss: boolean;
+  timeout: number;
+}) {
+  const isControlled = open !== undefined;
+  const [uncontrolledOpen, setUncontrolledOpen] = useState(defaultOpen);
+  const visible = isControlled ? open : uncontrolledOpen;
   const [mounted, setMounted] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [isFocusWithin, setIsFocusWithin] = useState(false);
@@ -366,7 +572,24 @@ function useAlertLifecycle(timeout: number, onDismiss?: () => void) {
   const dismissalRequestedRef = useRef(false);
   const previousTimeoutRef = useRef(timeout);
 
+  const setVisible = useCallback(
+    (nextOpen: boolean) => {
+      if (!isControlled) {
+        setUncontrolledOpen(nextOpen);
+      }
+
+      onOpenChange?.(nextOpen);
+    },
+    [isControlled, onOpenChange]
+  );
+
   useEffect(() => setMounted(true), []);
+
+  useEffect(() => {
+    if (open === true) {
+      dismissalRequestedRef.current = false;
+    }
+  }, [open]);
 
   useEffect(() => {
     const handleVisibilityChange = () => {
@@ -398,7 +621,7 @@ function useAlertLifecycle(timeout: number, onDismiss?: () => void) {
     dismissalRequestedRef.current = true;
     clearTimer();
     setVisible(false);
-  }, [clearTimer]);
+  }, [clearTimer, setVisible]);
 
   const pauseTimer = useCallback(() => {
     if (timeoutIdRef.current === null || timerStartedAtRef.current === null) {
@@ -481,6 +704,27 @@ function useAlertLifecycle(timeout: number, onDismiss?: () => void) {
 
   useEffect(() => clearTimer, [clearTimer]);
 
+  useEffect(() => {
+    if (!(visible && showDismiss)) {
+      return;
+    }
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key !== "Escape") {
+        return;
+      }
+
+      event.preventDefault();
+      requestDismiss();
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [requestDismiss, showDismiss, visible]);
+
   const handleBlurCapture = (event: FocusEvent<HTMLDivElement>) => {
     const nextFocusedNode = event.relatedTarget;
 
@@ -514,6 +758,8 @@ function useAlertLifecycle(timeout: number, onDismiss?: () => void) {
 }
 
 function AlertIcon({ children }: { children: ReactNode }) {
+  const context = useContext(AlertContext);
+
   if (!children) {
     return null;
   }
@@ -521,7 +767,7 @@ function AlertIcon({ children }: { children: ReactNode }) {
   return (
     <motion.div
       className="col-start-1 row-start-1 shrink-0 [&_svg]:size-4 [&_svg]:translate-y-0.5 [&_svg]:text-current"
-      variants={iconVariants}
+      variants={getIconVariants(context?.reduceMotion ?? false)}
     >
       {children}
     </motion.div>
@@ -534,6 +780,10 @@ function getDismissButtonClasses(
   switch (appearance) {
     case "warning":
       return "text-amber-900/40 hover:text-amber-900 dark:text-amber-100/45 dark:hover:text-amber-100";
+    case "success":
+      return "text-emerald-800/40 hover:text-emerald-900 dark:text-emerald-100/45 dark:hover:text-emerald-100";
+    case "info":
+      return "text-sky-800/40 hover:text-sky-900 dark:text-sky-100/45 dark:hover:text-sky-100";
     case "destructive":
       return "text-destructive/40 hover:text-destructive";
     default:
@@ -552,6 +802,8 @@ function AlertDismissButton({
   onDismiss: () => void;
   show: boolean;
 }) {
+  const context = useContext(AlertContext);
+
   if (!show) {
     return null;
   }
@@ -567,7 +819,7 @@ function AlertDismissButton({
       data-slot="alert-dismiss"
       onClick={onDismiss}
       type="button"
-      variants={childVariants}
+      variants={getChildVariants(context?.reduceMotion ?? false)}
     >
       <svg fill="none" height="14" viewBox="0 0 14 14" width="14">
         <path
@@ -614,9 +866,13 @@ function AlertCard({
   onPointerEnter,
   onPointerLeave,
   position,
+  reduceMotion,
+  ref,
   showDismiss,
   size,
+  stackOffsetStyle,
   titleId,
+  titleLines,
   variants,
   variant,
   visible,
@@ -638,9 +894,13 @@ function AlertCard({
   onPointerEnter: () => void;
   onPointerLeave: () => void;
   position?: AlertPosition;
+  reduceMotion: boolean;
+  ref?: Ref<HTMLDivElement>;
   showDismiss: boolean;
   size?: AlertSize;
+  stackOffsetStyle?: CSSProperties;
   titleId: string;
+  titleLines: AlertTitleLines;
   variants: Variants;
   variant: AlertVariant;
   visible: boolean;
@@ -658,7 +918,15 @@ function AlertCard({
   return (
     <AnimatePresence onExitComplete={onExitComplete}>
       {visible ? (
-        <AlertContext.Provider value={{ descriptionId, hasIcon, titleId }}>
+        <AlertContext.Provider
+          value={{
+            descriptionId,
+            hasIcon,
+            reduceMotion,
+            titleId,
+            titleLines,
+          }}
+        >
           <motion.div
             {...motionProps}
             animate="visible"
@@ -670,10 +938,12 @@ function AlertCard({
               componentThemeClassName,
               alertVariants({ appearance }),
               getAlertGridClasses({ hasIcon, showDismiss }),
-              "transform-gpu will-change-[transform,opacity,filter]",
+              reduceMotion
+                ? "will-change-[opacity]"
+                : "transform-gpu will-change-[transform,opacity,filter]",
               alertWidth.className,
               position ? positionClasses[position] : undefined,
-              position && "z-[300]",
+              position && "z-[300] shadow-[var(--ic-shadow-soft)]",
               className
             )}
             data-slot="alert"
@@ -683,8 +953,13 @@ function AlertCard({
             onFocusCapture={onFocusCapture}
             onPointerEnter={onPointerEnter}
             onPointerLeave={onPointerLeave}
+            ref={ref}
             role={variant === "toast" ? "status" : "alert"}
-            style={{ ...motionProps.style, ...alertWidth.style }}
+            style={{
+              ...motionProps.style,
+              ...alertWidth.style,
+              ...stackOffsetStyle,
+            }}
             variants={variants}
           >
             {icon ? <AlertIcon>{icon}</AlertIcon> : null}
@@ -702,7 +977,7 @@ function AlertCard({
   );
 }
 
-function getAlertConfig({
+export function getAlertConfig({
   dismissible,
   hasCompoundChildren,
   position,
@@ -733,34 +1008,12 @@ function getAlertConfig({
   };
 }
 
-function AlertAction({
-  children,
-  hasIcon,
-}: {
-  children: ReactNode;
-  hasIcon: boolean;
-}) {
-  return (
-    <motion.div
-      className={cn(
-        "mt-2 flex flex-wrap items-center gap-2",
-        hasIcon ? "col-start-2" : "col-start-1"
-      )}
-      variants={childVariants}
-    >
-      {children}
-    </motion.div>
-  );
-}
-
 function getLegacyAlertContent({
   action,
-  hasIcon,
   message,
   title,
 }: {
   action?: ReactNode;
-  hasIcon: boolean;
   message?: ReactNode;
   title?: ReactNode;
 }) {
@@ -768,7 +1021,7 @@ function getLegacyAlertContent({
     <>
       {title ? <AlertTitle>{title}</AlertTitle> : null}
       {message ? <AlertDescription>{message}</AlertDescription> : null}
-      {action ? <AlertAction hasIcon={hasIcon}>{action}</AlertAction> : null}
+      {action ? <AlertAction>{action}</AlertAction> : null}
     </>
   );
 }
@@ -789,7 +1042,8 @@ function getAlertContent({
   title?: ReactNode;
 }) {
   if (hasCompoundChildren) {
-    const { contentChildren, leadingIcon } = splitAlertChildren(children);
+    const { actionChildren, contentChildren, leadingIcon } =
+      splitAlertChildren(children);
     const renderedIcon = icon ?? leadingIcon;
 
     return {
@@ -799,9 +1053,8 @@ function getAlertContent({
       renderedContent: (
         <>
           {contentChildren}
-          {action ? (
-            <AlertAction hasIcon={Boolean(renderedIcon)}>{action}</AlertAction>
-          ) : null}
+          {actionChildren}
+          {action ? <AlertAction>{action}</AlertAction> : null}
         </>
       ),
       renderedIcon,
@@ -816,7 +1069,6 @@ function getAlertContent({
     hasTitle: Boolean(title),
     renderedContent: getLegacyAlertContent({
       action,
-      hasIcon: Boolean(renderedIcon),
       message,
       title,
     }),
@@ -824,24 +1076,34 @@ function getAlertContent({
   };
 }
 
-export const Alert = ({
-  appearance,
-  children,
-  className,
-  icon,
-  title,
-  message,
-  action,
-  dismissible,
-  size = DEFAULT_ALERT_SIZE,
-  width,
-  variant,
-  position,
-  timeout,
-  onDismiss,
-  ...props
-}: AlertProps) => {
+export const Alert = forwardRef<HTMLDivElement, AlertProps>(function Alert(
+  {
+    appearance,
+    children,
+    className,
+    icon,
+    title,
+    message,
+    action,
+    dismissible,
+    size = DEFAULT_ALERT_SIZE,
+    width,
+    variant,
+    position,
+    timeout,
+    open,
+    defaultOpen = true,
+    onOpenChange,
+    titleLines = 1,
+    onDismiss,
+    ...props
+  },
+  ref
+) {
   const hasCompoundChildren = Children.count(children) > 0;
+  const reduceMotion = useReducedMotion() ?? false;
+  const toastId = useId();
+  const [toastStackIndex, setToastStackIndex] = useState(0);
   const {
     resolvedDismissible,
     resolvedPosition,
@@ -862,12 +1124,56 @@ export const Alert = ({
     setIsFocusWithin,
     setIsHovered,
     visible,
-  } = useAlertLifecycle(resolvedTimeout, onDismiss);
+  } = useAlertLifecycle({
+    defaultOpen,
+    onDismiss,
+    onOpenChange,
+    open,
+    showDismiss: resolvedDismissible,
+    timeout: resolvedTimeout,
+  });
+
+  useEffect(() => {
+    if (resolvedVariant !== "toast" || !resolvedPosition || !visible) {
+      return;
+    }
+
+    registerAlertToast(toastId, resolvedPosition);
+
+    const updateStackIndex = () => {
+      setToastStackIndex(getAlertToastStackIndex(toastId, resolvedPosition));
+    };
+
+    const unsubscribe = subscribeAlertToasts(updateStackIndex);
+    updateStackIndex();
+
+    return () => {
+      unsubscribe();
+    };
+  }, [resolvedPosition, resolvedVariant, toastId, visible]);
+
+  const handleToastExitComplete = useCallback(() => {
+    if (resolvedVariant === "toast" && resolvedPosition) {
+      unregisterAlertToast(toastId);
+    }
+
+    handleExitComplete();
+  }, [handleExitComplete, resolvedPosition, resolvedVariant, toastId]);
+
+  useEffect(
+    () => () => {
+      unregisterAlertToast(toastId);
+    },
+    [toastId]
+  );
 
   const titleId = useId();
   const messageId = useId();
 
-  const containerVariants = getContainerVariants(resolvedPosition);
+  const containerVariants = getContainerVariants(
+    resolvedPosition,
+    reduceMotion
+  );
   const { hasDescription, hasTitle, renderedContent, renderedIcon } =
     getAlertContent({
       action,
@@ -877,6 +1183,14 @@ export const Alert = ({
       message,
       title,
     });
+
+  const stackOffsetStyle =
+    resolvedVariant === "toast" && resolvedPosition
+      ? resolveAlertToastStackOffset({
+          position: resolvedPosition,
+          stackIndex: toastStackIndex,
+        })
+      : undefined;
 
   const card = (
     <AlertCard
@@ -891,14 +1205,18 @@ export const Alert = ({
       motionProps={props}
       onBlurCapture={handleBlurCapture}
       onDismiss={requestDismiss}
-      onExitComplete={handleExitComplete}
+      onExitComplete={handleToastExitComplete}
       onFocusCapture={() => setIsFocusWithin(true)}
       onPointerEnter={() => setIsHovered(true)}
       onPointerLeave={() => setIsHovered(false)}
       position={resolvedPosition}
+      reduceMotion={reduceMotion}
+      ref={ref}
       showDismiss={resolvedDismissible}
       size={size}
+      stackOffsetStyle={stackOffsetStyle}
       titleId={titleId}
+      titleLines={titleLines}
       variant={resolvedVariant}
       variants={containerVariants}
       visible={visible}
@@ -921,7 +1239,9 @@ export const Alert = ({
   }
 
   return card;
-};
+});
+
+Alert.displayName = "Alert";
 
 export default Alert;
-export { AlertDescription, AlertTitle };
+export { AlertAction, AlertDescription, AlertTitle };

@@ -964,81 +964,21 @@ export default function Page() {
 export const alertPreviewCode = `"use client";
 
 import {
-  CheckCircle2Icon,
-  CircleAlert,
-  TriangleAlert,
-} from "lucide-react";
-import { useState } from "react";
-import {
   Alert,
   AlertDescription,
   AlertTitle,
 } from "@/components/ui/alert";
-import { cn } from "@/lib/utils";
-
-const appearanceOptions = [
-  { value: "default", label: "Default" },
-  { value: "warning", label: "Warning" },
-  { value: "destructive", label: "Destructive" },
-] as const;
-
-const appearanceContent = {
-  default: {
-    Icon: CheckCircle2Icon,
-    title: "Changes saved",
-    description: "The latest version is live for your team.",
-  },
-  warning: {
-    Icon: TriangleAlert,
-    title: "Unsaved changes detected",
-    description: "Save now or recent edits may be lost.",
-  },
-  destructive: {
-    Icon: CircleAlert,
-    title: "Upload failed",
-    description: "Try again in a moment.",
-  },
-} as const;
+import { CheckCircle2Icon } from "lucide-react";
 
 export function AlertPreview() {
-  const [appearance, setAppearance] = useState<
-    "default" | "warning" | "destructive"
-  >("default");
-
-  const { description, Icon, title } = appearanceContent[appearance];
-
   return (
-    <div className="flex w-full flex-col items-center gap-6 px-4 py-6 sm:px-8 sm:py-8">
-      <fieldset
-        aria-label="Alert appearance"
-        className="m-0 flex flex-wrap items-center justify-center gap-4 border-0 p-0"
-      >
-        {appearanceOptions.map((option) => {
-          const isSelected = appearance === option.value;
-
-          return (
-            <button
-              aria-pressed={isSelected}
-              className={cn(
-                "text-[13px] transition-colors",
-                isSelected
-                  ? "font-medium text-foreground"
-                  : "font-light text-muted-foreground hover:text-foreground"
-              )}
-              key={option.value}
-              onClick={() => setAppearance(option.value)}
-              type="button"
-            >
-              {option.label}
-            </button>
-          );
-        })}
-      </fieldset>
-
-      <Alert appearance={appearance} className="w-full">
-        <Icon />
-        <AlertTitle>{title}</AlertTitle>
-        <AlertDescription>{description}</AlertDescription>
+    <div className="flex w-full flex-col items-center gap-6 px-4 py-8 sm:px-8">
+      <Alert appearance="success" className="w-full max-w-xl" size="md">
+        <CheckCircle2Icon />
+        <AlertTitle>Changes saved</AlertTitle>
+        <AlertDescription>
+          The latest version is live for your team.
+        </AlertDescription>
       </Alert>
     </div>
   );
