@@ -7,6 +7,8 @@ import { createPortal } from "react-dom";
 
 import { cn } from "@/lib/utils";
 
+import { docsPlaygroundRowClassName } from "./docs-playground-styles";
+
 const VIEWPORT_MARGIN = 12;
 const MENU_GAP = 6;
 const MENU_MIN_WIDTH = 168;
@@ -242,7 +244,7 @@ export function DocsPlaygroundSelectMenu<T extends string>({
             >
               <motion.div
                 animate={menuMotion.animate}
-                className="rounded-[14px] border border-black/[0.08] bg-white p-1.5 shadow-[0_18px_40px_-16px_rgba(0,0,0,0.28)] dark:border-white/[0.08] dark:bg-[#1c1c1e] dark:shadow-[0_18px_40px_-16px_rgba(0,0,0,0.65)]"
+                className="rounded-[14px] border border-black/[0.08] bg-white p-1.5 shadow-[0_8px_20px_-8px_rgba(0,0,0,0.14)] dark:border-white/[0.08] dark:bg-[#1c1c1e] dark:shadow-[0_8px_20px_-8px_rgba(0,0,0,0.48)]"
                 exit={{
                   ...menuMotion.closed,
                   transition: {
@@ -300,7 +302,7 @@ export function DocsPlaygroundSelectMenu<T extends string>({
                             ) : null}
                             {isHovered ? (
                               <motion.span
-                                className="absolute inset-0 rounded-[10px] bg-[#ebebeb] dark:bg-[#2c2c2e]"
+                                className="absolute inset-0 rounded-[10px] bg-[#f3f3f3] dark:bg-[#2c2c2e]"
                                 layoutId={`${menuId}-hover-pill`}
                                 transition={{
                                   type: "spring",
@@ -388,7 +390,9 @@ export function DocsPlaygroundSelectRow<T extends string>({
   value: T;
 }) {
   return (
-    <div className="flex min-h-12 items-center justify-between gap-3 rounded-2xl bg-[#ebebeb] px-4 dark:bg-[#232323]">
+    <div
+      className={cn(docsPlaygroundRowClassName, "justify-between gap-3 px-4")}
+    >
       <span className="shrink-0 font-medium text-[#5c5c61] text-[13px] dark:text-[#a1a1a6]">
         {label}
       </span>

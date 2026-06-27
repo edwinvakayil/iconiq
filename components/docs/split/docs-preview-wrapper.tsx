@@ -243,7 +243,10 @@ export function DocsPreviewWrapper({
 
       <div
         className={cn(
-          "flex h-full w-full overflow-auto bg-white [-ms-overflow-style:none] [scrollbar-width:none] dark:bg-[#121212] [&::-webkit-scrollbar]:hidden",
+          "flex h-full w-full overflow-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
+          personalizeContent
+            ? "bg-white dark:bg-[#101010]"
+            : "bg-white dark:bg-[#121212]",
           !fullWidthPreview && "items-center justify-center"
         )}
       >
@@ -277,6 +280,7 @@ export function DocsPreviewWrapper({
 
       {resolvedPersonalizeContent ? (
         <DocsPreviewSettingsMorph
+          onClose={handleClosePersonalize}
           onToggle={handleTogglePersonalize}
           show={showPersonalize}
           title={personalizeTitle}

@@ -8,6 +8,10 @@ import {
   DocsPlaygroundSelectField,
   DocsPlaygroundToggleField,
 } from "@/components/docs/playground/docs-playground-fields";
+import {
+  docsPlaygroundRowClassName,
+  docsPlaygroundTextInputClassName,
+} from "@/components/docs/playground/docs-playground-styles";
 import { useDocStore } from "@/hooks/use-doc-store";
 import { cn } from "@/lib/utils";
 import type {
@@ -173,14 +177,12 @@ function DocsPlaygroundTextField({
   value: string;
 }) {
   return (
-    <div className="flex min-h-12 items-center gap-3 overflow-hidden rounded-2xl bg-[#ebebeb] px-3 dark:bg-[#232323]">
+    <div className={cn(docsPlaygroundRowClassName, "gap-3 px-3")}>
       <span className="shrink-0 whitespace-nowrap font-medium text-[#5c5c61] text-[13px] dark:text-[#a1a1a6]">
         {label}
       </span>
       <input
-        className={cn(
-          "min-w-0 flex-1 bg-transparent py-2 text-right font-medium text-[#111113] text-[13px] outline-none placeholder:text-[#5c5c61] dark:text-zinc-100 dark:placeholder:text-[#a1a1a6]"
-        )}
+        className={docsPlaygroundTextInputClassName}
         onChange={(event) => onChange(event.target.value)}
         placeholder={placeholder}
         spellCheck={false}

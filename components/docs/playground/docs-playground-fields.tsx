@@ -4,11 +4,14 @@ import { SlidersHorizontal } from "lucide-react";
 import type { ReactNode } from "react";
 
 import { cn } from "@/lib/utils";
-
 import { DocsPlaygroundSelectRow } from "./docs-playground-select-menu";
+import {
+  docsPlaygroundClearButtonClassName,
+  docsPlaygroundRowClassName,
+  docsPlaygroundSegmentActiveClassName,
+} from "./docs-playground-styles";
 
-const rowBase =
-  "flex min-h-12 items-center overflow-hidden rounded-2xl bg-[#ebebeb] dark:bg-[#232323]";
+const rowBase = docsPlaygroundRowClassName;
 
 function PlaygroundRow({
   children,
@@ -47,7 +50,7 @@ export function DocsPlaygroundPanel({
         {onClose ? (
           <button
             aria-label="Close settings"
-            className="mt-0.5 flex size-7 shrink-0 items-center justify-center rounded-lg text-[#5c5c61] transition-colors hover:bg-[#ebebeb] hover:text-[#111113] dark:text-[#a1a1a6] dark:hover:bg-[#232323] dark:hover:text-zinc-100"
+            className="mt-0.5 flex size-7 shrink-0 items-center justify-center rounded-lg text-[#5c5c61] transition-colors hover:bg-[#f3f3f3] hover:text-[#111113] dark:text-[#a1a1a6] dark:hover:bg-[#232323] dark:hover:text-zinc-100"
             onClick={onClose}
             type="button"
           >
@@ -127,7 +130,7 @@ export function DocsPlaygroundSegmentedField<T extends string>({
             className={cn(
               "min-w-0 flex-1 truncate rounded-xl px-2 py-1.5 font-medium text-[12px] transition-colors",
               active
-                ? "bg-[#d1d1d1] text-[#111113] dark:bg-[#3a3a3a] dark:text-zinc-100"
+                ? docsPlaygroundSegmentActiveClassName
                 : "text-[#5c5c61] hover:text-[#111113] dark:text-[#a1a1a6] dark:hover:text-zinc-100"
             )}
             key={option.value}
@@ -190,7 +193,7 @@ export function DocsPlaygroundClearButton({
 }) {
   return (
     <button
-      className="h-12 w-full rounded-2xl bg-[#ebebeb] font-medium text-[#2f2f33] text-[13px] transition-colors hover:bg-[#e2e2e5] dark:bg-[#232323] dark:text-zinc-100 dark:hover:bg-[#2b2b2b]"
+      className={docsPlaygroundClearButtonClassName}
       onClick={onClick}
       type="button"
     >

@@ -23,9 +23,9 @@ import * as ReactDOM from "react-dom";
 
 import { CommandMenu } from "@/components/command-menu";
 import { HighlightedCode } from "@/components/docs/code-snippet";
+import { docsPlaygroundPanelClassName } from "@/components/docs/playground/docs-playground-styles";
 import { ThemeToggle } from "@/components/docs/split/theme-toggle";
 import { cn } from "@/lib/utils";
-
 import type { CommandMenuGroupDef } from "@/registry/command-palette";
 
 export interface VariantItem {
@@ -313,16 +313,19 @@ export function DocsPreviewSettingsPanel({
 
 export function DocsPreviewSettingsMorph({
   children,
+  onClose,
   onToggle,
   show,
   title,
 }: {
   children: ReactNode;
+  onClose: () => void;
   onToggle: () => void;
   show: boolean;
   title: string;
 }) {
   const contentRef = React.useRef<HTMLDivElement>(null);
+  const panelRef = React.useRef<HTMLDivElement>(null);
   const [expandedHeight, setExpandedHeight] = React.useState(
     SETTINGS_COLLAPSED_SIZE
   );
@@ -388,10 +391,46 @@ export function DocsPreviewSettingsMorph({
     };
   }, [measurePanel, show]);
 
+  React.useEffect(() => {
+    if (!show) {
+      return;
+    }
+
+    const handlePointerDown = (event: PointerEvent) => {
+      const target = event.target;
+
+      if (!(target instanceof Node)) {
+        return;
+      }
+
+      if (panelRef.current?.contains(target)) {
+        return;
+      }
+
+      if (
+        target instanceof Element &&
+        target.closest("[data-playground-select-menu]")
+      ) {
+        return;
+      }
+
+      onClose();
+    };
+
+    document.addEventListener("pointerdown", handlePointerDown, true);
+
+    return () => {
+      document.removeEventListener("pointerdown", handlePointerDown, true);
+    };
+  }, [onClose, show]);
+
   const targetHeight = show ? expandedHeight : SETTINGS_COLLAPSED_SIZE;
 
   return (
-    <div className="pointer-events-none absolute right-4 bottom-4 z-40">
+    <div
+      className="pointer-events-none absolute right-4 bottom-4 z-40"
+      ref={panelRef}
+    >
       <motion.div
         animate={{
           borderRadius: show ? 22 : SETTINGS_COLLAPSED_SIZE / 2,
@@ -399,7 +438,10 @@ export function DocsPreviewSettingsMorph({
           width: show ? expandedWidth : SETTINGS_COLLAPSED_SIZE,
         }}
         aria-label={show ? `${title} settings` : undefined}
-        className="pointer-events-auto overflow-hidden border border-black/[0.06] bg-[#f5f5f5] shadow-[0_20px_48px_-28px_rgba(0,0,0,0.35)] will-change-[width,height,border-radius] dark:border-white/[0.08] dark:bg-[#0f0f0f] dark:shadow-none"
+        className={cn(
+          "pointer-events-auto overflow-hidden will-change-[width,height,border-radius]",
+          docsPlaygroundPanelClassName
+        )}
         role={show ? "dialog" : undefined}
         style={{ transformOrigin: "100% 100%" }}
         transition={SETTINGS_MORPH_SPRING}
