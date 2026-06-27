@@ -717,7 +717,7 @@ const REGISTRY_UI_META: Record<
   "status-dot": {
     title: "Status Dot",
     description:
-      "Rippling status dot with deployment states and optional label.",
+      "Rippling inline status dot with deployment presets, generic tones, sizing, and dot-only accessibility defaults.",
   },
   timezone: {
     title: "Timezone",

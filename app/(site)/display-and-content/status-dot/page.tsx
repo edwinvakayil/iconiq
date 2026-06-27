@@ -1,97 +1,125 @@
 "use client";
 
-import { useState } from "react";
-
-import { InlinePreviewSelect } from "@/app/(site)/components/_components/inline-preview-select";
-import { SharedPrimitiveProviderSwitch } from "@/app/(site)/components/_components/provider-switch";
+import { StatusDotPlaygroundProvider } from "@/app/(site)/display-and-content/status-dot/_components/status-dot-playground";
 import { statusDotApiDetails } from "@/components/docs/component-api";
 import { ComponentDocsPage } from "@/components/docs/page-shell";
 import { LINK } from "@/constants";
 import { statusDotPreviewCode } from "@/lib/component-v0-pages";
-import { StatusDot, type StatusDotProps } from "@/registry/status-dot";
+import * as StatusDotModule from "@/registry/status-dot";
 
-type StatusState = StatusDotProps["state"];
+const usageCode = `"use client";
 
-const stateOptions: { label: string; value: StatusState }[] = [
-  { value: "QUEUED", label: "Queued" },
-  { value: "BUILDING", label: "Building" },
-  { value: "ERROR", label: "Error" },
-  { value: "READY", label: "Ready" },
-  { value: "CANCELED", label: "Canceled" },
-];
-
-const stateTail: Record<StatusState, string> = {
-  QUEUED: "waiting in the deploy queue.",
-  BUILDING: "actively building on main.",
-  READY: "live for every region.",
-  ERROR: "blocked after a failed build.",
-  CANCELED: "stopped before rollout.",
-};
-
-const previewSentenceClassName =
-  "flex max-w-2xl flex-wrap items-center justify-center gap-x-2 gap-y-2 text-balance text-center font-medium text-lg text-neutral-800 leading-snug tracking-tight sm:text-xl dark:text-neutral-100";
-
-const usageCode = `import { StatusDot } from "@/components/ui/status-dot";
+import { StatusDot } from "@/components/ui/status-dot";
 
 export function StatusDotPreview() {
   return (
     <p className="flex flex-wrap items-center justify-center gap-x-2 gap-y-2 text-balance text-center font-medium text-lg leading-snug dark:text-neutral-100">
       <span>Right now, production is</span>
-      <span className="inline-flex translate-y-px items-center align-middle">
-        <StatusDot state="READY" />
-      </span>
+      <StatusDot className="translate-y-px" state="READY" />
       <span>live for every region.</span>
     </p>
   );
 }`;
 
-function StatusDotPreview() {
-  const [state, setState] = useState<StatusState>("BUILDING");
+const statusDotExamples = [
+  {
+    title: "Inline sentence",
+    code: `"use client";
 
+import { StatusDot } from "@/components/ui/status-dot";
+
+export function StatusDotInlineExample() {
   return (
-    <div className="flex min-h-[260px] w-full items-center justify-center px-4 py-8">
-      <div className="mx-auto max-w-2xl text-center">
-        <p className={previewSentenceClassName}>
-          <span>Right now, production is</span>
-          <span className="inline-flex translate-y-px items-center gap-1.5 align-middle">
-            <StatusDot label="" state={state} />
-            <InlinePreviewSelect
-              ariaLabel="Status dot state"
-              menuKey="status-dot-state-menu"
-              onChange={setState}
-              options={stateOptions}
-              value={state}
-            />
-          </span>
-          <span>{stateTail[state]}</span>
-        </p>
-      </div>
+    <p className="flex flex-wrap items-center gap-x-2 text-sm">
+      <span>Deploy status:</span>
+      <StatusDot state="BUILDING" />
+      <span>on main.</span>
+    </p>
+  );
+}`,
+  },
+  {
+    title: "Labeled row",
+    code: `"use client";
+
+import { StatusDot } from "@/components/ui/status-dot";
+
+export function StatusDotLabeledExample() {
+  return <StatusDot showLabel state="ERROR" />;
+}`,
+  },
+  {
+    title: "Custom label",
+    code: `"use client";
+
+import { StatusDot } from "@/components/ui/status-dot";
+
+export function StatusDotCustomLabelExample() {
+  return (
+    <StatusDot
+      label="Live in production"
+      showLabel
+      state="READY"
+    />
+  );
+}`,
+  },
+  {
+    title: "Sizes",
+    code: `"use client";
+
+import { StatusDot } from "@/components/ui/status-dot";
+
+export function StatusDotSizesExample() {
+  return (
+    <div className="flex flex-wrap items-center gap-4">
+      <StatusDot showLabel size="sm" state="READY" />
+      <StatusDot showLabel size="md" state="READY" />
+      <StatusDot showLabel size="lg" state="READY" />
     </div>
   );
-}
+}`,
+  },
+];
 
 export default function StatusDotPage() {
   return (
-    <ComponentDocsPage
-      breadcrumbs={[
-        { label: "Docs", href: "/" },
-        { label: "Display & Content" },
-        { label: "Status Dot" },
-      ]}
-      componentName="status-dot"
-      description="Rippling status dot with deployment states."
-      details={statusDotApiDetails}
-      editHref={`${LINK.GITHUB}/edit/main/app/(site)/display-and-content/status-dot/page.tsx`}
-      headerActions={<SharedPrimitiveProviderSwitch />}
-      pageUrl="/display-and-content/status-dot"
-      preview={<StatusDotPreview />}
-      previewClassName="overflow-visible"
-      previewCode={statusDotPreviewCode}
-      previewDescription="Pick a deployment state inline and watch the rippling dot and sentence ending update together."
-      title="Status Dot"
-      usageCode={usageCode}
-      usageDescription="Pass a `state` preset for color and default copy, or override the label when you need custom deployment messaging."
-      v0PageCode={statusDotPreviewCode}
-    />
+    <StatusDotPlaygroundProvider
+      importPath="@/components/ui/status-dot"
+      StatusDotModule={StatusDotModule}
+    >
+      {({ preview, renderSettings }) => (
+        <ComponentDocsPage
+          breadcrumbs={[
+            { label: "Docs", href: "/" },
+            { label: "Display & Content" },
+            { label: "Status Dot" },
+          ]}
+          componentName="status-dot"
+          description="Rippling status dot for inline copy and deployment dashboards."
+          details={statusDotApiDetails}
+          editHref={`${LINK.GITHUB}/edit/main/app/(site)/display-and-content/status-dot/page.tsx`}
+          examples={statusDotExamples}
+          itemSlug="status-dot"
+          pageUrl="/display-and-content/status-dot"
+          preview={preview}
+          previewClassName="min-h-[18rem] overflow-visible"
+          previewCode={statusDotPreviewCode}
+          previewDescription="Tune deployment states, sizing, labels, and ripple animation from the playground."
+          previewPersonalize={({ onClose }) => renderSettings(onClose)}
+          previewPersonalizeTitle="Status Dot"
+          railNotes={[
+            "Default to dot-only for inline sentences; add `showLabel` when you need visible copy beside the indicator.",
+            "Use `state` for deployment presets such as `BUILDING`, `READY`, and `ERROR`.",
+            "Ripple animation defaults to active states only; pass `animate` to override per instance.",
+            'Dot-only indicators announce changes with `role="status"` and `aria-live="polite"`.',
+          ]}
+          title="Status Dot"
+          usageCode={usageCode}
+          usageDescription="Start with a dot-only inline indicator, then expand into labeled rows and sizing through the API details."
+          v0PageCode={usageCode}
+        />
+      )}
+    </StatusDotPlaygroundProvider>
   );
 }

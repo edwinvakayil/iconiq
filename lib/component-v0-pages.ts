@@ -935,9 +935,7 @@ export default function Page() {
     <div className="flex min-h-svh items-center justify-center bg-background p-8">
       <p className="flex max-w-2xl flex-wrap items-center justify-center gap-x-2 gap-y-2 text-balance text-center font-medium text-lg text-neutral-800 leading-snug tracking-tight sm:text-xl dark:text-neutral-100">
         <span>Right now, production is</span>
-        <span className="inline-flex translate-y-px items-center align-middle">
-          <StatusDot state="READY" />
-        </span>
+        <StatusDot className="translate-y-px" state="READY" />
         <span>live for every region.</span>
       </p>
     </div>

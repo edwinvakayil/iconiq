@@ -1421,7 +1421,7 @@
       "dependencies": [],
       "devDependencies": [],
       "title": "Status Dot",
-      "description": "Rippling status dot with deployment states and optional label.",
+      "description": "Rippling inline status dot with deployment presets, generic tones, sizing, and dot-only accessibility defaults.",
       "files": [
         {
           "path": "status-dot.tsx",

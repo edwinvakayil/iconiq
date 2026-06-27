@@ -1,12 +1,24 @@
 "use client";
 
-import { StatusDot as RegistryStatusDot } from "@/registry/status-dot";
+import { forwardRef } from "react";
+
+import RegistryStatusDot from "@/registry/status-dot";
 
 type StatusDotProps = import("@/registry/status-dot").StatusDotProps;
-type StatusDotState = import("@/registry/status-dot").StatusDotState;
 
-function StatusDot(props: StatusDotProps) {
-  return <RegistryStatusDot {...props} />;
-}
+const StatusDot = forwardRef<HTMLElement, StatusDotProps>(
+  function StatusDot(props, ref) {
+    return <RegistryStatusDot ref={ref} {...props} />;
+  }
+);
 
-export { StatusDot, type StatusDotProps, type StatusDotState };
+StatusDot.displayName = "StatusDot";
+
+export { StatusDot };
+export default StatusDot;
+export type {
+  StatusDotProps,
+  StatusDotSize,
+  StatusDotState,
+  StatusDotTone,
+} from "@/registry/status-dot";

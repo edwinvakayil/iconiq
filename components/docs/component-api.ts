@@ -6504,27 +6504,69 @@ const statusDotApiDetails: DetailItem[] = [
     id: "status-dot",
     title: "StatusDot",
     summary:
-      "Compact status row with a rippling dot and optional label, using CSS keyframes for a stable halo animation in light and dark mode.",
+      "Inline status indicator with optional rippling halo, deployment presets, generic tones, and dot-only accessibility defaults.",
     fields: [
       field({
         name: "state",
         type: '"QUEUED" | "BUILDING" | "ERROR" | "READY" | "CANCELED"',
-        required: true,
         description:
-          "Selects the dot color and default label for common deployment or pipeline states.",
+          "Deployment preset that maps to tone, default label, and default animation. Use this or `tone`.",
+      }),
+      field({
+        name: "tone",
+        type: '"neutral" | "active" | "success" | "warning" | "error"',
+        description:
+          "Generic presence tone when you do not need deployment vocabulary. Use this or `state`.",
+      }),
+      field({
+        name: "showLabel",
+        type: "boolean",
+        defaultValue: "false",
+        description:
+          "Shows visible label text beside the dot. Defaults to dot-only for inline copy.",
       }),
       field({
         name: "label",
         type: "string",
         description:
-          "Optional text override. When omitted, the component falls back to the label mapped from `state`.",
+          "Optional label override used for visible copy and screen reader naming.",
+      }),
+      field({
+        name: "animate",
+        type: "boolean",
+        description:
+          'Overrides ripple animation. Defaults to active states only, such as `BUILDING` or `tone="active"`.',
+      }),
+      field({
+        name: "size",
+        type: '"sm" | "md" | "lg"',
+        defaultValue: '"md"',
+        description: "Scales the dot, ripple spread, and hit area together.",
+      }),
+      field({
+        name: "inline",
+        type: "boolean",
+        defaultValue: "true",
+        description:
+          "Uses an inline-flex root for embedding inside sentences and compact rows.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description: "Classes applied to the root element.",
+      }),
+      field({
+        name: "labelClassName",
+        type: "string",
+        description:
+          "Classes applied to the visible label when `showLabel` is enabled.",
       }),
     ],
     notes: [
-      "Each state maps to a fixed color token suited for deployment dashboards and build logs.",
-      "Ripple strength adapts through CSS `dark:` visibility layers, so theme changes do not require JavaScript observers.",
-      "Ripple motion uses CSS keyframes for reliable playback in production and disables when `prefers-reduced-motion: reduce` is enabled.",
-      "Pass an empty string for `label` to render a dot-only indicator; the default state label is still exposed to screen readers.",
+      'Dot-only mode announces changes with `role="status"` and `aria-live="polite"`.',
+      "Colors use embedded Iconiq CSS variables, so the dot works after registry install without extra theme setup.",
+      "Ripple motion uses CSS keyframes and disables when `prefers-reduced-motion: reduce` is enabled.",
+      "Use `getStatusDotConfig`, `statusDotStates`, and `statusDotStateConfig` when mapping app data to presets.",
     ],
   },
   registryItem("status-dot.json", []),
