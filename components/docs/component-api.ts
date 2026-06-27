@@ -4637,7 +4637,7 @@ const progressApiDetails: DetailItem[] = [
       field({
         name: "value",
         type: "number | null",
-        defaultValue: "64",
+        defaultValue: "0",
         description:
           "Current progress value. Pass null to switch into the indeterminate motion state instead of rendering a measured fill width.",
       }),
@@ -4705,11 +4705,50 @@ const progressApiDetails: DetailItem[] = [
         description:
           "Merged onto the root wrapper so you can control width, spacing, or placement in your layout.",
       }),
+      field({
+        name: "variant",
+        type: '"default" | "circular"',
+        defaultValue: '"default"',
+        description:
+          "Linear bar (default) or circular gauge layout with a dual-stroke ring, 5% gap, and CSS-smoothed arc transitions. Circular mode renders the value readout centered inside the ring.",
+      }),
+      field({
+        name: "size",
+        type: '"sm" | "md" | "lg"',
+        defaultValue: '"md"',
+        description:
+          "Track height preset for the default bar, or ring diameter preset for the circular variant.",
+      }),
+      field({
+        name: "tone",
+        type: '"default" | "brand" | "destructive" | "success"',
+        defaultValue: '"default"',
+        description:
+          "Fill color preset for neutral, brand, destructive, or success emphasis.",
+      }),
+      field({
+        name: "trackClassName",
+        type: "string",
+        description: "Merged onto the track element for custom track styling.",
+      }),
+      field({
+        name: "indicatorClassName",
+        type: "string",
+        description:
+          "Merged onto the fill element for custom indicator styling.",
+      }),
+      field({
+        name: "headerClassName",
+        type: "string",
+        description:
+          "Merged onto the label, helper, and value readout row above the track.",
+      }),
     ],
     notes: [
       "The component clamps numeric values into the min/max range before calculating the fill width.",
       "The visible value readout animates from the same motion value as the fill width, so the text and the bar stay visually locked together while values change.",
       "There is no controlled versus uncontrolled split here; value is simply rendered as the current state of the task.",
+      "Helper copy is linked to the progressbar through aria-describedby on both Radix and Base UI installs.",
     ],
   },
   {
@@ -4722,7 +4761,7 @@ const progressApiDetails: DetailItem[] = [
       "Indeterminate mode uses one minimal left-to-right flow band with a soft fade at the start and end of each pass, so the restart stays visually quiet.",
     ],
   },
-  registryItem("progress.json", ["motion"]),
+  registryItem("r-progress.json", ["@radix-ui/react-progress", "motion"]),
 ];
 
 const radioGroupApiDetails: DetailItem[] = [
