@@ -1,6 +1,6 @@
 "use client";
 
-import { SharedPrimitiveProviderSwitch } from "@/app/(site)/components/_components/provider-switch";
+import { ProviderSwitch } from "@/app/(site)/components/_components/provider-switch";
 import { DatePickerPlaygroundProvider } from "@/app/(site)/display-and-content/date-picker/_components/date-picker-playground";
 import { datePickerApiDetails } from "@/components/docs/component-api";
 import {
@@ -117,13 +117,17 @@ const details = datePickerApiDetails.map((item) => {
   return {
     ...item,
     notes: [
-      "Dependencies: motion, lucide-react, date-fns.",
+      "Dependencies: @base-ui/react/input, motion, lucide-react, date-fns.",
       "Registry dependency: calendar. Install date-picker together with the shared Calendar component.",
       "The generated registry file is /r/date-picker.json.",
     ],
     registryPath: "date-picker.json",
   };
 });
+
+function handleProviderSelect() {
+  return undefined;
+}
 
 export default function DatePickerPage() {
   return (
@@ -144,7 +148,13 @@ export default function DatePickerPage() {
           detailsDescription="Wrap forms with a trigger button and expandable Calendar panel. Selection, visible month, close-on-pick behavior, and open state stay in sync through controlled or uncontrolled props."
           editHref={`${LINK.GITHUB}/edit/main/app/(site)/display-and-content/date-picker/page.tsx`}
           examples={datePickerExamples}
-          headerActions={<SharedPrimitiveProviderSwitch />}
+          headerActions={
+            <ProviderSwitch
+              disabledProviders={["radix"]}
+              onSelect={handleProviderSelect}
+              selectedProvider="base"
+            />
+          }
           itemSlug="date-picker"
           pageUrl="/display-and-content/date-picker"
           preview={preview}

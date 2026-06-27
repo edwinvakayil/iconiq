@@ -1,5 +1,6 @@
 "use client";
 
+import { Input as InputPrimitive } from "@base-ui/react/input";
 import { format, type Locale, startOfMonth } from "date-fns";
 import { CalendarIcon, X } from "lucide-react";
 import { motion, useReducedMotion } from "motion/react";
@@ -22,6 +23,18 @@ import { cn } from "@/lib/utils";
 
 const datePickerTriggerCornerClassName =
   "rounded-lg supports-[corner-shape:squircle]:corner-squircle supports-[corner-shape:squircle]:rounded-[11px]";
+
+const datePickerInputShellClassName = cn(
+  "group flex w-full items-center border border-border bg-card text-left text-foreground text-sm transition-all focus-within:border-foreground/30 hover:border-foreground/30",
+  "[&:has(input:disabled)]:cursor-not-allowed [&:has(input:disabled)]:opacity-50",
+  "[&:has(input[aria-invalid=true])]:border-destructive"
+);
+
+const datePickerInputClassName = cn(
+  "min-w-0 flex-1 cursor-pointer truncate bg-transparent py-0 text-left font-medium tracking-tight outline-none focus-visible:outline-none",
+  "text-foreground placeholder:text-muted-foreground",
+  "[-webkit-tap-highlight-color:transparent]"
+);
 
 export const DATE_PICKER_PANEL_WIDTH = {
   sm: 212,
@@ -141,6 +154,7 @@ type DatePickerCalendarProps = Omit<
   | "range"
   | "defaultRange"
   | "onRangeSelect"
+  | "name"
 >;
 
 export type DatePickerProps = {
@@ -261,11 +275,11 @@ function useDismissiblePanel({
       }
     };
 
-    document.addEventListener("pointerdown", handlePointerDown);
+    document.addEventListener("pointerdown", handlePointerDown, true);
     document.addEventListener("keydown", handleKeyDown);
 
     return () => {
-      document.removeEventListener("pointerdown", handlePointerDown);
+      document.removeEventListener("pointerdown", handlePointerDown, true);
       document.removeEventListener("keydown", handleKeyDown);
     };
   }, [open, panelRef, rootRef, setOpenState]);
@@ -273,29 +287,29 @@ function useDismissiblePanel({
 
 function usePanelPlacement({
   align,
+  anchorRef,
   hasRenderedPanel,
   open,
   panelRef,
   panelWidth,
   side,
-  triggerRef,
 }: {
   align: DatePickerAlign;
+  anchorRef: RefObject<HTMLElement | null>;
   hasRenderedPanel: boolean;
   open: boolean;
   panelRef: RefObject<HTMLDivElement | null>;
   panelWidth: number;
   side: DatePickerSide;
-  triggerRef: RefObject<HTMLButtonElement | null>;
 }) {
   const [panelPlacement, setPanelPlacement] = useState<PanelPlacement | null>(
     null
   );
 
   const updatePanelPlacement = useCallback(() => {
-    const trigger = triggerRef.current;
+    const anchor = anchorRef.current;
     const panel = panelRef.current;
-    if (!(trigger && panel)) return;
+    if (!(anchor && panel)) return;
 
     const panelHeight = panel.offsetHeight;
     if (panelHeight === 0) return;
@@ -305,7 +319,7 @@ function usePanelPlacement({
       panelHeight,
       panelWidth,
       side,
-      triggerRect: trigger.getBoundingClientRect(),
+      triggerRect: anchor.getBoundingClientRect(),
     });
 
     setPanelPlacement({
@@ -313,7 +327,7 @@ function usePanelPlacement({
       top: position.top,
       width: panelWidth,
     });
-  }, [align, panelRef, panelWidth, side, triggerRef]);
+  }, [align, anchorRef, panelRef, panelWidth, side]);
 
   useLayoutEffect(() => {
     if (!(open && hasRenderedPanel)) return;
@@ -347,9 +361,9 @@ function usePanelPlacement({
 }
 
 function mergeTriggerRef(
-  node: HTMLButtonElement | null,
-  triggerRef: RefObject<HTMLButtonElement | null>,
-  ref: ForwardedRef<HTMLButtonElement>
+  node: HTMLInputElement | null,
+  triggerRef: RefObject<HTMLInputElement | null>,
+  ref: ForwardedRef<HTMLInputElement>
 ) {
   triggerRef.current = node;
 
@@ -376,7 +390,7 @@ type DatePickerTriggerProps = {
   panelId: string;
   placeholder: string;
   selected: Date | null;
-  setTriggerRef: (node: HTMLButtonElement | null) => void;
+  setTriggerRef: (node: HTMLInputElement | null) => void;
   triggerLabel: string;
 };
 
@@ -391,49 +405,89 @@ function DatePickerTrigger({
   onToggle,
   open,
   panelId,
+  placeholder,
   selected,
   setTriggerRef,
   triggerLabel,
 }: DatePickerTriggerProps) {
+  const handleActivate = () => {
+    if (disabled) return;
+    onToggle();
+  };
+
   return (
     <div
       className={cn(
-        "group flex w-full items-center border border-border bg-card text-left text-foreground text-sm transition-all focus-within:border-foreground/30 hover:border-foreground/30",
-        ariaInvalid && "border-destructive",
-        disabled && "cursor-not-allowed opacity-50",
+        datePickerInputShellClassName,
+        "h-10 pr-2 pl-4",
         datePickerTriggerCornerClassName
       )}
     >
-      <button
-        aria-controls={open ? panelId : undefined}
-        aria-expanded={open}
-        aria-haspopup="dialog"
-        aria-invalid={ariaInvalid}
-        aria-label={ariaLabel}
-        className="flex min-w-0 flex-1 items-center gap-3 px-4 py-3 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed"
-        disabled={disabled}
-        id={id}
-        onClick={onToggle}
-        ref={setTriggerRef}
-        type="button"
-      >
-        <CalendarIcon className="h-4 w-4 shrink-0 text-muted-foreground transition-colors group-hover:text-foreground group-disabled:text-muted-foreground" />
-        <span
-          className={cn(
-            "truncate font-medium tracking-tight",
-            !selected && "text-muted-foreground"
-          )}
-          id={labelId}
-        >
-          {triggerLabel}
-        </span>
-      </button>
+      <div className="relative flex min-w-0 flex-1 items-center">
+        <CalendarIcon
+          aria-hidden
+          className="pointer-events-none absolute left-0 h-4 w-4 shrink-0 text-muted-foreground transition-colors group-hover:text-foreground group-has-[input:disabled]:text-muted-foreground"
+        />
+        <InputPrimitive
+          aria-controls={open ? panelId : undefined}
+          aria-expanded={open}
+          aria-haspopup="dialog"
+          aria-invalid={ariaInvalid}
+          aria-label={ariaLabel}
+          disabled={disabled}
+          id={id ?? labelId}
+          onClick={handleActivate}
+          onKeyDown={(event) => {
+            if (event.key === "Enter" || event.key === " ") {
+              event.preventDefault();
+              handleActivate();
+            }
+          }}
+          placeholder={placeholder}
+          readOnly
+          render={(inputProps) => {
+            const {
+              className: primitiveClassName,
+              ref: primitiveRef,
+              ...resolvedInputProps
+            } = inputProps;
+
+            return (
+              <input
+                {...resolvedInputProps}
+                className={cn(
+                  datePickerInputClassName,
+                  "pl-7",
+                  !selected && "text-muted-foreground",
+                  primitiveClassName
+                )}
+                ref={(node) => {
+                  setTriggerRef(node);
+
+                  if (typeof primitiveRef === "function") {
+                    primitiveRef(node);
+                    return;
+                  }
+
+                  if (primitiveRef) {
+                    primitiveRef.current = node;
+                  }
+                }}
+              />
+            );
+          }}
+          value={selected ? triggerLabel : ""}
+        />
+      </div>
 
       {clearable && selected && !disabled ? (
         <button
           aria-label="Clear selected date"
-          className="mr-3 flex shrink-0 items-center justify-center text-muted-foreground/60 transition-colors hover:text-foreground focus-visible:text-foreground focus-visible:outline-none"
+          className="ml-1 flex h-7 w-7 shrink-0 items-center justify-center text-muted-foreground/60 transition-colors hover:text-foreground focus-visible:text-foreground focus-visible:outline-none"
           onClick={onClear}
+          onPointerDown={(event) => {
+            event.stopPropagation();
+          }}
           type="button"
         >
           <X className="h-3.5 w-3.5" strokeWidth={2.5} />
@@ -498,7 +552,10 @@ function DatePickerPanel({
       aria-hidden={!open}
       aria-labelledby={labelId}
       aria-modal="true"
-      className={cn("fixed z-50", !open && "pointer-events-none")}
+      className={cn(
+        "fixed z-50",
+        !(open && panelPlacement) && "pointer-events-none"
+      )}
       id={panelId}
       initial={false}
       ref={panelRef}
@@ -516,7 +573,7 @@ function DatePickerPanel({
       transition={panelTransition}
     >
       <Calendar
-        className={calendarClassName}
+        className={cn("!shadow-none", calendarClassName)}
         locale={locale}
         mode="single"
         month={viewMonth}
@@ -530,231 +587,237 @@ function DatePickerPanel({
   );
 }
 
-export const AnimatedDatePicker = forwardRef<
-  HTMLButtonElement,
-  DatePickerProps
->(function AnimatedDatePicker(props, ref) {
-  const {
-    value,
-    defaultValue = null,
-    onChange,
-    className,
-    defaultOpen = false,
-    open: openProp,
-    onOpenChange,
-    placeholder = "Select a date",
-    disabled = false,
-    clearable = false,
-    closeOnSelect = true,
-    dateFormat = DEFAULT_DATE_PICKER_FORMAT,
-    name,
-    id,
-    "aria-invalid": ariaInvalid,
-    side = "bottom",
-    align = "start",
-    calendarProps,
-  } = props;
+export const AnimatedDatePicker = forwardRef<HTMLInputElement, DatePickerProps>(
+  function AnimatedDatePicker(props, ref) {
+    const {
+      value,
+      defaultValue = null,
+      onChange,
+      className,
+      defaultOpen = false,
+      open: openProp,
+      onOpenChange,
+      placeholder = "Select a date",
+      disabled = false,
+      clearable = false,
+      closeOnSelect = true,
+      dateFormat = DEFAULT_DATE_PICKER_FORMAT,
+      name,
+      id,
+      "aria-invalid": ariaInvalid,
+      side = "bottom",
+      align = "start",
+      calendarProps,
+    } = props;
 
-  const isValueControlled = value !== undefined;
-  const isOpenControlled = openProp !== undefined;
-  const reduceMotion = useReducedMotion();
+    const isValueControlled = value !== undefined;
+    const isOpenControlled = openProp !== undefined;
+    const reduceMotion = useReducedMotion();
 
-  const rootRef = useRef<HTMLDivElement>(null);
-  const triggerRef = useRef<HTMLButtonElement>(null);
-  const panelRef = useRef<HTMLDivElement>(null);
+    const rootRef = useRef<HTMLDivElement>(null);
+    const triggerRef = useRef<HTMLInputElement>(null);
+    const panelRef = useRef<HTMLDivElement>(null);
 
-  const panelId = useId();
-  const labelId = useId();
+    const panelId = useId();
+    const labelId = useId();
 
-  const [mounted, setMounted] = useState(false);
-  const [uncontrolledOpen, setUncontrolledOpen] = useState(defaultOpen);
-  const [hasRenderedPanel, setHasRenderedPanel] = useState(defaultOpen);
-  const [internalSelected, setInternalSelected] = useState<Date | null>(
-    defaultValue
-  );
-  const [viewMonth, setViewMonth] = useState<Date>(() =>
-    resolveDatePickerViewMonth(value, defaultValue)
-  );
+    const [mounted, setMounted] = useState(false);
+    const [uncontrolledOpen, setUncontrolledOpen] = useState(defaultOpen);
+    const [hasRenderedPanel, setHasRenderedPanel] = useState(defaultOpen);
+    const [internalSelected, setInternalSelected] = useState<Date | null>(
+      defaultValue
+    );
+    const [viewMonth, setViewMonth] = useState<Date>(() =>
+      resolveDatePickerViewMonth(value, defaultValue)
+    );
 
-  const open = isOpenControlled ? Boolean(openProp) : uncontrolledOpen;
-  const selected = isValueControlled ? (value ?? null) : internalSelected;
+    const open = isOpenControlled ? Boolean(openProp) : uncontrolledOpen;
+    const selected = isValueControlled ? (value ?? null) : internalSelected;
 
-  const {
-    className: calendarClassName,
-    locale,
-    size,
-    ...restCalendarProps
-  } = calendarProps ?? {};
-  const calendarSize = size ?? "md";
-  const panelWidth = getDatePickerPanelWidth(calendarSize);
+    const {
+      className: calendarClassName,
+      locale,
+      size,
+      ...restCalendarProps
+    } = calendarProps ?? {};
+    const calendarSize = size ?? "md";
+    const panelWidth = getDatePickerPanelWidth(calendarSize);
 
-  const setOpenState = useCallback(
-    (nextOpen: boolean) => {
-      if (disabled && nextOpen) return;
+    const setOpenState = useCallback(
+      (nextOpen: boolean) => {
+        if (disabled && nextOpen) return;
 
-      if (nextOpen) {
-        setHasRenderedPanel(true);
-      }
+        if (nextOpen) {
+          setHasRenderedPanel(true);
+        }
 
-      if (!isOpenControlled) {
-        setUncontrolledOpen(nextOpen);
-      }
+        if (!isOpenControlled) {
+          setUncontrolledOpen(nextOpen);
+        }
 
-      onOpenChange?.(nextOpen);
-    },
-    [disabled, isOpenControlled, onOpenChange]
-  );
+        onOpenChange?.(nextOpen);
+      },
+      [disabled, isOpenControlled, onOpenChange]
+    );
 
-  const panelPlacement = usePanelPlacement({
-    align,
-    hasRenderedPanel,
-    open,
-    panelRef,
-    panelWidth,
-    side,
-    triggerRef,
-  });
+    const panelPlacement = usePanelPlacement({
+      align,
+      anchorRef: rootRef,
+      hasRenderedPanel,
+      open,
+      panelRef,
+      panelWidth,
+      side,
+    });
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+    useEffect(() => {
+      setMounted(true);
+    }, []);
 
-  useEffect(() => {
-    if (!isValueControlled) return;
-    setViewMonth(resolveDatePickerViewMonth(value, selected));
-  }, [isValueControlled, selected, value]);
+    useEffect(() => {
+      if (!isValueControlled) return;
+      setViewMonth(resolveDatePickerViewMonth(value, selected));
+    }, [isValueControlled, selected, value]);
 
-  useEffect(() => {
-    if (!open) return;
-    setViewMonth(resolveDatePickerViewMonth(selected, selected));
-  }, [open, selected]);
+    useEffect(() => {
+      if (!open) return;
+      setViewMonth(resolveDatePickerViewMonth(selected, selected));
+    }, [open, selected]);
 
-  useEffect(() => {
-    if (disabled && open) {
-      setOpenState(false);
-    }
-  }, [disabled, open, setOpenState]);
-
-  useDismissiblePanel({ open, panelRef, rootRef, setOpenState });
-  useFocusTrap(panelRef, triggerRef, open && hasRenderedPanel);
-
-  const handleSelect = useCallback(
-    (date: Date | null) => {
-      if (!isValueControlled) {
-        setInternalSelected(date);
-      }
-
-      if (date) {
-        setViewMonth(startOfMonth(date));
-      }
-
-      onChange?.(date);
-
-      if (closeOnSelect && date) {
+    useEffect(() => {
+      if (disabled && open) {
         setOpenState(false);
       }
-    },
-    [closeOnSelect, isValueControlled, onChange, setOpenState]
-  );
+    }, [disabled, open, setOpenState]);
 
-  const handleClear = useCallback(
-    (event: MouseEvent<HTMLButtonElement>) => {
-      event.stopPropagation();
+    useDismissiblePanel({ open, panelRef, rootRef, setOpenState });
+    useFocusTrap(
+      panelRef,
+      triggerRef,
+      open && hasRenderedPanel && panelPlacement !== null
+    );
 
-      if (!isValueControlled) {
-        setInternalSelected(null);
-      }
+    const handleSelect = useCallback(
+      (date: Date | null) => {
+        if (!isValueControlled) {
+          setInternalSelected(date);
+        }
 
-      onChange?.(null);
-      triggerRef.current?.focus();
-    },
-    [isValueControlled, onChange]
-  );
+        if (date) {
+          setViewMonth(startOfMonth(date));
+        }
 
-  const handleMonthChange = useCallback((month: Date) => {
-    setViewMonth(startOfMonth(month));
-  }, []);
+        onChange?.(date);
 
-  const setTriggerRef = useCallback(
-    (node: HTMLButtonElement | null) => {
-      mergeTriggerRef(node, triggerRef, ref);
-    },
-    [ref]
-  );
+        if (closeOnSelect && date) {
+          setOpenState(false);
+        }
+      },
+      [closeOnSelect, isValueControlled, onChange, setOpenState]
+    );
 
-  const triggerLabel = selected
-    ? formatDatePickerLabel(selected, dateFormat, locale)
-    : placeholder;
+    const handleClear = useCallback(
+      (event: MouseEvent<HTMLButtonElement>) => {
+        event.stopPropagation();
 
-  const ariaLabel = selected
-    ? `Selected date, ${formatDatePickerLabel(selected, DEFAULT_DATE_PICKER_ARIA_FORMAT, locale)}`
-    : placeholder;
+        if (!isValueControlled) {
+          setInternalSelected(null);
+        }
 
-  const panelTransition = reduceMotion
-    ? { duration: 0 }
-    : { type: "spring" as const, stiffness: 260, damping: 28 };
+        onChange?.(null);
+        setOpenState(false);
+        triggerRef.current?.focus();
+      },
+      [isValueControlled, onChange, setOpenState]
+    );
 
-  const panel = (
-    <DatePickerPanel
-      calendarClassName={calendarClassName}
-      calendarSize={calendarSize}
-      hasRenderedPanel={hasRenderedPanel}
-      labelId={labelId}
-      locale={locale}
-      onMonthChange={handleMonthChange}
-      onSelect={handleSelect}
-      open={open}
-      panelId={panelId}
-      panelPlacement={panelPlacement}
-      panelRef={panelRef}
-      panelTransition={panelTransition}
-      panelWidth={panelWidth}
-      reduceMotion={reduceMotion}
-      restCalendarProps={restCalendarProps}
-      selected={selected}
-      viewMonth={viewMonth}
-    />
-  );
+    const handleMonthChange = useCallback((month: Date) => {
+      setViewMonth(startOfMonth(month));
+    }, []);
 
-  return (
-    <div
-      className={cn("relative w-full", className)}
-      ref={rootRef}
-      style={{ maxWidth: panelWidth }}
-    >
-      {name ? (
-        <input
-          aria-hidden
-          className="sr-only"
-          name={name}
-          readOnly
-          tabIndex={-1}
-          type="text"
-          value={selected ? getDatePickerFormValue(selected) : ""}
-        />
-      ) : null}
+    const setTriggerRef = useCallback(
+      (node: HTMLInputElement | null) => {
+        mergeTriggerRef(node, triggerRef, ref);
+      },
+      [ref]
+    );
 
-      <DatePickerTrigger
-        ariaInvalid={ariaInvalid}
-        ariaLabel={ariaLabel}
-        clearable={clearable}
-        disabled={disabled}
-        id={id}
-        labelId={labelId}
-        onClear={handleClear}
-        onToggle={() => setOpenState(!open)}
+    const triggerLabel = selected
+      ? formatDatePickerLabel(selected, dateFormat, locale)
+      : placeholder;
+
+    const ariaLabel = selected
+      ? `Selected date, ${formatDatePickerLabel(selected, DEFAULT_DATE_PICKER_ARIA_FORMAT, locale)}`
+      : placeholder;
+
+    const triggerId = id ?? labelId;
+
+    const panelTransition = reduceMotion
+      ? { duration: 0 }
+      : { type: "spring" as const, stiffness: 260, damping: 28 };
+
+    const panel = (
+      <DatePickerPanel
+        calendarClassName={calendarClassName}
+        calendarSize={calendarSize}
+        hasRenderedPanel={hasRenderedPanel}
+        labelId={triggerId}
+        locale={locale}
+        onMonthChange={handleMonthChange}
+        onSelect={handleSelect}
         open={open}
         panelId={panelId}
-        placeholder={placeholder}
+        panelPlacement={panelPlacement}
+        panelRef={panelRef}
+        panelTransition={panelTransition}
+        panelWidth={panelWidth}
+        reduceMotion={reduceMotion}
+        restCalendarProps={restCalendarProps}
         selected={selected}
-        setTriggerRef={setTriggerRef}
-        triggerLabel={triggerLabel}
+        viewMonth={viewMonth}
       />
+    );
 
-      {mounted && panel ? createPortal(panel, document.body) : null}
-    </div>
-  );
-});
+    return (
+      <div
+        className={cn("relative w-full", className)}
+        ref={rootRef}
+        style={{ maxWidth: panelWidth }}
+      >
+        {name ? (
+          <InputPrimitive
+            aria-hidden
+            className="sr-only"
+            name={name}
+            readOnly
+            render={(inputProps) => <input {...inputProps} tabIndex={-1} />}
+            tabIndex={-1}
+            value={selected ? getDatePickerFormValue(selected) : ""}
+          />
+        ) : null}
+
+        <DatePickerTrigger
+          ariaInvalid={ariaInvalid}
+          ariaLabel={ariaLabel}
+          clearable={clearable}
+          disabled={disabled}
+          id={id}
+          labelId={labelId}
+          onClear={handleClear}
+          onToggle={() => setOpenState(!open)}
+          open={open}
+          panelId={panelId}
+          placeholder={placeholder}
+          selected={selected}
+          setTriggerRef={setTriggerRef}
+          triggerLabel={triggerLabel}
+        />
+
+        {mounted && panel ? createPortal(panel, document.body) : null}
+      </div>
+    );
+  }
+);
 
 AnimatedDatePicker.displayName = "DatePicker";
 

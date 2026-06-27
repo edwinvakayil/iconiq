@@ -791,7 +791,7 @@ const datePickerApiDetails: DetailItem[] = [
     id: "date-picker",
     title: "DatePicker",
     summary:
-      "Collapsible date field with a formatted trigger button and a portaled Iconiq Calendar panel.",
+      "Collapsible date field with a read-only Base UI input trigger and a portaled Iconiq Calendar panel.",
     fields: [
       field({
         name: "value",
@@ -917,7 +917,7 @@ const datePickerApiDetails: DetailItem[] = [
   },
   registryItem(
     "date-picker.json",
-    ["motion", "lucide-react", "date-fns"],
+    ["@base-ui/react/input", "motion", "lucide-react", "date-fns"],
     ["Registry dependency: calendar."]
   ),
 ];

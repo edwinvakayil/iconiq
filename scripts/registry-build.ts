@@ -374,7 +374,12 @@ const REGISTRY_UI_META: Record<
     title: "Date Picker",
     description:
       "Collapsible date picker trigger with the shared Iconiq Calendar panel, spring open motion, and month-aware selection.",
-    dependencies: ["motion", "lucide-react", "date-fns"],
+    dependencies: [
+      "@base-ui/react/input",
+      "motion",
+      "lucide-react",
+      "date-fns",
+    ],
     registryDependencies: ["calendar"],
   },
   card: {
