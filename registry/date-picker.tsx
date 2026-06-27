@@ -273,6 +273,7 @@ function useDismissiblePanel({
 
 function usePanelPlacement({
   align,
+  hasRenderedPanel,
   open,
   panelRef,
   panelWidth,
@@ -280,6 +281,7 @@ function usePanelPlacement({
   triggerRef,
 }: {
   align: DatePickerAlign;
+  hasRenderedPanel: boolean;
   open: boolean;
   panelRef: RefObject<HTMLDivElement | null>;
   panelWidth: number;
@@ -314,7 +316,7 @@ function usePanelPlacement({
   }, [align, panelRef, panelWidth, side, triggerRef]);
 
   useLayoutEffect(() => {
-    if (!open) return;
+    if (!(open && hasRenderedPanel)) return;
 
     updatePanelPlacement();
 
@@ -339,7 +341,7 @@ function usePanelPlacement({
       window.removeEventListener("scroll", updatePanelPlacement, true);
       resizeObserver?.disconnect();
     };
-  }, [open, panelRef, updatePanelPlacement]);
+  }, [hasRenderedPanel, open, panelRef, updatePanelPlacement]);
 
   return panelPlacement;
 }
@@ -593,6 +595,10 @@ export const AnimatedDatePicker = forwardRef<
     (nextOpen: boolean) => {
       if (disabled && nextOpen) return;
 
+      if (nextOpen) {
+        setHasRenderedPanel(true);
+      }
+
       if (!isOpenControlled) {
         setUncontrolledOpen(nextOpen);
       }
@@ -604,6 +610,7 @@ export const AnimatedDatePicker = forwardRef<
 
   const panelPlacement = usePanelPlacement({
     align,
+    hasRenderedPanel,
     open,
     panelRef,
     panelWidth,
@@ -623,7 +630,6 @@ export const AnimatedDatePicker = forwardRef<
   useEffect(() => {
     if (!open) return;
     setViewMonth(resolveDatePickerViewMonth(selected, selected));
-    setHasRenderedPanel(true);
   }, [open, selected]);
 
   useEffect(() => {
@@ -633,7 +639,7 @@ export const AnimatedDatePicker = forwardRef<
   }, [disabled, open, setOpenState]);
 
   useDismissiblePanel({ open, panelRef, rootRef, setOpenState });
-  useFocusTrap(panelRef, triggerRef, open);
+  useFocusTrap(panelRef, triggerRef, open && hasRenderedPanel);
 
   const handleSelect = useCallback(
     (date: Date | null) => {
