@@ -5503,6 +5503,12 @@ const faviconBadgeApiDetails: DetailItem[] = [
           "Optional label rendered beside the circular favicon badge. When omitted, only the badge is shown and the domain is exposed to screen readers.",
       }),
       field({
+        name: "faviconUrl",
+        type: "string",
+        description:
+          "Optional favicon URL that bypasses Google and DuckDuckGo resolution. Use for self-hosted icons or strict CSP environments.",
+      }),
+      field({
         name: "faviconSize",
         type: "16 | 32 | 64 | 128",
         defaultValue: "64",
@@ -5514,7 +5520,7 @@ const faviconBadgeApiDetails: DetailItem[] = [
         type: '"sm" | "md" | "lg"',
         defaultValue: '"md"',
         description:
-          "Visual scale for the circular favicon badge container. Label text stays at the standard `text-sm` size.",
+          "Visual scale for the circular favicon badge container. Label text scales with size: `text-sm` on small, `text-base` on medium, and `text-lg` on large.",
       }),
       field({
         name: "className",
@@ -5532,14 +5538,29 @@ const faviconBadgeApiDetails: DetailItem[] = [
         type: "string",
         description: "Merged onto the optional label when `label` is provided.",
       }),
+      field({
+        name: "onFaviconLoad",
+        type: "(url: string) => void",
+        description:
+          "Called after a favicon URL resolves successfully, including when `faviconUrl` is provided.",
+      }),
+      field({
+        name: "onFaviconError",
+        type: "() => void",
+        description:
+          "Called when every provider fails or an override URL fails to load.",
+      }),
     ],
     notes: [
       "Extends native `span` props (`id`, `onClick`, `data-*`, and other `aria-*` attributes) via prop spreading on the root.",
       "Favicons are resolved from Google and DuckDuckGo icon services after `extractDomain` normalizes the `website` value.",
-      "The component preloads favicons with cancellation-safe `Image()` requests and falls back through multiple providers before showing the `Globe` placeholder.",
+      "While resolving, the badge shows a pulsing skeleton and sets `aria-busy` on the root. Failed resolution uses a muted globe with a destructive-tinted border.",
+      "Google placeholder icons (16×16 defaults) are skipped automatically before falling back to the next provider.",
+      'Favicon images use `referrerPolicy="no-referrer"` and a single in-DOM `<img>` load path to avoid duplicate network requests.',
       'When `label` is omitted, the root uses `role="img"` with an `aria-label` derived from the label, domain, or raw `website` value.',
-      "Exports `extractDomain`, `getFaviconUrl`, and `FaviconBadgeSize` for reuse in search fields or attribution rows.",
+      "Exports `extractDomain`, `getFaviconCandidates`, `getFaviconUrl`, `isLikelyDefaultFavicon`, and `FaviconBadgeSize` for reuse in search fields or attribution rows.",
       "Install path is `components/ui/favicon-badge.tsx` with named and default `FaviconBadge` exports. Requires `@/lib/utils` (`cn`).",
+      "External favicon requests require `img-src` allowances for `https://www.google.com` and `https://icons.duckduckgo.com` unless `faviconUrl` is used.",
     ],
   },
   registryItem(

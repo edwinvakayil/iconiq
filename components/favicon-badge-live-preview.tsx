@@ -117,11 +117,17 @@ function InlineWebsiteField({
 
 export function FaviconBadgeLivePreview({
   className,
+  faviconSize,
+  label,
   onWebsiteChange,
+  size = "md",
   website,
 }: {
   className?: string;
+  faviconSize?: 16 | 32 | 64 | 128;
+  label?: string;
   onWebsiteChange: (website: string) => void;
+  size?: "sm" | "md" | "lg";
   website: string;
 }) {
   return (
@@ -134,7 +140,12 @@ export function FaviconBadgeLivePreview({
       <div className={cn(previewSentenceClassName, "max-w-2xl text-center")}>
         <span>Attributed to</span>
         <span className="inline-flex translate-y-px align-middle">
-          <FaviconBadge size="md" website={website} />
+          <FaviconBadge
+            faviconSize={faviconSize}
+            label={label}
+            size={size}
+            website={website}
+          />
         </span>
         <span>for</span>
         <InlineWebsiteField onChange={onWebsiteChange} value={website} />

@@ -134,7 +134,7 @@ function ShowcaseCard({
 }
 
 function HomeFaviconBadgeShowcase() {
-  const [website, setWebsite] = useState("iconiqui.com");
+  const [website, setWebsite] = useState("vercel.com");
 
   return (
     <FaviconBadgeLivePreview onWebsiteChange={setWebsite} website={website} />
