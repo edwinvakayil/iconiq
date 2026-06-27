@@ -7,25 +7,206 @@ import * as RechartsPrimitive from "recharts";
 
 import { cn } from "@/lib/utils";
 
-const componentThemeClassName =
-  "[--ic-background:#ffffff] [--ic-foreground:#111111] [--ic-primary:#111111] [--ic-secondary:#646b75] [--ic-surface-border:#e9edf2] [--ic-border:#e3e7ec] [--ic-card:#ffffff] [--ic-card-foreground:#111111] [--ic-muted:#f5f7fa] [--ic-muted-foreground:#6d7480] [--ic-accent:#f3f5f8] [--color-accent:var(--ic-accent)] [--color-accent-foreground:var(--ic-accent-foreground)] [--ic-accent-foreground:#111111] [--ic-input:#e3e7ec] [--ic-ring:rgba(17,17,17,0.16)] [--ic-destructive:#dc2626] [--ic-paper:#fcfcfd] [--ic-popover-foreground:#111111] [--ic-brand:#0ea5e9] [--ic-brand-soft:#bae6fd] [--ic-shadow-soft:0_18px_38px_-24px_rgba(15,23,42,0.35)] [--ic-chart-1:#1d4ed8] [--ic-chart-2:#7dd3fc] [--ic-chart-3:oklch(0.42_0.16_262)] [--ic-chart-4:oklch(0.84_0.07_228)] [--ic-chart-5:oklch(0.62_0.14_240)] [--color-background:var(--ic-background)] [--color-foreground:var(--ic-foreground)] [--color-primary:var(--ic-primary)] [--color-secondary:var(--ic-secondary)] [--color-border:var(--ic-border)] [--color-card:var(--ic-card)] [--color-card-foreground:var(--ic-card-foreground)] [--color-muted:var(--ic-muted)] [--color-muted-foreground:var(--ic-muted-foreground)] [--color-accent:var(--ic-accent)] [--color-accent-foreground:var(--ic-accent-foreground)] [--color-input:var(--ic-input)] [--color-ring:var(--ic-ring)] [--color-destructive:var(--ic-destructive)] [--color-paper:var(--ic-paper)] [--color-popover-foreground:var(--ic-popover-foreground)] [--color-brand:var(--ic-brand)] [--color-brand-soft:var(--ic-brand-soft)] [--color-chart-1:var(--ic-chart-1)] [--color-chart-2:var(--ic-chart-2)] [--color-chart-3:var(--ic-chart-3)] [--color-chart-4:var(--ic-chart-4)] [--color-chart-5:var(--ic-chart-5)] [--chart-1:var(--ic-chart-1)] [--chart-2:var(--ic-chart-2)] [--chart-3:var(--ic-chart-3)] [--chart-4:var(--ic-chart-4)] [--chart-5:var(--ic-chart-5)] dark:[--ic-background:#111111] dark:[--ic-foreground:#f6f3ec] dark:[--ic-primary:#f6f3ec] dark:[--ic-secondary:#cbc6bb] dark:[--ic-surface-border:#2a2a25] dark:[--ic-border:#2b2a25] dark:[--ic-card:#111111] dark:[--ic-card-foreground:#f6f3ec] dark:[--ic-muted:#171716] dark:[--ic-muted-foreground:#9a958a] dark:[--ic-accent:#1a1a18] [--color-accent:var(--ic-accent)] [--color-accent-foreground:var(--ic-accent-foreground)] dark:[--ic-accent-foreground:#f6f3ec] dark:[--ic-input:#2b2a25] dark:[--ic-ring:rgba(246,243,236,0.18)] dark:[--ic-destructive:#f87171] dark:[--ic-paper:#171716] dark:[--ic-popover-foreground:#f6f3ec] dark:[--ic-brand:#38bdf8] dark:[--ic-brand-soft:#0c4a6e] dark:[--ic-shadow-soft:0_20px_44px_-28px_rgba(0,0,0,0.6)] dark:[--ic-chart-1:#60a5fa] dark:[--ic-chart-2:#bfdbfe] dark:[--ic-chart-3:oklch(0.58_0.15_260)] dark:[--ic-chart-4:oklch(0.75_0.12_235)] dark:[--ic-chart-5:oklch(0.88_0.06_220)]";
-
 // Format: { THEME_NAME: CSS_SELECTOR }
 const THEMES = { light: "", dark: ".dark" } as const;
 
-const CHART_RESIZE_DEBOUNCE_MS = 150;
+export type ChartConfig = Record<
+  string,
+  {
+    label?: React.ReactNode;
+    icon?: React.ComponentType;
+  } & (
+    | { color?: string; theme?: never }
+    | { color?: never; theme: Record<keyof typeof THEMES, string> }
+  )
+>;
+
+function getPayloadConfigFromPayload(
+  config: ChartConfig,
+  payload: unknown,
+  key: string
+) {
+  if (typeof payload !== "object" || payload === null) {
+    return undefined;
+  }
+
+  const payloadPayload =
+    "payload" in payload &&
+    typeof payload.payload === "object" &&
+    payload.payload !== null
+      ? payload.payload
+      : undefined;
+
+  let configLabelKey: string = key;
+
+  if (
+    key in payload &&
+    typeof payload[key as keyof typeof payload] === "string"
+  ) {
+    configLabelKey = payload[key as keyof typeof payload] as string;
+  } else if (
+    payloadPayload &&
+    key in payloadPayload &&
+    typeof payloadPayload[key as keyof typeof payloadPayload] === "string"
+  ) {
+    configLabelKey = payloadPayload[
+      key as keyof typeof payloadPayload
+    ] as string;
+  }
+
+  return configLabelKey in config ? config[configLabelKey] : config[key];
+}
+
+function getChartConfigKey(config: ChartConfig, payload: unknown, key: string) {
+  if (typeof payload !== "object" || payload === null) {
+    return key;
+  }
+
+  const payloadPayload =
+    "payload" in payload &&
+    typeof payload.payload === "object" &&
+    payload.payload !== null
+      ? payload.payload
+      : undefined;
+
+  let configLabelKey: string = key;
+
+  if (
+    key in payload &&
+    typeof payload[key as keyof typeof payload] === "string"
+  ) {
+    configLabelKey = payload[key as keyof typeof payload] as string;
+  } else if (
+    payloadPayload &&
+    key in payloadPayload &&
+    typeof payloadPayload[key as keyof typeof payloadPayload] === "string"
+  ) {
+    configLabelKey = payloadPayload[
+      key as keyof typeof payloadPayload
+    ] as string;
+  }
+
+  if (configLabelKey in config) {
+    return configLabelKey;
+  }
+
+  return key in config ? key : key;
+}
+
+function normalizeChartField(
+  value: string | number | ((obj: unknown) => unknown) | undefined
+) {
+  return typeof value === "function" ? undefined : value;
+}
+
+function getChartSeriesKey(item: unknown, nameKey?: string) {
+  if (typeof item !== "object" || item === null) {
+    return nameKey ?? "value";
+  }
+
+  const record = item as {
+    dataKey?: string | number | ((obj: unknown) => unknown);
+    name?: string | number;
+    value?: unknown;
+    payload?: object;
+  };
+
+  if (nameKey) {
+    const payloadRecord =
+      record.payload && typeof record.payload === "object"
+        ? (record.payload as Record<string, unknown>)
+        : (record as Record<string, unknown>);
+
+    if (
+      nameKey in payloadRecord &&
+      payloadRecord[nameKey] != null &&
+      payloadRecord[nameKey] !== ""
+    ) {
+      return String(payloadRecord[nameKey]);
+    }
+  }
+
+  const dataKey = normalizeChartField(record.dataKey);
+  const value =
+    typeof record.value === "string" || typeof record.value === "number"
+      ? record.value
+      : undefined;
+
+  return String(dataKey ?? record.name ?? value ?? "value");
+}
+
+function getChartLegendLabel(
+  item: unknown,
+  itemConfig: ChartConfig[string] | undefined
+) {
+  if (typeof item !== "object" || item === null) {
+    return null;
+  }
+
+  const record = item as {
+    dataKey?: string | number | ((obj: unknown) => unknown);
+    name?: string | number;
+    value?: unknown;
+  };
+  if (itemConfig?.label != null) {
+    return itemConfig.label;
+  }
+
+  if (record.name != null) {
+    return String(record.name);
+  }
+
+  if (typeof record.value === "string") {
+    return record.value;
+  }
+
+  if (record.dataKey != null && typeof record.dataKey !== "function") {
+    return String(record.dataKey);
+  }
+
+  return null;
+}
+
+function getChartLegendSwatchColor(
+  configKey: string,
+  itemConfig: ChartConfig[string] | undefined,
+  fallbackColor?: string
+) {
+  if (itemConfig) {
+    return `var(--color-${configKey})`;
+  }
+
+  return fallbackColor;
+}
+
+const componentThemeClassName =
+  "[--ic-background:#ffffff] [--ic-foreground:#111111] [--ic-primary:#111111] [--ic-secondary:#646b75] [--ic-surface-border:#e9edf2] [--ic-border:#e3e7ec] [--ic-card:#ffffff] [--ic-card-foreground:#111111] [--ic-muted:#f5f7fa] [--ic-muted-foreground:#6d7480] [--ic-accent:#f3f5f8] [--color-accent:var(--ic-accent)] [--color-accent-foreground:var(--ic-accent-foreground)] [--ic-accent-foreground:#111111] [--ic-input:#e3e7ec] [--ic-ring:rgba(17,17,17,0.16)] [--ic-destructive:#dc2626] [--ic-paper:#fcfcfd] [--ic-popover-foreground:#111111] [--ic-brand:#0ea5e9] [--ic-brand-soft:#bae6fd] [--ic-shadow-soft:0_18px_38px_-24px_rgba(15,23,42,0.35)] [--ic-chart-1:#1d4ed8] [--ic-chart-2:#7dd3fc] [--ic-chart-3:oklch(0.42_0.16_262)] [--ic-chart-4:oklch(0.84_0.07_228)] [--ic-chart-5:oklch(0.62_0.14_240)] [--color-background:var(--ic-background)] [--color-foreground:var(--ic-foreground)] [--color-primary:var(--ic-primary)] [--color-secondary:var(--ic-secondary)] [--color-border:var(--ic-border)] [--color-card:var(--ic-card)] [--color-card-foreground:var(--ic-card-foreground)] [--color-muted:var(--ic-muted)] [--color-muted-foreground:var(--ic-muted-foreground)] [--color-accent:var(--ic-accent)] [--color-accent-foreground:var(--ic-accent-foreground)] [--color-input:var(--ic-input)] [--color-ring:var(--ic-ring)] [--color-destructive:var(--ic-destructive)] [--color-paper:var(--ic-paper)] [--color-popover-foreground:var(--ic-popover-foreground)] [--color-brand:var(--ic-brand)] [--color-brand-soft:var(--ic-brand-soft)] [--color-chart-1:var(--ic-chart-1)] [--color-chart-2:var(--ic-chart-2)] [--color-chart-3:var(--ic-chart-3)] [--color-chart-4:var(--ic-chart-4)] [--color-chart-5:var(--ic-chart-5)] [--chart-1:var(--ic-chart-1)] [--chart-2:var(--ic-chart-2)] [--chart-3:var(--ic-chart-3)] [--chart-4:var(--ic-chart-4)] [--chart-5:var(--ic-chart-5)] dark:[--ic-background:#111111] dark:[--ic-foreground:#f6f3ec] dark:[--ic-primary:#f6f3ec] dark:[--ic-secondary:#cbc6bb] dark:[--ic-surface-border:#2a2a25] dark:[--ic-border:#2b2a25] dark:[--ic-card:#111111] dark:[--ic-card-foreground:#f6f3ec] dark:[--ic-muted:#171716] dark:[--ic-muted-foreground:#9a958a] dark:[--ic-accent:#1a1a18] [--color-accent:var(--ic-accent)] [--color-accent-foreground:var(--ic-accent-foreground)] dark:[--ic-accent-foreground:#f6f3ec] dark:[--ic-input:#2b2a25] dark:[--ic-ring:rgba(246,243,236,0.18)] dark:[--ic-destructive:#f87171] dark:[--ic-paper:#171716] dark:[--ic-popover-foreground:#f6f3ec] dark:[--ic-brand:#38bdf8] dark:[--ic-brand-soft:#0c4a6e] dark:[--ic-shadow-soft:0_20px_44px_-28px_rgba(0,0,0,0.6)] dark:[--ic-chart-1:#60a5fa] dark:[--ic-chart-2:#bfdbfe] dark:[--ic-chart-3:oklch(0.58_0.15_260)] dark:[--ic-chart-4:oklch(0.75_0.12_235)] dark:[--ic-chart-5:oklch(0.88_0.06_220)]";
 
 /** Calm easing — no spring overshoot on data surfaces. */
 const chartEase = [0.22, 1, 0.36, 1] as const;
+
+const chartSurfaceFade = {
+  duration: 0.22,
+  ease: chartEase,
+};
 
 const chartTooltipFade = {
   duration: 0.14,
   ease: chartEase,
 };
 
-const CHART_BAR_ANIMATION_DURATION = 480;
-const CHART_BAR_ANIMATION_EASING = "ease-out" as const;
-const CHART_BAR_STAGGER_MS = 32;
+const CHART_SERIES_ANIMATION_DURATION = 480;
+const CHART_SERIES_ANIMATION_EASING = "ease-out" as const;
+const CHART_SERIES_STAGGER_MS = 32;
+
+function getChartAnimationTimeoutMs(seriesCount: number) {
+  const safeSeriesCount = Math.max(1, seriesCount);
+
+  return (
+    CHART_SERIES_ANIMATION_DURATION +
+    CHART_SERIES_STAGGER_MS * Math.max(0, safeSeriesCount - 1)
+  );
+}
 
 const MotionDiv = motion.div;
 
@@ -46,20 +227,11 @@ type MotionSafeDivProps = Omit<
 
 type TooltipNameType = number | string;
 
-export type ChartConfig = Record<
-  string,
-  {
-    label?: React.ReactNode;
-    icon?: React.ComponentType;
-  } & (
-    | { color?: string; theme?: never }
-    | { color?: never; theme: Record<keyof typeof THEMES, string> }
-  )
->;
+const CHART_RESIZE_DEBOUNCE_MS = 150;
 
 type ChartContextProps = {
   config: ChartConfig;
-  barAnimationActive: boolean;
+  chartAnimationActive: boolean;
 };
 
 const ChartContext = React.createContext<ChartContextProps | null>(null);
@@ -74,88 +246,7 @@ function useChart() {
   return context;
 }
 
-function ChartContainer({
-  id,
-  className,
-  children,
-  config,
-  initialDimension,
-  ...props
-}: MotionSafeDivProps & {
-  config: ChartConfig;
-  children: React.ComponentProps<
-    typeof RechartsPrimitive.ResponsiveContainer
-  >["children"];
-  initialDimension?: {
-    width: number;
-    height: number;
-  };
-}) {
-  const uniqueId = React.useId();
-  const chartId = `chart-${id ?? uniqueId.replace(/:/g, "")}`;
-  const initialBarAnimationDoneRef = React.useRef(false);
-  const resizeMeasureCountRef = React.useRef(0);
-  const [barAnimationActive, setBarAnimationActive] = React.useState(true);
-
-  React.useEffect(() => {
-    const timeoutId = window.setTimeout(
-      () => {
-        initialBarAnimationDoneRef.current = true;
-        setBarAnimationActive(false);
-      },
-      CHART_BAR_ANIMATION_DURATION + CHART_BAR_STAGGER_MS * 3
-    );
-
-    return () => {
-      window.clearTimeout(timeoutId);
-    };
-  }, []);
-
-  const handleResize = React.useCallback(() => {
-    resizeMeasureCountRef.current += 1;
-
-    if (resizeMeasureCountRef.current <= 1) {
-      return;
-    }
-
-    if (initialBarAnimationDoneRef.current) {
-      setBarAnimationActive(false);
-    }
-  }, []);
-
-  return (
-    <ChartContext.Provider
-      value={{
-        config,
-        barAnimationActive,
-      }}
-    >
-      <div
-        className={cn(
-          componentThemeClassName,
-          "flex aspect-video min-h-[12rem] w-full justify-center text-xs [&_.recharts-cartesian-axis-tick_text]:fill-muted-foreground [&_.recharts-cartesian-grid_line[stroke='#ccc']]:stroke-border/50 [&_.recharts-curve.recharts-tooltip-cursor]:stroke-border [&_.recharts-dot[stroke='#fff']]:stroke-transparent [&_.recharts-layer]:outline-hidden [&_.recharts-polar-grid_[stroke='#ccc']]:stroke-border [&_.recharts-radial-bar-background-sector]:fill-muted [&_.recharts-rectangle.recharts-tooltip-cursor]:fill-muted [&_.recharts-reference-line_[stroke='#ccc']]:stroke-border [&_.recharts-sector[stroke='#fff']]:stroke-transparent [&_.recharts-sector]:outline-hidden [&_.recharts-surface]:outline-hidden",
-          className
-        )}
-        data-chart={chartId}
-        data-slot="chart"
-        {...props}
-      >
-        <ChartStyle config={config} id={chartId} />
-        <RechartsPrimitive.ResponsiveContainer
-          debounce={CHART_RESIZE_DEBOUNCE_MS}
-          height="100%"
-          onResize={handleResize}
-          width="100%"
-          {...(initialDimension ? { initialDimension } : {})}
-        >
-          {children}
-        </RechartsPrimitive.ResponsiveContainer>
-      </div>
-    </ChartContext.Provider>
-  );
-}
-
-const ChartStyle = ({ id, config }: { id: string; config: ChartConfig }) => {
+function ChartStyle({ id, config }: { id: string; config: ChartConfig }) {
   const colorConfig = Object.entries(config).filter(
     ([, config]) => config.theme ?? config.color
   );
@@ -171,7 +262,7 @@ const ChartStyle = ({ id, config }: { id: string; config: ChartConfig }) => {
         __html: Object.entries(THEMES)
           .map(
             ([theme, prefix]) => `
-${prefix} [data-chart=${id}] {
+${prefix} [data-chart="${id}"] {
 ${colorConfig
   .map(([key, itemConfig]) => {
     const color =
@@ -187,9 +278,184 @@ ${colorConfig
       }}
     />
   );
-};
+}
 
-const ChartTooltip = RechartsPrimitive.Tooltip;
+function ChartContainer({
+  id,
+  className,
+  children,
+  config,
+  initialDimension,
+  seriesCount,
+  ...props
+}: MotionSafeDivProps & {
+  config: ChartConfig;
+  children: React.ComponentProps<
+    typeof RechartsPrimitive.ResponsiveContainer
+  >["children"];
+  initialDimension?: {
+    width: number;
+    height: number;
+  };
+  /** Overrides inferred series count for animation timing when config keys do not match plotted series. */
+  seriesCount?: number;
+}) {
+  const uniqueId = React.useId();
+  const chartId = `chart-${id ?? uniqueId.replace(/:/g, "")}`;
+  const initialChartAnimationDoneRef = React.useRef(false);
+  const resizeMeasureCountRef = React.useRef(0);
+  const [chartAnimationActive, setChartAnimationActive] = React.useState(true);
+  const resolvedSeriesCount = seriesCount ?? Object.keys(config).length;
+
+  React.useEffect(() => {
+    const timeoutId = window.setTimeout(() => {
+      initialChartAnimationDoneRef.current = true;
+      setChartAnimationActive(false);
+    }, getChartAnimationTimeoutMs(resolvedSeriesCount));
+
+    return () => {
+      window.clearTimeout(timeoutId);
+    };
+  }, [resolvedSeriesCount]);
+
+  const handleResize = React.useCallback(() => {
+    resizeMeasureCountRef.current += 1;
+
+    if (resizeMeasureCountRef.current <= 1) {
+      return;
+    }
+
+    if (initialChartAnimationDoneRef.current) {
+      setChartAnimationActive(false);
+    }
+  }, []);
+
+  return (
+    <ChartContext.Provider
+      value={{
+        config,
+        chartAnimationActive,
+      }}
+    >
+      <MotionDiv
+        animate={{ opacity: 1 }}
+        className={cn(
+          componentThemeClassName,
+          "flex aspect-video min-h-[12rem] w-full justify-center text-xs [&_.recharts-cartesian-axis-tick_text]:fill-muted-foreground [&_.recharts-cartesian-grid_line[stroke='#ccc']]:stroke-border/50 [&_.recharts-curve.recharts-tooltip-cursor]:stroke-border [&_.recharts-dot[stroke='#fff']]:stroke-transparent [&_.recharts-layer]:outline-hidden [&_.recharts-polar-grid_[stroke='#ccc']]:stroke-border [&_.recharts-radial-bar-background-sector]:fill-muted [&_.recharts-rectangle.recharts-tooltip-cursor]:fill-muted [&_.recharts-reference-line_[stroke='#ccc']]:stroke-border [&_.recharts-sector[stroke='#fff']]:stroke-transparent [&_.recharts-sector]:outline-hidden [&_.recharts-surface]:outline-hidden",
+          className
+        )}
+        data-chart={chartId}
+        data-slot="chart"
+        initial={{ opacity: 0 }}
+        transition={chartSurfaceFade}
+        {...props}
+      >
+        <ChartStyle config={config} id={chartId} />
+        <RechartsPrimitive.ResponsiveContainer
+          debounce={CHART_RESIZE_DEBOUNCE_MS}
+          height="100%"
+          onResize={handleResize}
+          width="100%"
+          {...(initialDimension ? { initialDimension } : {})}
+        >
+          {children}
+        </RechartsPrimitive.ResponsiveContainer>
+      </MotionDiv>
+    </ChartContext.Provider>
+  );
+}
+
+function useChartSeriesAnimation(seriesIndex = 0) {
+  const { chartAnimationActive } = useChart();
+
+  return {
+    animationBegin: seriesIndex * CHART_SERIES_STAGGER_MS,
+    animationDuration: chartAnimationActive
+      ? CHART_SERIES_ANIMATION_DURATION
+      : 0,
+    animationEasing: CHART_SERIES_ANIMATION_EASING,
+    isAnimationActive: chartAnimationActive,
+  };
+}
+
+function ChartBar({
+  animationBegin,
+  animationDuration,
+  animationEasing,
+  isAnimationActive,
+  seriesIndex = 0,
+  ...props
+}: React.ComponentProps<typeof RechartsPrimitive.Bar> & {
+  /** Staggers bar growth when plotting multiple series (0, 1, 2, …). */
+  seriesIndex?: number;
+}) {
+  const defaults = useChartSeriesAnimation(seriesIndex);
+  const shouldAnimate = isAnimationActive ?? defaults.isAnimationActive;
+
+  return (
+    <RechartsPrimitive.Bar
+      {...props}
+      animationBegin={animationBegin ?? defaults.animationBegin}
+      animationDuration={
+        shouldAnimate ? (animationDuration ?? defaults.animationDuration) : 0
+      }
+      animationEasing={animationEasing ?? defaults.animationEasing}
+      isAnimationActive={shouldAnimate}
+    />
+  );
+}
+
+function ChartLine({
+  animationBegin,
+  animationDuration,
+  animationEasing,
+  isAnimationActive,
+  seriesIndex = 0,
+  ...props
+}: React.ComponentProps<typeof RechartsPrimitive.Line> & {
+  seriesIndex?: number;
+}) {
+  const defaults = useChartSeriesAnimation(seriesIndex);
+  const shouldAnimate = isAnimationActive ?? defaults.isAnimationActive;
+
+  return (
+    <RechartsPrimitive.Line
+      {...props}
+      animationBegin={animationBegin ?? defaults.animationBegin}
+      animationDuration={
+        shouldAnimate ? (animationDuration ?? defaults.animationDuration) : 0
+      }
+      animationEasing={animationEasing ?? defaults.animationEasing}
+      isAnimationActive={shouldAnimate}
+    />
+  );
+}
+
+function ChartArea({
+  animationBegin,
+  animationDuration,
+  animationEasing,
+  isAnimationActive,
+  seriesIndex = 0,
+  ...props
+}: React.ComponentProps<typeof RechartsPrimitive.Area> & {
+  seriesIndex?: number;
+}) {
+  const defaults = useChartSeriesAnimation(seriesIndex);
+  const shouldAnimate = isAnimationActive ?? defaults.isAnimationActive;
+
+  return (
+    <RechartsPrimitive.Area
+      {...props}
+      animationBegin={animationBegin ?? defaults.animationBegin}
+      animationDuration={
+        shouldAnimate ? (animationDuration ?? defaults.animationDuration) : 0
+      }
+      animationEasing={animationEasing ?? defaults.animationEasing}
+      isAnimationActive={shouldAnimate}
+    />
+  );
+}
 
 function ChartTooltipRow({
   color,
@@ -223,8 +489,14 @@ function ChartTooltipRow({
         indicator === "dot" && "items-center"
       )}
     >
-      {formatter && item?.value !== undefined && item.name ? (
-        formatter(item.value, item.name, item, index, item.payload)
+      {formatter && item?.value !== undefined ? (
+        formatter(
+          item.value,
+          item.name ?? String(item.dataKey ?? index),
+          item,
+          index,
+          item.payload
+        )
       ) : (
         <>
           {itemConfig?.icon ? (
@@ -274,35 +546,6 @@ function ChartTooltipRow({
         </>
       )}
     </div>
-  );
-}
-
-function ChartBar({
-  animationBegin,
-  animationDuration,
-  animationEasing,
-  isAnimationActive,
-  seriesIndex = 0,
-  ...props
-}: React.ComponentProps<typeof RechartsPrimitive.Bar> & {
-  /** Staggers bar growth when plotting multiple series (0, 1, 2, …). */
-  seriesIndex?: number;
-}) {
-  const { barAnimationActive } = useChart();
-  const shouldAnimateBars = isAnimationActive ?? barAnimationActive;
-
-  return (
-    <RechartsPrimitive.Bar
-      {...props}
-      animationBegin={animationBegin ?? seriesIndex * CHART_BAR_STAGGER_MS}
-      animationDuration={
-        shouldAnimateBars
-          ? (animationDuration ?? CHART_BAR_ANIMATION_DURATION)
-          : 0
-      }
-      animationEasing={animationEasing ?? CHART_BAR_ANIMATION_EASING}
-      isAnimationActive={shouldAnimateBars}
-    />
   );
 }
 
@@ -386,6 +629,7 @@ function ChartTooltipContent({
         className
       )}
       initial={{ opacity: 0 }}
+      role="tooltip"
       transition={chartTooltipFade}
     >
       {nestLabel ? null : tooltipLabel}
@@ -393,7 +637,7 @@ function ChartTooltipContent({
         {payload
           .filter((item) => item.type !== "none")
           .map((item, index) => {
-            const key = `${nameKey ?? item.name ?? item.dataKey ?? "value"}`;
+            const key = getChartSeriesKey(item, nameKey);
             const itemConfig = getPayloadConfigFromPayload(config, item, key);
 
             return (
@@ -405,7 +649,7 @@ function ChartTooltipContent({
                 indicator={indicator}
                 item={item}
                 itemConfig={itemConfig}
-                key={index}
+                key={`${key}-${index}`}
                 nestLabel={nestLabel}
                 tooltipLabel={tooltipLabel}
               />
@@ -416,7 +660,34 @@ function ChartTooltipContent({
   );
 }
 
-const ChartLegend = RechartsPrimitive.Legend;
+function ChartTooltip({
+  content,
+  ...props
+}: React.ComponentProps<typeof RechartsPrimitive.Tooltip>) {
+  return (
+    <RechartsPrimitive.Tooltip
+      content={
+        (content ?? ChartTooltipContentRenderer) as React.ComponentProps<
+          typeof RechartsPrimitive.Tooltip
+        >["content"]
+      }
+      {...props}
+    />
+  );
+}
+
+function ChartTooltipContentRenderer(
+  props: RechartsPrimitive.TooltipContentProps<
+    TooltipValueType,
+    TooltipNameType
+  >
+) {
+  return (
+    <ChartTooltipContent
+      {...(props as React.ComponentProps<typeof ChartTooltipContent>)}
+    />
+  );
+}
 
 function ChartLegendContent({
   className,
@@ -435,23 +706,37 @@ function ChartLegendContent({
   }
 
   return (
-    <div
+    <MotionDiv
+      animate={{ opacity: 1, y: 0 }}
       className={cn(
         "flex items-center justify-center gap-4",
         verticalAlign === "top" ? "pb-3" : "pt-3",
         className
       )}
+      initial={{ opacity: 0, y: 4 }}
+      transition={chartTooltipFade}
     >
       {payload
         .filter((item) => item.type !== "none")
-        .map((item, index) => {
-          const key = `${nameKey ?? item.dataKey ?? "value"}`;
-          const itemConfig = getPayloadConfigFromPayload(config, item, key);
+        .map((item) => {
+          const seriesKey = getChartSeriesKey(item, nameKey);
+          const configKey = getChartConfigKey(config, item, seriesKey);
+          const itemConfig = getPayloadConfigFromPayload(
+            config,
+            item,
+            seriesKey
+          );
+          const label = getChartLegendLabel(item, itemConfig);
+          const swatchColor = getChartLegendSwatchColor(
+            configKey,
+            itemConfig,
+            item.color
+          );
 
           return (
             <div
               className="flex items-center gap-1.5 [&>svg]:h-3 [&>svg]:w-3 [&>svg]:text-muted-foreground"
-              key={index}
+              key={seriesKey}
             >
               {itemConfig?.icon && !hideIcon ? (
                 <itemConfig.icon />
@@ -459,60 +744,93 @@ function ChartLegendContent({
                 <div
                   className="h-2 w-2 shrink-0 rounded-[2px]"
                   style={{
-                    backgroundColor: item.color,
+                    backgroundColor: swatchColor,
                   }}
                 />
               )}
-              {itemConfig?.label}
+              {label}
             </div>
           );
         })}
+    </MotionDiv>
+  );
+}
+
+function ChartLegend({
+  className,
+  content,
+  hideIcon,
+  nameKey,
+  ...props
+}: React.ComponentProps<typeof RechartsPrimitive.Legend> & {
+  className?: string;
+  hideIcon?: boolean;
+  nameKey?: string;
+}) {
+  const legendContent =
+    content ??
+    ((legendProps: RechartsPrimitive.DefaultLegendContentProps) => (
+      <ChartLegendContent
+        {...(legendProps as React.ComponentProps<typeof ChartLegendContent>)}
+        className={className}
+        hideIcon={hideIcon}
+        nameKey={nameKey}
+      />
+    ));
+
+  return (
+    <RechartsPrimitive.Legend
+      content={
+        legendContent as React.ComponentProps<
+          typeof RechartsPrimitive.Legend
+        >["content"]
+      }
+      {...props}
+    />
+  );
+}
+
+function ChartEmptyState({
+  className,
+  description = "Try adjusting filters or adding data to render this chart.",
+  label = "No data available",
+}: {
+  className?: string;
+  description?: React.ReactNode;
+  label?: React.ReactNode;
+}) {
+  return (
+    <div
+      className={cn(
+        "flex h-full min-h-[12rem] flex-col items-center justify-center gap-1 rounded-lg border border-border/70 border-dashed bg-muted/20 px-6 text-center",
+        className
+      )}
+    >
+      <p className="font-medium text-foreground text-sm">{label}</p>
+      {description ? (
+        <p className="max-w-xs text-muted-foreground text-xs">{description}</p>
+      ) : null}
     </div>
   );
 }
 
-function getPayloadConfigFromPayload(
-  config: ChartConfig,
-  payload: unknown,
-  key: string
-) {
-  if (typeof payload !== "object" || payload === null) {
-    return undefined;
-  }
-
-  const payloadPayload =
-    "payload" in payload &&
-    typeof payload.payload === "object" &&
-    payload.payload !== null
-      ? payload.payload
-      : undefined;
-
-  let configLabelKey: string = key;
-
-  if (
-    key in payload &&
-    typeof payload[key as keyof typeof payload] === "string"
-  ) {
-    configLabelKey = payload[key as keyof typeof payload] as string;
-  } else if (
-    payloadPayload &&
-    key in payloadPayload &&
-    typeof payloadPayload[key as keyof typeof payloadPayload] === "string"
-  ) {
-    configLabelKey = payloadPayload[
-      key as keyof typeof payloadPayload
-    ] as string;
-  }
-
-  return configLabelKey in config ? config[configLabelKey] : config[key];
-}
-
 export {
+  ChartArea,
   ChartBar,
   ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
+  ChartEmptyState,
   ChartLegend,
   ChartLegendContent,
-  ChartStyle,
+  ChartLine,
+  ChartTooltip,
+  ChartTooltipContent,
+  useChart,
+};
+
+export {
+  getChartAnimationTimeoutMs,
+  getChartLegendLabel,
+  getChartLegendSwatchColor,
+  getChartSeriesKey,
+  getPayloadConfigFromPayload,
 };

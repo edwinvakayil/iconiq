@@ -534,7 +534,7 @@
       "dependencies": ["recharts", "motion"],
       "devDependencies": [],
       "title": "Charts",
-      "description": "Recharts shell with registry chart tokens, ease-out bar growth, and spring-smoothed tooltip and legend transitions.",
+      "description": "Recharts shell with registry chart tokens, ease-out series growth, and calm tooltip and legend transitions.",
       "files": [
         {
           "path": "charts.tsx",

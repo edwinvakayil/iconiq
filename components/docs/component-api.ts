@@ -850,21 +850,21 @@ const chartsApiDetails: DetailItem[] = [
     id: "chart-container",
     title: "ChartContainer",
     summary:
-      "Theme-aware Recharts shell that maps ChartConfig tokens to CSS variables, applies registry chart colors, and eases the surface in with fluid motion.",
+      "Theme-aware Recharts shell that maps ChartConfig tokens to CSS variables, applies registry chart colors, and fades the surface in on mount.",
     fields: [
       field({
         name: "config",
         type: "ChartConfig",
         required: true,
         description:
-          "Series labels and colors. Use var(--chart-1) style tokens or per-key theme overrides; ChartStyle writes --color-{key} variables scoped to this chart instance.",
+          "Series labels, optional icons, and colors. Use var(--chart-1) style tokens or per-key theme overrides; scoped --color-{key} variables are generated for this chart instance.",
       }),
       field({
         name: "children",
         type: "ReactNode",
         required: true,
         description:
-          "Recharts chart markup, usually a BarChart, LineChart, or AreaChart wrapped by ResponsiveContainer through this container.",
+          "Recharts chart markup, usually a BarChart, LineChart, AreaChart, PieChart, RadarChart, or RadialBarChart rendered inside ResponsiveContainer.",
       }),
       field({
         name: "id",
@@ -873,10 +873,16 @@ const chartsApiDetails: DetailItem[] = [
           "Optional stable id for the generated data-chart attribute and scoped CSS variables.",
       }),
       field({
+        name: "seriesCount",
+        type: "number",
+        description:
+          "Overrides inferred series count for animation timing when ChartConfig keys do not match plotted series.",
+      }),
+      field({
         name: "initialDimension",
         type: "{ width: number; height: number }",
         description:
-          "Optional fallback size for ResponsiveContainer before the first measure. By default the chart fills its parent (100% width/height) with a debounced resize handler.",
+          "Optional fallback size for ResponsiveContainer before the first measure. By default the chart fills its parent with a debounced resize handler.",
       }),
       field({
         name: "className",
@@ -888,6 +894,7 @@ const chartsApiDetails: DetailItem[] = [
     notes: [
       "ChartContainer ships its own local --chart-1 through --chart-5 defaults, so chart installs do not need a shared theme helper.",
       "Pair ChartContainer with Recharts primitives and ChartTooltip / ChartLegend helpers rather than Radix UI or Base UI wrappers.",
+      "Set accessibilityLayer on Recharts cartesian charts to improve keyboard and screen-reader support.",
     ],
   },
   {
@@ -912,14 +919,56 @@ const chartsApiDetails: DetailItem[] = [
     ],
     notes: [
       'Use fill="var(--color-desktop)" (or your config key) so bars pick up ChartConfig colors.',
-      "Bar growth runs once on first paint; resize uses a debounced container and skips repeat bar animations so narrowing the viewport stays stable.",
+      "Series growth runs once on first paint; resize uses a debounced container and skips repeat animations so narrowing the viewport stays stable.",
+    ],
+  },
+  {
+    id: "chart-line",
+    title: "ChartLine",
+    summary:
+      "Recharts Line wrapper that shares the same ease-out timing and stagger defaults as ChartBar.",
+    fields: [
+      field({
+        name: "seriesIndex",
+        type: "number",
+        defaultValue: "0",
+        description:
+          "Offsets line draw start time for multi-series charts so each stroke eases in with a short stagger.",
+      }),
+      field({
+        name: "...props",
+        type: "Recharts Line props",
+        description:
+          "Forwards the full Line API. animationDuration, easing, and isAnimationActive inherit calm defaults unless you override them.",
+      }),
+    ],
+  },
+  {
+    id: "chart-area",
+    title: "ChartArea",
+    summary:
+      "Recharts Area wrapper that shares the same ease-out timing and stagger defaults as ChartBar.",
+    fields: [
+      field({
+        name: "seriesIndex",
+        type: "number",
+        defaultValue: "0",
+        description:
+          "Offsets area reveal start time for multi-series charts so each fill eases in with a short stagger.",
+      }),
+      field({
+        name: "...props",
+        type: "Recharts Area props",
+        description:
+          "Forwards the full Area API. animationDuration, easing, and isAnimationActive inherit calm defaults unless you override them.",
+      }),
     ],
   },
   {
     id: "chart-tooltip",
     title: "ChartTooltip",
     summary:
-      "Recharts tooltip primitive wired to the shared Iconiq chart tooltip content shell.",
+      "Recharts tooltip primitive that defaults to ChartTooltipContent when content is omitted.",
     fields: [
       field({
         name: "content",
@@ -938,7 +987,7 @@ const chartsApiDetails: DetailItem[] = [
     id: "chart-tooltip-content",
     title: "ChartTooltipContent",
     summary:
-      "Styled tooltip content shell with a soft spring entrance and dashed, dot, or line indicators.",
+      "Styled tooltip content shell with a calm fade entrance and dashed, dot, or line indicators.",
     fields: [
       field({
         name: "indicator",
@@ -960,6 +1009,40 @@ const chartsApiDetails: DetailItem[] = [
         description: "Hides the color marker when you only want text values.",
       }),
       field({
+        name: "nameKey",
+        type: "string",
+        description:
+          "Payload key used to resolve ChartConfig labels and colors for each tooltip row.",
+      }),
+      field({
+        name: "labelKey",
+        type: "string",
+        description:
+          "Payload key used to resolve the tooltip label row from ChartConfig.",
+      }),
+      field({
+        name: "label",
+        type: "string",
+        description:
+          "Optional label key override when you want the tooltip header to read from ChartConfig directly.",
+      }),
+      field({
+        name: "labelClassName",
+        type: "string",
+        description: "Classes merged onto the tooltip label row.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description: "Classes merged onto the tooltip shell.",
+      }),
+      field({
+        name: "color",
+        type: "string",
+        description:
+          "Optional shared indicator color override for every tooltip row.",
+      }),
+      field({
         name: "labelFormatter",
         type: "(value, payload) => ReactNode",
         description: "Custom formatter for the tooltip label row.",
@@ -976,7 +1059,7 @@ const chartsApiDetails: DetailItem[] = [
     id: "chart-legend",
     title: "ChartLegend",
     summary:
-      "Recharts legend primitive wired to the shared Iconiq legend content shell.",
+      "Recharts legend primitive that defaults to ChartLegendContent when content is omitted.",
     fields: [
       field({
         name: "content",
@@ -1006,11 +1089,71 @@ const chartsApiDetails: DetailItem[] = [
           "Hides config icons and falls back to the color swatch derived from the series color.",
       }),
       field({
+        name: "nameKey",
+        type: "string",
+        description:
+          "Payload key used to resolve ChartConfig labels and swatch colors for each legend row.",
+      }),
+      field({
         name: "verticalAlign",
         type: '"top" | "bottom"',
         defaultValue: '"bottom"',
         description: "Adjusts legend spacing relative to the chart.",
       }),
+      field({
+        name: "className",
+        type: "string",
+        description: "Classes merged onto the legend shell.",
+      }),
+    ],
+  },
+  {
+    id: "chart-empty-state",
+    title: "ChartEmptyState",
+    summary:
+      "Centered empty placeholder for charts with no data yet or while a dataset is loading.",
+    fields: [
+      field({
+        name: "label",
+        type: "ReactNode",
+        defaultValue: '"No data available"',
+        description: "Primary empty-state message.",
+      }),
+      field({
+        name: "description",
+        type: "ReactNode",
+        description: "Optional supporting copy beneath the label.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description: "Classes merged onto the empty-state shell.",
+      }),
+    ],
+    notes: [
+      "Render ChartEmptyState inside ChartContainer when your query returns zero rows or while async data is still loading.",
+    ],
+  },
+  {
+    id: "use-chart",
+    title: "useChart",
+    summary:
+      "Reads ChartContainer context, including ChartConfig and whether the initial series animation is still active.",
+    fields: [
+      field({
+        name: "config",
+        type: "ChartConfig",
+        description: "The ChartConfig passed to ChartContainer.",
+      }),
+      field({
+        name: "chartAnimationActive",
+        type: "boolean",
+        description:
+          "True during the first ease-out series animation window, then false after resize-safe timing completes.",
+      }),
+    ],
+    notes: [
+      "Use this hook inside custom tooltip, legend, or annotation content rendered within ChartContainer.",
     ],
   },
   registryItem(

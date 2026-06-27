@@ -392,7 +392,7 @@ const REGISTRY_UI_META: Record<
   charts: {
     title: "Charts",
     description:
-      "Recharts shell with registry chart tokens, ease-out bar growth, and spring-smoothed tooltip and legend transitions.",
+      "Recharts shell with registry chart tokens, ease-out series growth, and calm tooltip and legend transitions.",
     dependencies: ["recharts", "motion"],
   },
   checkbox: {
