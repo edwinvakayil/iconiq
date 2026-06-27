@@ -430,17 +430,14 @@ function DatePickerTrigger({
       </button>
 
       {clearable && selected && !disabled ? (
-        <>
-          <span aria-hidden className="mx-1 h-4 w-px shrink-0 bg-border/80" />
-          <button
-            aria-label="Clear selected date"
-            className="mr-3 flex shrink-0 items-center justify-center text-muted-foreground/60 transition-colors hover:text-foreground focus-visible:text-foreground focus-visible:outline-none"
-            onClick={onClear}
-            type="button"
-          >
-            <X className="h-3.5 w-3.5" strokeWidth={2.5} />
-          </button>
-        </>
+        <button
+          aria-label="Clear selected date"
+          className="mr-3 flex shrink-0 items-center justify-center text-muted-foreground/60 transition-colors hover:text-foreground focus-visible:text-foreground focus-visible:outline-none"
+          onClick={onClear}
+          type="button"
+        >
+          <X className="h-3.5 w-3.5" strokeWidth={2.5} />
+        </button>
       ) : null}
     </div>
   );
