@@ -5616,7 +5616,7 @@ const verifiedBadgeApiDetails: DetailItem[] = [
     id: "verified-badge",
     title: "VerifiedBadge",
     summary:
-      "Inline X-style verified scallop with a check. Use shimmer or static variants.",
+      "Inline X-style verified scallop with a check. Use shimmer or static variants, size presets, and brand/gold/neutral tones.",
     fields: [
       field({
         name: "variant",
@@ -5627,30 +5627,45 @@ const verifiedBadgeApiDetails: DetailItem[] = [
       }),
       field({
         name: "size",
-        type: "number",
-        defaultValue: "64",
+        type: '"sm" | "md" | "lg" | number',
+        defaultValue: "md",
         description:
-          "Width and height in pixels for the outer badge; the check scales to half this value.",
+          "Preset sizes map to 18px, 22px, and 28px. Pass a number for an explicit pixel width and height.",
+      }),
+      field({
+        name: "tone",
+        type: '"brand" | "gold" | "neutral"',
+        defaultValue: "brand",
+        description:
+          "Brand uses `--verified-badge-color` (defaults to `--ic-brand`). Gold and neutral provide alternate trust-indicator palettes.",
+      }),
+      field({
+        name: "decorative",
+        type: "boolean",
+        defaultValue: "false",
+        description:
+          "When true, hides the badge from assistive tech. Use when visible copy already announces verification.",
       }),
       field({
         name: "className",
         type: "string",
         description:
-          "Merged onto the root span. Pass a `text-*` class to override the default Twitter-blue scallop color.",
+          "Merged onto the root span. Pass a `text-*` class to override the tone color.",
       }),
       field({
         name: "aria-label",
         type: "string",
         defaultValue: "Verified",
         description:
-          "Announced to screen readers. Override when the badge conveys a different status.",
+          "Announced to screen readers when `decorative` is false. Override when the badge conveys a different status.",
       }),
     ],
     notes: [
-      "Extends native `span` props (`id`, `onClick`, `data-*`, tooltips, and other `aria-*` attributes) via prop spreading on the root.",
-      "Default color lives on the root span (`text-[hsl(203,89%,57%)]`); scallop paths use `currentColor` so `cn` can override via `className`.",
-      "The `shimmer` variant uses Motion to sweep a highlight across the scallop (0.5s pass, 1.5s pause between repeats).",
-      'Root uses `role="img"` with `aria-label`; inner SVG shapes are `aria-hidden`.',
+      "Extends native `span` props (`id`, `style`, `onClick`, `data-*`, tooltips, and other `aria-*` attributes) via prop spreading on the root.",
+      "Scallop paths use `currentColor`, so tone tokens and `className` color utilities both work.",
+      "The `shimmer` variant uses Motion to sweep a highlight across the scallop (0.5s pass, 1.5s pause between repeats), mounts only after hydration, and automatically falls back to static when `prefers-reduced-motion` is enabled.",
+      'Non-decorative badges use `role="img"` with `aria-label`; inner SVG shapes are `aria-hidden`.',
+      "Check stroke width scales with badge size for crisp rendering at `sm` through custom pixel values.",
       "Install path is `components/ui/verified-badge.tsx` with the `VerifiedBadge` export.",
     ],
   },

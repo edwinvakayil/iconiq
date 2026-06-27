@@ -477,7 +477,8 @@ const REGISTRY_UI_META: Record<
   },
   "verified-badge": {
     title: "Verified Badge",
-    description: "X-style verified badge with shimmer or static variants.",
+    description:
+      "X-style verified scallop with shimmer or static variants, size presets, brand/gold/neutral tones, and reduced-motion aware animation.",
     dependencies: ["motion"],
   },
   "favicon-badge": {
