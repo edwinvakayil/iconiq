@@ -593,24 +593,26 @@ export function CardPreview() {
 /** Skeleton docs preview uses ShimmerSkeleton (registry export name). */
 export const skeletonPreviewCode = `"use client";
 
-import { ShimmerSkeleton } from "@/components/ui/skeleton";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export function SkeletonPreview() {
   return (
-    <div className="flex min-h-[300px] w-full items-center justify-center px-4 py-10">
-      <div className="w-full max-w-sm rounded-lg bg-card p-4">
-        <div className="flex items-center gap-3">
-          <ShimmerSkeleton className="h-11 w-11" rounded="full" />
-          <div className="flex-1 space-y-2">
-            <ShimmerSkeleton className="h-4 w-32" />
-            <ShimmerSkeleton className="h-3 w-24" rounded="sm" />
-          </div>
+    <div
+      aria-busy="true"
+      aria-label="Loading profile"
+      className="w-full max-w-sm rounded-lg bg-card p-4"
+    >
+      <div className="flex items-center gap-3">
+        <Skeleton className="h-11 w-11" rounded="full" />
+        <div className="flex-1 space-y-2">
+          <Skeleton className="h-4 w-32" />
+          <Skeleton className="h-3 w-24" rounded="sm" />
         </div>
-        <div className="mt-5 space-y-2.5">
-          <ShimmerSkeleton className="h-3 w-full" />
-          <ShimmerSkeleton className="h-3 w-[92%]" />
-          <ShimmerSkeleton className="h-3 w-[78%]" />
-        </div>
+      </div>
+      <div className="mt-5 space-y-2.5">
+        <Skeleton className="h-3 w-full" />
+        <Skeleton className="h-3 w-[92%]" />
+        <Skeleton className="h-3 w-[78%]" />
       </div>
     </div>
   );

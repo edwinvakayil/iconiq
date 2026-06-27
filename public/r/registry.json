@@ -1376,7 +1376,7 @@
       "dependencies": [],
       "devDependencies": [],
       "title": "Skeleton",
-      "description": "Shimmer loading placeholder with configurable radius, optional animation, and zero runtime dependencies.",
+      "description": "Shimmer or fade loading placeholder with preset helpers, configurable radius, optional animation, and embedded theme tokens.",
       "files": [
         {
           "path": "skeleton.tsx",

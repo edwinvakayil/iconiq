@@ -16,7 +16,7 @@ import { DiaText } from "@/registry/dia-text";
 import { Accordion, type AccordionItem } from "@/registry/r-accordion";
 import { Progress } from "@/registry/r-progress";
 import type { RadioOption } from "@/registry/r-radio-group";
-import { ShimmerSkeleton } from "@/registry/skeleton";
+import { Skeleton } from "@/registry/skeleton";
 
 const featuredAccordionItems: AccordionItem[] = [
   {
@@ -205,20 +205,20 @@ export function HomeFeaturedShowcase() {
         >
           <div className="w-full max-w-[360px] p-4">
             <div className="flex items-center gap-3">
-              <ShimmerSkeleton className="size-11" rounded="full" />
+              <Skeleton className="size-11" rounded="full" />
               <div className="min-w-0 flex-1 space-y-2">
-                <ShimmerSkeleton className="h-3.5 w-28" />
-                <ShimmerSkeleton className="h-3 w-20" rounded="full" />
+                <Skeleton className="h-3.5 w-28" />
+                <Skeleton className="h-3 w-20" rounded="full" />
               </div>
             </div>
             <div className="mt-4 space-y-2.5">
-              <ShimmerSkeleton className="h-3.5 w-full" />
-              <ShimmerSkeleton className="h-3.5 w-[88%]" />
-              <ShimmerSkeleton className="h-3.5 w-[68%]" />
+              <Skeleton className="h-3.5 w-full" />
+              <Skeleton className="h-3.5 w-[88%]" />
+              <Skeleton className="h-3.5 w-[68%]" />
             </div>
             <div className="mt-4 flex gap-2">
-              <ShimmerSkeleton className="h-9 flex-1" rounded="lg" />
-              <ShimmerSkeleton className="h-9 w-24" rounded="lg" />
+              <Skeleton className="h-9 flex-1" rounded="lg" />
+              <Skeleton className="h-9 w-24" rounded="lg" />
             </div>
           </div>
         </ShowcaseCard>

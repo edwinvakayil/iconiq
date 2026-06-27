@@ -6745,10 +6745,17 @@ const rollingDigitsApiDetails: DetailItem[] = [
 const skeletonApiDetails: DetailItem[] = [
   {
     id: "skeleton",
-    title: "ShimmerSkeleton",
+    title: "Skeleton",
     summary:
-      "Lightweight loading placeholder that renders a muted block with an optional shimmer pass layered above it.",
+      "Loading placeholder that renders a muted block with shimmer or fade animation, sensible defaults, and preset helpers for common shapes.",
     fields: [
+      field({
+        name: "variant",
+        type: '"shimmer" | "fade"',
+        defaultValue: "shimmer",
+        description:
+          "Chooses between the moving shimmer sweep and a softer opacity fade.",
+      }),
       field({
         name: "rounded",
         type: '"none" | "sm" | "md" | "lg" | "full"',
@@ -6761,7 +6768,27 @@ const skeletonApiDetails: DetailItem[] = [
         type: "boolean",
         defaultValue: "true",
         description:
-          "Controls whether the shimmer overlay is rendered. Set it to false when you want a static loading block.",
+          "Controls whether the selected animation variant is rendered. Set it to false for a static loading block.",
+      }),
+      field({
+        name: "duration",
+        type: "number",
+        defaultValue: "1.6",
+        description:
+          "Animation cycle duration in seconds. Defaults to 1.6s for shimmer and 2.4s for fade.",
+      }),
+      field({
+        name: "decorative",
+        type: "boolean",
+        defaultValue: "true",
+        description:
+          "When true, the skeleton is hidden from assistive tech so grouped placeholders do not repeat loading announcements.",
+      }),
+      field({
+        name: "label",
+        type: "string | null",
+        description:
+          "Accessible label used when `decorative={false}`. Pass `null` to force a hidden decorative skeleton.",
       }),
       field({
         name: "className",
@@ -6777,19 +6804,50 @@ const skeletonApiDetails: DetailItem[] = [
       }),
     ],
     notes: [
-      "The component always renders role='status' and aria-label='Loading' on the root placeholder.",
-      "The shimmer uses a local keyframes definition and a gradient overlay span, so there are no runtime dependencies beyond React.",
-      "Use rounded='full' for avatar placeholders and the default rounded='md' or rounded='lg' for cards and text blocks.",
+      "The root defaults to `h-4 w-full`, so skeletons work without extra sizing for simple text lines.",
+      'Decorative skeletons render `aria-hidden`. Standalone loading blocks can set `decorative={false}` to expose `role="status"`, `aria-live="polite"`, and a label.',
+      "Theme tokens are embedded on the root node, so colors resolve out of the box without installing iconiq-theme separately.",
+      "Shimmer and fade styles are injected once on the client through a scoped keyframe helper, so lists of skeletons do not duplicate `<style>` tags.",
+      "Animations pause automatically when `prefers-reduced-motion: reduce` is enabled.",
+      "Preset exports `SkeletonAvatar`, `SkeletonText`, and `SkeletonButton` cover the most common placeholder shapes.",
+      "`ShimmerSkeleton` remains available as a backwards-compatible alias.",
     ],
   },
   {
-    id: "skeleton-registry",
-    title: "Registry bundle",
+    id: "skeleton-presets",
+    title: "Preset helpers",
     summary:
-      "Install the exact registry entry shown on the right when you want the component file with no additional runtime dependencies.",
-    notes: ["No runtime dependencies."],
-    registryPath: "skeleton.json",
+      "Opinionated wrappers around the base skeleton for avatar, text-line, and button placeholders.",
+    fields: [
+      field({
+        name: "SkeletonAvatar",
+        type: "Component",
+        description: "Renders a circular `size-10` avatar placeholder.",
+      }),
+      field({
+        name: "SkeletonText",
+        type: "Component",
+        description: "Renders a `h-3` text-line placeholder.",
+      }),
+      field({
+        name: "SkeletonButton",
+        type: "Component",
+        description:
+          'Renders a `h-9 w-24` button placeholder with `rounded="lg"`.',
+      }),
+    ],
+    notes: [
+      "Each preset accepts the same props as `Skeleton` except where the shape is fixed by the helper.",
+    ],
   },
+  registryItem(
+    "skeleton.json",
+    [],
+    [
+      "No runtime dependencies beyond React.",
+      "Requires the standard shadcn `cn` helper from `@/lib/utils` (clsx + tailwind-merge).",
+    ]
+  ),
 ];
 
 const tabsApiDetails: DetailItem[] = [

@@ -676,7 +676,7 @@ const REGISTRY_UI_META: Record<
   skeleton: {
     title: "Skeleton",
     description:
-      "Shimmer loading placeholder with configurable radius, optional animation, and zero runtime dependencies.",
+      "Shimmer or fade loading placeholder with preset helpers, configurable radius, optional animation, and embedded theme tokens.",
   },
   slider: {
     title: "Slider",
