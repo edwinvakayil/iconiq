@@ -72,10 +72,7 @@ function HomeRollingDigitsShowcase() {
     <div className="flex min-h-[150px] w-full items-center justify-center px-4">
       <div className="flex max-w-sm flex-wrap items-center justify-center gap-x-1.5 gap-y-2 text-balance text-center font-medium text-foreground text-lg leading-snug tracking-tight">
         <span>Early access opens in</span>
-        <span
-          aria-hidden
-          className="inline-flex translate-y-px items-center align-middle"
-        >
+        <span className="inline-flex translate-y-px items-center align-middle">
           <RollingDigits pad={2} startOnView={false} value={days} />
         </span>
         <span>days.</span>

@@ -143,7 +143,8 @@ const REGISTRY_UI_META: Record<
   },
   "rolling-digits": {
     title: "Rolling Digits",
-    description: "Spring-animated digit counter with blur and scale.",
+    description:
+      "Spring-animated digit counter with transform, opacity, and vertical motion.",
     dependencies: ["motion"],
   },
   drawer: {

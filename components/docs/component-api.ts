@@ -6588,7 +6588,7 @@ const rollingDigitsApiDetails: DetailItem[] = [
     id: "rolling-digits",
     title: "RollingDigits",
     summary:
-      "Inline animated counter that swaps digits with spring-driven blur, scale, and vertical motion while exiting the previous character.",
+      "Inline animated counter that swaps digits with spring-driven transform, opacity, and vertical motion while exiting the previous character.",
     fields: [
       field({
         name: "value",
@@ -6601,7 +6601,7 @@ const rollingDigitsApiDetails: DetailItem[] = [
         name: "pad",
         type: "number",
         description:
-          "Minimum digit width passed to `String.padStart`. Useful for clock-style or fixed-width counters.",
+          "Minimum digit count. Applied with `padStart` for plain numbers, or through `minimumIntegerDigits` when `locale` is enabled.",
       }),
       field({
         name: "animationDelay",
@@ -6609,6 +6609,32 @@ const rollingDigitsApiDetails: DetailItem[] = [
         defaultValue: "80",
         description:
           "Milliseconds between queued value steps when `value` changes faster than the animation can finish.",
+      }),
+      field({
+        name: "stagger",
+        type: "number",
+        description:
+          "Deprecated. Seconds between queued steps. Use `animationDelay` in milliseconds instead.",
+      }),
+      field({
+        name: "coalesceUpdates",
+        type: "boolean",
+        defaultValue: "false",
+        description:
+          "When true, rapid `value` updates replace the pending queue with the latest value instead of stepping through every intermediate update.",
+      }),
+      field({
+        name: "onAnimationComplete",
+        type: "() => void",
+        description:
+          "Called when the displayed value catches up to the latest `value` prop.",
+      }),
+      field({
+        name: "ariaLive",
+        type: 'boolean | "polite" | "assertive" | "off"',
+        defaultValue: "true",
+        description:
+          "Controls `aria-live` on the screen-reader layer. `true` maps to `polite`; `false` and `off` disable announcements.",
       }),
       field({
         name: "startOnView",
@@ -6619,15 +6645,15 @@ const rollingDigitsApiDetails: DetailItem[] = [
       }),
       field({
         name: "locale",
-        type: "boolean",
+        type: "true | string | Intl.NumberFormatOptions",
         description:
-          "When true, formats the rounded value with `toLocaleString()` before splitting digits.",
+          "Locale formatting. `locale` uses the runtime default locale, a string sets the locale tag, and an object is passed to `Intl.NumberFormat`. When combined with `pad`, padding is applied through `minimumIntegerDigits`.",
       }),
       field({
         name: "format",
         type: "(value: number) => string",
         description:
-          "Custom formatter that runs before padding. Overrides `locale` when both are provided.",
+          "Custom formatter that runs after rounding. Overrides `locale` when both are provided.",
       }),
       field({
         name: "gap",
@@ -6681,8 +6707,14 @@ const rollingDigitsApiDetails: DetailItem[] = [
       field({
         name: "enterScale",
         type: "number",
-        defaultValue: "0.7",
+        defaultValue: "0.84",
         description: "Starting scale applied when a digit enters.",
+      }),
+      field({
+        name: "exitScale",
+        type: "number",
+        defaultValue: "0.84",
+        description: "Ending scale applied when a digit exits.",
       }),
       field({
         name: "className",
@@ -6698,10 +6730,11 @@ const rollingDigitsApiDetails: DetailItem[] = [
       }),
     ],
     notes: [
+      "Export `RollingDigitsText` when you already have a formatted string such as `12:34:56`.",
       "Non-digit characters from locale separators or custom formatters render as static spans and do not animate.",
-      "The visual layer is `aria-hidden`; screen readers receive the formatted number through an `sr-only` span.",
+      "The visual layer is `aria-hidden`; screen readers receive the formatted number through an `sr-only` span with `aria-live`.",
       "When `startOnView` is enabled, the ticker displays zero until the container crosses the viewport threshold (`once: true`, `amount: 0.6`).",
-      "Each digit keeps a short exit queue so the previous character can slide out while the next one springs into place.",
+      "Digit positions use right-aligned stable keys so rolls stay tied to place value when separators appear.",
       "Digit rolls use transform and opacity only so Safari and other WebKit browsers avoid filter-blur compositing glitches.",
       "Layer symbols such as `%` or `$` beside the component in your layout, or include them through `format`.",
     ],

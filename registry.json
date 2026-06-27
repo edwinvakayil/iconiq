@@ -1316,7 +1316,7 @@
       "dependencies": ["motion"],
       "devDependencies": [],
       "title": "Rolling Digits",
-      "description": "Spring-animated digit counter with blur and scale.",
+      "description": "Spring-animated digit counter with transform, opacity, and vertical motion.",
       "files": [
         {
           "path": "rolling-digits.tsx",
