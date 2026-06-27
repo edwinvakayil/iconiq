@@ -1,9 +1,21 @@
 "use client";
 
-import { format, startOfMonth } from "date-fns";
-import { CalendarIcon } from "lucide-react";
-import { motion } from "motion/react";
-import { useEffect, useId, useRef, useState } from "react";
+import { format, type Locale, startOfMonth } from "date-fns";
+import { CalendarIcon, X } from "lucide-react";
+import { motion, useReducedMotion } from "motion/react";
+import {
+  type ForwardedRef,
+  forwardRef,
+  type MouseEvent,
+  type RefObject,
+  useCallback,
+  useEffect,
+  useId,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
+import { createPortal } from "react-dom";
 
 import { Calendar, type CalendarProps } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
@@ -11,153 +23,736 @@ import { cn } from "@/lib/utils";
 const datePickerTriggerCornerClassName =
   "rounded-lg supports-[corner-shape:squircle]:corner-squircle supports-[corner-shape:squircle]:rounded-[11px]";
 
+export const DATE_PICKER_PANEL_WIDTH = {
+  sm: 212,
+  md: 240,
+  lg: 282,
+} as const;
+
+export type DatePickerAlign = "start" | "end";
+export type DatePickerSide = "top" | "bottom";
+
+export const DEFAULT_DATE_PICKER_FORMAT = "EEE, MMM d, yyyy";
+export const DEFAULT_DATE_PICKER_ARIA_FORMAT = "PPPP";
+const DATE_PICKER_FORM_VALUE_FORMAT = "yyyy-MM-dd";
+
+const PANEL_GAP_PX = 12;
+const VIEWPORT_PADDING_PX = 8;
+const FOCUSABLE_SELECTOR =
+  'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
+export function getDatePickerPanelWidth(
+  size: NonNullable<CalendarProps["size"]> = "md"
+): number {
+  return DATE_PICKER_PANEL_WIDTH[size];
+}
+
+export function resolveDatePickerViewMonth(
+  value: Date | null | undefined,
+  selected: Date | null | undefined,
+  fallback: Date = new Date()
+): Date {
+  const source = value !== undefined ? value : selected;
+  return startOfMonth(source ?? fallback);
+}
+
+export function formatDatePickerLabel(
+  date: Date,
+  dateFormat: string,
+  locale?: Locale
+): string {
+  const options = locale ? { locale } : undefined;
+
+  try {
+    return format(date, dateFormat, options);
+  } catch {
+    return format(date, DEFAULT_DATE_PICKER_FORMAT, options);
+  }
+}
+
+export function getDatePickerFormValue(date: Date): string {
+  return format(date, DATE_PICKER_FORM_VALUE_FORMAT);
+}
+
+export function getDatePickerPanelPosition({
+  align,
+  gap = PANEL_GAP_PX,
+  panelHeight,
+  panelWidth,
+  side,
+  triggerRect,
+  viewportHeight = typeof window !== "undefined" ? window.innerHeight : 0,
+  viewportWidth = typeof window !== "undefined" ? window.innerWidth : 0,
+}: {
+  align: DatePickerAlign;
+  gap?: number;
+  panelHeight: number;
+  panelWidth: number;
+  side: DatePickerSide;
+  triggerRect: Pick<DOMRect, "bottom" | "left" | "right" | "top">;
+  viewportHeight?: number;
+  viewportWidth?: number;
+}): { left: number; side: DatePickerSide; top: number } {
+  const spaceBelow = viewportHeight - triggerRect.bottom;
+  const spaceAbove = triggerRect.top;
+
+  let resolvedSide = side;
+
+  if (
+    panelHeight > 0 &&
+    side === "bottom" &&
+    spaceBelow < panelHeight + gap &&
+    spaceAbove > spaceBelow
+  ) {
+    resolvedSide = "top";
+  } else if (
+    panelHeight > 0 &&
+    side === "top" &&
+    spaceAbove < panelHeight + gap &&
+    spaceBelow > spaceAbove
+  ) {
+    resolvedSide = "bottom";
+  }
+
+  const top =
+    resolvedSide === "bottom"
+      ? triggerRect.bottom + gap
+      : triggerRect.top - panelHeight - gap;
+
+  let left =
+    align === "start" ? triggerRect.left : triggerRect.right - panelWidth;
+
+  left = Math.max(
+    VIEWPORT_PADDING_PX,
+    Math.min(left, viewportWidth - panelWidth - VIEWPORT_PADDING_PX)
+  );
+
+  return { left, side: resolvedSide, top };
+}
+
+type DatePickerCalendarProps = Omit<
+  CalendarProps,
+  | "selected"
+  | "defaultSelected"
+  | "onSelect"
+  | "month"
+  | "onMonthChange"
+  | "mode"
+  | "range"
+  | "defaultRange"
+  | "onRangeSelect"
+>;
+
 export type DatePickerProps = {
   value?: Date | null;
-  onChange?: (date: Date) => void;
+  defaultValue?: Date | null;
+  onChange?: (date: Date | null) => void;
   className?: string;
   defaultOpen?: boolean;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
   placeholder?: string;
+  disabled?: boolean;
+  clearable?: boolean;
+  closeOnSelect?: boolean;
+  dateFormat?: string;
+  name?: string;
+  id?: string;
+  "aria-invalid"?: boolean;
+  side?: DatePickerSide;
+  align?: DatePickerAlign;
   /** Props forwarded to the embedded Calendar, except selection and month state. */
-  calendarProps?: Omit<
-    CalendarProps,
-    "selected" | "defaultSelected" | "onSelect" | "month" | "onMonthChange"
-  >;
+  calendarProps?: DatePickerCalendarProps;
 };
 
-export function AnimatedDatePicker({
-  value,
-  onChange,
-  className,
-  defaultOpen = false,
-  placeholder = "Select a date",
-  calendarProps,
-}: DatePickerProps) {
-  const isValueControlled = value !== undefined;
-  const rootRef = useRef<HTMLDivElement>(null);
-  const panelId = useId();
-  const [open, setOpen] = useState(defaultOpen);
-  const [hasRenderedPanel, setHasRenderedPanel] = useState(defaultOpen);
-  const [internalSelected, setInternalSelected] = useState<Date | undefined>(
-    value ?? undefined
-  );
-  const [viewMonth, setViewMonth] = useState<Date>(
-    startOfMonth(value ?? new Date())
-  );
+type PanelPlacement = {
+  left: number;
+  top: number;
+  width: number;
+};
 
-  const selected = isValueControlled ? (value ?? undefined) : internalSelected;
-
+function useFocusTrap(
+  containerRef: RefObject<HTMLElement | null>,
+  returnFocusRef: RefObject<HTMLElement | null>,
+  active: boolean
+) {
   useEffect(() => {
-    if (!isValueControlled) return;
+    if (!(active && containerRef.current)) return;
 
-    if (value) {
-      setViewMonth(startOfMonth(value));
-    }
-  }, [isValueControlled, value]);
+    const container = containerRef.current;
+    let frameId = 0;
 
+    const focusFirst = () => {
+      const focusable = Array.from(
+        container.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR)
+      );
+
+      if (focusable.length === 0) {
+        frameId = window.requestAnimationFrame(focusFirst);
+        return;
+      }
+
+      focusable[0]?.focus();
+    };
+
+    frameId = window.requestAnimationFrame(focusFirst);
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key !== "Tab" || !containerRef.current) return;
+
+      const focusable = Array.from(
+        containerRef.current.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR)
+      );
+
+      if (focusable.length === 0) return;
+
+      const first = focusable[0];
+      const last = focusable.at(-1);
+
+      if (event.shiftKey) {
+        if (document.activeElement === first) {
+          event.preventDefault();
+          last?.focus();
+        }
+        return;
+      }
+
+      if (document.activeElement === last) {
+        event.preventDefault();
+        first?.focus();
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.cancelAnimationFrame(frameId);
+      document.removeEventListener("keydown", handleKeyDown);
+      returnFocusRef.current?.focus();
+    };
+  }, [active, containerRef, returnFocusRef]);
+}
+
+function useDismissiblePanel({
+  open,
+  rootRef,
+  panelRef,
+  setOpenState,
+}: {
+  open: boolean;
+  rootRef: RefObject<HTMLDivElement | null>;
+  panelRef: RefObject<HTMLDivElement | null>;
+  setOpenState: (nextOpen: boolean) => void;
+}) {
   useEffect(() => {
     if (!open) return;
 
-    if (selected) {
-      setViewMonth(startOfMonth(selected));
-    }
-
-    setHasRenderedPanel(true);
-  }, [open, selected]);
-
-  useEffect(() => {
-    if (!open) return;
-
-    const handlePointerDown = (event: MouseEvent) => {
+    const handlePointerDown = (event: PointerEvent) => {
       const target = event.target as Node;
       if (rootRef.current?.contains(target)) return;
-      setOpen(false);
+      if (panelRef.current?.contains(target)) return;
+      setOpenState(false);
     };
 
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
-        setOpen(false);
+        event.preventDefault();
+        setOpenState(false);
       }
     };
 
-    document.addEventListener("mousedown", handlePointerDown);
+    document.addEventListener("pointerdown", handlePointerDown);
     document.addEventListener("keydown", handleKeyDown);
 
     return () => {
-      document.removeEventListener("mousedown", handlePointerDown);
+      document.removeEventListener("pointerdown", handlePointerDown);
       document.removeEventListener("keydown", handleKeyDown);
     };
-  }, [open]);
+  }, [open, panelRef, rootRef, setOpenState]);
+}
 
-  const handleSelect = (date: Date | null) => {
-    if (date === null) return;
+function usePanelPlacement({
+  align,
+  open,
+  panelRef,
+  panelWidth,
+  side,
+  triggerRef,
+}: {
+  align: DatePickerAlign;
+  open: boolean;
+  panelRef: RefObject<HTMLDivElement | null>;
+  panelWidth: number;
+  side: DatePickerSide;
+  triggerRef: RefObject<HTMLButtonElement | null>;
+}) {
+  const [panelPlacement, setPanelPlacement] = useState<PanelPlacement | null>(
+    null
+  );
 
-    if (!isValueControlled) {
-      setInternalSelected(date);
+  const updatePanelPlacement = useCallback(() => {
+    const trigger = triggerRef.current;
+    const panel = panelRef.current;
+    if (!(trigger && panel)) return;
+
+    const panelHeight = panel.offsetHeight;
+    if (panelHeight === 0) return;
+
+    const position = getDatePickerPanelPosition({
+      align,
+      panelHeight,
+      panelWidth,
+      side,
+      triggerRect: trigger.getBoundingClientRect(),
+    });
+
+    setPanelPlacement({
+      left: position.left,
+      top: position.top,
+      width: panelWidth,
+    });
+  }, [align, panelRef, panelWidth, side, triggerRef]);
+
+  useLayoutEffect(() => {
+    if (!open) return;
+
+    updatePanelPlacement();
+
+    const frameId = window.requestAnimationFrame(updatePanelPlacement);
+
+    window.addEventListener("resize", updatePanelPlacement);
+    window.addEventListener("scroll", updatePanelPlacement, true);
+
+    const panel = panelRef.current;
+    const resizeObserver =
+      panel && typeof ResizeObserver !== "undefined"
+        ? new ResizeObserver(updatePanelPlacement)
+        : null;
+
+    if (panel && resizeObserver) {
+      resizeObserver.observe(panel);
     }
 
-    setViewMonth(startOfMonth(date));
-    onChange?.(date);
-  };
+    return () => {
+      window.cancelAnimationFrame(frameId);
+      window.removeEventListener("resize", updatePanelPlacement);
+      window.removeEventListener("scroll", updatePanelPlacement, true);
+      resizeObserver?.disconnect();
+    };
+  }, [open, panelRef, updatePanelPlacement]);
 
-  const { className: calendarClassName, ...restCalendarProps } =
-    calendarProps ?? {};
+  return panelPlacement;
+}
 
+function mergeTriggerRef(
+  node: HTMLButtonElement | null,
+  triggerRef: RefObject<HTMLButtonElement | null>,
+  ref: ForwardedRef<HTMLButtonElement>
+) {
+  triggerRef.current = node;
+
+  if (typeof ref === "function") {
+    ref(node);
+    return;
+  }
+
+  if (ref) {
+    ref.current = node;
+  }
+}
+
+type DatePickerTriggerProps = {
+  ariaInvalid?: boolean;
+  ariaLabel: string;
+  clearable: boolean;
+  disabled: boolean;
+  id?: string;
+  labelId: string;
+  onClear: (event: MouseEvent<HTMLButtonElement>) => void;
+  onToggle: () => void;
+  open: boolean;
+  panelId: string;
+  placeholder: string;
+  selected: Date | null;
+  setTriggerRef: (node: HTMLButtonElement | null) => void;
+  triggerLabel: string;
+};
+
+function DatePickerTrigger({
+  ariaInvalid,
+  ariaLabel,
+  clearable,
+  disabled,
+  id,
+  labelId,
+  onClear,
+  onToggle,
+  open,
+  panelId,
+  selected,
+  setTriggerRef,
+  triggerLabel,
+}: DatePickerTriggerProps) {
   return (
     <div
-      className={cn("relative w-full max-w-[240px]", className)}
-      ref={rootRef}
+      className={cn(
+        "group flex w-full items-center border border-border bg-card text-left text-foreground text-sm transition-all focus-within:border-foreground/30 hover:border-foreground/30",
+        ariaInvalid && "border-destructive",
+        disabled && "cursor-not-allowed opacity-50",
+        datePickerTriggerCornerClassName
+      )}
     >
       <button
-        aria-controls={panelId}
+        aria-controls={open ? panelId : undefined}
         aria-expanded={open}
         aria-haspopup="dialog"
-        aria-label={
-          selected ? `Selected date, ${format(selected, "PPPP")}` : placeholder
-        }
-        className={cn(
-          "group flex w-full items-center border border-border bg-card px-4 py-3 text-left text-foreground text-sm transition-all hover:border-foreground/30",
-          datePickerTriggerCornerClassName
-        )}
-        onClick={() => setOpen((current) => !current)}
+        aria-invalid={ariaInvalid}
+        aria-label={ariaLabel}
+        className="flex min-w-0 flex-1 items-center gap-3 px-4 py-3 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed"
+        disabled={disabled}
+        id={id}
+        onClick={onToggle}
+        ref={setTriggerRef}
         type="button"
       >
-        <span className="flex min-w-0 items-center gap-3">
-          <CalendarIcon className="h-4 w-4 shrink-0 text-muted-foreground transition-colors group-hover:text-foreground" />
-          <span className="truncate font-medium tracking-tight">
-            {selected ? format(selected, "EEE, MMM d, yyyy") : placeholder}
-          </span>
+        <CalendarIcon className="h-4 w-4 shrink-0 text-muted-foreground transition-colors group-hover:text-foreground group-disabled:text-muted-foreground" />
+        <span
+          className={cn(
+            "truncate font-medium tracking-tight",
+            !selected && "text-muted-foreground"
+          )}
+          id={labelId}
+        >
+          {triggerLabel}
         </span>
       </button>
 
-      {hasRenderedPanel && (
-        <motion.div
-          animate={{
-            opacity: open ? 1 : 0,
-            y: open ? 0 : -6,
-          }}
-          aria-hidden={!open}
-          className={cn(
-            "absolute top-full left-0 z-20 mt-3 w-full",
-            !open && "pointer-events-none"
-          )}
-          id={panelId}
-          initial={false}
-          role="dialog"
-          transition={{ type: "spring", stiffness: 260, damping: 28 }}
-        >
-          <Calendar
-            className={calendarClassName}
-            month={viewMonth}
-            onMonthChange={(month) => setViewMonth(startOfMonth(month))}
-            onSelect={handleSelect}
-            selected={selected}
-            size="md"
-            {...restCalendarProps}
-          />
-        </motion.div>
-      )}
+      {clearable && selected && !disabled ? (
+        <>
+          <span aria-hidden className="mx-1 h-4 w-px shrink-0 bg-border/80" />
+          <button
+            aria-label="Clear selected date"
+            className="mr-3 flex shrink-0 items-center justify-center text-muted-foreground/60 transition-colors hover:text-foreground focus-visible:text-foreground focus-visible:outline-none"
+            onClick={onClear}
+            type="button"
+          >
+            <X className="h-3.5 w-3.5" strokeWidth={2.5} />
+          </button>
+        </>
+      ) : null}
     </div>
   );
 }
+
+type DatePickerPanelProps = {
+  calendarClassName?: string;
+  calendarSize: NonNullable<CalendarProps["size"]>;
+  hasRenderedPanel: boolean;
+  labelId: string;
+  locale?: Locale;
+  onMonthChange: (month: Date) => void;
+  onSelect: (date: Date | null) => void;
+  open: boolean;
+  panelId: string;
+  panelPlacement: PanelPlacement | null;
+  panelRef: RefObject<HTMLDivElement | null>;
+  panelTransition:
+    | { duration: number }
+    | { type: "spring"; stiffness: number; damping: number };
+  panelWidth: number;
+  reduceMotion: boolean | null;
+  restCalendarProps: Omit<
+    DatePickerCalendarProps,
+    "className" | "locale" | "size"
+  >;
+  selected: Date | null;
+  viewMonth: Date;
+};
+
+function DatePickerPanel({
+  calendarClassName,
+  calendarSize,
+  hasRenderedPanel,
+  labelId,
+  locale,
+  onMonthChange,
+  onSelect,
+  open,
+  panelId,
+  panelPlacement,
+  panelRef,
+  panelTransition,
+  panelWidth,
+  reduceMotion,
+  restCalendarProps,
+  selected,
+  viewMonth,
+}: DatePickerPanelProps) {
+  if (!hasRenderedPanel) return null;
+
+  return (
+    <motion.div
+      animate={{
+        opacity: open ? 1 : 0,
+        y: open || reduceMotion ? 0 : -6,
+      }}
+      aria-hidden={!open}
+      aria-labelledby={labelId}
+      aria-modal="true"
+      className={cn("fixed z-50", !open && "pointer-events-none")}
+      id={panelId}
+      initial={false}
+      ref={panelRef}
+      role="dialog"
+      style={
+        panelPlacement
+          ? {
+              left: panelPlacement.left,
+              top: panelPlacement.top,
+              width: panelPlacement.width,
+              visibility: open ? undefined : "hidden",
+            }
+          : { visibility: "hidden", width: panelWidth }
+      }
+      transition={panelTransition}
+    >
+      <Calendar
+        className={calendarClassName}
+        locale={locale}
+        mode="single"
+        month={viewMonth}
+        onMonthChange={onMonthChange}
+        onSelect={onSelect}
+        selected={selected}
+        size={calendarSize}
+        {...restCalendarProps}
+      />
+    </motion.div>
+  );
+}
+
+export const AnimatedDatePicker = forwardRef<
+  HTMLButtonElement,
+  DatePickerProps
+>(function AnimatedDatePicker(props, ref) {
+  const {
+    value,
+    defaultValue = null,
+    onChange,
+    className,
+    defaultOpen = false,
+    open: openProp,
+    onOpenChange,
+    placeholder = "Select a date",
+    disabled = false,
+    clearable = false,
+    closeOnSelect = true,
+    dateFormat = DEFAULT_DATE_PICKER_FORMAT,
+    name,
+    id,
+    "aria-invalid": ariaInvalid,
+    side = "bottom",
+    align = "start",
+    calendarProps,
+  } = props;
+
+  const isValueControlled = value !== undefined;
+  const isOpenControlled = openProp !== undefined;
+  const reduceMotion = useReducedMotion();
+
+  const rootRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
+
+  const panelId = useId();
+  const labelId = useId();
+
+  const [mounted, setMounted] = useState(false);
+  const [uncontrolledOpen, setUncontrolledOpen] = useState(defaultOpen);
+  const [hasRenderedPanel, setHasRenderedPanel] = useState(defaultOpen);
+  const [internalSelected, setInternalSelected] = useState<Date | null>(
+    defaultValue
+  );
+  const [viewMonth, setViewMonth] = useState<Date>(() =>
+    resolveDatePickerViewMonth(value, defaultValue)
+  );
+
+  const open = isOpenControlled ? Boolean(openProp) : uncontrolledOpen;
+  const selected = isValueControlled ? (value ?? null) : internalSelected;
+
+  const {
+    className: calendarClassName,
+    locale,
+    size,
+    ...restCalendarProps
+  } = calendarProps ?? {};
+  const calendarSize = size ?? "md";
+  const panelWidth = getDatePickerPanelWidth(calendarSize);
+
+  const setOpenState = useCallback(
+    (nextOpen: boolean) => {
+      if (disabled && nextOpen) return;
+
+      if (!isOpenControlled) {
+        setUncontrolledOpen(nextOpen);
+      }
+
+      onOpenChange?.(nextOpen);
+    },
+    [disabled, isOpenControlled, onOpenChange]
+  );
+
+  const panelPlacement = usePanelPlacement({
+    align,
+    open,
+    panelRef,
+    panelWidth,
+    side,
+    triggerRef,
+  });
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!isValueControlled) return;
+    setViewMonth(resolveDatePickerViewMonth(value, selected));
+  }, [isValueControlled, selected, value]);
+
+  useEffect(() => {
+    if (!open) return;
+    setViewMonth(resolveDatePickerViewMonth(selected, selected));
+    setHasRenderedPanel(true);
+  }, [open, selected]);
+
+  useEffect(() => {
+    if (disabled && open) {
+      setOpenState(false);
+    }
+  }, [disabled, open, setOpenState]);
+
+  useDismissiblePanel({ open, panelRef, rootRef, setOpenState });
+  useFocusTrap(panelRef, triggerRef, open);
+
+  const handleSelect = useCallback(
+    (date: Date | null) => {
+      if (!isValueControlled) {
+        setInternalSelected(date);
+      }
+
+      if (date) {
+        setViewMonth(startOfMonth(date));
+      }
+
+      onChange?.(date);
+
+      if (closeOnSelect && date) {
+        setOpenState(false);
+      }
+    },
+    [closeOnSelect, isValueControlled, onChange, setOpenState]
+  );
+
+  const handleClear = useCallback(
+    (event: MouseEvent<HTMLButtonElement>) => {
+      event.stopPropagation();
+
+      if (!isValueControlled) {
+        setInternalSelected(null);
+      }
+
+      onChange?.(null);
+      triggerRef.current?.focus();
+    },
+    [isValueControlled, onChange]
+  );
+
+  const handleMonthChange = useCallback((month: Date) => {
+    setViewMonth(startOfMonth(month));
+  }, []);
+
+  const setTriggerRef = useCallback(
+    (node: HTMLButtonElement | null) => {
+      mergeTriggerRef(node, triggerRef, ref);
+    },
+    [ref]
+  );
+
+  const triggerLabel = selected
+    ? formatDatePickerLabel(selected, dateFormat, locale)
+    : placeholder;
+
+  const ariaLabel = selected
+    ? `Selected date, ${formatDatePickerLabel(selected, DEFAULT_DATE_PICKER_ARIA_FORMAT, locale)}`
+    : placeholder;
+
+  const panelTransition = reduceMotion
+    ? { duration: 0 }
+    : { type: "spring" as const, stiffness: 260, damping: 28 };
+
+  const panel = (
+    <DatePickerPanel
+      calendarClassName={calendarClassName}
+      calendarSize={calendarSize}
+      hasRenderedPanel={hasRenderedPanel}
+      labelId={labelId}
+      locale={locale}
+      onMonthChange={handleMonthChange}
+      onSelect={handleSelect}
+      open={open}
+      panelId={panelId}
+      panelPlacement={panelPlacement}
+      panelRef={panelRef}
+      panelTransition={panelTransition}
+      panelWidth={panelWidth}
+      reduceMotion={reduceMotion}
+      restCalendarProps={restCalendarProps}
+      selected={selected}
+      viewMonth={viewMonth}
+    />
+  );
+
+  return (
+    <div
+      className={cn("relative w-full", className)}
+      ref={rootRef}
+      style={{ maxWidth: panelWidth }}
+    >
+      {name ? (
+        <input
+          aria-hidden
+          className="sr-only"
+          name={name}
+          readOnly
+          tabIndex={-1}
+          type="text"
+          value={selected ? getDatePickerFormValue(selected) : ""}
+        />
+      ) : null}
+
+      <DatePickerTrigger
+        ariaInvalid={ariaInvalid}
+        ariaLabel={ariaLabel}
+        clearable={clearable}
+        disabled={disabled}
+        id={id}
+        labelId={labelId}
+        onClear={handleClear}
+        onToggle={() => setOpenState(!open)}
+        open={open}
+        panelId={panelId}
+        placeholder={placeholder}
+        selected={selected}
+        setTriggerRef={setTriggerRef}
+        triggerLabel={triggerLabel}
+      />
+
+      {mounted && panel ? createPortal(panel, document.body) : null}
+    </div>
+  );
+});
+
+AnimatedDatePicker.displayName = "DatePicker";
 
 export { AnimatedDatePicker as DatePicker };

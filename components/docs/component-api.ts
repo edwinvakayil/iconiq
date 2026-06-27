@@ -791,13 +791,20 @@ const datePickerApiDetails: DetailItem[] = [
     id: "date-picker",
     title: "DatePicker",
     summary:
-      "Collapsible date field with a formatted trigger button and the shared Iconiq Calendar panel underneath.",
+      "Collapsible date field with a formatted trigger button and a portaled Iconiq Calendar panel.",
     fields: [
       field({
         name: "value",
         type: "Date | null",
         description:
           "Controlled selected date. When provided, the trigger and embedded Calendar both reflect this value.",
+      }),
+      field({
+        name: "defaultValue",
+        type: "Date | null",
+        defaultValue: "null",
+        description:
+          "Initial selected date for uncontrolled usage when `value` is omitted.",
       }),
       field({
         name: "placeholder",
@@ -807,9 +814,9 @@ const datePickerApiDetails: DetailItem[] = [
       }),
       field({
         name: "onChange",
-        type: "(date: Date) => void",
+        type: "(date: Date | null) => void",
         description:
-          "Called when the user picks a date from the embedded Calendar.",
+          "Called when the user picks or clears a date from the embedded Calendar or clear control.",
       }),
       field({
         name: "className",
@@ -824,17 +831,87 @@ const datePickerApiDetails: DetailItem[] = [
           "Whether the Calendar panel starts expanded on first render.",
       }),
       field({
-        name: "calendarProps",
-        type: "Omit<CalendarProps, 'selected' | 'defaultSelected' | 'onSelect' | 'month' | 'onMonthChange'>",
+        name: "open",
+        type: "boolean",
         description:
-          "Props forwarded to the embedded Calendar, such as size, locale, disabled, bounds, modifiers, weekStartsOn, minYear, and maxYear.",
+          "Controlled open state for the Calendar panel. Pair with `onOpenChange`.",
+      }),
+      field({
+        name: "onOpenChange",
+        type: "(open: boolean) => void",
+        description:
+          "Called when the panel opens or closes from the trigger, selection, Escape, or outside click.",
+      }),
+      field({
+        name: "disabled",
+        type: "boolean",
+        defaultValue: "false",
+        description:
+          "Disables the trigger and prevents the panel from opening.",
+      }),
+      field({
+        name: "clearable",
+        type: "boolean",
+        defaultValue: "false",
+        description:
+          "Shows a clear button when a date is selected so users can reset to `null`.",
+      }),
+      field({
+        name: "closeOnSelect",
+        type: "boolean",
+        defaultValue: "true",
+        description: "Whether picking a date closes the panel automatically.",
+      }),
+      field({
+        name: "dateFormat",
+        type: "string",
+        defaultValue: "EEE, MMM d, yyyy",
+        description:
+          "date-fns format string for the trigger label. Uses `calendarProps.locale` when provided.",
+      }),
+      field({
+        name: "name",
+        type: "string",
+        description:
+          "Optional form field name. Renders a hidden input with the selected ISO date.",
+      }),
+      field({
+        name: "id",
+        type: "string",
+        description: "Optional id applied to the trigger button.",
+      }),
+      field({
+        name: "aria-invalid",
+        type: "boolean",
+        description:
+          "Marks the trigger as invalid for assistive tech and applies error styling.",
+      }),
+      field({
+        name: "side",
+        type: '"top" | "bottom"',
+        defaultValue: "bottom",
+        description:
+          "Preferred panel side relative to the trigger. Flips when there is not enough space.",
+      }),
+      field({
+        name: "align",
+        type: '"start" | "end"',
+        defaultValue: "start",
+        description:
+          "Horizontal alignment of the portaled panel to the trigger.",
+      }),
+      field({
+        name: "calendarProps",
+        type: "Omit<CalendarProps, 'selected' | 'defaultSelected' | 'onSelect' | 'month' | 'onMonthChange' | 'mode' | 'range' | 'defaultRange' | 'onRangeSelect'>",
+        description:
+          "Props forwarded to the embedded Calendar, such as size, locale, disabled, bounds, modifiers, weekStartsOn, minYear, and maxYear. Range mode is not supported on DatePicker.",
       }),
     ],
     notes: [
       "Also exported as `AnimatedDatePicker` for backwards compatibility.",
-      "The trigger formats the selected date as `EEE, MMM d, yyyy` and toggles the panel open and closed.",
-      "Choosing a date closes the panel automatically while keeping the visible month aligned with the selected value.",
-      "Click outside or press Escape to close the panel. The embedded Calendar stays mounted after the first open to avoid repeat entrance motion.",
+      "The trigger formats the selected date with `dateFormat` and toggles the portaled panel open and closed.",
+      "Choosing a date closes the panel by default while keeping the visible month aligned with the selected value.",
+      "Click outside or press Escape to close the panel. Focus returns to the trigger and the embedded Calendar stays mounted after the first open to avoid repeat entrance motion.",
       "Install the `calendar` registry entry alongside `date-picker` so `@/components/ui/calendar` resolves in consumer apps.",
     ],
   },

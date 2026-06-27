@@ -131,7 +131,7 @@ export function ButtonGroupDemo() {
     `import { useState } from "react"\n` +
     `import { DatePicker } from "@/components/ui/date-picker"\n\n` +
     "export default function Page() {\n" +
-    "  const [value, setValue] = useState<Date | undefined>(new Date())\n" +
+    "  const [value, setValue] = useState<Date | null>(new Date())\n" +
     "  return (\n" +
     '    <div className="flex min-h-svh items-center justify-center p-8">\n' +
     "      <DatePicker onChange={setValue} value={value} />\n" +
