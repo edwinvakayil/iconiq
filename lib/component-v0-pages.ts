@@ -919,7 +919,7 @@ export default function Page() {
         <span>Right now in</span>
         <span>San Francisco</span>
         <span>it is</span>
-        <Timezone live zone="San Francisco" zoneName="abbreviation" />
+        <Timezone live showZoneLabel zone="San Francisco" zoneName="abbreviation" />
         <span>for the west coast team.</span>
       </div>
     </div>

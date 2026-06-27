@@ -1,11 +1,25 @@
 "use client";
 
-import { Timezone as RegistryTimezone } from "@/registry/timezone";
+import { forwardRef } from "react";
+
+import {
+  Timezone as RegistryTimezone,
+  getWorldTimezones as registryGetWorldTimezones,
+  resolveTimezone as registryResolveTimezone,
+} from "@/registry/timezone";
 
 type TimezoneProps = import("@/registry/timezone").TimezoneProps;
 
-function Timezone(props: TimezoneProps) {
-  return <RegistryTimezone {...props} />;
-}
+const Timezone = forwardRef<HTMLElement, TimezoneProps>(
+  function Timezone(props, ref) {
+    return <RegistryTimezone ref={ref} {...props} />;
+  }
+);
 
-export { Timezone, type TimezoneProps };
+Timezone.displayName = "Timezone";
+
+const getWorldTimezones = registryGetWorldTimezones;
+const resolveTimezone = registryResolveTimezone;
+
+export { Timezone, getWorldTimezones, resolveTimezone };
+export type { TimezoneProps };

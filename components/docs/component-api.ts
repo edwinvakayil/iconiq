@@ -6594,17 +6594,24 @@ const timezoneApiDetails: DetailItem[] = [
           "Controls whether the clock renders with a 12-hour or 24-hour display.",
       }),
       field({
-        name: "showAbbreviation",
+        name: "showZoneLabel",
         type: "boolean",
         defaultValue: "true",
         description: "When true, appends a timezone label after the clock.",
+      }),
+      field({
+        name: "showAbbreviation",
+        type: "boolean",
+        defaultValue: "true",
+        description:
+          "Deprecated alias for `showZoneLabel`. Prefer `showZoneLabel` in new code.",
       }),
       field({
         name: "zoneName",
         type: '"abbreviation" | "offset"',
         defaultValue: '"abbreviation"',
         description:
-          "Controls the label style when `showAbbreviation` is true. `abbreviation` renders IST, EST, or PST. `offset` renders GMT-style labels such as GMT+5:30.",
+          "Controls the label style when `showZoneLabel` is true. `abbreviation` renders IST, EST, or PST. `offset` renders GMT-style labels such as GMT+5:30.",
       }),
       field({
         name: "live",
@@ -6621,6 +6628,31 @@ const timezoneApiDetails: DetailItem[] = [
           "Locale passed to `Intl.DateTimeFormat` for number and time formatting.",
       }),
       field({
+        name: "fallback",
+        type: "ReactNode",
+        description:
+          "Custom content rendered when `zone` cannot be resolved. Defaults to `Unknown timezone: {zone}`.",
+      }),
+      field({
+        name: "onError",
+        type: "(zone: string) => void",
+        description:
+          "Called when `zone` cannot be resolved. Useful for logging or analytics.",
+      }),
+      field({
+        name: "animate",
+        type: "boolean",
+        defaultValue: "true",
+        description:
+          "When false, disables digit and separator motion even if reduced motion is off.",
+      }),
+      field({
+        name: "ariaLive",
+        type: 'boolean | "polite" | "assertive" | "off"',
+        description:
+          "Adds `aria-live` to a screen-reader-only layer. Defaults to `polite` for minute clocks and off for `live` second clocks.",
+      }),
+      field({
         name: "className",
         type: "string",
         description:
@@ -6629,10 +6661,14 @@ const timezoneApiDetails: DetailItem[] = [
     ],
     notes: [
       "City aliases normalize spacing and casing, so values like `San fransico` still resolve to `America/Los_Angeles`.",
+      "Curated aliases such as `portland`, `la`, and `uk` intentionally resolve to specific regional zones and may not match every user expectation.",
+      "Use `resolveTimezone(zone)` to validate user input and `getWorldTimezones()` to list every IANA timezone from the current runtime.",
       "All IANA timezones from the runtime environment are indexed automatically, including full paths like `Pacific/Kiritimati` and unique city slugs like `Africa/Abidjan`.",
       "The clock uses `suppressHydrationWarning` and client-side ticking so SSR and hydration stay stable in Next.js apps.",
+      "Multiple clocks share one global minute or second timer and pause while the document is hidden.",
       "Digit motion and zone transitions automatically disable when `prefers-reduced-motion: reduce` is enabled.",
       "Digit rolls use transform and opacity only so Safari and other WebKit browsers avoid filter-blur compositing glitches.",
+      "Colon separators pulse in `live` mode. The visual layer is `aria-hidden` when `ariaLive` is enabled.",
       "The component renders a semantic `time` element with a machine-readable `dateTime` value in the target timezone.",
       "By default the clock refreshes once per minute. Pass `live` for second-level updates in dashboards or hero copy.",
       "Unknown zones render a compact destructive fallback label instead of throwing during render.",
