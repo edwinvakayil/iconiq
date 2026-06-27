@@ -6458,26 +6458,42 @@ const spinnerApiDetails: DetailItem[] = [
     id: "spinner",
     title: "Spinner",
     summary:
-      "Default export for a lightweight loading indicator built around an output element.",
+      "Default export for a lightweight loading indicator with ring, dots, or matrix variants, size presets, and accessibility controls.",
     fields: [
       field({
         name: "variant",
-        type: '"ring" | "dots"',
+        type: '"ring" | "dots" | "matrix"',
         defaultValue: "ring",
         description:
-          "Chooses between the rotating circular border and the three bouncing dots treatment.",
+          "Chooses between the rotating ring, three bouncing dots, or a square dot-matrix sweep.",
+      }),
+      field({
+        name: "size",
+        type: '"sm" | "md" | "lg"',
+        defaultValue: "md",
+        description:
+          "Scales the spinner footprint and ring border thickness together.",
+      }),
+      field({
+        name: "decorative",
+        type: "boolean",
+        defaultValue: "false",
+        description:
+          "When true, hides the spinner from assistive tech so a parent can announce loading once.",
       }),
       field({
         name: "className",
         type: "string",
         description:
-          "Merged onto the root output element so you can resize or recolor the spinner with Tailwind utilities.",
+          "Merged onto the root span so you can fine-tune color, spacing, or layout with Tailwind utilities.",
       }),
     ],
     notes: [
-      "The ring variant uses motion.create('output'), while the dots variant renders a plain output element with animated child spans.",
-      'Both variants ship with aria-label="Loading" and aria-live="polite". The component does not currently accept a custom accessible label prop.',
-      "No additional DOM props are forwarded beyond className, so wrap the component if you need extra data attributes or inline event handlers.",
+      'The root element is a span with role="status" when the spinner announces loading on its own.',
+      "Use decorative spinners inside buttons or busy containers that already expose aria-busy and aria-label.",
+      "Ring, dots, and matrix variants share the same ref, DOM prop forwarding, and accessibility resolver.",
+      "Matrix renders a fixed 5x5 dot grid with a smooth diagonal wave driven by phase-offset CSS animation.",
+      "Prefer size over manual width classes so border thickness stays proportional.",
     ],
   },
   registryItem("spinner.json", ["motion"]),

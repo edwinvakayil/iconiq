@@ -618,6 +618,24 @@ export function SkeletonPreview() {
   );
 }`;
 
+export const spinnerPreviewCode = `"use client";
+
+import Spinner from "@/components/ui/spinner";
+
+export function SpinnerPreview() {
+  return (
+    <p className="flex max-w-xl flex-wrap items-center justify-center gap-x-1.5 gap-y-2.5 text-center text-[13px] leading-relaxed text-neutral-600 dark:text-neutral-300">
+      <span className="text-neutral-500 dark:text-neutral-400">
+        Every stall deserves a kinder signal —
+      </span>
+      <Spinner className="shrink-0" decorative size="sm" />
+      <span className="font-medium text-sky-600 dark:text-sky-400">
+        calm motion that still reads.
+      </span>
+    </p>
+  );
+}`;
+
 export const carouselPreviewSlides = [
   "Ship interfaces that feel polished from the first slide.",
   "Motion, spacing, and type that stay in sync.",
@@ -1041,6 +1059,7 @@ const COMPONENT_PREVIEW_OVERRIDES: Record<string, string> = {
   "rolling-digits": rollingDigitsPreviewCode,
   carousel: carouselPreviewCode,
   skeleton: skeletonPreviewCode,
+  spinner: spinnerPreviewCode,
   "status-dot": statusDotPreviewCode,
   timezone: timezonePreviewCode,
 };

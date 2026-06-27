@@ -711,7 +711,7 @@ const REGISTRY_UI_META: Record<
   spinner: {
     title: "Spinner",
     description:
-      "Loading indicator with an animated ring or bouncing dots. Motion; uses primary and muted theme tokens.",
+      "Loading indicator with ring, bouncing dots, or dot-matrix sweep variants. Motion; uses primary and muted theme tokens.",
     dependencies: ["motion"],
   },
   "status-dot": {
