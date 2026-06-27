@@ -1,9 +1,10 @@
 "use client";
 
 import { Autocomplete as AutocompletePrimitive } from "@base-ui/react/autocomplete";
+import { Input as InputPrimitive } from "@base-ui/react/input";
 import { ScrollArea as ScrollAreaPrimitive } from "@base-ui/react/scroll-area";
-import { ChevronsUpDown } from "lucide-react";
-import { motion } from "motion/react";
+import { ChevronsUpDown, X } from "lucide-react";
+import { motion, useReducedMotion } from "motion/react";
 import * as React from "react";
 
 import { cn } from "@/lib/utils";
@@ -24,13 +25,14 @@ type AutocompleteRootProps<Value> = Omit<
   items: readonly Value[];
 };
 
-const INSTANT_CLOSE_TRANSITION = { duration: 0 } as const;
+const INSTANT_TRANSITION = { duration: 0 } as const;
 
 type AutocompleteContextValue = {
   actionsRef: React.RefObject<AutocompletePrimitive.Root.Actions | null>;
   activeHighlightId: string;
   activeValue: unknown;
   open: boolean;
+  prefersReducedMotion: boolean;
   setActiveValue: React.Dispatch<React.SetStateAction<unknown>>;
   setOpen: (open: boolean) => void;
   skipExitAnimationRef: React.MutableRefObject<boolean>;
@@ -40,6 +42,12 @@ type DivRenderProps = React.HTMLAttributes<HTMLDivElement> & {
   children?: React.ReactNode;
   className?: string;
   ref?: React.Ref<HTMLDivElement>;
+  style?: React.CSSProperties;
+};
+
+type InputRenderProps = React.InputHTMLAttributes<HTMLInputElement> & {
+  className?: string;
+  ref?: React.Ref<HTMLInputElement>;
   style?: React.CSSProperties;
 };
 
@@ -182,6 +190,15 @@ const autocompleteListScrollbarClassName =
 const autocompleteListThumbClassName =
   "relative rounded-full bg-muted-foreground/50 bg-[color:color-mix(in_oklch,var(--ic-muted-foreground),transparent_35%)]";
 
+const autocompleteInputShellClassName =
+  "group flex h-11 w-full items-center gap-1 border border-input bg-background pl-3 pr-2 text-base transition-all sm:text-sm hover:border-ring/40 focus-within:border-ring focus-within:ring-1 focus-within:ring-ring/25 [&:has(input[aria-invalid=true])]:border-destructive [&:has(input[aria-invalid=true])]:ring-1 [&:has(input[aria-invalid=true])]:ring-destructive/20 dark:[&:has(input[aria-invalid=true])]:border-destructive/50 dark:[&:has(input[aria-invalid=true])]:ring-destructive/40";
+
+const autocompleteInputClassName =
+  "h-full w-full min-w-0 flex-1 bg-transparent text-[16px] text-foreground placeholder:text-muted-foreground focus:outline-none disabled:cursor-not-allowed sm:text-sm";
+
+const autocompletePopupPanelClassName =
+  "w-[var(--anchor-width)] max-w-[var(--available-width)] transform-gpu overflow-hidden border border-neutral-200/60 bg-white text-neutral-900 shadow-none dark:border-neutral-700/60 dark:bg-neutral-950 dark:text-neutral-100";
+
 const MAX_MENU_HEIGHT = 256;
 const VIEWPORT_PADDING = 12;
 
@@ -206,7 +223,7 @@ function Autocomplete<Value>({
   highlightItemOnHover = true,
   items,
   modal = false,
-  mode = "list",
+  onItemHighlighted,
   onOpenChange,
   open: openProp,
   openOnInputClick = false,
@@ -221,6 +238,7 @@ function Autocomplete<Value>({
   const open = isOpenControlled ? openProp : uncontrolledOpen;
   const activeHighlightId = React.useId();
   const skipExitAnimationRef = React.useRef(false);
+  const prefersReducedMotion = useReducedMotion() === true;
 
   const setOpen = React.useCallback(
     (nextOpen: boolean) => {
@@ -233,6 +251,16 @@ function Autocomplete<Value>({
       }
     },
     [isOpenControlled]
+  );
+
+  const handleItemHighlighted = React.useCallback<
+    NonNullable<AutocompletePrimitive.Root.Props<Value>["onItemHighlighted"]>
+  >(
+    (highlightedValue, eventDetails) => {
+      setActiveValue(highlightedValue);
+      onItemHighlighted?.(highlightedValue, eventDetails);
+    },
+    [onItemHighlighted]
   );
 
   const handleOpenChange = React.useCallback<
@@ -261,6 +289,7 @@ function Autocomplete<Value>({
         activeHighlightId,
         activeValue,
         open,
+        prefersReducedMotion,
         setActiveValue,
         setOpen,
         skipExitAnimationRef,
@@ -273,7 +302,7 @@ function Autocomplete<Value>({
         highlightItemOnHover={highlightItemOnHover}
         items={items}
         modal={modal}
-        mode={mode}
+        onItemHighlighted={handleItemHighlighted}
         onOpenChange={handleOpenChange}
         open={open}
         openOnInputClick={openOnInputClick}
@@ -290,27 +319,91 @@ function AutocompleteValue({ ...props }: AutocompletePrimitive.Value.Props) {
   );
 }
 
+function AutocompleteIcon({
+  className,
+  ...props
+}: AutocompletePrimitive.Icon.Props) {
+  return (
+    <AutocompletePrimitive.Icon
+      className={cn(
+        "pointer-events-none flex shrink-0 items-center text-muted-foreground",
+        className
+      )}
+      data-slot="autocomplete-icon"
+      {...props}
+    />
+  );
+}
+
+function AutocompleteClear({
+  className,
+  disabled: disabledProp,
+  ...props
+}: AutocompletePrimitive.Clear.Props) {
+  return (
+    <AutocompletePrimitive.Clear
+      disabled={disabledProp}
+      {...props}
+      render={(clearProps) => {
+        const {
+          className: _clearClassName,
+          ref: clearRef,
+          style: _clearStyle,
+          ...resolvedClearProps
+        } = clearProps as React.ComponentProps<"button"> & {
+          ref?: React.Ref<HTMLButtonElement>;
+        };
+
+        return (
+          <button
+            {...resolvedClearProps}
+            aria-label="Clear input"
+            className={cn(
+              "flex size-8 shrink-0 items-center justify-center overflow-hidden rounded-md text-muted-foreground/70 transition-colors hover:bg-accent/60 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/30 disabled:cursor-not-allowed disabled:opacity-50",
+              className
+            )}
+            data-slot="autocomplete-clear"
+            ref={clearRef}
+            type="button"
+          >
+            <X className="h-3.5 w-3.5" />
+          </button>
+        );
+      }}
+    />
+  );
+}
+
 function AutocompleteTrigger({
   className,
   children,
+  disabled = false,
   ...props
 }: AutocompletePrimitive.Trigger.Props) {
-  const { open } = useAutocompleteContext("AutocompleteTrigger");
+  const { open, prefersReducedMotion } = useAutocompleteContext(
+    "AutocompleteTrigger"
+  );
 
   return (
     <AutocompletePrimitive.Trigger
+      aria-expanded={open}
+      aria-label={open ? "Collapse suggestions" : "Open suggestions"}
       className={cn(
-        "flex shrink-0 items-center justify-center text-muted-foreground transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/30 disabled:cursor-not-allowed disabled:opacity-50",
+        "flex size-8 shrink-0 items-center justify-center text-muted-foreground transition hover:bg-accent/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/30 disabled:cursor-not-allowed disabled:opacity-50",
+        controlCornerClassName,
         className
       )}
       data-slot="autocomplete-trigger"
+      disabled={disabled}
       type="button"
       {...props}
     >
       {children}
       <motion.span
         animate={{ rotate: open ? 180 : 0 }}
-        transition={chevronTransition}
+        transition={
+          prefersReducedMotion ? INSTANT_TRANSITION : chevronTransition
+        }
       >
         <ChevronsUpDown className="h-4 w-4" />
       </motion.span>
@@ -326,11 +419,14 @@ function AutocompleteInput({
   label,
   labelClassName,
   ref: refProp,
+  render: userRender,
+  showClear = true,
   showTrigger = false,
   ...props
 }: AutocompletePrimitive.Input.Props & {
   label?: React.ReactNode;
   labelClassName?: string;
+  showClear?: boolean;
   showTrigger?: boolean;
 }) {
   const { open, setOpen } = useAutocompleteContext("AutocompleteInput");
@@ -343,23 +439,30 @@ function AutocompleteInput({
       className={cn(
         componentThemeClassName,
         controlCornerClassName,
-        "group flex h-11 w-full items-center gap-1.5 border border-input bg-background px-3 text-base transition-all sm:text-sm",
-        "hover:border-ring/40",
-        "focus-within:border-ring focus-within:ring-1 focus-within:ring-ring/25",
+        autocompleteInputShellClassName,
         disabled && "cursor-not-allowed opacity-50",
         open && "border-ring ring-1 ring-ring/25",
         label ? undefined : className
       )}
       data-slot="autocomplete-input"
-      onClick={() => {
+      onClick={(event) => {
         if (disabled) return;
+
+        const target = event.target as HTMLElement;
+
+        if (
+          target.closest(
+            '[data-slot="autocomplete-clear"], [data-slot="autocomplete-trigger"]'
+          )
+        ) {
+          return;
+        }
 
         inputRef.current?.focus();
       }}
     >
       <AutocompletePrimitive.Input
-        autoComplete="off"
-        className="h-full w-full min-w-0 flex-1 bg-transparent text-[16px] text-foreground placeholder:text-muted-foreground focus:outline-none disabled:cursor-not-allowed sm:text-sm"
+        {...props}
         disabled={disabled}
         id={inputId}
         onKeyDown={composeEventHandlers(props.onKeyDown, (event) => {
@@ -367,13 +470,63 @@ function AutocompleteInput({
             setOpen(false);
           }
         })}
-        ref={(node) => {
-          inputRef.current = node;
-          setRef(refProp, node);
+        render={(inputProps, inputState) => {
+          if (userRender) {
+            return typeof userRender === "function"
+              ? userRender(inputProps, inputState)
+              : userRender;
+          }
+
+          const {
+            className: primitiveClassName,
+            ref: primitiveRef,
+            style: primitiveStyle,
+            ...resolvedInputProps
+          } = inputProps as InputRenderProps;
+
+          return (
+            <InputPrimitive
+              {...resolvedInputProps}
+              disabled={disabled}
+              id={inputId}
+              render={(baseInputProps) => {
+                const {
+                  className: baseClassName,
+                  ref: baseRef,
+                  style: baseStyle,
+                  ...baseResolvedProps
+                } = baseInputProps as InputRenderProps;
+
+                return (
+                  <input
+                    {...baseResolvedProps}
+                    autoComplete="off"
+                    className={cn(
+                      autocompleteInputClassName,
+                      primitiveClassName,
+                      baseClassName
+                    )}
+                    data-slot="autocomplete-input-control"
+                    ref={(node) => {
+                      inputRef.current = node;
+                      setRef(primitiveRef, node);
+                      setRef(baseRef, node);
+                      setRef(refProp, node);
+                    }}
+                    style={{ ...primitiveStyle, ...baseStyle }}
+                  />
+                );
+              }}
+            />
+          );
         }}
-        {...props}
       />
-      {showTrigger ? <AutocompleteTrigger disabled={disabled} /> : null}
+      {(showClear || showTrigger) && (
+        <div className="ml-1.5 flex shrink-0 items-center gap-0.5">
+          {showClear ? <AutocompleteClear disabled={disabled} /> : null}
+          {showTrigger ? <AutocompleteTrigger disabled={disabled} /> : null}
+        </div>
+      )}
       {children}
     </AutocompletePrimitive.InputGroup>
   );
@@ -417,17 +570,10 @@ function AutocompleteContentPanel({
     "children" | "className" | "ref" | "style"
   >;
 }) {
-  const { actionsRef, setOpen, skipExitAnimationRef } = useAutocompleteContext(
-    "AutocompleteContentPanel"
-  );
-  const isPopupVisible = popupState.open && !popupState.empty;
+  const { actionsRef, prefersReducedMotion, skipExitAnimationRef } =
+    useAutocompleteContext("AutocompleteContentPanel");
+  const isPopupVisible = popupState.open;
   const skipExitAnimation = !popupState.open && skipExitAnimationRef.current;
-
-  React.useEffect(() => {
-    if (popupState.open && popupState.empty) {
-      setOpen(false);
-    }
-  }, [popupState.empty, popupState.open, setOpen]);
 
   return (
     <div
@@ -446,17 +592,17 @@ function AutocompleteContentPanel({
         className={cn(
           componentThemeClassName,
           controlCornerClassName,
-          "w-[var(--anchor-width)] max-w-[var(--available-width)] transform-gpu overflow-hidden border border-neutral-200/60 bg-white text-neutral-900 shadow-none dark:border-neutral-700/60 dark:bg-neutral-950 dark:text-neutral-100",
+          autocompletePopupPanelClassName,
           popupClassName,
           resolveStateClassName(className, popupState)
         )}
         initial={
-          popupState.transitionStatus === "starting" && !popupState.empty
+          popupState.transitionStatus === "starting"
             ? popupMotion.initial
             : false
         }
         onAnimationComplete={() => {
-          if (!popupState.open || popupState.empty) {
+          if (!popupState.open) {
             skipExitAnimationRef.current = false;
             actionsRef.current?.unmount();
           }
@@ -466,16 +612,34 @@ function AutocompleteContentPanel({
           transformOrigin: "var(--transform-origin)",
         }}
         transition={
-          isPopupVisible
-            ? popupMotion.openTransition
-            : skipExitAnimation
-              ? INSTANT_CLOSE_TRANSITION
-              : popupMotion.closedTransition
+          prefersReducedMotion
+            ? INSTANT_TRANSITION
+            : isPopupVisible
+              ? popupMotion.openTransition
+              : skipExitAnimation
+                ? INSTANT_TRANSITION
+                : popupMotion.closedTransition
         }
       >
         {children}
       </motion.div>
     </div>
+  );
+}
+
+function AutocompleteBackdrop({
+  className,
+  ...props
+}: AutocompletePrimitive.Backdrop.Props) {
+  return (
+    <AutocompletePrimitive.Backdrop
+      className={cn(
+        "fixed inset-0 z-[9998] bg-black/20 dark:bg-black/40",
+        className
+      )}
+      data-slot="autocomplete-backdrop"
+      {...props}
+    />
   );
 }
 
@@ -487,6 +651,7 @@ function AutocompleteContent({
   className,
   collisionAvoidance = autocompleteCollisionAvoidance,
   collisionPadding = VIEWPORT_PADDING,
+  side = "bottom",
   sideOffset = 6,
   ...props
 }: AutocompletePrimitive.Popup.Props &
@@ -497,6 +662,7 @@ function AutocompleteContent({
     | "anchor"
     | "collisionAvoidance"
     | "collisionPadding"
+    | "side"
     | "sideOffset"
   >) {
   return (
@@ -508,7 +674,7 @@ function AutocompleteContent({
         className="z-[9999] outline-none"
         collisionAvoidance={collisionAvoidance}
         collisionPadding={collisionPadding}
-        side="bottom"
+        side={side}
         sideOffset={sideOffset}
       >
         <AutocompletePrimitive.Popup
@@ -603,8 +769,12 @@ function AutocompleteItem({
 }: AutocompletePrimitive.Item.Props & {
   description?: React.ReactNode;
 }) {
-  const { activeHighlightId, activeValue, setActiveValue } =
-    useAutocompleteContext("AutocompleteItem");
+  const {
+    activeHighlightId,
+    activeValue,
+    prefersReducedMotion,
+    setActiveValue,
+  } = useAutocompleteContext("AutocompleteItem");
 
   return (
     <AutocompletePrimitive.Item
@@ -620,12 +790,14 @@ function AutocompleteItem({
         return (
           <motion.div
             {...resolvedItemProps}
+            animate={{ opacity: 1, y: 0 }}
             className={cn(
               "relative flex cursor-pointer select-none items-start px-2.5 py-2 text-foreground text-sm",
               controlCornerClassName,
               itemClassName,
               resolveStateClassName(className, itemState)
             )}
+            initial={prefersReducedMotion ? false : { opacity: 0, y: 2 }}
             onMouseEnter={composeEventHandlers(
               resolvedItemProps.onMouseEnter,
               () => {
@@ -642,6 +814,11 @@ function AutocompleteItem({
               setRef(itemRef, node);
             }}
             style={itemStyle}
+            transition={
+              prefersReducedMotion
+                ? INSTANT_TRANSITION
+                : { duration: 0.12, ease: "easeOut" }
+            }
           >
             {showHighlight ? (
               <motion.div
@@ -650,7 +827,9 @@ function AutocompleteItem({
                   controlCornerInheritClassName
                 )}
                 layoutId={activeHighlightId}
-                transition={HIGHLIGHT_SPRING}
+                transition={
+                  prefersReducedMotion ? INSTANT_TRANSITION : HIGHLIGHT_SPRING
+                }
               />
             ) : null}
 
@@ -665,6 +844,59 @@ function AutocompleteItem({
           </motion.div>
         );
       }}
+    />
+  );
+}
+
+function AutocompleteEmpty({
+  className,
+  children = "No results found.",
+  ...props
+}: AutocompletePrimitive.Empty.Props) {
+  const { prefersReducedMotion } = useAutocompleteContext("AutocompleteEmpty");
+
+  return (
+    <AutocompletePrimitive.Empty
+      className={cn("text-center text-muted-foreground text-sm", className)}
+      data-slot="autocomplete-empty"
+      {...props}
+    >
+      <motion.span
+        animate={{ opacity: 1 }}
+        className="block px-3 py-6"
+        initial={prefersReducedMotion ? false : { opacity: 0 }}
+        transition={
+          prefersReducedMotion ? INSTANT_TRANSITION : { duration: 0.18 }
+        }
+      >
+        {children}
+      </motion.span>
+    </AutocompletePrimitive.Empty>
+  );
+}
+
+function AutocompleteStatus({
+  className,
+  ...props
+}: AutocompletePrimitive.Status.Props) {
+  return (
+    <AutocompletePrimitive.Status
+      className={cn("px-3 py-2 text-muted-foreground text-xs", className)}
+      data-slot="autocomplete-status"
+      {...props}
+    />
+  );
+}
+
+function AutocompleteRow({
+  className,
+  ...props
+}: AutocompletePrimitive.Row.Props) {
+  return (
+    <AutocompletePrimitive.Row
+      className={cn(className)}
+      data-slot="autocomplete-row"
+      {...props}
     />
   );
 }
@@ -723,17 +955,28 @@ function useAutocompleteAnchor() {
   return React.useRef<HTMLDivElement | null>(null);
 }
 
+const useAutocompleteFilter = AutocompletePrimitive.useFilter;
+const useFilteredAutocompleteItems = AutocompletePrimitive.useFilteredItems;
+
 export {
   Autocomplete,
+  AutocompleteBackdrop,
+  AutocompleteClear,
   AutocompleteCollection,
   AutocompleteContent,
+  AutocompleteEmpty,
   AutocompleteGroup,
+  AutocompleteIcon,
   AutocompleteInput,
   AutocompleteItem,
   AutocompleteLabel,
   AutocompleteList,
+  AutocompleteRow,
   AutocompleteSeparator,
+  AutocompleteStatus,
   AutocompleteTrigger,
   AutocompleteValue,
   useAutocompleteAnchor,
+  useAutocompleteFilter,
+  useFilteredAutocompleteItems,
 };

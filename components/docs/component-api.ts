@@ -2647,7 +2647,7 @@ const autocompleteApiDetails: DetailItem[] = [
       }),
       field({
         name: "onValueChange",
-        type: "(value: string) => void",
+        type: "(value: string, eventDetails) => void",
         description:
           "Called when the input text changes from typing or when a suggestion is accepted.",
       }),
@@ -2658,18 +2658,18 @@ const autocompleteApiDetails: DetailItem[] = [
           "Maps each item to the string used for filtering and the committed input value.",
       }),
       field({
-        name: "mode",
-        type: '"list" | "both" | "inline" | "none"',
-        defaultValue: '"list"',
-        description:
-          "Controls filtering and inline completion while navigating suggestions.",
-      }),
-      field({
         name: "autoHighlight",
         type: 'boolean | "always"',
         defaultValue: "true",
         description:
           "Automatically highlights the first matching item while typing.",
+      }),
+      field({
+        name: "keepHighlight",
+        type: "boolean",
+        defaultValue: "false",
+        description:
+          "When true, keeps the highlighted item when the pointer leaves the list.",
       }),
       field({
         name: "open",
@@ -2683,11 +2683,31 @@ const autocompleteApiDetails: DetailItem[] = [
           "Called when the suggestion panel opens or closes. Use with open for controlled popup state.",
       }),
       field({
+        name: "onItemHighlighted",
+        type: "(item: Item | undefined, eventDetails) => void",
+        description:
+          "Called when the highlighted suggestion changes from keyboard, pointer, or programmatic updates.",
+      }),
+      field({
         name: "openOnInputClick",
         type: "boolean",
         defaultValue: "false",
         description:
           "When true, clicking the input opens the suggestion panel even before typing.",
+      }),
+      field({
+        name: "submitOnItemClick",
+        type: "boolean",
+        defaultValue: "false",
+        description:
+          "When true, selecting an item submits the owning form. Useful for search inputs.",
+      }),
+      field({
+        name: "modal",
+        type: "boolean",
+        defaultValue: "false",
+        description:
+          "When true, traps focus inside the popup. Pair with AutocompleteBackdrop for a dimmed overlay.",
       }),
       field({
         name: "isItemEqualToValue",
@@ -2697,17 +2717,19 @@ const autocompleteApiDetails: DetailItem[] = [
       }),
     ],
     notes: [
-      "Built on Base UI Autocomplete with list filtering, keyboard navigation, and a sliding highlight treatment.",
+      "Built on Base UI Autocomplete with list filtering, keyboard navigation, empty-state support, and a sliding highlight treatment.",
       "Radix UI does not ship a dedicated autocomplete primitive, so this install is Base UI only.",
       "Pass value and onValueChange for controlled input text. The popup opens while typing by default, not on focus.",
       "Object items require itemToStringValue. Use isItemEqualToValue if selection highlight behaves incorrectly.",
+      "Use useAutocompleteFilter and useFilteredAutocompleteItems when you need custom locale or filter behavior.",
+      "Popup and highlight motion honor prefers-reduced-motion automatically.",
     ],
   },
   {
     id: "autocomplete-input",
     title: "AutocompleteInput",
     summary:
-      "Styled input shell with border, focus ring, and optional clear control. The suggestion panel opens while typing, not on focus or click.",
+      "Styled input shell with border, focus ring, optional clear control, and invalid-state styling via aria-invalid. The field control uses Base UI Input.",
     fields: [
       field({
         name: "label",
@@ -2742,7 +2764,46 @@ const autocompleteApiDetails: DetailItem[] = [
         name: "disabled",
         type: "boolean",
         defaultValue: "false",
-        description: "Disables the input and clear button.",
+        description: "Disables the input, clear button, and trigger.",
+      }),
+      field({
+        name: "aria-invalid",
+        type: "boolean | 'true' | 'false'",
+        description:
+          "When true, applies destructive border and ring styling to the input shell.",
+      }),
+    ],
+  },
+  {
+    id: "autocomplete-clear",
+    title: "AutocompleteClear",
+    summary:
+      "Clears the current input text. Rendered automatically when AutocompleteInput showClear is true.",
+    fields: [
+      field({
+        name: "disabled",
+        type: "boolean",
+        defaultValue: "false",
+        description: "Disables the clear button.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description: "Merged onto the clear button.",
+      }),
+    ],
+  },
+  {
+    id: "autocomplete-trigger",
+    title: "AutocompleteTrigger",
+    summary:
+      "Chevron button that toggles the suggestion panel. Includes aria-expanded and aria-label for screen readers.",
+    fields: [
+      field({
+        name: "disabled",
+        type: "boolean",
+        defaultValue: "false",
+        description: "Disables the trigger button.",
       }),
     ],
   },
@@ -2759,11 +2820,26 @@ const autocompleteApiDetails: DetailItem[] = [
         description: "Preferred side for the popup.",
       }),
       field({
+        name: "align",
+        type: '"start" | "center" | "end"',
+        defaultValue: '"start"',
+        description: "Popup alignment relative to the input anchor.",
+      }),
+      field({
         name: "sideOffset",
         type: "number",
         defaultValue: "6",
         description: "Distance between the input and the popup.",
       }),
+      field({
+        name: "className",
+        type: "string",
+        description: "Merged onto the animated popup panel.",
+      }),
+    ],
+    notes: [
+      "The popup stays open when filtering returns no matches so AutocompleteEmpty can render.",
+      "The panel width matches the input anchor and the list scrolls at the same max height as the combobox install.",
     ],
   },
   {
@@ -2803,6 +2879,99 @@ const autocompleteApiDetails: DetailItem[] = [
         description: "Optional secondary line below the primary label.",
       }),
     ],
+  },
+  {
+    id: "autocomplete-empty",
+    title: "AutocompleteEmpty",
+    summary:
+      "Empty-state message shown when filtering returns no matches. Place inside AutocompleteContent after AutocompleteList.",
+    fields: [
+      field({
+        name: "children",
+        type: "ReactNode",
+        defaultValue: '"No results found."',
+        description: "Message shown when the filtered list is empty.",
+      }),
+    ],
+  },
+  {
+    id: "autocomplete-status",
+    title: "AutocompleteStatus",
+    summary:
+      "Live status region for async loading or result counts. Keep mounted and update children instead of conditionally removing the component.",
+    fields: [
+      field({
+        name: "children",
+        type: "ReactNode",
+        description:
+          "Status text announced politely to screen readers, such as Loading or No matches.",
+      }),
+    ],
+  },
+  {
+    id: "autocomplete-group",
+    title: "AutocompleteGroup",
+    summary: "Groups related suggestions inside AutocompleteList.",
+    fields: [
+      field({
+        name: "items",
+        type: "readonly Item[]",
+        description:
+          "Items rendered inside this group when using grouped root items.",
+      }),
+    ],
+  },
+  {
+    id: "autocomplete-label",
+    title: "AutocompleteLabel",
+    summary: "Section label rendered above a group of suggestions.",
+    fields: [
+      field({
+        name: "children",
+        type: "ReactNode",
+        required: true,
+        description: "Group heading text.",
+      }),
+    ],
+  },
+  {
+    id: "autocomplete-separator",
+    title: "AutocompleteSeparator",
+    summary: "Horizontal divider between suggestion groups or rows.",
+    fields: [],
+  },
+  {
+    id: "autocomplete-collection",
+    title: "AutocompleteCollection",
+    summary:
+      "Renders the current filtered collection when not using AutocompleteList render props.",
+    fields: [],
+  },
+  {
+    id: "autocomplete-value",
+    title: "AutocompleteValue",
+    summary:
+      "Reads the current input value from context for custom display layouts.",
+    fields: [],
+  },
+  {
+    id: "autocomplete-icon",
+    title: "AutocompleteIcon",
+    summary: "Leading icon slot rendered inside AutocompleteInput.",
+    fields: [],
+  },
+  {
+    id: "autocomplete-backdrop",
+    title: "AutocompleteBackdrop",
+    summary:
+      "Dimmed overlay for modal autocomplete usage. Render as a sibling of AutocompleteContent when modal is true.",
+    fields: [],
+  },
+  {
+    id: "autocomplete-row",
+    title: "AutocompleteRow",
+    summary: "Row wrapper for multi-column or complex suggestion layouts.",
+    fields: [],
   },
   registryItem("b-autocomplete.json", [
     "@base-ui/react",

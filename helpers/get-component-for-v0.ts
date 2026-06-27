@@ -226,6 +226,7 @@ export function ButtonGroupDemo() {
     "import {\n" +
     "  Autocomplete,\n" +
     "  AutocompleteContent,\n" +
+    "  AutocompleteEmpty,\n" +
     "  AutocompleteInput,\n" +
     "  AutocompleteItem,\n" +
     "  AutocompleteList,\n" +
@@ -266,6 +267,7 @@ export function ButtonGroupDemo() {
     "              </AutocompleteItem>\n" +
     "            )}\n" +
     "          </AutocompleteList>\n" +
+    "          <AutocompleteEmpty>No country matches that query.</AutocompleteEmpty>\n" +
     "        </AutocompleteContent>\n" +
     "      </Autocomplete>\n" +
     "    </div>\n" +
