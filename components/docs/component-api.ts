@@ -4924,26 +4924,32 @@ const colorPickerApiDetails: DetailItem[] = [
     id: "color-picker",
     title: "ColorPicker",
     summary:
-      "Self-contained HSV panel with saturation field, hue/alpha sliders, multi-format readouts, and EyeDropper.",
+      "Self-contained HSV panel with saturation field, hue/alpha sliders, multi-format readouts, presets, popover mode, and EyeDropper.",
     fields: [
       field({
         name: "value",
         type: "string",
         description:
-          "Controlled hex color such as #3B82F6. When provided, the picker syncs its internal state to this value.",
+          "Controlled hex color such as #3B82F6 or #3B82F680. When provided, the picker syncs its internal state to this value.",
       }),
       field({
         name: "defaultValue",
         type: "string",
         defaultValue: "#3B82F6",
         description:
-          "Starting color for uncontrolled usage. Ignored when value is supplied.",
+          "Starting color for uncontrolled usage (3-, 6-, or 8-digit hex). Ignored when value is supplied.",
       }),
       field({
         name: "onChange",
-        type: "(color: string) => void",
+        type: "(color: string, detail: ColorPickerChangeDetail) => void",
         description:
-          "Called when the color settles (pointer up on sliders, blur/Enter on inputs). Emits #RRGGBB, or #RRGGBBAA when alpha is below 100%.",
+          "Called when the color settles (pointer up on sliders, blur/Enter on inputs). Emits #RRGGBB, or #RRGGBBAA when alpha is below 100%, plus CSS strings in detail.",
+      }),
+      field({
+        name: "onValueCommit",
+        type: "(color: string, detail: ColorPickerChangeDetail) => void",
+        description:
+          "Fires alongside onChange when the color settles. Useful for form commit handlers.",
       }),
       field({
         name: "defaultAlpha",
@@ -4951,6 +4957,68 @@ const colorPickerApiDetails: DetailItem[] = [
         defaultValue: "100",
         description:
           "Starting alpha percentage (0–100) for uncontrolled usage when defaultValue has no alpha channel.",
+      }),
+      field({
+        name: "defaultFormat",
+        type: '"HEX" | "RGB" | "HSL" | "OKLCH"',
+        defaultValue: "HEX",
+        description: "Initial readout format for the footer row.",
+      }),
+      field({
+        name: "variant",
+        type: '"inline" | "popover" | "swatch"',
+        defaultValue: "inline",
+        description:
+          "Inline panel (default), field popover trigger, or compact swatch trigger that opens the picker on click.",
+      }),
+      field({
+        name: "open",
+        type: "boolean",
+        description: "Controlled open state when variant is popover.",
+      }),
+      field({
+        name: "defaultOpen",
+        type: "boolean",
+        defaultValue: "false",
+        description: "Initial open state for uncontrolled popover usage.",
+      }),
+      field({
+        name: "onOpenChange",
+        type: "(open: boolean) => void",
+        description: "Called when the popover panel opens or closes.",
+      }),
+      field({
+        name: "placeholder",
+        type: "string",
+        defaultValue: "Pick a color",
+        description: "Placeholder text for the popover trigger label.",
+      }),
+      field({
+        name: "presets",
+        type: "string[]",
+        description:
+          "Quick-select swatch colors shown above the saturation field.",
+      }),
+      field({
+        name: "swatchShape",
+        type: '"default" | "circle"',
+        defaultValue: "default",
+        description:
+          "Corner style for swatch triggers and preset chips. Use circle for a fully round swatch.",
+      }),
+      field({
+        name: "showAlpha",
+        type: "boolean",
+        defaultValue: "true",
+        description:
+          "Shows or hides alpha controls and keeps output opaque when false.",
+      }),
+      field({
+        name: "showCopy",
+        type: "boolean",
+        defaultValue: "false",
+        description:
+          "Shows a copy-to-clipboard control for the active format string.",
       }),
       field({
         name: "disabled",
@@ -4971,17 +5039,40 @@ const colorPickerApiDetails: DetailItem[] = [
           "Called when EyeDropper is unavailable. No alert dialog is shown by default.",
       }),
       field({
+        name: "id",
+        type: "string",
+        description: "Root element id used for internal aria wiring.",
+      }),
+      field({
+        name: "name",
+        type: "string",
+        description: "Hidden input name for native form submission.",
+      }),
+      field({
+        name: "aria-label",
+        type: "string",
+        defaultValue: "Color picker",
+        description: "Accessible label when not using aria-labelledby.",
+      }),
+      field({
+        name: "aria-labelledby",
+        type: "string",
+        description: "ID of an external label element.",
+      }),
+      field({
         name: "className",
         type: "string",
         description:
-          "Merged onto the outer picker shell for width, shadow, or layout overrides.",
+          "Merged onto the outer shell for width, shadow, or layout overrides.",
       }),
     ],
     notes: [
       "Install with npx shadcn@latest add https://iconiqui.com/r/color-picker.json (requires lucide-react, motion, and a cn helper).",
-      "Theme tokens are embedded on the root node so the picker works without iconiq-theme, though it still maps cleanly to shadcn semantic colors.",
+      "Theme tokens are embedded on the panel node so the picker works without iconiq-theme, though it still maps cleanly to shadcn semantic colors.",
       "The saturation square, hue slider, and alpha slider share one RGB source of truth. Slider drags emit on pointer up to stay stable in controlled mode.",
-      "Format switching exposes editable HEX, RGB, HSL, and OKLCH channels. Values commit on blur or Enter so partial typing does not fight the live color state.",
+      "Format switching exposes editable HEX, RGB, HSL, and OKLCH channels with labeled inputs. Values commit on blur or Enter so partial typing does not fight the live color state.",
+      "HEX input accepts 3-, 6-, and 8-digit values. Invalid hex shows inline feedback on blur.",
+      "OKLCH chroma max adapts to the current lightness and hue so vivid sRGB colors stay reachable.",
       "EyeDropper support depends on the browser API (Chrome/Edge). Use onEyedropperUnsupported for user-facing feedback.",
       "FluidColorPicker remains exported as a backward-compatible alias for older imports.",
     ],
