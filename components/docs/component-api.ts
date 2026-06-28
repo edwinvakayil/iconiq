@@ -5797,17 +5797,23 @@ const radioGroupApiDetails: DetailItem[] = [
         description:
           "Optional secondary line shown below the label with reduced emphasis.",
       }),
+      field({
+        name: "disabled",
+        type: "boolean",
+        description:
+          "Disables this option while keeping it visible in the list.",
+      }),
     ],
   },
   {
     id: "radio-group",
     title: "RadioGroup",
     summary:
-      "Single-choice selector with animated rows, native radio inputs, and support for both controlled and uncontrolled state.",
+      "Single-choice selector with animated rows, form semantics, and support for both controlled and uncontrolled state.",
     fields: [
       field({
         name: "options",
-        type: "{ value: string; label: string; description?: string }[]",
+        type: "{ value: string; label: string; description?: string; disabled?: boolean }[]",
         required: true,
         description: "Available choices in display order.",
       }),
@@ -5829,22 +5835,62 @@ const radioGroupApiDetails: DetailItem[] = [
         description: "Called whenever a user selects a row.",
       }),
       field({
+        name: "disabled",
+        type: "boolean",
+        description: "Disables the entire group and all rows.",
+      }),
+      field({
+        name: "invalid",
+        type: "boolean",
+        description:
+          "Marks the group invalid for assistive tech and applies destructive focus styling.",
+      }),
+      field({
+        name: "label",
+        type: "string",
+        description:
+          "Visible field label rendered above the group. When required is true, a destructive asterisk is appended.",
+      }),
+      field({
+        name: "labelClassName",
+        type: "string",
+        description: "Merged onto the visible field label.",
+      }),
+      field({
+        name: "required",
+        type: "boolean",
+        description:
+          "Marks the native radio inputs as required for form validation and shows a destructive asterisk when label is set.",
+      }),
+      field({
+        name: "form",
+        type: "string",
+        description:
+          "Associates the native radio inputs with a form element by id when the group is rendered outside that form.",
+      }),
+      field({
+        name: "orientation",
+        type: '"horizontal" | "vertical"',
+        description:
+          "Layout direction for the option rows. Defaults to vertical.",
+      }),
+      field({
         name: "name",
         type: "string",
         description:
           "Shared radio input name. If omitted, the component generates one per instance.",
       }),
       field({
-        name: "layoutId",
+        name: '"aria-describedby"',
         type: "string",
         description:
-          "Motion layout id used by the selected row highlight. Override it only when you want to intentionally share that highlight between groups.",
+          "ID of helper or error text associated with the radiogroup.",
       }),
       field({
         name: '"aria-label"',
         type: "string",
         description:
-          "Accessible name for the radiogroup. Provide this or aria-labelledby so assistive tech can announce the set clearly.",
+          "Accessible name for the radiogroup when label is omitted. Prefer label when you need a visible field title.",
       }),
       field({
         name: '"aria-labelledby"',
@@ -5861,20 +5907,24 @@ const radioGroupApiDetails: DetailItem[] = [
     ],
     notes: [
       "If options is empty, the component returns null rather than rendering an empty radiogroup.",
-      "In uncontrolled mode, the selected value normalizes back to the first available option if the current selection disappears from the options array.",
+      "In uncontrolled mode, the selected value normalizes to the first enabled option when the current selection disappears or becomes disabled.",
+      "In controlled mode, an invalid value leaves no row selected until the parent corrects the value.",
+      "Use label with required to show the destructive asterisk. The group is wrapped in a native fieldset with legend for form semantics.",
+      "Motion respects prefers-reduced-motion for entrance, hover, and ring transitions.",
     ],
   },
   {
     id: "radio-motion-a11y",
     title: "Motion and accessibility",
     summary:
-      "The component wraps native radio inputs in an animated label shell so keyboard, form, and screen-reader behavior stay intact.",
+      "The component wraps native radio inputs in an animated row shell so keyboard, form, and screen-reader behavior stay intact.",
     notes: [
       "The root keeps radiogroup semantics and each input supports Arrow keys plus Home and End navigation with a single tab stop inside the set.",
-      "Each instance gets its own highlight layoutId by default, so separate groups on the same page do not animate across each other unless you opt into a shared layoutId.",
+      "Disabled rows skip hover and tap motion while remaining visible.",
     ],
   },
-  registryItem("radiogroup.json", ["motion"]),
+  registryItem("b-radio-group.json", ["@base-ui/react", "motion"]),
+  registryItem("r-radio-group.json", ["@radix-ui/react-radio-group", "motion"]),
 ];
 
 const selectApiDetails: DetailItem[] = [

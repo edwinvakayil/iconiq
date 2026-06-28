@@ -2,7 +2,7 @@
 
 import { Radio as RadioPrimitive } from "@base-ui/react/radio";
 import { RadioGroup as RadioGroupPrimitive } from "@base-ui/react/radio-group";
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import * as React from "react";
 
 import { cn } from "@/lib/utils";
@@ -15,6 +15,8 @@ const ringTransition = {
   stiffness: 400,
   damping: 22,
 };
+
+const instantTransition = { duration: 0 } as const;
 
 const dotMotion = {
   animate: { scale: 1, opacity: 1 },
@@ -30,14 +32,128 @@ const dotMotion = {
 
 const textTransition = { duration: 0.2 };
 
-function getValidSelection(options: RadioOption[], candidate?: string) {
+export type RadioGroupOrientation = "horizontal" | "vertical";
+
+export interface RadioOption {
+  value: string;
+  label: string;
+  description?: string;
+  disabled?: boolean;
+}
+
+export interface RadioGroupProps {
+  options: RadioOption[];
+  defaultValue?: string;
+  value?: string;
+  onChange?: (value: string) => void;
+  className?: string;
+  disabled?: boolean;
+  form?: string;
+  invalid?: boolean;
+  label?: string;
+  labelClassName?: string;
+  name?: string;
+  orientation?: RadioGroupOrientation;
+  required?: boolean;
+  "aria-describedby"?: string;
+  "aria-label"?: string;
+  "aria-labelledby"?: string;
+}
+
+function getFirstSelectableValue(options: RadioOption[]) {
+  return options.find((option) => !option.disabled)?.value ?? options[0]?.value;
+}
+
+function isSelectableOption(options: RadioOption[], candidate: string) {
+  const option = options.find((item) => item.value === candidate);
+  return Boolean(option && !option.disabled);
+}
+
+function getValidSelection(
+  options: RadioOption[],
+  candidate?: string,
+  groupDisabled = false
+) {
+  const fallback = groupDisabled
+    ? options[0]?.value
+    : getFirstSelectableValue(options);
+
   if (candidate === undefined) {
-    return options[0]?.value;
+    return fallback;
   }
 
-  return options.some((option) => option.value === candidate)
-    ? candidate
-    : options[0]?.value;
+  if (groupDisabled) {
+    return options.some((option) => option.value === candidate)
+      ? candidate
+      : fallback;
+  }
+
+  if (isSelectableOption(options, candidate)) {
+    return candidate;
+  }
+
+  return fallback;
+}
+
+function resolveGroupValue(
+  options: RadioOption[],
+  candidate: string | undefined,
+  allowFallback: boolean
+) {
+  if (
+    candidate !== undefined &&
+    options.some((option) => option.value === candidate)
+  ) {
+    return candidate;
+  }
+
+  return allowFallback ? getFirstSelectableValue(options) : undefined;
+}
+
+function getRingBorderColor(isSelected: boolean, invalid: boolean) {
+  if (isSelected) {
+    return "var(--ic-primary)";
+  }
+
+  if (invalid) {
+    return "color-mix(in srgb, var(--ic-destructive) 45%, transparent)";
+  }
+
+  return "color-mix(in srgb, var(--ic-muted-foreground) 25%, transparent)";
+}
+
+function getRadioRowMotionConfig(index: number, prefersReducedMotion: boolean) {
+  return {
+    dotMotionTransition: prefersReducedMotion
+      ? instantTransition
+      : dotMotion.transition,
+    entranceTransition: prefersReducedMotion
+      ? instantTransition
+      : { delay: index * 0.05, duration: 0.3 },
+    labelMotionTransition: prefersReducedMotion
+      ? instantTransition
+      : textTransition,
+    ringMotionTransition: prefersReducedMotion
+      ? instantTransition
+      : ringTransition,
+  };
+}
+
+function getRadioRowClassName({
+  invalid,
+  orientation,
+  rowDisabled,
+}: {
+  invalid: boolean;
+  orientation: RadioGroupOrientation;
+  rowDisabled: boolean;
+}) {
+  return cn(
+    "relative flex touch-manipulation select-none items-center gap-3.5 rounded-lg py-3.5 text-left outline-none focus-visible:ring-2",
+    orientation === "horizontal" ? "min-w-[10rem] flex-1" : "w-full",
+    invalid ? "focus-visible:ring-destructive/40" : "focus-visible:ring-ring",
+    rowDisabled && "cursor-not-allowed opacity-50"
+  );
 }
 
 function setRef<T>(ref: React.Ref<T> | undefined, value: T) {
@@ -51,118 +167,129 @@ function setRef<T>(ref: React.Ref<T> | undefined, value: T) {
   }
 }
 
-export interface RadioOption {
-  value: string;
-  label: string;
-  description?: string;
-}
-
-export interface RadioGroupProps {
-  options: RadioOption[];
-  defaultValue?: string;
-  value?: string;
-  onChange?: (value: string) => void;
-  className?: string;
-  layoutId?: string;
-  name?: string;
-  "aria-label"?: string;
-  "aria-labelledby"?: string;
-}
-
 type BaseRadioRootRenderProps =
   React.ButtonHTMLAttributes<HTMLButtonElement> & {
     className?: string;
     ref?: React.Ref<HTMLButtonElement>;
   };
 
-type RadioOptionContentProps = {
+type RadioOptionIndicatorProps = {
+  invalid: boolean;
+  isSelected: boolean;
+  prefersReducedMotion: boolean;
+  ringMotionTransition: typeof ringTransition | typeof instantTransition;
+  dotMotionTransition: typeof dotMotion.transition | typeof instantTransition;
+};
+
+function RadioOptionIndicator({
+  invalid,
+  isSelected,
+  prefersReducedMotion,
+  ringMotionTransition,
+  dotMotionTransition,
+}: RadioOptionIndicatorProps) {
+  return (
+    <div
+      aria-hidden
+      className="relative z-10 flex h-5 w-5 shrink-0 items-center justify-center"
+    >
+      <motion.div
+        animate={{
+          borderWidth: isSelected ? 6 : 2,
+          borderColor: getRingBorderColor(isSelected, invalid),
+        }}
+        className="absolute inset-0 rounded-full"
+        style={{ borderStyle: "solid" }}
+        transition={ringMotionTransition}
+      />
+
+      <AnimatePresence>
+        {isSelected ? (
+          <motion.div
+            animate={dotMotion.animate}
+            className="absolute h-1.5 w-1.5 rounded-full bg-background"
+            exit={prefersReducedMotion ? undefined : dotMotion.exit}
+            initial={prefersReducedMotion ? false : dotMotion.initial}
+            transition={dotMotionTransition}
+          />
+        ) : null}
+      </AnimatePresence>
+    </div>
+  );
+}
+
+type RadioOptionCopyProps = {
   description?: string;
   descriptionId?: string;
   isSelected: boolean;
   label: string;
   labelId: string;
+  labelMotionTransition: typeof textTransition | typeof instantTransition;
 };
 
-type BaseRadioOptionButtonProps = RadioOptionContentProps & {
-  index: number;
-  rootProps: BaseRadioRootRenderProps;
-};
-
-function RadioOptionContent({
+function RadioOptionCopy({
   description,
   descriptionId,
   isSelected,
   label,
   labelId,
-}: RadioOptionContentProps) {
+  labelMotionTransition,
+}: RadioOptionCopyProps) {
   return (
-    <>
-      <div
-        aria-hidden
-        className="relative z-10 flex h-5 w-5 shrink-0 items-center justify-center"
+    <div className="relative z-10 flex flex-col gap-0.5">
+      <motion.span
+        animate={{
+          color: isSelected
+            ? "var(--ic-foreground)"
+            : "var(--ic-muted-foreground)",
+          fontWeight: isSelected ? 500 : 400,
+        }}
+        className="text-[14px] leading-tight"
+        id={labelId}
+        transition={labelMotionTransition}
       >
-        <motion.div
-          animate={{
-            borderWidth: isSelected ? 6 : 2,
-            borderColor: isSelected
-              ? "var(--ic-primary)"
-              : "color-mix(in srgb, var(--ic-muted-foreground) 25%, transparent)",
-          }}
-          className="absolute inset-0 rounded-full"
-          style={{ borderStyle: "solid" }}
-          transition={ringTransition}
-        />
+        {label}
+      </motion.span>
 
-        <AnimatePresence>
-          {isSelected ? (
-            <motion.div
-              animate={dotMotion.animate}
-              className="absolute h-1.5 w-1.5 rounded-full bg-background"
-              exit={dotMotion.exit}
-              initial={dotMotion.initial}
-              transition={dotMotion.transition}
-            />
-          ) : null}
-        </AnimatePresence>
-      </div>
-
-      <div className="relative z-10 flex flex-col gap-0.5">
+      {description ? (
         <motion.span
-          animate={{
-            color: isSelected
-              ? "var(--ic-foreground)"
-              : "var(--ic-muted-foreground)",
-            fontWeight: isSelected ? 500 : 400,
-          }}
-          className="text-[14px] leading-tight"
-          id={labelId}
-          transition={textTransition}
+          animate={{ opacity: isSelected ? 0.85 : 0.5 }}
+          className="text-muted-foreground/60 text-xs leading-snug"
+          id={descriptionId}
+          transition={labelMotionTransition}
         >
-          {label}
+          {description}
         </motion.span>
-
-        {description ? (
-          <motion.span
-            animate={{ opacity: isSelected ? 0.85 : 0.5 }}
-            className="text-muted-foreground/60 text-xs leading-snug"
-            id={descriptionId}
-            transition={textTransition}
-          >
-            {description}
-          </motion.span>
-        ) : null}
-      </div>
-    </>
+      ) : null}
+    </div>
   );
 }
+
+type BaseRadioOptionButtonProps = {
+  description?: string;
+  descriptionId?: string;
+  index: number;
+  invalid: boolean;
+  isSelected: boolean;
+  label: string;
+  labelId: string;
+  orientation: RadioGroupOrientation;
+  prefersReducedMotion: boolean;
+  rowDisabled: boolean;
+  rootProps: BaseRadioRootRenderProps;
+};
 
 function BaseRadioOptionButton({
   description,
   descriptionId,
   index,
+  invalid,
   isSelected,
   label,
   labelId,
+  orientation,
+  prefersReducedMotion,
+  rowDisabled,
   rootProps,
 }: BaseRadioOptionButtonProps) {
   const {
@@ -182,71 +309,140 @@ function BaseRadioOptionButton({
     ...resolvedRootProps
   } = rootProps;
 
+  const rowInteractive = !rowDisabled;
+  const motionConfig = getRadioRowMotionConfig(index, prefersReducedMotion);
+
   return (
     <motion.button
       {...resolvedRootProps}
       animate={{ opacity: 1, y: 0 }}
       className={cn(
-        "relative flex w-full touch-manipulation select-none items-center gap-3.5 rounded-lg px-4 py-3.5 text-left outline-none focus-visible:ring-2 focus-visible:ring-ring",
+        getRadioRowClassName({ invalid, orientation, rowDisabled }),
         rootClassName
       )}
-      initial={{ opacity: 0, y: 8 }}
+      data-slot="radio-row"
+      initial={prefersReducedMotion ? false : { opacity: 0, y: 8 }}
       ref={(node) => {
         setRef(rootRef, node);
       }}
-      transition={{ delay: index * 0.05, duration: 0.3 }}
+      transition={motionConfig.entranceTransition}
       type="button"
-      whileHover={{ x: 2 }}
-      whileTap={{ scale: 0.98 }}
+      whileHover={
+        rowInteractive && !prefersReducedMotion ? { x: 2 } : undefined
+      }
+      whileTap={
+        rowInteractive && !prefersReducedMotion ? { scale: 0.98 } : undefined
+      }
     >
-      <RadioOptionContent
+      <RadioOptionIndicator
+        dotMotionTransition={motionConfig.dotMotionTransition}
+        invalid={invalid}
+        isSelected={isSelected}
+        prefersReducedMotion={prefersReducedMotion}
+        ringMotionTransition={motionConfig.ringMotionTransition}
+      />
+
+      <RadioOptionCopy
         description={description}
         descriptionId={descriptionId}
         isSelected={isSelected}
         label={label}
         labelId={labelId}
+        labelMotionTransition={motionConfig.labelMotionTransition}
       />
     </motion.button>
+  );
+}
+
+function RadioGroupLegend({
+  groupLabelId,
+  label,
+  labelClassName,
+  required,
+}: {
+  groupLabelId: string;
+  label: string;
+  labelClassName?: string;
+  required?: boolean;
+}) {
+  return (
+    <legend
+      className={cn(
+        "mb-0 block w-full max-w-full px-0 pt-0 font-medium text-foreground text-sm [margin-inline:0] [padding-inline:0]",
+        labelClassName
+      )}
+      id={groupLabelId}
+    >
+      {label}
+      {required ? (
+        <span aria-hidden className="text-destructive">
+          {" "}
+          *
+        </span>
+      ) : null}
+    </legend>
   );
 }
 
 const RadioGroup = React.forwardRef<HTMLDivElement, RadioGroupProps>(
   (
     {
+      "aria-describedby": ariaDescribedBy,
       "aria-label": ariaLabel,
       "aria-labelledby": ariaLabelledBy,
       className,
       defaultValue,
+      disabled = false,
+      form,
+      invalid = false,
+      label,
+      labelClassName,
       name,
       onChange,
       options,
+      orientation = "vertical",
+      required,
       value,
     },
     ref
   ) => {
     const generatedId = React.useId();
+    const prefersReducedMotion = Boolean(useReducedMotion());
     const isControlled = value !== undefined;
     const [uncontrolledSelected, setUncontrolledSelected] = React.useState<
       string | undefined
-    >(() => getValidSelection(options, defaultValue));
+    >(() => getValidSelection(options, defaultValue, disabled));
     const selected = isControlled ? value : uncontrolledSelected;
     const groupName = name ?? `radio-group-${generatedId}`;
+    const groupLabelId = `${generatedId}-group-label`;
+    const resolvedAriaLabelledBy = label ? groupLabelId : ariaLabelledBy;
+    const resolvedAriaLabel =
+      label || resolvedAriaLabelledBy ? undefined : ariaLabel;
+    const primitiveValue = resolveGroupValue(options, selected, !isControlled);
 
     React.useEffect(() => {
       if (isControlled) {
         return;
       }
 
-      const normalized = getValidSelection(options, uncontrolledSelected);
+      const normalized = getValidSelection(
+        options,
+        uncontrolledSelected,
+        disabled
+      );
 
       if (normalized !== uncontrolledSelected) {
         setUncontrolledSelected(normalized);
       }
-    }, [isControlled, options, uncontrolledSelected]);
+    }, [disabled, isControlled, options, uncontrolledSelected]);
 
     const handleSelect = React.useCallback(
       (nextValue: string) => {
-        if (nextValue === selected) {
+        if (disabled || nextValue === selected) {
+          return;
+        }
+
+        if (!isSelectableOption(options, nextValue)) {
           return;
         }
 
@@ -256,7 +452,7 @@ const RadioGroup = React.forwardRef<HTMLDivElement, RadioGroupProps>(
 
         onChange?.(nextValue);
       },
-      [isControlled, onChange, selected]
+      [disabled, isControlled, onChange, options, selected]
     );
 
     if (options.length === 0) {
@@ -264,49 +460,79 @@ const RadioGroup = React.forwardRef<HTMLDivElement, RadioGroupProps>(
     }
 
     return (
-      <RadioGroupPrimitive
-        aria-label={ariaLabel}
-        aria-labelledby={ariaLabelledBy}
-        className={cn(
-          componentThemeClassName,
-          "flex flex-col gap-0.5",
-          className
-        )}
-        name={groupName}
-        onValueChange={handleSelect}
-        ref={ref}
-        value={selected}
+      <fieldset
+        className="m-0 flex w-full min-w-0 flex-col gap-2 border-0 p-0 [padding-inline:0]"
+        disabled={disabled || undefined}
       >
-        {options.map((option, index) => {
-          const isSelected = selected === option.value;
-          const optionId = `${generatedId}-option-${index}`;
-          const labelId = `${optionId}-label`;
-          const descriptionId = option.description
-            ? `${optionId}-description`
-            : undefined;
+        {label ? (
+          <RadioGroupLegend
+            groupLabelId={groupLabelId}
+            label={label}
+            labelClassName={labelClassName}
+            required={required}
+          />
+        ) : null}
+        <div className="w-full min-w-0">
+          <RadioGroupPrimitive
+            aria-describedby={ariaDescribedBy}
+            aria-invalid={invalid || undefined}
+            aria-label={resolvedAriaLabel}
+            aria-labelledby={resolvedAriaLabelledBy}
+            aria-orientation={orientation}
+            aria-required={required || undefined}
+            className={cn(
+              componentThemeClassName,
+              orientation === "horizontal"
+                ? "flex flex-row flex-wrap gap-2"
+                : "flex flex-col gap-0.5",
+              className
+            )}
+            disabled={disabled}
+            form={form}
+            name={groupName}
+            onValueChange={handleSelect}
+            ref={ref}
+            required={required}
+            value={primitiveValue}
+          >
+            {options.map((option, index) => {
+              const isSelected = selected === option.value;
+              const rowDisabled = disabled || Boolean(option.disabled);
+              const optionId = `${generatedId}-option-${index}`;
+              const labelId = `${optionId}-label`;
+              const descriptionId = option.description
+                ? `${optionId}-description`
+                : undefined;
 
-          return (
-            <RadioPrimitive.Root
-              aria-describedby={descriptionId}
-              aria-labelledby={labelId}
-              key={option.value}
-              nativeButton
-              render={(rootProps) => (
-                <BaseRadioOptionButton
-                  description={option.description}
-                  descriptionId={descriptionId}
-                  index={index}
-                  isSelected={isSelected}
-                  label={option.label}
-                  labelId={labelId}
-                  rootProps={rootProps}
+              return (
+                <RadioPrimitive.Root
+                  aria-describedby={descriptionId}
+                  aria-labelledby={labelId}
+                  disabled={rowDisabled}
+                  key={`${option.value}-${index}`}
+                  nativeButton
+                  render={(rootProps) => (
+                    <BaseRadioOptionButton
+                      description={option.description}
+                      descriptionId={descriptionId}
+                      index={index}
+                      invalid={invalid}
+                      isSelected={isSelected}
+                      label={option.label}
+                      labelId={labelId}
+                      orientation={orientation}
+                      prefersReducedMotion={prefersReducedMotion}
+                      rootProps={rootProps}
+                      rowDisabled={rowDisabled}
+                    />
+                  )}
+                  value={option.value}
                 />
-              )}
-              value={option.value}
-            />
-          );
-        })}
-      </RadioGroupPrimitive>
+              );
+            })}
+          </RadioGroupPrimitive>
+        </div>
+      </fieldset>
     );
   }
 );
