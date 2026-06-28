@@ -2372,17 +2372,17 @@ const checkboxApiDetails: DetailItem[] = [
     id: "checkbox",
     title: "Checkbox",
     summary:
-      "Single checkbox with controlled or uncontrolled state, a visually hidden native input, and an optional inline label.",
+      "Provider-switchable single checkbox layered over Base UI or Radix primitives with optional label, description, and form-field props.",
     fields: [
       field({
         name: "checked",
-        type: "boolean",
+        type: 'boolean | "indeterminate"',
         description:
-          "Controlled checked state. When you pass this prop, the component always renders from it and stops mutating its own internal state.",
+          'Controlled checked state. Pass true, false, or "indeterminate" for partial selection rows such as select-all headers.',
       }),
       field({
         name: "defaultChecked",
-        type: "boolean",
+        type: 'boolean | "indeterminate"',
         defaultValue: "false",
         description:
           "Initial state for uncontrolled usage. It is only read on the first render.",
@@ -2391,45 +2391,113 @@ const checkboxApiDetails: DetailItem[] = [
         name: "onCheckedChange",
         type: "(checked: boolean) => void",
         description:
-          "Called with the next boolean value each time the checkbox is toggled.",
+          "Called with the next boolean value whenever the user toggles the checkbox. Indeterminate clicks resolve to true.",
       }),
       field({
         name: "label",
-        type: "string",
+        type: "React.ReactNode",
         description:
-          "Optional text rendered to the right of the box inside the same clickable label wrapper.",
+          "Optional label rendered beside the control. When provided with description, both sit inside a native label element linked by htmlFor.",
       }),
       field({
-        name: "className",
+        name: "description",
+        type: "React.ReactNode",
+        description:
+          "Optional helper copy rendered under the label and linked through aria-describedby.",
+      }),
+      field({
+        name: "labelClassName",
+        type: "string",
+        description: "Merged onto the label text wrapper.",
+      }),
+      field({
+        name: "descriptionClassName",
+        type: "string",
+        description: "Merged onto the description text wrapper.",
+      }),
+      field({
+        name: "disabled",
+        type: "boolean",
+        defaultValue: "false",
+        description:
+          "Disables interaction and applies reduced opacity to the full row.",
+      }),
+      field({
+        name: "readOnly",
+        type: "boolean",
+        defaultValue: "false",
+        description:
+          "Shows the current state without allowing toggles. Useful for locked consent rows.",
+      }),
+      field({
+        name: "required",
+        type: "boolean",
+        defaultValue: "false",
+        description:
+          "Forwards native required validation to the hidden checkbox input and appends a visual asterisk to the label.",
+      }),
+      field({
+        name: "invalid",
+        type: "boolean",
+        defaultValue: "false",
+        description:
+          "Applies destructive border styling and aria-invalid for form validation feedback.",
+      }),
+      field({
+        name: "name",
+        type: "string",
+        description: "Input name submitted with native forms.",
+      }),
+      field({
+        name: "value",
+        type: "string",
+        description: "Value submitted when the checkbox is checked.",
+      }),
+      field({
+        name: "form",
         type: "string",
         description:
-          "Merged onto the root label so you can reposition the row or override spacing.",
+          "Associates the hidden input with a form element by id when the checkbox renders outside the form.",
+      }),
+      field({
+        name: "size",
+        type: '"sm" | "default" | "lg"',
+        defaultValue: '"default"',
+        description: "Adjusts box, icon, label, and row spacing together.",
       }),
       field({
         name: "id",
         type: "string",
         description:
-          "Passed to the hidden input and linked from the wrapping label for explicit form-field association.",
+          "Stable id for the control. When omitted, the component generates one and uses it for label association.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description:
+          "Merged onto the outer row wrapper so you can position the checkbox in your layout.",
       }),
     ],
     notes: [
-      "The component supports both controlled and uncontrolled usage, but `checked` becomes the source of truth whenever it is provided.",
-      "There is no disabled or indeterminate state in this version, so more complex form behavior still needs a wrapper or extension.",
-      "The full row stays clickable because the custom control and optional label both live inside a native label element.",
+      "Install b-checkbox.json for Base UI or r-checkbox.json for Radix UI. Both expose the same Iconiq API.",
+      "When label or description is present, the row uses a native label element with htmlFor instead of manual click forwarding.",
+      "Base UI renders a hidden native input beside the animated button, so name, value, required, and form work out of the box.",
+      "Radix readOnly is enforced in the component so the visual state cannot be toggled while still looking active.",
     ],
   },
   {
     id: "checkbox-motion",
     title: "Motion and accessibility",
     summary:
-      "Visual feedback comes from Motion while input semantics still come from the hidden native checkbox element.",
+      "Visual feedback comes from Motion while checkbox semantics travel through the underlying primitive and hidden input.",
     notes: [
-      "The box animates its border and fill between theme tokens, then the checkmark path draws in or out based on the next state.",
-      "Tap feedback briefly compresses the control, while the label subtly dims when the row is checked.",
-      "Keyboard toggling and screen-reader semantics still travel through the native input, even though the visible box is custom rendered.",
+      "The box animates its border and fill between theme tokens, then the checkmark or minus icon draws based on the next state.",
+      "Tap feedback briefly compresses the control unless disabled, readOnly, or prefers-reduced-motion is active.",
+      "The label subtly dims when the row is fully checked. Indeterminate rows keep full label opacity.",
+      "Checkbox groups for multi-select lists are available via b-checkbox-group. There is no r-checkbox-group registry entry yet.",
     ],
   },
-  registryItem("checkbox.json", ["motion"]),
+  registryItem("b-checkbox.json", ["@base-ui/react/checkbox", "motion"]),
 ];
 
 const comboboxApiDetails: DetailItem[] = [

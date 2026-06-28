@@ -1,14 +1,15 @@
 "use client";
 
 import { useMemo, useState } from "react";
-
 import {
   type PrimitiveProvider,
   ProviderSwitch,
 } from "@/app/(site)/components/_components/provider-switch";
+import { CheckboxPlaygroundProvider } from "@/app/(site)/inputs-and-forms/checkbox/_components/checkbox-playground";
+import { checkboxApiDetails } from "@/components/docs/component-api";
 import {
   ComponentDocsPage,
-  type DetailItem,
+  type VariantItem,
 } from "@/components/docs/page-shell";
 import { LINK } from "@/constants";
 import * as BaseCheckbox from "@/registry/b-checkbox";
@@ -19,6 +20,7 @@ type CheckboxModule = typeof BaseCheckbox;
 type ProviderConfig = {
   componentName: "b-checkbox" | "r-checkbox";
   dependencyLabel: string;
+  importPath: string;
   libraryLabel: string;
   notes: string[];
   ui: CheckboxModule;
@@ -44,9 +46,12 @@ export function CheckboxPreview() {
     <div className="w-full max-w-sm">
       <Checkbox
         checked={checked}
+        description="You can turn this off anytime in account settings."
         id="release-updates"
         label="Email me when the next release ships"
+        name="release-updates"
         onCheckedChange={setChecked}
+        value="yes"
       />
     </div>
   );
@@ -63,30 +68,76 @@ export function CheckboxPreview() {
     <div className="w-full max-w-sm">
       <Checkbox
         checked={checked}
+        description="You can turn this off anytime in account settings."
         id="release-updates"
         label="Email me when the next release ships"
+        name="release-updates"
         onCheckedChange={setChecked}
+        value="yes"
       />
     </div>
   );
 }`,
 };
 
-function CheckboxPreview({ ui }: { ui: CheckboxModule }) {
-  const { Checkbox } = ui;
-  const [checked, setChecked] = useState(true);
+const checkboxExamples: VariantItem[] = [
+  {
+    title: "Indeterminate",
+    code: `"use client";
 
+import { Checkbox } from "@/components/ui/b-checkbox";
+
+export function CheckboxIndeterminateExample() {
   return (
-    <div className="w-full max-w-sm">
-      <Checkbox
-        checked={checked}
-        id="release-updates-preview"
-        label="Email me when the next release ships"
-        onCheckedChange={setChecked}
-      />
-    </div>
+    <Checkbox
+      checked="indeterminate"
+      id="select-all"
+      label="Select all notifications"
+    />
   );
-}
+}`,
+  },
+  {
+    title: "Disabled",
+    code: `"use client";
+
+import { Checkbox } from "@/components/ui/b-checkbox";
+
+export function CheckboxDisabledExample() {
+  return (
+    <Checkbox
+      checked
+      disabled
+      id="locked-preference"
+      label="Legacy email digest"
+    />
+  );
+}`,
+  },
+  {
+    title: "Form field",
+    code: `"use client";
+
+import { Checkbox } from "@/components/ui/b-checkbox";
+
+export function CheckboxFormExample() {
+  return (
+    <form className="space-y-4">
+      <Checkbox
+        id="terms"
+        label="I agree to the terms"
+        name="terms"
+        required
+        value="accepted"
+      />
+      <button className="rounded-md bg-foreground px-3 py-2 text-background text-sm" type="submit">
+        Continue
+      </button>
+    </form>
+  );
+}`,
+  },
+];
 
 export default function RadixBaseCheckboxPage() {
   const [selectedProvider, setSelectedProvider] =
@@ -97,11 +148,13 @@ export default function RadixBaseCheckboxPage() {
       return {
         componentName: "b-checkbox",
         dependencyLabel: "@base-ui/react, motion",
+        importPath: "@/components/ui/b-checkbox",
         libraryLabel: "Base UI",
         notes: [
-          "Installs a Base UI checkbox with the same controlled and uncontrolled Iconiq API as the Radix version.",
-          "Keeps the same fill spring, press scale, line-drawn checkmark, and label fade used by the original checkbox component.",
+          "Installs a Base UI checkbox with hidden native input semantics for form submission.",
+          "Supports indeterminate, disabled, readOnly, required, invalid, and size variants with the same Iconiq API as the Radix version.",
           "The generated registry file is /r/b-checkbox.json.",
+          "Multi-checkbox groups are available separately via b-checkbox-group.",
         ],
         ui: BaseCheckbox,
         usageCode: usageCodeByProvider["b-checkbox"],
@@ -111,93 +164,62 @@ export default function RadixBaseCheckboxPage() {
     return {
       componentName: "r-checkbox",
       dependencyLabel: "@radix-ui/react-checkbox, motion",
+      importPath: "@/components/ui/r-checkbox",
       libraryLabel: "Radix UI",
       notes: [
         "Installs a Radix checkbox with the same controlled and uncontrolled Iconiq API as the Base UI version.",
-        "Uses the exact same Motion timing and checkmark draw behavior as the original checkbox component.",
+        "Uses the exact same Motion timing, minus icon for indeterminate state, and label association as b-checkbox.",
         "The generated registry file is /r/r-checkbox.json.",
+        "Multi-checkbox groups are currently Base UI only — use b-checkbox-group for grouped selections.",
       ],
       ui: RadixCheckbox,
       usageCode: usageCodeByProvider["r-checkbox"],
     };
   }, [selectedProvider]);
 
-  const details = useMemo<DetailItem[]>(
-    () => [
-      {
-        id: "checkbox",
-        title: "Checkbox",
-        summary:
-          "Provider-switchable single checkbox with the same Iconiq API layered over Base UI and Radix UI primitives.",
-        fields: [
-          {
-            name: "checked",
-            type: "boolean",
-            description:
-              "Controlled checked state for the checkbox. Pass this when the parent owns the value.",
-          },
-          {
-            name: "defaultChecked",
-            type: "boolean",
-            defaultValue: "false",
-            description:
-              "Initial checked state for uncontrolled usage. The component manages future toggles internally.",
-          },
-          {
-            name: "onCheckedChange",
-            type: "(checked: boolean) => void",
-            description:
-              "Called with the next boolean state whenever the checkbox toggles.",
-          },
-          {
-            name: "label",
-            type: "string",
-            description:
-              "Optional inline label rendered beside the checkbox with the same opacity fade used in the original component.",
-          },
-          {
-            name: "id",
-            type: "string",
-            description:
-              "Optional id forwarded to the underlying primitive control.",
-          },
-          {
-            name: "className",
-            type: "string",
-            description:
-              "Merged onto the outer inline-flex wrapper so you can position the checkbox row in your layout.",
-          },
-        ],
-        notes: [
-          `Current install target: ${provider.libraryLabel}.`,
-          `Dependencies declared by this registry entry: ${provider.dependencyLabel}.`,
-          ...provider.notes,
-        ],
-      },
-    ],
-    [provider]
-  );
-
   return (
-    <ComponentDocsPage
-      breadcrumbs={breadcrumbs}
-      componentName={provider.componentName}
-      description="Single-choice control for binary selections and consent."
-      details={details}
-      editHref={`${LINK.GITHUB}/edit/main/app/(site)/inputs-and-forms/checkbox/page.tsx`}
-      headerActions={
-        <ProviderSwitch
-          onSelect={setSelectedProvider}
-          selectedProvider={selectedProvider}
+    <CheckboxPlaygroundProvider
+      CheckboxModule={provider.ui}
+      importPath={provider.importPath}
+      key={provider.componentName}
+    >
+      {({ preview, renderSettings }) => (
+        <ComponentDocsPage
+          breadcrumbs={breadcrumbs}
+          componentName={provider.componentName}
+          description="Single-choice control for binary selections, consent, and form fields."
+          details={checkboxApiDetails}
+          editHref={`${LINK.GITHUB}/edit/main/app/(site)/inputs-and-forms/checkbox/page.tsx`}
+          examples={checkboxExamples}
+          headerActions={
+            <ProviderSwitch
+              onSelect={setSelectedProvider}
+              selectedProvider={selectedProvider}
+            />
+          }
+          itemSlug="checkbox"
+          pageUrl="/inputs-and-forms/checkbox"
+          preview={preview}
+          previewClassName="min-h-[14rem] lg:col-span-8"
+          previewDescription="Tune size, validation, indeterminate, disabled, and label layout from the playground."
+          previewPersonalize={({ onClose }) => renderSettings(onClose)}
+          previewPersonalizeTitle="Checkbox"
+          railNotes={[
+            `Current install target: ${provider.libraryLabel}.`,
+            'Pass checked="indeterminate" for select-all or partial selection states.',
+            "Label and description render beside the control inside a native label element when text is provided.",
+            "name, value, required, and form props forward to the hidden input for native form submission.",
+            "Motion for fill, checkmark draw, and label fade honors prefers-reduced-motion automatically.",
+            provider.componentName === "r-checkbox"
+              ? "Checkbox groups are Base UI only today — install b-checkbox-group for multi-select lists."
+              : "Install b-checkbox-group when you need multi-select option lists.",
+          ]}
+          title="Checkbox"
+          usageCode={provider.usageCode}
+          usageDescription="Switch libraries above to update the install command, registry JSON, preview code, and generated file set together."
+          v0PageCode={provider.usageCode}
         />
-      }
-      itemSlug="checkbox"
-      pageUrl="/inputs-and-forms/checkbox"
-      preview={<CheckboxPreview ui={provider.ui} />}
-      title="Checkbox"
-      usageCode={provider.usageCode}
-      usageDescription="Switch libraries above to update the install command, registry JSON, preview code, and generated file set together."
-      v0PageCode={provider.usageCode}
-    />
+      )}
+    </CheckboxPlaygroundProvider>
   );
 }

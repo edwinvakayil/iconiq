@@ -140,7 +140,7 @@ export function ButtonGroupDemo() {
     "}\n",
   checkbox:
     '"use client";\n\n' +
-    `import { Checkbox } from "@/components/ui/checkbox"\n` +
+    `import { Checkbox } from "@/components/ui/b-checkbox"\n` +
     `import { useState } from "react"\n\n` +
     "export default function Page() {\n" +
     "  const [checked, setChecked] = useState(true)\n" +
@@ -149,9 +149,56 @@ export function ButtonGroupDemo() {
     '      <div className="w-full max-w-sm">\n' +
     "        <Checkbox\n" +
     "          checked={checked}\n" +
+    '          description="You can turn this off anytime in account settings."\n' +
     '          id="release-updates"\n' +
     '          label="Email me when the next release ships"\n' +
+    '          name="release-updates"\n' +
     "          onCheckedChange={setChecked}\n" +
+    '          value="yes"\n' +
+    "        />\n" +
+    "      </div>\n" +
+    "    </div>\n" +
+    "  )\n" +
+    "}\n",
+  "b-checkbox":
+    '"use client";\n\n' +
+    `import { Checkbox } from "@/components/ui/b-checkbox"\n` +
+    `import { useState } from "react"\n\n` +
+    "export default function Page() {\n" +
+    "  const [checked, setChecked] = useState(true)\n" +
+    "  return (\n" +
+    '    <div className="flex min-h-svh items-center justify-center p-8">\n' +
+    '      <div className="w-full max-w-sm">\n' +
+    "        <Checkbox\n" +
+    "          checked={checked}\n" +
+    '          description="You can turn this off anytime in account settings."\n' +
+    '          id="release-updates"\n' +
+    '          label="Email me when the next release ships"\n' +
+    '          name="release-updates"\n' +
+    "          onCheckedChange={setChecked}\n" +
+    '          value="yes"\n' +
+    "        />\n" +
+    "      </div>\n" +
+    "    </div>\n" +
+    "  )\n" +
+    "}\n",
+  "r-checkbox":
+    '"use client";\n\n' +
+    `import { Checkbox } from "@/components/ui/r-checkbox"\n` +
+    `import { useState } from "react"\n\n` +
+    "export default function Page() {\n" +
+    "  const [checked, setChecked] = useState(true)\n" +
+    "  return (\n" +
+    '    <div className="flex min-h-svh items-center justify-center p-8">\n' +
+    '      <div className="w-full max-w-sm">\n' +
+    "        <Checkbox\n" +
+    "          checked={checked}\n" +
+    '          description="You can turn this off anytime in account settings."\n' +
+    '          id="release-updates"\n' +
+    '          label="Email me when the next release ships"\n' +
+    '          name="release-updates"\n' +
+    "          onCheckedChange={setChecked}\n" +
+    '          value="yes"\n' +
     "        />\n" +
     "      </div>\n" +
     "    </div>\n" +
