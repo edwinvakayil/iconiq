@@ -4365,7 +4365,7 @@ const inputApiDetails: DetailItem[] = [
         type: "React.HTMLInputTypeAttribute",
         defaultValue: "text",
         description:
-          "Native input type. Smooth caret is disabled for `file` and `hidden`. Password mode measures bullet glyphs for caret placement.",
+          "Native input type. Smooth caret is enabled for text-like types only (`text`, `search`, `url`, `email`, `password`, `tel`).",
       }),
       field({
         name: "label",
@@ -4379,9 +4379,91 @@ const inputApiDetails: DetailItem[] = [
         description: "Classes merged onto the optional label element.",
       }),
       field({
+        name: "description",
+        type: "React.ReactNode",
+        description:
+          "Optional helper text rendered below the input shell and linked with `aria-describedby`.",
+      }),
+      field({
+        name: "descriptionClassName",
+        type: "string",
+        description: "Classes merged onto the description element.",
+      }),
+      field({
+        name: "errorMessage",
+        type: "React.ReactNode",
+        description:
+          "Validation message rendered below the field. Also sets `aria-invalid` and links through `aria-describedby`.",
+      }),
+      field({
+        name: "errorMessageClassName",
+        type: "string",
+        description: "Classes merged onto the error message element.",
+      }),
+      field({
+        name: "invalid",
+        type: "boolean",
+        defaultValue: "false",
+        description:
+          "Applies destructive shell styling and forwards `aria-invalid` to the native input.",
+      }),
+      field({
+        name: "required",
+        type: "boolean",
+        defaultValue: "false",
+        description:
+          "Forwards native required validation and appends a visual asterisk to the label.",
+      }),
+      field({
+        name: "size",
+        type: '"sm" | "default"',
+        defaultValue: "default",
+        description: "Controls the input shell height.",
+      }),
+      field({
+        name: "shellClassName",
+        type: "string",
+        description: "Classes merged onto the bordered input shell.",
+      }),
+      field({
+        name: "wrapperClassName",
+        type: "string",
+        description:
+          "Classes merged onto the outer field wrapper when `label`, `description`, or `errorMessage` is set. Otherwise merged onto the shell.",
+      }),
+      field({
+        name: "startAdornment",
+        type: "React.ReactNode",
+        description: "Optional leading slot rendered inside the input shell.",
+      }),
+      field({
+        name: "endAdornment",
+        type: "React.ReactNode",
+        description:
+          "Optional trailing slot rendered inside the input shell after built-in actions.",
+      }),
+      field({
+        name: "children",
+        type: "React.ReactNode",
+        description:
+          "Additional trailing content rendered inside the input shell after adornments and actions.",
+      }),
+      field({
+        name: "showClear",
+        type: "boolean",
+        defaultValue: "false",
+        description:
+          "When true, renders a clear button while the field has a value and is not disabled or read-only.",
+      }),
+      field({
+        name: "showPasswordToggle",
+        type: "boolean",
+        description:
+          'When `type="password"`, shows a visibility toggle by default. Pass `false` to hide it.',
+      }),
+      field({
         name: "placeholder",
         type: "string",
-        defaultValue: "input",
         description: "Placeholder shown when the field is empty.",
       }),
       field({
@@ -4395,12 +4477,6 @@ const inputApiDetails: DetailItem[] = [
         type: "{ stiffness?: number; damping?: number; mass?: number }",
         description:
           "Spring config for caret movement. Defaults to stiffness 500, damping 30, mass 0.5.",
-      }),
-      field({
-        name: "wrapperClassName",
-        type: "string",
-        description:
-          "Classes merged onto the outer label wrapper when `label` is provided, or onto the input shell when no label is set.",
       }),
       field({
         name: "id",
@@ -4424,7 +4500,7 @@ const inputApiDetails: DetailItem[] = [
         name: "render",
         type: "React.ReactElement | ((props: React.ComponentProps<'input'>) => React.ReactElement)",
         description:
-          "Base UI render override for the native input element. Custom renders replace the default caret wiring.",
+          "Base UI render override for the native input element. Custom renders disable the smooth caret.",
       }),
       field({
         name: "disabled",
@@ -4432,12 +4508,20 @@ const inputApiDetails: DetailItem[] = [
         defaultValue: "false",
         description: "Disables interaction on the native input.",
       }),
+      field({
+        name: "readOnly",
+        type: "boolean",
+        defaultValue: "false",
+        description:
+          "Keeps the field focusable while applying muted shell styling and blocking edits.",
+      }),
     ],
     notes: [
       "Built on `@base-ui/react/input` and works with Base UI `Field` for labels, descriptions, and validation state.",
-      "Uses a hidden measurement span to position the caret across fonts, password bullets, and horizontal scroll.",
+      "Uses a hidden measurement span to position the caret across fonts, password bullets, RTL layout, and horizontal scroll.",
       "Respects `prefers-reduced-motion` by snapping the caret spring when motion is reduced.",
-      "Standard input attributes such as `autoComplete`, `name`, `readOnly`, `required`, `aria-*`, and `data-*` are forwarded to the native element.",
+      "Clicking the input shell focuses the native control unless the click lands on a trailing action.",
+      "Standard input attributes such as `autoComplete`, `name`, `required`, `aria-*`, and `data-*` are forwarded to the native element.",
     ],
   },
   registryItem("input.json", ["@base-ui/react/input", "motion"]),
