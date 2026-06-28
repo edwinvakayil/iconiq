@@ -4532,7 +4532,7 @@ const inputOtpApiDetails: DetailItem[] = [
     id: "otp",
     title: "OTP",
     summary:
-      "Root wrapper around Base UI OTP Field that owns the shared value, completion state, and keyboard/paste behavior for every slot.",
+      "Root wrapper around Base UI OTP Field with optional label, description, error message, size, and invalid styling for complete form-field semantics.",
     fields: [
       field({
         name: "length",
@@ -4565,11 +4565,99 @@ const inputOtpApiDetails: DetailItem[] = [
           "Called when all slots are filled, including when a complete code is pasted.",
       }),
       field({
+        name: "onValueInvalid",
+        type: "(value: string, eventDetails) => void",
+        description:
+          "Called when entered text contains characters rejected by validation or normalization.",
+      }),
+      field({
         name: "validationType",
         type: '"numeric" | "alpha" | "alphanumeric" | "none"',
         defaultValue: '"numeric"',
         description:
           "Built-in validation applied before values are stored. Use `alphanumeric` for backup or recovery codes.",
+      }),
+      field({
+        name: "normalizeValue",
+        type: "(value: string) => string",
+        description:
+          "Normalizes accepted values before state updates, such as uppercasing recovery codes.",
+      }),
+      field({
+        name: "mask",
+        type: "boolean",
+        defaultValue: "false",
+        description:
+          "Obscures entered characters in the animated slot display and native inputs.",
+      }),
+      field({
+        name: "autoSubmit",
+        type: "boolean",
+        defaultValue: "false",
+        description:
+          "Submits the owning form automatically when the OTP becomes complete.",
+      }),
+      field({
+        name: "autoComplete",
+        type: "string",
+        defaultValue: '"one-time-code"',
+        description:
+          "Autocomplete hint applied to the first slot and hidden validation input for SMS autofill.",
+      }),
+      field({
+        name: "inputMode",
+        type: "string",
+        description:
+          "Virtual keyboard hint applied to slot inputs. Override when `validationType` defaults are not ideal.",
+      }),
+      field({
+        name: "name",
+        type: "string",
+        description: "Identifies the field when a form is submitted.",
+      }),
+      field({
+        name: "form",
+        type: "string",
+        description:
+          "Associates the hidden validation input with a form elsewhere in the document.",
+      }),
+      field({
+        name: "id",
+        type: "string",
+        description:
+          "Applied to the first input. Subsequent inputs derive ids from it. Used by `label` and `htmlFor`.",
+      }),
+      field({
+        name: "label",
+        type: "ReactNode",
+        description:
+          "Visible field label rendered above the OTP group with `htmlFor` wired to the first slot.",
+      }),
+      field({
+        name: "description",
+        type: "ReactNode",
+        description:
+          "Supporting text below the field, linked through `aria-describedby`.",
+      }),
+      field({
+        name: "errorMessage",
+        type: "ReactNode",
+        description:
+          "Error text below the field. Also sets invalid styling when present.",
+      }),
+      field({
+        name: "invalid",
+        type: "boolean",
+        defaultValue: "false",
+        description:
+          "Marks the field invalid for `aria-invalid` and destructive slot borders.",
+      }),
+      field({
+        name: "required",
+        type: "boolean",
+        defaultValue: "false",
+        description:
+          "Whether the user must enter a value before submitting a form.",
       }),
       field({
         name: "disabled",
@@ -4578,9 +4666,27 @@ const inputOtpApiDetails: DetailItem[] = [
         description: "Disables interaction across every slot.",
       }),
       field({
+        name: "readOnly",
+        type: "boolean",
+        defaultValue: "false",
+        description: "Prevents editing while keeping the value visible.",
+      }),
+      field({
+        name: "size",
+        type: '"default" | "sm"',
+        defaultValue: '"default"',
+        description: "Slot dimensions and typography scale.",
+      }),
+      field({
         name: "className",
         type: "string",
         description: "Classes merged onto the root flex container.",
+      }),
+      field({
+        name: "wrapperClassName",
+        type: "string",
+        description:
+          "Classes merged onto the outer field wrapper when label or help text is present.",
       }),
       field({
         name: "containerClassName",
@@ -4592,20 +4698,28 @@ const inputOtpApiDetails: DetailItem[] = [
     notes: [
       "Built on `OTPFieldPreview` from `@base-ui/react/otp-field`.",
       "Prefer `OTPSlots` so slot count always matches `length`, or render one `OTPSlot` per character manually.",
-      "Supports `autoSubmit`, `mask`, `normalizeValue`, and `onValueInvalid` from the underlying Base UI root.",
+      "Scoped theme tokens ship with the component so registry installs look correct without extra theme setup.",
+      "Motion respects `prefers-reduced-motion` by snapping borders, characters, and caret animations.",
+      "Pair `label`, `description`, and `errorMessage` for the same form-field pattern used by `Input`.",
     ],
   },
   {
     id: "otp-slots",
     title: "OTPSlots",
     summary:
-      "Convenience layout that renders the correct number of slots from the parent `OTP` length, with an optional separator.",
+      "Convenience layout that renders the correct number of slots from the parent `OTP` length, with optional separators and placeholder hints.",
     fields: [
       field({
         name: "separatorAfter",
-        type: "number",
+        type: "number | number[]",
         description:
-          "Inserts `OTPSeparator` before the slot at this zero-based index, such as `3` for a 3-3 grouped code.",
+          "Inserts `OTPSeparator` before each listed zero-based index, such as `3` for 3-3 or `[3, 6]` for 3-3-3 codes.",
+      }),
+      field({
+        name: "placeholder",
+        type: "string",
+        description:
+          "Hint shown in empty slots until the active slot receives focus.",
       }),
       field({
         name: "slotClassName",
@@ -4627,12 +4741,17 @@ const inputOtpApiDetails: DetailItem[] = [
     id: "otp-slot",
     title: "OTPSlot",
     summary:
-      "Animated character cell with spring focus ring, pop-in digit motion, and a pulsing caret on the active empty slot.",
+      "Animated character cell with spring focus ring, pop-in digit motion, masked bullets, and a pulsing caret on the active empty slot.",
     fields: [
       field({
         name: "className",
         type: "string",
         description: "Classes merged onto the animated slot surface.",
+      }),
+      field({
+        name: "placeholder",
+        type: "string",
+        description: "Per-slot placeholder hint when composing slots manually.",
       }),
       field({
         name: "aria-label",
@@ -4644,6 +4763,7 @@ const inputOtpApiDetails: DetailItem[] = [
     notes: [
       "The real input is visually hidden but remains focusable for typing, paste, and mobile one-time-code autofill.",
       "Slot order is determined by render order; the legacy `index` prop is accepted but ignored.",
+      "Destructive borders apply when `OTP` is invalid or when Base UI `Field` reports `data-invalid`.",
     ],
   },
   {
@@ -4663,12 +4783,18 @@ const inputOtpApiDetails: DetailItem[] = [
     id: "otp-separator",
     title: "OTPSeparator",
     summary:
-      "Accessible separator between OTP groups, rendered with the dotted divider used in the Iconiq preview.",
+      "Screen-reader-accessible separator between OTP groups, rendered with the dotted divider used in the Iconiq preview.",
     fields: [
       field({
         name: "className",
         type: "string",
         description: "Classes merged onto the separator element.",
+      }),
+      field({
+        name: "orientation",
+        type: '"horizontal" | "vertical"',
+        defaultValue: '"horizontal"',
+        description: "Separator orientation passed through to Base UI.",
       }),
     ],
   },

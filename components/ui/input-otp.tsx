@@ -11,6 +11,7 @@ import {
 
 export type {
   OTPProps,
+  OTPSize,
   OTPSlotProps,
   OTPSlotsProps,
 } from "@/registry/input-otp";
