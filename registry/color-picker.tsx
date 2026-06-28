@@ -1,10 +1,12 @@
 "use client";
 
+import { Input as InputPrimitive } from "@base-ui/react/input";
 import { Check, ChevronDown, Copy, Pipette } from "lucide-react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import {
   type ForwardedRef,
   forwardRef,
+  type HTMLAttributes,
   type KeyboardEvent as ReactKeyboardEvent,
   type ReactNode,
   type RefObject,
@@ -627,6 +629,20 @@ function getDisplayHex(rgb: Rgb, alpha: number, showAlpha: boolean) {
   return `${hex}${toHex(alphaChannel)}`;
 }
 
+type ColorEmitMode = "none" | "change" | "commit";
+
+function buildNormalizedColor(
+  nextRgb: Rgb,
+  nextAlpha: number,
+  showAlpha: boolean
+) {
+  const resolvedAlpha = showAlpha ? clampPercent(nextAlpha) : 100;
+  const normalized = formatColorValue(nextRgb, resolvedAlpha);
+  const detail = buildChangeDetail(nextRgb, resolvedAlpha);
+
+  return { detail, normalized, resolvedAlpha };
+}
+
 function useControllableOpen(
   openProp: boolean | undefined,
   defaultOpen: boolean,
@@ -670,9 +686,10 @@ function useColorPickerController({
   | "showAlpha"
   | "value"
 >) {
+  const resolvedDefaultAlpha = clampPercent(defaultAlpha);
   const initialRgb = getInitialRgb(value ?? defaultValue);
   const initialAlpha = showAlpha
-    ? getInitialAlpha(value ?? defaultValue, defaultAlpha)
+    ? getInitialAlpha(value ?? defaultValue, resolvedDefaultAlpha)
     : 100;
   const initialPickerHsv = getPickerHsv(initialRgb);
   const [rgb, setRgb] = useState<Rgb>(initialRgb);
@@ -692,12 +709,14 @@ function useColorPickerController({
   const pickerValRef = useRef(initialPickerHsv.v);
   const alphaRef = useRef(initialAlpha);
   const showAlphaRef = useRef(showAlpha);
-  const lastEmittedColorRef = useRef(
+  const lastSyncedColorRef = useRef(
     normalizeColorValue(
       value ?? defaultValue,
-      showAlpha ? defaultAlpha : 100
+      showAlpha ? resolvedDefaultAlpha : 100
     ) ?? formatColorValue(initialRgb, initialAlpha)
   );
+  const lastNotifiedColorRef = useRef(lastSyncedColorRef.current);
+  const lastCommittedColorRef = useRef(lastSyncedColorRef.current);
   const isEditingRef = useRef(false);
   const isDraggingSvRef = useRef(false);
   const isDraggingHueRef = useRef(false);
@@ -743,23 +762,65 @@ function useColorPickerController({
     setPickerVal(nextPickerHsv.v);
   }, []);
 
-  const emitColor = useCallback(
+  const notifyChange = useCallback(
     (nextRgb: Rgb, nextAlpha = alphaRef.current) => {
-      const resolvedAlpha = showAlphaRef.current
-        ? clampPercent(nextAlpha)
-        : 100;
-      const normalized = formatColorValue(nextRgb, resolvedAlpha);
+      const { detail, normalized } = buildNormalizedColor(
+        nextRgb,
+        nextAlpha,
+        showAlphaRef.current
+      );
 
-      if (normalized === lastEmittedColorRef.current) {
+      if (normalized === lastNotifiedColorRef.current) {
         return;
       }
 
-      lastEmittedColorRef.current = normalized;
-      const detail = buildChangeDetail(nextRgb, resolvedAlpha);
+      lastNotifiedColorRef.current = normalized;
+      lastSyncedColorRef.current = normalized;
       onChangeRef.current?.(normalized, detail);
-      onValueCommitRef.current?.(normalized, detail);
     },
     []
+  );
+
+  const commitChange = useCallback(
+    (nextRgb: Rgb, nextAlpha = alphaRef.current) => {
+      const { detail, normalized } = buildNormalizedColor(
+        nextRgb,
+        nextAlpha,
+        showAlphaRef.current
+      );
+
+      if (normalized !== lastNotifiedColorRef.current) {
+        lastNotifiedColorRef.current = normalized;
+        lastSyncedColorRef.current = normalized;
+        onChangeRef.current?.(normalized, detail);
+      }
+
+      if (normalized !== lastCommittedColorRef.current) {
+        lastCommittedColorRef.current = normalized;
+        onValueCommitRef.current?.(normalized, detail);
+      }
+    },
+    []
+  );
+
+  const emitColor = useCallback(
+    (
+      nextRgb: Rgb,
+      nextAlpha = alphaRef.current,
+      mode: ColorEmitMode = "commit"
+    ) => {
+      if (mode === "none") {
+        return;
+      }
+
+      if (mode === "change") {
+        notifyChange(nextRgb, nextAlpha);
+        return;
+      }
+
+      commitChange(nextRgb, nextAlpha);
+    },
+    [commitChange, notifyChange]
   );
 
   const applyColorState = useCallback(
@@ -767,9 +828,9 @@ function useColorPickerController({
       nextRgb: Rgb,
       nextAlpha: number,
       {
-        shouldEmit = true,
+        emitMode = "none",
         syncPicker = true,
-      }: { shouldEmit?: boolean; syncPicker?: boolean } = {}
+      }: { emitMode?: ColorEmitMode; syncPicker?: boolean } = {}
     ) => {
       const resolvedAlpha = showAlphaRef.current
         ? clampPercent(nextAlpha)
@@ -785,15 +846,13 @@ function useColorPickerController({
       alphaRef.current = resolvedAlpha;
       setAlpha(resolvedAlpha);
 
-      if (shouldEmit) {
-        emitColor(nextRgb, resolvedAlpha);
-      }
+      emitColor(nextRgb, resolvedAlpha, emitMode);
     },
     [emitColor, syncPickerFromRgb]
   );
 
   const applyAlpha = useCallback(
-    (nextAlpha: number, shouldEmit = true) => {
+    (nextAlpha: number, emitMode: ColorEmitMode = "none") => {
       if (!showAlphaRef.current) {
         return;
       }
@@ -803,15 +862,13 @@ function useColorPickerController({
       alphaRef.current = clampedAlpha;
       setAlpha(clampedAlpha);
 
-      if (shouldEmit) {
-        emitColor(rgbRef.current, clampedAlpha);
-      }
+      emitColor(rgbRef.current, clampedAlpha, emitMode);
     },
     [emitColor]
   );
 
   const applyRgb = useCallback(
-    (nextRgb: Rgb, shouldEmit = true, syncPicker = true) => {
+    (nextRgb: Rgb, emitMode: ColorEmitMode = "none", syncPicker = true) => {
       rgbRef.current = nextRgb;
       setRgb(nextRgb);
 
@@ -819,9 +876,7 @@ function useColorPickerController({
         syncPickerFromRgb(nextRgb);
       }
 
-      if (shouldEmit) {
-        emitColor(nextRgb);
-      }
+      emitColor(nextRgb, alphaRef.current, emitMode);
     },
     [emitColor, syncPickerFromRgb]
   );
@@ -831,7 +886,7 @@ function useColorPickerController({
       nextHue: number,
       nextSaturation: number,
       nextValue: number,
-      shouldEmit = true
+      emitMode: ColorEmitMode = "none"
     ) => {
       const normalizedHue = normalizeHue(nextHue);
       const roundedSaturation = Math.max(
@@ -847,13 +902,13 @@ function useColorPickerController({
       setPickerHue(normalizedHue);
       setPickerSat(roundedSaturation);
       setPickerVal(roundedValue);
-      applyRgb(nextRgb, shouldEmit, false);
+      applyRgb(nextRgb, emitMode, false);
     },
     [applyRgb]
   );
 
   const setFromHex = useCallback(
-    (nextValue: string, shouldEmit = true) => {
+    (nextValue: string, emitMode: ColorEmitMode = "commit") => {
       const parsed = parseHexColor(nextValue);
 
       if (!parsed) {
@@ -868,7 +923,7 @@ function useColorPickerController({
             ? alphaRef.current
             : 100;
 
-      applyColorState(nextRgb, nextAlpha, { shouldEmit, syncPicker: true });
+      applyColorState(nextRgb, nextAlpha, { emitMode, syncPicker: true });
       return true;
     },
     [applyColorState]
@@ -876,35 +931,35 @@ function useColorPickerController({
 
   const setFromHsl = useCallback(
     (nextHue: number, nextSaturation: number, nextLightness: number) => {
-      applyRgb(hslToRgb(nextHue, nextSaturation, nextLightness));
+      applyRgb(hslToRgb(nextHue, nextSaturation, nextLightness), "commit");
     },
     [applyRgb]
   );
 
   const setFromOklch = useCallback(
     (nextLightness: number, nextChroma: number, nextHue: number) => {
-      applyRgb(oklchToRgb(nextLightness, nextChroma, nextHue));
+      applyRgb(oklchToRgb(nextLightness, nextChroma, nextHue), "commit");
     },
     [applyRgb]
   );
 
   const commitHexInput = useCallback(
-    (rawValue: string) => {
+    (rawValue: string, emitMode: ColorEmitMode = "commit") => {
       const normalized = rawValue
         .trim()
         .replace(HEX_HASH_PREFIX, "")
         .toUpperCase();
 
       if (normalized.length === 8) {
-        return setFromHex(normalized);
+        return setFromHex(normalized, emitMode);
       }
 
       if (normalized.length === 6) {
-        return setFromHex(normalized);
+        return setFromHex(normalized, emitMode);
       }
 
       if (normalized.length === 3 || normalized.length === 4) {
-        return setFromHex(expandShortHex(normalized));
+        return setFromHex(expandShortHex(normalized), emitMode);
       }
 
       return false;
@@ -926,10 +981,10 @@ function useColorPickerController({
 
     const normalizedValue = normalizeColorValue(
       value,
-      showAlpha ? defaultAlpha : 100
+      showAlpha ? resolvedDefaultAlpha : 100
     );
 
-    if (!normalizedValue || normalizedValue === lastEmittedColorRef.current) {
+    if (!normalizedValue || normalizedValue === lastSyncedColorRef.current) {
       return;
     }
 
@@ -940,19 +995,21 @@ function useColorPickerController({
     }
 
     const { alpha: parsedAlpha, ...nextRgb } = parsed;
-    const nextAlpha = showAlpha ? (parsedAlpha ?? defaultAlpha) : 100;
+    const nextAlpha = showAlpha ? (parsedAlpha ?? resolvedDefaultAlpha) : 100;
 
-    lastEmittedColorRef.current = normalizedValue;
+    lastSyncedColorRef.current = normalizedValue;
+    lastNotifiedColorRef.current = normalizedValue;
+    lastCommittedColorRef.current = normalizedValue;
     rgbRef.current = nextRgb;
     alphaRef.current = nextAlpha;
     setRgb(nextRgb);
     setAlpha(nextAlpha);
     syncPickerFromRgb(nextRgb);
-  }, [defaultAlpha, hexFocused, showAlpha, syncPickerFromRgb, value]);
+  }, [hexFocused, resolvedDefaultAlpha, showAlpha, syncPickerFromRgb, value]);
 
   useEffect(() => {
     if (!showAlpha && alpha !== 100) {
-      applyAlpha(100, false);
+      applyAlpha(100, "none");
     }
   }, [alpha, applyAlpha, showAlpha]);
 
@@ -962,9 +1019,9 @@ function useColorPickerController({
     applyPickerHsv,
     applyRgb,
     colorValue,
+    commitChange,
     commitHexInput,
     effectiveAlpha,
-    emitColor,
     format,
     hex,
     hexFocused,
@@ -1007,12 +1064,20 @@ function PresetSwatches({
     return null;
   }
 
+  const validPresets = presets.filter(
+    (preset) => parseHexColor(preset) !== null
+  );
+
+  if (validPresets.length === 0) {
+    return null;
+  }
+
   return (
     <ul
       aria-label="Color presets"
       className="mb-3 flex list-none flex-wrap gap-1.5 p-0"
     >
-      {presets.map((preset, index) => {
+      {validPresets.map((preset, index) => {
         const parsed = parseHexColor(preset);
         const swatchAlpha = parsed?.alpha ?? 100;
         const swatchColor = parsed
@@ -1054,6 +1119,7 @@ function ColorPickerPanel({
   ariaLabelledBy,
   controller,
   disabled,
+  fillWidth = false,
   formatMenuId,
   formatTriggerId,
   id,
@@ -1070,6 +1136,7 @@ function ColorPickerPanel({
   ariaLabelledBy?: string;
   controller: ColorPickerController;
   disabled?: boolean;
+  fillWidth?: boolean;
   formatMenuId: string;
   formatTriggerId: string;
   id?: string;
@@ -1088,9 +1155,9 @@ function ColorPickerPanel({
     applyPickerHsv,
     applyRgb,
     colorValue,
+    commitChange,
     commitHexInput,
     effectiveAlpha,
-    emitColor,
     format,
     hexFocused,
     hexInput,
@@ -1147,7 +1214,10 @@ function ColorPickerPanel({
   pickerValRef.current = pickerVal;
 
   const updateSV = useCallback(
-    (event: { clientX: number; clientY: number }, shouldEmit = false) => {
+    (
+      event: { clientX: number; clientY: number },
+      emitMode: ColorEmitMode = "none"
+    ) => {
       const element = svRef.current;
 
       if (!element) {
@@ -1173,7 +1243,7 @@ function ColorPickerPanel({
         pickerHueRef.current,
         Math.round(x * 100),
         Math.round((1 - y) * 100),
-        shouldEmit
+        emitMode
       );
     },
     [applyPickerHsv]
@@ -1182,7 +1252,7 @@ function ColorPickerPanel({
   useEffect(() => {
     const move = (event: PointerEvent) => {
       if (dragRef.current === "sv") {
-        updateSV(event, false);
+        updateSV(event, "none");
       }
     };
     const up = () => {
@@ -1191,7 +1261,7 @@ function ColorPickerPanel({
         dragRef.current === "hue" ||
         dragRef.current === "alpha"
       ) {
-        emitColor(rgbRef.current, alphaRef.current);
+        commitChange(rgbRef.current, alphaRef.current);
       }
 
       dragRef.current = null;
@@ -1210,7 +1280,7 @@ function ColorPickerPanel({
       window.removeEventListener("pointercancel", up);
     };
   }, [
-    emitColor,
+    commitChange,
     isDraggingAlphaRef,
     isDraggingHueRef,
     isDraggingSvRef,
@@ -1326,7 +1396,7 @@ function ColorPickerPanel({
         return;
     }
 
-    applyPickerHsv(pickerHueRef.current, nextSat, nextVal, true);
+    applyPickerHsv(pickerHueRef.current, nextSat, nextVal, "commit");
   };
 
   const handleFormatTriggerKeyDown = (event: ReactKeyboardEvent) => {
@@ -1371,7 +1441,7 @@ function ColorPickerPanel({
       className={cn(
         componentThemeClassName,
         controlCornerClassName,
-        colorPickerShellWidthClassName,
+        fillWidth ? "w-full min-w-0" : colorPickerShellWidthClassName,
         "relative isolate m-0 min-w-0 overflow-visible border border-border bg-card p-3.5 shadow-[0_10px_28px_-18px_rgba(15,23,42,0.16)] dark:shadow-[0_12px_32px_-20px_rgba(0,0,0,0.35)]",
         disabled && "pointer-events-none opacity-60"
       )}
@@ -1425,7 +1495,7 @@ function ColorPickerPanel({
             dragRef.current = "sv";
             isDraggingSvRef.current = true;
             event.currentTarget.setPointerCapture(event.pointerId);
-            updateSV(event, false);
+            updateSV(event, "none");
           }}
           ref={svRef}
           role="application"
@@ -1474,7 +1544,7 @@ function ColorPickerPanel({
                 Number(event.target.value),
                 pickerSatRef.current,
                 pickerValRef.current,
-                false
+                "none"
               );
             }}
             onPointerDown={(event) => {
@@ -1482,6 +1552,7 @@ function ColorPickerPanel({
               isDraggingHueRef.current = true;
               event.currentTarget.setPointerCapture(event.pointerId);
             }}
+            step={1}
             type="range"
             value={pickerHue}
           />
@@ -1515,13 +1586,14 @@ function ColorPickerPanel({
               max={100}
               min={0}
               onChange={(event) => {
-                applyAlpha(Number(event.target.value), false);
+                applyAlpha(Number(event.target.value), "none");
               }}
               onPointerDown={(event) => {
                 dragRef.current = "alpha";
                 isDraggingAlphaRef.current = true;
                 event.currentTarget.setPointerCapture(event.pointerId);
               }}
+              step={1}
               type="range"
               value={alpha}
             />
@@ -1669,7 +1741,7 @@ function ColorPickerPanel({
                     <span className="font-light text-base text-muted-foreground">
                       #
                     </span>
-                    <input
+                    <ColorPickerTextInput
                       aria-describedby={
                         hexInvalid ? `${svFieldId}-hex-error` : undefined
                       }
@@ -1683,24 +1755,8 @@ function ColorPickerPanel({
                       onBlur={() => {
                         isEditingRef.current = false;
                         setHexFocused(false);
-                        const committed = commitHexInput(hexInput);
+                        const committed = commitHexInput(hexInput, "commit");
                         setHexInvalid(!committed && hexInput.trim().length > 0);
-                      }}
-                      onChange={(event) => {
-                        const maxLength = showAlpha ? 8 : 6;
-                        const nextValue = event.target.value
-                          .replace(HEX_INPUT_SANITIZE_PATTERN, "")
-                          .slice(0, maxLength)
-                          .toUpperCase();
-                        setHexInput(nextValue);
-                        setHexInvalid(false);
-
-                        if (
-                          nextValue.length === 6 ||
-                          (showAlpha && nextValue.length === 8)
-                        ) {
-                          commitHexInput(nextValue);
-                        }
                       }}
                       onFocus={() => {
                         isEditingRef.current = true;
@@ -1711,6 +1767,22 @@ function ColorPickerPanel({
                       onKeyDown={(event) => {
                         if (event.key === "Enter") {
                           event.currentTarget.blur();
+                        }
+                      }}
+                      onValueChange={(nextValue) => {
+                        const maxLength = showAlpha ? 8 : 6;
+                        const sanitized = nextValue
+                          .replace(HEX_INPUT_SANITIZE_PATTERN, "")
+                          .slice(0, maxLength)
+                          .toUpperCase();
+                        setHexInput(sanitized);
+                        setHexInvalid(false);
+
+                        if (
+                          sanitized.length === 6 ||
+                          (showAlpha && sanitized.length === 8)
+                        ) {
+                          commitHexInput(sanitized, "change");
                         }
                       }}
                       spellCheck={false}
@@ -1733,7 +1805,7 @@ function ColorPickerPanel({
                   label="Alpha"
                   max={100}
                   min={0}
-                  onChange={applyAlpha}
+                  onChange={(nextAlpha) => applyAlpha(nextAlpha, "commit")}
                   onEditEnd={() => {
                     isEditingRef.current = false;
                   }}
@@ -1753,7 +1825,7 @@ function ColorPickerPanel({
                 label="Red"
                 max={255}
                 min={0}
-                onChange={(nextRed) => applyRgb({ r: nextRed, g, b })}
+                onChange={(nextRed) => applyRgb({ r: nextRed, g, b }, "commit")}
                 onEditEnd={() => {
                   isEditingRef.current = false;
                 }}
@@ -1767,7 +1839,9 @@ function ColorPickerPanel({
                 label="Green"
                 max={255}
                 min={0}
-                onChange={(nextGreen) => applyRgb({ r, g: nextGreen, b })}
+                onChange={(nextGreen) =>
+                  applyRgb({ r, g: nextGreen, b }, "commit")
+                }
                 onEditEnd={() => {
                   isEditingRef.current = false;
                 }}
@@ -1781,7 +1855,9 @@ function ColorPickerPanel({
                 label="Blue"
                 max={255}
                 min={0}
-                onChange={(nextBlue) => applyRgb({ r, g, b: nextBlue })}
+                onChange={(nextBlue) =>
+                  applyRgb({ r, g, b: nextBlue }, "commit")
+                }
                 onEditEnd={() => {
                   isEditingRef.current = false;
                 }}
@@ -1796,7 +1872,7 @@ function ColorPickerPanel({
                   label="Alpha"
                   max={100}
                   min={0}
-                  onChange={applyAlpha}
+                  onChange={(nextAlpha) => applyAlpha(nextAlpha, "commit")}
                   onEditEnd={() => {
                     isEditingRef.current = false;
                   }}
@@ -1863,7 +1939,7 @@ function ColorPickerPanel({
                   label="Alpha"
                   max={100}
                   min={0}
-                  onChange={applyAlpha}
+                  onChange={(nextAlpha) => applyAlpha(nextAlpha, "commit")}
                   onEditEnd={() => {
                     isEditingRef.current = false;
                   }}
@@ -1932,7 +2008,7 @@ function ColorPickerPanel({
                   label="Alpha"
                   max={100}
                   min={0}
-                  onChange={applyAlpha}
+                  onChange={(nextAlpha) => applyAlpha(nextAlpha, "commit")}
                   onEditEnd={() => {
                     isEditingRef.current = false;
                   }}
@@ -1992,18 +2068,67 @@ function getPopoverPanelMotion(
   };
 }
 
+const POPOVER_VIEWPORT_PADDING = 12;
+const POPOVER_GAP = 8;
+
+function getColorPickerPopoverPosition({
+  align,
+  anchorRect,
+  matchAnchorWidth,
+  panelRect,
+}: {
+  align: "center" | "start";
+  anchorRect: DOMRect;
+  matchAnchorWidth: boolean;
+  panelRect: DOMRect;
+}) {
+  const panelWidth = matchAnchorWidth ? anchorRect.width : panelRect.width;
+  let placement: "bottom" | "top" = "bottom";
+  let top = anchorRect.bottom + POPOVER_GAP;
+  let left =
+    align === "center"
+      ? anchorRect.left + anchorRect.width / 2 - panelWidth / 2
+      : anchorRect.left;
+
+  if (left + panelWidth > window.innerWidth - POPOVER_VIEWPORT_PADDING) {
+    left = window.innerWidth - panelWidth - POPOVER_VIEWPORT_PADDING;
+  }
+
+  if (left < POPOVER_VIEWPORT_PADDING) {
+    left = POPOVER_VIEWPORT_PADDING;
+  }
+
+  if (top + panelRect.height > window.innerHeight - POPOVER_VIEWPORT_PADDING) {
+    top = anchorRect.top - panelRect.height - POPOVER_GAP;
+    placement = "top";
+  }
+
+  return {
+    left: Math.round(left),
+    placement,
+    top: Math.round(top),
+    width: matchAnchorWidth ? Math.round(anchorRect.width) : undefined,
+  };
+}
+
 function ColorPickerPopoverLayer({
+  align = "start",
   anchorRef,
   children,
+  matchAnchorWidth = false,
   onClose,
   open,
   panelId,
+  triggerId,
 }: {
+  align?: "center" | "start";
   anchorRef: RefObject<HTMLElement | null>;
   children: ReactNode;
+  matchAnchorWidth?: boolean;
   onClose: () => void;
   open: boolean;
   panelId: string;
+  triggerId: string;
 }) {
   const floatingRef = useRef<HTMLDivElement>(null);
   const reducedMotion = useReducedMotion();
@@ -2011,6 +2136,7 @@ function ColorPickerPopoverLayer({
     left: 0,
     placement: "bottom" as "bottom" | "top",
     top: 0,
+    width: undefined as number | undefined,
   });
   const [isPositioned, setIsPositioned] = useState(false);
   const [mounted, setMounted] = useState(false);
@@ -2044,25 +2170,15 @@ function ColorPickerPopoverLayer({
 
       const anchorRect = anchor.getBoundingClientRect();
       const panelRect = panel.getBoundingClientRect();
-      const viewportPadding = 12;
-      let placement: "bottom" | "top" = "bottom";
-      let top = anchorRect.bottom + 8;
-      let left = anchorRect.left + anchorRect.width / 2 - panelRect.width / 2;
 
-      if (left + panelRect.width > window.innerWidth - viewportPadding) {
-        left = window.innerWidth - panelRect.width - viewportPadding;
-      }
-
-      if (left < viewportPadding) {
-        left = viewportPadding;
-      }
-
-      if (top + panelRect.height > window.innerHeight - viewportPadding) {
-        top = anchorRect.top - panelRect.height - 8;
-        placement = "top";
-      }
-
-      setPosition({ left, placement, top });
+      setPosition(
+        getColorPickerPopoverPosition({
+          align,
+          anchorRect,
+          matchAnchorWidth,
+          panelRect,
+        })
+      );
       setIsPositioned(true);
     };
 
@@ -2076,7 +2192,7 @@ function ColorPickerPopoverLayer({
       window.removeEventListener("resize", updatePosition);
       window.removeEventListener("scroll", updatePosition, true);
     };
-  }, [anchorRef, open]);
+  }, [align, anchorRef, matchAnchorWidth, open]);
 
   useEffect(() => {
     if (!(open && isPositioned)) {
@@ -2139,6 +2255,7 @@ function ColorPickerPopoverLayer({
       {open ? (
         <motion.div
           animate={panelMotion.animate}
+          aria-labelledby={triggerId}
           aria-modal="true"
           className="fixed z-[100]"
           exit={panelMotion.exit}
@@ -2152,6 +2269,7 @@ function ColorPickerPopoverLayer({
             transformOrigin:
               position.placement === "top" ? "bottom center" : "top center",
             visibility: isPositioned ? "visible" : "hidden",
+            width: position.width,
           }}
           transition={panelMotion.transition}
         >
@@ -2220,7 +2338,15 @@ export const ColorPicker = forwardRef(function ColorPicker(
   });
 
   const hiddenInput = name ? (
-    <input name={name} readOnly type="hidden" value={controller.colorValue} />
+    <InputPrimitive
+      name={name}
+      readOnly
+      render={(inputProps) => (
+        <input {...inputProps} tabIndex={-1} type="hidden" />
+      )}
+      tabIndex={-1}
+      value={controller.colorValue}
+    />
   ) : null;
 
   if (variant === "popover" || variant === "swatch") {
@@ -2320,16 +2446,20 @@ export const ColorPicker = forwardRef(function ColorPicker(
         )}
 
         <ColorPickerPopoverLayer
+          align={variant === "popover" ? "start" : "center"}
           anchorRef={triggerRef}
+          matchAnchorWidth={variant === "popover"}
           onClose={() => setOpen(false)}
           open={open}
           panelId={panelId}
+          triggerId={triggerId}
         >
           <ColorPickerPanel
             ariaLabel={ariaLabel}
             ariaLabelledBy={ariaLabelledBy}
             controller={controller}
             disabled={disabled}
+            fillWidth={variant === "popover"}
             formatMenuId={formatMenuId}
             formatTriggerId={formatTriggerId}
             id={panelId}
@@ -2378,11 +2508,73 @@ export const ColorPicker = forwardRef(function ColorPicker(
   );
 });
 
+ColorPicker.displayName = "ColorPicker";
+
+function ColorPickerTextInput({
+  "aria-describedby": ariaDescribedBy,
+  "aria-invalid": ariaInvalid,
+  "aria-label": ariaLabel,
+  className,
+  disabled,
+  inputMode,
+  onBlur,
+  onFocus,
+  onKeyDown,
+  onValueChange,
+  spellCheck,
+  value,
+}: {
+  "aria-describedby"?: string;
+  "aria-invalid"?: boolean;
+  "aria-label": string;
+  className?: string;
+  disabled?: boolean;
+  inputMode?: HTMLAttributes<HTMLInputElement>["inputMode"];
+  onBlur?: () => void;
+  onFocus?: () => void;
+  onKeyDown?: (event: ReactKeyboardEvent<HTMLInputElement>) => void;
+  onValueChange: (value: string) => void;
+  spellCheck?: boolean;
+  value: string;
+}) {
+  return (
+    <InputPrimitive
+      aria-describedby={ariaDescribedBy}
+      aria-invalid={ariaInvalid}
+      aria-label={ariaLabel}
+      disabled={disabled}
+      inputMode={inputMode}
+      onBlur={onBlur}
+      onFocus={onFocus}
+      onKeyDown={onKeyDown}
+      onValueChange={onValueChange}
+      render={(inputProps) => {
+        const {
+          className: primitiveClassName,
+          ref: _ref,
+          ...resolvedInputProps
+        } = inputProps;
+
+        return (
+          <input
+            {...resolvedInputProps}
+            className={cn(className, primitiveClassName)}
+            data-slot="color-picker-input"
+            spellCheck={spellCheck}
+            type="text"
+          />
+        );
+      }}
+      value={value}
+    />
+  );
+}
+
 function ChannelInput({
   value,
   min,
   max,
-  step = 1,
+  step: _step = 1,
   suffix,
   label,
   disabled,
@@ -2425,7 +2617,7 @@ function ChannelInput({
   return (
     <div className="flex min-w-0 flex-1 flex-col items-center gap-0.5">
       <div className="flex w-full min-w-0 items-baseline justify-center gap-0.5">
-        <input
+        <ColorPickerTextInput
           aria-label={label}
           className="w-full min-w-0 bg-transparent text-center font-light text-base tabular-nums outline-none disabled:cursor-not-allowed disabled:opacity-50"
           disabled={disabled}
@@ -2435,21 +2627,25 @@ function ChannelInput({
             onEditEnd?.();
             commit();
           }}
-          onChange={(event) => {
-            setLocal(event.target.value);
-          }}
           onFocus={() => {
             onEditStart?.();
             setLocal(String(value));
             setFocused(true);
           }}
           onKeyDown={(event) => {
+            if (event.key === "Escape") {
+              setLocal(String(value));
+              setFocused(false);
+              onEditEnd?.();
+              event.currentTarget.blur();
+              return;
+            }
+
             if (event.key === "Enter") {
               event.currentTarget.blur();
             }
           }}
-          step={step}
-          type="text"
+          onValueChange={setLocal}
           value={displayValue}
         />
         {suffix ? (

@@ -5190,7 +5190,7 @@ const colorPickerApiDetails: DetailItem[] = [
       }),
     ],
     notes: [
-      "Install with npx shadcn@latest add https://iconiqui.com/r/color-picker.json (requires lucide-react, motion, and a cn helper).",
+      "Install with npx shadcn@latest add https://iconiqui.com/r/color-picker.json (requires @base-ui/react, lucide-react, motion, and a cn helper).",
       "Theme tokens are embedded on the panel node so the picker works without iconiq-theme, though it still maps cleanly to shadcn semantic colors.",
       "The saturation square, hue slider, and alpha slider share one RGB source of truth. Slider drags emit on pointer up to stay stable in controlled mode.",
       "Format switching exposes editable HEX, RGB, HSL, and OKLCH channels with labeled inputs. Values commit on blur or Enter so partial typing does not fight the live color state.",
@@ -5200,7 +5200,11 @@ const colorPickerApiDetails: DetailItem[] = [
       "FluidColorPicker remains exported as a backward-compatible alias for older imports.",
     ],
   },
-  registryItem("color-picker.json", ["lucide-react", "motion"]),
+  registryItem("color-picker.json", [
+    "@base-ui/react",
+    "lucide-react",
+    "motion",
+  ]),
 ];
 
 const accordionApiDetails: DetailItem[] = [

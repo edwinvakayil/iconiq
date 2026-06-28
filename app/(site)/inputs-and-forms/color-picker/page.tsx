@@ -1,6 +1,6 @@
 "use client";
 
-import { SharedPrimitiveProviderSwitch } from "@/app/(site)/components/_components/provider-switch";
+import { ProviderSwitch } from "@/app/(site)/components/_components/provider-switch";
 import { ColorPickerPlaygroundProvider } from "@/app/(site)/inputs-and-forms/color-picker/_components/color-picker-playground";
 import { colorPickerApiDetails } from "@/components/docs/component-api";
 import { ComponentDocsPage } from "@/components/docs/page-shell";
@@ -46,13 +46,17 @@ const details = colorPickerApiDetails.map((item) => {
   return {
     ...item,
     notes: [
-      "Dependencies: lucide-react, motion.",
-      "This page documents the shared Iconiq color picker. Base UI and Radix UI options are disabled because there is no primitive-specific variant.",
+      "Dependencies: @base-ui/react, lucide-react, motion.",
+      "This page documents the Base UI install only. Text inputs use the Base UI Input primitive; Radix UI does not ship a dedicated color picker primitive.",
       "The generated registry file is /r/color-picker.json.",
     ],
     registryPath: "color-picker.json",
   };
 });
+
+function handleProviderSelect() {
+  return undefined;
+}
 
 export default function ColorPickerPage() {
   return (
@@ -68,7 +72,13 @@ export default function ColorPickerPage() {
           description="HSV picker with sliders, format readouts, hex input, presets, popover mode, and eyedropper."
           details={details}
           editHref={`${LINK.GITHUB}/edit/main/app/(site)/inputs-and-forms/color-picker/page.tsx`}
-          headerActions={<SharedPrimitiveProviderSwitch />}
+          headerActions={
+            <ProviderSwitch
+              disabledProviders={["radix"]}
+              onSelect={handleProviderSelect}
+              selectedProvider="base"
+            />
+          }
           pageUrl="/inputs-and-forms/color-picker"
           preview={preview}
           previewClassName="!overflow-visible min-h-[20rem] lg:col-span-8"
@@ -84,7 +94,7 @@ export default function ColorPickerPage() {
           ]}
           title="Color Picker"
           usageCode={usageCode}
-          usageDescription="Use ColorPicker when a form needs an inline or popover color surface instead of the native color input. Pass value and onChange for controlled usage, or rely on defaultValue for an uncontrolled starting color."
+          usageDescription="This Base UI install uses the Input primitive for hex and channel readouts. Pass value and onChange for controlled usage, or rely on defaultValue for an uncontrolled starting color."
           v0PageCode={usageCode}
         />
       )}

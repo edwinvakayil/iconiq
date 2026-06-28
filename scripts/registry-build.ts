@@ -393,7 +393,7 @@ const REGISTRY_UI_META: Record<
     title: "Color Picker",
     description:
       "HSV panel with saturation field, hue/alpha sliders, multi-format readouts, hex input, and EyeDropper.",
-    dependencies: ["lucide-react", "motion"],
+    dependencies: ["@base-ui/react", "lucide-react", "motion"],
   },
   charts: {
     title: "Charts",

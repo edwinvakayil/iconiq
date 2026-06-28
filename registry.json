@@ -576,7 +576,7 @@
       "name": "color-picker",
       "type": "registry:ui",
       "registryDependencies": [],
-      "dependencies": ["lucide-react", "motion"],
+      "dependencies": ["@base-ui/react", "lucide-react", "motion"],
       "devDependencies": [],
       "title": "Color Picker",
       "description": "HSV panel with saturation field, hue/alpha sliders, multi-format readouts, hex input, and EyeDropper.",
