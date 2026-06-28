@@ -2685,9 +2685,16 @@ const comboboxApiDetails: DetailItem[] = [
       }),
       field({
         name: "onValueChange",
-        type: "(value: Item | Item[] | null) => void",
+        type: "(value, eventDetails) => void",
         description:
           "Called when an item is selected, a chip is removed, or the clear action resets the selection.",
+      }),
+      field({
+        name: "multiple",
+        type: "boolean",
+        defaultValue: "false",
+        description:
+          "Allows selecting multiple items. Pair with ComboboxChips, ComboboxChip, and ComboboxChipsInput.",
       }),
       field({
         name: "itemToStringLabel",
@@ -2701,28 +2708,71 @@ const comboboxApiDetails: DetailItem[] = [
         description: "Maps object values to the hidden form value.",
       }),
       field({
+        name: "isItemEqualToValue",
+        type: "(item, value) => boolean",
+        description:
+          "Custom equality check for object values. Defaults to Object.is.",
+      }),
+      field({
         name: "inputValue",
         type: "string",
         description:
           "Controlled search text. Leave uncontrolled for Base UI to manage query state.",
       }),
       field({
+        name: "onInputValueChange",
+        type: "(inputValue, eventDetails) => void",
+        description: "Called when the typed query changes.",
+      }),
+      field({
+        name: "autoHighlight",
+        type: "boolean",
+        defaultValue: "false",
+        description:
+          "Automatically highlights the first matching item while filtering.",
+      }),
+      field({
         name: "open",
         type: "boolean",
         description: "Controlled popup state. Pair with onOpenChange.",
+      }),
+      field({
+        name: "onOpenChange",
+        type: "(open, eventDetails) => void",
+        description: "Called when the popup opens or closes.",
+      }),
+      field({
+        name: "openOnInputClick",
+        type: "boolean",
+        defaultValue: "false",
+        description:
+          "When true, clicking the input shell opens the popup. Otherwise only focus is moved.",
+      }),
+      field({
+        name: "onItemHighlighted",
+        type: "(value, eventDetails) => void",
+        description:
+          "Called when the highlighted item changes from keyboard or pointer navigation.",
       }),
     ],
     notes: [
       "The root wraps Base UI's combobox primitive with the same Iconiq motion layer used by the previous wrapper.",
       "Filtering, selection, typeahead, keyboard navigation, and clear behavior are delegated to Base UI while the visual treatment stays Iconiq.",
+      "Popup, item, and highlight motion honor prefers-reduced-motion automatically.",
     ],
   },
   {
     id: "combobox-input",
     title: "ComboboxInput",
     summary:
-      "Styled input shell with the previous border, focus ring, clear button, and rotating trigger icon.",
+      "Styled input shell with border, focus ring, optional label, clear button, and rotating trigger icon.",
     fields: [
+      field({
+        name: "label",
+        type: "ReactNode",
+        description:
+          "Optional label rendered above the input shell with an associated htmlFor.",
+      }),
       field({
         name: "placeholder",
         type: "string",
@@ -2742,17 +2792,89 @@ const comboboxApiDetails: DetailItem[] = [
           "Controls whether the rotating trigger icon is rendered in the input.",
       }),
       field({
+        name: "size",
+        type: '"sm" | "default"',
+        defaultValue: '"default"',
+        description: "Controls the input shell height.",
+      }),
+      field({
         name: "className",
         type: "string",
         description:
-          "Merged onto the input shell so width and local layout can be adjusted.",
+          "Merged onto the wrapper when label is set, otherwise onto the input shell.",
       }),
       field({
         name: "disabled",
         type: "boolean",
         defaultValue: "false",
         description:
-          "Disables the input, clear button, and trigger while applying the previous reduced-opacity presentation.",
+          "Disables the input, clear button, and trigger while applying reduced-opacity presentation.",
+      }),
+      field({
+        name: "aria-invalid",
+        type: "boolean",
+        description:
+          "When true, applies destructive border and ring styling to the input shell.",
+      }),
+    ],
+  },
+  {
+    id: "combobox-clear",
+    title: "ComboboxClear",
+    summary:
+      "Clears the current selection. Rendered automatically inside ComboboxInput when showClear is true.",
+    fields: [
+      field({
+        name: "disabled",
+        type: "boolean",
+        defaultValue: "false",
+        description: "Prevents clearing while disabled.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description: "Merged onto the clear button.",
+      }),
+    ],
+    notes: [
+      "Visibility is managed by Base UI and only appears when a value can be cleared.",
+    ],
+  },
+  {
+    id: "combobox-trigger",
+    title: "ComboboxTrigger",
+    summary:
+      "Opens or closes the popup. Rendered automatically inside ComboboxInput when showTrigger is true.",
+    fields: [
+      field({
+        name: "disabled",
+        type: "boolean",
+        defaultValue: "false",
+        description: "Prevents toggling while disabled.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description: "Merged onto the trigger button.",
+      }),
+    ],
+  },
+  {
+    id: "combobox-status",
+    title: "ComboboxStatus",
+    summary:
+      "Announces async loading or empty-state copy politely to screen readers.",
+    fields: [
+      field({
+        name: "children",
+        type: "ReactNode",
+        description:
+          "Status message content. Keep the root mounted and update children instead of conditionally rendering the component.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description: "Merged onto the status container.",
       }),
     ],
   },
@@ -2842,11 +2964,12 @@ const comboboxApiDetails: DetailItem[] = [
       }),
     ],
     notes: [
-      "ComboboxEmpty, ComboboxGroup, ComboboxLabel, ComboboxSeparator, ComboboxCollection, and chip helpers are exported for larger compositions.",
-      "Keyboard navigation and filtering are handled by Base UI; the visual hover highlight and checkmark animation stay Iconiq.",
+      "Keyboard highlight follows itemState.highlighted; pointer hover uses the same spring motion layer.",
+      "Disabled items render with reduced opacity and ignore pointer interaction.",
+      "ComboboxEmpty, ComboboxGroup, ComboboxLabel, ComboboxSeparator, ComboboxCollection, ComboboxChips, ComboboxChip, ComboboxChipsInput, ComboboxValue, and useComboboxAnchor are exported for larger compositions.",
     ],
   },
-  registryItem("combobox.json", ["motion", "lucide-react"]),
+  registryItem("b-combobox.json", ["@base-ui/react", "motion", "lucide-react"]),
 ];
 
 const autocompleteApiDetails: DetailItem[] = [

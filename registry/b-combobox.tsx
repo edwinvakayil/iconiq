@@ -1,9 +1,10 @@
 "use client";
 
 import { Combobox as ComboboxPrimitive } from "@base-ui/react/combobox";
+import { Input as InputPrimitive } from "@base-ui/react/input";
 import { ScrollArea as ScrollAreaPrimitive } from "@base-ui/react/scroll-area";
-import { Check, ChevronDown, ChevronUp, X } from "lucide-react";
-import { AnimatePresence, motion } from "motion/react";
+import { Check, ChevronsUpDown, X } from "lucide-react";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import * as React from "react";
 
 import { cn } from "@/lib/utils";
@@ -25,13 +26,14 @@ type ComboboxRootProps<
   Multiple extends boolean | undefined = false,
 > = ComboboxPrimitive.Root.Props<Value, Multiple>;
 
-const INSTANT_CLOSE_TRANSITION = { duration: 0 } as const;
+const INSTANT_TRANSITION = { duration: 0 } as const;
 
 type ComboboxContextValue = {
   actionsRef: React.RefObject<ComboboxPrimitive.Root.Actions | null>;
   activeHighlightId: string;
   activeValue: unknown;
   open: boolean;
+  prefersReducedMotion: boolean;
   setActiveValue: React.Dispatch<React.SetStateAction<unknown>>;
   setOpen: (open: boolean) => void;
   skipExitAnimationRef: React.MutableRefObject<boolean>;
@@ -41,6 +43,12 @@ type DivRenderProps = React.HTMLAttributes<HTMLDivElement> & {
   children?: React.ReactNode;
   className?: string;
   ref?: React.Ref<HTMLDivElement>;
+  style?: React.CSSProperties;
+};
+
+type InputRenderProps = React.InputHTMLAttributes<HTMLInputElement> & {
+  className?: string;
+  ref?: React.Ref<HTMLInputElement>;
   style?: React.CSSProperties;
 };
 
@@ -153,6 +161,26 @@ const POPUP_SPRING = {
   mass: 0.95,
 };
 
+const HIGHLIGHT_SPRING = {
+  type: "spring" as const,
+  stiffness: 460,
+  damping: 40,
+  mass: 0.82,
+};
+
+const chevronTransition = {
+  type: "spring" as const,
+  stiffness: 380,
+  damping: 30,
+  mass: 0.8,
+};
+
+const checkmarkTransition = {
+  type: "spring" as const,
+  stiffness: 500,
+  damping: 22,
+};
+
 const popupMotion = {
   animate: { opacity: 1, scale: 1, y: 0 },
   closed: { opacity: 0, scale: 0.985, y: -5 },
@@ -169,11 +197,25 @@ const popupMotion = {
   },
 };
 
+const comboboxInputShellClassName =
+  "group flex w-full items-center gap-1 border border-input bg-background pl-3.5 pr-1 text-base transition-all sm:text-sm hover:border-ring/40 focus-within:border-ring focus-within:ring-1 focus-within:ring-ring/25 [&:has(input[aria-invalid=true])]:border-destructive [&:has(input[aria-invalid=true])]:ring-1 [&:has(input[aria-invalid=true])]:ring-destructive/20 dark:[&:has(input[aria-invalid=true])]:border-destructive/50 dark:[&:has(input[aria-invalid=true])]:ring-destructive/40";
+
+const comboboxInputClassName =
+  "h-full w-full flex-1 bg-transparent text-[16px] text-foreground placeholder:text-muted-foreground focus:outline-none disabled:cursor-not-allowed sm:text-sm";
+
+const comboboxPopupPanelClassName =
+  "w-[var(--anchor-width)] max-w-[var(--available-width)] transform-gpu overflow-hidden border border-neutral-200/60 bg-white text-neutral-900 shadow-[var(--ic-shadow-soft)] dark:border-neutral-700/60 dark:bg-neutral-950 dark:text-neutral-100";
+
 const comboboxListScrollbarClassName =
   "z-10 my-1.5 mr-0.5 w-1 shrink-0 touch-none select-none opacity-0 transition-opacity duration-150 before:absolute before:left-1/2 before:h-full before:w-5 before:-translate-x-1/2 before:content-[''] data-hovering:pointer-events-auto data-hovering:opacity-100 data-scrolling:pointer-events-auto data-scrolling:opacity-100 data-scrolling:duration-0";
 
 const comboboxListThumbClassName =
   "relative rounded-full bg-muted-foreground/50 bg-[color:color-mix(in_oklch,var(--ic-muted-foreground),transparent_35%)]";
+
+const comboboxSizeClassNames = {
+  default: "h-11",
+  sm: "h-9 pl-3 pr-1",
+} as const;
 
 function Combobox<Value, Multiple extends boolean | undefined = false>({
   actionsRef: actionsRefProp,
@@ -182,6 +224,7 @@ function Combobox<Value, Multiple extends boolean | undefined = false>({
   defaultOpen = false,
   highlightItemOnHover = true,
   modal = false,
+  onItemHighlighted,
   onOpenChange,
   open: openProp,
   openOnInputClick = false,
@@ -196,6 +239,7 @@ function Combobox<Value, Multiple extends boolean | undefined = false>({
   const open = isOpenControlled ? openProp : uncontrolledOpen;
   const activeHighlightId = React.useId();
   const skipExitAnimationRef = React.useRef(false);
+  const prefersReducedMotion = useReducedMotion() === true;
 
   const setOpen = React.useCallback(
     (nextOpen: boolean) => {
@@ -208,6 +252,18 @@ function Combobox<Value, Multiple extends boolean | undefined = false>({
       }
     },
     [isOpenControlled]
+  );
+
+  const handleItemHighlighted = React.useCallback<
+    NonNullable<
+      ComboboxPrimitive.Root.Props<Value, Multiple>["onItemHighlighted"]
+    >
+  >(
+    (highlightedValue, eventDetails) => {
+      setActiveValue(highlightedValue);
+      onItemHighlighted?.(highlightedValue, eventDetails);
+    },
+    [onItemHighlighted]
   );
 
   const handleOpenChange = React.useCallback<
@@ -229,25 +285,37 @@ function Combobox<Value, Multiple extends boolean | undefined = false>({
     [onOpenChange, setOpen]
   );
 
+  const contextValue = React.useMemo(
+    () => ({
+      actionsRef,
+      activeHighlightId,
+      activeValue,
+      open,
+      prefersReducedMotion,
+      setActiveValue,
+      setOpen,
+      skipExitAnimationRef,
+    }),
+    [
+      actionsRef,
+      activeHighlightId,
+      activeValue,
+      open,
+      prefersReducedMotion,
+      setOpen,
+    ]
+  );
+
   return (
-    <ComboboxContext.Provider
-      value={{
-        actionsRef,
-        activeHighlightId,
-        activeValue,
-        open,
-        setActiveValue,
-        setOpen,
-        skipExitAnimationRef,
-      }}
-    >
+    <ComboboxContext.Provider value={contextValue}>
       <ComboboxPrimitive.Root
         {...props}
         actionsRef={actionsRef}
         autoComplete={autoComplete}
-        defaultOpen={defaultOpen}
+        defaultOpen={isOpenControlled ? undefined : defaultOpen}
         highlightItemOnHover={highlightItemOnHover}
         modal={modal}
+        onItemHighlighted={handleItemHighlighted}
         onOpenChange={handleOpenChange}
         open={open}
         openOnInputClick={openOnInputClick}
@@ -262,48 +330,80 @@ function ComboboxValue({ ...props }: ComboboxPrimitive.Value.Props) {
   return <ComboboxPrimitive.Value data-slot="combobox-value" {...props} />;
 }
 
+function ComboboxClear({
+  className,
+  disabled: disabledProp,
+  ...props
+}: ComboboxPrimitive.Clear.Props) {
+  return (
+    <ComboboxPrimitive.Clear
+      disabled={disabledProp}
+      {...props}
+      render={(clearProps, clearState) => {
+        const {
+          className: _clearClassName,
+          ref: clearRef,
+          style: _clearStyle,
+          ...resolvedClearProps
+        } = clearProps as React.ComponentProps<"button"> & {
+          ref?: React.Ref<HTMLButtonElement>;
+        };
+
+        return (
+          <button
+            {...resolvedClearProps}
+            aria-hidden={!clearState.visible}
+            aria-label="Clear selection"
+            className={cn(
+              "flex size-8 shrink-0 items-center justify-center overflow-hidden rounded-md text-muted-foreground/70 transition-colors hover:bg-accent/60 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/30 disabled:cursor-not-allowed disabled:opacity-50",
+              !clearState.visible && "hidden",
+              className
+            )}
+            data-slot="combobox-clear"
+            ref={clearRef}
+            tabIndex={clearState.visible ? resolvedClearProps.tabIndex : -1}
+            type="button"
+          >
+            <X className="h-3.5 w-3.5" />
+          </button>
+        );
+      }}
+    />
+  );
+}
+
 function ComboboxTrigger({
   className,
   children,
   disabled = false,
-}: {
-  children?: React.ReactNode;
-  className?: string;
-  disabled?: boolean;
-}) {
-  const { open, setOpen } = useComboboxContext("ComboboxTrigger");
+  ...props
+}: ComboboxPrimitive.Trigger.Props) {
+  const { open, prefersReducedMotion } = useComboboxContext("ComboboxTrigger");
 
   return (
-    <div
+    <ComboboxPrimitive.Trigger
+      aria-expanded={open}
+      aria-label={open ? "Collapse options" : "Open options"}
       className={cn(
-        "flex shrink-0 items-center justify-center text-muted-foreground",
+        "flex size-8 shrink-0 items-center justify-center text-muted-foreground transition hover:bg-accent/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/30 disabled:cursor-not-allowed disabled:opacity-50",
+        controlCornerClassName,
         className
       )}
       data-slot="combobox-trigger"
+      disabled={disabled}
+      type="button"
+      {...props}
     >
       {children}
-      <button
-        aria-expanded={open}
-        aria-label={open ? "Collapse options" : "Open options"}
-        className={cn(
-          "flex size-8 items-center justify-center text-muted-foreground transition-colors duration-150 hover:bg-accent/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/30 disabled:cursor-not-allowed disabled:opacity-50",
-          controlCornerClassName
-        )}
-        disabled={disabled}
-        onClick={(event) => {
-          event.preventDefault();
-          event.stopPropagation();
-          setOpen(!open);
-        }}
-        type="button"
+      <motion.span
+        animate={{ rotate: open ? 180 : 0 }}
+        transition={
+          prefersReducedMotion ? INSTANT_TRANSITION : chevronTransition
+        }
       >
-        {open ? (
-          <ChevronUp className="h-4 w-4" />
-        ) : (
-          <ChevronDown className="h-4 w-4" />
-        )}
-      </button>
-    </div>
+        <ChevronsUpDown className="h-4 w-4" />
+      </motion.span>
+    </ComboboxPrimitive.Trigger>
   );
 }
 
@@ -311,48 +411,137 @@ function ComboboxInput({
   className,
   children,
   disabled = false,
+  id: idProp,
+  label,
+  labelClassName,
+  ref: refProp,
+  render: userRender,
+  showClear = true,
   showTrigger = true,
+  size = "default",
   ...props
-}: ComboboxPrimitive.Input.Props & {
+}: Omit<ComboboxPrimitive.Input.Props, "size"> & {
+  label?: React.ReactNode;
+  labelClassName?: string;
+  showClear?: boolean;
   showTrigger?: boolean;
+  size?: "sm" | "default";
 }) {
   const { open, setOpen } = useComboboxContext("ComboboxInput");
   const inputRef = React.useRef<HTMLInputElement | null>(null);
+  const generatedId = React.useId();
+  const inputId = idProp ?? generatedId;
 
-  return (
+  const inputGroup = (
     <ComboboxPrimitive.InputGroup
       className={cn(
         componentThemeClassName,
         controlCornerClassName,
-        "group flex h-11 w-full items-center gap-2 border border-input bg-background px-3.5 text-base transition-all sm:text-sm",
-        "hover:border-ring/40",
-        "focus-within:border-ring focus-within:ring-1 focus-within:ring-ring/25",
+        comboboxInputShellClassName,
+        comboboxSizeClassNames[size],
         disabled && "cursor-not-allowed opacity-50",
         open && "border-ring ring-1 ring-ring/25",
-        className
+        label ? undefined : className
       )}
+      data-size={size}
       data-slot="combobox-input"
-      onClick={() => {
+      onClick={(event) => {
         if (disabled) return;
 
-        setOpen(true);
+        const target = event.target as HTMLElement;
+
+        if (
+          target.closest(
+            '[data-slot="combobox-clear"], [data-slot="combobox-trigger"]'
+          )
+        ) {
+          return;
+        }
+
         inputRef.current?.focus();
       }}
     >
       <ComboboxPrimitive.Input
-        className="h-full w-full flex-1 bg-transparent text-[16px] text-foreground placeholder:text-muted-foreground focus:outline-none disabled:cursor-not-allowed sm:text-sm"
+        {...props}
         disabled={disabled}
+        id={inputId}
         onKeyDown={composeEventHandlers(props.onKeyDown, (event) => {
           if (event.key === "Tab") {
             setOpen(false);
           }
         })}
-        ref={inputRef}
-        {...props}
+        render={(inputProps, inputState) => {
+          if (userRender) {
+            return typeof userRender === "function"
+              ? userRender(inputProps, inputState)
+              : userRender;
+          }
+
+          const {
+            className: primitiveClassName,
+            ref: primitiveRef,
+            style: primitiveStyle,
+            ...resolvedInputProps
+          } = inputProps as InputRenderProps;
+
+          return (
+            <InputPrimitive
+              {...resolvedInputProps}
+              disabled={disabled}
+              id={inputId}
+              render={(baseInputProps) => {
+                const {
+                  className: baseClassName,
+                  ref: baseRef,
+                  style: baseStyle,
+                  ...baseResolvedProps
+                } = baseInputProps as InputRenderProps;
+
+                return (
+                  <input
+                    {...baseResolvedProps}
+                    autoComplete="off"
+                    className={cn(
+                      comboboxInputClassName,
+                      primitiveClassName,
+                      baseClassName
+                    )}
+                    data-slot="combobox-input-control"
+                    readOnly={inputState.readOnly}
+                    ref={(node) => {
+                      inputRef.current = node;
+                      setRef(primitiveRef, node);
+                      setRef(baseRef, node);
+                      setRef(refProp, node);
+                    }}
+                    style={{ ...primitiveStyle, ...baseStyle }}
+                  />
+                );
+              }}
+            />
+          );
+        }}
       />
+      {showClear ? <ComboboxClear disabled={disabled} /> : null}
       {showTrigger ? <ComboboxTrigger disabled={disabled} /> : null}
       {children}
     </ComboboxPrimitive.InputGroup>
+  );
+
+  if (!label) {
+    return inputGroup;
+  }
+
+  return (
+    <div className={cn("flex w-full flex-col gap-2", className)}>
+      <label
+        className={cn("font-medium text-foreground text-sm", labelClassName)}
+        htmlFor={inputId}
+      >
+        {label}
+      </label>
+      {inputGroup}
+    </div>
   );
 }
 
@@ -378,9 +567,9 @@ function ComboboxContentPanel({
     "children" | "className" | "ref" | "style"
   >;
 }) {
-  const { actionsRef, skipExitAnimationRef } = useComboboxContext(
-    "ComboboxContentPanel"
-  );
+  const { actionsRef, prefersReducedMotion, skipExitAnimationRef } =
+    useComboboxContext("ComboboxContentPanel");
+  const isPopupVisible = popupState.open;
   const skipExitAnimation = !popupState.open && skipExitAnimationRef.current;
 
   return (
@@ -396,11 +585,11 @@ function ComboboxContentPanel({
       }}
     >
       <motion.div
-        animate={popupState.open ? popupMotion.animate : popupMotion.closed}
+        animate={isPopupVisible ? popupMotion.animate : popupMotion.closed}
         className={cn(
           componentThemeClassName,
           controlCornerClassName,
-          "w-[var(--anchor-width)] max-w-[var(--available-width)] transform-gpu overflow-hidden border border-neutral-200/60 bg-white text-neutral-900 shadow-none dark:border-neutral-700/60 dark:bg-neutral-950 dark:text-neutral-100",
+          comboboxPopupPanelClassName,
           popupClassName,
           resolveStateClassName(className, popupState)
         )}
@@ -416,15 +605,17 @@ function ComboboxContentPanel({
           }
         }}
         style={{
-          pointerEvents: popupState.open ? undefined : "none",
+          pointerEvents: isPopupVisible ? undefined : "none",
           transformOrigin: "var(--transform-origin)",
         }}
         transition={
-          popupState.open
-            ? popupMotion.openTransition
-            : skipExitAnimation
-              ? INSTANT_CLOSE_TRANSITION
-              : popupMotion.closedTransition
+          prefersReducedMotion
+            ? INSTANT_TRANSITION
+            : isPopupVisible
+              ? popupMotion.openTransition
+              : skipExitAnimation
+                ? INSTANT_TRANSITION
+                : popupMotion.closedTransition
         }
       >
         {children}
@@ -440,7 +631,7 @@ function ComboboxContent({
   children,
   className,
   side = "bottom",
-  sideOffset = 6,
+  sideOffset = 4,
   ...props
 }: ComboboxPrimitive.Popup.Props &
   Pick<
@@ -537,6 +728,144 @@ function ComboboxList({
   );
 }
 
+function ComboboxItemHighlight({
+  activeHighlightId,
+  prefersReducedMotion,
+  showHighlight,
+}: {
+  activeHighlightId: string;
+  prefersReducedMotion: boolean;
+  showHighlight: boolean;
+}) {
+  if (!showHighlight) {
+    return null;
+  }
+
+  return (
+    <motion.div
+      className={cn(
+        "absolute inset-0 bg-accent",
+        controlCornerInheritClassName
+      )}
+      layoutId={activeHighlightId}
+      transition={prefersReducedMotion ? INSTANT_TRANSITION : HIGHLIGHT_SPRING}
+    />
+  );
+}
+
+function ComboboxItemCheckmark({
+  prefersReducedMotion,
+  selected,
+}: {
+  prefersReducedMotion: boolean;
+  selected: boolean;
+}) {
+  return (
+    <span className="relative z-10 mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center">
+      <AnimatePresence>
+        {selected ? (
+          <motion.span
+            animate={{ scale: 1, rotate: 0 }}
+            className="text-primary"
+            exit={prefersReducedMotion ? undefined : { scale: 0, rotate: 90 }}
+            initial={prefersReducedMotion ? false : { scale: 0, rotate: -90 }}
+            transition={
+              prefersReducedMotion ? INSTANT_TRANSITION : checkmarkTransition
+            }
+          >
+            <Check className="h-4 w-4" strokeWidth={3} />
+          </motion.span>
+        ) : null}
+      </AnimatePresence>
+    </span>
+  );
+}
+
+function ComboboxItemPanel({
+  activeHighlightId,
+  activeValue,
+  children,
+  className,
+  description,
+  itemProps,
+  itemState,
+  prefersReducedMotion,
+  setActiveValue,
+  value,
+}: {
+  activeHighlightId: string;
+  activeValue: unknown;
+  children: React.ReactNode;
+  className?:
+    | string
+    | ((state: ComboboxPrimitive.Item.State) => string | undefined);
+  description?: React.ReactNode;
+  itemProps: DivRenderProps;
+  itemState: ComboboxPrimitive.Item.State;
+  prefersReducedMotion: boolean;
+  setActiveValue: React.Dispatch<React.SetStateAction<unknown>>;
+  value: unknown;
+}) {
+  const { itemClassName, itemRef, itemStyle, resolvedItemProps } =
+    resolveItemProps(itemProps);
+  const showHighlight = itemState.highlighted || Object.is(activeValue, value);
+
+  const handlePointerHighlight = () => {
+    if (!itemState.disabled) {
+      setActiveValue(value);
+    }
+  };
+
+  return (
+    <motion.div
+      {...resolvedItemProps}
+      animate={{ opacity: 1, y: 0 }}
+      className={cn(
+        "relative flex cursor-pointer select-none items-start gap-2 px-2.5 py-2 text-foreground text-sm transition-colors",
+        controlCornerClassName,
+        itemState.disabled &&
+          "pointer-events-none cursor-not-allowed opacity-50",
+        itemClassName,
+        resolveStateClassName(className, itemState)
+      )}
+      initial={false}
+      onMouseEnter={composeEventHandlers(
+        resolvedItemProps.onMouseEnter,
+        handlePointerHighlight
+      )}
+      onPointerMove={composeEventHandlers(
+        resolvedItemProps.onPointerMove,
+        handlePointerHighlight
+      )}
+      ref={(node) => {
+        setRef(itemRef, node);
+      }}
+      style={itemStyle}
+      transition={
+        prefersReducedMotion
+          ? INSTANT_TRANSITION
+          : { duration: 0.12, ease: "easeOut" }
+      }
+    >
+      <ComboboxItemHighlight
+        activeHighlightId={activeHighlightId}
+        prefersReducedMotion={prefersReducedMotion}
+        showHighlight={showHighlight}
+      />
+      <ComboboxItemCheckmark
+        prefersReducedMotion={prefersReducedMotion}
+        selected={itemState.selected}
+      />
+      <span className="relative z-10 flex flex-col">
+        <span className="font-medium leading-tight">{children}</span>
+        {description ? (
+          <span className="text-muted-foreground text-xs">{description}</span>
+        ) : null}
+      </span>
+    </motion.div>
+  );
+}
+
 function ComboboxItem({
   className,
   children,
@@ -546,97 +875,33 @@ function ComboboxItem({
 }: ComboboxPrimitive.Item.Props & {
   description?: React.ReactNode;
 }) {
-  const { activeHighlightId, activeValue, setActiveValue } =
-    useComboboxContext("ComboboxItem");
+  const {
+    activeHighlightId,
+    activeValue,
+    prefersReducedMotion,
+    setActiveValue,
+  } = useComboboxContext("ComboboxItem");
 
   return (
     <ComboboxPrimitive.Item
       data-slot="combobox-item"
       value={value}
       {...props}
-      render={(itemProps, itemState) => {
-        const { itemClassName, itemRef, itemStyle, resolvedItemProps } =
-          resolveItemProps(itemProps as DivRenderProps);
-        const isHovered = Object.is(activeValue, value);
-
-        return (
-          <motion.div
-            {...resolvedItemProps}
-            animate={{ opacity: 1, y: 0 }}
-            className={cn(
-              "relative flex cursor-pointer select-none items-start gap-2 px-2.5 py-2 text-foreground text-sm transition-colors",
-              controlCornerClassName,
-              itemClassName,
-              resolveStateClassName(className, itemState)
-            )}
-            initial={{ opacity: 0, y: 2 }}
-            onMouseEnter={composeEventHandlers(
-              resolvedItemProps.onMouseEnter,
-              () => {
-                setActiveValue(value);
-              }
-            )}
-            onPointerMove={composeEventHandlers(
-              resolvedItemProps.onPointerMove,
-              () => {
-                setActiveValue(value);
-              }
-            )}
-            ref={(node) => {
-              setRef(itemRef, node);
-            }}
-            style={itemStyle}
-            transition={{
-              duration: 0.12,
-              ease: "easeOut",
-            }}
-          >
-            {isHovered ? (
-              <motion.div
-                className={cn(
-                  "absolute inset-0 bg-accent",
-                  controlCornerInheritClassName
-                )}
-                layoutId={activeHighlightId}
-                transition={{
-                  type: "spring",
-                  stiffness: 600,
-                  damping: 38,
-                }}
-              />
-            ) : null}
-
-            <span className="relative z-10 mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center">
-              <AnimatePresence>
-                {itemState.selected ? (
-                  <motion.span
-                    animate={{ scale: 1, rotate: 0 }}
-                    className="text-primary"
-                    exit={{ scale: 0, rotate: 90 }}
-                    initial={{ scale: 0, rotate: -90 }}
-                    transition={{
-                      type: "spring",
-                      stiffness: 500,
-                      damping: 22,
-                    }}
-                  >
-                    <Check className="h-4 w-4" strokeWidth={3} />
-                  </motion.span>
-                ) : null}
-              </AnimatePresence>
-            </span>
-
-            <span className="relative z-10 flex flex-col">
-              <span className="font-medium leading-tight">{children}</span>
-              {description ? (
-                <span className="text-muted-foreground text-xs">
-                  {description}
-                </span>
-              ) : null}
-            </span>
-          </motion.div>
-        );
-      }}
+      render={(itemProps, itemState) => (
+        <ComboboxItemPanel
+          activeHighlightId={activeHighlightId}
+          activeValue={activeValue}
+          className={className}
+          description={description}
+          itemProps={itemProps as DivRenderProps}
+          itemState={itemState}
+          prefersReducedMotion={prefersReducedMotion}
+          setActiveValue={setActiveValue}
+          value={value}
+        >
+          {children}
+        </ComboboxItemPanel>
+      )}
     />
   );
 }
@@ -644,7 +909,7 @@ function ComboboxItem({
 function ComboboxGroup({ className, ...props }: ComboboxPrimitive.Group.Props) {
   return (
     <ComboboxPrimitive.Group
-      className={cn(className)}
+      className={cn("py-1", className)}
       data-slot="combobox-group"
       {...props}
     />
@@ -675,16 +940,38 @@ function ComboboxEmpty({
   children = "No results found.",
   ...props
 }: ComboboxPrimitive.Empty.Props) {
+  const { prefersReducedMotion } = useComboboxContext("ComboboxEmpty");
+
   return (
     <ComboboxPrimitive.Empty
       className={cn("text-center text-muted-foreground text-sm", className)}
       data-slot="combobox-empty"
       {...props}
     >
-      <motion.span animate={{ opacity: 1 }} className="block px-3 py-6">
+      <motion.span
+        animate={{ opacity: 1 }}
+        className="block px-3 py-6"
+        initial={prefersReducedMotion ? false : { opacity: 0 }}
+        transition={
+          prefersReducedMotion ? INSTANT_TRANSITION : { duration: 0.18 }
+        }
+      >
         {children}
       </motion.span>
     </ComboboxPrimitive.Empty>
+  );
+}
+
+function ComboboxStatus({
+  className,
+  ...props
+}: ComboboxPrimitive.Status.Props) {
+  return (
+    <ComboboxPrimitive.Status
+      className={cn("px-3 py-2 text-muted-foreground text-xs", className)}
+      data-slot="combobox-status"
+      {...props}
+    />
   );
 }
 
@@ -703,17 +990,22 @@ function ComboboxSeparator({
 
 function ComboboxChips({
   className,
+  size = "default",
   ...props
 }: React.ComponentPropsWithRef<typeof ComboboxPrimitive.Chips> &
-  ComboboxPrimitive.Chips.Props) {
+  ComboboxPrimitive.Chips.Props & {
+    size?: "sm" | "default";
+  }) {
   return (
     <ComboboxPrimitive.Chips
       className={cn(
         componentThemeClassName,
         controlCornerClassName,
         "flex min-h-8 flex-wrap items-center gap-1 border border-input bg-transparent bg-clip-padding px-2.5 py-1 text-sm transition-colors focus-within:border-ring focus-within:ring-3 focus-within:ring-ring/50 has-aria-invalid:border-destructive has-data-[slot=combobox-chip]:px-1 has-aria-invalid:ring-3 has-aria-invalid:ring-destructive/20 dark:bg-input/30 dark:has-aria-invalid:border-destructive/50 dark:has-aria-invalid:ring-destructive/40",
+        size === "sm" ? "min-h-8" : "min-h-9",
         className
       )}
+      data-size={size}
       data-slot="combobox-chips"
       {...props}
     />
@@ -741,6 +1033,7 @@ function ComboboxChip({
       {children}
       {showRemove ? (
         <ComboboxPrimitive.ChipRemove
+          aria-label="Remove item"
           className={cn(
             "-ml-1 flex size-5 items-center justify-center opacity-50 transition hover:bg-accent/60 hover:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/30",
             controlCornerXsClassName
@@ -756,13 +1049,60 @@ function ComboboxChip({
 
 function ComboboxChipsInput({
   className,
+  disabled = false,
+  ref: refProp,
   ...props
-}: ComboboxPrimitive.Input.Props) {
+}: Omit<ComboboxPrimitive.Input.Props, "size">) {
+  const inputRef = React.useRef<HTMLInputElement | null>(null);
+
   return (
     <ComboboxPrimitive.Input
-      className={cn("min-w-16 flex-1 outline-none", className)}
-      data-slot="combobox-chip-input"
       {...props}
+      disabled={disabled}
+      render={(inputProps) => {
+        const {
+          className: primitiveClassName,
+          ref: primitiveRef,
+          style: primitiveStyle,
+          ...resolvedInputProps
+        } = inputProps as InputRenderProps;
+
+        return (
+          <InputPrimitive
+            {...resolvedInputProps}
+            disabled={disabled}
+            render={(baseInputProps) => {
+              const {
+                className: baseClassName,
+                ref: baseRef,
+                style: baseStyle,
+                ...baseResolvedProps
+              } = baseInputProps as InputRenderProps;
+
+              return (
+                <input
+                  {...baseResolvedProps}
+                  autoComplete="off"
+                  className={cn(
+                    "min-w-16 flex-1 bg-transparent outline-none disabled:cursor-not-allowed",
+                    primitiveClassName,
+                    baseClassName,
+                    className
+                  )}
+                  data-slot="combobox-chip-input"
+                  ref={(node) => {
+                    inputRef.current = node;
+                    setRef(primitiveRef, node);
+                    setRef(baseRef, node);
+                    setRef(refProp, node);
+                  }}
+                  style={{ ...primitiveStyle, ...baseStyle }}
+                />
+              );
+            }}
+          />
+        );
+      }}
     />
   );
 }
@@ -771,11 +1111,15 @@ function useComboboxAnchor() {
   return React.useRef<HTMLDivElement | null>(null);
 }
 
+const useComboboxFilter = ComboboxPrimitive.useFilter;
+const useFilteredComboboxItems = ComboboxPrimitive.useFilteredItems;
+
 export {
   Combobox,
-  ComboboxChips,
   ComboboxChip,
+  ComboboxChips,
   ComboboxChipsInput,
+  ComboboxClear,
   ComboboxCollection,
   ComboboxContent,
   ComboboxEmpty,
@@ -785,7 +1129,10 @@ export {
   ComboboxLabel,
   ComboboxList,
   ComboboxSeparator,
+  ComboboxStatus,
   ComboboxTrigger,
   ComboboxValue,
   useComboboxAnchor,
+  useComboboxFilter,
+  useFilteredComboboxItems,
 };
