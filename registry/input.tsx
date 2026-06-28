@@ -164,6 +164,26 @@ function isChromeBrowser() {
   return Boolean(navigator.userAgent.match(CHROME_USER_AGENT_PATTERN));
 }
 
+let webKitPasswordMeasureSupported: boolean | null = null;
+
+function canMeasurePasswordWithTextSecurity() {
+  if (webKitPasswordMeasureSupported !== null) {
+    return webKitPasswordMeasureSupported;
+  }
+
+  if (typeof document === "undefined") {
+    webKitPasswordMeasureSupported = false;
+    return false;
+  }
+
+  const probe = document.createElement("span");
+  probe.style.setProperty("-webkit-text-security", "disc");
+  webKitPasswordMeasureSupported =
+    probe.style.getPropertyValue("-webkit-text-security") === "disc";
+
+  return webKitPasswordMeasureSupported;
+}
+
 function getCaretIndex(target: HTMLInputElement) {
   const selectionStart = target.selectionStart ?? 0;
   const selectionEnd = target.selectionEnd ?? 0;
@@ -470,7 +490,7 @@ function useSmoothCaret({
       : spring
   );
 
-  const syncMeasureSpan = useCallback(() => {
+  const syncMeasureSpan = useCallback((isPassword = false) => {
     const input = inputRef.current;
     const measureSpan = measureRef.current;
     if (!(input && measureSpan)) {
@@ -479,30 +499,47 @@ function useSmoothCaret({
 
     const styles = window.getComputedStyle(input);
     const passwordChar = getPasswordChar();
-    const isPassword = input.type === "password";
+    const useWebKitPasswordMeasure =
+      isPassword && canMeasurePasswordWithTextSecurity();
 
     let resolvedFontSize = styles.fontSize;
-    if (passwordChar === "\u2022" && isPassword && !isChromeBrowser()) {
+    if (
+      passwordChar === "\u2022" &&
+      isPassword &&
+      !isChromeBrowser() &&
+      !useWebKitPasswordMeasure
+    ) {
       resolvedFontSize = `${Number.parseFloat(resolvedFontSize) + 6.25}px`;
     }
 
     measureSpan.style.font = `${styles.fontStyle} ${styles.fontWeight} ${resolvedFontSize} ${styles.fontFamily}`;
     measureSpan.style.letterSpacing = styles.letterSpacing;
+    measureSpan.style.lineHeight = styles.lineHeight;
     measureSpan.style.fontFeatureSettings = styles.fontFeatureSettings;
     measureSpan.style.fontVariationSettings = styles.fontVariationSettings;
     measureSpan.style.direction = styles.direction;
   }, []);
 
   const measurePrefixWidth = useCallback(
-    (text: string) => {
+    (text: string, isPassword = false) => {
       const input = inputRef.current;
       const measureSpan = measureRef.current;
       if (!(input && measureSpan)) {
         return null;
       }
 
-      syncMeasureSpan();
-      measureSpan.textContent = text;
+      syncMeasureSpan(isPassword);
+
+      if (isPassword && canMeasurePasswordWithTextSecurity()) {
+        measureSpan.style.setProperty("-webkit-text-security", "disc");
+        measureSpan.textContent = text;
+      } else if (isPassword) {
+        measureSpan.style.removeProperty("-webkit-text-security");
+        measureSpan.textContent = getPasswordChar().repeat(text.length);
+      } else {
+        measureSpan.style.removeProperty("-webkit-text-security");
+        measureSpan.textContent = text;
+      }
 
       const paddingLeft =
         Number.parseFloat(window.getComputedStyle(input).paddingLeft) || 0;
@@ -527,12 +564,9 @@ function useSmoothCaret({
       const hasSelection = selectionStart !== selectionEnd;
       const caretIndex = getCaretIndex(target);
       const isPassword = target.type === "password";
-      const passwordChar = getPasswordChar();
-      const textBeforeCaret = isPassword
-        ? passwordChar.repeat(caretIndex)
-        : target.value.slice(0, caretIndex);
+      const textBeforeCaret = target.value.slice(0, caretIndex);
 
-      const absoluteWidth = measurePrefixWidth(textBeforeCaret);
+      const absoluteWidth = measurePrefixWidth(textBeforeCaret, isPassword);
       if (absoluteWidth === null) {
         return;
       }
@@ -547,10 +581,8 @@ function useSmoothCaret({
       let caretPosition = absoluteWidth - target.scrollLeft;
 
       if (isRtl) {
-        const fullText = isPassword
-          ? passwordChar.repeat(target.value.length)
-          : target.value;
-        const fullWidth = measurePrefixWidth(fullText) ?? paddingLeft;
+        const fullWidth =
+          measurePrefixWidth(target.value, isPassword) ?? paddingLeft;
         caretPosition =
           target.clientWidth - paddingRight - (fullWidth - absoluteWidth);
       }
