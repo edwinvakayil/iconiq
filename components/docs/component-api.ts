@@ -4099,13 +4099,13 @@ const fileUploadApiDetails: DetailItem[] = [
     id: "file-upload",
     title: "FileUpload",
     summary:
-      "Drag-and-drop uploader with an internal queue, hidden file input, keyboard-triggerable drop zone, and callback hooks for parent integrations.",
+      "Drag-and-drop uploader with paste support, validation, optional real upload hooks, controlled queue state, and accessible progress feedback.",
     fields: [
       field({
         name: "accept",
         type: "string",
         description:
-          "Optional accept string passed to the hidden file input and also enforced for dropped files, including MIME types like image/* and extensions like .pdf.",
+          "Optional accept string passed to the hidden file input and enforced for dropped or pasted files, including MIME types like image/* and extensions like .pdf.",
       }),
       field({
         name: "multiple",
@@ -4118,20 +4118,111 @@ const fileUploadApiDetails: DetailItem[] = [
         name: "maxFiles",
         type: "number",
         description:
-          "Caps the queue length. New files are prepended, and anything beyond the limit is trimmed from the end.",
+          "Caps the queue length. New files are prepended, and anything beyond the limit is rejected with inline feedback.",
+      }),
+      field({
+        name: "maxSize",
+        type: "number",
+        description:
+          "Maximum file size in bytes. Files above the limit are rejected with inline feedback.",
       }),
       field({
         name: "disabled",
         type: "boolean",
         defaultValue: "false",
         description:
-          "Disables click, drag, keyboard activation, and the hidden file input without changing the component structure.",
+          "Disables click, drag, paste, keyboard activation, remove, clear-all, and the hidden file input.",
+      }),
+      field({
+        name: "required",
+        type: "boolean",
+        defaultValue: "false",
+        description:
+          "Forwards required validation to the hidden file input when the queue is empty.",
+      }),
+      field({
+        name: "invalid",
+        type: "boolean",
+        defaultValue: "false",
+        description:
+          "Marks the drop zone with invalid styling for external validation states.",
+      }),
+      field({
+        name: "preventDuplicates",
+        type: "boolean",
+        defaultValue: "false",
+        description:
+          "Rejects files that match an existing queue item by name, size, and lastModified.",
+      }),
+      field({
+        name: "simulateUpload",
+        type: "boolean",
+        description:
+          "Controls built-in progress simulation. Defaults to true when onUpload is not provided, and false when onUpload is set.",
+      }),
+      field({
+        name: "showClearAll",
+        type: "boolean",
+        defaultValue: "true",
+        description: "Shows a clear-all action when the queue has files.",
       }),
       field({
         name: "name",
         type: "string",
         description:
-          "Passes a form field name through to the hidden file input for form integrations.",
+          "Passes a form field name through to the hidden file input. The queue stays synced to the input for native form submission.",
+      }),
+      field({
+        name: "id",
+        type: "string",
+        description:
+          "Root id used for the hidden file input and internal aria-describedby wiring.",
+      }),
+      field({
+        name: "ariaLabel",
+        type: "string",
+        defaultValue: "Upload files",
+        description: "Accessible label for the keyboard-focusable drop zone.",
+      }),
+      field({
+        name: "ariaDescribedBy",
+        type: "string",
+        description:
+          "Additional ids merged into the drop zone aria-describedby list.",
+      }),
+      field({
+        name: "description",
+        type: "string",
+        description: "Optional helper text rendered above the drop zone.",
+      }),
+      field({
+        name: "dropzoneTitle",
+        type: "string",
+        description: "Custom primary drop zone label.",
+      }),
+      field({
+        name: "dropzoneDescription",
+        type: "string",
+        description:
+          "Custom secondary drop zone hint. When omitted, a hint is generated from accept, maxFiles, and maxSize.",
+      }),
+      field({
+        name: "libraryLabel",
+        type: "string",
+        defaultValue: "Library",
+        description: "Heading label for the queued file list.",
+      }),
+      field({
+        name: "browseLabel",
+        type: "string",
+        defaultValue: "Browse",
+        description: "Label for the browse affordance in the drop zone.",
+      }),
+      field({
+        name: "clearAllLabel",
+        type: "string",
+        defaultValue: "Clear all",
+        description: "Label for the clear-all action.",
       }),
       field({
         name: "className",
@@ -4140,10 +4231,33 @@ const fileUploadApiDetails: DetailItem[] = [
           "Adds classes to the outer wrapper without changing the component internals.",
       }),
       field({
+        name: "defaultValue",
+        type: "File[]",
+        description: "Initial queue files for uncontrolled usage.",
+      }),
+      field({
+        name: "value",
+        type: "FileUploadItem[]",
+        description:
+          "Controlled queue state including per-file progress and status.",
+      }),
+      field({
+        name: "validateFile",
+        type: "(file: File) => boolean | string",
+        description:
+          "Custom per-file validator. Return true to accept, false to reject, or a string error message.",
+      }),
+      field({
         name: "onFilesChange",
         type: "(files: File[]) => void",
         description:
           "Called when files are added or removed from the queue. It does not fire on every progress tick.",
+      }),
+      field({
+        name: "onValueChange",
+        type: "(items: FileUploadItem[]) => void",
+        description:
+          "Called when the queue changes, including status and progress updates in controlled mode.",
       }),
       field({
         name: "onFileRemove",
@@ -4152,45 +4266,66 @@ const fileUploadApiDetails: DetailItem[] = [
           "Called after a queued file is removed. The second argument contains the remaining files in queue order.",
       }),
       field({
+        name: "onReject",
+        type: "(files: File[], reason: FileUploadRejectReason, message: string) => void",
+        description:
+          "Called when one or more files fail accept, size, duplicate, max-files, validation, or disabled checks.",
+      }),
+      field({
+        name: "onUpload",
+        type: "(file: File, context: { setProgress: (progress: number) => void }) => Promise<void>",
+        description:
+          "Optional real upload handler. When provided, built-in progress simulation is disabled unless simulateUpload is explicitly set to true.",
+      }),
+      field({
         name: "onUploadComplete",
         type: "(files: File[]) => void",
         description:
-          "Called once the current queue reaches 100% completion for every item.",
+          "Called once every item in the current queue reaches done status.",
       }),
     ],
     notes: [
       "The drop zone is keyboard accessible and opens the hidden file input on Enter or Space.",
-      "Both drag-and-drop and click-to-browse flow through the same queue logic, so accept filtering and max file limits stay consistent.",
+      "Both drag-and-drop, click-to-browse, and paste flow through the same queue logic, so accept filtering and limits stay consistent.",
+      "The hidden file input stays synced to the current queue through the DataTransfer API for native form submission.",
+      "Motion for drop, list, and progress visuals honors prefers-reduced-motion automatically.",
     ],
   },
   {
     id: "file-upload-behavior",
     title: "Built-in behavior",
     summary:
-      "The component still owns its progress visuals and preview lifecycle, even when you attach callbacks from parent code.",
+      "The component owns preview lifecycle, progress visuals, retry, and inline rejection messaging unless you take over with onUpload or controlled value.",
     fields: [
       field({
         name: "progress state",
         type: "built-in",
         description:
-          "Each added file starts in an uploading state and advances through the built-in simulated progress loop until it reaches done.",
+          "Each added file starts in uploading state. Without onUpload, a simulated progress loop runs until done. With onUpload, progress follows setProgress from your handler.",
       }),
       field({
-        name: "image previews",
+        name: "error + retry",
         type: "built-in",
         description:
-          "Image files receive object URL previews and render as thumbnails; non-image files fall back to a file icon surface.",
+          "Failed onUpload calls move a file to error status and expose a retry action that reruns the upload handler or restarts simulation.",
       }),
       field({
-        name: "remove action",
+        name: "image and video previews",
         type: "built-in",
         description:
-          "Each queued file can be removed individually from the trailing action button, with preview URLs revoked immediately.",
+          "Image and video files receive object URL previews. Upload progress renders as an overlay on thumbnails and as a ring for other file types.",
+      }),
+      field({
+        name: "remove + clear all",
+        type: "built-in",
+        description:
+          "Each queued file can be removed individually. Clear all empties the queue and revokes preview URLs immediately.",
       }),
     ],
     notes: [
-      "Preview object URLs are cleaned up on remove and during component unmount.",
-      "Each queue item id is built from the file name, file size, and a random suffix to reduce collisions between repeated uploads.",
+      "Preview object URLs are cleaned up on remove, clear-all, trim, and unmount.",
+      "Each queue item id is built from the file name, size, lastModified, and a random suffix to reduce collisions between repeated uploads.",
+      "FileUploadRejectReason values: accept, max-size, max-files, duplicate, validation, disabled.",
     ],
   },
   registryItem("file-upload.json", ["motion", "lucide-react"]),
