@@ -206,7 +206,7 @@ export function ButtonGroupDemo() {
     "}\n",
   "checkbox-group":
     '"use client";\n\n' +
-    `import { CheckboxGroup } from "@/components/ui/checkbox-group"\n` +
+    `import { CheckboxGroup } from "@/components/ui/b-checkbox-group"\n` +
     `import { useState } from "react"\n\n` +
     "const options = [\n" +
     '  { label: "Option A", value: "a" },\n' +
@@ -216,7 +216,7 @@ export function ButtonGroupDemo() {
     "  const [value, setValue] = useState<string[]>([])\n" +
     "  return (\n" +
     '    <div className="flex min-h-svh items-center justify-center p-8">\n' +
-    "      <CheckboxGroup onChange={setValue} options={options} value={value} />\n" +
+    '      <CheckboxGroup aria-label="Preferences" name="preferences" onChange={setValue} options={options} value={value} />\n' +
     "    </div>\n" +
     "  )\n" +
     "}\n",

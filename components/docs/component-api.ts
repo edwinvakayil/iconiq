@@ -2256,14 +2256,14 @@ const buttonGroupApiDetails: DetailItem[] = [
 
 const checkboxGroupApiDetails: DetailItem[] = [
   {
-    id: "checkbox-option",
-    title: "CheckboxGroupOption",
+    id: "checkbox-group-item",
+    title: "CheckboxGroupItem",
     summary:
-      "Each option row is described with a plain object and rendered as an animated button.",
+      "A single checkbox row composed as a child of CheckboxGroup or CheckboxGroupSection.",
     fields: [
       field({
         name: "label",
-        type: "string",
+        type: "React.ReactNode",
         required: true,
         description: "Primary copy shown for the row.",
       }),
@@ -2275,27 +2275,118 @@ const checkboxGroupApiDetails: DetailItem[] = [
           "Stable identifier used when checking whether the row is selected and when producing the next selection array.",
       }),
       field({
-        name: "description",
-        type: "string",
-        description: "Optional secondary text rendered below the label.",
-      }),
-      field({
-        name: "group",
+        name: "id",
         type: "string",
         description:
-          "Optional section label used to chunk long lists into named groups when adjacent options share the same value.",
+          "Optional stable id used for label and description associations. Falls back to a generated id when omitted.",
+      }),
+      field({
+        name: "description",
+        type: "React.ReactNode",
+        description:
+          "Optional secondary text rendered below the label and linked through aria-describedby.",
       }),
       field({
         name: "disabled",
         type: "boolean",
         description:
-          "Disables the row button and blocks hover, active, and toggle behavior for that option.",
+          "Disables this row only. Use CheckboxGroupSection disabled to disable an entire section.",
       }),
       field({
         name: "disabledReason",
         type: "string",
         description:
-          "Optional explainer rendered below disabled rows so users understand why the choice is unavailable.",
+          "Optional explainer rendered below disabled rows and linked through aria-describedby.",
+      }),
+      field({
+        name: "readOnly",
+        type: "boolean",
+        description:
+          "Shows this row without allowing toggles and keeps it checked. Pair with CheckboxGroup value for mixed read-only and interactive rows.",
+      }),
+    ],
+  },
+  {
+    id: "checkbox-group-section",
+    title: "CheckboxGroupSection",
+    summary:
+      "Named fieldset wrapper for a cluster of CheckboxGroupItem children. Mirrors how ButtonGroup composes child buttons.",
+    fields: [
+      field({
+        name: "label",
+        type: "string",
+        description:
+          "Optional section heading rendered as a fieldset legend. Required for maxVisible section collapse.",
+      }),
+      field({
+        name: "disabled",
+        type: "boolean",
+        defaultValue: "false",
+        description:
+          "Disables every checkbox row inside this section and applies native fieldset disabled semantics.",
+      }),
+      field({
+        name: "children",
+        type: "React.ReactNode",
+        required: true,
+        description: "CheckboxGroupItem elements to render inside the section.",
+      }),
+    ],
+  },
+  {
+    id: "checkbox-option",
+    title: "CheckboxGroupOption",
+    summary:
+      "Legacy options-array shape. Prefer CheckboxGroupItem children for new installs.",
+    fields: [
+      field({
+        name: "label",
+        type: "React.ReactNode",
+        required: true,
+        description: "Primary copy shown for the row.",
+      }),
+      field({
+        name: "value",
+        type: "string",
+        required: true,
+        description:
+          "Stable identifier used when checking whether the row is selected and when producing the next selection array.",
+      }),
+      field({
+        name: "id",
+        type: "string",
+        description:
+          "Optional stable id used for label and description associations. Falls back to a generated id when omitted.",
+      }),
+      field({
+        name: "description",
+        type: "React.ReactNode",
+        description:
+          "Optional secondary text rendered below the label and linked through aria-describedby.",
+      }),
+      field({
+        name: "group",
+        type: "string",
+        description:
+          "Optional section label used to chunk long lists into named fieldset groups when adjacent options share the same value.",
+      }),
+      field({
+        name: "disabled",
+        type: "boolean",
+        description:
+          "Disables the row button and blocks hover, active, and toggle behavior for that option. Works inside grouped sections as well as flat lists.",
+      }),
+      field({
+        name: "disabledReason",
+        type: "string",
+        description:
+          "Optional explainer rendered below disabled rows and linked through aria-describedby.",
+      }),
+      field({
+        name: "readOnly",
+        type: "boolean",
+        description:
+          "Shows the row state without allowing toggles. Useful for locked consent or audit views.",
       }),
     ],
   },
@@ -2303,20 +2394,32 @@ const checkboxGroupApiDetails: DetailItem[] = [
     id: "checkbox-group",
     title: "CheckboxGroup",
     summary:
-      "Animated multi-select list with optimistic toggle feedback, stable output ordering, and optional disclosure for longer option sets.",
+      "Animated multi-select list composed with CheckboxGroupSection and CheckboxGroupItem children, with optional legacy options prop support.",
     fields: [
+      field({
+        name: "children",
+        type: "React.ReactNode",
+        description:
+          "Preferred composition API. Pass CheckboxGroupItem rows directly or nest them inside CheckboxGroupSection wrappers.",
+      }),
       field({
         name: "options",
         type: "CheckboxGroupOption[]",
-        required: true,
-        description: "Array of rows to render, in display order.",
+        description:
+          "Legacy array-based configuration. Ignored when children are provided.",
       }),
       field({
         name: "value",
         type: "string[]",
+        description:
+          "Controlled selected values. When provided, the parent remains the source of truth while the component renders an immediate optimistic preview after each click.",
+      }),
+      field({
+        name: "defaultValue",
+        type: "string[]",
         defaultValue: "[]",
         description:
-          "Current selected values. The prop remains the source of truth, while the component renders an immediate optimistic preview after each click.",
+          "Initial selected values for uncontrolled usage. Ignored when value is provided.",
       }),
       field({
         name: "onChange",
@@ -2325,46 +2428,102 @@ const checkboxGroupApiDetails: DetailItem[] = [
           "Receives the next selected values array after a row is toggled, normalized back into the original display order.",
       }),
       field({
-        name: "className",
+        name: "name",
         type: "string",
-        description: "Merged onto the root flex column wrapper.",
+        description:
+          "Forwarded to each hidden checkbox input for native form submission.",
+      }),
+      field({
+        name: "form",
+        type: "string",
+        description:
+          "Associates the hidden checkbox inputs with a distant form element by id.",
+      }),
+      field({
+        name: "disabled",
+        type: "boolean",
+        defaultValue: "false",
+        description:
+          "Disables every row in the group. Prefer CheckboxGroupSection disabled or CheckboxGroupItem disabled for partial disable.",
+      }),
+      field({
+        name: "invalid",
+        type: "boolean",
+        defaultValue: "false",
+        description:
+          "Applies destructive border styling and aria-invalid for form validation feedback.",
+      }),
+      field({
+        name: "size",
+        type: '"sm" | "default" | "lg"',
+        defaultValue: '"default"',
+        description:
+          "Controls row padding, checkbox box size, and label typography.",
       }),
       field({
         name: "maxVisible",
         type: "number",
         description:
-          "Optional progressive-disclosure cap. When provided, the list initially renders up to this many rows and reveals the rest with a built-in toggle.",
+          "When labeled CheckboxGroupSection children are used, limits how many sections stay visible before a show more control appears.",
       }),
       field({
         name: "showMoreLabel",
         type: "string",
+        defaultValue: '"Show more"',
         description:
-          "Optional label prefix for the disclosure button shown when maxVisible hides rows.",
+          "Button label when grouped sections are collapsed. Appends the hidden section count in parentheses.",
       }),
       field({
         name: "showLessLabel",
         type: "string",
+        defaultValue: '"Show less"',
+        description: "Button label when grouped sections are expanded.",
+      }),
+      field({
+        name: "aria-label",
+        type: "string",
         description:
-          "Optional label used when the disclosure button collapses the list back down.",
+          "Accessible name for the checkbox group when no visible label is present.",
+      }),
+      field({
+        name: "aria-labelledby",
+        type: "string",
+        description:
+          "Id of an external element that labels the checkbox group.",
+      }),
+      field({
+        name: "aria-describedby",
+        type: "string",
+        description:
+          "Id of an external element that describes the checkbox group.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description: "Merged onto the root flex column wrapper.",
       }),
     ],
     notes: [
       "The component previews the next state immediately after a click, then re-syncs with whatever value the parent sends back.",
-      "If a selected option would be hidden by maxVisible, the list stays expanded so users do not lose track of active choices.",
-      "Rows are buttons, not native checkbox inputs, so form submission and checkbox semantics are not provided out of the box.",
+      "Compose rows with CheckboxGroupSection and CheckboxGroupItem, similar to ButtonGroup child buttons.",
+      "Named sections render as fieldset and legend pairs. Unlabeled sections render as plain fieldsets.",
+      "maxVisible only applies when at least one CheckboxGroupSection includes a label.",
+      "Collapsed grouped sections stay mounted but hidden so Base UI selection state is preserved. Sections with selected values auto-expand.",
+      "Returns null when no items are provided.",
     ],
   },
   {
     id: "checkbox-motion",
     title: "Motion and accessibility",
     summary:
-      "The component leans on hover surfaces and AnimatePresence rather than native checkbox UI.",
+      "Base UI supplies role='group', checkbox semantics, and hidden native inputs underneath the animated row shell.",
     notes: [
-      "Selection is represented by a Lucide Check icon instead of a filled checkbox background.",
-      "There is no role='group', role='checkbox', or aria-checked wiring in this version, so accessibility-sensitive forms should add hidden inputs or extend the component.",
+      "Selection is represented by an SVG checkmark draw instead of a filled checkbox background.",
+      "Row hover, active, tap spring, and label fade match the core Iconiq checkbox-group.",
+      "Motion honors prefers-reduced-motion for checkmark draw and label fade transitions.",
     ],
   },
-  registryItem("checkbox-group.json", ["motion", "lucide-react"]),
+  registryItem("b-checkbox-group.json", ["@base-ui/react/checkbox", "motion"]),
 ];
 
 const checkboxApiDetails: DetailItem[] = [

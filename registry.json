@@ -132,10 +132,10 @@
       "name": "b-checkbox-group",
       "type": "registry:ui",
       "registryDependencies": [],
-      "dependencies": ["@base-ui/react", "motion", "lucide-react"],
+      "dependencies": ["@base-ui/react", "motion"],
       "devDependencies": [],
       "title": "Checkbox Group (Base UI)",
-      "description": "Checkbox group with the same Iconiq API layered over Base UI primitives, preserving the original row hover, tap spring, check icon entrance, and disclosure behavior.",
+      "description": "Checkbox group with the same Iconiq API layered over Base UI primitives, preserving the original row hover, tap spring, checkmark draw, and disclosure behavior.",
       "files": [
         {
           "path": "b-checkbox-group.tsx",
