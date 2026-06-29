@@ -5995,6 +5995,18 @@ const selectApiDetails: DetailItem[] = [
           "Data attribute hook for compact trigger variants without changing the default Iconiq styling.",
       }),
       field({
+        name: "label",
+        type: "ReactNode",
+        description:
+          "Optional field label rendered above the trigger and linked with htmlFor.",
+      }),
+      field({
+        name: "description",
+        type: "ReactNode",
+        description:
+          "Optional helper copy rendered above the trigger. Linked to the trigger with aria-describedby.",
+      }),
+      field({
         name: "className",
         type: "string",
         description:
@@ -6009,7 +6021,7 @@ const selectApiDetails: DetailItem[] = [
     id: "select-value",
     title: "SelectValue",
     summary:
-      "Inline label for the current selection, with placeholder support from the underlying primitive.",
+      "Trigger label driven by the selected value primitive, with optional render-prop children for API-backed labels and icons.",
     fields: [
       field({
         name: "placeholder",
@@ -6017,11 +6029,20 @@ const selectApiDetails: DetailItem[] = [
         description: "Shown in the trigger when no item is selected.",
       }),
       field({
+        name: "children",
+        type: "ReactNode | (value: string | undefined) => ReactNode",
+        description:
+          "Optional custom trigger content. Use the render prop to resolve labels or icons from your options array when data is loaded dynamically.",
+      }),
+      field({
         name: "className",
         type: "string",
         description:
           "Merged onto the value span. The default keeps text truncated inside the trigger.",
       }),
+    ],
+    notes: [
+      "Without children, the trigger shows the selected value string. Pass a render prop when you need human-readable labels from external data.",
     ],
   },
   {
@@ -6075,17 +6096,28 @@ const selectApiDetails: DetailItem[] = [
           "Stable value reported through onValueChange and used to determine the selected checkmark.",
       }),
       field({
+        name: "label",
+        type: "string",
+        description:
+          "Optional display label for the item and selected trigger value. Falls back to textValue, string children, then value.",
+      }),
+      field({
         name: "children",
         type: "ReactNode",
-        required: true,
         description:
-          "Item label content. Primitive ItemText also feeds the selected trigger value.",
+          "Optional custom row content. When omitted, label or value is rendered in the menu.",
       }),
       field({
         name: "icon",
         type: "ReactNode",
         description:
           "Optional leading icon rendered inline with the item label and selected trigger value.",
+      }),
+      field({
+        name: "textValue",
+        type: "string",
+        description:
+          "Optional plain-text fallback used for trigger display and typeahead when label is omitted.",
       }),
       field({
         name: "disabled",

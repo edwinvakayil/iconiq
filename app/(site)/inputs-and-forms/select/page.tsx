@@ -1,18 +1,15 @@
 "use client";
 
-import {
-  CalendarDays,
-  MessageSquareText,
-  Palette,
-  Rocket,
-  ShieldCheck,
-} from "lucide-react";
-import { type ComponentType, type ReactNode, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 
 import {
   type PrimitiveProvider,
   ProviderSwitch,
 } from "@/app/(site)/components/_components/provider-switch";
+import {
+  getSelectUsageCode,
+  SelectPlaygroundProvider,
+} from "@/app/(site)/inputs-and-forms/select/_components/select-playground";
 import { selectApiDetails } from "@/components/docs/component-api";
 import {
   ComponentDocsPage,
@@ -22,26 +19,13 @@ import { LINK } from "@/constants";
 import * as BaseSelect from "@/registry/b-select";
 import * as RadixSelect from "@/registry/r-select";
 
-type SelectModule = {
-  Select: ComponentType<{ children?: ReactNode }>;
-  SelectContent: ComponentType<{ children?: ReactNode }>;
-  SelectGroup: ComponentType<{ children?: ReactNode }>;
-  SelectItem: ComponentType<{
-    children?: ReactNode;
-    icon?: ReactNode;
-    value: string;
-  }>;
-  SelectLabel: ComponentType<{ children?: ReactNode }>;
-  SelectTrigger: ComponentType<{ children?: ReactNode; className?: string }>;
-  SelectValue: ComponentType<{ placeholder?: ReactNode }>;
-};
-
 type ProviderConfig = {
   componentName: "b-select" | "r-select";
   dependencyLabel: string;
+  importPath: string;
   libraryLabel: string;
   notes: string[];
-  ui: SelectModule;
+  ui: typeof BaseSelect | typeof RadixSelect;
   usageCode: string;
 };
 
@@ -51,147 +35,10 @@ const breadcrumbs = [
   { label: "Select" },
 ];
 
-const previewSentenceClassName =
-  "text-pretty text-[13px] text-muted-foreground leading-snug tracking-tight";
-
-const previewContentClassName = "flex w-full max-w-72 flex-col gap-2.5";
-
-const selectUsageCodeTemplate = (importPath: string) => `"use client";
-
-import {
-  CalendarDays,
-  MessageSquareText,
-  Palette,
-  Rocket,
-  ShieldCheck,
-} from "lucide-react";
-
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "${importPath}";
-
-export function SelectDemo() {
-  return (
-    <div className="flex w-full items-center justify-center px-4 py-6">
-      <div className="flex w-full max-w-72 flex-col gap-2.5">
-        <p className="text-pretty text-[13px] text-muted-foreground leading-snug tracking-tight">
-          Choose the next workflow step from one compact select.
-        </p>
-        <Select>
-          <SelectTrigger className="w-full">
-            <SelectValue placeholder="Choose workflow" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectGroup>
-              <SelectItem
-                icon={<Rocket className="size-4 text-muted-foreground" />}
-                value="launch"
-              >
-                Launch plan
-              </SelectItem>
-              <SelectItem
-                icon={<Palette className="size-4 text-muted-foreground" />}
-                value="design"
-              >
-                Design pass
-              </SelectItem>
-              <SelectItem
-                icon={<MessageSquareText className="size-4 text-muted-foreground" />}
-                value="review"
-              >
-                Review notes
-              </SelectItem>
-              <SelectItem
-                icon={<CalendarDays className="size-4 text-muted-foreground" />}
-                value="schedule"
-              >
-                Schedule
-              </SelectItem>
-              <SelectItem
-                icon={<ShieldCheck className="size-4 text-muted-foreground" />}
-                value="approve"
-              >
-                Approvals
-              </SelectItem>
-            </SelectGroup>
-          </SelectContent>
-        </Select>
-      </div>
-    </div>
-  );
-}`;
-
 const usageCodeByProvider: Record<ProviderConfig["componentName"], string> = {
-  "b-select": selectUsageCodeTemplate("@/components/ui/b-select"),
-  "r-select": selectUsageCodeTemplate("@/components/ui/r-select"),
+  "b-select": getSelectUsageCode("@/components/ui/b-select"),
+  "r-select": getSelectUsageCode("@/components/ui/r-select"),
 };
-
-function SelectPreview({ ui }: { ui: SelectModule }) {
-  const {
-    Select,
-    SelectContent,
-    SelectGroup,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-  } = ui;
-
-  return (
-    <div className="flex w-full items-center justify-center px-4 py-6">
-      <div className={previewContentClassName}>
-        <p className={previewSentenceClassName}>
-          Choose the next workflow step from one compact select.
-        </p>
-        <Select>
-          <SelectTrigger className="w-full">
-            <SelectValue placeholder="Choose workflow" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectGroup>
-              <SelectItem
-                icon={<Rocket className="size-4 text-muted-foreground" />}
-                value="launch"
-              >
-                Launch plan
-              </SelectItem>
-              <SelectItem
-                icon={<Palette className="size-4 text-muted-foreground" />}
-                value="design"
-              >
-                Design pass
-              </SelectItem>
-              <SelectItem
-                icon={
-                  <MessageSquareText className="size-4 text-muted-foreground" />
-                }
-                value="review"
-              >
-                Review notes
-              </SelectItem>
-              <SelectItem
-                icon={<CalendarDays className="size-4 text-muted-foreground" />}
-                value="schedule"
-              >
-                Schedule
-              </SelectItem>
-              <SelectItem
-                icon={<ShieldCheck className="size-4 text-muted-foreground" />}
-                value="approve"
-              >
-                Approvals
-              </SelectItem>
-            </SelectGroup>
-          </SelectContent>
-        </Select>
-      </div>
-    </div>
-  );
-}
 
 function getDetails(provider: ProviderConfig): DetailItem[] {
   return selectApiDetails.map((item) => {
@@ -240,6 +87,7 @@ export default function RadixBaseSelectPage() {
       return {
         componentName: "b-select",
         dependencyLabel: "@base-ui/react, motion, lucide-react",
+        importPath: "@/components/ui/b-select",
         libraryLabel: "Base UI",
         notes: [
           "Installs compound Base UI select parts with the same exported part names as the Radix version.",
@@ -253,6 +101,7 @@ export default function RadixBaseSelectPage() {
     return {
       componentName: "r-select",
       dependencyLabel: "@radix-ui/react-select, motion, lucide-react",
+      importPath: "@/components/ui/r-select",
       libraryLabel: "Radix UI",
       notes: [
         "Installs compound Radix select parts with the same exported part names as the Base UI version.",
@@ -266,26 +115,43 @@ export default function RadixBaseSelectPage() {
   const details = useMemo(() => getDetails(provider), [provider]);
 
   return (
-    <ComponentDocsPage
-      breadcrumbs={breadcrumbs}
-      componentName={provider.componentName}
-      description="Single-select menu for choosing from a structured list."
-      details={details}
-      editHref={`${LINK.GITHUB}/edit/main/app/(site)/inputs-and-forms/select/page.tsx`}
-      headerActions={
-        <ProviderSwitch
-          onSelect={setSelectedProvider}
-          selectedProvider={selectedProvider}
+    <SelectPlaygroundProvider
+      importPath={provider.importPath}
+      SelectModule={provider.ui}
+    >
+      {({ preview, renderSettings }) => (
+        <ComponentDocsPage
+          breadcrumbs={breadcrumbs}
+          componentName={provider.componentName}
+          description="Single-select menu for choosing from a structured list."
+          details={details}
+          editHref={`${LINK.GITHUB}/edit/main/app/(site)/inputs-and-forms/select/page.tsx`}
+          headerActions={
+            <ProviderSwitch
+              onSelect={setSelectedProvider}
+              selectedProvider={selectedProvider}
+            />
+          }
+          itemSlug="select"
+          pageUrl="/inputs-and-forms/select"
+          preview={preview}
+          previewClassName="min-h-[18rem] overflow-visible lg:col-span-8"
+          previewDescription="Tune popup side, label, caption, icons, and disabled states from the playground."
+          previewPersonalize={({ onClose }) => renderSettings(onClose)}
+          previewPersonalizeTitle="Select"
+          railNotes={[
+            `Current install target: ${provider.libraryLabel}.`,
+            "Pass icon on SelectItem to render a leading glyph in both the menu row and selected trigger value.",
+            "Use SelectGroup and SelectLabel to separate related options inside the menu.",
+            "SelectContent matches trigger width by default and caps height at 320px before scrolling.",
+            "Popup, item highlight, and checkmark motion honor prefers-reduced-motion automatically.",
+          ]}
+          title="Select"
+          usageCode={provider.usageCode}
+          usageDescription="Load options from an API, map them into SelectItem rows, and control the selected value with useState. Switch libraries above to update the install command, registry JSON, preview code, and generated file set together."
+          v0PageCode={provider.usageCode}
         />
-      }
-      itemSlug="select"
-      pageUrl="/inputs-and-forms/select"
-      preview={<SelectPreview ui={provider.ui} />}
-      previewDescription="A workflow select with a centered caption above."
-      title="Select"
-      usageCode={provider.usageCode}
-      usageDescription="Switch libraries above to update the install command, registry JSON, preview code, and generated file set together."
-      v0PageCode={provider.usageCode}
-    />
+      )}
+    </SelectPlaygroundProvider>
   );
 }

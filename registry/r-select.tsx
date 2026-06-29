@@ -15,26 +15,26 @@ const controlCornerInheritClassName =
   "rounded-[inherit] supports-[corner-shape:squircle]:[corner-shape:inherit]";
 
 const selectThemeClassName =
-  "[--sel-surface:#ffffff] [--sel-foreground:#111111] [--sel-border:#e3e7ec] [--sel-ring:rgba(17,17,17,0.16)] [--sel-muted-foreground:#6d7480] [--sel-accent:#f3f5f8] dark:[--sel-surface:#111111] dark:[--sel-foreground:#f6f3ec] dark:[--sel-border:#2b2a25] dark:[--sel-ring:rgba(246,243,236,0.18)] dark:[--sel-muted-foreground:#9a958a] dark:[--sel-accent:#1a1a18] [--color-accent:var(--sel-accent)] [--color-accent-foreground:var(--sel-foreground)]";
+  "[--sel-surface:#ffffff] [--sel-foreground:#111111] [--sel-border:#d5dae0] [--sel-ring:rgba(17,17,17,0.16)] [--sel-muted-foreground:#6d7480] [--sel-accent:#e9edf2] dark:[--sel-surface:#111111] dark:[--sel-foreground:#f6f3ec] dark:[--sel-border:#3a3834] dark:[--sel-ring:rgba(246,243,236,0.18)] dark:[--sel-muted-foreground:#9a958a] dark:[--sel-accent:#1e1e1c] [--color-accent:var(--sel-accent)] [--color-accent-foreground:var(--sel-foreground)]";
 
 const selectTriggerClassName = cn(
   controlCornerClassName,
-  "flex min-h-11 w-full touch-manipulation items-center justify-between gap-2 border border-[color:var(--sel-border)] bg-[color:var(--sel-surface)] px-4 py-3 text-left font-medium text-[color:var(--sel-foreground)] text-sm transition-colors hover:bg-accent/60 focus:outline-none focus-visible:ring-2 focus-visible:ring-[color:color-mix(in_oklch,var(--sel-ring),transparent_50%)] disabled:cursor-not-allowed disabled:opacity-50 data-placeholder:text-[color:var(--sel-muted-foreground)]"
+  "flex min-h-11 w-full touch-manipulation items-center justify-between gap-2 border border-[color:var(--sel-border)] bg-[color:var(--sel-surface)] px-4 py-3 text-left font-medium text-[color:var(--sel-foreground)] text-sm transition-[background-color,color,box-shadow] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-accent/72 focus:outline-none focus-visible:ring-2 focus-visible:ring-[color:color-mix(in_oklch,var(--sel-ring),transparent_50%)] disabled:cursor-not-allowed disabled:opacity-50 data-placeholder:text-[color:var(--sel-muted-foreground)]"
 );
 
 const selectPanelChromeClassName = cn(
   controlCornerClassName,
-  "z-[300] overflow-hidden border border-[color:color-mix(in_oklch,var(--sel-border,#e3e7ec),transparent_40%)] bg-[var(--sel-surface,#ffffff)] text-[var(--sel-foreground,#111111)] shadow-none dark:border-[color:color-mix(in_oklch,var(--sel-border,#2b2a25),transparent_40%)] dark:bg-[var(--sel-surface,#111111)] dark:text-[var(--sel-foreground,#f6f3ec)]"
+  "z-[300] overflow-hidden border border-[color:color-mix(in_oklch,var(--sel-border,#d5dae0),transparent_40%)] bg-[var(--sel-surface,#ffffff)] text-[var(--sel-foreground,#111111)] shadow-none dark:border-[color:color-mix(in_oklch,var(--sel-border,#3a3834),transparent_40%)] dark:bg-[var(--sel-surface,#111111)] dark:text-[var(--sel-foreground,#f6f3ec)]"
 );
 
 const selectItemClassName = cn(
   controlCornerClassName,
-  "group relative isolate flex min-h-11 cursor-pointer touch-manipulation select-none items-center gap-3 py-2.5 pr-8 pl-3 text-[color:var(--sel-foreground)] text-sm outline-none transition-colors"
+  "group relative isolate flex min-h-11 cursor-pointer touch-manipulation select-none items-center gap-3 py-2.5 pr-8 pl-3 text-[color:var(--sel-foreground)] text-sm outline-none data-[disabled]:pointer-events-none data-[disabled]:cursor-not-allowed data-[disabled]:text-[color:var(--sel-muted-foreground)] data-[disabled]:opacity-50"
 );
 
 const selectItemHighlightClassName = cn(
   controlCornerInheritClassName,
-  "absolute inset-0 -z-10 bg-accent/60"
+  "absolute inset-0 -z-10 bg-accent/68"
 );
 
 const selectListScrollbarClassName =
@@ -96,10 +96,8 @@ type SelectContextValue = {
   activeHighlightId: string;
   activeValue?: string;
   getItemIndex: () => number;
-  itemLabelsRef: React.RefObject<Record<string, React.ReactNode>>;
   itemVariants: typeof itemVariants;
   open: boolean;
-  registerItemLabel: (value: string, label: React.ReactNode) => void;
   selectedValue?: string;
   setActiveValue: React.Dispatch<React.SetStateAction<string | undefined>>;
   skipExitAnimationRef: React.MutableRefObject<boolean>;
@@ -245,12 +243,18 @@ const popupMotion = {
   },
 };
 
-const chevronTransition = { duration: 0.2, ease: SOFT_EASE };
-
-const highlightTransition = {
+const chevronTransition = {
   type: "spring" as const,
-  stiffness: 600,
-  damping: 38,
+  stiffness: 360,
+  damping: 32,
+  mass: 0.82,
+};
+
+const HIGHLIGHT_SPRING = {
+  type: "spring" as const,
+  stiffness: 380,
+  damping: 41,
+  mass: 0.82,
 };
 
 function composeEventHandlers<Event extends React.SyntheticEvent>(
@@ -263,28 +267,83 @@ function composeEventHandlers<Event extends React.SyntheticEvent>(
   };
 }
 
-function Select({
+function isEmptySelectValue(value: string | undefined | null) {
+  return value == null || value === "";
+}
+
+function toPrimitiveSelectValue(value: string | undefined | null) {
+  return isEmptySelectValue(value) ? undefined : value;
+}
+
+const selectValueClassName =
+  "flex min-w-0 flex-1 items-center gap-2 truncate text-left [&_svg]:shrink-0";
+
+function resolveItemContent({
   children,
-  defaultOpen = false,
-  defaultValue,
-  onOpenChange,
-  onValueChange,
-  open: openProp,
-  value: valueProp,
-  ...props
-}: SelectProps) {
+  icon,
+}: {
+  children: React.ReactNode;
+  icon?: React.ReactNode;
+}) {
+  if (!icon) {
+    return children;
+  }
+
+  return (
+    <>
+      {icon}
+      {children}
+    </>
+  );
+}
+
+function resolveItemText({
+  children,
+  label,
+  textValue,
+  value,
+}: {
+  children?: React.ReactNode;
+  label?: string;
+  textValue?: string;
+  value: string;
+}) {
+  return (
+    label ??
+    textValue ??
+    (typeof children === "string" ? children : undefined) ??
+    value
+  );
+}
+
+function Select(allProps: SelectProps) {
+  const {
+    children,
+    defaultOpen = false,
+    defaultValue,
+    onOpenChange,
+    onValueChange,
+    open: openProp,
+    value: valueProp,
+    ...props
+  } = allProps;
   const skipExitAnimationRef = React.useRef(false);
   const isOpenControlled = openProp !== undefined;
-  const isValueControlled = valueProp !== undefined;
+  const isValueControlled = Object.hasOwn(allProps, "value");
   const [uncontrolledOpen, setUncontrolledOpen] = React.useState(defaultOpen);
   const [uncontrolledValue, setUncontrolledValue] =
     React.useState<SelectRootProps["value"]>(defaultValue);
   const [activeValue, setActiveValue] = React.useState<string | undefined>();
-  const itemLabelsRef = React.useRef<Record<string, React.ReactNode>>({});
   const nextItemIndexRef = React.useRef(0);
+  const openStateRef = React.useRef(false);
   const open = isOpenControlled ? openProp : uncontrolledOpen;
   const selectedValue = isValueControlled ? valueProp : uncontrolledValue;
   const activeHighlightId = React.useId();
+
+  if (open && !openStateRef.current) {
+    nextItemIndexRef.current = 0;
+  }
+  openStateRef.current = open;
 
   useSuppressResizeObserverLoopError();
 
@@ -322,45 +381,37 @@ function Select({
     [isValueControlled, onValueChange]
   );
 
-  const registerItemLabel = React.useCallback(
-    (itemValue: string, itemLabel: React.ReactNode) => {
-      itemLabelsRef.current[itemValue] = itemLabel;
-    },
-    []
-  );
   const getItemIndex = React.useCallback(() => {
     const itemIndex = nextItemIndexRef.current;
     nextItemIndexRef.current += 1;
     return itemIndex;
   }, []);
 
-  React.useEffect(() => {
-    if (!open) {
-      nextItemIndexRef.current = 0;
-    }
-  }, [open]);
+  const contextValue = React.useMemo<SelectContextValue>(
+    () => ({
+      activeHighlightId,
+      activeValue,
+      getItemIndex,
+      itemVariants,
+      open,
+      selectedValue,
+      setActiveValue,
+      skipExitAnimationRef,
+    }),
+    [activeHighlightId, activeValue, getItemIndex, open, selectedValue]
+  );
 
   return (
-    <SelectContext.Provider
-      value={{
-        activeHighlightId,
-        activeValue,
-        getItemIndex,
-        itemLabelsRef,
-        itemVariants,
-        open,
-        registerItemLabel,
-        selectedValue,
-        setActiveValue,
-        skipExitAnimationRef,
-      }}
-    >
+    <SelectContext.Provider value={contextValue}>
       <SelectPrimitive.Root
         {...props}
+        defaultValue={isValueControlled ? undefined : defaultValue}
         onOpenChange={handleOpenChange}
         onValueChange={handleValueChange}
         open={open}
-        value={selectedValue}
+        {...(isValueControlled
+          ? { value: toPrimitiveSelectValue(valueProp) }
+          : {})}
       >
         {children}
       </SelectPrimitive.Root>
@@ -381,67 +432,166 @@ function SelectGroup({
   );
 }
 
+type SelectValueProps = Omit<
+  React.ComponentPropsWithoutRef<typeof SelectPrimitive.Value>,
+  "children"
+> & {
+  children?: React.ReactNode | ((value: string | undefined) => React.ReactNode);
+};
+
 function SelectValue({
   children,
   className,
   placeholder,
   ...props
-}: React.ComponentPropsWithoutRef<typeof SelectPrimitive.Value>) {
-  const { itemLabelsRef, selectedValue } = useSelectContext("SelectValue");
-  const hasValue = Boolean(selectedValue);
-  const selectedLabel = selectedValue
-    ? itemLabelsRef.current[selectedValue]
-    : undefined;
-  const valueChildren = hasValue
-    ? (children ?? selectedLabel ?? selectedValue)
-    : placeholder;
+}: SelectValueProps) {
+  const { selectedValue } = useSelectContext("SelectValue");
+  const hasValue = !isEmptySelectValue(selectedValue);
   const { asChild: _asChild, ...valueProps } = props;
+  const resolvedValue =
+    hasValue && typeof selectedValue === "string" ? selectedValue : undefined;
+  const resolvedChildren =
+    typeof children === "function" ? children(resolvedValue) : children;
+
+  if (!hasValue) {
+    return (
+      <span
+        className={cn(
+          selectValueClassName,
+          "text-[color:var(--sel-muted-foreground)]",
+          className
+        )}
+        data-placeholder=""
+        data-slot="select-value"
+        {...valueProps}
+      >
+        {placeholder}
+      </span>
+    );
+  }
 
   return (
     <span
-      className={cn(
-        "flex min-w-0 flex-1 items-center gap-2 truncate text-left [&_svg]:shrink-0",
-        className
-      )}
-      data-placeholder={hasValue ? undefined : ""}
+      className={cn(selectValueClassName, className)}
       data-slot="select-value"
       {...valueProps}
     >
-      {valueChildren}
+      {resolvedChildren ?? resolvedValue}
     </span>
+  );
+}
+
+function SelectFieldChrome({
+  children,
+  className,
+  description,
+  descriptionClassName,
+  descriptionId,
+  label,
+  labelClassName,
+  triggerId,
+}: {
+  children: React.ReactNode;
+  className?: string;
+  description?: React.ReactNode;
+  descriptionClassName?: string;
+  descriptionId?: string;
+  label?: React.ReactNode;
+  labelClassName?: string;
+  triggerId: string;
+}) {
+  if (!(label || description)) {
+    return <>{children}</>;
+  }
+
+  return (
+    <div className={cn("flex w-full flex-col gap-2", className)}>
+      {label ? (
+        <label
+          className={cn("font-medium text-foreground text-sm", labelClassName)}
+          htmlFor={triggerId}
+        >
+          {label}
+        </label>
+      ) : null}
+      {description ? (
+        <p
+          className={cn(
+            "text-pretty text-muted-foreground text-xs leading-snug tracking-tight",
+            descriptionClassName
+          )}
+          id={descriptionId}
+        >
+          {description}
+        </p>
+      ) : null}
+      {children}
+    </div>
   );
 }
 
 function SelectTrigger({
   children,
   className,
+  description,
+  descriptionClassName,
+  id: idProp,
+  label,
+  labelClassName,
   size = "default",
   ...props
 }: React.ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger> & {
+  description?: React.ReactNode;
+  descriptionClassName?: string;
+  label?: React.ReactNode;
+  labelClassName?: string;
   size?: "sm" | "default";
 }) {
   const { open } = useSelectContext("SelectTrigger");
+  const generatedId = React.useId();
+  const triggerId = idProp ?? generatedId;
+  const descriptionId = description ? `${triggerId}-description` : undefined;
+  const hasFieldChrome = Boolean(label || description);
+  const describedBy = [props["aria-describedby"], descriptionId]
+    .filter(Boolean)
+    .join(" ");
 
   return (
-    <SelectPrimitive.Trigger asChild {...props}>
-      <button
-        className={cn(selectThemeClassName, selectTriggerClassName, className)}
-        data-size={size}
-        data-slot="select-trigger"
-        type="button"
-      >
-        {children}
-        <SelectPrimitive.Icon asChild>
-          <motion.span
-            animate={{ rotate: open ? 180 : 0 }}
-            className="shrink-0"
-            transition={chevronTransition}
-          >
-            <ChevronDownIcon className="h-4 w-4 text-[color:var(--sel-muted-foreground)]" />
-          </motion.span>
-        </SelectPrimitive.Icon>
-      </button>
-    </SelectPrimitive.Trigger>
+    <SelectFieldChrome
+      className={hasFieldChrome ? className : undefined}
+      description={description}
+      descriptionClassName={descriptionClassName}
+      descriptionId={descriptionId}
+      label={label}
+      labelClassName={labelClassName}
+      triggerId={triggerId}
+    >
+      <SelectPrimitive.Trigger asChild {...props}>
+        <button
+          aria-describedby={describedBy || undefined}
+          className={cn(
+            selectThemeClassName,
+            selectTriggerClassName,
+            hasFieldChrome ? undefined : className
+          )}
+          data-size={size}
+          data-slot="select-trigger"
+          id={triggerId}
+          type="button"
+        >
+          {children}
+          <SelectPrimitive.Icon asChild>
+            <motion.span
+              animate={{ rotate: open ? 180 : 0 }}
+              className="shrink-0"
+              transition={chevronTransition}
+            >
+              <ChevronDownIcon className="h-4 w-4 text-[color:var(--sel-muted-foreground)]" />
+            </motion.span>
+          </SelectPrimitive.Icon>
+        </button>
+      </SelectPrimitive.Trigger>
+    </SelectFieldChrome>
   );
 }
 
@@ -491,7 +641,6 @@ function SelectContent({
               asChild: true,
               avoidCollisions,
               collisionPadding,
-              forceMount: true,
               position,
               side,
               sideOffset,
@@ -585,76 +734,85 @@ function SelectLabel({
 function SelectItem({
   children,
   className,
+  disabled = false,
   icon,
+  label,
+  textValue,
   value,
   ...props
 }: React.ComponentPropsWithoutRef<typeof SelectPrimitive.Item> & {
   icon?: React.ReactNode;
+  label?: string;
+  textValue?: string;
 }) {
   const {
     activeHighlightId,
     activeValue,
     getItemIndex,
     itemVariants,
-    registerItemLabel,
     selectedValue,
     setActiveValue,
     skipExitAnimationRef,
   } = useSelectContext("SelectItem");
-  const isActive = value === activeValue;
+  const resolvedText = resolveItemText({ children, label, textValue, value });
+  const itemContent = resolveItemContent({
+    children: children ?? resolvedText,
+    icon,
+  });
+  const isActive = !disabled && value === activeValue;
   const isSelected = value === selectedValue;
-  const itemContent = icon ? (
-    <>
-      {icon}
-      {children}
-    </>
-  ) : (
-    children
-  );
   const itemIndexRef = React.useRef<number | null>(null);
 
   if (itemIndexRef.current === null) {
     itemIndexRef.current = getItemIndex();
   }
 
-  registerItemLabel(value, itemContent);
-
   return (
     <SelectPrimitive.Item
       asChild
+      disabled={disabled}
       onSelect={() => {
         skipExitAnimationRef.current = true;
       }}
+      textValue={resolvedText}
       value={value}
       {...props}
     >
       <motion.div
         animate="visible"
+        aria-disabled={disabled || undefined}
         className={cn(
           "transform-gpu",
           selectItemClassName,
-          !isActive && "hover:bg-accent/60",
+          disabled &&
+            "pointer-events-none cursor-not-allowed text-[color:var(--sel-muted-foreground)] opacity-50",
           className
         )}
         custom={itemIndexRef.current}
+        data-disabled={disabled ? "" : undefined}
         exit="exit"
         initial="hidden"
         layout={false}
         onMouseEnter={composeEventHandlers(props.onMouseEnter, () => {
-          setActiveValue(value);
+          if (!disabled) {
+            setActiveValue(value);
+          }
         })}
         onPointerMove={composeEventHandlers(props.onPointerMove, () => {
-          setActiveValue(value);
+          if (!disabled) {
+            setActiveValue(value);
+          }
         })}
         transition={PRESS_SPRING}
         variants={itemVariants}
-        whileTap={{ scale: 0.985 }}
+        whileTap={disabled ? undefined : { scale: 0.985 }}
       >
         {isActive ? (
           <motion.span
             className={selectItemHighlightClassName}
+            initial={false}
             layoutId={activeHighlightId}
-            transition={highlightTransition}
+            transition={HIGHLIGHT_SPRING}
           />
         ) : null}
         <SelectPrimitive.ItemText asChild>
