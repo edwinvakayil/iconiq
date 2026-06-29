@@ -8756,7 +8756,7 @@ const switchApiDetails: DetailItem[] = [
     id: "switch",
     title: "Switch",
     summary:
-      "Binary on or off control built on Radix Switch, with a motion-driven thumb travel, foreground fill sweep, and optional inline label.",
+      "Binary on or off control with motion-driven thumb travel, foreground fill sweep, and optional label and description field chrome.",
     fields: [
       field({
         name: "checked",
@@ -8777,34 +8777,85 @@ const switchApiDetails: DetailItem[] = [
           "Called whenever the switch changes state, after the thumb and fill animation sequence starts.",
       }),
       field({
-        name: "disabled",
-        type: "boolean",
+        name: "label",
+        type: "React.ReactNode",
         description:
-          "Disables pointer and keyboard interaction, and dims the switch and optional label together.",
+          "Optional label rendered beside the switch. When provided with description, both sit inside a native label element linked by htmlFor.",
       }),
       field({
-        name: "label",
-        type: "string",
+        name: "description",
+        type: "React.ReactNode",
         description:
-          "Optional inline text rendered beside the switch. When omitted, the component returns only the switch control itself.",
+          "Optional helper copy rendered under the label and linked through aria-describedby.",
       }),
       field({
         name: "labelSide",
         type: '"left" | "right"',
         defaultValue: "right",
         description:
-          "Controls which side of the switch the optional label text appears on.",
+          "Controls which side of the switch the label and description block appears on.",
+      }),
+      field({
+        name: "labelClassName",
+        type: "string",
+        description: "Merged onto the label text wrapper.",
+      }),
+      field({
+        name: "descriptionClassName",
+        type: "string",
+        description: "Merged onto the description text wrapper.",
+      }),
+      field({
+        name: "size",
+        type: '"sm" | "default" | "lg"',
+        defaultValue: "default",
+        description:
+          "Scales the track, thumb, label text, and row gap together.",
+      }),
+      field({
+        name: "disabled",
+        type: "boolean",
+        description:
+          "Disables pointer and keyboard interaction, and dims the switch and optional label together.",
+      }),
+      field({
+        name: "readOnly",
+        type: "boolean",
+        defaultValue: "false",
+        description:
+          "Shows the current state without allowing toggles. Useful for locked preference rows.",
+      }),
+      field({
+        name: "required",
+        type: "boolean",
+        defaultValue: "false",
+        description:
+          "Forwards native required validation to the hidden input and appends a visual asterisk to the label.",
+      }),
+      field({
+        name: "invalid",
+        type: "boolean",
+        defaultValue: "false",
+        description:
+          "Applies destructive ring styling and aria-invalid for form validation feedback.",
       }),
       field({
         name: "className",
         type: "string",
         description:
-          "Merged onto the Radix root element for local spacing or surface overrides.",
+          "Merged onto the switch track for local spacing or surface overrides.",
+      }),
+      field({
+        name: "wrapperClassName",
+        type: "string",
+        description:
+          "Merged onto the outer label wrapper when label or description text is present.",
       }),
     ],
     notes: [
-      "Additional Radix switch props such as aria-label, name, value, required, and form are forwarded to the root control.",
-      "If you provide label, the component wraps the control in a native label element so clicking the text also toggles the switch.",
+      "Additional switch props such as id, aria-label, name, value, required, form, and inputRef are forwarded to the root control.",
+      "If you provide label or description, the component wraps the row in a native label element so clicking the text also toggles the switch.",
+      "When no label or description is provided, pass aria-label for an accessible name.",
     ],
   },
   {
@@ -8815,7 +8866,9 @@ const switchApiDetails: DetailItem[] = [
     notes: [
       "Pointer press slightly flattens the thumb before release, then the thumb snaps back with a softer bounce after the state change.",
       "The dark foreground fill fades in as the thumb travels right, rather than swapping track color instantly.",
-      "Controlled and uncontrolled usage both keep the thumb animation synchronized with the underlying Radix state.",
+      "Controlled and uncontrolled usage both keep the thumb animation synchronized with the underlying switch state.",
+      "Thumb travel, squash, and fill animations honor prefers-reduced-motion automatically.",
+      "The track keeps a fixed left-to-right thumb direction via dir=ltr so RTL layouts do not invert the on state.",
     ],
   },
   registryItem("switch.json", ["@radix-ui/react-switch", "motion"]),
