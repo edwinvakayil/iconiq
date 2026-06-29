@@ -6984,7 +6984,7 @@ const themeToggleApiDetails: DetailItem[] = [
     id: "theme-toggle",
     title: "ThemeToggle",
     summary:
-      "Client-only pill switch that toggles light and dark mode by adding or removing the `dark` class on `document.documentElement`, with sun and moon icons inside a sliding knob.",
+      "Client-only pill switch that toggles light and dark mode by syncing the `dark` class on `document.documentElement`, persisting to `localStorage`, and falling back to `prefers-color-scheme` when no saved preference exists.",
     fields: [
       field({
         name: "size",
@@ -6994,16 +6994,93 @@ const themeToggleApiDetails: DetailItem[] = [
           "Controls track, knob, and icon dimensions. Use `sm` in compact toolbars and `lg` for hero or settings layouts.",
       }),
       field({
+        name: "pressed",
+        type: "boolean",
+        description:
+          "Controlled dark-mode state. Pair with `onPressedChange` when wiring the toggle to next-themes or another theme provider.",
+      }),
+      field({
+        name: "defaultPressed",
+        type: "boolean",
+        description:
+          "Initial dark-mode state for uncontrolled usage when no saved preference or system preference is available.",
+      }),
+      field({
+        name: "onPressedChange",
+        type: "(pressed: boolean) => void",
+        description:
+          "Called when the user toggles theme. Receives `true` for dark mode and `false` for light mode.",
+      }),
+      field({
+        name: "persist",
+        type: "boolean",
+        defaultValue: "true",
+        description:
+          "When enabled, writes `light` or `dark` to `localStorage` using `storageKey`. Disable when an external theme layer owns persistence.",
+      }),
+      field({
+        name: "storageKey",
+        type: "string",
+        defaultValue: '"theme"',
+        description:
+          "localStorage key used for saved theme preference. Defaults to `theme` for next-themes compatibility.",
+      }),
+      field({
+        name: "enableSystem",
+        type: "boolean",
+        defaultValue: "true",
+        description:
+          "When no saved preference exists, resolve the initial theme from `prefers-color-scheme` and keep following system changes until the user toggles manually.",
+      }),
+      field({
+        name: "applyToDocument",
+        type: "boolean",
+        defaultValue: "true",
+        description:
+          "When enabled, toggles the `dark` class and `color-scheme` style on `document.documentElement`. Disable for controlled integrations that already apply theme changes.",
+      }),
+      field({
+        name: "disabled",
+        type: "boolean",
+        description: "Prevents interaction and dims the control.",
+      }),
+      field({
+        name: "aria-label",
+        type: "string",
+        defaultValue: '"Toggle theme"',
+        description: "Accessible name for the toggle button.",
+      }),
+      field({
+        name: "id",
+        type: "string",
+        description: "Forwarded to the underlying toggle button.",
+      }),
+      field({
         name: "className",
         type: "string",
         description:
           "Optional class names merged onto the root button for spacing or layout in your header or settings panel.",
       }),
+      field({
+        name: "trackClassName",
+        type: "string",
+        description: "Optional class names merged onto the outer track button.",
+      }),
+      field({
+        name: "knobClassName",
+        type: "string",
+        description: "Optional class names merged onto the sliding knob.",
+      }),
+      field({
+        name: "ref",
+        type: "Ref<HTMLButtonElement>",
+        description: "Ref forwarded to the rendered button element.",
+      }),
     ],
     notes: [
-      "On mount, the control reads `prefers-color-scheme: dark` and syncs both local state and the document `dark` class.",
-      "Before hydration completes, a neutral placeholder button is rendered to avoid layout shift while keeping an accessible name.",
-      "The toggle manages theme locally via the `dark` class; pair it with your own CSS variables or Tailwind dark mode setup.",
+      "On mount, the control resolves theme from `localStorage`, then `prefers-color-scheme` when `enableSystem` is true, then the existing document `dark` class.",
+      "User toggles persist as `light` or `dark` in `localStorage` and stop following system changes until storage is cleared or set back to `system`.",
+      "For next-themes, use controlled mode with `pressed`, `onPressedChange`, `persist={false}`, and `applyToDocument={false}`.",
       "Install path is `components/ui/theme-toggle.tsx` with the `ThemeToggle` export.",
     ],
   },
