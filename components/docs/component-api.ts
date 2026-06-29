@@ -7448,19 +7448,27 @@ const sliderApiDetails: DetailItem[] = [
     id: "slider",
     title: "Slider",
     summary:
-      "Pointer-driven range control with optional controlled or uncontrolled value management.",
+      "Pointer-driven range control with optional single or dual-thumb value management, field chrome, and formatting helpers.",
     fields: [
       field({
         name: "value",
-        type: "number",
+        type: "number | [number, number]",
         description:
-          "Controlled value. When provided, the parent owns the current position.",
+          "Controlled value. Use a number for single-thumb mode or a tuple when range is enabled.",
       }),
       field({
         name: "defaultValue",
-        type: "number",
+        type: "number | [number, number]",
         defaultValue: "50",
-        description: "Initial internal value used when value is not supplied.",
+        description:
+          "Initial internal value used when value is not supplied. Defaults to [25, 75] when range is true.",
+      }),
+      field({
+        name: "range",
+        type: "boolean",
+        defaultValue: "false",
+        description:
+          "Renders two thumbs and fills the track between the low and high values.",
       }),
       field({
         name: "min",
@@ -7483,13 +7491,13 @@ const sliderApiDetails: DetailItem[] = [
       }),
       field({
         name: "onChange",
-        type: "(value: number) => void",
+        type: "(value: number | [number, number]) => void",
         description:
           "Called for live value updates from pointer or keyboard input when the snapped value actually changes.",
       }),
       field({
         name: "onValueCommit",
-        type: "(value: number) => void",
+        type: "(value: number | [number, number]) => void",
         description:
           "Called when an interaction is committed, such as releasing a drag or finishing a keyboard step.",
       }),
@@ -7520,10 +7528,81 @@ const sliderApiDetails: DetailItem[] = [
           "Optional label shown on the left side of the header row above the track.",
       }),
       field({
+        name: "description",
+        type: "ReactNode",
+        description:
+          "Optional helper text rendered below the track and linked through aria-describedby.",
+      }),
+      field({
+        name: "errorMessage",
+        type: "ReactNode",
+        description:
+          "Validation message rendered below the track with alert semantics when present.",
+      }),
+      field({
+        name: "invalid",
+        type: "boolean",
+        description:
+          "Marks the slider as invalid for assistive tech even when no errorMessage is rendered.",
+      }),
+      field({
+        name: "disabled",
+        type: "boolean",
+        defaultValue: "false",
+        description:
+          "Prevents interaction, removes the slider from tab order, and applies disabled styling.",
+      }),
+      field({
+        name: "readOnly",
+        type: "boolean",
+        defaultValue: "false",
+        description:
+          "Keeps the slider focusable while blocking pointer and keyboard value changes.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description:
+          "Merged onto the root wrapper so you can constrain width, spacing, or layout.",
+      }),
+      field({
+        name: "size",
+        type: '"sm" | "md" | "lg"',
+        defaultValue: "md",
+        description:
+          "Scales the hit area, thumb, and track thickness together while preserving the default md footprint.",
+      }),
+      field({
+        name: "inverted",
+        type: "boolean",
+        defaultValue: "false",
+        description:
+          "Reverses pointer and keyboard direction. RTL documents also reverse horizontal pointer mapping.",
+      }),
+      field({
+        name: "marksInteractive",
+        type: "boolean",
+        defaultValue: "false",
+        description:
+          "Turns tick marks into buttons that jump the nearest thumb to the mark value.",
+      }),
+      field({
+        name: "name",
+        type: "string",
+        description:
+          "When provided, renders hidden inputs so the current value can participate in native form submission.",
+      }),
+      field({
+        name: "id",
+        type: "string",
+        description:
+          "Optional id applied to the focusable slider element and used to derive description and error ids.",
+      }),
+      field({
         name: "ariaLabel",
         type: "string",
         description:
-          "Accessible name used when no visible label is rendered for the slider.",
+          "Accessible name used when no visible label is rendered for the slider. Falls back to Slider.",
       }),
       field({
         name: "ariaLabelledBy",
@@ -7532,16 +7611,23 @@ const sliderApiDetails: DetailItem[] = [
           "ID of an external label element that should be announced instead of the built-in label.",
       }),
       field({
+        name: "ariaDescribedBy",
+        type: "string",
+        description:
+          "Additional ids merged into aria-describedby alongside description and errorMessage.",
+      }),
+      field({
         name: "marks",
         type: "{ value: number; label?: string }[]",
         description:
-          "Optional tick marks rendered below the track so large ranges can include landmarks like Low, Medium, and High.",
+          "Optional tick marks rendered below or beside the track so large ranges can include landmarks like Low, Medium, and High.",
       }),
     ],
     notes: [
       "When value is undefined, the component stores the current value internally and updates it during drag operations.",
       "The displayed value is derived from the animated motion value, so the readout stays in sync with the spring animation rather than jumping immediately.",
-      "Touch interaction keeps vertical page scrolling available with pan-y while still supporting horizontal dragging on the slider itself.",
+      "Touch interaction keeps vertical page scrolling available with pan-y on horizontal sliders while still supporting dragging on the track itself.",
+      "Spring motion honors prefers-reduced-motion and settles instantly when reduced motion is requested.",
     ],
   },
   {
@@ -7553,6 +7639,7 @@ const sliderApiDetails: DetailItem[] = [
       "The thumb and filled track animate with springs whenever the current value changes.",
       "Pointer capture is taken on pointer down and released on pointer up or cancel, which keeps dragging stable even when the pointer leaves the track.",
       "Keyboard support includes Arrow keys for step changes, Page Up and Page Down for larger jumps, and Home and End for min and max.",
+      "Range mode tracks an active thumb during keyboard and pointer interaction so the nearest endpoint moves first.",
     ],
   },
   registryItem("slider.json", ["motion"]),

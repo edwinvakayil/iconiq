@@ -6,9 +6,18 @@ import {
   type MotionValue,
   motion,
   useMotionValue,
+  useReducedMotion,
   useTransform,
 } from "motion/react";
-import { useEffect, useId, useState } from "react";
+import {
+  forwardRef,
+  type ReactNode,
+  useCallback,
+  useEffect,
+  useId,
+  useRef,
+  useState,
+} from "react";
 
 import { cn } from "@/lib/utils";
 
@@ -20,14 +29,16 @@ export interface SliderMark {
   label?: string;
 }
 
+export type SliderSize = "sm" | "md" | "lg";
+
 export interface SliderProps {
-  value?: number;
-  defaultValue?: number;
+  value?: number | [number, number];
+  defaultValue?: number | [number, number];
   min?: number;
   max?: number;
   step?: number;
-  onChange?: (value: number) => void;
-  onValueCommit?: (value: number) => void;
+  onChange?: (value: number | [number, number]) => void;
+  onValueCommit?: (value: number | [number, number]) => void;
   showValue?: boolean;
   valueDecimals?: number;
   formatValue?: (value: number) => string;
@@ -36,109 +47,52 @@ export interface SliderProps {
   ariaLabelledBy?: string;
   marks?: SliderMark[];
   className?: string;
+  disabled?: boolean;
+  readOnly?: boolean;
+  description?: ReactNode;
+  errorMessage?: ReactNode;
+  invalid?: boolean;
+  ariaDescribedBy?: string;
+  marksInteractive?: boolean;
+  size?: SliderSize;
+  inverted?: boolean;
+  name?: string;
+  id?: string;
+  range?: boolean;
 }
 
-function SliderMarks({
-  marks,
-  range,
-  resolvedMin,
-}: {
-  marks: SliderMark[];
-  range: number;
-  resolvedMin: number;
-}) {
-  if (marks.length === 0) {
-    return null;
+export const sliderSizeClasses = {
+  sm: {
+    hitAreaHorizontal: "h-9",
+    thumb: "h-3 w-3",
+    thumbBorder: "border",
+    trackInactive: 3,
+    trackActive: 5,
+  },
+  md: {
+    hitAreaHorizontal: "h-11",
+    thumb: "h-4 w-4",
+    thumbBorder: "border-[1.5px]",
+    trackInactive: 4,
+    trackActive: 6,
+  },
+  lg: {
+    hitAreaHorizontal: "h-14",
+    thumb: "h-5 w-5",
+    thumbBorder: "border-2",
+    trackInactive: 5,
+    trackActive: 7,
+  },
+} as const satisfies Record<
+  SliderSize,
+  {
+    hitAreaHorizontal: string;
+    thumb: string;
+    thumbBorder: string;
+    trackInactive: number;
+    trackActive: number;
   }
-
-  const hasMarkLabels = marks.some((mark) => mark.label);
-
-  return (
-    <div
-      aria-hidden
-      className={`pointer-events-none relative mt-2 ${
-        hasMarkLabels ? "h-8" : "h-3"
-      }`}
-    >
-      {marks.map((mark) => {
-        const left =
-          range === 0 ? "0%" : `${((mark.value - resolvedMin) / range) * 100}%`;
-
-        return (
-          <div
-            className="absolute top-0 -translate-x-1/2 text-center"
-            key={`${mark.value}-${mark.label ?? "tick"}`}
-            style={{ left }}
-          >
-            <span className="mx-auto block h-2 w-px rounded-full bg-foreground/25" />
-            {mark.label ? (
-              <span className="mt-1 block whitespace-nowrap font-medium text-[11px] text-muted-foreground">
-                {mark.label}
-              </span>
-            ) : null}
-          </div>
-        );
-      })}
-    </div>
-  );
-}
-
-function SliderVisualShell({
-  active,
-  isDragging,
-  isHovered,
-  leftPercent,
-  widthPercent,
-}: {
-  active: boolean;
-  isDragging: boolean;
-  isHovered: boolean;
-  leftPercent: MotionValue<string>;
-  widthPercent: MotionValue<string>;
-}) {
-  return (
-    <div aria-hidden className="pointer-events-none absolute inset-0">
-      <motion.div
-        animate={{ height: active ? 6 : 4 }}
-        className="absolute top-1/2 right-0 left-0 -translate-y-1/2 overflow-hidden rounded-full bg-foreground/15"
-        transition={{
-          type: "spring",
-          stiffness: 200,
-          damping: 28,
-          mass: 0.8,
-        }}
-      />
-
-      <motion.div
-        animate={{ height: active ? 6 : 4 }}
-        className="absolute top-1/2 left-0 origin-left -translate-y-1/2 overflow-hidden rounded-full bg-foreground"
-        style={{ width: widthPercent }}
-        transition={{
-          type: "spring",
-          stiffness: 200,
-          damping: 28,
-          mass: 0.8,
-        }}
-      />
-
-      <motion.div
-        animate={{
-          scale: isDragging ? 1.15 : isHovered ? 1.08 : 1,
-        }}
-        className="absolute top-1/2 -translate-x-1/2 -translate-y-1/2"
-        style={{ left: leftPercent }}
-        transition={{
-          type: "spring",
-          stiffness: 220,
-          damping: 22,
-          mass: 0.7,
-        }}
-      >
-        <div className="relative h-4 w-4 rounded-full border-[1.5px] border-foreground bg-background shadow-sm" />
-      </motion.div>
-    </div>
-  );
-}
+>;
 
 function clamp(value: number, min: number, max: number) {
   return Math.min(Math.max(value, min), max);
@@ -170,6 +124,97 @@ function snapValue(raw: number, min: number, max: number, step: number) {
   return clamp(Number(stepped.toFixed(precision)), min, max);
 }
 
+function snapRangeValue(
+  raw: readonly [number, number] | number[],
+  min: number,
+  max: number,
+  step: number
+): [number, number] {
+  const first = snapValue(raw[0] ?? min, min, max, step);
+  const second = snapValue(raw[1] ?? max, min, max, step);
+  return first <= second ? [first, second] : [second, first];
+}
+
+function formatSliderDisplayValue(
+  value: number | [number, number],
+  options: {
+    formatValue?: (value: number) => string;
+    range?: boolean;
+    valueDecimals?: number;
+  }
+) {
+  const { formatValue, range = false, valueDecimals = 0 } = options;
+
+  if (range && Array.isArray(value)) {
+    const [low, high] = value;
+    const lowText = formatValue ? formatValue(low) : low.toFixed(valueDecimals);
+    const highText = formatValue
+      ? formatValue(high)
+      : high.toFixed(valueDecimals);
+    return `${lowText} – ${highText}`;
+  }
+
+  const numericValue = Array.isArray(value) ? (value[0] ?? 0) : value;
+  return formatValue
+    ? formatValue(numericValue)
+    : numericValue.toFixed(valueDecimals);
+}
+
+function resolveSliderAccessibleName({
+  ariaLabel,
+  ariaLabelledBy,
+  label,
+  labelId,
+}: {
+  ariaLabel?: string;
+  ariaLabelledBy?: string;
+  label?: string;
+  labelId?: string;
+}) {
+  if (ariaLabelledBy || label) {
+    return {
+      ariaLabel: undefined,
+      ariaLabelledBy: ariaLabelledBy ?? labelId,
+    };
+  }
+
+  return {
+    ariaLabel: ariaLabel ?? "Slider",
+    ariaLabelledBy: undefined,
+  };
+}
+
+function resolveSliderFieldMeta({
+  ariaDescribedByProp,
+  description,
+  errorMessage,
+  generatedId,
+  id,
+  invalid,
+}: {
+  ariaDescribedByProp?: string;
+  description?: ReactNode;
+  errorMessage?: ReactNode;
+  generatedId: string;
+  id?: string;
+  invalid?: boolean;
+}) {
+  const sliderId = id ?? generatedId;
+  const descriptionId = description ? `${sliderId}-description` : undefined;
+  const errorId = errorMessage ? `${sliderId}-error` : undefined;
+  const showInvalid = Boolean(invalid) || Boolean(errorMessage);
+
+  return {
+    describedBy: [ariaDescribedByProp, descriptionId, errorId]
+      .filter(Boolean)
+      .join(" "),
+    descriptionId,
+    errorId,
+    showInvalid,
+    sliderId,
+  };
+}
+
 function resolveBlurTarget(
   currentTarget: EventTarget & HTMLDivElement,
   relatedTarget: EventTarget | null
@@ -177,54 +222,515 @@ function resolveBlurTarget(
   return !currentTarget.contains(relatedTarget as Node | null);
 }
 
-function resolveSliderPrimitiveValue(
-  nextValue: number | readonly number[],
-  min: number,
-  max: number,
-  step: number
+function isDocumentRtl() {
+  if (typeof document === "undefined") {
+    return false;
+  }
+
+  return document.documentElement.dir === "rtl";
+}
+
+function valueToProgress(
+  currentValue: number,
+  resolvedMin: number,
+  resolvedMax: number
 ) {
+  const span = resolvedMax - resolvedMin;
+  return span === 0 ? 0 : ((currentValue - resolvedMin) / span) * 100;
+}
+
+function progressToValue(
+  progress: number,
+  resolvedMin: number,
+  resolvedMax: number,
+  safeStep: number
+) {
+  const span = resolvedMax - resolvedMin;
+  const raw = resolvedMin + (progress / 100) * span;
+  return snapValue(raw, resolvedMin, resolvedMax, safeStep);
+}
+
+function resolveInitialSliderValue(
+  controlledValue: number | [number, number] | undefined,
+  defaultValue: number | [number, number] | undefined,
+  range: boolean,
+  resolvedMin: number,
+  resolvedMax: number,
+  safeStep: number,
+  rangeSpan: number
+) {
+  const initial = controlledValue ?? defaultValue ?? (range ? [25, 75] : 50);
+
+  if (range) {
+    const tuple = Array.isArray(initial)
+      ? initial
+      : [resolvedMin + rangeSpan * 0.25, resolvedMin + rangeSpan * 0.75];
+    return snapRangeValue(tuple, resolvedMin, resolvedMax, safeStep);
+  }
+
+  const numeric = Array.isArray(initial) ? (initial[0] ?? 50) : initial;
+  return snapValue(numeric, resolvedMin, resolvedMax, safeStep);
+}
+
+function resolveControlledSliderValue(
+  controlledValue: number | [number, number] | undefined,
+  internalValue: number | [number, number],
+  range: boolean,
+  resolvedMin: number,
+  resolvedMax: number,
+  safeStep: number
+) {
+  if (controlledValue === undefined) {
+    return internalValue;
+  }
+
+  if (range) {
+    return snapRangeValue(
+      Array.isArray(controlledValue)
+        ? controlledValue
+        : [controlledValue, controlledValue],
+      resolvedMin,
+      resolvedMax,
+      safeStep
+    );
+  }
+
   return snapValue(
-    Array.isArray(nextValue) ? (nextValue[0] ?? min) : nextValue,
-    min,
-    max,
-    step
+    Array.isArray(controlledValue)
+      ? (controlledValue[0] ?? resolvedMin)
+      : controlledValue,
+    resolvedMin,
+    resolvedMax,
+    safeStep
   );
 }
 
-export function Slider({
-  value: controlledValue,
-  defaultValue = 50,
-  min = 0,
-  max = 100,
-  step = 1,
-  onChange,
-  onValueCommit,
-  showValue = true,
-  valueDecimals = 0,
-  formatValue,
-  label,
-  ariaLabel,
-  ariaLabelledBy,
+function sliderValuesEqual(
+  current: number | [number, number],
+  next: number | [number, number],
+  range: boolean
+) {
+  if (range) {
+    const currentTuple = Array.isArray(current) ? current : [current, current];
+    const nextTuple = Array.isArray(next) ? next : [next, next];
+    return currentTuple[0] === nextTuple[0] && currentTuple[1] === nextTuple[1];
+  }
+
+  const currentValue = Array.isArray(current) ? (current[0] ?? 0) : current;
+  const nextValue = Array.isArray(next) ? (next[0] ?? 0) : next;
+  return currentValue === nextValue;
+}
+
+function invertSliderValue(
+  value: number,
+  resolvedMin: number,
+  resolvedMax: number
+) {
+  return resolvedMin + resolvedMax - value;
+}
+
+function toPrimitiveValue(
+  value: number | [number, number],
+  isRange: boolean,
+  inverted: boolean,
+  resolvedMin: number,
+  resolvedMax: number
+): number | [number, number] {
+  if (!inverted) {
+    return value;
+  }
+
+  if (isRange) {
+    const [low, high] = value as [number, number];
+    return [
+      invertSliderValue(high, resolvedMin, resolvedMax),
+      invertSliderValue(low, resolvedMin, resolvedMax),
+    ];
+  }
+
+  return invertSliderValue(value as number, resolvedMin, resolvedMax);
+}
+
+function fromPrimitiveValue(
+  nextValue: number | readonly number[],
+  isRange: boolean,
+  inverted: boolean,
+  resolvedMin: number,
+  resolvedMax: number,
+  safeStep: number
+): number | [number, number] {
+  if (!inverted) {
+    if (isRange) {
+      const tuple = Array.isArray(nextValue)
+        ? nextValue
+        : [nextValue, nextValue];
+      return snapRangeValue(tuple, resolvedMin, resolvedMax, safeStep);
+    }
+
+    return snapValue(
+      Array.isArray(nextValue) ? (nextValue[0] ?? resolvedMin) : nextValue,
+      resolvedMin,
+      resolvedMax,
+      safeStep
+    );
+  }
+
+  if (isRange) {
+    const tuple = Array.isArray(nextValue) ? nextValue : [nextValue, nextValue];
+    const low = invertSliderValue(
+      tuple[1] ?? resolvedMax,
+      resolvedMin,
+      resolvedMax
+    );
+    const high = invertSliderValue(
+      tuple[0] ?? resolvedMin,
+      resolvedMin,
+      resolvedMax
+    );
+    return snapRangeValue([low, high], resolvedMin, resolvedMax, safeStep);
+  }
+
+  const numeric = Array.isArray(nextValue)
+    ? (nextValue[0] ?? resolvedMin)
+    : nextValue;
+  return snapValue(
+    invertSliderValue(numeric, resolvedMin, resolvedMax),
+    resolvedMin,
+    resolvedMax,
+    safeStep
+  );
+}
+
+function toPrimitiveArray(
+  value: number | [number, number],
+  isRange: boolean,
+  inverted: boolean,
+  resolvedMin: number,
+  resolvedMax: number
+): number[] {
+  const primitive = toPrimitiveValue(
+    value,
+    isRange,
+    inverted,
+    resolvedMin,
+    resolvedMax
+  );
+
+  if (isRange) {
+    const tuple = primitive as [number, number];
+    return [tuple[0], tuple[1]];
+  }
+
+  return [primitive as number];
+}
+
+function resolveThumbAccessibleLabel(
+  accessibleName: ReturnType<typeof resolveSliderAccessibleName>,
+  thumbIndex: number,
+  isRange: boolean
+) {
+  if (accessibleName.ariaLabelledBy) {
+    return undefined;
+  }
+
+  const baseLabel = accessibleName.ariaLabel ?? "Slider";
+
+  if (!isRange) {
+    return baseLabel;
+  }
+
+  return thumbIndex === 0 ? `${baseLabel}, minimum` : `${baseLabel}, maximum`;
+}
+
+function SliderVisualShell({
+  active,
+  activeThumbIndex,
+  fillLeftPercent,
+  fillSizePercent,
+  isDragging,
+  isHovered,
+  isRange,
+  sizeClasses,
+  thumbPercents,
+}: {
+  active: boolean;
+  activeThumbIndex: number;
+  fillLeftPercent: MotionValue<string>;
+  fillSizePercent: MotionValue<string>;
+  isDragging: boolean;
+  isHovered: boolean;
+  isRange: boolean;
+  sizeClasses: (typeof sliderSizeClasses)[SliderSize];
+  thumbPercents: MotionValue<string>[];
+}) {
+  const trackInactive = sizeClasses.trackInactive;
+  const trackActive = sizeClasses.trackActive;
+  const trackSize = active ? trackActive : trackInactive;
+  const springTransition = {
+    type: "spring" as const,
+    stiffness: 200,
+    damping: 28,
+    mass: 0.8,
+  };
+  const thumbSpringTransition = {
+    type: "spring" as const,
+    stiffness: 220,
+    damping: 22,
+    mass: 0.7,
+  };
+
+  return (
+    <div aria-hidden className="pointer-events-none absolute inset-0">
+      <motion.div
+        animate={{ height: trackSize }}
+        className="absolute top-1/2 right-0 left-0 -translate-y-1/2 overflow-hidden rounded-full bg-foreground/15"
+        transition={springTransition}
+      />
+
+      <motion.div
+        animate={{ height: trackSize }}
+        className="absolute top-1/2 left-0 origin-left -translate-y-1/2 overflow-hidden rounded-full bg-foreground"
+        style={{ left: fillLeftPercent, width: fillSizePercent }}
+        transition={springTransition}
+      />
+
+      {thumbPercents.map((thumbPercent, index) => {
+        const isActiveThumb = isDragging && activeThumbIndex === index;
+
+        return (
+          <motion.div
+            animate={{
+              scale: isActiveThumb ? 1.15 : isHovered ? 1.08 : 1,
+            }}
+            className="absolute top-1/2 -translate-x-1/2 -translate-y-1/2"
+            key={isRange ? `thumb-${index}` : "thumb"}
+            style={{ left: thumbPercent }}
+            transition={thumbSpringTransition}
+          >
+            <div
+              className={cn(
+                "relative rounded-full border-foreground bg-background shadow-sm",
+                sizeClasses.thumb,
+                sizeClasses.thumbBorder
+              )}
+            />
+          </motion.div>
+        );
+      })}
+    </div>
+  );
+}
+
+function SliderMarks({
+  disabled,
+  inverted,
+  isRtl,
   marks,
-  className,
-}: SliderProps) {
+  marksInteractive,
+  onMarkActivate,
+  rangeSpan,
+  readOnly,
+  resolvedMin,
+}: {
+  disabled?: boolean;
+  inverted: boolean;
+  isRtl: boolean;
+  marks: SliderMark[];
+  marksInteractive?: boolean;
+  onMarkActivate: (value: number) => void;
+  rangeSpan: number;
+  readOnly?: boolean;
+  resolvedMin: number;
+}) {
+  if (marks.length === 0) {
+    return null;
+  }
+
+  const hasMarkLabels = marks.some((mark) => mark.label);
+  const interactive = marksInteractive && !disabled && !readOnly;
+
+  return (
+    <div
+      aria-hidden={!interactive}
+      className={cn(
+        "relative mt-2",
+        hasMarkLabels ? "h-8" : "h-3",
+        interactive ? "" : "pointer-events-none"
+      )}
+    >
+      {marks.map((mark) => {
+        let progress =
+          rangeSpan === 0 ? 0 : ((mark.value - resolvedMin) / rangeSpan) * 100;
+
+        if (isRtl) {
+          progress = 100 - progress;
+        }
+
+        if (inverted) {
+          progress = 100 - progress;
+        }
+
+        const positionStyle = { left: `${progress}%` };
+
+        const content = (
+          <>
+            <span className="mx-auto block h-2 w-px rounded-full bg-foreground/25" />
+            {mark.label ? (
+              <span className="mt-1 block whitespace-nowrap font-medium text-[11px] text-muted-foreground">
+                {mark.label}
+              </span>
+            ) : null}
+          </>
+        );
+
+        if (interactive) {
+          return (
+            <button
+              className="absolute top-0 -translate-x-1/2 text-center outline-none focus-visible:outline-2 focus-visible:outline-foreground/35 focus-visible:outline-offset-2"
+              key={`${mark.value}-${mark.label ?? "tick"}`}
+              onClick={() => {
+                onMarkActivate(mark.value);
+              }}
+              style={positionStyle}
+              type="button"
+            >
+              {content}
+            </button>
+          );
+        }
+
+        return (
+          <div
+            className="absolute top-0 -translate-x-1/2 text-center"
+            key={`${mark.value}-${mark.label ?? "tick"}`}
+            style={positionStyle}
+          >
+            {content}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+function SliderFieldMessages({
+  description,
+  descriptionId,
+  errorId,
+  errorMessage,
+}: {
+  description?: ReactNode;
+  descriptionId?: string;
+  errorId?: string;
+  errorMessage?: ReactNode;
+}) {
+  if (!(description || errorMessage)) {
+    return null;
+  }
+
+  return (
+    <div className="mt-2 space-y-1">
+      {description ? (
+        <p
+          className="text-muted-foreground text-xs leading-snug"
+          id={descriptionId}
+        >
+          {description}
+        </p>
+      ) : null}
+      {errorMessage ? (
+        <p
+          aria-live="polite"
+          className="text-destructive text-xs leading-snug"
+          id={errorId}
+          role="alert"
+        >
+          {errorMessage}
+        </p>
+      ) : null}
+    </div>
+  );
+}
+
+// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: slider shell coordinates motion, range, pointer, and keyboard state in one place.
+export const Slider = forwardRef<HTMLDivElement, SliderProps>(function Slider(
+  {
+    value: controlledValue,
+    defaultValue,
+    min = 0,
+    max = 100,
+    step = 1,
+    onChange,
+    onValueCommit,
+    showValue = true,
+    valueDecimals = 0,
+    formatValue,
+    label,
+    ariaLabel,
+    ariaLabelledBy,
+    marks,
+    className,
+    disabled = false,
+    readOnly = false,
+    description,
+    errorMessage,
+    invalid = false,
+    ariaDescribedBy,
+    marksInteractive = false,
+    size = "md",
+    inverted = false,
+    name,
+    id,
+    range = false,
+  },
+  ref
+) {
+  const generatedId = useId();
   const labelId = useId();
+  const activeThumbIndexRef = useRef(0);
   const resolvedMin = Math.min(min, max);
   const resolvedMax = Math.max(min, max);
   const safeStep = step > 0 ? step : 1;
   const safeValueDecimals = Math.max(0, valueDecimals);
-  const range = resolvedMax - resolvedMin;
-  const [internalValue, setInternalValue] = useState(() =>
-    snapValue(
-      controlledValue ?? defaultValue,
-      resolvedMin,
-      resolvedMax,
-      safeStep
-    )
+  const rangeSpan = resolvedMax - resolvedMin;
+  const sizeClasses = sliderSizeClasses[size];
+  const prefersReducedMotion = useReducedMotion() === true;
+  const [isRtl, setIsRtl] = useState(false);
+  const [internalValue, setInternalValue] = useState<number | [number, number]>(
+    () =>
+      resolveInitialSliderValue(
+        controlledValue,
+        defaultValue,
+        range,
+        resolvedMin,
+        resolvedMax,
+        safeStep,
+        rangeSpan
+      )
   );
   const [isDragging, setIsDragging] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
+  const [activeThumbIndex, setActiveThumbIndex] = useState(0);
+
+  const fieldMeta = resolveSliderFieldMeta({
+    ariaDescribedByProp: ariaDescribedBy,
+    description,
+    errorMessage,
+    generatedId,
+    id,
+    invalid,
+  });
+  const accessibleName = resolveSliderAccessibleName({
+    ariaLabel,
+    ariaLabelledBy,
+    label,
+    labelId,
+  });
+
+  useEffect(() => {
+    setIsRtl(isDocumentRtl());
+  }, []);
 
   useEffect(() => {
     if (controlledValue !== undefined) {
@@ -232,48 +738,271 @@ export function Slider({
     }
 
     setInternalValue((current) => {
-      const next = snapValue(current, resolvedMin, resolvedMax, safeStep);
+      if (range) {
+        const tuple = Array.isArray(current)
+          ? current
+          : [resolvedMin, resolvedMax];
+        const next = snapRangeValue(tuple, resolvedMin, resolvedMax, safeStep);
+        return next[0] === tuple[0] && next[1] === tuple[1] ? current : next;
+      }
+
+      const numeric = Array.isArray(current)
+        ? (current[0] ?? resolvedMin)
+        : current;
+      const next = snapValue(numeric, resolvedMin, resolvedMax, safeStep);
       return current === next ? current : next;
     });
-  }, [controlledValue, resolvedMin, resolvedMax, safeStep]);
+  }, [controlledValue, range, resolvedMin, resolvedMax, safeStep]);
 
-  const value =
-    controlledValue === undefined
-      ? internalValue
-      : snapValue(controlledValue, resolvedMin, resolvedMax, safeStep);
-  const progress = range === 0 ? 0 : ((value - resolvedMin) / range) * 100;
+  const value = resolveControlledSliderValue(
+    controlledValue,
+    internalValue,
+    range,
+    resolvedMin,
+    resolvedMax,
+    safeStep
+  );
 
-  const progressMV = useMotionValue(progress);
-  const widthPercent = useTransform(progressMV, (currentProgress) => {
-    return `${currentProgress}%`;
-  });
-  const leftPercent = useTransform(progressMV, (currentProgress) => {
-    return `${currentProgress}%`;
-  });
-  const displayValue = useTransform(progressMV, (currentProgress) => {
-    const nextValue = snapValue(
-      resolvedMin + (currentProgress / 100) * range,
+  const values: [number, number] = range
+    ? (value as [number, number])
+    : [value as number, value as number];
+  const [lowValue, highValue] = values;
+  const lowProgress = valueToProgress(lowValue, resolvedMin, resolvedMax);
+  const highProgress = valueToProgress(highValue, resolvedMin, resolvedMax);
+  const singleProgress = range
+    ? lowProgress
+    : valueToProgress(value as number, resolvedMin, resolvedMax);
+  const fillStartProgress = range ? lowProgress : 0;
+  const fillEndProgress = range ? highProgress : singleProgress;
+
+  const lowProgressMV = useMotionValue(lowProgress);
+  const highProgressMV = useMotionValue(highProgress);
+  const singleProgressMV = useMotionValue(singleProgress);
+  const fillStartMV = useMotionValue(fillStartProgress);
+  const fillEndMV = useMotionValue(fillEndProgress);
+
+  const lowThumbPercent = useTransform(
+    lowProgressMV,
+    (progress) => `${progress}%`
+  );
+  const highThumbPercent = useTransform(
+    highProgressMV,
+    (progress) => `${progress}%`
+  );
+  const singleThumbPercent = useTransform(
+    singleProgressMV,
+    (progress) => `${progress}%`
+  );
+  const thumbPercents = range
+    ? [lowThumbPercent, highThumbPercent]
+    : [singleThumbPercent];
+
+  const fillLeftPercent = useTransform(
+    fillStartMV,
+    (progress) => `${progress}%`
+  );
+  const fillSizePercent = useTransform(
+    [fillStartMV, fillEndMV],
+    ([start, end]: number[]) => `${Math.max(0, end - start)}%`
+  );
+
+  const singleDisplayValue = useTransform(singleProgressMV, (progress) => {
+    const resolved = progressToValue(
+      progress,
       resolvedMin,
       resolvedMax,
       safeStep
     );
 
-    return formatValue
-      ? formatValue(nextValue)
-      : nextValue.toFixed(safeValueDecimals);
+    return formatSliderDisplayValue(resolved, {
+      formatValue,
+      valueDecimals: safeValueDecimals,
+    });
   });
+  const rangeDisplayValue = useTransform(
+    [lowProgressMV, highProgressMV],
+    ([low, high]: number[]) => {
+      const lowResolved = progressToValue(
+        low,
+        resolvedMin,
+        resolvedMax,
+        safeStep
+      );
+      const highResolved = progressToValue(
+        high,
+        resolvedMin,
+        resolvedMax,
+        safeStep
+      );
+
+      return formatSliderDisplayValue([lowResolved, highResolved], {
+        formatValue,
+        range: true,
+        valueDecimals: safeValueDecimals,
+      });
+    }
+  );
+
+  const progressSpring = prefersReducedMotion
+    ? { duration: 0 }
+    : {
+        type: "spring" as const,
+        stiffness: 180,
+        damping: 26,
+        mass: 0.9,
+        restDelta: 0.001,
+      };
 
   useEffect(() => {
-    const controls = animate(progressMV, progress, {
-      type: "spring",
-      stiffness: 180,
-      damping: 26,
-      mass: 0.9,
-      restDelta: 0.001,
-    });
+    activeThumbIndexRef.current = activeThumbIndex;
+  }, [activeThumbIndex]);
 
-    return controls.stop;
-  }, [progress, progressMV]);
+  useEffect(() => {
+    const controls = [
+      animate(lowProgressMV, lowProgress, progressSpring),
+      animate(highProgressMV, highProgress, progressSpring),
+      animate(singleProgressMV, singleProgress, progressSpring),
+      animate(fillStartMV, fillStartProgress, progressSpring),
+      animate(fillEndMV, fillEndProgress, progressSpring),
+    ];
+
+    return () => {
+      for (const control of controls) {
+        control.stop();
+      }
+    };
+  }, [
+    fillEndProgress,
+    fillStartProgress,
+    highProgress,
+    highProgressMV,
+    lowProgress,
+    lowProgressMV,
+    progressSpring,
+    singleProgress,
+    singleProgressMV,
+    fillEndMV,
+    fillStartMV,
+  ]);
+
+  const primitiveValue = toPrimitiveArray(
+    value,
+    range,
+    inverted,
+    resolvedMin,
+    resolvedMax
+  );
+
+  const commitValue = useCallback(
+    (
+      nextPrimitiveValue: number | readonly number[],
+      commit?: (resolved: number | [number, number]) => void
+    ) => {
+      if (disabled || readOnly) {
+        return;
+      }
+
+      const resolved = fromPrimitiveValue(
+        nextPrimitiveValue,
+        range,
+        inverted,
+        resolvedMin,
+        resolvedMax,
+        safeStep
+      );
+
+      if (sliderValuesEqual(value, resolved, range)) {
+        return;
+      }
+
+      if (controlledValue === undefined) {
+        setInternalValue(resolved);
+      }
+
+      onChange?.(resolved);
+      commit?.(resolved);
+    },
+    [
+      controlledValue,
+      disabled,
+      inverted,
+      onChange,
+      range,
+      readOnly,
+      resolvedMax,
+      resolvedMin,
+      safeStep,
+      value,
+    ]
+  );
+
+  const handleMarkActivate = useCallback(
+    (markValue: number) => {
+      if (disabled || readOnly) {
+        return;
+      }
+
+      if (range) {
+        const current = value as [number, number];
+        const lowDistance = Math.abs(current[0] - markValue);
+        const highDistance = Math.abs(current[1] - markValue);
+        const thumbIndex = lowDistance <= highDistance ? 0 : 1;
+        setActiveThumbIndex(thumbIndex);
+        activeThumbIndexRef.current = thumbIndex;
+
+        const nextTuple: [number, number] = [...current];
+        nextTuple[thumbIndex] = snapValue(
+          markValue,
+          resolvedMin,
+          resolvedMax,
+          safeStep
+        );
+        const resolved = snapRangeValue(
+          nextTuple,
+          resolvedMin,
+          resolvedMax,
+          safeStep
+        );
+
+        if (sliderValuesEqual(value, resolved, true)) {
+          return;
+        }
+
+        if (controlledValue === undefined) {
+          setInternalValue(resolved);
+        }
+
+        onChange?.(resolved);
+        onValueCommit?.(resolved);
+        return;
+      }
+
+      const resolved = snapValue(markValue, resolvedMin, resolvedMax, safeStep);
+
+      if (sliderValuesEqual(value, resolved, false)) {
+        return;
+      }
+
+      if (controlledValue === undefined) {
+        setInternalValue(resolved);
+      }
+
+      onChange?.(resolved);
+      onValueCommit?.(resolved);
+    },
+    [
+      controlledValue,
+      disabled,
+      onChange,
+      onValueCommit,
+      range,
+      readOnly,
+      resolvedMax,
+      resolvedMin,
+      safeStep,
+      value,
+    ]
+  );
 
   const normalizedMarks = (marks ?? [])
     .map((mark) => ({
@@ -282,13 +1011,30 @@ export function Slider({
     }))
     .sort((firstMark, secondMark) => firstMark.value - secondMark.value);
   const active = isDragging || isHovered || isFocused;
-  const formattedValue = formatValue
-    ? formatValue(value)
-    : value.toFixed(safeValueDecimals);
+
+  const thumbClassName = cn("block opacity-0 outline-none", sizeClasses.thumb);
+  const getThumbAriaValueText = useCallback(
+    (_formattedValue: string, thumbValue: number) =>
+      formatSliderDisplayValue(thumbValue, {
+        formatValue,
+        valueDecimals: safeValueDecimals,
+      }),
+    [formatValue, safeValueDecimals]
+  );
+  const getThumbAriaLabel = useCallback(
+    (thumbIndex: number) =>
+      resolveThumbAccessibleLabel(accessibleName, thumbIndex, range),
+    [accessibleName, range]
+  );
 
   return (
     <div
-      className={cn(componentThemeClassName, "w-full select-none", className)}
+      className={cn(
+        componentThemeClassName,
+        "w-full select-none",
+        disabled && "cursor-not-allowed opacity-50",
+        className
+      )}
     >
       {(label || showValue) && (
         <div className="mb-3 flex items-baseline justify-between">
@@ -302,105 +1048,184 @@ export function Slider({
           ) : null}
           {showValue ? (
             <motion.span className="font-semibold text-foreground text-sm tabular-nums">
-              {displayValue}
+              {range ? rangeDisplayValue : singleDisplayValue}
             </motion.span>
           ) : null}
         </div>
       )}
 
-      <SliderPrimitive.Root
-        aria-label={ariaLabel}
-        aria-labelledby={ariaLabelledBy ?? (label ? labelId : undefined)}
-        className="relative"
-        max={resolvedMax}
-        min={resolvedMin}
-        onValueChange={(nextValue) => {
-          const resolvedValue = resolveSliderPrimitiveValue(
-            nextValue,
-            resolvedMin,
-            resolvedMax,
-            safeStep
-          );
-
-          if (controlledValue === undefined) {
-            setInternalValue(resolvedValue);
+      <div className="relative">
+        <SliderPrimitive.Root
+          aria-label={
+            accessibleName.ariaLabelledBy ? undefined : accessibleName.ariaLabel
           }
+          aria-labelledby={accessibleName.ariaLabelledBy}
+          className="relative"
+          disabled={disabled}
+          max={resolvedMax}
+          min={resolvedMin}
+          onValueChange={(nextValue) => {
+            commitValue(nextValue);
+          }}
+          onValueCommitted={(nextValue) => {
+            commitValue(nextValue, onValueCommit);
+          }}
+          step={safeStep}
+          value={primitiveValue}
+        >
+          <div className="relative">
+            <SliderPrimitive.Control
+              aria-describedby={fieldMeta.describedBy || undefined}
+              aria-invalid={fieldMeta.showInvalid || undefined}
+              aria-orientation="horizontal"
+              aria-readonly={readOnly || undefined}
+              className={cn(
+                "relative flex w-full cursor-pointer items-center rounded-full outline-none focus-within:outline-2 focus-within:outline-foreground/35 focus-within:outline-offset-4",
+                sizeClasses.hitAreaHorizontal,
+                (disabled || readOnly) && "cursor-not-allowed"
+              )}
+              id={fieldMeta.sliderId}
+              onBlurCapture={(event) => {
+                if (
+                  resolveBlurTarget(event.currentTarget, event.relatedTarget)
+                ) {
+                  setIsFocused(false);
+                }
+              }}
+              onFocusCapture={() => {
+                setIsFocused(true);
+              }}
+              onMouseEnter={() => {
+                setIsHovered(true);
+              }}
+              onMouseLeave={() => {
+                setIsHovered(false);
+              }}
+              onPointerCancelCapture={() => {
+                setIsDragging(false);
+              }}
+              onPointerDownCapture={() => {
+                setIsDragging(true);
+              }}
+              onPointerUpCapture={() => {
+                setIsDragging(false);
+              }}
+              ref={ref}
+              style={{ touchAction: "pan-y" }}
+            >
+              <SliderPrimitive.Track className="absolute top-1/2 right-0 left-0 h-4 -translate-y-1/2 opacity-0">
+                <SliderPrimitive.Indicator className="absolute inset-0" />
+              </SliderPrimitive.Track>
 
-          onChange?.(resolvedValue);
-        }}
-        onValueCommitted={(nextValue) => {
-          const resolvedValue = resolveSliderPrimitiveValue(
-            nextValue,
-            resolvedMin,
-            resolvedMax,
-            safeStep
-          );
+              {range ? (
+                <>
+                  <SliderPrimitive.Thumb
+                    className={thumbClassName}
+                    getAriaLabel={
+                      accessibleName.ariaLabelledBy
+                        ? undefined
+                        : () => getThumbAriaLabel(0) ?? "Slider, minimum"
+                    }
+                    getAriaValueText={getThumbAriaValueText}
+                    index={0}
+                    onFocus={() => {
+                      setActiveThumbIndex(0);
+                    }}
+                  />
+                  <SliderPrimitive.Thumb
+                    className={thumbClassName}
+                    getAriaLabel={
+                      accessibleName.ariaLabelledBy
+                        ? undefined
+                        : () => getThumbAriaLabel(1) ?? "Slider, maximum"
+                    }
+                    getAriaValueText={getThumbAriaValueText}
+                    index={1}
+                    onFocus={() => {
+                      setActiveThumbIndex(1);
+                    }}
+                  />
+                </>
+              ) : (
+                <SliderPrimitive.Thumb
+                  className={thumbClassName}
+                  getAriaLabel={
+                    accessibleName.ariaLabelledBy
+                      ? undefined
+                      : () => getThumbAriaLabel(0) ?? "Slider"
+                  }
+                  getAriaValueText={getThumbAriaValueText}
+                  onFocus={() => {
+                    setActiveThumbIndex(0);
+                  }}
+                />
+              )}
 
-          onValueCommit?.(resolvedValue);
-        }}
-        step={safeStep}
-        value={value}
-      >
-        <div className="relative">
-          <SliderPrimitive.Control
-            className="relative flex h-11 w-full cursor-pointer items-center rounded-full outline-none focus-within:outline-2 focus-within:outline-foreground/35 focus-within:outline-offset-4"
-            onBlurCapture={(event) => {
-              if (resolveBlurTarget(event.currentTarget, event.relatedTarget)) {
-                setIsFocused(false);
-              }
-            }}
-            onFocusCapture={() => {
-              setIsFocused(true);
-            }}
-            onMouseEnter={() => {
-              setIsHovered(true);
-            }}
-            onMouseLeave={() => {
-              setIsHovered(false);
-            }}
-            onPointerCancelCapture={() => {
-              setIsDragging(false);
-            }}
-            onPointerDownCapture={() => {
-              setIsDragging(true);
-            }}
-            onPointerUpCapture={() => {
-              setIsDragging(false);
-            }}
-            style={{ touchAction: "pan-y" }}
-          >
-            <SliderPrimitive.Track className="absolute top-1/2 right-0 left-0 h-4 -translate-y-1/2 opacity-0">
-              <SliderPrimitive.Indicator className="absolute inset-y-0 left-0 h-full" />
-            </SliderPrimitive.Track>
+              <SliderVisualShell
+                active={active}
+                activeThumbIndex={activeThumbIndex}
+                fillLeftPercent={fillLeftPercent}
+                fillSizePercent={fillSizePercent}
+                isDragging={isDragging}
+                isHovered={isHovered}
+                isRange={range}
+                sizeClasses={sizeClasses}
+                thumbPercents={thumbPercents}
+              />
+            </SliderPrimitive.Control>
 
-            <SliderPrimitive.Thumb
-              className="block h-4 w-4 opacity-0"
-              getAriaLabel={
-                ariaLabel || !(ariaLabelledBy || label)
-                  ? () => ariaLabel ?? "Slider"
-                  : undefined
-              }
-              getAriaValueText={formatValue ? () => formattedValue : undefined}
+            <SliderMarks
+              disabled={disabled}
+              inverted={inverted}
+              isRtl={isRtl}
+              marks={normalizedMarks}
+              marksInteractive={marksInteractive}
+              onMarkActivate={handleMarkActivate}
+              rangeSpan={rangeSpan}
+              readOnly={readOnly}
+              resolvedMin={resolvedMin}
             />
+          </div>
+        </SliderPrimitive.Root>
 
-            <SliderVisualShell
-              active={active}
-              isDragging={isDragging}
-              isHovered={isHovered}
-              leftPercent={leftPercent}
-              widthPercent={widthPercent}
+        {name ? (
+          range ? (
+            <>
+              <input
+                aria-hidden
+                name={`${name}[0]`}
+                tabIndex={-1}
+                type="hidden"
+                value={lowValue}
+              />
+              <input
+                aria-hidden
+                name={`${name}[1]`}
+                tabIndex={-1}
+                type="hidden"
+                value={highValue}
+              />
+            </>
+          ) : (
+            <input
+              aria-hidden
+              name={name}
+              tabIndex={-1}
+              type="hidden"
+              value={value as number}
             />
-          </SliderPrimitive.Control>
+          )
+        ) : null}
+      </div>
 
-          <SliderMarks
-            marks={normalizedMarks}
-            range={range}
-            resolvedMin={resolvedMin}
-          />
-        </div>
-      </SliderPrimitive.Root>
+      <SliderFieldMessages
+        description={description}
+        descriptionId={fieldMeta.descriptionId}
+        errorId={fieldMeta.errorId}
+        errorMessage={errorMessage}
+      />
     </div>
   );
-}
+});
 
 export { Slider as slider };

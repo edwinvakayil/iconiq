@@ -1,11 +1,15 @@
 "use client";
 
-import { type ComponentType, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 
 import {
   type PrimitiveProvider,
   ProviderSwitch,
 } from "@/app/(site)/components/_components/provider-switch";
+import {
+  getSliderUsageCode,
+  SliderPlaygroundProvider,
+} from "@/app/(site)/inputs-and-forms/slider/_components/slider-playground";
 import { sliderApiDetails } from "@/components/docs/component-api";
 import {
   ComponentDocsPage,
@@ -15,45 +19,15 @@ import { LINK } from "@/constants";
 import * as BaseSlider from "@/registry/b-slider";
 import * as RadixSlider from "@/registry/r-slider";
 
-type SliderMark = {
-  value: number;
-  label?: string;
-};
-
-type SliderModule = {
-  Slider: ComponentType<{
-    value?: number;
-    defaultValue?: number;
-    min?: number;
-    max?: number;
-    step?: number;
-    onChange?: (value: number) => void;
-    onValueCommit?: (value: number) => void;
-    showValue?: boolean;
-    valueDecimals?: number;
-    formatValue?: (value: number) => string;
-    label?: string;
-    ariaLabel?: string;
-    ariaLabelledBy?: string;
-    marks?: SliderMark[];
-    className?: string;
-  }>;
-};
-
 type ProviderConfig = {
   componentName: "b-slider" | "r-slider";
   dependencyLabel: string;
+  importPath: string;
   libraryLabel: string;
   notes: string[];
-  ui: SliderModule;
+  ui: typeof BaseSlider | typeof RadixSlider;
   usageCode: string;
 };
-
-const demoMarks: SliderMark[] = [
-  { value: 0, label: "Low" },
-  { value: 50, label: "Cruise" },
-  { value: 100, label: "Peak" },
-];
 
 const breadcrumbs = [
   { label: "Docs", href: "/" },
@@ -62,79 +36,16 @@ const breadcrumbs = [
 ];
 
 const usageCodeByProvider: Record<ProviderConfig["componentName"], string> = {
-  "b-slider": `"use client";
-
-import { useState } from "react";
-import { Slider } from "@/components/ui/b-slider";
-
-const marks = [
-  { value: 0, label: "Low" },
-  { value: 50, label: "Cruise" },
-  { value: 100, label: "Peak" },
-];
-
-export function SliderPreview() {
-  const [value, setValue] = useState(42);
-
-  return (
-    <Slider
-      className="w-full max-w-sm"
-      label="Intensity"
-      marks={marks}
-      onChange={setValue}
-      value={value}
-    />
-  );
-}`,
-  "r-slider": `"use client";
-
-import { useState } from "react";
-import { Slider } from "@/components/ui/r-slider";
-
-const marks = [
-  { value: 0, label: "Low" },
-  { value: 50, label: "Cruise" },
-  { value: 100, label: "Peak" },
-];
-
-export function SliderPreview() {
-  const [value, setValue] = useState(42);
-
-  return (
-    <Slider
-      className="w-full max-w-sm"
-      label="Intensity"
-      marks={marks}
-      onChange={setValue}
-      value={value}
-    />
-  );
-}`,
+  "b-slider": getSliderUsageCode("@/components/ui/b-slider"),
+  "r-slider": getSliderUsageCode("@/components/ui/r-slider"),
 };
-
-function SliderPreview({ ui }: { ui: SliderModule }) {
-  const { Slider } = ui;
-  const [value, setValue] = useState(42);
-
-  return (
-    <div className="flex min-h-[320px] w-full items-center justify-center p-6">
-      <Slider
-        className="w-full max-w-sm"
-        label="Intensity"
-        marks={demoMarks}
-        onChange={setValue}
-        value={value}
-      />
-    </div>
-  );
-}
 
 function getDetails(provider: ProviderConfig): DetailItem[] {
   return sliderApiDetails.map((item) => {
     if (item.id === "slider") {
       return {
         ...item,
-        summary: `Single-value slider with the same Iconiq label row, spring-settled fill, and thumb motion layered over ${provider.libraryLabel} primitives.`,
+        summary: `Single- or dual-thumb slider with the same Iconiq label row, spring-settled fill, and thumb motion layered over ${provider.libraryLabel} primitives.`,
       };
     }
 
@@ -175,9 +86,10 @@ export default function RadixBaseSliderPage() {
       return {
         componentName: "b-slider",
         dependencyLabel: "@base-ui/react, motion",
+        importPath: "@/components/ui/b-slider",
         libraryLabel: "Base UI",
         notes: [
-          "Installs a Base UI slider with the same value, defaultValue, min, max, step, marks, and formatting API as the Radix version.",
+          "Installs a Base UI slider with the same value, range, marks, formatting, and field chrome API as the Radix version.",
           "Uses the Base UI slider control and thumb primitives under the same Iconiq track and thumb motion shell.",
         ],
         ui: BaseSlider,
@@ -188,9 +100,10 @@ export default function RadixBaseSliderPage() {
     return {
       componentName: "r-slider",
       dependencyLabel: "@radix-ui/react-slider, motion",
+      importPath: "@/components/ui/r-slider",
       libraryLabel: "Radix UI",
       notes: [
-        "Installs a Radix slider with the same value, defaultValue, min, max, step, marks, and formatting API as the Base UI version.",
+        "Installs a Radix slider with the same value, range, marks, formatting, and field chrome API as the Base UI version.",
         "Uses the Radix slider track, range, and thumb primitives under the same Iconiq track and thumb motion shell.",
       ],
       ui: RadixSlider,
@@ -201,25 +114,43 @@ export default function RadixBaseSliderPage() {
   const details = useMemo(() => getDetails(provider), [provider]);
 
   return (
-    <ComponentDocsPage
-      breadcrumbs={breadcrumbs}
-      componentName={provider.componentName}
-      description="Drag control for adjusting a value within a range."
-      details={details}
-      editHref={`${LINK.GITHUB}/edit/main/app/(site)/inputs-and-forms/slider/page.tsx`}
-      headerActions={
-        <ProviderSwitch
-          onSelect={setSelectedProvider}
-          selectedProvider={selectedProvider}
+    <SliderPlaygroundProvider
+      importPath={provider.importPath}
+      SliderModule={provider.ui}
+    >
+      {({ preview, renderSettings }) => (
+        <ComponentDocsPage
+          breadcrumbs={breadcrumbs}
+          componentName={provider.componentName}
+          description="Drag control for adjusting a value within a range."
+          details={details}
+          editHref={`${LINK.GITHUB}/edit/main/app/(site)/inputs-and-forms/slider/page.tsx`}
+          headerActions={
+            <ProviderSwitch
+              onSelect={setSelectedProvider}
+              selectedProvider={selectedProvider}
+            />
+          }
+          itemSlug="slider"
+          pageUrl="/inputs-and-forms/slider"
+          preview={preview}
+          previewClassName="min-h-[20rem] overflow-visible lg:col-span-8"
+          previewDescription="Tune range mode, marks, size, validation, and disabled states from the playground."
+          previewPersonalize={({ onClose }) => renderSettings(onClose)}
+          previewPersonalizeTitle="Slider"
+          railNotes={[
+            `Current install target: ${provider.libraryLabel}.`,
+            "Use range to render two thumbs with a filled segment between them.",
+            "marksInteractive lets users jump to labeled landmarks with a click.",
+            "description and errorMessage render below the track with the same field chrome pattern as Input.",
+            "Track and thumb motion honor prefers-reduced-motion automatically.",
+          ]}
+          title="Slider"
+          usageCode={provider.usageCode}
+          usageDescription="Switch libraries above to update the install command, registry JSON, preview code, and generated file set together."
+          v0PageCode={provider.usageCode}
         />
-      }
-      itemSlug="slider"
-      pageUrl="/inputs-and-forms/slider"
-      preview={<SliderPreview ui={provider.ui} />}
-      title="Slider"
-      usageCode={provider.usageCode}
-      usageDescription="Switch libraries above to update the install command, registry JSON, preview code, and generated file set together."
-      v0PageCode={provider.usageCode}
-    />
+      )}
+    </SliderPlaygroundProvider>
   );
 }
