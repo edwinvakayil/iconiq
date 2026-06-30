@@ -948,15 +948,19 @@ import { InfiniteRibbon } from "@/components/ui/infiniteribbon";
 
 export default function Page() {
   return (
-    <div className="relative flex min-h-svh w-full items-center justify-center overflow-hidden bg-background px-6 py-20">
-      <InfiniteRibbon className="absolute" duration={42} rotation={5}>
-        Craft crisp dashboards, lively landing pages, and polished product flows
-        with components that feel ready from the first click.
-      </InfiniteRibbon>
-      <InfiniteRibbon duration={42} reverse={true} rotation={-5}>
-        Craft crisp dashboards, lively landing pages, and polished product flows
-        with components that feel ready from the first click.
-      </InfiniteRibbon>
+    <div className="relative flex min-h-svh w-full items-center justify-center overflow-hidden bg-white px-6 py-20">
+      <div className="relative h-full min-h-[24rem] w-full max-w-6xl overflow-hidden">
+        <div className="absolute top-1/2 left-1/2 z-0 w-[145%] max-w-none -translate-x-1/2 -translate-y-1/2">
+          <InfiniteRibbon duration={42} rotation={5}>
+            Build fast, responsive, and beautiful interfaces with ready-to-use components. Designed for developers.
+          </InfiniteRibbon>
+        </div>
+        <div className="absolute top-1/2 left-1/2 z-10 w-[145%] max-w-none -translate-x-1/2 -translate-y-1/2">
+          <InfiniteRibbon duration={42} reverse rotation={-5}>
+            Build fast, responsive, and beautiful interfaces with ready-to-use components. Designed for developers.
+          </InfiniteRibbon>
+        </div>
+      </div>
     </div>
   );
 }`;

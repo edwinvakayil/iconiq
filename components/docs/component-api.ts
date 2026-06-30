@@ -6406,28 +6406,45 @@ const infiniteRibbonApiDetails: DetailItem[] = [
     id: "infiniteribbon",
     title: "InfiniteRibbon",
     summary:
-      "Full-width looping ribbon that duplicates its children into a continuous marquee track and optionally rotates the whole strip.",
+      "Full-width looping ribbon that duplicates content into a seamless marquee track with theme variants, viewport-aware repeat, reduced-motion support, and optional link banners.",
     fields: [
       field({
         name: "children",
         type: "React.ReactNode",
-        required: true,
         description:
           "Content repeated across the moving ribbon. Short announcement copy works best because it stays legible while scrolling.",
+      }),
+      field({
+        name: "items",
+        type: "string[]",
+        description:
+          "Optional list of strings rendered with `separator` between each item instead of a single `children` node.",
+      }),
+      field({
+        name: "separator",
+        type: "React.ReactNode",
+        defaultValue: '" · "',
+        description: "Divider rendered between `items` entries.",
       }),
       field({
         name: "repeat",
         type: "number",
         defaultValue: "5",
         description:
-          "Number of copies rendered per half of the seamless track. Higher values keep wider ribbons filled with repeated content.",
+          "Minimum number of copies rendered per half of the seamless track. The component auto-expands this value when the viewport is wider than the measured segment.",
       }),
       field({
         name: "duration",
         type: "number",
         defaultValue: "10",
         description:
-          "Loop duration in seconds. Lower values move the ribbon faster; values below 0.1 are clamped.",
+          "Loop duration in seconds for one half of the track. Ignored when `speed` is set. Values below 0.1 are clamped.",
+      }),
+      field({
+        name: "speed",
+        type: "number",
+        description:
+          "Optional scroll speed in pixels per second. When set, loop duration is derived from the measured half-track distance.",
       }),
       field({
         name: "reverse",
@@ -6441,19 +6458,79 @@ const infiniteRibbonApiDetails: DetailItem[] = [
         type: "number",
         defaultValue: "0",
         description:
-          "Degrees applied to the root strip with CSS transform, useful for diagonal banner layouts.",
+          "Degrees applied to an outer wrapper so additional transforms on the root do not conflict with diagonal banner layouts.",
+      }),
+      field({
+        name: "variant",
+        type: '"default" | "brand" | "warning"',
+        defaultValue: '"default"',
+        description:
+          "Built-in surface tone mapped to Iconiq theme tokens instead of hard-coded colors.",
+      }),
+      field({
+        name: "gap",
+        type: "number | string",
+        defaultValue: '"2rem"',
+        description: "Spacing between repeated segments.",
+      }),
+      field({
+        name: "pauseOnHover",
+        type: "boolean",
+        defaultValue: "true",
+        description:
+          "Pauses the animation while the ribbon is hovered or contains focused interactive content.",
+      }),
+      field({
+        name: "pauseWhenHidden",
+        type: "boolean",
+        defaultValue: "true",
+        description:
+          "Pauses the animation while the document tab is hidden to reduce unnecessary work.",
+      }),
+      field({
+        name: "fadeEdges",
+        type: "boolean",
+        defaultValue: "false",
+        description:
+          "Applies a soft gradient mask at the viewport edges for a polished marquee fade.",
+      }),
+      field({
+        name: "selectable",
+        type: "boolean",
+        defaultValue: "true",
+        description:
+          "When false, repeated copy uses `select-none` so users cannot highlight moving text.",
+      }),
+      field({
+        name: "href",
+        type: "string",
+        description:
+          "Turns each repeated segment into a link. Only the first copy stays tabbable to avoid keyboard traps.",
+      }),
+      field({
+        name: "interactive",
+        type: "boolean",
+        description:
+          "Keeps the animated track available to assistive tech. Defaults to `true` when `href` is provided.",
+      }),
+      field({
+        name: "aria-label",
+        type: "string",
+        description:
+          "Accessible name for the announcement region. Falls back to joined `items` or plain-text `children`.",
       }),
       field({
         name: "className",
         type: "string",
         description:
-          "Optional class names merged onto the root ribbon for positioning, colors, spacing, or typography.",
+          "Optional class names merged onto the root ribbon for positioning, spacing, or typography overrides.",
       }),
     ],
     notes: [
-      "The animated track is marked aria-hidden and a single screen-reader-only copy of children is rendered before it.",
-      "The component ships its own keyframes, so no global Tailwind animation extension is required.",
-      "Because rotation is applied as an inline transform, wrap the ribbon when you need additional transform utilities on the same element.",
+      "Non-interactive ribbons render a single screen-reader-only copy of the content while the animated track stays `aria-hidden`.",
+      "Keyframes are injected once through a shared style tag, so no global Tailwind animation extension is required.",
+      "When `prefers-reduced-motion` is enabled, the ribbon shows a static centered copy instead of animating.",
+      "Rotation is applied on an outer wrapper so you can still use transform utilities on the root element.",
     ],
   },
   registryItem("infiniteribbon.json", []),
