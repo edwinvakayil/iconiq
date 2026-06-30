@@ -6222,7 +6222,7 @@ const separatorApiDetails: DetailItem[] = [
     id: "separator",
     title: "Separator",
     summary:
-      "Horizontal or vertical divider with a solid line by default plus dashed and dotted variants.",
+      "Horizontal or vertical divider with solid, dashed, and dotted variants plus tone, spacing, and inset helpers.",
     fields: [
       field({
         name: "orientation",
@@ -6236,7 +6236,28 @@ const separatorApiDetails: DetailItem[] = [
         type: '"line" | "dashed" | "dotted"',
         defaultValue: '"line"',
         description:
-          "Chooses the visual treatment. The default line variant renders a solid border-token rule, dashed repeats the token as short strokes, and dotted uses native dotted border rendering.",
+          "Chooses the visual treatment. The default line variant renders a solid rule, dashed repeats short strokes, and dotted uses native dotted border rendering.",
+      }),
+      field({
+        name: "tone",
+        type: '"default" | "muted" | "brand" | "destructive"',
+        defaultValue: '"default"',
+        description:
+          "Maps the divider color to border, muted, brand, or destructive tokens without overriding className.",
+      }),
+      field({
+        name: "spacing",
+        type: '"none" | "sm" | "md" | "lg"',
+        defaultValue: '"none"',
+        description:
+          "Adds orientation-aware margin around the divider for section gutters. Use inset instead for compact menu dividers.",
+      }),
+      field({
+        name: "inset",
+        type: "boolean",
+        defaultValue: "false",
+        description:
+          "Applies the compact negative-margin treatment used between menu or list groups.",
       }),
       field({
         name: "decorative",
@@ -6253,8 +6274,53 @@ const separatorApiDetails: DetailItem[] = [
       }),
     ],
     notes: [
-      "Vertical separators rely on their parent for height, so place them inside a row with an explicit height or pass a height class.",
-      "The dashed variant uses background gradients so horizontal and vertical strokes keep the same dash rhythm. The dotted variant uses border rendering to keep dots crisp at one pixel.",
+      "Vertical separators use self-stretch inside flex rows and keep min-h-4 as a fallback when the parent does not define height.",
+      "The dashed variant uses background gradients so horizontal and vertical strokes keep the same dash rhythm. The dotted variant uses border rendering with h-px sizing so dots stay visible in flex layouts.",
+      'Every separator root exposes data-slot="separator" for parent styling hooks.',
+    ],
+  },
+  {
+    id: "separator-label",
+    title: "SeparatorLabel",
+    summary:
+      "Centered caption layout that renders matching dividers on both sides of a label.",
+    fields: [
+      field({
+        name: "children",
+        type: "ReactNode",
+        required: true,
+        description: "Caption rendered between the two separators.",
+      }),
+      field({
+        name: "variant",
+        type: '"line" | "dashed" | "dotted"',
+        defaultValue: '"line"',
+        description: "Variant applied to both flanking separators.",
+      }),
+      field({
+        name: "tone",
+        type: '"default" | "muted" | "brand" | "destructive"',
+        defaultValue: '"default"',
+        description: "Tone applied to both flanking separators.",
+      }),
+      field({
+        name: "labelClassName",
+        type: "string",
+        description: "Classes merged onto the caption span.",
+      }),
+      field({
+        name: "separatorClassName",
+        type: "string",
+        description: "Classes merged onto both flanking separators.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description: "Classes merged onto the outer flex container.",
+      }),
+    ],
+    notes: [
+      "SeparatorLabel is included in the same registry file as Separator, so no extra install step is required.",
     ],
   },
   {
@@ -6267,7 +6333,7 @@ const separatorApiDetails: DetailItem[] = [
       "Additional primitive props and data attributes are forwarded to the root element for composition with layout or menu surfaces.",
     ],
   },
-  registryItem("separator.json", ["@radix-ui/react-separator"]),
+  registryItem("b-separator.json", ["@base-ui/react"]),
 ];
 
 const selectionToolbarApiDetails: DetailItem[] = [

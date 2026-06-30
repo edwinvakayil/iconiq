@@ -778,6 +778,8 @@ export function SeparatorPreview() {
 
       <Separator />
 
+      <Separator variant="dashed" />
+
       <div className="grid h-14 grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)_auto_minmax(0,1fr)] items-center text-sm">
         <div className="min-w-0 text-center">
           <p className="font-medium">12</p>
@@ -847,6 +849,8 @@ export function SeparatorPreview() {
       </div>
 
       <Separator />
+
+      <Separator variant="dashed" />
 
       <div className="grid h-14 grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)_auto_minmax(0,1fr)] items-center text-sm">
         <div className="min-w-0 text-center">
