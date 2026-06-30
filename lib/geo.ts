@@ -130,7 +130,7 @@ const DOCS_COMPONENT_NAME_BY_HREF: Record<string, string> = {
   "/overlay-and-popups/popover": "b-popover",
   "/inputs-and-forms/radio-group": "b-radio-group",
   "/inputs-and-forms/select": "b-select",
-  "/layout-and-toolbars/selection-toolbar": "b-selection-toolbar",
+  "/layout-and-toolbars/selection-toolbar": "selectiontoolbar",
   "/inputs-and-forms/slider": "b-slider",
   "/inputs-and-forms/switch": "b-switch",
   "/navigation/tabs": "tabs",

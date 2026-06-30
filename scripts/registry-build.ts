@@ -291,8 +291,9 @@ const REGISTRY_UI_META: Record<
   "b-selection-toolbar": {
     title: "Selection Toolbar (Base UI)",
     description:
-      "Floating selection toolbar with the same Iconiq API layered over Base UI toolbar primitives, preserving the original inline formatting shell, fixed-position reveal, and editable-surface selection tracking.",
+      "Floating selection toolbar with the same Iconiq API layered over Base UI toolbar primitives, including viewport-aware positioning, keyboard shortcuts, and fluid button motion.",
     dependencies: ["@base-ui/react", "lucide-react"],
+    registryDependencies: ["selectiontoolbar"],
   },
   "b-slider": {
     title: "Slider (Base UI)",
@@ -593,8 +594,9 @@ const REGISTRY_UI_META: Record<
   "r-selection-toolbar": {
     title: "Selection Toolbar (Radix UI)",
     description:
-      "Floating selection toolbar with the same Iconiq API layered over Radix UI toolbar primitives, preserving the original inline formatting shell, fixed-position reveal, and editable-surface selection tracking.",
+      "Floating selection toolbar with the same Iconiq API layered over Radix UI toolbar primitives, including viewport-aware positioning, keyboard shortcuts, and fluid button motion.",
     dependencies: ["@radix-ui/react-toolbar", "lucide-react"],
+    registryDependencies: ["selectiontoolbar"],
   },
   "r-slider": {
     title: "Slider (Radix UI)",
@@ -671,7 +673,7 @@ const REGISTRY_UI_META: Record<
   selectiontoolbar: {
     title: "Selection Toolbar",
     description:
-      "Floating inline formatting toolbar for editable text selections with bold, italic, and underline actions.",
+      "Floating inline formatting toolbar for editable text selections with viewport-aware positioning, keyboard shortcuts, theme tokens, and bold, italic, underline, link, copy, and strikethrough actions.",
     dependencies: ["lucide-react"],
   },
   skeleton: {

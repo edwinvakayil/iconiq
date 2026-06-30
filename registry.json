@@ -301,11 +301,11 @@
     {
       "name": "b-selection-toolbar",
       "type": "registry:ui",
-      "registryDependencies": [],
+      "registryDependencies": ["selectiontoolbar"],
       "dependencies": ["@base-ui/react", "lucide-react"],
       "devDependencies": [],
       "title": "Selection Toolbar (Base UI)",
-      "description": "Floating selection toolbar with the same Iconiq API layered over Base UI toolbar primitives, preserving the original inline formatting shell, fixed-position reveal, and editable-surface selection tracking.",
+      "description": "Floating selection toolbar with the same Iconiq API layered over Base UI toolbar primitives, including viewport-aware positioning, keyboard shortcuts, and fluid button motion.",
       "files": [
         {
           "path": "b-selection-toolbar.tsx",
@@ -1143,11 +1143,11 @@
     {
       "name": "r-selection-toolbar",
       "type": "registry:ui",
-      "registryDependencies": [],
+      "registryDependencies": ["selectiontoolbar"],
       "dependencies": ["@radix-ui/react-toolbar", "lucide-react"],
       "devDependencies": [],
       "title": "Selection Toolbar (Radix UI)",
-      "description": "Floating selection toolbar with the same Iconiq API layered over Radix UI toolbar primitives, preserving the original inline formatting shell, fixed-position reveal, and editable-surface selection tracking.",
+      "description": "Floating selection toolbar with the same Iconiq API layered over Radix UI toolbar primitives, including viewport-aware positioning, keyboard shortcuts, and fluid button motion.",
       "files": [
         {
           "path": "r-selection-toolbar.tsx",
@@ -1346,7 +1346,7 @@
       "dependencies": ["lucide-react"],
       "devDependencies": [],
       "title": "Selection Toolbar",
-      "description": "Floating inline formatting toolbar for editable text selections with bold, italic, and underline actions.",
+      "description": "Floating inline formatting toolbar for editable text selections with viewport-aware positioning, keyboard shortcuts, theme tokens, and bold, italic, underline, link, copy, and strikethrough actions.",
       "files": [
         {
           "path": "selectiontoolbar.tsx",

@@ -6275,7 +6275,7 @@ const selectionToolbarApiDetails: DetailItem[] = [
     id: "selectiontoolbar",
     title: "SelectionToolbar",
     summary:
-      "Floating formatting toolbar for editable text. It watches document selection, shows itself only when the selection lives inside the provided container, and exposes bold, italic, and underline actions.",
+      "Floating formatting toolbar for editable text. It watches document selection, shows itself only when the selection lives inside the provided container, and exposes bold, italic, and underline actions by default.",
     fields: [
       field({
         name: "containerRef",
@@ -6284,11 +6284,76 @@ const selectionToolbarApiDetails: DetailItem[] = [
         description:
           "Ref pointing at the editable container whose text selection should drive the toolbar. Selections outside this element immediately hide the toolbar.",
       }),
+      field({
+        name: "className",
+        type: "string",
+        description:
+          "Optional class names applied to the portaled toolbar shell.",
+      }),
+      field({
+        name: "items",
+        type: "SelectionToolbarItem[]",
+        description:
+          "Optional toolbar actions. Defaults to bold, italic, and underline. Use SelectionToolbarPresets for link, copy, and strikethrough helpers.",
+      }),
+      field({
+        name: "children",
+        type: "React.ReactNode",
+        description:
+          "Optional custom toolbar buttons rendered after the configured items.",
+      }),
+      field({
+        name: "onCommand",
+        type: "(command: SelectionToolbarCommand) => void",
+        description: "Called after a native formatting command succeeds.",
+      }),
+      field({
+        name: "portalContainer",
+        type: "HTMLElement | null",
+        defaultValue: "document.body",
+        description:
+          "Portal target for the floating toolbar. Defaults to document.body.",
+      }),
+      field({
+        name: "offset",
+        type: "number",
+        defaultValue: "10",
+        description:
+          "Gap in pixels between the selection anchor and the toolbar.",
+      }),
+      field({
+        name: "side",
+        type: '"auto" | "top" | "bottom"',
+        defaultValue: '"auto"',
+        description:
+          "Preferred placement relative to the selection. Auto flips above or below based on viewport space.",
+      }),
+      field({
+        name: "zIndex",
+        type: "number",
+        defaultValue: "50",
+        description: "Stacking order for the portaled toolbar.",
+      }),
+      field({
+        name: "disabled",
+        type: "boolean",
+        defaultValue: "false",
+        description:
+          "When true, the toolbar stays hidden and actions are ignored.",
+      }),
+      field({
+        name: "aria-controls",
+        type: "string",
+        description:
+          "Optional id of the editable surface controlled by the toolbar.",
+      }),
     ],
     notes: [
-      "The toolbar listens to document-level selectionchange and mousedown events, so it updates as the selection moves and closes when people click away.",
-      "Formatting actions run on mousedown instead of click so the active text selection is preserved while bold, italic, or underline is applied.",
-      "Active states are read from document.queryCommandState for the same three formatting commands the toolbar exposes.",
+      "The toolbar listens to document-level selectionchange events and only dismisses on pointerdown outside both the toolbar and the editable container.",
+      "Formatting actions run on mousedown instead of click so the active text selection is preserved while commands are applied.",
+      "Active states are read from document.queryCommandState for inline formatting commands.",
+      "Keyboard shortcuts Ctrl/Cmd+B, Ctrl/Cmd+I, and Ctrl/Cmd+U work while a non-collapsed selection is inside the container.",
+      "Toolbar buttons support arrow-key roving focus, Home, and End while the toolbar is visible.",
     ],
   },
   {
@@ -6297,9 +6362,10 @@ const selectionToolbarApiDetails: DetailItem[] = [
     summary:
       "The toolbar positions itself from the live range rectangle returned by the browser selection API and applies formatting through the native rich-text command pipeline.",
     notes: [
-      "Coordinates are derived from Range.getBoundingClientRect plus the current page scroll offset, which keeps the toolbar visually anchored to the selected phrase.",
-      "Because the toolbar uses page-level coordinates, it works best when rendered in a non-clipping part of the tree rather than inside a tightly overflow-hidden local wrapper.",
-      "The current implementation depends on document.execCommand for inline formatting. That makes it convenient for lightweight editable surfaces, but apps with a custom text model may want to fork the behavior.",
+      "Coordinates come from Range.getBoundingClientRect in viewport space and the toolbar uses position: fixed, so it stays anchored while the page scrolls.",
+      "Horizontal placement is clamped to the viewport and vertical placement can flip above or below the selection when space is limited.",
+      "The toolbar is portaled outside clipping containers by default, which avoids overflow-hidden wrappers trimming the floating shell.",
+      "The current implementation depends on document.execCommand for inline formatting. That keeps the install lightweight for native contentEditable text, but apps with a custom text model should replace command handling via items or onCommand.",
     ],
   },
   registryItem("selectiontoolbar.json", ["lucide-react"]),

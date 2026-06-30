@@ -942,6 +942,51 @@ export default function Page() {
   );
 }`;
 
+export const selectionToolbarPreviewCode = `"use client";
+
+import { useRef } from "react";
+import {
+  SelectionToolbar,
+  SelectionToolbarPresets,
+} from "@/components/ui/selectiontoolbar";
+
+const previewText =
+  "Select any phrase here to reveal the toolbar, then try bold, underline, link, or copy on the highlight.";
+
+export default function Page() {
+  const editorRef = useRef<HTMLDivElement | null>(null);
+
+  return (
+    <div className="flex min-h-svh items-center justify-center bg-background px-6 py-16">
+      <div className="mx-auto w-full max-w-xl text-center">
+        <SelectionToolbar
+          aria-controls="selection-toolbar-editor"
+          containerRef={editorRef}
+          items={[
+            { command: "bold", id: "bold", label: "Bold" },
+            { command: "italic", id: "italic", label: "Italic" },
+            { command: "underline", id: "underline", label: "Underline" },
+            SelectionToolbarPresets.strikeThrough,
+            SelectionToolbarPresets.link,
+            SelectionToolbarPresets.copy,
+          ]}
+        />
+
+        <div
+          className="text-balance text-[15px] text-foreground leading-7 outline-none sm:text-[16px]"
+          contentEditable
+          id="selection-toolbar-editor"
+          ref={editorRef}
+          spellCheck={false}
+          suppressContentEditableWarning
+        >
+          {previewText}
+        </div>
+      </div>
+    </div>
+  );
+}`;
+
 export const infiniteRibbonPreviewCode = `"use client";
 
 import { InfiniteRibbon } from "@/components/ui/infiniteribbon";
@@ -995,6 +1040,8 @@ const COMPONENT_PREVIEW_OVERRIDES: Record<string, string> = {
   charts: chartsPreviewCode,
   card: cardPreviewCode,
   infiniteribbon: infiniteRibbonPreviewCode,
+  selectiontoolbar: selectionToolbarPreviewCode,
+  "selection-toolbar": selectionToolbarPreviewCode,
   "theme-toggle": themeTogglePreviewCode,
   "favicon-badge": faviconBadgePreviewCode,
   "verified-badge": verifiedBadgePreviewCode,

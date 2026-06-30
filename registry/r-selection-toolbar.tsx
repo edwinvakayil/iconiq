@@ -1,185 +1,150 @@
 "use client";
 
 import * as ToolbarPrimitive from "@radix-ui/react-toolbar";
-import { Bold, Italic, Underline } from "lucide-react";
 import * as React from "react";
 import { createPortal } from "react-dom";
 
-import { cn } from "@/lib/utils";
+import {
+  getSelectionToolbarButtonClassName,
+  getSelectionToolbarShortcutLabel,
+  isSelectionToolbarCommandActive,
+  type SelectionToolbarItem,
+  type SelectionToolbarProps,
+  selectionToolbarStyles,
+  useSelectionToolbar,
+} from "./selectiontoolbar";
 
-const controlCornerClassName =
-  "rounded-lg supports-[corner-shape:squircle]:corner-squircle supports-[corner-shape:squircle]:rounded-[11px]";
+export type {
+  SelectionToolbarCommand,
+  SelectionToolbarItem,
+  SelectionToolbarProps,
+} from "./selectiontoolbar";
 
-type Pos = { x: number; y: number } | null;
+type ToolbarButtonProps = {
+  active?: boolean;
+  children: React.ReactNode;
+  className?: string;
+  disabled?: boolean;
+  label: string;
+  onMouseDown: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  shortcut?: string;
+  tabIndex?: number;
+};
 
-export interface SelectionToolbarProps {
-  containerRef: React.RefObject<HTMLElement | null>;
+const ToolbarButton = React.forwardRef<HTMLButtonElement, ToolbarButtonProps>(
+  function ToolbarButton(
+    {
+      active = false,
+      children,
+      className,
+      disabled = false,
+      label,
+      onMouseDown,
+      shortcut,
+      tabIndex = -1,
+    },
+    ref
+  ) {
+    return (
+      <ToolbarPrimitive.Button
+        aria-keyshortcuts={shortcut}
+        aria-label={shortcut ? `${label} (${shortcut})` : label}
+        aria-pressed={active}
+        className={getSelectionToolbarButtonClassName({ active, className })}
+        disabled={disabled}
+        onMouseDown={onMouseDown}
+        ref={ref}
+        tabIndex={tabIndex}
+        title={shortcut ? `${label} (${shortcut})` : label}
+        type="button"
+      >
+        <span className={selectionToolbarStyles.toolbarButtonIconClassName}>
+          {children}
+        </span>
+      </ToolbarPrimitive.Button>
+    );
+  }
+);
+
+ToolbarButton.displayName = "SelectionToolbarButton";
+
+function renderToolbarItems({
+  active,
+  buttonRefs,
+  disabled,
+  focusedIndex,
+  handleItemAction,
+  items,
+}: {
+  active: ReturnType<typeof useSelectionToolbar>["active"];
+  buttonRefs: ReturnType<typeof useSelectionToolbar>["buttonRefs"];
+  disabled: boolean;
+  focusedIndex: number;
+  handleItemAction: (item: SelectionToolbarItem) => void;
+  items: SelectionToolbarItem[];
+}) {
+  return items.map((item, index) => (
+    <ToolbarButton
+      active={
+        item.command
+          ? isSelectionToolbarCommandActive(item.command, active)
+          : false
+      }
+      disabled={disabled || item.disabled}
+      key={item.id}
+      label={item.label}
+      onMouseDown={(event) => {
+        event.preventDefault();
+        handleItemAction(item);
+      }}
+      ref={(node) => {
+        buttonRefs.current[index] = node;
+      }}
+      shortcut={
+        item.command
+          ? getSelectionToolbarShortcutLabel(item.command)
+          : undefined
+      }
+      tabIndex={focusedIndex === index ? 0 : -1}
+    >
+      {item.icon}
+    </ToolbarButton>
+  ));
 }
 
-export function SelectionToolbar({ containerRef }: SelectionToolbarProps) {
-  const [mounted, setMounted] = React.useState(false);
-  const [pos, setPos] = React.useState<Pos>(null);
-  const [active, setActive] = React.useState({
-    bold: false,
-    italic: false,
-    underline: false,
-  });
-  const toolbarRef = React.useRef<HTMLDivElement>(null);
+export function SelectionToolbar(props: SelectionToolbarProps) {
+  const toolbar = useSelectionToolbar(props);
 
-  React.useEffect(() => {
-    setMounted(true);
-
-    return () => {
-      setMounted(false);
-    };
-  }, []);
-
-  React.useEffect(() => {
-    const el = containerRef.current;
-    if (!el) {
-      return;
-    }
-
-    const update = () => {
-      const selection = window.getSelection();
-      if (!selection || selection.isCollapsed || selection.rangeCount === 0) {
-        setPos(null);
-        return;
-      }
-
-      const range = selection.getRangeAt(0);
-      if (!el.contains(range.commonAncestorContainer)) {
-        setPos(null);
-        return;
-      }
-
-      const rect = range.getBoundingClientRect();
-      if (rect.width === 0 && rect.height === 0) {
-        setPos(null);
-        return;
-      }
-
-      setPos({
-        x: rect.left + rect.width / 2,
-        y: rect.top,
-      });
-      setActive({
-        bold: document.queryCommandState("bold"),
-        italic: document.queryCommandState("italic"),
-        underline: document.queryCommandState("underline"),
-      });
-    };
-
-    const handleMouseDown = (event: MouseEvent) => {
-      if (toolbarRef.current?.contains(event.target as Node)) {
-        return;
-      }
-
-      setPos(null);
-    };
-
-    document.addEventListener("selectionchange", update);
-    document.addEventListener("mousedown", handleMouseDown);
-    document.addEventListener("scroll", update, true);
-    window.addEventListener("resize", update);
-
-    return () => {
-      document.removeEventListener("selectionchange", update);
-      document.removeEventListener("mousedown", handleMouseDown);
-      document.removeEventListener("scroll", update, true);
-      window.removeEventListener("resize", update);
-    };
-  }, [containerRef]);
-
-  const exec =
-    (command: "bold" | "italic" | "underline") =>
-    (event: React.MouseEvent<HTMLButtonElement>) => {
-      event.preventDefault();
-      document.execCommand(command);
-      setActive({
-        bold: document.queryCommandState("bold"),
-        italic: document.queryCommandState("italic"),
-        underline: document.queryCommandState("underline"),
-      });
-    };
-
-  const visible = pos !== null;
-
-  if (!mounted) {
+  if (!(toolbar.mounted && toolbar.portalTarget)) {
     return null;
   }
 
   return createPortal(
     <ToolbarPrimitive.Root
+      aria-controls={toolbar.ariaControls}
+      aria-hidden={!toolbar.visible}
       aria-label="Text formatting"
-      className={cn(
-        "z-50 flex items-center gap-1 bg-neutral-800 px-2 py-1.5 shadow-xl ring-1 ring-black/20",
-        controlCornerClassName
-      )}
+      className={toolbar.shellClassName}
+      onKeyDown={toolbar.handleToolbarKeyDown}
       onMouseDown={(event) => event.preventDefault()}
       orientation="horizontal"
-      ref={toolbarRef}
-      style={{
-        position: "fixed",
-        left: pos?.x ?? 0,
-        top: pos?.y ?? 0,
-        transform: `translate(-50%, calc(-100% - 10px)) scale(${visible ? 1 : 0.9})`,
-        opacity: visible ? 1 : 0,
-        pointerEvents: visible ? "auto" : "none",
-        transition:
-          "opacity 150ms ease, transform 180ms cubic-bezier(0.34, 1.56, 0.64, 1)",
-      }}
+      ref={toolbar.setToolbarNode}
+      style={toolbar.toolbarStyle}
     >
-      <ToolbarButton
-        active={active.bold}
-        label="Bold"
-        onMouseDown={exec("bold")}
-      >
-        <Bold className="h-4 w-4" strokeWidth={2.5} />
-      </ToolbarButton>
-      <ToolbarButton
-        active={active.italic}
-        label="Italic"
-        onMouseDown={exec("italic")}
-      >
-        <Italic className="h-4 w-4" strokeWidth={2.5} />
-      </ToolbarButton>
-      <ToolbarButton
-        active={active.underline}
-        label="Underline"
-        onMouseDown={exec("underline")}
-      >
-        <Underline className="h-4 w-4" strokeWidth={2.5} />
-      </ToolbarButton>
+      {renderToolbarItems({
+        active: toolbar.active,
+        buttonRefs: toolbar.buttonRefs,
+        disabled: toolbar.disabled,
+        focusedIndex: toolbar.focusedIndex,
+        handleItemAction: toolbar.handleItemAction,
+        items: toolbar.resolvedItems,
+      })}
+      {toolbar.children}
     </ToolbarPrimitive.Root>,
-    document.body
+    toolbar.portalTarget
   );
 }
 
-function ToolbarButton({
-  children,
-  label,
-  active,
-  onMouseDown,
-}: {
-  children: React.ReactNode;
-  label: string;
-  active: boolean;
-  onMouseDown: (event: React.MouseEvent<HTMLButtonElement>) => void;
-}) {
-  return (
-    <ToolbarPrimitive.Button
-      aria-label={label}
-      aria-pressed={active}
-      className={cn(
-        "flex h-8 w-8 items-center justify-center text-neutral-200 transition-colors hover:bg-neutral-700 hover:text-white",
-        controlCornerClassName,
-        active && "bg-neutral-700 text-white"
-      )}
-      onMouseDown={onMouseDown}
-      type="button"
-    >
-      {children}
-    </ToolbarPrimitive.Button>
-  );
-}
+SelectionToolbar.displayName = "SelectionToolbar";
+
+export { ToolbarButton };
