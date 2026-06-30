@@ -1,6 +1,5 @@
 "use client";
 
-import type { ReactNode } from "react";
 import { useMemo, useState } from "react";
 
 import {
@@ -8,62 +7,27 @@ import {
   ProviderSwitch,
 } from "@/app/(site)/components/_components/provider-switch";
 import {
+  type AccordionModule,
+  AccordionPlaygroundProvider,
+  getAccordionDefaultUsageCode,
+} from "@/app/(site)/navigation/accordion/_components/accordion-playground";
+import {
   ComponentDocsPage,
   type DetailItem,
 } from "@/components/docs/page-shell";
 import { LINK } from "@/constants";
-import {
-  Accordion as BaseAccordion,
-  AccordionContent as BaseAccordionContent,
-  AccordionItem as BaseAccordionItem,
-  AccordionTrigger as BaseAccordionTrigger,
-} from "@/registry/b-accordion";
-import {
-  Accordion as RadixAccordion,
-  AccordionContent as RadixAccordionContent,
-  AccordionItem as RadixAccordionItem,
-  AccordionTrigger as RadixAccordionTrigger,
-} from "@/registry/r-accordion";
+import * as BaseAccordion from "@/registry/b-accordion";
+import * as RadixAccordion from "@/registry/r-accordion";
 
 type ProviderConfig = {
   componentName: "b-accordion" | "r-accordion";
   dependencyLabel: string;
-  installationPreview: ReactNode;
-  installationPreviewCode: string;
+  importPath: string;
   libraryLabel: string;
   notes: string[];
-  preview: ReactNode;
+  ui: AccordionModule;
   usageCode: string;
 };
-
-type AccordionDemoItem = {
-  id: string;
-  title: string;
-  content: ReactNode;
-};
-
-const demoItems: AccordionDemoItem[] = [
-  {
-    id: "workflow",
-    title: "How should I use this page?",
-    content:
-      "Switch libraries above. The preview, install command, and registry files update together.",
-  },
-  {
-    id: "api",
-    title: "Does the public API stay the same?",
-    content:
-      "Yes. Both entries export the same compound parts, variants, and multi-open behavior.",
-  },
-  {
-    id: "install",
-    title: "What changes when I switch providers?",
-    content: "Only the underlying implementation and dependency list change.",
-  },
-];
-
-const previewAccordionClassName = "w-full max-w-xl";
-const installationPreviewAccordionClassName = "mx-auto w-full max-w-xl";
 
 const breadcrumbs = [
   { label: "Docs", href: "/" },
@@ -71,172 +35,10 @@ const breadcrumbs = [
   { label: "Accordion" },
 ];
 
-function getBaseAccordionRows() {
-  return demoItems.map((item) => (
-    <BaseAccordionItem key={item.id} value={item.id}>
-      <BaseAccordionTrigger>{item.title}</BaseAccordionTrigger>
-      <BaseAccordionContent>{item.content}</BaseAccordionContent>
-    </BaseAccordionItem>
-  ));
-}
-
-function getRadixAccordionRows() {
-  return demoItems.map((item) => (
-    <RadixAccordionItem key={item.id} value={item.id}>
-      <RadixAccordionTrigger>{item.title}</RadixAccordionTrigger>
-      <RadixAccordionContent>{item.content}</RadixAccordionContent>
-    </RadixAccordionItem>
-  ));
-}
-
-const usageCodeByProvider: Record<ProviderConfig["componentName"], string> = {
-  "b-accordion": `import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/b-accordion";
-
-export function AccordionPreview() {
-  return (
-    <Accordion defaultValue={["workflow"]} className="w-full max-w-xl">
-      <AccordionItem value="workflow">
-        <AccordionTrigger>How should I use this page?</AccordionTrigger>
-        <AccordionContent>
-          Switch libraries above. The preview, install command, and registry
-          files update together.
-        </AccordionContent>
-      </AccordionItem>
-      <AccordionItem value="api">
-        <AccordionTrigger>Does the public API stay the same?</AccordionTrigger>
-        <AccordionContent>
-          Yes. Both entries export the same compound parts, variants, and
-          multi-open behavior.
-        </AccordionContent>
-      </AccordionItem>
-      <AccordionItem value="install">
-        <AccordionTrigger>What changes when I switch providers?</AccordionTrigger>
-        <AccordionContent>
-          Only the underlying implementation and dependency list change.
-        </AccordionContent>
-      </AccordionItem>
-    </Accordion>
-  );
-}`,
-  "r-accordion": `import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/r-accordion";
-
-export function AccordionPreview() {
-  return (
-    <Accordion defaultValue={["workflow"]} className="${previewAccordionClassName}">
-      <AccordionItem value="workflow">
-        <AccordionTrigger>How should I use this page?</AccordionTrigger>
-        <AccordionContent>
-          Switch libraries above. The preview, install command, and registry
-          files update together.
-        </AccordionContent>
-      </AccordionItem>
-      <AccordionItem value="api">
-        <AccordionTrigger>Does the public API stay the same?</AccordionTrigger>
-        <AccordionContent>
-          Yes. Both entries export the same compound parts, variants, and
-          multi-open behavior.
-        </AccordionContent>
-      </AccordionItem>
-      <AccordionItem value="install">
-        <AccordionTrigger>What changes when I switch providers?</AccordionTrigger>
-        <AccordionContent>
-          Only the underlying implementation and dependency list change.
-        </AccordionContent>
-      </AccordionItem>
-    </Accordion>
-  );
-}`,
-};
-
-const quietUsageCodeByProvider: Record<
-  ProviderConfig["componentName"],
-  string
-> = {
-  "b-accordion": `import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/b-accordion";
-
-export function QuietAccordionPreview() {
-  return (
-    <Accordion
-      className="mx-auto w-full max-w-xl"
-      defaultValue={["workflow"]}
-      variant="quiet"
-    >
-      <AccordionItem value="workflow">
-        <AccordionTrigger>How should I use this page?</AccordionTrigger>
-        <AccordionContent>
-          Switch libraries above. The preview, install command, and registry
-          files update together.
-        </AccordionContent>
-      </AccordionItem>
-      <AccordionItem value="api">
-        <AccordionTrigger>Does the public API stay the same?</AccordionTrigger>
-        <AccordionContent>
-          Yes. Both entries export the same compound parts, variants, and
-          multi-open behavior.
-        </AccordionContent>
-      </AccordionItem>
-      <AccordionItem value="install">
-        <AccordionTrigger>What changes when I switch providers?</AccordionTrigger>
-        <AccordionContent>
-          Only the underlying implementation and dependency list change.
-        </AccordionContent>
-      </AccordionItem>
-    </Accordion>
-  );
-}`,
-  "r-accordion": `import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/r-accordion";
-
-export function QuietAccordionPreview() {
-  return (
-    <Accordion
-      className="mx-auto w-full max-w-xl"
-      defaultValue={["workflow"]}
-      variant="quiet"
-    >
-      <AccordionItem value="workflow">
-        <AccordionTrigger>How should I use this page?</AccordionTrigger>
-        <AccordionContent>
-          Switch libraries above. The preview, install command, and registry
-          files update together.
-        </AccordionContent>
-      </AccordionItem>
-      <AccordionItem value="api">
-        <AccordionTrigger>Does the public API stay the same?</AccordionTrigger>
-        <AccordionContent>
-          Yes. Both entries export the same compound parts, variants, and
-          multi-open behavior.
-        </AccordionContent>
-      </AccordionItem>
-      <AccordionItem value="install">
-        <AccordionTrigger>What changes when I switch providers?</AccordionTrigger>
-        <AccordionContent>
-          Only the underlying implementation and dependency list change.
-        </AccordionContent>
-      </AccordionItem>
-    </Accordion>
-  );
-}`,
-};
+const IMPORT_PATHS = {
+  base: "@/components/ui/b-accordion",
+  radix: "@/components/ui/r-accordion",
+} as const;
 
 export default function RadixBaseAccordionPage() {
   const [selectedProvider, setSelectedProvider] =
@@ -246,63 +48,31 @@ export default function RadixBaseAccordionPage() {
     if (selectedProvider === "base") {
       return {
         componentName: "b-accordion",
-        dependencyLabel: "@base-ui/react, motion, lucide-react",
+        dependencyLabel: "@base-ui/react, motion",
+        importPath: IMPORT_PATHS.base,
         libraryLabel: "Base UI",
         notes: [
           "Installs the Base UI accordion parts under the same compound Accordion API.",
           "Uses Base UI panel measurement plus motion-backed label and icon polish.",
           "The generated registry file is /r/b-accordion.json.",
         ],
-        installationPreview: (
-          <BaseAccordion
-            className={installationPreviewAccordionClassName}
-            defaultValue={["workflow"]}
-            variant="quiet"
-          >
-            {getBaseAccordionRows()}
-          </BaseAccordion>
-        ),
-        installationPreviewCode: quietUsageCodeByProvider["b-accordion"],
-        preview: (
-          <BaseAccordion
-            className={previewAccordionClassName}
-            defaultValue={["workflow"]}
-          >
-            {getBaseAccordionRows()}
-          </BaseAccordion>
-        ),
-        usageCode: usageCodeByProvider["b-accordion"],
+        ui: BaseAccordion as AccordionModule,
+        usageCode: getAccordionDefaultUsageCode(IMPORT_PATHS.base),
       };
     }
 
     return {
       componentName: "r-accordion",
-      dependencyLabel: "@radix-ui/react-accordion, motion, lucide-react",
+      dependencyLabel: "@radix-ui/react-accordion, motion",
+      importPath: IMPORT_PATHS.radix,
       libraryLabel: "Radix UI",
       notes: [
         "Installs the Radix accordion primitive under the same compound Accordion API.",
-        "Uses the existing Motion + Radix content choreography with animated height, wipe, and copy transitions.",
+        "Uses motion-backed height and content transitions on top of Radix content semantics.",
         "The generated registry file is /r/r-accordion.json.",
       ],
-      installationPreview: (
-        <RadixAccordion
-          className={installationPreviewAccordionClassName}
-          defaultValue={["workflow"]}
-          variant="quiet"
-        >
-          {getRadixAccordionRows()}
-        </RadixAccordion>
-      ),
-      installationPreviewCode: quietUsageCodeByProvider["r-accordion"],
-      preview: (
-        <RadixAccordion
-          className={previewAccordionClassName}
-          defaultValue={["workflow"]}
-        >
-          {getRadixAccordionRows()}
-        </RadixAccordion>
-      ),
-      usageCode: usageCodeByProvider["r-accordion"],
+      ui: RadixAccordion as AccordionModule,
+      usageCode: getAccordionDefaultUsageCode(IMPORT_PATHS.radix),
     };
   }, [selectedProvider]);
 
@@ -375,6 +145,13 @@ export default function RadixBaseAccordionPage() {
             description:
               "Merged onto the inner copy wrapper so text and rich content can be styled per panel.",
           },
+          {
+            name: "keepMounted",
+            type: "boolean",
+            defaultValue: "true",
+            description:
+              "Keep panel content mounted while closed so height animation can finish cleanly. Radix installs also accept forceMount as an alias.",
+          },
         ],
       },
       {
@@ -415,6 +192,13 @@ export default function RadixBaseAccordionPage() {
               "Merged onto the max-w-2xl root wrapper so you can stretch, align, or reposition the accordion in your layout.",
           },
           {
+            name: "collapsible",
+            type: "boolean",
+            defaultValue: "true",
+            description:
+              "Single-open mode only. When false, the open row cannot be collapsed by clicking it again.",
+          },
+          {
             name: "multiple",
             type: "boolean",
             defaultValue: "false",
@@ -440,38 +224,44 @@ export default function RadixBaseAccordionPage() {
     [provider]
   );
 
-  const examples = useMemo(
-    () => [
-      {
-        title: "Quiet",
-        preview: provider.installationPreview,
-        code: provider.installationPreviewCode,
-      },
-    ],
-    [provider]
-  );
-
   return (
-    <ComponentDocsPage
-      breadcrumbs={breadcrumbs}
-      componentName={provider.componentName}
-      description="Stacked sections for showing and hiding related content."
-      details={details}
-      editHref={`${LINK.GITHUB}/edit/main/app/(site)/navigation/accordion/page.tsx`}
-      examples={examples}
-      headerActions={
-        <ProviderSwitch
-          onSelect={setSelectedProvider}
-          selectedProvider={selectedProvider}
+    <AccordionPlaygroundProvider
+      importPath={provider.importPath}
+      key={provider.componentName}
+      ui={provider.ui}
+    >
+      {({ preview, renderSettings }) => (
+        <ComponentDocsPage
+          breadcrumbs={breadcrumbs}
+          componentName={provider.componentName}
+          description="Stacked sections for showing and hiding related content."
+          details={details}
+          editHref={`${LINK.GITHUB}/edit/main/app/(site)/navigation/accordion/page.tsx`}
+          headerActions={
+            <ProviderSwitch
+              onSelect={setSelectedProvider}
+              selectedProvider={selectedProvider}
+            />
+          }
+          itemSlug="accordion"
+          pageUrl="/navigation/accordion"
+          preview={preview}
+          previewClassName="min-h-[20rem]"
+          previewDescription="Use the playground to switch variant, multi-open, collapsible, default open, and mount behavior."
+          previewPersonalize={({ onClose }) => renderSettings(onClose)}
+          previewPersonalizeTitle="Accordion"
+          railNotes={[
+            "Variants: default uses divided rows with a plus/minus icon; quiet uses inline plus/minus labels.",
+            "Single-open is the default. Pass multiple when you want a keep-open FAQ or settings list.",
+            "Use collapsible={false} when one section should always stay open in single mode.",
+            "Pass keepMounted={false} on AccordionContent for heavy panels you want removed from the DOM when closed.",
+          ]}
+          title="Accordion"
+          usageCode={provider.usageCode}
+          usageDescription="Use the compound parts directly. Switch libraries above to update the install command, registry JSON, preview code, and generated file set together."
+          v0PageCode={provider.usageCode}
         />
-      }
-      itemSlug="accordion"
-      pageUrl="/navigation/accordion"
-      preview={provider.preview}
-      title="Accordion"
-      usageCode={provider.usageCode}
-      usageDescription="Use the compound parts directly. Switch libraries above to update the install command, registry JSON, preview code, and generated file set together."
-      v0PageCode={provider.usageCode}
-    />
+      )}
+    </AccordionPlaygroundProvider>
   );
 }
