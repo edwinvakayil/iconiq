@@ -1,11 +1,14 @@
 "use client";
 
 import { useMemo, useState } from "react";
-
 import {
   type PrimitiveProvider,
   ProviderSwitch,
 } from "@/app/(site)/components/_components/provider-switch";
+import {
+  CollapsiblePlaygroundProvider,
+  getCollapsibleDefaultUsageCode,
+} from "@/app/(site)/layout-and-toolbars/collapsible/_components/collapsible-playground";
 import {
   ComponentDocsPage,
   type DetailItem,
@@ -19,6 +22,7 @@ type CollapsibleModule = typeof BaseCollapsible;
 type ProviderConfig = {
   componentName: "b-collapsible" | "r-collapsible";
   dependencyLabel: string;
+  importPath: string;
   libraryLabel: string;
   notes: string[];
   ui: CollapsibleModule;
@@ -31,169 +35,6 @@ const breadcrumbs = [
   { label: "Collapsible" },
 ];
 
-const usageCodeByProvider: Record<ProviderConfig["componentName"], string> = {
-  "b-collapsible": `import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/b-collapsible";
-
-export function ReleaseNote() {
-  return (
-    <Collapsible className="w-full max-w-xl">
-      <CollapsibleTrigger>What changed in this release?</CollapsibleTrigger>
-      <CollapsibleContent>
-        <div className="space-y-4">
-          <p>
-            This release focuses on reducing friction across setup, review, and
-            team handoff.
-          </p>
-          <div className="space-y-3">
-            <div className="flex items-start justify-between gap-4 border-border/50 border-t pt-3">
-              <div className="space-y-1">
-                <p className="font-medium text-foreground">Setup flow</p>
-                <p>Workspace creation now takes three fewer steps.</p>
-              </div>
-              <span className="shrink-0 text-[11px] text-muted-foreground uppercase tracking-[0.16em]">
-                3 steps saved
-              </span>
-            </div>
-            <div className="flex items-start justify-between gap-4 border-border/50 border-t pt-3">
-              <div className="space-y-1">
-                <p className="font-medium text-foreground">Dashboard states</p>
-                <p>Empty and loading states were reduced into one cleaner path.</p>
-              </div>
-              <span className="shrink-0 text-[11px] text-muted-foreground uppercase tracking-[0.16em]">
-                Cleaner
-              </span>
-            </div>
-            <div className="flex items-start justify-between gap-4 border-border/50 border-t pt-3">
-              <div className="space-y-1">
-                <p className="font-medium text-foreground">Approval handoff</p>
-                <p>Frequent review flows now need fewer confirmation screens.</p>
-              </div>
-              <span className="shrink-0 text-[11px] text-muted-foreground uppercase tracking-[0.16em]">
-                Faster review
-              </span>
-            </div>
-          </div>
-        </div>
-      </CollapsibleContent>
-    </Collapsible>
-  );
-}`,
-  "r-collapsible": `import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/r-collapsible";
-
-export function ReleaseNote() {
-  return (
-    <Collapsible className="w-full max-w-xl">
-      <CollapsibleTrigger>What changed in this release?</CollapsibleTrigger>
-      <CollapsibleContent>
-        <div className="space-y-4">
-          <p>
-            This release focuses on reducing friction across setup, review, and
-            team handoff.
-          </p>
-          <div className="space-y-3">
-            <div className="flex items-start justify-between gap-4 border-border/50 border-t pt-3">
-              <div className="space-y-1">
-                <p className="font-medium text-foreground">Setup flow</p>
-                <p>Workspace creation now takes three fewer steps.</p>
-              </div>
-              <span className="shrink-0 text-[11px] text-muted-foreground uppercase tracking-[0.16em]">
-                3 steps saved
-              </span>
-            </div>
-            <div className="flex items-start justify-between gap-4 border-border/50 border-t pt-3">
-              <div className="space-y-1">
-                <p className="font-medium text-foreground">Dashboard states</p>
-                <p>Empty and loading states were reduced into one cleaner path.</p>
-              </div>
-              <span className="shrink-0 text-[11px] text-muted-foreground uppercase tracking-[0.16em]">
-                Cleaner
-              </span>
-            </div>
-            <div className="flex items-start justify-between gap-4 border-border/50 border-t pt-3">
-              <div className="space-y-1">
-                <p className="font-medium text-foreground">Approval handoff</p>
-                <p>Frequent review flows now need fewer confirmation screens.</p>
-              </div>
-              <span className="shrink-0 text-[11px] text-muted-foreground uppercase tracking-[0.16em]">
-                Faster review
-              </span>
-            </div>
-          </div>
-        </div>
-      </CollapsibleContent>
-    </Collapsible>
-  );
-}`,
-};
-
-function CollapsiblePreview({ ui }: { ui: CollapsibleModule }) {
-  const { Collapsible, CollapsibleContent, CollapsibleTrigger } = ui;
-
-  return (
-    <div className="flex min-h-[18rem] w-full justify-center p-6">
-      <div className="w-full max-w-xl pt-24">
-        <Collapsible className="w-full">
-          <CollapsibleTrigger>What changed in this release?</CollapsibleTrigger>
-          <CollapsibleContent>
-            <div className="space-y-4">
-              <p>
-                This release focuses on reducing friction across setup, review,
-                and team handoff.
-              </p>
-              <div className="space-y-3">
-                <div className="flex items-start justify-between gap-4 border-border/50 border-t pt-3">
-                  <div className="space-y-1">
-                    <p className="font-medium text-foreground">Setup flow</p>
-                    <p>Workspace creation now takes three fewer steps.</p>
-                  </div>
-                  <span className="shrink-0 text-[11px] text-muted-foreground uppercase tracking-[0.16em]">
-                    3 steps saved
-                  </span>
-                </div>
-                <div className="flex items-start justify-between gap-4 border-border/50 border-t pt-3">
-                  <div className="space-y-1">
-                    <p className="font-medium text-foreground">
-                      Dashboard states
-                    </p>
-                    <p>
-                      Empty and loading states were reduced into one cleaner
-                      path.
-                    </p>
-                  </div>
-                  <span className="shrink-0 text-[11px] text-muted-foreground uppercase tracking-[0.16em]">
-                    Cleaner
-                  </span>
-                </div>
-                <div className="flex items-start justify-between gap-4 border-border/50 border-t pt-3">
-                  <div className="space-y-1">
-                    <p className="font-medium text-foreground">
-                      Approval handoff
-                    </p>
-                    <p>
-                      Frequent review flows now need fewer confirmation screens.
-                    </p>
-                  </div>
-                  <span className="shrink-0 text-[11px] text-muted-foreground uppercase tracking-[0.16em]">
-                    Faster review
-                  </span>
-                </div>
-              </div>
-            </div>
-          </CollapsibleContent>
-        </Collapsible>
-      </div>
-    </div>
-  );
-}
-
 export default function RadixBaseCollapsiblePage() {
   const [selectedProvider, setSelectedProvider] =
     useState<PrimitiveProvider>("radix");
@@ -203,20 +44,24 @@ export default function RadixBaseCollapsiblePage() {
       return {
         componentName: "b-collapsible",
         dependencyLabel: "@base-ui/react, motion, lucide-react",
+        importPath: "@/components/ui/b-collapsible",
         libraryLabel: "Base UI",
         notes: [
           "Installs a Base UI collapsible with the same trigger and content API as the Radix version.",
-          "Base UI supplies the root, trigger, and panel semantics while Motion drives the same height, icon, and copy transitions.",
+          "Base UI supplies the root, trigger, and panel semantics while Motion drives height, icon, and copy transitions.",
           "The generated registry file is /r/b-collapsible.json.",
         ],
         ui: BaseCollapsible,
-        usageCode: usageCodeByProvider["b-collapsible"],
+        usageCode: getCollapsibleDefaultUsageCode(
+          "@/components/ui/b-collapsible"
+        ),
       };
     }
 
     return {
       componentName: "r-collapsible",
       dependencyLabel: "@radix-ui/react-collapsible, motion, lucide-react",
+      importPath: "@/components/ui/r-collapsible",
       libraryLabel: "Radix UI",
       notes: [
         "Installs a Radix collapsible with the same trigger and content API as the Base UI version.",
@@ -224,7 +69,9 @@ export default function RadixBaseCollapsiblePage() {
         "The generated registry file is /r/r-collapsible.json.",
       ],
       ui: RadixCollapsible,
-      usageCode: usageCodeByProvider["r-collapsible"],
+      usageCode: getCollapsibleDefaultUsageCode(
+        "@/components/ui/r-collapsible"
+      ),
     };
   }, [selectedProvider]);
 
@@ -266,33 +113,90 @@ export default function RadixBaseCollapsiblePage() {
             name: "className",
             type: "string",
             description:
-              "Merged onto the rounded card shell that wraps the trigger and content.",
+              "Merged onto the root shell that wraps the trigger and content.",
           },
         ],
         notes: [
           `Current install target: ${provider.libraryLabel}.`,
           `Dependencies declared by this registry entry: ${provider.dependencyLabel}.`,
+          "Use Accordion when you need multiple sections with shared open-state rules.",
           ...provider.notes,
         ],
       },
       {
-        id: "exports",
-        title: "Exports",
+        id: "collapsible-trigger",
+        title: "CollapsibleTrigger",
         summary:
-          "Both registry entries ship the same three-part composition so you can keep one collapsible structure while swapping the headless library below it.",
+          "Pre-styled trigger button with a built-in chevron, press feedback, and optional composition.",
         fields: [
           {
-            name: "CollapsibleTrigger",
-            type: "ButtonHTMLAttributes<HTMLButtonElement>",
+            name: "asChild",
+            type: "boolean",
+            defaultValue: "false",
             description:
-              "Pre-styled trigger button with the built-in chevron and motion-aware press and hover feedback.",
+              "Merge trigger semantics onto a single child element instead of rendering the default button.",
           },
           {
-            name: "CollapsibleContent",
-            type: "HTMLAttributes<HTMLDivElement>",
+            name: "showIcon",
+            type: "boolean",
+            defaultValue: "true",
             description:
-              "Animated content region with height expansion and an inner text wrapper that eases independently.",
+              "Show the built-in indicator. Ignored when asChild is true.",
           },
+          {
+            name: "icon",
+            type: "ReactNode",
+            description: "Custom indicator node. Defaults to a chevron.",
+          },
+          {
+            name: "iconPosition",
+            type: '"start" | "end"',
+            defaultValue: '"end"',
+            description:
+              "Indicator position when using the default trigger layout.",
+          },
+          {
+            name: "className",
+            type: "string",
+            description: "Merged onto the trigger button.",
+          },
+        ],
+      },
+      {
+        id: "collapsible-content",
+        title: "CollapsibleContent",
+        summary:
+          "Animated content region with height expansion, prose-friendly defaults, and optional composition.",
+        fields: [
+          {
+            name: "asChild",
+            type: "boolean",
+            defaultValue: "false",
+            description:
+              "Merge panel semantics onto a single child element instead of rendering animated wrappers.",
+          },
+          {
+            name: "contentClassName",
+            type: "string",
+            description:
+              "Classes for the inner content wrapper. Ignored when asChild is true.",
+          },
+          {
+            name: "forceMount",
+            type: "boolean",
+            defaultValue: "true",
+            description:
+              "Keep content mounted while closed so exit animation can run. Set false for heavy panels you want removed from the DOM.",
+          },
+          {
+            name: "className",
+            type: "string",
+            description: "Merged onto the animated outer shell.",
+          },
+        ],
+        notes: [
+          "Closed panels set aria-hidden and inert so focus cannot enter hidden content.",
+          "Motion respects prefers-reduced-motion and falls back to opacity and height only.",
         ],
       },
     ],
@@ -300,25 +204,41 @@ export default function RadixBaseCollapsiblePage() {
   );
 
   return (
-    <ComponentDocsPage
-      breadcrumbs={breadcrumbs}
-      componentName={provider.componentName}
-      description="Simple disclosure for showing and hiding supporting content."
-      details={details}
-      editHref={`${LINK.GITHUB}/edit/main/app/(site)/layout-and-toolbars/collapsible/page.tsx`}
-      headerActions={
-        <ProviderSwitch
-          onSelect={setSelectedProvider}
-          selectedProvider={selectedProvider}
+    <CollapsiblePlaygroundProvider
+      importPath={provider.importPath}
+      ui={provider.ui}
+    >
+      {({ preview, renderSettings }) => (
+        <ComponentDocsPage
+          breadcrumbs={breadcrumbs}
+          componentName={provider.componentName}
+          description="Simple disclosure for showing and hiding supporting content."
+          details={details}
+          editHref={`${LINK.GITHUB}/edit/main/app/(site)/layout-and-toolbars/collapsible/page.tsx`}
+          headerActions={
+            <ProviderSwitch
+              onSelect={setSelectedProvider}
+              selectedProvider={selectedProvider}
+            />
+          }
+          itemSlug="collapsible"
+          pageUrl="/layout-and-toolbars/collapsible"
+          preview={preview}
+          previewClassName="min-h-[18rem] overflow-visible"
+          previewDescription="Use the playground to switch controlled state, icon layout, and force mount while keeping the preview and Usage code in sync."
+          previewPersonalize={({ onClose }) => renderSettings(onClose)}
+          previewPersonalizeTitle="Collapsible"
+          railNotes={[
+            "Use the floating sliders button in the bottom-right of the preview to open settings.",
+            "Controlled state and icon options update the preview and Usage code together.",
+            "Switch libraries above to compare Base UI and Radix installs without changing the composition API.",
+          ]}
+          title="Collapsible"
+          usageCode={provider.usageCode}
+          usageDescription="Switch libraries above to update the install command, registry JSON, preview code, and generated file set together."
+          v0PageCode={provider.usageCode}
         />
-      }
-      itemSlug="collapsible"
-      pageUrl="/layout-and-toolbars/collapsible"
-      preview={<CollapsiblePreview ui={provider.ui} />}
-      title="Collapsible"
-      usageCode={provider.usageCode}
-      usageDescription="Switch libraries above to update the install command, registry JSON, preview code, and generated file set together."
-      v0PageCode={provider.usageCode}
-    />
+      )}
+    </CollapsiblePlaygroundProvider>
   );
 }
