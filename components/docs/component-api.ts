@@ -3655,15 +3655,13 @@ const contextMenuApiDetails: DetailItem[] = [
       field({
         name: "open",
         type: "boolean",
-        description:
-          "Controlled open state for the menu surface. Supported on the Base UI install.",
+        description: "Controlled open state for the menu surface.",
       }),
       field({
         name: "defaultOpen",
         type: "boolean",
         defaultValue: "false",
-        description:
-          "Initial open state for uncontrolled usage on the Base UI install.",
+        description: "Initial open state for uncontrolled usage.",
       }),
       field({
         name: "onOpenChange",
@@ -3675,7 +3673,7 @@ const contextMenuApiDetails: DetailItem[] = [
     notes: [
       "Compose ContextMenuTrigger, ContextMenuContent, ContextMenuItem, ContextMenuSub, and the other exported parts inside the root.",
       "The menu opens from right click or long press on the trigger surface. Shift+F10 and the Context Menu key also open it from keyboard focus.",
-      "Open and defaultOpen are supported on the Base UI install. The Radix install mirrors open changes through onOpenChange but keeps open state internal to the primitive.",
+      "Pass open and onOpenChange on the root for controlled usage.",
       "Content is portaled and collision-aware. The Iconiq shell keeps the original panel spring, row entrance, and active highlight motion.",
     ],
   },
@@ -3853,10 +3851,10 @@ const contextMenuApiDetails: DetailItem[] = [
       }),
     ],
   },
-  registryItem("context-menu.json", [
+  registryItem("b-context-menu.json", [
     "motion",
     "lucide-react",
-    "@radix-ui/react-context-menu or @base-ui/react",
+    "@base-ui/react",
   ]),
 ];
 

@@ -518,17 +518,6 @@ const REGISTRY_UI_META: Record<
       "Checkbox with the same Iconiq API layered over Radix UI primitives, preserving the original fill spring, press scale, checkmark draw, and label fade.",
     dependencies: ["@radix-ui/react-checkbox", "motion"],
   },
-  "r-context-menu": {
-    title: "Context Menu (Radix UI)",
-    description:
-      "Composable context menu layered over Radix UI primitives, preserving the original panel spring, row entrance, active highlight, and shortcut layout.",
-    dependencies: [
-      "@radix-ui/react-context-menu",
-      "@radix-ui/react-scroll-area",
-      "motion",
-      "lucide-react",
-    ],
-  },
   "r-dialog": {
     title: "Dialog (Radix UI)",
     description:

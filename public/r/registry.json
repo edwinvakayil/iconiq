@@ -1002,26 +1002,6 @@
       ]
     },
     {
-      "name": "r-context-menu",
-      "type": "registry:ui",
-      "registryDependencies": [],
-      "dependencies": [
-        "@radix-ui/react-context-menu",
-        "@radix-ui/react-scroll-area",
-        "motion",
-        "lucide-react"
-      ],
-      "devDependencies": [],
-      "title": "Context Menu (Radix UI)",
-      "description": "Composable context menu layered over Radix UI primitives, preserving the original panel spring, row entrance, active highlight, and shortcut layout.",
-      "files": [
-        {
-          "path": "r-context-menu.tsx",
-          "type": "registry:ui"
-        }
-      ]
-    },
-    {
       "name": "r-dialog",
       "type": "registry:ui",
       "registryDependencies": [],

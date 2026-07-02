@@ -3,7 +3,7 @@
 import { ContextMenu as ContextMenuPrimitive } from "@base-ui/react/context-menu";
 import { ScrollArea as ScrollAreaPrimitive } from "@base-ui/react/scroll-area";
 import { Check, ChevronRight } from "lucide-react";
-import { motion } from "motion/react";
+import { MotionConfig, motion, useReducedMotion } from "motion/react";
 import * as React from "react";
 
 import { cn } from "@/lib/utils";
@@ -15,22 +15,22 @@ const controlCornerInheritClassName =
   "rounded-[inherit] supports-[corner-shape:squircle]:[corner-shape:inherit]";
 
 const contextMenuThemeClassName =
-  "[--cm-surface:#ffffff] [--cm-foreground:#111111] [--cm-border:#e3e7ec] [--cm-muted-foreground:#6d7480] [--cm-accent:#f3f5f8] [--color-accent:var(--cm-accent)] [--color-accent-foreground:var(--cm-accent-foreground)] [--cm-accent-foreground:#111111] [--cm-destructive:#dc2626] [--cm-ring:rgba(17,17,17,0.16)] dark:[--cm-surface:#111111] dark:[--cm-foreground:#f6f3ec] dark:[--cm-border:#2b2a25] dark:[--cm-muted-foreground:#9a958a] dark:[--cm-accent:#1a1a18] [--color-accent:var(--cm-accent)] [--color-accent-foreground:var(--cm-accent-foreground)] dark:[--cm-accent-foreground:#f6f3ec] dark:[--cm-destructive:#f87171] dark:[--cm-ring:rgba(246,243,236,0.18)]";
+  "[--cm-surface:var(--popover,#ffffff)] [--cm-foreground:var(--popover-foreground,#111111)] [--cm-border:var(--border,#e3e7ec)] [--cm-muted-foreground:var(--muted-foreground,#6d7480)] [--cm-accent:var(--accent,#f3f5f8)] [--color-accent:var(--cm-accent)] [--color-accent-foreground:var(--cm-accent-foreground)] [--cm-accent-foreground:var(--accent-foreground,#111111)] [--cm-destructive:var(--destructive,#dc2626)] [--cm-ring:var(--ring,rgba(17,17,17,0.16))] dark:[--cm-surface:var(--popover,#111111)] dark:[--cm-foreground:var(--popover-foreground,#f6f3ec)] dark:[--cm-border:var(--border,#2b2a25)] dark:[--cm-muted-foreground:var(--muted-foreground,#9a958a)] dark:[--cm-accent:var(--accent,#1a1a18)] dark:[--cm-accent-foreground:var(--accent-foreground,#f6f3ec)] dark:[--cm-destructive:var(--destructive,#f87171)] dark:[--cm-ring:var(--ring,rgba(246,243,236,0.18))]";
 
 const ITEM_HEIGHT = 44;
 
 const contextMenuPanelChromeClassName = cn(
   controlCornerClassName,
-  "z-50 min-w-[232px] overflow-hidden border border-[color:color-mix(in_oklch,var(--cm-border),transparent_40%)] bg-[color:var(--cm-surface)] text-[color:var(--cm-foreground)] shadow-2xl"
+  "z-50 min-w-[232px] overflow-hidden border border-[color:color-mix(in_oklch,var(--cm-border),transparent_40%)] bg-[color:var(--cm-surface)] text-[color:var(--cm-foreground)] shadow-lg"
 );
 
 const contextMenuPanelScrollbarClassName =
   "z-10 my-1.5 mr-0.5 w-1 shrink-0 touch-none select-none opacity-0 transition-opacity duration-150 before:absolute before:left-1/2 before:h-full before:w-5 before:-translate-x-1/2 before:content-[''] data-hovering:pointer-events-auto data-hovering:opacity-100 data-scrolling:pointer-events-auto data-scrolling:opacity-100 data-scrolling:duration-0";
 
 const contextMenuPanelThumbClassName =
-  "relative rounded-full bg-muted-foreground/50 bg-[color:color-mix(in_oklch,var(--cm-muted-foreground),transparent_35%)]";
+  "relative rounded-full bg-[color:color-mix(in_oklch,var(--cm-muted-foreground),transparent_35%)]";
 
-const contextMenuTriggerClassName =
+export const contextMenuTriggerClassName =
   "select-none outline-none focus-visible:ring-2 focus-visible:ring-[color:color-mix(in_oklch,var(--cm-ring),transparent_50%)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--cm-surface)]";
 
 const contextMenuItemHighlightClassName = cn(
@@ -45,22 +45,28 @@ const contextMenuItemClassName = cn(
 
 const contextMenuSubTriggerClassName = cn(
   controlCornerClassName,
-  "relative flex w-full cursor-pointer items-center gap-2.5 px-3 py-2.5 text-left font-medium text-sm outline-none transition-colors"
+  "group/context-menu-item relative flex w-full cursor-pointer items-center gap-2.5 px-3 py-2.5 text-left font-medium text-sm outline-none transition-colors"
 );
 
 const contextMenuIndicatorItemClassName = cn(
   controlCornerClassName,
-  "relative flex w-full cursor-pointer items-center gap-2.5 py-2.5 pr-8 pl-3 text-left font-medium text-sm outline-none transition-colors"
+  "group/context-menu-item relative flex w-full cursor-pointer items-center gap-2.5 py-2.5 pr-8 pl-3 text-left font-medium text-sm outline-none transition-colors"
 );
 
 const contextMenuItemDefaultClassName =
-  "text-[color:color-mix(in_oklch,var(--cm-foreground),transparent_15%)] hover:bg-accent/60";
+  "text-[color:color-mix(in_oklch,var(--cm-foreground),transparent_15%)]";
 
 const contextMenuItemDestructiveClassName =
-  "text-[color:var(--cm-destructive)] hover:bg-accent/60";
+  "text-[color:var(--cm-destructive)]";
+
+const contextMenuItemDisabledClassName =
+  "pointer-events-none cursor-not-allowed text-[color:var(--cm-muted-foreground)] opacity-50 data-popup-open:bg-transparent data-popup-open:text-[color:var(--cm-muted-foreground)] [&_svg]:text-[color:var(--cm-muted-foreground)] [&_svg]:opacity-70";
 
 const contextMenuSubTriggerOpenClassName =
   "data-popup-open:bg-[color:var(--cm-accent)] data-popup-open:text-[color:var(--cm-accent-foreground)]";
+
+const contextMenuShortcutClassName =
+  "relative z-10 ml-auto text-[color:color-mix(in_oklch,var(--cm-muted-foreground),transparent_30%)] text-xs tracking-widest opacity-70 transition-opacity group-focus-visible/context-menu-item:opacity-100 group-hover/context-menu-item:opacity-100 group-data-[disabled]/context-menu-item:text-[color:var(--cm-muted-foreground)] group-data-[disabled]/context-menu-item:opacity-50";
 
 type DivRenderProps = React.HTMLAttributes<HTMLDivElement> & {
   children?: React.ReactNode;
@@ -76,23 +82,46 @@ type ButtonRenderProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   style?: React.CSSProperties;
 };
 
+type TriggerElementProps = React.HTMLAttributes<HTMLElement> & {
+  className?: string;
+};
+
+type TriggerChildElement = React.ReactElement<
+  TriggerElementProps & React.RefAttributes<HTMLElement>
+>;
+
 type ContextMenuContextValue = {
   actionsRef: React.RefObject<ContextMenuPrimitive.Root.Actions | null>;
-  contentId: string;
-  hoveredItemId: string | undefined;
   open: boolean;
-  setHoveredItemId: React.Dispatch<React.SetStateAction<string | undefined>>;
+};
+
+type PanelContextValue = {
+  activeItemId: string | undefined;
+  panelId: string;
+  setActiveItemId: React.Dispatch<React.SetStateAction<string | undefined>>;
 };
 
 const ContextMenuContext = React.createContext<ContextMenuContextValue | null>(
   null
 );
 
+const PanelContext = React.createContext<PanelContextValue | null>(null);
+
 function useContextMenu(componentName: string) {
   const context = React.useContext(ContextMenuContext);
 
   if (!context) {
     throw new Error(`${componentName} must be used within ContextMenu.`);
+  }
+
+  return context;
+}
+
+function useContextMenuPanel(componentName: string) {
+  const context = React.useContext(PanelContext);
+
+  if (!context) {
+    throw new Error(`${componentName} must be used within ContextMenuContent.`);
   }
 
   return context;
@@ -126,6 +155,41 @@ function setRef<T>(ref: React.Ref<T> | undefined, value: T) {
   if (ref) {
     (ref as React.MutableRefObject<T>).current = value;
   }
+}
+
+function composeRefs<T>(...refs: Array<React.Ref<T> | undefined>) {
+  return (value: T) => {
+    for (const ref of refs) {
+      setRef(ref, value);
+    }
+  };
+}
+
+function composeEventHandlers<Event extends React.SyntheticEvent>(
+  originalEventHandler: ((event: Event) => void) | undefined,
+  eventHandler: (event: Event) => void
+) {
+  return (event: Event) => {
+    originalEventHandler?.(event);
+    eventHandler(event);
+  };
+}
+
+function getElementRef<T>(element: React.ReactElement) {
+  return (
+    (
+      element as React.ReactElement & {
+        ref?: React.Ref<T>;
+        props: { ref?: React.Ref<T> };
+      }
+    ).ref ??
+    (
+      element as React.ReactElement & {
+        ref?: React.Ref<T>;
+        props: { ref?: React.Ref<T> };
+      }
+    ).props.ref
+  );
 }
 
 function resolvePopupProps(popupProps: DivRenderProps) {
@@ -184,45 +248,72 @@ function resolveItemProps(itemProps: ButtonRenderProps) {
   };
 }
 
+function resolveStateClassName<State>(
+  className: string | ((state: State) => string | undefined) | undefined,
+  state: State
+) {
+  return typeof className === "function" ? className(state) : className;
+}
+
 const activeHighlightTransition = {
   type: "spring" as const,
   stiffness: 600,
   damping: 38,
 };
 
-function getItemEntranceTransition() {
+const panelMotionVariants = {
+  closed: { opacity: 0, scale: 0.96, y: -2 },
+  open: { opacity: 1, scale: 1, y: 0 },
+};
+
+const reducedPanelMotionVariants = {
+  closed: { opacity: 0 },
+  open: { opacity: 1 },
+};
+
+function getItemEntranceTransition(reduceMotion: boolean) {
+  if (reduceMotion) {
+    return { duration: 0 };
+  }
+
   return {
     duration: 0.12,
     ease: [0.16, 1, 0.3, 1] as const,
   };
 }
 
-function getContentMotionTransition() {
+function getPanelMotionTransition(reduceMotion: boolean) {
+  if (reduceMotion) {
+    return { duration: 0 };
+  }
+
   return {
     duration: 0.14,
     ease: [0.16, 1, 0.3, 1] as const,
   };
 }
 
-function ContextMenuPanelScroll({
-  children,
-  onPointerLeave,
-}: {
-  children: React.ReactNode;
-  onPointerLeave?: () => void;
-}) {
+function ContextMenuPanelProvider({ children }: { children: React.ReactNode }) {
+  const panelId = React.useId();
+  const [activeItemId, setActiveItemId] = React.useState<string | undefined>();
+
+  return (
+    <PanelContext.Provider value={{ activeItemId, panelId, setActiveItemId }}>
+      {children}
+    </PanelContext.Provider>
+  );
+}
+
+function ContextMenuPanelScroll({ children }: { children: React.ReactNode }) {
   return (
     <ScrollAreaPrimitive.Root
       className="relative overflow-hidden"
       style={{ maxHeight: "calc(100vh - 32px)" }}
     >
       <ScrollAreaPrimitive.Viewport className="max-h-[inherit] min-h-0 overscroll-contain outline-none">
-        <div
-          className="overflow-x-hidden p-1.5"
-          onPointerLeave={onPointerLeave}
-        >
+        <motion.div className="relative overflow-x-hidden p-1.5" layoutRoot>
           {children}
-        </div>
+        </motion.div>
       </ScrollAreaPrimitive.Viewport>
       <ScrollAreaPrimitive.Scrollbar
         className={contextMenuPanelScrollbarClassName}
@@ -234,38 +325,151 @@ function ContextMenuPanelScroll({
   );
 }
 
+function renderContextMenuItemButton({
+  activeItemId,
+  baseClassName,
+  children,
+  className,
+  disabled,
+  dataVariant,
+  highlighted,
+  inset,
+  itemClassName,
+  itemId,
+  itemRef,
+  itemStyle,
+  panelId,
+  reduceMotion,
+  ref,
+  resolvedItemProps,
+  setActiveItemId,
+  slot,
+  trailing,
+  variantClassName,
+}: {
+  activeItemId: string | undefined;
+  baseClassName: string;
+  children: React.ReactNode;
+  className?: string;
+  disabled?: boolean;
+  dataVariant?: string;
+  highlighted: boolean;
+  inset?: boolean;
+  itemClassName?: string;
+  itemId: string;
+  itemRef?: React.Ref<HTMLButtonElement>;
+  itemStyle?: React.CSSProperties;
+  panelId: string;
+  reduceMotion: boolean;
+  ref?: React.Ref<HTMLButtonElement>;
+  resolvedItemProps: Omit<
+    ButtonRenderProps,
+    "children" | "className" | "ref" | "style"
+  >;
+  setActiveItemId: React.Dispatch<React.SetStateAction<string | undefined>>;
+  slot: string;
+  trailing?: React.ReactNode;
+  variantClassName?: string;
+}) {
+  const showHighlight = !disabled && (highlighted || activeItemId === itemId);
+
+  const activateItem = () => {
+    if (!disabled) {
+      setActiveItemId(itemId);
+    }
+  };
+
+  return (
+    <motion.button
+      {...(resolvedItemProps as React.ComponentPropsWithoutRef<
+        typeof motion.button
+      >)}
+      animate={reduceMotion ? undefined : { opacity: 1, x: 0 }}
+      aria-disabled={disabled}
+      className={cn(
+        baseClassName,
+        variantClassName ?? contextMenuItemDefaultClassName,
+        inset && "pl-7",
+        itemClassName,
+        className,
+        disabled && contextMenuItemDisabledClassName
+      )}
+      data-disabled={disabled ? "" : undefined}
+      data-inset={inset ? "" : undefined}
+      data-slot={slot}
+      data-variant={dataVariant}
+      initial={reduceMotion ? false : { opacity: 0, x: -4 }}
+      onFocus={composeEventHandlers(resolvedItemProps.onFocus, activateItem)}
+      onMouseEnter={composeEventHandlers(
+        resolvedItemProps.onMouseEnter,
+        activateItem
+      )}
+      onPointerMove={composeEventHandlers(
+        resolvedItemProps.onPointerMove,
+        activateItem
+      )}
+      ref={composeRefs(itemRef, ref)}
+      style={{
+        ...itemStyle,
+        minHeight: ITEM_HEIGHT,
+      }}
+      transition={getItemEntranceTransition(reduceMotion)}
+      type="button"
+    >
+      {showHighlight ? (
+        <motion.div
+          className={contextMenuItemHighlightClassName}
+          initial={false}
+          layoutId={`${panelId}-context-menu-active`}
+          transition={
+            reduceMotion ? { duration: 0 } : activeHighlightTransition
+          }
+        />
+      ) : null}
+      <span className="relative z-10 flex flex-1 items-center gap-2.5">
+        {children}
+      </span>
+      {trailing}
+    </motion.button>
+  );
+}
+
 function renderMotionPanel({
   actionsRef,
   children,
   className,
-  onPointerLeave,
   popupClassName,
   popupRef,
   popupState,
   popupStyle,
+  reduceMotion,
   resolvedPopupProps,
   unmountOnClose = true,
 }: {
-  actionsRef: React.RefObject<ContextMenuPrimitive.Root.Actions | null>;
+  actionsRef?: React.RefObject<ContextMenuPrimitive.Root.Actions | null>;
   children: React.ReactNode;
   className?: string;
-  onPointerLeave?: () => void;
   popupClassName?: string;
   popupRef?: React.Ref<HTMLDivElement>;
   popupState: { open: boolean; transitionStatus?: string };
   popupStyle?: React.CSSProperties;
+  reduceMotion: boolean;
   resolvedPopupProps: Omit<
     DivRenderProps,
     "children" | "className" | "ref" | "style"
   >;
   unmountOnClose?: boolean;
 }) {
+  const panelVariants = reduceMotion
+    ? reducedPanelMotionVariants
+    : panelMotionVariants;
+
   return (
     <motion.div
       {...(resolvedPopupProps as React.ComponentPropsWithoutRef<
         typeof motion.div
       >)}
-      animate={popupState.open ? { scale: 1, y: 0 } : { scale: 0.96, y: -2 }}
+      animate={popupState.open ? "open" : "closed"}
       className={cn(
         contextMenuThemeClassName,
         contextMenuPanelChromeClassName,
@@ -273,12 +477,12 @@ function renderMotionPanel({
         popupClassName
       )}
       initial={
-        popupState.transitionStatus === "starting"
-          ? { scale: 0.94, y: -4 }
+        popupState.transitionStatus === "starting" && !reduceMotion
+          ? "closed"
           : false
       }
       onAnimationComplete={() => {
-        if (!popupState.open && unmountOnClose) {
+        if (!popupState.open && unmountOnClose && actionsRef) {
           actionsRef.current?.unmount();
         }
       }}
@@ -292,11 +496,12 @@ function renderMotionPanel({
         pointerEvents: popupState.open ? undefined : "none",
         transformOrigin: "var(--transform-origin)",
       }}
-      transition={getContentMotionTransition()}
+      transition={getPanelMotionTransition(reduceMotion)}
+      variants={panelVariants}
     >
-      <ContextMenuPanelScroll onPointerLeave={onPointerLeave}>
-        {children}
-      </ContextMenuPanelScroll>
+      <ContextMenuPanelProvider>
+        <ContextMenuPanelScroll>{children}</ContextMenuPanelScroll>
+      </ContextMenuPanelProvider>
     </motion.div>
   );
 }
@@ -318,16 +523,12 @@ function ContextMenu({
   open: openProp,
   ...props
 }: ContextMenuProps) {
-  const contentId = React.useId();
   const actionsRef = React.useRef<ContextMenuPrimitive.Root.Actions | null>(
     null
   );
   const isControlled = openProp !== undefined;
   const [uncontrolledOpen, setUncontrolledOpen] = React.useState(defaultOpen);
   const open = isControlled ? openProp : uncontrolledOpen;
-  const [hoveredItemId, setHoveredItemId] = React.useState<
-    string | undefined
-  >();
 
   const handleOpenChange = React.useCallback(
     (nextOpen: boolean) => {
@@ -340,20 +541,11 @@ function ContextMenu({
     [isControlled, onOpenChange]
   );
 
-  React.useEffect(() => {
-    if (!open) {
-      setHoveredItemId(undefined);
-    }
-  }, [open]);
-
   return (
     <ContextMenuContext.Provider
       value={{
         actionsRef,
-        contentId,
-        hoveredItemId,
         open,
-        setHoveredItemId,
       }}
     >
       <ContextMenuPrimitive.Root
@@ -381,15 +573,12 @@ const ContextMenuTrigger = React.forwardRef<
 >(({ asChild, children, className, onKeyDown, ...props }, ref) => {
   const { open } = useContextMenu("ContextMenuTrigger");
 
-  const handleKeyDown: ContextMenuTriggerProps["onKeyDown"] = (event) => {
-    onKeyDown?.(event);
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+    (onKeyDown as React.KeyboardEventHandler<HTMLDivElement> | undefined)?.(
+      event
+    );
 
-    if (
-      event.defaultPrevented ||
-      !isContextMenuKeyboardShortcut(
-        event as React.KeyboardEvent<HTMLDivElement>
-      )
-    ) {
+    if (event.defaultPrevented || !isContextMenuKeyboardShortcut(event)) {
       return;
     }
 
@@ -397,53 +586,75 @@ const ContextMenuTrigger = React.forwardRef<
     dispatchContextMenuFromKeyboard(event.currentTarget);
   };
 
-  if (asChild) {
-    if (!React.isValidElement<React.HTMLAttributes<HTMLElement>>(children)) {
-      throw new Error(
-        "ContextMenuTrigger with asChild expects a single React element child."
-      );
-    }
-
-    const child = React.Children.only(children);
-
-    return (
-      <ContextMenuPrimitive.Trigger
-        {...props}
-        aria-expanded={open}
-        aria-haspopup="menu"
-        className={className}
-        data-slot="context-menu-trigger"
-        onKeyDown={handleKeyDown}
-        ref={ref}
-        render={React.cloneElement(child, {
-          className: cn(
-            contextMenuThemeClassName,
-            contextMenuTriggerClassName,
-            className,
-            child.props.className
-          ),
-        })}
-      />
-    );
-  }
-
   return (
     <ContextMenuPrimitive.Trigger
       {...props}
-      aria-expanded={open}
-      aria-haspopup="menu"
-      className={cn(
-        contextMenuThemeClassName,
-        contextMenuTriggerClassName,
-        className
-      )}
+      className={className}
       data-slot="context-menu-trigger"
-      onKeyDown={handleKeyDown}
-      ref={ref}
-      tabIndex={0}
-    >
-      {children}
-    </ContextMenuPrimitive.Trigger>
+      render={(triggerProps) => {
+        const { "aria-expanded": _ariaExpanded, ...resolvedTriggerProps } =
+          triggerProps;
+
+        const mergedClassName = cn(
+          contextMenuThemeClassName,
+          contextMenuTriggerClassName,
+          className,
+          resolvedTriggerProps.className
+        );
+
+        const mergedKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+          resolvedTriggerProps.onKeyDown?.(event);
+          handleKeyDown(event);
+        };
+
+        if (asChild) {
+          if (!React.isValidElement<TriggerElementProps>(children)) {
+            throw new Error(
+              "ContextMenuTrigger with asChild expects a single React element child."
+            );
+          }
+
+          const child = React.Children.only(children) as TriggerChildElement;
+
+          return React.cloneElement(child, {
+            ...resolvedTriggerProps,
+            "aria-haspopup": "menu",
+            className: cn(mergedClassName, child.props.className),
+            "data-state": open ? "open" : "closed",
+            onKeyDown: (event: React.KeyboardEvent<HTMLElement>) => {
+              child.props.onKeyDown?.(event);
+              mergedKeyDown(
+                event as unknown as React.KeyboardEvent<HTMLDivElement>
+              );
+            },
+            ref: composeRefs<HTMLElement>(
+              getElementRef(child),
+              resolvedTriggerProps.ref as React.Ref<HTMLElement>,
+              ref as React.Ref<HTMLElement>
+            ),
+            tabIndex:
+              child.props.tabIndex ?? resolvedTriggerProps.tabIndex ?? 0,
+          } as TriggerElementProps & React.RefAttributes<HTMLElement>);
+        }
+
+        return (
+          <div
+            {...resolvedTriggerProps}
+            aria-haspopup="menu"
+            className={mergedClassName}
+            data-state={open ? "open" : "closed"}
+            onKeyDown={mergedKeyDown}
+            ref={composeRefs(
+              resolvedTriggerProps.ref as React.Ref<HTMLDivElement>,
+              ref
+            )}
+            tabIndex={resolvedTriggerProps.tabIndex ?? 0}
+          >
+            {children}
+          </div>
+        );
+      }}
+    />
   );
 });
 ContextMenuTrigger.displayName = "ContextMenuTrigger";
@@ -455,6 +666,7 @@ function ContextMenuGroup({
     <ContextMenuPrimitive.Group data-slot="context-menu-group" {...props} />
   );
 }
+ContextMenuGroup.displayName = "ContextMenuGroup";
 
 function ContextMenuPortal({
   ...props
@@ -463,6 +675,7 @@ function ContextMenuPortal({
     <ContextMenuPrimitive.Portal data-slot="context-menu-portal" {...props} />
   );
 }
+ContextMenuPortal.displayName = "ContextMenuPortal";
 
 function ContextMenuSub({
   ...props
@@ -471,6 +684,7 @@ function ContextMenuSub({
     <ContextMenuPrimitive.SubmenuRoot data-slot="context-menu-sub" {...props} />
   );
 }
+ContextMenuSub.displayName = "ContextMenuSub";
 
 function ContextMenuRadioGroup({
   ...props
@@ -482,150 +696,157 @@ function ContextMenuRadioGroup({
     />
   );
 }
+ContextMenuRadioGroup.displayName = "ContextMenuRadioGroup";
 
-type ContextMenuContentProps = React.ComponentPropsWithoutRef<
-  typeof ContextMenuPrimitive.Popup
+type PositionerProps = React.ComponentPropsWithoutRef<
+  typeof ContextMenuPrimitive.Positioner
+>;
+
+type ContextMenuContentProps = Omit<
+  React.ComponentPropsWithoutRef<typeof ContextMenuPrimitive.Popup>,
+  "children" | "className" | "render"
 > & {
+  align?: PositionerProps["align"];
+  alignOffset?: PositionerProps["alignOffset"];
+  children?: React.ReactNode;
   className?: string;
+  collisionPadding?: PositionerProps["collisionPadding"];
+  side?: PositionerProps["side"];
+  sideOffset?: PositionerProps["sideOffset"];
 };
 
-function ContextMenuContent({ children, className }: ContextMenuContentProps) {
-  const { actionsRef, setHoveredItemId } = useContextMenu("ContextMenuContent");
+const ContextMenuContent = React.forwardRef<
+  HTMLDivElement,
+  ContextMenuContentProps
+>(
+  (
+    {
+      align,
+      alignOffset,
+      children,
+      className,
+      collisionPadding = 8,
+      side,
+      sideOffset,
+      ...popupProps
+    },
+    ref
+  ) => {
+    const { actionsRef } = useContextMenu("ContextMenuContent");
+    const reduceMotion = useReducedMotion() === true;
 
-  return (
-    <ContextMenuPrimitive.Portal>
-      <ContextMenuPrimitive.Positioner className="z-50 outline-none">
-        <ContextMenuPrimitive.Popup
-          finalFocus
-          render={(popupProps, popupState) => {
-            const { popupClassName, popupRef, popupStyle, resolvedPopupProps } =
-              resolvePopupProps(popupProps);
+    return (
+      <MotionConfig reducedMotion={reduceMotion ? "always" : "never"}>
+        <ContextMenuPrimitive.Portal>
+          <ContextMenuPrimitive.Positioner
+            align={align}
+            alignOffset={alignOffset}
+            className="z-50 outline-none"
+            collisionPadding={collisionPadding}
+            side={side}
+            sideOffset={sideOffset}
+          >
+            <ContextMenuPrimitive.Popup
+              {...popupProps}
+              finalFocus
+              render={(renderPopupProps, popupState) => {
+                const {
+                  popupClassName,
+                  popupRef,
+                  popupStyle,
+                  resolvedPopupProps,
+                } = resolvePopupProps(renderPopupProps);
 
-            if (!popupState.open) {
-              return (
-                <div
-                  {...(resolvedPopupProps as React.HTMLAttributes<HTMLDivElement>)}
-                  hidden
-                  ref={(node) => {
-                    setRef(popupRef, node);
-                  }}
-                />
-              );
-            }
-
-            return renderMotionPanel({
-              actionsRef,
-              children,
-              className,
-              onPointerLeave: () => {
-                setHoveredItemId(undefined);
-              },
-              popupClassName,
-              popupRef,
-              popupState,
-              popupStyle,
-              resolvedPopupProps,
-              unmountOnClose: false,
-            });
-          }}
-        />
-      </ContextMenuPrimitive.Positioner>
-    </ContextMenuPrimitive.Portal>
-  );
-}
+                return renderMotionPanel({
+                  actionsRef,
+                  children,
+                  className,
+                  popupClassName,
+                  popupRef: composeRefs(popupRef, ref),
+                  popupState,
+                  popupStyle,
+                  reduceMotion,
+                  resolvedPopupProps,
+                  unmountOnClose: false,
+                });
+              }}
+            />
+          </ContextMenuPrimitive.Positioner>
+        </ContextMenuPrimitive.Portal>
+      </MotionConfig>
+    );
+  }
+);
 ContextMenuContent.displayName = "ContextMenuContent";
 
 type ContextMenuItemProps = React.ComponentPropsWithoutRef<
   typeof ContextMenuPrimitive.Item
 > & {
+  closeOnClick?: boolean;
   inset?: boolean;
   variant?: "default" | "destructive";
 };
 
-function ContextMenuItem({
-  children,
-  className,
-  disabled,
-  inset,
-  variant = "default",
-  ...props
-}: ContextMenuItemProps) {
-  const { contentId, hoveredItemId, setHoveredItemId } =
-    useContextMenu("ContextMenuItem");
-  const itemId = React.useId();
-  const isHovered = hoveredItemId === itemId;
-  const isDestructive = variant === "destructive";
+const ContextMenuItem = React.forwardRef<
+  HTMLButtonElement,
+  ContextMenuItemProps
+>(
+  (
+    {
+      children,
+      className,
+      closeOnClick = true,
+      disabled,
+      inset,
+      variant = "default",
+      ...props
+    },
+    ref
+  ) => {
+    const { activeItemId, panelId, setActiveItemId } =
+      useContextMenuPanel("ContextMenuItem");
+    const itemId = React.useId();
+    const isDestructive = variant === "destructive";
+    const reduceMotion = useReducedMotion() === true;
 
-  return (
-    <ContextMenuPrimitive.Item
-      closeOnClick
-      disabled={disabled}
-      render={(itemProps) => {
-        const { itemClassName, itemRef, itemStyle, resolvedItemProps } =
-          resolveItemProps(itemProps as ButtonRenderProps);
+    return (
+      <ContextMenuPrimitive.Item
+        {...props}
+        closeOnClick={closeOnClick}
+        disabled={disabled}
+        nativeButton
+        render={(itemProps, itemState) => {
+          const { itemClassName, itemRef, itemStyle, resolvedItemProps } =
+            resolveItemProps(itemProps as ButtonRenderProps);
 
-        return (
-          <motion.button
-            {...resolvedItemProps}
-            animate={{ opacity: 1, x: 0 }}
-            aria-disabled={disabled}
-            className={cn(
-              contextMenuItemClassName,
-              "disabled:cursor-not-allowed disabled:opacity-40",
-              isDestructive
-                ? contextMenuItemDestructiveClassName
-                : contextMenuItemDefaultClassName,
-              inset && "pl-7",
-              itemClassName,
-              className
-            )}
-            data-inset={inset ? "" : undefined}
-            data-slot="context-menu-item"
-            data-variant={variant}
-            initial={{ opacity: 0, x: -4 }}
-            onFocus={() => {
-              if (!disabled) {
-                setHoveredItemId(itemId);
-              }
-            }}
-            onMouseEnter={() => {
-              if (!disabled) {
-                setHoveredItemId(itemId);
-              }
-            }}
-            onPointerMove={() => {
-              if (!disabled) {
-                setHoveredItemId(itemId);
-              }
-            }}
-            ref={(node) => {
-              setRef(itemRef, node);
-            }}
-            style={{
-              ...itemStyle,
-              minHeight: ITEM_HEIGHT,
-            }}
-            tabIndex={disabled ? -1 : undefined}
-            transition={getItemEntranceTransition()}
-            type="button"
-          >
-            {isHovered && !disabled ? (
-              <motion.div
-                className={contextMenuItemHighlightClassName}
-                layoutId={`${contentId}-context-menu-active`}
-                transition={activeHighlightTransition}
-              />
-            ) : null}
-            <span className="relative z-10 flex flex-1 items-center gap-2.5">
-              {children}
-            </span>
-          </motion.button>
-        );
-      }}
-      {...props}
-    />
-  );
-}
+          return renderContextMenuItemButton({
+            activeItemId,
+            baseClassName: contextMenuItemClassName,
+            children,
+            className: resolveStateClassName(className, itemState),
+            disabled,
+            dataVariant: variant,
+            highlighted: itemState.highlighted,
+            inset,
+            itemClassName,
+            itemId,
+            itemRef,
+            itemStyle,
+            panelId,
+            reduceMotion,
+            ref,
+            resolvedItemProps,
+            setActiveItemId,
+            slot: "context-menu-item",
+            variantClassName: isDestructive
+              ? contextMenuItemDestructiveClassName
+              : undefined,
+          });
+        }}
+      />
+    );
+  }
+);
 ContextMenuItem.displayName = "ContextMenuItem";
 
 type ContextMenuSubTriggerProps = React.ComponentPropsWithoutRef<
@@ -634,131 +855,129 @@ type ContextMenuSubTriggerProps = React.ComponentPropsWithoutRef<
   inset?: boolean;
 };
 
-function ContextMenuSubTrigger({
-  children,
-  className,
-  inset,
-  ...props
-}: ContextMenuSubTriggerProps) {
-  const { contentId, hoveredItemId, setHoveredItemId } = useContextMenu(
-    "ContextMenuSubTrigger"
-  );
-  const itemId = React.useId();
-  const isHovered = hoveredItemId === itemId;
+const ContextMenuSubTrigger = React.forwardRef<
+  HTMLButtonElement,
+  ContextMenuSubTriggerProps
+>(
+  (
+    { children, className, closeDelay = 150, disabled, inset, ...props },
+    ref
+  ) => {
+    const { activeItemId, panelId, setActiveItemId } = useContextMenuPanel(
+      "ContextMenuSubTrigger"
+    );
+    const itemId = React.useId();
+    const reduceMotion = useReducedMotion() === true;
 
-  return (
-    <ContextMenuPrimitive.SubmenuTrigger
-      render={(itemProps) => {
-        const { itemClassName, itemRef, itemStyle, resolvedItemProps } =
-          resolveItemProps(itemProps as ButtonRenderProps);
+    return (
+      <ContextMenuPrimitive.SubmenuTrigger
+        {...props}
+        closeDelay={closeDelay}
+        disabled={disabled}
+        nativeButton
+        render={(itemProps, itemState) => {
+          const { itemClassName, itemRef, itemStyle, resolvedItemProps } =
+            resolveItemProps(itemProps as ButtonRenderProps);
 
-        return (
-          <motion.button
-            {...resolvedItemProps}
-            animate={{ opacity: 1, x: 0 }}
-            className={cn(
+          return renderContextMenuItemButton({
+            activeItemId,
+            baseClassName: cn(
               contextMenuSubTriggerClassName,
-              contextMenuItemDefaultClassName,
-              contextMenuSubTriggerOpenClassName,
-              inset && "pl-7",
-              itemClassName,
-              className
-            )}
-            data-inset={inset ? "" : undefined}
-            data-slot="context-menu-sub-trigger"
-            initial={{ opacity: 0, x: -4 }}
-            onFocus={() => {
-              setHoveredItemId(itemId);
-            }}
-            onMouseEnter={() => {
-              setHoveredItemId(itemId);
-            }}
-            onPointerMove={() => {
-              setHoveredItemId(itemId);
-            }}
-            ref={(node) => {
-              setRef(itemRef, node);
-            }}
-            style={{
-              ...itemStyle,
-              minHeight: ITEM_HEIGHT,
-            }}
-            transition={getItemEntranceTransition()}
-            type="button"
-          >
-            {isHovered ? (
-              <motion.div
-                className={contextMenuItemHighlightClassName}
-                layoutId={`${contentId}-context-menu-active`}
-                transition={activeHighlightTransition}
-              />
-            ) : null}
-            <span className="relative z-10 flex flex-1 items-center gap-2.5">
-              {children}
-            </span>
-            <ChevronRight className="relative z-10 ml-auto size-4 opacity-70" />
-          </motion.button>
-        );
-      }}
-      {...props}
-    />
-  );
-}
+              contextMenuSubTriggerOpenClassName
+            ),
+            children,
+            className: resolveStateClassName(className, itemState),
+            disabled,
+            highlighted: itemState.highlighted,
+            inset,
+            itemClassName,
+            itemId,
+            itemRef,
+            itemStyle,
+            panelId,
+            reduceMotion,
+            ref,
+            resolvedItemProps,
+            setActiveItemId,
+            slot: "context-menu-sub-trigger",
+            trailing: (
+              <ChevronRight className="relative z-10 ml-auto size-4 opacity-70" />
+            ),
+          });
+        }}
+      />
+    );
+  }
+);
 ContextMenuSubTrigger.displayName = "ContextMenuSubTrigger";
 
 type ContextMenuSubContentProps = {
+  align?: PositionerProps["align"];
+  alignOffset?: PositionerProps["alignOffset"];
   children?: React.ReactNode;
   className?: string;
+  collisionPadding?: PositionerProps["collisionPadding"];
+  side?: PositionerProps["side"];
+  sideOffset?: PositionerProps["sideOffset"];
 };
 
-function ContextMenuSubContent({
-  children,
-  className,
-}: ContextMenuSubContentProps) {
-  const { actionsRef, setHoveredItemId } = useContextMenu(
-    "ContextMenuSubContent"
-  );
+const ContextMenuSubContent = React.forwardRef<
+  HTMLDivElement,
+  ContextMenuSubContentProps
+>(
+  (
+    {
+      align,
+      alignOffset,
+      children,
+      className,
+      collisionPadding = 8,
+      side,
+      sideOffset,
+    },
+    ref
+  ) => {
+    const reduceMotion = useReducedMotion() === true;
 
-  return (
-    <ContextMenuPrimitive.Portal>
-      <ContextMenuPrimitive.Positioner className="z-50 outline-none">
-        <ContextMenuPrimitive.Popup
-          render={(popupProps, popupState) => {
-            const { popupClassName, popupRef, popupStyle, resolvedPopupProps } =
-              resolvePopupProps(popupProps);
+    return (
+      <MotionConfig reducedMotion={reduceMotion ? "always" : "never"}>
+        <ContextMenuPrimitive.Portal>
+          <ContextMenuPrimitive.Positioner
+            align={align}
+            alignOffset={alignOffset}
+            className="z-50 outline-none"
+            collisionPadding={collisionPadding}
+            side={side}
+            sideOffset={sideOffset}
+          >
+            <ContextMenuPrimitive.Popup
+              render={(renderPopupProps, popupState) => {
+                const {
+                  popupClassName,
+                  popupRef,
+                  popupStyle,
+                  resolvedPopupProps,
+                } = resolvePopupProps(renderPopupProps);
 
-            if (!popupState.open) {
-              return (
-                <div
-                  {...(resolvedPopupProps as React.HTMLAttributes<HTMLDivElement>)}
-                  hidden
-                  ref={(node) => {
-                    setRef(popupRef, node);
-                  }}
-                />
-              );
-            }
-
-            return renderMotionPanel({
-              actionsRef,
-              children,
-              className,
-              onPointerLeave: () => {
-                setHoveredItemId(undefined);
-              },
-              popupClassName,
-              popupRef,
-              popupState,
-              popupStyle,
-              resolvedPopupProps,
-              unmountOnClose: false,
-            });
-          }}
-        />
-      </ContextMenuPrimitive.Positioner>
-    </ContextMenuPrimitive.Portal>
-  );
-}
+                return renderMotionPanel({
+                  children,
+                  className,
+                  popupClassName,
+                  popupRef: composeRefs(popupRef, ref),
+                  popupState,
+                  popupStyle,
+                  reduceMotion,
+                  resolvedPopupProps,
+                  unmountOnClose: false,
+                });
+              }}
+            />
+          </ContextMenuPrimitive.Positioner>
+        </ContextMenuPrimitive.Portal>
+      </MotionConfig>
+    );
+  }
+);
 ContextMenuSubContent.displayName = "ContextMenuSubContent";
 
 type ContextMenuCheckboxItemProps = React.ComponentPropsWithoutRef<
@@ -767,94 +986,56 @@ type ContextMenuCheckboxItemProps = React.ComponentPropsWithoutRef<
   inset?: boolean;
 };
 
-function ContextMenuCheckboxItem({
-  checked,
-  children,
-  className,
-  disabled,
-  inset,
-  ...props
-}: ContextMenuCheckboxItemProps) {
-  const { contentId, hoveredItemId, setHoveredItemId } = useContextMenu(
+const ContextMenuCheckboxItem = React.forwardRef<
+  HTMLButtonElement,
+  ContextMenuCheckboxItemProps
+>(({ checked, children, className, disabled, inset, ...props }, ref) => {
+  const { activeItemId, panelId, setActiveItemId } = useContextMenuPanel(
     "ContextMenuCheckboxItem"
   );
   const itemId = React.useId();
-  const isHovered = hoveredItemId === itemId;
+  const reduceMotion = useReducedMotion() === true;
 
   return (
     <ContextMenuPrimitive.CheckboxItem
+      {...props}
       checked={checked}
       disabled={disabled}
-      render={(itemProps) => {
+      nativeButton
+      render={(itemProps, itemState) => {
         const { itemClassName, itemRef, itemStyle, resolvedItemProps } =
           resolveItemProps(itemProps as ButtonRenderProps);
 
-        return (
-          <motion.button
-            {...resolvedItemProps}
-            animate={{ opacity: disabled ? 0.5 : 1, x: 0 }}
-            aria-disabled={disabled}
-            className={cn(
-              contextMenuIndicatorItemClassName,
-              contextMenuItemDefaultClassName,
-              "disabled:cursor-not-allowed data-[disabled]:pointer-events-none",
-              inset && "pl-7",
-              itemClassName,
-              className
-            )}
-            data-disabled={disabled ? "" : undefined}
-            data-inset={inset ? "" : undefined}
-            data-slot="context-menu-checkbox-item"
-            disabled={disabled}
-            initial={{ opacity: 0, x: -4 }}
-            onFocus={() => {
-              if (!disabled) {
-                setHoveredItemId(itemId);
-              }
-            }}
-            onMouseEnter={() => {
-              if (!disabled) {
-                setHoveredItemId(itemId);
-              }
-            }}
-            onPointerMove={() => {
-              if (!disabled) {
-                setHoveredItemId(itemId);
-              }
-            }}
-            ref={(node) => {
-              setRef(itemRef, node);
-            }}
-            style={{
-              ...itemStyle,
-              minHeight: ITEM_HEIGHT,
-            }}
-            tabIndex={disabled ? -1 : undefined}
-            transition={getItemEntranceTransition()}
-            type="button"
-          >
-            {isHovered && !disabled ? (
-              <motion.div
-                className={contextMenuItemHighlightClassName}
-                layoutId={`${contentId}-context-menu-active`}
-                transition={activeHighlightTransition}
-              />
-            ) : null}
-            <span className="relative z-10 flex flex-1 items-center gap-2.5">
-              {children}
-            </span>
+        return renderContextMenuItemButton({
+          activeItemId,
+          baseClassName: contextMenuIndicatorItemClassName,
+          children,
+          className: resolveStateClassName(className, itemState),
+          disabled,
+          highlighted: itemState.highlighted,
+          inset,
+          itemClassName,
+          itemId,
+          itemRef,
+          itemStyle,
+          panelId,
+          reduceMotion,
+          ref,
+          resolvedItemProps,
+          setActiveItemId,
+          slot: "context-menu-checkbox-item",
+          trailing: (
             <span className="pointer-events-none absolute right-3 z-10">
               <ContextMenuPrimitive.CheckboxItemIndicator>
                 <Check className="size-4" />
               </ContextMenuPrimitive.CheckboxItemIndicator>
             </span>
-          </motion.button>
-        );
+          ),
+        });
       }}
-      {...props}
     />
   );
-}
+});
 ContextMenuCheckboxItem.displayName = "ContextMenuCheckboxItem";
 
 type ContextMenuRadioItemProps = React.ComponentPropsWithoutRef<
@@ -863,90 +1044,55 @@ type ContextMenuRadioItemProps = React.ComponentPropsWithoutRef<
   inset?: boolean;
 };
 
-function ContextMenuRadioItem({
-  children,
-  className,
-  disabled,
-  inset,
-  ...props
-}: ContextMenuRadioItemProps) {
-  const { contentId, hoveredItemId, setHoveredItemId } = useContextMenu(
+const ContextMenuRadioItem = React.forwardRef<
+  HTMLButtonElement,
+  ContextMenuRadioItemProps
+>(({ children, className, disabled, inset, ...props }, ref) => {
+  const { activeItemId, panelId, setActiveItemId } = useContextMenuPanel(
     "ContextMenuRadioItem"
   );
   const itemId = React.useId();
-  const isHovered = hoveredItemId === itemId;
+  const reduceMotion = useReducedMotion() === true;
 
   return (
     <ContextMenuPrimitive.RadioItem
+      {...props}
       disabled={disabled}
-      render={(itemProps) => {
+      nativeButton
+      render={(itemProps, itemState) => {
         const { itemClassName, itemRef, itemStyle, resolvedItemProps } =
           resolveItemProps(itemProps as ButtonRenderProps);
 
-        return (
-          <motion.button
-            {...resolvedItemProps}
-            animate={{ opacity: 1, x: 0 }}
-            aria-disabled={disabled}
-            className={cn(
-              contextMenuIndicatorItemClassName,
-              contextMenuItemDefaultClassName,
-              "disabled:cursor-not-allowed disabled:opacity-40",
-              inset && "pl-7",
-              itemClassName,
-              className
-            )}
-            data-inset={inset ? "" : undefined}
-            data-slot="context-menu-radio-item"
-            initial={{ opacity: 0, x: -4 }}
-            onFocus={() => {
-              if (!disabled) {
-                setHoveredItemId(itemId);
-              }
-            }}
-            onMouseEnter={() => {
-              if (!disabled) {
-                setHoveredItemId(itemId);
-              }
-            }}
-            onPointerMove={() => {
-              if (!disabled) {
-                setHoveredItemId(itemId);
-              }
-            }}
-            ref={(node) => {
-              setRef(itemRef, node);
-            }}
-            style={{
-              ...itemStyle,
-              minHeight: ITEM_HEIGHT,
-            }}
-            tabIndex={disabled ? -1 : undefined}
-            transition={getItemEntranceTransition()}
-            type="button"
-          >
-            {isHovered && !disabled ? (
-              <motion.div
-                className={contextMenuItemHighlightClassName}
-                layoutId={`${contentId}-context-menu-active`}
-                transition={activeHighlightTransition}
-              />
-            ) : null}
-            <span className="relative z-10 flex flex-1 items-center gap-2.5">
-              {children}
-            </span>
+        return renderContextMenuItemButton({
+          activeItemId,
+          baseClassName: contextMenuIndicatorItemClassName,
+          children,
+          className: resolveStateClassName(className, itemState),
+          disabled,
+          highlighted: itemState.highlighted,
+          inset,
+          itemClassName,
+          itemId,
+          itemRef,
+          itemStyle,
+          panelId,
+          reduceMotion,
+          ref,
+          resolvedItemProps,
+          setActiveItemId,
+          slot: "context-menu-radio-item",
+          trailing: (
             <span className="pointer-events-none absolute right-3 z-10">
               <ContextMenuPrimitive.RadioItemIndicator>
                 <Check className="size-4" />
               </ContextMenuPrimitive.RadioItemIndicator>
             </span>
-          </motion.button>
-        );
+          ),
+        });
       }}
-      {...props}
     />
   );
-}
+});
 ContextMenuRadioItem.displayName = "ContextMenuRadioItem";
 
 type ContextMenuLabelProps = React.ComponentPropsWithoutRef<
@@ -998,10 +1144,7 @@ function ContextMenuShortcut({
 }: React.ComponentProps<"span">) {
   return (
     <span
-      className={cn(
-        "relative z-10 ml-auto text-[color:color-mix(in_oklch,var(--cm-muted-foreground),transparent_30%)] text-xs tracking-widest",
-        className
-      )}
+      className={cn(contextMenuShortcutClassName, className)}
       data-slot="context-menu-shortcut"
       {...props}
     />
