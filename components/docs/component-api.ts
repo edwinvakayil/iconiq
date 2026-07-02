@@ -1608,6 +1608,13 @@ const breadcrumbsApiDetails: DetailItem[] = [
     summary: "Root semantic navigation wrapper for a breadcrumb trail.",
     fields: [
       field({
+        name: "ariaLabel",
+        type: "string",
+        defaultValue: '"Breadcrumb"',
+        description:
+          "Accessible label for the root nav landmark. Override for localization.",
+      }),
+      field({
         name: "className",
         type: "string",
         description:
@@ -1615,15 +1622,75 @@ const breadcrumbsApiDetails: DetailItem[] = [
       }),
     ],
     notes: [
-      'The root nav always uses aria-label="breadcrumb".',
       "Compose BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbPage, and BreadcrumbSeparator inside the root.",
+    ],
+  },
+  {
+    id: "breadcrumbs",
+    title: "Breadcrumbs",
+    summary:
+      "Convenience wrapper that renders a trail from an items array with optional collapse and JSON-LD.",
+    fields: [
+      field({
+        name: "items",
+        type: "BreadcrumbItemData[]",
+        required: true,
+        description:
+          "Ordered trail segments with label, optional href, icon, and title fields.",
+      }),
+      field({
+        name: "maxItems",
+        type: "number",
+        description:
+          "When the trail exceeds this count, middle segments collapse into BreadcrumbEllipsisMenu.",
+      }),
+      field({
+        name: "truncate",
+        type: "boolean",
+        defaultValue: "false",
+        description:
+          "Applies max-width truncation to linked and current-page labels.",
+      }),
+      field({
+        name: "separator",
+        type: "ReactNode",
+        description:
+          "Custom separator content passed to each BreadcrumbSeparator in the generated trail.",
+      }),
+      field({
+        name: "renderLink",
+        type: "(props) => ReactNode",
+        description:
+          "Optional custom link renderer for framework routers such as Next.js Link.",
+      }),
+      field({
+        name: "siteUrl",
+        type: "string",
+        description:
+          "Absolute site origin used when BreadcrumbJsonLd is emitted alongside the trail.",
+      }),
+      field({
+        name: "currentPath",
+        type: "string",
+        description:
+          "Fallback path for the final breadcrumb item in JSON-LD when it has no href.",
+      }),
+      field({
+        name: "listClassName",
+        type: "string",
+        description: "Merged onto the internal BreadcrumbList element.",
+      }),
+    ],
+    notes: [
+      "The final item without an href is treated as the current page.",
+      "Pass renderLink when you need router-aware links instead of plain anchors.",
     ],
   },
   {
     id: "breadcrumb-list",
     title: "BreadcrumbList",
     summary:
-      "Animated ordered list that lays out breadcrumb segments and separators.",
+      "Ordered list that lays out breadcrumb segments and separators with optional Motion.",
     fields: [
       field({
         name: "className",
@@ -1633,13 +1700,13 @@ const breadcrumbsApiDetails: DetailItem[] = [
       }),
     ],
     notes: [
-      "Layout changes are animated with Motion, and AnimatePresence uses popLayout so inserted or removed items keep the trail fluid.",
+      "Uses AnimatePresence with popLayout for trail insertions and removals.",
     ],
   },
   {
     id: "breadcrumb-item",
     title: "BreadcrumbItem",
-    summary: "Animated list item wrapper for each breadcrumb segment.",
+    summary: "List item wrapper for each breadcrumb segment.",
     fields: [
       field({
         name: "className",
@@ -1668,19 +1735,42 @@ const breadcrumbsApiDetails: DetailItem[] = [
           "Optional Base UI render override for composing with framework-specific links while preserving merged props.",
       }),
       field({
+        name: "truncate",
+        type: "boolean",
+        defaultValue: "false",
+        description:
+          "Applies responsive max-width truncation with an optional title tooltip.",
+      }),
+      field({
+        name: "title",
+        type: "string",
+        description:
+          "Native title attribute for truncated or abbreviated link labels.",
+      }),
+      field({
         name: "className",
         type: "string",
         description:
-          "Merged with the default color transition and hover foreground treatment.",
+          "Merged with the default focus ring, color transition, and hover foreground treatment.",
       }),
     ],
   },
   {
     id: "breadcrumb-page",
     title: "BreadcrumbPage",
-    summary:
-      "Current page segment rendered as disabled link-like text with aria-current.",
+    summary: "Current page segment rendered with aria-current='page'.",
     fields: [
+      field({
+        name: "truncate",
+        type: "boolean",
+        defaultValue: "false",
+        description: "Applies responsive max-width truncation to the label.",
+      }),
+      field({
+        name: "title",
+        type: "string",
+        description: "Native title attribute for truncated labels.",
+      }),
       field({
         name: "className",
         type: "string",
@@ -1693,7 +1783,7 @@ const breadcrumbsApiDetails: DetailItem[] = [
     id: "breadcrumb-separator",
     title: "BreadcrumbSeparator",
     summary:
-      "Animated visual separator between breadcrumb items, defaulting to a chevron icon.",
+      "Visual separator between breadcrumb items, defaulting to a chevron icon.",
     fields: [
       field({
         name: "children",
@@ -1713,13 +1803,72 @@ const breadcrumbsApiDetails: DetailItem[] = [
   {
     id: "breadcrumb-ellipsis",
     title: "BreadcrumbEllipsis",
-    summary: "Compact overflow marker for collapsed breadcrumb paths.",
+    summary:
+      "Decorative overflow marker for manually composed collapsed trails.",
     fields: [
       field({
         name: "className",
         type: "string",
         description:
           "Merged with the default 20px square centered icon layout.",
+      }),
+    ],
+    notes: [
+      "Wrap inside BreadcrumbItem for valid list semantics.",
+      "Use BreadcrumbEllipsisMenu when the overflow segment should be interactive.",
+    ],
+  },
+  {
+    id: "breadcrumb-ellipsis-menu",
+    title: "BreadcrumbEllipsisMenu",
+    summary:
+      "Accessible button-triggered menu for collapsed breadcrumb segments.",
+    fields: [
+      field({
+        name: "items",
+        type: "BreadcrumbEllipsisMenuItem[]",
+        required: true,
+        description:
+          "Collapsed segments rendered inside the overflow menu. Each item accepts an optional icon.",
+      }),
+      field({
+        name: "menuLabel",
+        type: "string",
+        defaultValue: '"Show collapsed breadcrumb items"',
+        description: "Accessible label for the overflow trigger button.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description: "Merged onto the relative menu wrapper.",
+      }),
+    ],
+  },
+  {
+    id: "breadcrumb-json-ld",
+    title: "BreadcrumbJsonLd",
+    summary:
+      "Emits schema.org BreadcrumbList JSON-LD for SEO when paired with a siteUrl.",
+    fields: [
+      field({
+        name: "items",
+        type: "BreadcrumbJsonLdItem[]",
+        required: true,
+        description: "Trail labels and optional href values.",
+      }),
+      field({
+        name: "siteUrl",
+        type: "string",
+        required: true,
+        description:
+          "Absolute site origin used to resolve relative breadcrumb URLs.",
+      }),
+      field({
+        name: "currentPath",
+        type: "string",
+        defaultValue: '"/"',
+        description:
+          "Fallback path for the final breadcrumb when it has no href.",
       }),
     ],
   },
@@ -1730,8 +1879,9 @@ const breadcrumbsApiDetails: DetailItem[] = [
       "The compound API keeps semantic breadcrumb structure while layering Motion on top.",
     notes: [
       "BreadcrumbList wraps the trail in an ordered list.",
-      "BreadcrumbItem, BreadcrumbSeparator, and BreadcrumbEllipsis keep the same subtle fade, slide, and layout transitions from the previous implementation.",
+      "BreadcrumbLink exposes a visible focus ring for keyboard users.",
       "BreadcrumbPage marks the final segment with aria-current='page'.",
+      "BreadcrumbEllipsisMenu uses aria-expanded, aria-haspopup, and Escape to dismiss.",
     ],
   },
   registryItem("breadcrumbs.json", [

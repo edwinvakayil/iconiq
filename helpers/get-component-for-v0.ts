@@ -63,13 +63,13 @@ export function AccordionPreview() {
     `import { Home } from "lucide-react"\n\n` +
     "const items = [\n" +
     '  { label: "Home", href: "/", icon: <Home className="size-3.5" /> },\n' +
-    '  { label: "Docs", href: "/docs" },\n' +
-    '  { label: "Current" },\n' +
+    '  { label: "Components", href: "/components" },\n' +
+    '  { label: "Breadcrumbs" },\n' +
     "]\n\n" +
     "export default function Page() {\n" +
     "  return (\n" +
     '    <div className="flex min-h-svh items-center justify-center p-8">\n' +
-    "      <Breadcrumbs items={items} />\n" +
+    '      <Breadcrumbs className="w-full max-w-xl" items={items} />\n' +
     "    </div>\n" +
     "  )\n" +
     "}\n",

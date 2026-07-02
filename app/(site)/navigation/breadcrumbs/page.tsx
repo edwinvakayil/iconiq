@@ -1,119 +1,47 @@
 "use client";
 
-import { Home } from "lucide-react";
-
-import { SharedPrimitiveProviderSwitch } from "@/app/(site)/components/_components/provider-switch";
+import {
+  BreadcrumbsPlaygroundProvider,
+  getBreadcrumbsDefaultUsageCode,
+} from "@/app/(site)/navigation/breadcrumbs/_components/breadcrumbs-playground";
 import { breadcrumbsApiDetails } from "@/components/docs/component-api";
 import { ComponentDocsPage } from "@/components/docs/page-shell";
 import { LINK } from "@/constants";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/registry/breadcrumbs";
 
-const previewSentenceClassName =
-  "text-balance text-center text-[15px] text-muted-foreground leading-relaxed sm:text-base";
+const IMPORT_PATH = "@/components/ui/breadcrumbs";
 
-const previewContentClassName =
-  "flex w-full max-w-lg flex-col items-center gap-4 text-center";
-
-const usageCode = `import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumbs";
-import { Home } from "lucide-react";
-
-export function BreadcrumbsPreview() {
+export default function BreadcrumbsPage() {
   return (
-    <div className="${previewContentClassName}">
-      <Breadcrumb className="w-full">
-        <BreadcrumbList className="justify-center">
-          <BreadcrumbItem>
-            <BreadcrumbLink className="inline-flex items-center gap-1.5" href="/">
-              <Home className="size-3.5" />
-              Home
-            </BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbLink href="/components">Components</BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbPage>Breadcrumbs</BreadcrumbPage>
-          </BreadcrumbItem>
-        </BreadcrumbList>
-      </Breadcrumb>
-      <p className={previewSentenceClassName}>
-        Nested docs pages stay easy to navigate from here.
-      </p>
-    </div>
-  );
-}`;
-
-function BreadcrumbsPreview() {
-  return (
-    <div className="flex min-h-[280px] w-full items-center justify-center px-4 py-8">
-      <div className={previewContentClassName}>
-        <Breadcrumb className="w-full">
-          <BreadcrumbList className="justify-center">
-            <BreadcrumbItem>
-              <BreadcrumbLink
-                className="inline-flex items-center gap-1.5"
-                href="/"
-              >
-                <Home className="size-3.5" />
-                Home
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbLink href="/components">Components</BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbPage>Breadcrumbs</BreadcrumbPage>
-            </BreadcrumbItem>
-          </BreadcrumbList>
-        </Breadcrumb>
-        <p className={previewSentenceClassName}>
-          Nested docs pages stay easy to navigate from here.
-        </p>
-      </div>
-    </div>
-  );
-}
-
-const componentDetailsItems = breadcrumbsApiDetails;
-
-export default function RadixBaseBreadcrumbsPage() {
-  return (
-    <ComponentDocsPage
-      breadcrumbs={[
-        { label: "Docs", href: "/" },
-        { label: "Navigation" },
-        { label: "Breadcrumbs" },
-      ]}
-      componentName="breadcrumbs"
-      description="Clear path navigation for nested pages and flows."
-      details={componentDetailsItems}
-      detailsDescription="The compound parts cover root semantics, linked segments, current-page state, separators, ellipsis, and the Motion transitions layered across the trail."
-      editHref={`${LINK.GITHUB}/edit/main/app/(site)/navigation/breadcrumbs/page.tsx`}
-      headerActions={<SharedPrimitiveProviderSwitch />}
-      pageUrl="/navigation/breadcrumbs"
-      preview={<BreadcrumbsPreview />}
-      previewDescription="Breadcrumbs sit above page copy so users can see the trail and the content below it together."
-      title="Breadcrumbs"
-      usageCode={usageCode}
-      usageDescription="Use the minimal trail below as the baseline, then expand into icons, current-state styling, ellipsis markers, and custom separators through the compound parts."
-    />
+    <BreadcrumbsPlaygroundProvider>
+      {({ preview, renderSettings }) => (
+        <ComponentDocsPage
+          breadcrumbs={[
+            { label: "Docs", href: "/" },
+            { label: "Navigation" },
+            { label: "Breadcrumbs" },
+          ]}
+          componentName="breadcrumbs"
+          description="Clear path navigation for nested pages and flows."
+          details={breadcrumbsApiDetails}
+          detailsDescription="Compound parts cover semantics, links, current-page state, separators, ellipsis menus, optional items-array rendering, JSON-LD, and Motion transitions across the trail."
+          editHref={`${LINK.GITHUB}/edit/main/app/(site)/navigation/breadcrumbs/page.tsx`}
+          pageUrl="/navigation/breadcrumbs"
+          preview={preview}
+          previewClassName="min-h-[220px]"
+          previewDescription="Use the playground to switch between the items API and compound parts, collapse long paths, separators, icons, and truncation."
+          previewPersonalize={({ onClose }) => renderSettings(onClose)}
+          previewPersonalizeTitle="Breadcrumbs"
+          railNotes={[
+            "Use Breadcrumbs with an items array for quick trails, or compose the parts directly for full control.",
+            "Pass maxItems to collapse middle segments into an ellipsis menu on long paths.",
+            "Pair siteUrl with BreadcrumbJsonLd for structured breadcrumb metadata.",
+          ]}
+          title="Breadcrumbs"
+          usageCode={getBreadcrumbsDefaultUsageCode(IMPORT_PATH)}
+          usageDescription="Start with the items API for common trails, then drop into the compound parts for custom separators, router links, and manual ellipsis menus."
+          v0PageCode={getBreadcrumbsDefaultUsageCode(IMPORT_PATH)}
+        />
+      )}
+    </BreadcrumbsPlaygroundProvider>
   );
 }
