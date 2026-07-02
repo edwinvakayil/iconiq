@@ -228,6 +228,164 @@ const alertApiDetails: DetailItem[] = [
   registryItem("alert.json", ["motion", "class-variance-authority"]),
 ];
 
+const alertDialogApiDetails: DetailItem[] = [
+  {
+    id: "alert-dialog",
+    title: "AlertDialog",
+    summary:
+      "Provider-switchable confirmation dialog with the same compound API on Base UI and Radix UI, including controlled state, custom triggers, and reduced-motion aware card transitions.",
+    fields: [
+      field({
+        name: "open",
+        type: "boolean",
+        description:
+          "Controlled open state for the root. Pair with onOpenChange when async actions or parent state should own dismissal.",
+      }),
+      field({
+        name: "defaultOpen",
+        type: "boolean",
+        defaultValue: "false",
+        description:
+          "Initial uncontrolled open state. Ignored when open is provided.",
+      }),
+      field({
+        name: "onOpenChange",
+        type: "(open: boolean) => void",
+        description:
+          "Called when the alert dialog opens or closes through the trigger, cancel action, confirm action, Escape, or controlled state updates.",
+      }),
+    ],
+    notes: [
+      "The Base UI entry keeps the popup mounted until the Motion exit finishes, then unmounts through the primitive action ref.",
+      "The Radix entry places the primitive Content semantics and forwarded ref on the animated card surface while the viewport wrapper only handles centering.",
+      "Motion falls back to short opacity transitions when prefers-reduced-motion is enabled.",
+    ],
+  },
+  {
+    id: "alert-dialog-parts",
+    title: "Parts and composition",
+    summary:
+      "Both registry entries export the same parts so the installed code can swap headless libraries without changing app-level composition.",
+    fields: [
+      field({
+        name: "AlertDialogTrigger",
+        type: "ButtonHTMLAttributes<HTMLButtonElement> & { asChild?: boolean }",
+        description:
+          "Opens the dialog. Use asChild to wrap an existing button, link-styled button, or inline control while preserving trigger behavior.",
+      }),
+      field({
+        name: "AlertDialogContent",
+        type: "Primitive content props & { open?: boolean }",
+        description:
+          "Animated card surface. Pass open in controlled usage to keep exit animations synchronized with the root state.",
+      }),
+      field({
+        name: "AlertDialogMedia",
+        type: "HTMLAttributes<HTMLDivElement>",
+        description:
+          "Optional leading icon or media container for warning, publish, or verification visuals.",
+      }),
+      field({
+        name: "AlertDialogHeader / AlertDialogFooter",
+        type: "HTMLAttributes<HTMLDivElement>",
+        description:
+          "Layout slots for title/description copy and the cancel/action row. Mobile order keeps Cancel before the confirming action.",
+      }),
+      field({
+        name: "AlertDialogTitle / AlertDialogDescription",
+        type: "Primitive title and description props",
+        description:
+          "Accessible heading and supporting copy linked by the underlying alert-dialog primitive.",
+      }),
+    ],
+  },
+  {
+    id: "alert-dialog-actions",
+    title: "Actions and async flows",
+    summary:
+      "Cancel and action buttons include the default styling needed for common confirmation flows, with escape hatches for neutral confirms and async work.",
+    fields: [
+      field({
+        name: "AlertDialogAction.variant",
+        type: '"destructive" | "default"',
+        defaultValue: '"destructive"',
+        description:
+          "Controls whether the confirming action uses the destructive color treatment or the neutral primary action treatment.",
+      }),
+      field({
+        name: "AlertDialogAction.closeOnClick",
+        type: "boolean",
+        defaultValue: "true",
+        description:
+          "Set to false for async requests, keep the root controlled, and close the dialog after the request succeeds.",
+      }),
+      field({
+        name: "AlertDialogCancel.closeOnClick",
+        type: "boolean",
+        defaultValue: "true",
+        description:
+          "Set to false only when a cancel button needs to run custom validation before closing.",
+      }),
+      field({
+        name: "AlertDialogAction / AlertDialogCancel asChild",
+        type: "boolean",
+        description:
+          "Base UI and Radix UI installs both support slotted action controls for custom button components.",
+      }),
+    ],
+    notes: [
+      "Disable the action while a request is pending to avoid duplicate destructive operations.",
+      'Use variant="default" for confirmations such as Publish, Continue, Leave page, or Discard draft when a red destructive button would overstate the risk.',
+    ],
+  },
+  {
+    id: "alert-dialog-exports",
+    title: "Style exports",
+    summary:
+      "The component exports class-name recipes for custom triggers and advanced local composition without requiring users to copy private constants.",
+    fields: [
+      field({
+        name: "alertDialogTriggerClassName",
+        type: "string",
+        description:
+          "Default trigger recipe for full-size confirmation buttons.",
+      }),
+      field({
+        name: "alertDialogTriggerSmClassName",
+        type: "string",
+        description:
+          "Compact trigger recipe for inline sentence controls and toolbar-sized buttons.",
+      }),
+      field({
+        name: "alertDialogActionClassName / alertDialogDefaultActionClassName / alertDialogCancelClassName",
+        type: "string",
+        description: "Action recipes exported for custom footer compositions.",
+      }),
+      field({
+        name: "alertDialogThemeClassName",
+        type: "string",
+        description:
+          "Theme variable wrapper used by triggers and content, useful when composing custom alert-dialog surfaces.",
+      }),
+      field({
+        name: "AlertDialogPortal",
+        type: "Primitive Portal",
+        description:
+          "Portal primitive export for advanced consumers that need direct portal composition.",
+      }),
+    ],
+  },
+  registryItem("b-alert-dialog.json", [
+    "@base-ui/react",
+    "@radix-ui/react-slot",
+    "motion",
+  ]),
+  registryItem("r-alert-dialog.json", [
+    "@radix-ui/react-alert-dialog",
+    "motion",
+  ]),
+];
+
 const avatarApiDetails: DetailItem[] = [
   {
     id: "avatar",
@@ -10377,6 +10535,7 @@ const tooltipApiDetails: DetailItem[] = [
 
 export {
   alertApiDetails,
+  alertDialogApiDetails,
   avatarApiDetails,
   badgeApiDetails,
   calendarApiDetails,

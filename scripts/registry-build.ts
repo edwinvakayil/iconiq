@@ -185,8 +185,8 @@ const REGISTRY_UI_META: Record<
   "b-alert-dialog": {
     title: "Alert Dialog (Base UI)",
     description:
-      "Alert dialog with a shared Iconiq trigger, content, cancel, and action API layered over Base UI primitives, plus Motion-backed confirm-state transitions.",
-    dependencies: ["@base-ui/react", "motion"],
+      "Alert dialog with asChild triggers, action variants, optional media, controlled async flows, and reduced-motion aware transitions layered over Base UI primitives.",
+    dependencies: ["@base-ui/react", "@radix-ui/react-slot", "motion"],
   },
   "b-avatar": {
     title: "Avatar (Base UI)",
@@ -497,7 +497,7 @@ const REGISTRY_UI_META: Record<
   "r-alert-dialog": {
     title: "Alert Dialog (Radix UI)",
     description:
-      "Alert dialog with a shared Iconiq trigger, content, cancel, and action API layered over Radix UI primitives, plus Motion-backed confirm-state transitions.",
+      "Alert dialog with asChild triggers, action variants, optional media, controlled async flows, and reduced-motion aware transitions layered over Radix UI primitives.",
     dependencies: ["@radix-ui/react-alert-dialog", "motion"],
   },
   "r-avatar": {

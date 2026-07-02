@@ -1,7 +1,14 @@
 "use client";
 
 import { AlertDialog as AlertDialogPrimitive } from "@base-ui/react/alert-dialog";
-import { motion, type Variants } from "motion/react";
+import { Slot } from "@radix-ui/react-slot";
+import {
+  MotionConfig,
+  motion,
+  type Transition,
+  useReducedMotion,
+  type Variants,
+} from "motion/react";
 import * as React from "react";
 
 import { cn } from "@/lib/utils";
@@ -13,11 +20,11 @@ const surfaceCornerClassName =
   "rounded-lg supports-[corner-shape:squircle]:corner-squircle supports-[corner-shape:squircle]:rounded-[12px]";
 
 const alertDialogThemeClassName =
-  "[--adlg-surface:#ffffff] [--adlg-foreground:#111111] [--adlg-border:#e3e7ec] [--adlg-ring:rgba(17,17,17,0.16)] [--adlg-muted-foreground:#6d7480] [--adlg-muted:#f5f7fa] [--adlg-action-surface:#111111] [--adlg-action-foreground:#ffffff] [--color-accent:var(--adlg-muted)] [--color-accent-foreground:var(--adlg-foreground)] dark:[--adlg-surface:#0a0a0a] dark:[--adlg-foreground:#f6f3ec] dark:[--adlg-border:#2b2a25] dark:[--adlg-ring:rgba(246,243,236,0.18)] dark:[--adlg-muted-foreground:#9a958a] dark:[--adlg-muted:#1a1a18] dark:[--adlg-action-surface:#f6f3ec] dark:[--adlg-action-foreground:#111111]";
+  "[--adlg-surface:#ffffff] [--adlg-foreground:#111111] [--adlg-border:#e3e7ec] [--adlg-ring:rgba(17,17,17,0.16)] [--adlg-muted-foreground:#6d7480] [--adlg-muted:#f5f7fa] [--adlg-action-surface:#111111] [--adlg-action-foreground:#ffffff] [--adlg-destructive:#dc2626] [--adlg-destructive-foreground:#ffffff] [--color-accent:var(--adlg-muted)] [--color-accent-foreground:var(--adlg-foreground)] dark:[--adlg-surface:#0a0a0a] dark:[--adlg-foreground:#f6f3ec] dark:[--adlg-border:#2b2a25] dark:[--adlg-ring:rgba(246,243,236,0.18)] dark:[--adlg-muted-foreground:#9a958a] dark:[--adlg-muted:#1a1a18] dark:[--adlg-action-surface:#f6f3ec] dark:[--adlg-action-foreground:#111111] dark:[--adlg-destructive:#f87171] dark:[--adlg-destructive-foreground:#111111]";
 
 const alertDialogContentClassName = cn(
   surfaceCornerClassName,
-  "relative flex w-[min(100%,34rem)] max-w-xl flex-col gap-5 border border-[color:color-mix(in_oklch,var(--adlg-border),transparent_25%)] bg-[color:color-mix(in_oklch,var(--adlg-surface),transparent_4%)] p-6 text-[color:var(--adlg-foreground)] shadow-[0_32px_120px_rgba(15,23,42,0.18)] outline-none supports-[backdrop-filter]:bg-[color:color-mix(in_oklch,var(--adlg-surface),transparent_8%)] sm:p-7"
+  "relative flex w-[min(100%,34rem)] max-w-xl transform-gpu flex-col gap-5 border border-[color:color-mix(in_oklch,var(--adlg-border),transparent_25%)] bg-[color:color-mix(in_oklch,var(--adlg-surface),transparent_4%)] p-6 text-[color:var(--adlg-foreground)] shadow-[0_32px_120px_rgba(15,23,42,0.18)] outline-none supports-[backdrop-filter]:bg-[color:color-mix(in_oklch,var(--adlg-surface),transparent_8%)] sm:p-7"
 );
 
 type AlertDialogContextValue = {
@@ -29,90 +36,234 @@ const AlertDialogContext = React.createContext<AlertDialogContextValue | null>(
   null
 );
 
-const overlayTransition = {
-  duration: 0.24,
-  ease: [0.16, 1, 0.3, 1],
-} as const;
+const FLUID_EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
+const FLUID_EXIT_EASE: [number, number, number, number] = [0.4, 0, 0.2, 1];
 
-const triggerClassName = cn(
+const overlayEnterTransition: Transition = {
+  opacity: { duration: 0.44, ease: FLUID_EASE },
+  backdropFilter: { duration: 0.52, ease: FLUID_EASE },
+};
+
+const overlayExitTransition: Transition = {
+  opacity: { duration: 0.32, ease: FLUID_EXIT_EASE },
+  backdropFilter: { duration: 0.28, ease: FLUID_EXIT_EASE },
+};
+
+const overlayVariants: Variants = {
+  hidden: {
+    opacity: 0,
+    backdropFilter: "blur(0px)",
+    transition: overlayExitTransition,
+  },
+  visible: {
+    opacity: 1,
+    backdropFilter: "blur(10px)",
+    transition: overlayEnterTransition,
+  },
+};
+
+const reducedOverlayVariants: Variants = {
+  hidden: { opacity: 0, transition: { duration: 0.1, ease: FLUID_EXIT_EASE } },
+  visible: { opacity: 1, transition: { duration: 0.12, ease: FLUID_EASE } },
+};
+
+const alertDialogTriggerClassName = cn(
   controlCornerClassName,
   "inline-flex min-h-11 items-center justify-center bg-[color:var(--adlg-action-surface)] px-4 py-2.5 font-medium text-[14px] text-[color:var(--adlg-action-foreground)] tracking-[-0.01em] transition-[transform,background-color] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-px hover:bg-[color:color-mix(in_oklch,var(--adlg-action-surface),transparent_10%)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:color-mix(in_oklch,var(--adlg-ring),transparent_50%)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--adlg-surface)] active:translate-y-0 active:bg-[color:color-mix(in_oklch,var(--adlg-action-surface),transparent_20%)] disabled:pointer-events-none disabled:opacity-50"
 );
 
-const actionClassName = cn(
+const alertDialogTriggerSmClassName = cn(
   controlCornerClassName,
-  "inline-flex min-h-11 items-center justify-center bg-rose-600 px-4 py-2.5 font-medium text-[14px] text-white tracking-[-0.01em] transition-[transform,filter] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-px hover:brightness-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-500 focus-visible:ring-offset-2 active:translate-y-0 active:brightness-90 disabled:pointer-events-none disabled:opacity-50"
+  "inline-flex h-8 min-h-8 translate-y-px items-center bg-[color:var(--adlg-action-surface)] px-3 py-0 font-medium text-[13px] text-[color:var(--adlg-action-foreground)] tracking-[-0.01em] transition-[transform,background-color] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-px hover:bg-[color:color-mix(in_oklch,var(--adlg-action-surface),transparent_10%)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:color-mix(in_oklch,var(--adlg-ring),transparent_50%)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--adlg-surface)] active:translate-y-0 active:bg-[color:color-mix(in_oklch,var(--adlg-action-surface),transparent_20%)] disabled:pointer-events-none disabled:opacity-50"
 );
 
-const cancelClassName = cn(
+const alertDialogActionClassName = cn(
+  controlCornerClassName,
+  "inline-flex min-h-11 items-center justify-center bg-[color:var(--adlg-destructive)] px-4 py-2.5 font-medium text-[14px] text-[color:var(--adlg-destructive-foreground)] tracking-[-0.01em] transition-[transform,filter] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-px hover:brightness-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:color-mix(in_oklch,var(--adlg-destructive),transparent_30%)] focus-visible:ring-offset-2 active:translate-y-0 active:brightness-90 disabled:pointer-events-none disabled:opacity-50"
+);
+
+const alertDialogDefaultActionClassName = cn(
+  controlCornerClassName,
+  "inline-flex min-h-11 items-center justify-center bg-[color:var(--adlg-action-surface)] px-4 py-2.5 font-medium text-[14px] text-[color:var(--adlg-action-foreground)] tracking-[-0.01em] transition-[transform,background-color] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-px hover:bg-[color:color-mix(in_oklch,var(--adlg-action-surface),transparent_10%)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:color-mix(in_oklch,var(--adlg-ring),transparent_50%)] focus-visible:ring-offset-2 active:translate-y-0 active:bg-[color:color-mix(in_oklch,var(--adlg-action-surface),transparent_20%)] disabled:pointer-events-none disabled:opacity-50"
+);
+
+const alertDialogCancelClassName = cn(
   controlCornerClassName,
   "inline-flex min-h-11 items-center justify-center bg-[color:color-mix(in_oklch,var(--adlg-muted),transparent_45%)] px-4 py-2.5 font-medium text-[14px] text-[color:var(--adlg-muted-foreground)] tracking-[-0.01em] transition-colors duration-150 hover:bg-accent/60 hover:text-[color:var(--adlg-foreground)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:color-mix(in_oklch,var(--adlg-ring),transparent_50%)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--adlg-surface)] disabled:pointer-events-none disabled:opacity-50"
 );
 
-function setRef<T>(ref: React.Ref<T> | undefined, value: T) {
+type PopupRenderProps = React.HTMLAttributes<HTMLDivElement> & {
+  children?: React.ReactNode;
+  className?: string;
+  ref?: React.Ref<HTMLDivElement>;
+  style?: React.CSSProperties;
+};
+
+type BackdropRenderProps = React.HTMLAttributes<HTMLDivElement> & {
+  className?: string;
+  ref?: React.Ref<HTMLDivElement>;
+  style?: React.CSSProperties;
+};
+
+function setRef<T>(ref: React.Ref<T> | undefined, value: T | null) {
   if (typeof ref === "function") {
     ref(value);
     return;
   }
 
   if (ref) {
-    (ref as React.MutableRefObject<T>).current = value;
+    (ref as React.MutableRefObject<T | null>).current = value;
   }
+}
+
+function resolvePopupProps(popupProps: PopupRenderProps) {
+  const {
+    children: popupChildren,
+    className: popupClassName,
+    onAnimationEnd: _onAnimationEnd,
+    onAnimationIteration: _onAnimationIteration,
+    onAnimationStart: _onAnimationStart,
+    onDrag: _onDrag,
+    onDragEnd: _onDragEnd,
+    onDragEnter: _onDragEnter,
+    onDragExit: _onDragExit,
+    onDragLeave: _onDragLeave,
+    onDragOver: _onDragOver,
+    onDragStart: _onDragStart,
+    onDrop: _onDrop,
+    ref: popupRef,
+    style: popupStyle,
+    ...resolvedPopupProps
+  } = popupProps;
+
+  return {
+    popupChildren,
+    popupClassName,
+    popupRef,
+    popupStyle,
+    resolvedPopupProps,
+  };
+}
+
+function resolveBackdropProps(backdropProps: BackdropRenderProps) {
+  const {
+    className: backdropClassName,
+    onAnimationEnd: _onAnimationEnd,
+    onAnimationIteration: _onAnimationIteration,
+    onAnimationStart: _onAnimationStart,
+    onDrag: _onDrag,
+    onDragEnd: _onDragEnd,
+    onDragStart: _onDragStart,
+    ref: backdropRef,
+    style: backdropStyle,
+    ...resolvedBackdropProps
+  } = backdropProps;
+
+  return {
+    backdropClassName,
+    backdropRef,
+    backdropStyle,
+    resolvedBackdropProps,
+  };
 }
 
 const contentVariants: Variants = {
   hidden: {
     opacity: 0,
-    scale: 0.9,
-    y: 26,
-    filter: "blur(10px)",
+    scaleX: 0.94,
+    scaleY: 0.82,
+    y: 24,
+    filter: "blur(14px)",
   },
   visible: {
     opacity: 1,
-    scale: 1,
+    scaleX: 1,
+    scaleY: 1,
     y: 0,
     filter: "blur(0px)",
     transition: {
-      type: "spring",
-      stiffness: 280,
-      damping: 24,
-      mass: 0.92,
-      staggerChildren: 0.055,
-      delayChildren: 0.04,
+      opacity: { duration: 0.46, ease: FLUID_EASE },
+      scaleX: { duration: 0.54, ease: FLUID_EASE },
+      scaleY: { duration: 0.58, ease: FLUID_EASE },
+      y: { duration: 0.52, ease: FLUID_EASE },
+      filter: { duration: 0.56, ease: FLUID_EASE },
+      staggerChildren: 0.065,
+      delayChildren: 0.1,
     },
   },
   exit: {
     opacity: 0,
-    scale: 0.96,
+    scaleX: 0.98,
+    scaleY: 0.92,
     y: 12,
-    filter: "blur(4px)",
+    filter: "blur(6px)",
     transition: {
-      type: "spring",
-      stiffness: 340,
-      damping: 28,
-      mass: 0.86,
+      opacity: { duration: 0.28, ease: FLUID_EXIT_EASE },
+      scaleX: { duration: 0.3, ease: FLUID_EXIT_EASE },
+      scaleY: { duration: 0.32, ease: FLUID_EXIT_EASE },
+      y: { duration: 0.3, ease: FLUID_EXIT_EASE },
+      filter: { duration: 0.26, ease: FLUID_EXIT_EASE },
     },
   },
 };
 
+const reducedContentVariants: Variants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { duration: 0.12, ease: FLUID_EASE },
+  },
+  exit: {
+    opacity: 0,
+    transition: { duration: 0.1, ease: FLUID_EXIT_EASE },
+  },
+};
+
 const childVariants: Variants = {
-  hidden: { opacity: 0, y: 10 },
+  hidden: { opacity: 0, y: 14, scale: 0.96, filter: "blur(4px)" },
   visible: {
     opacity: 1,
     y: 0,
+    scale: 1,
+    filter: "blur(0px)",
     transition: {
-      type: "spring",
-      stiffness: 300,
-      damping: 24,
-      mass: 0.82,
+      opacity: { duration: 0.4, ease: FLUID_EASE },
+      y: { duration: 0.44, ease: FLUID_EASE },
+      scale: { duration: 0.42, ease: FLUID_EASE },
+      filter: { duration: 0.46, ease: FLUID_EASE },
     },
   },
   exit: {
     opacity: 0,
-    y: -4,
-    transition: { duration: 0.12, ease: [0.4, 0, 1, 1] },
+    y: -6,
+    scale: 0.98,
+    filter: "blur(2px)",
+    transition: { duration: 0.22, ease: FLUID_EXIT_EASE },
   },
 };
+
+const reducedChildVariants: Variants = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { duration: 0.1 } },
+  exit: { opacity: 0, transition: { duration: 0.08 } },
+};
+
+function mapStaggeredChildren(children: React.ReactNode, variants: Variants) {
+  return React.Children.map(children, (child, index) => {
+    if (child == null) {
+      return null;
+    }
+
+    const key =
+      React.isValidElement(child) && child.key != null ? child.key : index;
+
+    return (
+      <motion.div key={key} variants={variants}>
+        {child}
+      </motion.div>
+    );
+  });
+}
 
 function useAlertDialogContext() {
   const context = React.useContext(AlertDialogContext);
@@ -124,7 +275,11 @@ function useAlertDialogContext() {
   return context;
 }
 
-export interface AlertDialogProps {
+export interface AlertDialogProps
+  extends Omit<
+    React.ComponentPropsWithoutRef<typeof AlertDialogPrimitive.Root>,
+    "actionsRef" | "children" | "defaultOpen" | "onOpenChange" | "open"
+  > {
   children: React.ReactNode;
   defaultOpen?: boolean;
   onOpenChange?: (open: boolean) => void;
@@ -168,7 +323,7 @@ function AlertDialog({
       <AlertDialogPrimitive.Root
         {...props}
         actionsRef={actionsRef}
-        defaultOpen={defaultOpen}
+        defaultOpen={isControlled ? undefined : defaultOpen}
         onOpenChange={handleOpenChange}
         open={open}
       >
@@ -178,118 +333,144 @@ function AlertDialog({
   );
 }
 
+type AlertDialogButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
+  asChild?: boolean;
+};
+
+type AlertDialogTriggerRef = React.ComponentProps<
+  typeof AlertDialogPrimitive.Trigger
+>["ref"];
+
 const AlertDialogTrigger = React.forwardRef<
-  HTMLButtonElement,
-  React.ButtonHTMLAttributes<HTMLButtonElement>
->(({ className, type = "button", ...props }, ref) => {
+  HTMLElement,
+  AlertDialogButtonProps
+>(({ asChild, children, className, type = "button", ...props }, ref) => {
   return (
     <AlertDialogPrimitive.Trigger
-      className={cn(alertDialogThemeClassName, triggerClassName, className)}
-      ref={ref}
-      type={type}
       {...props}
-    />
+      className={cn(
+        alertDialogThemeClassName,
+        alertDialogTriggerClassName,
+        className
+      )}
+      ref={ref as AlertDialogTriggerRef}
+      render={asChild ? <Slot /> : undefined}
+      type={asChild ? undefined : type}
+    >
+      {children}
+    </AlertDialogPrimitive.Trigger>
   );
 });
 AlertDialogTrigger.displayName = "AlertDialogTrigger";
 
+const AlertDialogPortal = AlertDialogPrimitive.Portal;
+
+export interface AlertDialogContentProps
+  extends Omit<
+    React.ComponentPropsWithoutRef<typeof AlertDialogPrimitive.Popup>,
+    "children" | "className" | "render"
+  > {
+  children: React.ReactNode;
+  className?: string;
+  open?: boolean;
+}
+
 const AlertDialogContent = React.forwardRef<
   HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ children, className, ...props }, ref) => {
-  const { actionsRef } = useAlertDialogContext();
+  AlertDialogContentProps
+>(({ children, className, open: openProp, ...props }, ref) => {
+  const context = useAlertDialogContext();
+  const open = openProp ?? context.open;
+  const reduceMotion = useReducedMotion() === true;
+  const contentVariantConfig = reduceMotion
+    ? reducedContentVariants
+    : contentVariants;
+  const childVariantConfig = reduceMotion
+    ? reducedChildVariants
+    : childVariants;
+  const overlayVariantConfig = reduceMotion
+    ? reducedOverlayVariants
+    : overlayVariants;
 
   return (
-    <AlertDialogPrimitive.Portal>
-      <AlertDialogPrimitive.Backdrop
-        render={(backdropProps, backdropState) => {
-          const {
-            className: backdropClassName,
-            onAnimationEnd: _onAnimationEnd,
-            onAnimationIteration: _onAnimationIteration,
-            onAnimationStart: _onAnimationStart,
-            onDrag: _onDrag,
-            onDragEnd: _onDragEnd,
-            onDragStart: _onDragStart,
-            style: backdropStyle,
-            ...resolvedBackdropProps
-          } = backdropProps;
-
-          return (
-            <motion.div
-              {...resolvedBackdropProps}
-              animate={{ opacity: backdropState.open ? 1 : 0 }}
-              className={cn(
-                backdropClassName,
-                "fixed inset-0 z-50 bg-black/52 backdrop-blur-[10px]"
-              )}
-              initial={
-                backdropState.transitionStatus === "starting"
-                  ? { opacity: 0 }
-                  : false
-              }
-              style={backdropStyle}
-              transition={overlayTransition}
-            />
-          );
-        }}
-      />
-      <AlertDialogPrimitive.Viewport className="fixed inset-0 z-50 grid place-items-center overflow-y-auto p-4">
-        <AlertDialogPrimitive.Popup
-          {...props}
-          className={className}
-          render={(popupProps, popupState) => {
+    <AlertDialogPortal>
+      <MotionConfig reducedMotion={reduceMotion ? "always" : "never"}>
+        <AlertDialogPrimitive.Backdrop
+          render={(backdropProps) => {
             const {
-              children: popupChildren,
-              className: popupClassName,
-              onAnimationEnd: _popupOnAnimationEnd,
-              onAnimationIteration: _popupOnAnimationIteration,
-              onAnimationStart: _popupOnAnimationStart,
-              onDrag: _popupOnDrag,
-              onDragEnd: _popupOnDragEnd,
-              onDragStart: _popupOnDragStart,
-              ref: popupRef,
-              style: popupStyle,
-              ...resolvedPopupProps
-            } = popupProps;
+              backdropClassName,
+              backdropRef,
+              backdropStyle,
+              resolvedBackdropProps,
+            } = resolveBackdropProps(backdropProps);
 
             return (
               <motion.div
-                {...resolvedPopupProps}
-                animate={popupState.open ? "visible" : "exit"}
+                {...resolvedBackdropProps}
+                animate={open ? "visible" : "hidden"}
                 className={cn(
-                  popupClassName,
-                  alertDialogThemeClassName,
-                  alertDialogContentClassName
+                  backdropClassName,
+                  "fixed inset-0 z-50 bg-black/52"
                 )}
-                initial={
-                  popupState.transitionStatus === "starting" ? "hidden" : false
-                }
-                onAnimationComplete={() => {
-                  if (!popupState.open) {
-                    actionsRef.current?.unmount();
-                  }
-                }}
+                initial="hidden"
                 ref={(node) => {
-                  setRef(popupRef, node);
-                  setRef(ref, node);
+                  setRef(backdropRef, node);
                 }}
-                style={popupStyle}
-                variants={contentVariants}
-              >
-                {popupChildren}
-              </motion.div>
+                style={backdropStyle}
+                variants={overlayVariantConfig}
+              />
             );
           }}
-        >
-          {React.Children.map(children, (child) =>
-            child == null ? null : (
-              <motion.div variants={childVariants}>{child}</motion.div>
-            )
-          )}
-        </AlertDialogPrimitive.Popup>
-      </AlertDialogPrimitive.Viewport>
-    </AlertDialogPrimitive.Portal>
+        />
+        <AlertDialogPrimitive.Viewport className="pointer-events-none fixed inset-0 z-[51] grid place-items-center overflow-y-auto p-4">
+          <AlertDialogPrimitive.Popup
+            {...props}
+            className={className}
+            render={(popupProps) => {
+              const {
+                popupChildren,
+                popupClassName,
+                popupRef,
+                popupStyle,
+                resolvedPopupProps,
+              } = resolvePopupProps(popupProps);
+
+              return (
+                <motion.div
+                  {...resolvedPopupProps}
+                  animate={open ? "visible" : "exit"}
+                  className={cn(
+                    alertDialogThemeClassName,
+                    alertDialogContentClassName,
+                    "pointer-events-auto",
+                    popupClassName
+                  )}
+                  initial="hidden"
+                  onAnimationComplete={(definition) => {
+                    if (definition === "exit" && !open) {
+                      context.actionsRef.current?.unmount();
+                    }
+                  }}
+                  ref={(node) => {
+                    setRef(popupRef, node);
+                    setRef(ref, node);
+                  }}
+                  style={{
+                    ...popupStyle,
+                    transformOrigin: "center center",
+                  }}
+                  variants={contentVariantConfig}
+                >
+                  {popupChildren}
+                </motion.div>
+              );
+            }}
+          >
+            {mapStaggeredChildren(children, childVariantConfig)}
+          </AlertDialogPrimitive.Popup>
+        </AlertDialogPrimitive.Viewport>
+      </MotionConfig>
+    </AlertDialogPortal>
   );
 });
 AlertDialogContent.displayName = "AlertDialogContent";
@@ -306,6 +487,21 @@ function AlertDialogHeader({
   );
 }
 
+function AlertDialogMedia({
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement>) {
+  return (
+    <div
+      className={cn(
+        "flex size-11 shrink-0 items-center justify-center rounded-full bg-[color:color-mix(in_oklch,var(--adlg-destructive),transparent_90%)] text-[color:var(--adlg-destructive)]",
+        className
+      )}
+      {...props}
+    />
+  );
+}
+
 function AlertDialogFooter({
   className,
   ...props
@@ -313,7 +509,7 @@ function AlertDialogFooter({
   return (
     <div
       className={cn(
-        "flex flex-col-reverse gap-2 pt-1 sm:flex-row sm:justify-end",
+        "flex flex-col gap-2 pt-1 sm:flex-row sm:justify-end",
         className
       )}
       {...props}
@@ -322,8 +518,8 @@ function AlertDialogFooter({
 }
 
 const AlertDialogTitle = React.forwardRef<
-  HTMLHeadingElement,
-  React.HTMLAttributes<HTMLHeadingElement>
+  React.ElementRef<typeof AlertDialogPrimitive.Title>,
+  React.ComponentPropsWithoutRef<typeof AlertDialogPrimitive.Title>
 >(({ className, ...props }, ref) => {
   return (
     <AlertDialogPrimitive.Title
@@ -339,8 +535,8 @@ const AlertDialogTitle = React.forwardRef<
 AlertDialogTitle.displayName = "AlertDialogTitle";
 
 const AlertDialogDescription = React.forwardRef<
-  HTMLParagraphElement,
-  React.HTMLAttributes<HTMLParagraphElement>
+  React.ElementRef<typeof AlertDialogPrimitive.Description>,
+  React.ComponentPropsWithoutRef<typeof AlertDialogPrimitive.Description>
 >(({ className, ...props }, ref) => {
   return (
     <AlertDialogPrimitive.Description
@@ -355,34 +551,94 @@ const AlertDialogDescription = React.forwardRef<
 });
 AlertDialogDescription.displayName = "AlertDialogDescription";
 
+type AlertDialogCloseRef = React.ComponentProps<
+  typeof AlertDialogPrimitive.Close
+>["ref"];
+
+type AlertDialogActionVariant = "default" | "destructive";
+
+interface AlertDialogActionProps extends AlertDialogButtonProps {
+  closeOnClick?: boolean;
+  variant?: AlertDialogActionVariant;
+}
+
 const AlertDialogCancel = React.forwardRef<
-  HTMLButtonElement,
-  React.ButtonHTMLAttributes<HTMLButtonElement>
->(({ className, type = "button", ...props }, ref) => {
-  return (
-    <AlertDialogPrimitive.Close
-      className={cn(cancelClassName, className)}
-      ref={ref}
-      type={type}
-      {...props}
-    />
-  );
-});
+  HTMLElement,
+  AlertDialogButtonProps & { closeOnClick?: boolean }
+>(
+  (
+    {
+      asChild,
+      children,
+      className,
+      closeOnClick = true,
+      onClick,
+      type = "button",
+      ...props
+    },
+    ref
+  ) => {
+    return (
+      <AlertDialogPrimitive.Close
+        {...props}
+        className={cn(alertDialogCancelClassName, className)}
+        onClick={(event) => {
+          onClick?.(event);
+
+          if (!closeOnClick) {
+            event.preventDefault();
+          }
+        }}
+        ref={ref as AlertDialogCloseRef}
+        render={asChild ? <Slot /> : undefined}
+        type={asChild ? undefined : type}
+      >
+        {children}
+      </AlertDialogPrimitive.Close>
+    );
+  }
+);
 AlertDialogCancel.displayName = "AlertDialogCancel";
 
-const AlertDialogAction = React.forwardRef<
-  HTMLButtonElement,
-  React.ButtonHTMLAttributes<HTMLButtonElement>
->(({ className, type = "button", ...props }, ref) => {
-  return (
-    <AlertDialogPrimitive.Close
-      className={cn(actionClassName, className)}
-      ref={ref}
-      type={type}
-      {...props}
-    />
-  );
-});
+const AlertDialogAction = React.forwardRef<HTMLElement, AlertDialogActionProps>(
+  (
+    {
+      asChild,
+      children,
+      className,
+      closeOnClick = true,
+      onClick,
+      type = "button",
+      variant = "destructive",
+      ...props
+    },
+    ref
+  ) => {
+    const actionClassName =
+      variant === "default"
+        ? alertDialogDefaultActionClassName
+        : alertDialogActionClassName;
+
+    return (
+      <AlertDialogPrimitive.Close
+        {...props}
+        className={cn(actionClassName, className)}
+        onClick={(event) => {
+          onClick?.(event);
+
+          if (!closeOnClick) {
+            event.preventDefault();
+          }
+        }}
+        ref={ref as AlertDialogCloseRef}
+        render={asChild ? <Slot /> : undefined}
+        type={asChild ? undefined : type}
+      >
+        {children}
+      </AlertDialogPrimitive.Close>
+    );
+  }
+);
 AlertDialogAction.displayName = "AlertDialogAction";
 
 export {
@@ -393,6 +649,14 @@ export {
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
+  AlertDialogMedia,
+  AlertDialogPortal,
   AlertDialogTitle,
   AlertDialogTrigger,
+  alertDialogActionClassName,
+  alertDialogCancelClassName,
+  alertDialogDefaultActionClassName,
+  alertDialogThemeClassName,
+  alertDialogTriggerClassName,
+  alertDialogTriggerSmClassName,
 };

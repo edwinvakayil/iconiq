@@ -7,6 +7,12 @@ import {
   ProviderSwitch,
 } from "@/app/(site)/components/_components/provider-switch";
 import {
+  type AlertDialogModule,
+  AlertDialogPlaygroundProvider,
+  getAlertDialogDefaultUsageCode,
+} from "@/app/(site)/overlay-and-popups/alert-dialog/_components/alert-dialog-playground";
+import { alertDialogApiDetails } from "@/components/docs/component-api";
+import {
   ComponentDocsPage,
   type DetailItem,
 } from "@/components/docs/page-shell";
@@ -14,137 +20,27 @@ import { LINK } from "@/constants";
 import * as BaseAlertDialog from "@/registry/b-alert-dialog";
 import * as RadixAlertDialog from "@/registry/r-alert-dialog";
 
-type AlertDialogModule = typeof BaseAlertDialog;
-
 type ProviderConfig = {
   componentName: "b-alert-dialog" | "r-alert-dialog";
   dependencyLabel: string;
+  details: DetailItem[];
+  importPath: string;
   libraryLabel: string;
   notes: string[];
   ui: AlertDialogModule;
   usageCode: string;
 };
 
-const usageCodeByProvider: Record<ProviderConfig["componentName"], string> = {
-  "b-alert-dialog": `import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/b-alert-dialog";
-
-export function DeleteCollectionAlert() {
-  return (
-    <AlertDialog>
-      <AlertDialogTrigger>Open dialog</AlertDialogTrigger>
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>Delete this item?</AlertDialogTitle>
-          <AlertDialogDescription>
-            This action will permanently remove the item from your workspace,
-            and you will not be able to recover it later.
-          </AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction>Delete</AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
-  );
-}`,
-  "r-alert-dialog": `import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/r-alert-dialog";
-
-export function DeleteCollectionAlert() {
-  return (
-    <AlertDialog>
-      <AlertDialogTrigger>Open dialog</AlertDialogTrigger>
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>Delete this item?</AlertDialogTitle>
-          <AlertDialogDescription>
-            This action will permanently remove the item from your workspace,
-            and you will not be able to recover it later.
-          </AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction>Delete</AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
-  );
-}`,
-};
-
-const previewSentenceClassName =
-  "flex flex-wrap items-center justify-center gap-x-2 gap-y-1.5 text-balance text-[13px] text-muted-foreground leading-snug tracking-tight sm:text-sm";
-
-const previewTriggerClassName =
-  "inline-flex h-8 min-h-8 translate-y-px items-center align-middle px-3 py-0 text-[13px]";
+const IMPORT_PATHS = {
+  base: "@/components/ui/b-alert-dialog",
+  radix: "@/components/ui/r-alert-dialog",
+} as const;
 
 const breadcrumbs = [
   { label: "Docs", href: "/" },
   { label: "Overlay & Popups" },
   { label: "Alert Dialog" },
 ];
-
-function AlertDialogPreview({ ui }: { ui: AlertDialogModule }) {
-  const {
-    AlertDialog,
-    AlertDialogAction,
-    AlertDialogCancel,
-    AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle,
-    AlertDialogTrigger,
-  } = ui;
-
-  return (
-    <div className="flex min-h-[18rem] items-center justify-center p-6">
-      <AlertDialog>
-        <p className={previewSentenceClassName}>
-          <span>This can&apos;t be undone.</span>
-          <span>Tap</span>
-          <AlertDialogTrigger className={previewTriggerClassName}>
-            Delete
-          </AlertDialogTrigger>
-          <span>to confirm.</span>
-        </p>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Delete this item?</AlertDialogTitle>
-            <AlertDialogDescription>
-              This action will permanently remove the item from your workspace,
-              and you will not be able to recover it later.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction>Delete</AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-    </div>
-  );
-}
 
 export default function RadixBaseAlertDialogPage() {
   const [selectedProvider, setSelectedProvider] =
@@ -154,128 +50,93 @@ export default function RadixBaseAlertDialogPage() {
     if (selectedProvider === "base") {
       return {
         componentName: "b-alert-dialog",
-        dependencyLabel: "@base-ui/react, motion",
+        dependencyLabel: "@base-ui/react, @radix-ui/react-slot, motion",
+        details: alertDialogApiDetails,
+        importPath: IMPORT_PATHS.base,
         libraryLabel: "Base UI",
         notes: [
-          "Installs a Base UI alert dialog with the same trigger, content, action, and cancel surface as the Radix version.",
-          "Base UI keeps the focus and alertdialog semantics while the visible card uses the same motion direction and pacing as the Radix install.",
+          "Installs a Base UI alert dialog with asChild triggers and actions, controlled open state, action variants, and reduced-motion aware Motion transitions.",
+          "Base UI owns focus and alertdialog semantics while the card waits for the exit animation before unmounting.",
           "The generated registry file is /r/b-alert-dialog.json.",
         ],
-        ui: BaseAlertDialog,
-        usageCode: usageCodeByProvider["b-alert-dialog"],
+        ui: BaseAlertDialog as AlertDialogModule,
+        usageCode: getAlertDialogDefaultUsageCode(IMPORT_PATHS.base),
       };
     }
 
     return {
       componentName: "r-alert-dialog",
       dependencyLabel: "@radix-ui/react-alert-dialog, motion",
+      details: alertDialogApiDetails,
+      importPath: IMPORT_PATHS.radix,
       libraryLabel: "Radix UI",
       notes: [
-        "Installs a Radix alert dialog with the same higher-level trigger, content, action, and cancel API as the Base UI version.",
-        "Uses Motion-driven overlay fade, spring card entry, and staggered inner sections for the confirm flow.",
+        "Installs a Radix alert dialog with the same higher-level API as the Base UI version, including asChild, controlled content animation, and action variants.",
+        "The animated surface now owns the primitive content semantics and forwarded ref, while the overlay receives the Radix props through asChild.",
         "The generated registry file is /r/r-alert-dialog.json.",
       ],
-      ui: RadixAlertDialog,
-      usageCode: usageCodeByProvider["r-alert-dialog"],
+      ui: RadixAlertDialog as AlertDialogModule,
+      usageCode: getAlertDialogDefaultUsageCode(IMPORT_PATHS.radix),
     };
   }, [selectedProvider]);
 
   const details = useMemo<DetailItem[]>(
-    () => [
-      {
-        id: "alert-dialog",
-        title: "AlertDialog",
-        summary:
-          "Provider-switchable destructive-confirmation surface with the same product-facing API on both Base UI and Radix UI.",
-        fields: [
-          {
-            name: "open",
-            type: "boolean",
-            description: "Optional controlled open state for the dialog root.",
-          },
-          {
-            name: "defaultOpen",
-            type: "boolean",
-            defaultValue: "false",
-            description:
-              "Uncontrolled initial state for the dialog root when you want the component to manage its own visibility.",
-          },
-          {
-            name: "onOpenChange",
-            type: "(open: boolean) => void",
-            description:
-              "Called whenever the open state changes, regardless of which provider is installed underneath.",
-          },
-        ],
-        notes: [
-          `Current install target: ${provider.libraryLabel}.`,
-          `Dependencies declared by this registry entry: ${provider.dependencyLabel}.`,
-          ...provider.notes,
-        ],
-      },
-      {
-        id: "exports",
-        title: "Exports",
-        summary:
-          "Both registry entries ship the same higher-level parts so you can keep one alert-dialog composition style while swapping the headless library below it.",
-        fields: [
-          {
-            name: "AlertDialogTrigger",
-            type: "ButtonHTMLAttributes<HTMLButtonElement>",
-            description:
-              "Default trigger button with the section’s rounded, motion-aware action styling baked in.",
-          },
-          {
-            name: "AlertDialogContent",
-            type: "HTMLAttributes<HTMLDivElement>",
-            description:
-              "Visible dialog card wrapper. className is merged onto the animated surface rather than the outer viewport container.",
-          },
-          {
-            name: "AlertDialogTitle",
-            type: "HTMLAttributes<HTMLHeadingElement>",
-            description:
-              "Heading slot linked to the dialog semantics on both providers.",
-          },
-          {
-            name: "AlertDialogDescription",
-            type: "HTMLAttributes<HTMLParagraphElement>",
-            description:
-              "Body copy slot for irreversible-action context and consequences.",
-          },
-          {
-            name: "AlertDialogCancel / AlertDialogAction",
-            type: "ButtonHTMLAttributes<HTMLButtonElement>",
-            description:
-              "Pre-styled action row buttons for the safe path and the destructive confirm path.",
-          },
-        ],
-      },
-    ],
+    () =>
+      provider.details.map((detail) =>
+        detail.id === "alert-dialog"
+          ? {
+              ...detail,
+              notes: [
+                `Current install target: ${provider.libraryLabel}.`,
+                `Dependencies declared by this registry entry: ${provider.dependencyLabel}.`,
+                ...(detail.notes ?? []),
+                ...provider.notes,
+              ],
+            }
+          : detail
+      ),
     [provider]
   );
 
   return (
-    <ComponentDocsPage
-      breadcrumbs={breadcrumbs}
-      componentName={provider.componentName}
-      description="Confirmation dialog for destructive or high-stakes actions."
-      details={details}
-      editHref={`${LINK.GITHUB}/edit/main/app/(site)/overlay-and-popups/alert-dialog/page.tsx`}
-      headerActions={
-        <ProviderSwitch
-          onSelect={setSelectedProvider}
-          selectedProvider={selectedProvider}
+    <AlertDialogPlaygroundProvider
+      importPath={provider.importPath}
+      key={provider.componentName}
+      ui={provider.ui}
+    >
+      {({ preview, renderSettings }) => (
+        <ComponentDocsPage
+          breadcrumbs={breadcrumbs}
+          componentName={provider.componentName}
+          description="Confirmation dialog for destructive or high-stakes actions."
+          details={details}
+          detailsDescription="Compound parts cover custom triggers, controlled and uncontrolled state, destructive or default actions, async confirmation, media slots, and reduced-motion behavior."
+          editHref={`${LINK.GITHUB}/edit/main/app/(site)/overlay-and-popups/alert-dialog/page.tsx`}
+          headerActions={
+            <ProviderSwitch
+              onSelect={setSelectedProvider}
+              selectedProvider={selectedProvider}
+            />
+          }
+          itemSlug="alert-dialog"
+          pageUrl="/overlay-and-popups/alert-dialog"
+          preview={preview}
+          previewClassName="min-h-[320px]"
+          previewDescription="Use the playground to switch destructive/default tone, controlled state, custom triggers, async close behavior, and the media slot."
+          previewPersonalize={({ onClose }) => renderSettings(onClose)}
+          previewPersonalizeTitle="Alert Dialog"
+          railNotes={[
+            "Use AlertDialogTrigger asChild when the trigger is already a design-system button or inline control.",
+            'Use AlertDialogAction variant="default" for high-stakes but non-destructive confirmations.',
+            "For async actions, pass closeOnClick={false}, keep the root controlled, and close it after the request succeeds.",
+            "AlertDialogContent accepts open so controlled Radix and Base installs can keep exit animations in sync.",
+          ]}
+          title="Alert Dialog"
+          usageCode={provider.usageCode}
+          usageDescription="Switch libraries above to update the install command, registry JSON, preview code, and generated file set together."
+          v0PageCode={provider.usageCode}
         />
-      }
-      itemSlug="alert-dialog"
-      pageUrl="/overlay-and-popups/alert-dialog"
-      preview={<AlertDialogPreview ui={provider.ui} />}
-      previewDescription="Tap Delete in the sentence to open the confirmation dialog before a permanent action."
-      title="Alert Dialog"
-      usageCode={provider.usageCode}
-      usageDescription="Switch libraries above to update the install command, registry JSON, preview code, and generated file set together."
-      v0PageCode={provider.usageCode}
-    />
+      )}
+    </AlertDialogPlaygroundProvider>
   );
 }
