@@ -2,6 +2,7 @@
 
 import { FileText, Home, Layers } from "lucide-react";
 
+import { SharedPrimitiveProviderSwitch } from "@/app/(site)/components/_components/provider-switch";
 import { commandPaletteApiDetails } from "@/components/docs/component-api";
 import { ComponentDocsPage } from "@/components/docs/page-shell";
 import { LINK } from "@/constants";
@@ -133,6 +134,7 @@ export default function CommandPalettePage() {
       details={commandPaletteApiDetails}
       detailsDescription="CommandPalette groups searchable items, supports custom triggers, and wires navigation plus optional theme actions through Radix Dialog."
       editHref={`${LINK.GITHUB}/edit/main/app/(site)/navigation/command-palette/page.tsx`}
+      headerActions={<SharedPrimitiveProviderSwitch />}
       itemSlug="command-palette"
       pageUrl="/navigation/command-palette"
       preview={<CommandPalettePreview />}

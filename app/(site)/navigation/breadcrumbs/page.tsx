@@ -1,5 +1,6 @@
 "use client";
 
+import { SharedPrimitiveProviderSwitch } from "@/app/(site)/components/_components/provider-switch";
 import {
   BreadcrumbsPlaygroundProvider,
   getBreadcrumbsDefaultUsageCode,
@@ -25,6 +26,7 @@ export default function BreadcrumbsPage() {
           details={breadcrumbsApiDetails}
           detailsDescription="Compound parts cover semantics, links, current-page state, separators, ellipsis menus, optional items-array rendering, JSON-LD, and Motion transitions across the trail."
           editHref={`${LINK.GITHUB}/edit/main/app/(site)/navigation/breadcrumbs/page.tsx`}
+          headerActions={<SharedPrimitiveProviderSwitch />}
           pageUrl="/navigation/breadcrumbs"
           preview={preview}
           previewClassName="min-h-[220px]"
