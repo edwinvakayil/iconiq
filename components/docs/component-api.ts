@@ -7976,20 +7976,80 @@ const faqProApiDetails: DetailItem[] = [
         type: "FaqProItem[]",
         required: true,
         description:
-          "Array of `{ id, question, answer }` entries. Each id must be unique within the list.",
+          "Array of `{ id, question, answer, keywords?, disabled? }` entries. `answer` accepts ReactNode (string answers get highlighted and searched). Each id must be unique.",
       }),
       field({
-        name: "searchPlaceholder",
+        name: "value",
+        type: "string | null",
+        description:
+          "Controlled open item id. Pair with onOpenChange. Use null to close all.",
+      }),
+      field({
+        name: "onOpenChange",
+        type: "(openId: string | null) => void",
+        description:
+          "Called whenever the open item changes, in both controlled and uncontrolled modes.",
+      }),
+      field({
+        name: "defaultValue",
+        type: "string | null",
+        description:
+          "Initial open item id for uncontrolled usage. Overrides defaultOpenId and defaultOpenFirst.",
+      }),
+      field({
+        name: "defaultOpenId",
         type: "string",
-        defaultValue: "Search FAQs...",
-        description: "Placeholder copy for the search field.",
+        description:
+          "Opens a specific item id by default when there is no active query.",
       }),
       field({
         name: "defaultOpenFirst",
         type: "boolean",
         defaultValue: "false",
         description:
-          "Opens the first item when there is no active search query.",
+          "Opens the first enabled item when there is no active search query.",
+      }),
+      field({
+        name: "hideSearch",
+        type: "boolean",
+        defaultValue: "false",
+        description: "Hides the search field and renders the list only.",
+      }),
+      field({
+        name: "filter",
+        type: "(item: FaqProItem, query: string) => boolean",
+        description:
+          "Custom match predicate. Overrides the built-in multi-term substring search.",
+      }),
+      field({
+        name: "onQueryChange",
+        type: "(query: string) => void",
+        description: "Called whenever the search query changes.",
+      }),
+      field({
+        name: "searchPlaceholder",
+        type: "string",
+        defaultValue: "Search FAQs...",
+        description: "Placeholder and accessible label for the search field.",
+      }),
+      field({
+        name: "emptyMessage",
+        type: "string",
+        defaultValue: "No FAQs to show yet.",
+        description: "Message shown when there are no items at all.",
+      }),
+      field({
+        name: "noResultsMessage",
+        type: "string",
+        defaultValue: "No FAQs match your search.",
+        description: "Message shown when a query returns no matches.",
+      }),
+      field({
+        name: "themed",
+        type: "boolean",
+        defaultValue: "true",
+        description:
+          "Applies the built-in light/dark token surface. Set false to inherit your app tokens.",
       }),
       field({
         name: "className",
@@ -7998,10 +8058,11 @@ const faqProApiDetails: DetailItem[] = [
       }),
     ],
     notes: [
-      "Search filters by question and answer text. The first matching row opens automatically while you type.",
-      "Only one FAQ panel can be open at a time. Clicking another item closes the previous one.",
-      "Matched substrings render inside a highlight mark in both the question and answer.",
-      "When the query is cleared, the list returns to the default open state controlled by defaultOpenFirst.",
+      "Search matches all whitespace-separated terms (AND) against question, string answers, and keywords.",
+      "The first matching row opens automatically while you type; clearing the query restores the default open state.",
+      "Only one FAQ panel can be open at a time. Respects prefers-reduced-motion for animations.",
+      "Matched substrings render inside a highlight mark in the question and string answers.",
+      "Rows expose data-slot attributes (faq-pro, faq-pro-item, faq-pro-trigger, faq-pro-panel) for styling.",
     ],
   },
   registryItem("faq-pro.json", [

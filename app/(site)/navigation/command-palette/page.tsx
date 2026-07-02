@@ -1,6 +1,6 @@
 "use client";
 
-import { SharedPrimitiveProviderSwitch } from "@/app/(site)/components/_components/provider-switch";
+import { ProviderSwitch } from "@/app/(site)/components/_components/provider-switch";
 import {
   CommandPalettePlaygroundProvider,
   getCommandPaletteDefaultUsageCode,
@@ -10,6 +10,10 @@ import { ComponentDocsPage } from "@/components/docs/page-shell";
 import { LINK } from "@/constants";
 
 const IMPORT_PATH = "@/components/ui/command-palette";
+
+function handleProviderSelect() {
+  return undefined;
+}
 
 export default function CommandPalettePage() {
   return (
@@ -26,7 +30,13 @@ export default function CommandPalettePage() {
           details={commandPaletteApiDetails}
           detailsDescription="CommandPalette groups searchable items, supports custom triggers, ranked substring search, recent commands, async callbacks, and optional theme actions through Radix Dialog."
           editHref={`${LINK.GITHUB}/edit/main/app/(site)/navigation/command-palette/page.tsx`}
-          headerActions={<SharedPrimitiveProviderSwitch />}
+          headerActions={
+            <ProviderSwitch
+              disabledProviders={["base"]}
+              onSelect={handleProviderSelect}
+              selectedProvider="radix"
+            />
+          }
           itemSlug="command-palette"
           pageUrl="/navigation/command-palette"
           preview={preview}
