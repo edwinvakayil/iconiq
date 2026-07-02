@@ -7757,21 +7757,53 @@ const commandPaletteApiDetails: DetailItem[] = [
     id: "command-palette",
     title: "CommandPalette",
     summary:
-      "Keyboard-first command menu built on Radix Dialog with grouped items, fuzzy search, arrow-key navigation, and optional built-in theme actions.",
+      "Keyboard-first command menu built on Radix Dialog with grouped items, substring search, optional recent commands, async search, and keyboard navigation.",
     fields: [
       field({
         name: "groups",
         type: "CommandMenuGroupDef[]",
         defaultValue: "[]",
         description:
-          "Grouped command items. Each group has a heading and an items array with label, optional href or action, icon, keywords, and description.",
+          "Grouped command items. Each group has a heading and an items array with label, optional href or action, icon, keywords, description, shortcut, disabled, id, and value.",
       }),
       field({
         name: "showThemeGroup",
         type: "boolean",
-        defaultValue: "true",
+        defaultValue: "false",
         description:
-          "When true, appends Light, Dark, and System theme actions that call next-themes setTheme.",
+          "When true, appends a theme group that calls next-themes setTheme. Requires ThemeProvider. Override with themeGroup for custom items.",
+      }),
+      field({
+        name: "themeGroup",
+        type: "CommandMenuGroupDef",
+        description:
+          "Optional custom theme group. Used when showThemeGroup is true instead of the built-in Light, Dark, and System actions.",
+      }),
+      field({
+        name: "themeGroupHeading",
+        type: "string",
+        defaultValue: '"Theme"',
+        description:
+          "Heading for the built-in theme group when themeGroup is not provided.",
+      }),
+      field({
+        name: "showRecentGroup",
+        type: "boolean",
+        defaultValue: "false",
+        description:
+          "When true, shows recently selected commands from localStorage or the recentItems seed list.",
+      }),
+      field({
+        name: "recentItems",
+        type: "CommandMenuItemDef[]",
+        description:
+          "Optional seed list for the Recent group. Selections are also persisted to localStorage.",
+      }),
+      field({
+        name: "maxRecentItems",
+        type: "number",
+        defaultValue: "5",
+        description: "Maximum number of recent commands to keep.",
       }),
       field({
         name: "placeholder",
@@ -7787,9 +7819,56 @@ const commandPaletteApiDetails: DetailItem[] = [
           "Letter used with Cmd on macOS or Ctrl elsewhere to toggle the palette globally.",
       }),
       field({
+        name: "enableGlobalShortcut",
+        type: "boolean",
+        defaultValue: "true",
+        description:
+          "When false, disables the document-level Cmd/Ctrl shortcut listener.",
+      }),
+      field({
+        name: "open",
+        type: "boolean",
+        description: "Controlled open state for the dialog.",
+      }),
+      field({
+        name: "onOpenChange",
+        type: "(open: boolean) => void",
+        description: "Called when the dialog open state changes.",
+      }),
+      field({
+        name: "onSelect",
+        type: "(item: CommandMenuItemDef) => void",
+        description:
+          "Called when a command is selected, before navigation or action execution.",
+      }),
+      field({
+        name: "onNavigate",
+        type: "(href: string, item: CommandMenuItemDef) => void",
+        description:
+          "Custom navigation handler. When provided, replaces the default Next.js router.push behavior for href items.",
+      }),
+      field({
+        name: "onSearch",
+        type: "(query: string) => Promise<CommandMenuGroupDef[]>",
+        description:
+          "Async search callback. Returned groups are merged with static groups and debounced by searchDebounceMs.",
+      }),
+      field({
+        name: "searchDebounceMs",
+        type: "number",
+        defaultValue: "200",
+        description: "Debounce delay used when onSearch is provided.",
+      }),
+      field({
+        name: "filter",
+        type: "(item: CommandMenuItemDef, query: string) => boolean",
+        description:
+          "Custom filter function. When omitted, ranked substring matching is used across label, keywords, and description.",
+      }),
+      field({
         name: "contentDelay",
         type: "number",
-        defaultValue: "150",
+        defaultValue: "0",
         description:
           "Milliseconds to wait before revealing the results panel after the dialog opens.",
       }),
@@ -7797,7 +7876,7 @@ const commandPaletteApiDetails: DetailItem[] = [
         name: "trigger",
         type: "React.ReactNode",
         description:
-          "Custom trigger node. When provided, it replaces the default search button and receives an open handler.",
+          "Custom trigger node. When provided, it replaces the default search button and receives merged open handlers plus aria-expanded.",
       }),
       field({
         name: "triggerProps",
@@ -7811,17 +7890,70 @@ const commandPaletteApiDetails: DetailItem[] = [
         description: "Merged onto the dialog content panel.",
       }),
       field({
+        name: "overlayClassName",
+        type: "string",
+        description: "Merged onto the dialog overlay.",
+      }),
+      field({
+        name: "positionClassName",
+        type: "string",
+        description:
+          "Overrides the default dialog positioning classes. The default uses portable CSS variables with optional nav offset fallbacks.",
+      }),
+      field({
+        name: "themed",
+        type: "boolean",
+        defaultValue: "false",
+        description:
+          "When true, applies the self-contained Iconiq theme token scope to the dialog surface.",
+      }),
+      field({
+        name: "showFooterHints",
+        type: "boolean",
+        defaultValue: "true",
+        description:
+          "Shows keyboard hint badges for navigate, select, and close actions.",
+      }),
+      field({
         name: "emptyMessage",
         type: "string",
         defaultValue: '"No results found."',
         description: "Copy shown when the current query matches no items.",
       }),
+      field({
+        name: "noQueryMessage",
+        type: "string",
+        defaultValue: '"Start typing to search commands."',
+        description:
+          "Copy shown when the query is empty and no items are visible.",
+      }),
+      field({
+        name: "loadingMessage",
+        type: "string",
+        defaultValue: '"Searching…"',
+        description: "Copy shown while onSearch is in flight.",
+      }),
+      field({
+        name: "currentPath",
+        type: "string",
+        description:
+          "Optional current route override used for the Current page badge. Defaults to usePathname when available.",
+      }),
+      field({
+        name: "closeOnRouteChange",
+        type: "boolean",
+        defaultValue: "true",
+        description:
+          "When true, closes the palette automatically on pathname changes in Next.js App Router apps.",
+      }),
     ],
     notes: [
-      "Items with href navigate through Next.js router.push. Items with action run a callback and close the palette.",
-      "Search matches every whitespace-separated term against the label, description, and keywords haystack.",
-      "The palette closes automatically on route changes when used inside a Next.js App Router app.",
-      "Requires next-themes ThemeProvider when showThemeGroup is enabled.",
+      "Items with href navigate through onNavigate when provided, otherwise Next.js router.push or router.replace.",
+      "External href values and external: true open in a new tab. Items with action run a callback and close the palette.",
+      "Search matches every whitespace-separated term against label, keywords, and description.",
+      "Icons are optional on items — pass icon only when you want one.",
+      "CommandMenuItemDef, CommandMenuTrigger, Kbd, and KbdGroup are exported for custom compositions.",
+      "Requires next-themes ThemeProvider only when showThemeGroup is enabled.",
     ],
   },
   registryItem("command-palette.json", [

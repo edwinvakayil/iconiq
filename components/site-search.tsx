@@ -52,6 +52,8 @@ export function SiteSearch({ variant = "desktop" }: SiteSearchProps) {
       <CommandMenu
         groups={searchGroups}
         placeholder="Search components, pages, actions…"
+        showRecentGroup
+        showThemeGroup
         trigger={
           <button
             aria-label="Open search"
@@ -70,6 +72,8 @@ export function SiteSearch({ variant = "desktop" }: SiteSearchProps) {
       <CommandMenu
         groups={searchGroups}
         placeholder="Search components, pages, actions…"
+        showRecentGroup
+        showThemeGroup
         trigger={
           <button className={mobileMenuSearchButtonClass} type="button">
             <Search className="h-3.5 w-3.5 shrink-0" />
@@ -85,6 +89,8 @@ export function SiteSearch({ variant = "desktop" }: SiteSearchProps) {
       className="lg:w-[min(680px,calc(100vw-2rem))]"
       groups={searchGroups}
       placeholder="Search components, pages, actions…"
+      showRecentGroup
+      showThemeGroup
       triggerProps={{
         className:
           "hidden rounded-xl border-0 bg-muted/90 hover:bg-muted lg:flex lg:w-[19rem] lg:max-w-[19rem] xl:w-[21rem] xl:max-w-[21rem]",
