@@ -1,168 +1,146 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 import {
   type PrimitiveProvider,
   ProviderSwitch,
 } from "@/app/(site)/components/_components/provider-switch";
-import { tabsApiDetails } from "@/components/docs/component-api";
-import { ComponentDocsPage } from "@/components/docs/page-shell";
-import { LINK } from "@/constants";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/registry/tabs";
-
-const tabSections = [
-  {
-    body: "Keep the main summary visible while switching between planning, delivery, and support details without leaving the current surface.",
-    detail:
-      "The active pill slides between triggers with spring motion, so the selected tab stays visually anchored even when you jump back to a shorter panel.",
-    heading: "Product workspace",
-    value: "overview",
-  },
-  {
-    body: "Review the last design review, implementation notes, and timeline updates in a compact panel that still feels grounded.",
-    detail:
-      "Radix handles keyboard navigation and focus management while the segmented list keeps each trigger easy to scan.",
-    heading: "Recent handoff",
-    value: "activity",
-  },
-  {
-    body: "Attach decks, mockups, and implementation references while preserving a clear transition between each content block.",
-    detail:
-      "Each panel renders directly below the trigger row, so longer tab bodies stay separated from the navigation rail.",
-    heading: "Shared assets",
-    value: "files",
-  },
-] as const;
-
-function handleProviderSelect(_provider: PrimitiveProvider) {
-  return undefined;
-}
-
-const usageCode = `"use client";
-
-import { useState } from "react";
 import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "@/components/ui/tabs";
+  getTabsDefaultUsageCode,
+  type TabsModule,
+  TabsPlaygroundProvider,
+} from "@/app/(site)/navigation/tabs/_components/tabs-playground";
+import { tabsApiDetails } from "@/components/docs/component-api";
+import {
+  ComponentDocsPage,
+  type DetailItem,
+} from "@/components/docs/page-shell";
+import { LINK } from "@/constants";
+import * as BaseTabs from "@/registry/b-tabs";
+import * as RadixTabs from "@/registry/tabs";
 
-const tabSections = [
-  {
-    body: "Keep the main summary visible while switching between planning, delivery, and support details without leaving the current surface.",
-    detail:
-      "The active pill slides between triggers with spring motion, so the selected tab stays visually anchored even when you jump back to a shorter panel.",
-    heading: "Product workspace",
-    value: "overview",
-  },
-  {
-    body: "Review the last design review, implementation notes, and timeline updates in a compact panel that still feels grounded.",
-    detail:
-      "Radix handles keyboard navigation and focus management while the segmented list keeps each trigger easy to scan.",
-    heading: "Recent handoff",
-    value: "activity",
-  },
-  {
-    body: "Attach decks, mockups, and implementation references while preserving a clear transition between each content block.",
-    detail:
-      "Each panel renders directly below the trigger row, so longer tab bodies stay separated from the navigation rail.",
-    heading: "Shared assets",
-    value: "files",
-  },
-] as const;
+type ProviderConfig = {
+  componentName: "b-tabs" | "tabs";
+  dependencyLabel: string;
+  details: DetailItem[];
+  importPath: string;
+  libraryLabel: string;
+  notes: string[];
+  supportsVariant: boolean;
+  ui: TabsModule;
+  usageCode: string;
+};
 
-export function TabsPreview() {
-  const [value, setValue] = useState("overview");
+const breadcrumbs = [
+  { label: "Docs", href: "/" },
+  { label: "Navigation" },
+  { label: "Tabs" },
+];
 
-  return (
-    <Tabs value={value} onValueChange={setValue}>
-      <TabsList>
-        <TabsTrigger value="overview">Overview</TabsTrigger>
-        <TabsTrigger value="activity">Activity</TabsTrigger>
-        <TabsTrigger value="files">Files</TabsTrigger>
-      </TabsList>
-
-      {tabSections.map((section) => (
-        <TabsContent key={section.value} value={section.value}>
-          <div className="space-y-3 p-4">
-            <p className="text-[15px] font-medium tracking-[-0.02em] text-foreground">
-              {section.heading}
-            </p>
-            <p className="text-[14px] leading-6 text-secondary">
-              {section.body}
-            </p>
-            <p className="text-[14px] leading-6 text-secondary">
-              {section.detail}
-            </p>
-          </div>
-        </TabsContent>
-      ))}
-    </Tabs>
-  );
-}`;
-
-function TabsPreview() {
-  const [value, setValue] = useState("overview");
-
-  return (
-    <div className="flex min-h-[320px] w-full items-center justify-center px-4 py-10">
-      <div className="w-full max-w-2xl">
-        <Tabs onValueChange={setValue} value={value}>
-          <TabsList>
-            <TabsTrigger value="overview">Overview</TabsTrigger>
-            <TabsTrigger value="activity">Activity</TabsTrigger>
-            <TabsTrigger value="files">Files</TabsTrigger>
-          </TabsList>
-
-          {tabSections.map((section) => (
-            <TabsContent key={section.value} value={section.value}>
-              <div className="space-y-3 p-4">
-                <p className="font-medium text-[15px] text-foreground tracking-[-0.02em]">
-                  {section.heading}
-                </p>
-                <p className="text-[14px] text-secondary leading-6">
-                  {section.body}
-                </p>
-                <p className="text-[14px] text-secondary leading-6">
-                  {section.detail}
-                </p>
-              </div>
-            </TabsContent>
-          ))}
-        </Tabs>
-      </div>
-    </div>
-  );
-}
+const IMPORT_PATHS = {
+  base: "@/components/ui/b-tabs",
+  radix: "@/components/ui/tabs",
+} as const;
 
 export default function TabsPage() {
+  const [selectedProvider, setSelectedProvider] =
+    useState<PrimitiveProvider>("radix");
+
+  const provider = useMemo<ProviderConfig>(() => {
+    if (selectedProvider === "base") {
+      return {
+        componentName: "b-tabs",
+        dependencyLabel: "@base-ui/react, motion",
+        details: tabsApiDetails,
+        importPath: IMPORT_PATHS.base,
+        libraryLabel: "Base UI",
+        notes: [
+          "Installs the Base UI tabs entry with measured underline motion and animated panel shell.",
+          "Uses the same compound Tabs, TabsList, TabsTrigger, and TabsContent names, with content panels hoisted by the root.",
+          "The generated registry file is /r/b-tabs.json.",
+        ],
+        supportsVariant: false,
+        ui: BaseTabs as TabsModule,
+        usageCode: getTabsDefaultUsageCode(IMPORT_PATHS.base, false),
+      };
+    }
+
+    return {
+      componentName: "tabs",
+      dependencyLabel: "@radix-ui/react-tabs, motion",
+      details: tabsApiDetails,
+      importPath: IMPORT_PATHS.radix,
+      libraryLabel: "Radix UI",
+      notes: [
+        "Installs the Radix tabs entry with pill or underline variants, icon and badge triggers, and optional content motion.",
+        "Falls back to the first TabsContent value when defaultValue or value does not match a panel.",
+        "The generated registry file is /r/tabs.json. For the alternate underline-only Radix entry, see r-tabs.",
+      ],
+      supportsVariant: true,
+      ui: RadixTabs as TabsModule,
+      usageCode: getTabsDefaultUsageCode(IMPORT_PATHS.radix, true),
+    };
+  }, [selectedProvider]);
+
+  const details = useMemo<DetailItem[]>(
+    () =>
+      provider.details.map((detail) =>
+        detail.id === "tabs"
+          ? {
+              ...detail,
+              notes: [
+                `Current install target: ${provider.libraryLabel}.`,
+                `Dependencies declared by this registry entry: ${provider.dependencyLabel}.`,
+                ...(detail.notes ?? []),
+                ...provider.notes,
+              ],
+            }
+          : detail
+      ),
+    [provider]
+  );
+
   return (
-    <ComponentDocsPage
-      breadcrumbs={[
-        { label: "Docs", href: "/" },
-        { label: "Navigation" },
-        { label: "Tabs" },
-      ]}
-      componentName="tabs"
-      description="Sectioned panels for switching between related views."
-      details={tabsApiDetails}
-      editHref={`${LINK.GITHUB}/edit/main/app/(site)/navigation/tabs/page.tsx`}
-      headerActions={
-        <ProviderSwitch
-          disabledProviders={["base"]}
-          onSelect={handleProviderSelect}
-          selectedProvider="radix"
+    <TabsPlaygroundProvider
+      importPath={provider.importPath}
+      key={provider.componentName}
+      supportsVariant={provider.supportsVariant}
+      ui={provider.ui}
+    >
+      {({ preview, renderSettings }) => (
+        <ComponentDocsPage
+          breadcrumbs={breadcrumbs}
+          componentName={provider.componentName}
+          description="Sectioned panels for switching between related views."
+          details={details}
+          detailsDescription="Compound parts cover pill and underline variants, controlled and uncontrolled state, icons, badges, overflow scrolling, orientation, activation mode, and optional content motion."
+          editHref={`${LINK.GITHUB}/edit/main/app/(site)/navigation/tabs/page.tsx`}
+          headerActions={
+            <ProviderSwitch
+              onSelect={setSelectedProvider}
+              selectedProvider={selectedProvider}
+            />
+          }
+          itemSlug="tabs"
+          pageUrl="/navigation/tabs"
+          preview={preview}
+          previewClassName="min-h-[320px]"
+          previewDescription="Use the playground to switch variant, orientation, activation mode, controlled state, icons, badges, overflow tabs, and disabled triggers."
+          previewPersonalize={({ onClose }) => renderSettings(onClose)}
+          previewPersonalizeTitle="Tabs"
+          railNotes={[
+            "tabs is the Radix registry entry with pill and underline variants. b-tabs and r-tabs are alternate installs with a hoisted panel shell.",
+            "Pass defaultValue for uncontrolled usage, or hold the active tab in React state with value and onValueChange.",
+            "Use icon and badge on TabsTrigger for compact status rails. TabsList fullWidth stretches the trigger row across the container.",
+            'Set activationMode="manual" when panels should change on Enter or Space instead of focus alone.',
+          ]}
+          title="Tabs"
+          usageCode={provider.usageCode}
+          usageDescription="Compose TabsList, TabsTrigger, and TabsContent inside the root. Switch libraries above to update the install command, registry JSON, preview code, and generated file set together."
+          v0PageCode={provider.usageCode}
         />
-      }
-      pageUrl="/navigation/tabs"
-      preview={<TabsPreview />}
-      previewCode={usageCode}
-      title="Tabs"
-      usageCode={usageCode}
-      usageDescription="Pass `defaultValue` for uncontrolled usage, or hold the active tab in React state with `value` and `onValueChange`. Compose `TabsList`, `TabsTrigger`, and `TabsContent` inside the root."
-      v0PageCode={usageCode}
-    />
+      )}
+    </TabsPlaygroundProvider>
   );
 }

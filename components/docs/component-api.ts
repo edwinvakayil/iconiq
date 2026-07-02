@@ -8925,7 +8925,7 @@ const tabsApiDetails: DetailItem[] = [
     id: "tabs",
     title: "Tabs",
     summary:
-      "Radix tabs root with a shared spring transition config for the sliding active pill. Supports controlled and uncontrolled usage.",
+      "Radix tabs root with theme fallbacks, measured indicator motion, optional content transitions, and controlled or uncontrolled state with safe fallbacks.",
     fields: [
       field({
         name: "children",
@@ -8938,12 +8938,13 @@ const tabsApiDetails: DetailItem[] = [
         name: "defaultValue",
         type: "string",
         description:
-          "Initial active tab for uncontrolled usage when you do not manage value in React state.",
+          "Initial active tab for uncontrolled usage. Falls back to the first TabsContent value when omitted or invalid.",
       }),
       field({
         name: "value",
         type: "string",
-        description: "Controlled active tab value.",
+        description:
+          "Controlled active tab value. Invalid values fall back to the first TabsContent value in development with a console warning.",
       }),
       field({
         name: "onValueChange",
@@ -8952,21 +8953,55 @@ const tabsApiDetails: DetailItem[] = [
           "Called when a trigger activates a different tab through click or keyboard interaction.",
       }),
       field({
+        name: "variant",
+        type: '"pill" | "underline"',
+        defaultValue: '"pill"',
+        description:
+          "Switches between the segmented pill rail and the underline indicator treatment.",
+      }),
+      field({
+        name: "animateContent",
+        type: "boolean",
+        defaultValue: "false",
+        description:
+          "Applies a short fade-and-rise transition to the active panel body. Respects reduced-motion preferences.",
+      }),
+      field({
+        name: "orientation",
+        type: '"horizontal" | "vertical"',
+        defaultValue: '"horizontal"',
+        description:
+          "Radix orientation forwarded to the list and content layout. Vertical roots render as a flex row with the list beside the panel.",
+      }),
+      field({
+        name: "activationMode",
+        type: '"automatic" | "manual"',
+        defaultValue: '"automatic"',
+        description:
+          "Radix activation mode. Manual keeps focus and selection separate until Enter or Space.",
+      }),
+      field({
+        name: "dir",
+        type: '"ltr" | "rtl"',
+        description: "Radix text direction for keyboard navigation order.",
+      }),
+      field({
         name: "className",
         type: "string",
         description: "Merged onto the Radix tabs root wrapper.",
       }),
     ],
     notes: [
-      "Each Tabs instance uses a unique layoutId so multiple tab bars on one page do not share pill animations.",
+      "Each Tabs instance scopes trigger and content ids from a unique base id for aria-controls wiring.",
       "Use controlled state with value and onValueChange, or pass defaultValue for uncontrolled usage.",
+      "Reduced-motion users receive instant indicator transitions instead of spring motion.",
     ],
   },
   {
     id: "tabs-list",
     title: "TabsList",
     summary:
-      "Full-width segmented rail with rounded neutral background and padding for the trigger row.",
+      "Scrollable trigger rail with a measured motion indicator for pill or underline variants.",
     fields: [
       field({
         name: "children",
@@ -8974,20 +9009,35 @@ const tabsApiDetails: DetailItem[] = [
         description: "Usually a row of TabsTrigger elements.",
       }),
       field({
+        name: "fullWidth",
+        type: "boolean",
+        defaultValue: "false",
+        description:
+          "Stretches the list to the container width instead of fitting the trigger row.",
+      }),
+      field({
+        name: "loop",
+        type: "boolean",
+        defaultValue: "true",
+        description:
+          "Radix loop behavior for keyboard navigation across the first and last triggers.",
+      }),
+      field({
         name: "className",
         type: "string",
-        description: "Merged onto the inline-flex rail around the triggers.",
+        description: "Merged onto the trigger rail element.",
       }),
     ],
     notes: [
-      "Uses a rounded neutral surface in light and dark mode with overflow hidden so the active pill stays clipped cleanly.",
+      "Uses horizontal overflow scrolling for long tab sets instead of clipping triggers.",
+      "A ResizeObserver keeps the active indicator aligned when labels or icons change size.",
     ],
   },
   {
     id: "tabs-trigger",
     title: "TabsTrigger",
     summary:
-      "Interactive tab button with a shared layoutId pill behind the active trigger and mix-blend-exclusion label treatment.",
+      "Interactive tab button with optional icon and badge slots, token-based colors, and measured active-state treatment.",
     fields: [
       field({
         name: "value",
@@ -9003,10 +9053,21 @@ const tabsApiDetails: DetailItem[] = [
         description: "Label content rendered inside the trigger button.",
       }),
       field({
+        name: "icon",
+        type: "ReactNode",
+        description:
+          "Optional leading icon rendered before the label with consistent sizing.",
+      }),
+      field({
+        name: "badge",
+        type: "ReactNode",
+        description: "Optional trailing badge such as a count or status chip.",
+      }),
+      field({
         name: "className",
         type: "string",
         description:
-          "Merged onto the trigger button for local spacing, typography, or active-state overrides.",
+          "Merged onto the trigger button for local spacing, typography, or state overrides.",
       }),
       field({
         name: "disabled",
@@ -9016,15 +9077,15 @@ const tabsApiDetails: DetailItem[] = [
       }),
     ],
     notes: [
-      "The active trigger renders a motion.div with layoutId active-tab-bg that slides between tabs with spring motion.",
-      "Inactive triggers fade slightly on hover while keeping the label readable through mix-blend-exclusion.",
+      "The active trigger indicator is rendered in TabsList and positioned with ResizeObserver measurements.",
+      "Pill triggers use foreground-on-background label contrast instead of mix-blend tricks.",
     ],
   },
   {
     id: "tabs-content",
     title: "TabsContent",
     summary:
-      "Radix content panel tied to a matching trigger value below the tab list.",
+      "Radix content panel tied to a matching trigger value below or beside the tab list.",
     fields: [
       field({
         name: "value",
@@ -9043,10 +9104,16 @@ const tabsApiDetails: DetailItem[] = [
         type: "string",
         description: "Merged onto the rendered content panel element.",
       }),
+      field({
+        name: "forceMount",
+        type: "boolean",
+        description:
+          "Keeps the panel mounted while inactive. Useful for preserving form state or SSR-friendly markup.",
+      }),
     ],
     notes: [
       "Radix handles mounting and visibility for the active panel.",
-      "Standard Radix content props such as forceMount are forwarded through the primitive.",
+      "When animateContent is enabled on Tabs, the active panel body receives a short motion transition.",
     ],
   },
   registryItem("tabs.json", ["@radix-ui/react-tabs", "motion"]),
