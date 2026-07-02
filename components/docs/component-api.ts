@@ -7623,7 +7623,7 @@ const fileTreeApiDetails: DetailItem[] = [
     id: "file-tree",
     title: "FileTree",
     summary:
-      "Root provider for the compound file tree. Tracks expanded folders, hover highlight bounds, and shared visual settings.",
+      "Root provider for the compound file tree. Tracks expanded folders, selection, focus, hover highlight bounds, search filtering, and shared visual settings.",
     fields: [
       field({
         name: "defaultExpandedIds",
@@ -7633,11 +7633,64 @@ const fileTreeApiDetails: DetailItem[] = [
           "Folder node ids that should start expanded on first render.",
       }),
       field({
+        name: "expandedIds",
+        type: "string[] | Set<string>",
+        description:
+          "Controlled expanded folder ids. Pair with `onExpandedIdsChange`.",
+      }),
+      field({
+        name: "onExpandedIdsChange",
+        type: "(expandedIds: string[]) => void",
+        description: "Called when expanded folder ids change.",
+      }),
+      field({
+        name: "defaultSelectedId",
+        type: "string",
+        description: "Node id selected on first render in single-select mode.",
+      }),
+      field({
+        name: "defaultSelectedIds",
+        type: "string[]",
+        description:
+          "Node ids selected on first render in multiple-select mode.",
+      }),
+      field({
+        name: "selectedIds",
+        type: "string[] | Set<string>",
+        description:
+          "Controlled selected node ids. Pair with `onSelectedIdsChange`.",
+      }),
+      field({
+        name: "onSelectedIdsChange",
+        type: "(selectedIds: string[]) => void",
+        description: "Called when selected node ids change.",
+      }),
+      field({
+        name: "selectionMode",
+        type: '"single" | "multiple"',
+        defaultValue: '"single"',
+        description:
+          "Selection behavior. Multiple mode supports Cmd/Ctrl additive and Shift range selection.",
+      }),
+      field({
+        name: "searchQuery",
+        type: "string",
+        defaultValue: '""',
+        description:
+          "Case-insensitive label filter. Matching branches auto-expand.",
+      }),
+      field({
         name: "highlightColor",
         type: "string",
-        defaultValue: "#3b82f6",
+        defaultValue: "var(--color-brand, #3b82f6)",
         description:
           "Text color applied to items with `highlight` on `FileTreeItem`.",
+      }),
+      field({
+        name: "iconMap",
+        type: "Record<string, LucideIcon>",
+        description:
+          "Custom extension or filename to icon map merged over built-in defaults.",
       }),
       field({
         name: "indentSize",
@@ -7647,6 +7700,12 @@ const fileTreeApiDetails: DetailItem[] = [
           "Horizontal indent in pixels for each nested folder level.",
       }),
       field({
+        name: "maxHeight",
+        type: "number | string",
+        description:
+          "Enables a scrollable viewport for large trees via overflow-y auto.",
+      }),
+      field({
         name: "showIcons",
         type: "boolean",
         defaultValue: "true",
@@ -7654,14 +7713,58 @@ const fileTreeApiDetails: DetailItem[] = [
           "Whether to render icons. File icons are inferred from the label extension when no custom icon is provided.",
       }),
       field({
-        name: "onNodeClick",
+        name: "truncate",
+        type: "boolean",
+        defaultValue: "false",
+        description:
+          "Truncate long labels with a native title tooltip on each row.",
+      }),
+      field({
+        name: "onLoadChildren",
         type: "(nodeId: string) => void",
+        description:
+          "Called when a lazy branch with `hasChildren` opens before children are mounted.",
+      }),
+      field({
+        name: "onNodeClick",
+        type: "(nodeId: string, event?: React.MouseEvent) => void",
         description: "Called when a file or folder row is activated.",
       }),
       field({
         name: "onNodeExpand",
         type: "(nodeId: string, expanded: boolean) => void",
         description: "Called when a folder branch opens or closes.",
+      }),
+      field({
+        name: "onNodeContextMenu",
+        type: "(nodeId: string, event: React.MouseEvent) => void",
+        description: "Called when a row receives a context menu event.",
+      }),
+      field({
+        name: "onNodeDragStart",
+        type: "(nodeId: string, event: React.DragEvent) => void",
+        description: "Called when a draggable row starts dragging.",
+      }),
+      field({
+        name: "onNodeDragOver",
+        type: "(nodeId: string, event: React.DragEvent) => void",
+        description: "Called when a drag moves over a row.",
+      }),
+      field({
+        name: "onNodeDrop",
+        type: "(nodeId: string, event: React.DragEvent) => void",
+        description: "Called when a drag is dropped on a row.",
+      }),
+      field({
+        name: "onNodeDragEnd",
+        type: "(nodeId: string, event: React.DragEvent) => void",
+        description: "Called when a row drag ends.",
+      }),
+      field({
+        name: "ref",
+        type: "FileTreeHandle",
+        description:
+          "Imperative handle with `expandAll`, `collapseAll`, and `focusNode`.",
       }),
       field({
         name: "className",
@@ -7673,19 +7776,40 @@ const fileTreeApiDetails: DetailItem[] = [
         name: "children",
         type: "React.ReactNode",
         description:
-          "Usually a single `FileTreeList` with nested `FileTreeItem` rows.",
+          "Usually a single `FileTreeList` with nested `FileTreeItem` rows, or use `FileTreeFromItems`.",
       }),
     ],
     notes: [
       "Wrap `FileTreeList` and nested `FileTreeItem` components inside the root provider.",
-      "Hovering any row updates a single animated highlight that follows the active item inside the tree container.",
+      "Hovering or focusing a row updates a single animated highlight inside the tree container.",
+      "Arrow keys, Home, End, Enter, Space, and `*` implement the WAI-ARIA tree keyboard pattern.",
+    ],
+  },
+  {
+    id: "file-tree-from-items",
+    title: "FileTreeFromItems",
+    summary:
+      "Data-driven helper that renders a `FileTree` from an `items` array of nested node definitions.",
+    fields: [
+      field({
+        name: "items",
+        type: "FileTreeNodeData[]",
+        required: true,
+        description:
+          "Nested node definitions with `id`, `label`, optional `children`, `icon`, `highlight`, `disabled`, and `loading`.",
+      }),
+      field({
+        name: "...FileTreeProps",
+        type: "FileTreeProps",
+        description: "All `FileTree` root props are supported.",
+      }),
     ],
   },
   {
     id: "file-tree-list",
     title: "FileTreeList",
     summary:
-      "Semantic tree container for top-level and nested file rows. Supports Base UI `render` composition instead of Radix Slot.",
+      "Semantic tree container for top-level rows. Supports Base UI `render` composition.",
     fields: [
       field({
         name: "className",
@@ -7704,26 +7828,32 @@ const fileTreeApiDetails: DetailItem[] = [
     id: "file-tree-item",
     title: "FileTreeItem",
     summary:
-      "Single file or folder row. Nested children render as an animated branch when the row is expandable.",
+      "Single file or folder row rendered as a Base UI Button treeitem. Nested children render inside an animated branch group.",
     fields: [
       field({
         name: "nodeId",
         type: "string",
         required: true,
         description:
-          "Stable unique id used for expand state, callbacks, and tree semantics.",
+          "Stable unique id used for expand state, selection, callbacks, and tree semantics.",
       }),
       field({
         name: "label",
         type: "string",
         required: true,
         description:
-          "Display label for the row. File extension is used to pick a default icon.",
+          "Display label for the row. File extension or filename is used to pick a default icon.",
       }),
       field({
         name: "icon",
         type: "React.ReactNode",
         description: "Optional custom icon node rendered before the label.",
+      }),
+      field({
+        name: "openIcon",
+        type: "React.ReactNode",
+        description:
+          "Optional open-state icon for folder rows. Defaults to FolderOpen.",
       }),
       field({
         name: "hasChildren",
@@ -7732,10 +7862,34 @@ const fileTreeApiDetails: DetailItem[] = [
           "Marks the row as a branch even when it has no nested children yet. Otherwise inferred from child items.",
       }),
       field({
+        name: "loading",
+        type: "boolean",
+        description: "Shows a spinner icon while lazy children are loading.",
+      }),
+      field({
+        name: "disabled",
+        type: "boolean",
+        defaultValue: "false",
+        description:
+          "Disables row activation and removes it from keyboard focus order.",
+      }),
+      field({
+        name: "draggable",
+        type: "boolean",
+        defaultValue: "false",
+        description: "Enables native drag interactions on the row button.",
+      }),
+      field({
         name: "highlight",
         type: "boolean",
         description:
           "When true, tints the row with `highlightColor` to mark it as new or relevant.",
+      }),
+      field({
+        name: "render",
+        type: "ReactElement | ((props) => ReactElement)",
+        description:
+          "Optional Base UI render override for the row button element.",
       }),
       field({
         name: "children",
@@ -7745,8 +7899,9 @@ const fileTreeApiDetails: DetailItem[] = [
       }),
     ],
     notes: [
-      "Folder rows use Base UI Button for the toggle control while file rows remain static display rows.",
-      "Folder icons swap with a spring transition, and child lists animate open and closed with height and opacity motion.",
+      'File and folder rows both use Base UI Button with `role="treeitem"`, roving tabindex, and `aria-selected` when selected.',
+      "Folder icons swap with a spring transition, and child groups animate open and closed with height and opacity motion.",
+      "Respects `prefers-reduced-motion` by skipping nonessential animations.",
     ],
   },
   registryItem("file-tree.json", ["@base-ui/react", "motion", "lucide-react"]),
