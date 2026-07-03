@@ -50,17 +50,6 @@ const Footer = () => {
             </a>{" "}
             :)
           </p>
-          <p className="text-[14px] text-muted-foreground leading-7 tracking-[-0.02em]">
-            Credits to{" "}
-            <a
-              className="font-medium text-foreground underline underline-offset-4 transition-colors hover:text-neutral-600 dark:hover:text-neutral-300"
-              href="https://skipper-ui.com"
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-              Skipper UI
-            </a>
-          </p>
         </div>
 
         <div className="flex shrink-0 items-center sm:justify-end">

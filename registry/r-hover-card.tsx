@@ -7,6 +7,10 @@ import * as React from "react";
 
 import { cn } from "@/lib/utils";
 
+// ---------------------------------------------------------------------------
+// Design tokens
+// ---------------------------------------------------------------------------
+
 const controlCornerClassName =
   "rounded-lg supports-[corner-shape:squircle]:corner-squircle supports-[corner-shape:squircle]:rounded-[11px]";
 
@@ -26,6 +30,10 @@ const hoverCardTriggerClassName = cn(
   "inline-flex min-h-9 cursor-pointer items-center px-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:color-mix(in_oklch,var(--hc-ring),transparent_40%)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--hc-surface)]"
 );
 
+// ---------------------------------------------------------------------------
+// Types
+// ---------------------------------------------------------------------------
+
 type Side = "top" | "right" | "bottom" | "left";
 type Align = "start" | "center" | "end";
 type CollisionPadding = React.ComponentPropsWithoutRef<
@@ -44,63 +52,85 @@ type HoverCardContextValue = {
   handleHoverStart: (event: React.PointerEvent<HTMLElement>) => void;
 };
 
+// ---------------------------------------------------------------------------
+// Context
+// ---------------------------------------------------------------------------
+
 const HoverCardContext = React.createContext<HoverCardContextValue | null>(
   null
 );
+
+// ---------------------------------------------------------------------------
+// Motion config
+// ---------------------------------------------------------------------------
 
 const FLUID_EASE = [0.16, 1, 0.3, 1] as const;
 const HOVER_CARD_EXIT_EASE = [0.4, 0, 0.6, 1] as const;
 
 const HOVER_CARD_SPRING = {
   type: "spring" as const,
-  stiffness: 340,
-  damping: 30,
-  mass: 0.72,
+  stiffness: 260,
+  damping: 18,
+  mass: 0.65,
 };
 
-function getSideMotionOffset(side: Side) {
+function getSideMotionOffset(side: Side): { x: number; y: number } {
   switch (side) {
     case "top":
-      return { x: 0, y: 4 };
+      return { x: 0, y: 6 };
     case "right":
-      return { x: -4, y: 0 };
+      return { x: -6, y: 0 };
     case "left":
-      return { x: 4, y: 0 };
+      return { x: 6, y: 0 };
     default:
-      return { x: 0, y: -4 };
+      return { x: 0, y: -6 };
   }
 }
 
-function getHoverCardMotion(side: Side) {
+// We pre-compute variants keyed by side at render time so Framer Motion can
+// interpolate all values cleanly (no CSS-variable strings mixed with numbers).
+function getHoverCardVariants(side: Side) {
   const offset = getSideMotionOffset(side);
 
   return {
-    animate: { opacity: 1, scale: 1, x: 0, y: 0 },
-    closed: { opacity: 0, scale: 0.988, ...offset },
-    initial: { opacity: 0, scale: 0.988, ...offset },
-    openTransition: {
-      opacity: { duration: 0.26, ease: FLUID_EASE },
-      scale: HOVER_CARD_SPRING,
-      x: HOVER_CARD_SPRING,
-      y: HOVER_CARD_SPRING,
+    open: {
+      opacity: 1,
+      scale: 1,
+      x: 0,
+      y: 0,
+      filter: "blur(0px)",
+      transition: {
+        opacity: { duration: 0.32, ease: FLUID_EASE },
+        scale: HOVER_CARD_SPRING,
+        x: HOVER_CARD_SPRING,
+        y: HOVER_CARD_SPRING,
+        filter: { duration: 0.28, ease: [0, 0, 0.2, 1] as const },
+      },
     },
-    closedTransition: {
-      opacity: { duration: 0.16, ease: HOVER_CARD_EXIT_EASE },
-      scale: { duration: 0.16, ease: HOVER_CARD_EXIT_EASE },
-      x: { duration: 0.16, ease: HOVER_CARD_EXIT_EASE },
-      y: { duration: 0.16, ease: HOVER_CARD_EXIT_EASE },
+    closed: {
+      opacity: 0,
+      scale: 0.95,
+      x: offset.x,
+      y: offset.y,
+      filter: "blur(8px)",
+      transition: {
+        opacity: { duration: 0.18, ease: HOVER_CARD_EXIT_EASE },
+        scale: { duration: 0.18, ease: HOVER_CARD_EXIT_EASE },
+        x: { duration: 0.18, ease: HOVER_CARD_EXIT_EASE },
+        y: { duration: 0.18, ease: HOVER_CARD_EXIT_EASE },
+        filter: { duration: 0.18, ease: HOVER_CARD_EXIT_EASE },
+      },
     },
   };
 }
 
-const hoverBridgeStyles: Record<Side, string> = {
-  top: "before:pointer-events-auto before:absolute before:right-0 before:bottom-[calc(var(--hover-card-bridge-size)*-1)] before:left-0 before:h-[var(--hover-card-bridge-size)] before:bg-transparent before:content-['']",
-  right:
-    "before:pointer-events-auto before:absolute before:top-0 before:bottom-0 before:left-[calc(var(--hover-card-bridge-size)*-1)] before:w-[var(--hover-card-bridge-size)] before:bg-transparent before:content-['']",
-  bottom:
-    "before:pointer-events-auto before:absolute before:top-[calc(var(--hover-card-bridge-size)*-1)] before:right-0 before:left-0 before:h-[var(--hover-card-bridge-size)] before:bg-transparent before:content-['']",
-  left: "before:pointer-events-auto before:absolute before:top-0 before:right-[calc(var(--hover-card-bridge-size)*-1)] before:bottom-0 before:w-[var(--hover-card-bridge-size)] before:bg-transparent before:content-['']",
-};
+// ---------------------------------------------------------------------------
+// Hover bridge — positioned via group-data-[side=...] on the inner motion.div.
+// ---------------------------------------------------------------------------
+
+// ---------------------------------------------------------------------------
+// Ref utilities
+// ---------------------------------------------------------------------------
 
 const assignRef = <T,>(ref: React.ForwardedRef<T>, value: T | null) => {
   if (typeof ref === "function") {
@@ -113,21 +143,34 @@ const assignRef = <T,>(ref: React.ForwardedRef<T>, value: T | null) => {
   }
 };
 
+// ---------------------------------------------------------------------------
+// useHoverCard hook
+// ---------------------------------------------------------------------------
+
 const useHoverCard = () => {
   const context = React.useContext(HoverCardContext);
 
   if (!context) {
-    throw new Error("HoverCard components must be used inside HoverCard");
+    throw new Error("HoverCard components must be used inside <HoverCard>");
   }
 
   return context;
 };
+
+// ---------------------------------------------------------------------------
+// HoverCard — root
+// ---------------------------------------------------------------------------
 
 type HoverCardProps = {
   className?: string;
   openDelay?: number;
   closeDelay?: number;
   children?: React.ReactNode;
+  /** Controlled open state. */
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+  /** Uncontrolled initial open state. */
+  defaultOpen?: boolean;
 };
 
 const HoverCard = ({
@@ -135,19 +178,39 @@ const HoverCard = ({
   openDelay = 80,
   closeDelay = 120,
   children,
+  open: openProp,
+  onOpenChange,
+  defaultOpen = false,
 }: HoverCardProps) => {
-  const [open, setOpen] = React.useState(false);
+  const [internalOpen, setInternalOpen] = React.useState(defaultOpen);
+  const isControlled = openProp !== undefined;
+  const open = isControlled ? openProp : internalOpen;
+
+  const setOpen = React.useCallback(
+    (nextOpen: boolean) => {
+      if (!isControlled) {
+        setInternalOpen(nextOpen);
+      }
+      onOpenChange?.(nextOpen);
+    },
+    [isControlled, onOpenChange]
+  );
+
   const timeoutRef = React.useRef<number | null>(null);
   const triggerRef = React.useRef<HTMLElement | null>(null);
   const contentRef = React.useRef<HTMLDivElement | null>(null);
+  const isHoveringRef = React.useRef(false);
   const reactId = React.useId();
 
   const clearTimer = React.useCallback(() => {
-    if (timeoutRef.current) {
+    if (timeoutRef.current !== null) {
       window.clearTimeout(timeoutRef.current);
       timeoutRef.current = null;
     }
   }, []);
+
+  // Clear any pending timer when the component unmounts.
+  React.useEffect(() => clearTimer, [clearTimer]);
 
   const containsInteractiveNode = React.useCallback((node: Node | null) => {
     return Boolean(
@@ -167,18 +230,20 @@ const HoverCard = ({
   const scheduleOpen = React.useCallback(() => {
     clearTimer();
     timeoutRef.current = window.setTimeout(() => setOpen(true), openDelay);
-  }, [clearTimer, openDelay]);
+  }, [clearTimer, openDelay, setOpen]);
 
   const scheduleClose = React.useCallback(() => {
     clearTimer();
     timeoutRef.current = window.setTimeout(() => setOpen(false), closeDelay);
-  }, [clearTimer, closeDelay]);
+  }, [clearTimer, closeDelay, setOpen]);
 
   const handleHoverStart = React.useCallback(
     (event: React.PointerEvent<HTMLElement>) => {
       if (event.pointerType === "touch") return;
+      isHoveringRef.current = true;
 
       if (open) {
+        // Already open — cancel any scheduled close.
         clearTimer();
         return;
       }
@@ -194,10 +259,14 @@ const HoverCard = ({
 
       const nextTarget = event.relatedTarget;
 
+      // Cursor moved into the other interactive zone (trigger ↔ content).
       if (nextTarget instanceof Node && containsInteractiveNode(nextTarget)) {
         return;
       }
 
+      isHoveringRef.current = false;
+
+      // Keep open if focus is still inside.
       if (hasFocusWithin()) return;
 
       scheduleClose();
@@ -208,23 +277,25 @@ const HoverCard = ({
   const handleFocusStart = React.useCallback(() => {
     clearTimer();
     setOpen(true);
-  }, [clearTimer]);
+  }, [clearTimer, setOpen]);
 
   const handleFocusEnd = React.useCallback(
     (event: React.FocusEvent<HTMLElement>) => {
       const nextTarget = event.relatedTarget;
 
+      // Focus moved to another interactive zone — keep open.
       if (nextTarget instanceof Node && containsInteractiveNode(nextTarget)) {
         return;
       }
 
+      // Cursor is still hovering — keep open (e.g. user clicked static text).
+      if (isHoveringRef.current) return;
+
       clearTimer();
       setOpen(false);
     },
-    [clearTimer, containsInteractiveNode]
+    [clearTimer, containsInteractiveNode, setOpen]
   );
-
-  React.useEffect(() => clearTimer, [clearTimer]);
 
   return (
     <HoverCardContext.Provider
@@ -244,6 +315,11 @@ const HoverCard = ({
         handleHoverStart,
       }}
     >
+      {/*
+        Radix HoverCard.Root is used solely to handle the Radix portal and
+        positioning. We bypass its own open/close timing by wiring open/onOpenChange
+        from our own state and calling clearTimer before forwarding the event.
+      */}
       <HoverCardPrimitive.Root
         onOpenChange={(nextOpen) => {
           clearTimer();
@@ -264,6 +340,10 @@ const HoverCard = ({
     </HoverCardContext.Provider>
   );
 };
+
+// ---------------------------------------------------------------------------
+// HoverCardTrigger
+// ---------------------------------------------------------------------------
 
 type HoverCardTriggerProps = React.ComponentPropsWithoutRef<"button"> & {
   asChild?: boolean;
@@ -296,6 +376,7 @@ const HoverCardTrigger = React.forwardRef<
       handleHoverEnd,
       handleHoverStart,
     } = useHoverCard();
+
     const Comp = asChild ? Slot : "button";
 
     return (
@@ -314,38 +395,22 @@ const HoverCardTrigger = React.forwardRef<
           id={triggerId}
           onBlur={(event) => {
             onBlur?.(event);
-
-            if (event.defaultPrevented) {
-              return;
-            }
-
+            if (event.defaultPrevented) return;
             handleFocusEnd(event);
           }}
           onFocus={(event) => {
             onFocus?.(event);
-
-            if (event.defaultPrevented) {
-              return;
-            }
-
+            if (event.defaultPrevented) return;
             handleFocusStart();
           }}
           onPointerEnter={(event) => {
             onPointerEnter?.(event);
-
-            if (event.defaultPrevented) {
-              return;
-            }
-
+            if (event.defaultPrevented) return;
             handleHoverStart(event);
           }}
           onPointerLeave={(event) => {
             onPointerLeave?.(event);
-
-            if (event.defaultPrevented) {
-              return;
-            }
-
+            if (event.defaultPrevented) return;
             handleHoverEnd(event);
           }}
           ref={(node: HTMLButtonElement | null) => {
@@ -361,9 +426,13 @@ const HoverCardTrigger = React.forwardRef<
 );
 HoverCardTrigger.displayName = "HoverCardTrigger";
 
+// ---------------------------------------------------------------------------
+// HoverCardContent types
+// ---------------------------------------------------------------------------
+
 type HoverCardContentProps = Omit<
   React.ComponentPropsWithoutRef<typeof motion.div>,
-  "initial" | "animate" | "exit" | "transition"
+  "initial" | "animate" | "exit" | "transition" | "variants"
 > & {
   align?: Align;
   alignOffset?: number;
@@ -372,6 +441,16 @@ type HoverCardContentProps = Omit<
   side?: Side;
   sideOffset?: number;
 };
+
+// ---------------------------------------------------------------------------
+// HoverCardContentBody — rendered panel, mounted only while open or animating.
+//
+// ARCHITECTURE NOTE:
+// Radix sets `data-side` on its Content element when collision-detection flips
+// the placement. We pass `asChild` so the outer <div> receives that attribute.
+// The `group` class on the same element lets child `group-data-[side=...]`
+// selectors control the bridge position correctly on all sides.
+// ---------------------------------------------------------------------------
 
 const HoverCardContentBody = React.forwardRef<
   HTMLDivElement,
@@ -405,17 +484,12 @@ const HoverCardContentBody = React.forwardRef<
       handleHoverEnd,
       handleHoverStart,
     } = useHoverCard();
-    const cardMotion = getHoverCardMotion(side);
-    const panelVariants = {
-      closed: {
-        ...cardMotion.closed,
-        transition: cardMotion.closedTransition,
-      },
-      open: {
-        ...cardMotion.animate,
-        transition: cardMotion.openTransition,
-      },
-    };
+
+    // Variants are computed from the prop `side`. Radix may flip the actual
+    // placement, but the initial closed state still needs numeric offsets so
+    // Framer Motion can interpolate cleanly. The bridge CSS is handled via the
+    // group-data-[side=...] selectors which read Radix's data-side attribute.
+    const variants = getHoverCardVariants(side);
 
     return (
       <HoverCardPrimitive.Content
@@ -427,7 +501,13 @@ const HoverCardContentBody = React.forwardRef<
         side={side}
         sideOffset={sideOffset}
       >
+        {/*
+          Radix renders its positioning wrapper here and sets data-side on it.
+          The `group` class exposes that attribute to group-data-[side=...]
+          utility classes on the inner panel.
+        */}
         <div
+          className="group outline-none"
           style={
             {
               "--hover-card-bridge-size": `${sideOffset}px`,
@@ -442,59 +522,49 @@ const HoverCardContentBody = React.forwardRef<
             className={cn(
               hoverCardThemeClassName,
               hoverCardPanelClassName,
-              hoverBridgeStyles[side],
+              // Bridge pseudo-element positions itself relative to whatever side
+              // Radix resolved at runtime via group-data-[side=...] selectors.
+              "before:pointer-events-auto before:absolute before:bg-transparent before:content-['']",
+              "group-data-[side=top]:before:right-0 group-data-[side=top]:before:bottom-[calc(var(--hover-card-bridge-size)*-1)] group-data-[side=top]:before:left-0 group-data-[side=top]:before:h-[var(--hover-card-bridge-size)]",
+              "group-data-[side=bottom]:before:top-[calc(var(--hover-card-bridge-size)*-1)] group-data-[side=bottom]:before:right-0 group-data-[side=bottom]:before:left-0 group-data-[side=bottom]:before:h-[var(--hover-card-bridge-size)]",
+              "group-data-[side=left]:before:top-0 group-data-[side=left]:before:right-[calc(var(--hover-card-bridge-size)*-1)] group-data-[side=left]:before:bottom-0 group-data-[side=left]:before:w-[var(--hover-card-bridge-size)]",
+              "group-data-[side=right]:before:top-0 group-data-[side=right]:before:bottom-0 group-data-[side=right]:before:left-[calc(var(--hover-card-bridge-size)*-1)] group-data-[side=right]:before:w-[var(--hover-card-bridge-size)]",
               "transform-gpu",
               className
             )}
-            data-state="open"
             exit="closed"
             id={contentId}
             initial="closed"
             onBlur={(event) => {
               onBlur?.(event);
-
-              if (event.defaultPrevented) {
-                return;
-              }
-
+              if (event.defaultPrevented) return;
               handleFocusEnd(event);
             }}
             onFocus={(event) => {
               onFocus?.(event);
-
-              if (event.defaultPrevented) {
-                return;
-              }
-
+              if (event.defaultPrevented) return;
               handleFocusStart();
             }}
             onPointerEnter={(event) => {
               onPointerEnter?.(event);
-
-              if (event.defaultPrevented) {
-                return;
-              }
-
+              if (event.defaultPrevented) return;
               handleHoverStart(event);
             }}
             onPointerLeave={(event) => {
               onPointerLeave?.(event);
-
-              if (event.defaultPrevented) {
-                return;
-              }
-
+              if (event.defaultPrevented) return;
               handleHoverEnd(event);
             }}
             ref={(node: HTMLDivElement | null) => {
               setContentNode(node);
               assignRef(ref, node);
             }}
+            role="dialog"
             style={{
               transformOrigin:
                 "var(--radix-hover-card-content-transform-origin)",
             }}
-            variants={panelVariants}
+            variants={variants}
           >
             {children}
           </motion.div>
@@ -504,6 +574,11 @@ const HoverCardContentBody = React.forwardRef<
   }
 );
 HoverCardContentBody.displayName = "HoverCardContentBody";
+
+// ---------------------------------------------------------------------------
+// HoverCardContent — AnimatePresence wrapper keeps the panel in the DOM until
+// the exit animation finishes, then cleanly unmounts.
+// ---------------------------------------------------------------------------
 
 const HoverCardContent = React.forwardRef<
   HTMLDivElement,
