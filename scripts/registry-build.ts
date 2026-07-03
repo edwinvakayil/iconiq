@@ -150,8 +150,8 @@ const REGISTRY_UI_META: Record<
   drawer: {
     title: "Drawer",
     description:
-      "Compound Vaul drawer primitives with a soft overlay fade, direction-aware layout classes, drag gestures, and tuned fluid slide motion.",
-    dependencies: ["vaul"],
+      "Compound Vaul drawer with direction-aware layout, drag gestures, snap points, size variants, styled footer actions, optional close button, and safe-area-aware panel geometry.",
+    dependencies: ["vaul", "lucide-react"],
   },
   dropdown: {
     title: "Dropdown",

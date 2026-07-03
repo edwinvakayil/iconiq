@@ -1,184 +1,20 @@
 "use client";
 
-import { useEffect, useState } from "react";
-
 import { SharedPrimitiveProviderSwitch } from "@/app/(site)/components/_components/provider-switch";
+import {
+  type DrawerModule,
+  DrawerPlaygroundProvider,
+  getDrawerDefaultUsageCode,
+} from "@/app/(site)/overlay-and-popups/drawer/_components/drawer-playground";
 import { drawerApiDetails } from "@/components/docs/component-api";
 import {
   ComponentDocsPage,
   type DetailItem,
 } from "@/components/docs/page-shell";
 import { LINK } from "@/constants";
-import { Badge } from "@/registry/badge";
-import { Checkbox } from "@/registry/checkbox";
-import {
-  Drawer,
-  DrawerClose,
-  DrawerContent,
-  DrawerDescription,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from "@/registry/drawer";
+import * as DrawerUI from "@/registry/drawer";
 
-const previewSentenceClassName =
-  "flex flex-wrap items-center justify-center gap-x-2 gap-y-1.5 text-balance text-[13px] text-muted-foreground leading-snug tracking-tight sm:text-sm";
-
-const previewTriggerClassName =
-  "inline-flex h-8 min-h-8 translate-y-px items-center align-middle rounded-md bg-foreground px-3 py-0 font-medium text-[13px] text-background tracking-[-0.01em] transition-[transform,background-color] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-px hover:bg-foreground/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2";
-
-const usageCode = `"use client";
-
-import { useEffect, useState } from "react";
-import {
-  Drawer,
-  DrawerClose,
-  DrawerContent,
-  DrawerDescription,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from "@/components/ui/drawer";
-import { Badge } from "@/components/ui/badge";
-import { Checkbox } from "@/components/ui/checkbox";
-
-const reviewTasks = [
-  { id: "registry", label: "Build drawer registry payload", defaultChecked: true },
-  { id: "preview", label: "Review docs preview state", defaultChecked: true },
-  { id: "install", label: "Check shadcn install command", defaultChecked: false },
-] as const;
-
-export function DrawerPreview() {
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  const previewSentenceClassName =
-    "flex flex-wrap items-center justify-center gap-x-2 gap-y-1.5 text-balance text-[13px] text-muted-foreground leading-snug tracking-tight sm:text-sm";
-
-  const previewTriggerClassName =
-    "inline-flex h-8 min-h-8 translate-y-px items-center align-middle rounded-md bg-foreground px-3 py-0 font-medium text-[13px] text-background tracking-[-0.01em] transition-[transform,background-color] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-px hover:bg-foreground/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2";
-
-  const previewSentence = (
-    <div className={previewSentenceClassName}>
-      <span>Review the checklist without leaving the page.</span>
-      <span>Tap</span>
-      {mounted ? (
-        <DrawerTrigger asChild>
-          <button className={previewTriggerClassName} type="button">
-            Review
-          </button>
-        </DrawerTrigger>
-      ) : (
-        <button className={previewTriggerClassName} type="button">
-          Review
-        </button>
-      )}
-      <span>to continue.</span>
-    </div>
-  );
-
-  if (!mounted) {
-    return (
-      <div className="flex min-h-[280px] w-full items-center justify-center px-4 py-10">
-        {previewSentence}
-      </div>
-    );
-  }
-
-  return (
-    <div className="flex min-h-[280px] w-full items-center justify-center px-4 py-10">
-      <Drawer direction="right">
-        {previewSentence}
-      <DrawerContent>
-        <DrawerHeader className="pb-7">
-          <DrawerTitle>Iconiq registry</DrawerTitle>
-          <DrawerDescription>
-            Prepare the drawer example for the component docs.
-          </DrawerDescription>
-        </DrawerHeader>
-        <div className="min-h-0 overflow-y-auto px-4 pb-4">
-          <div className="flex items-start justify-between gap-4 border-border border-b pb-5">
-            <div>
-              <h3 className="font-medium text-[20px] text-foreground tracking-[-0.03em]">
-                Drawer preview
-              </h3>
-            </div>
-            <Badge color="gray" size="sm">
-              Iconiq
-            </Badge>
-          </div>
-
-          <div className="py-5">
-            <p className="font-medium text-[14px] text-foreground">
-              Registry checklist
-            </p>
-            <p className="mt-1 text-[13px] text-muted-foreground">
-              Keep the install payload and docs preview aligned.
-            </p>
-            <div className="mt-3">
-              {reviewTasks.map((task) => (
-                <div
-                  className="flex items-center gap-3 border-border border-b py-3 last:border-b-0"
-                  key={task.id}
-                >
-                  <Checkbox
-                    className="shrink-0"
-                    defaultChecked={task.defaultChecked}
-                    id={\`drawer-\${task.id}\`}
-                  />
-                  <label
-                    className="min-w-0 text-[13px] text-foreground leading-5"
-                    htmlFor={\`drawer-\${task.id}\`}
-                  >
-                    {task.label}
-                  </label>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-        <DrawerFooter className="border-t border-border">
-          <div className="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
-            <DrawerClose asChild>
-              <button
-                className="inline-flex min-h-11 items-center justify-center rounded-xl border border-border bg-background px-4 text-[13px] font-medium text-foreground transition-colors hover:bg-foreground hover:text-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                type="button"
-              >
-                Close
-              </button>
-            </DrawerClose>
-            <button
-              className="inline-flex min-h-11 items-center justify-center rounded-xl border border-foreground bg-foreground px-4 text-[13px] font-medium text-background transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-              type="button"
-            >
-              Update docs
-            </button>
-          </div>
-        </DrawerFooter>
-      </DrawerContent>
-      </Drawer>
-    </div>
-  );
-}`;
-
-const reviewTasks = [
-  {
-    id: "registry",
-    label: "Build drawer registry payload",
-    defaultChecked: true,
-  },
-  { id: "preview", label: "Review docs preview state", defaultChecked: true },
-  {
-    id: "install",
-    label: "Check shadcn install command",
-    defaultChecked: false,
-  },
-] as const;
+const IMPORT_PATH = "@/components/ui/drawer";
 
 const breadcrumbs = [
   { label: "Docs", href: "/" },
@@ -195,7 +31,7 @@ function getDetails(): DetailItem[] {
     return {
       ...item,
       notes: [
-        "Dependencies: vaul.",
+        "Dependencies: vaul, lucide-react.",
         "This page documents the Vaul install only. The Base UI and Radix UI provider options are visible for section consistency but disabled because this drawer is not a primitive-specific wrapper.",
         "The generated registry file is /r/drawer.json.",
       ],
@@ -204,164 +40,86 @@ function getDetails(): DetailItem[] {
   });
 }
 
-function DrawerPreview() {
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  const previewSentence = (
-    <div className={previewSentenceClassName}>
-      <span>Review the checklist without leaving the page.</span>
-      <span>Tap</span>
-      {mounted ? (
-        <DrawerTrigger asChild>
-          <button className={previewTriggerClassName} type="button">
-            Review
-          </button>
-        </DrawerTrigger>
-      ) : (
-        <button className={previewTriggerClassName} type="button">
-          Review
-        </button>
-      )}
-      <span>to continue.</span>
-    </div>
-  );
-
-  if (!mounted) {
-    return (
-      <div className="flex min-h-[280px] w-full items-center justify-center px-4 py-10">
-        {previewSentence}
-      </div>
-    );
-  }
-
-  return (
-    <div className="flex min-h-[280px] w-full items-center justify-center px-4 py-10">
-      <Drawer direction="right">
-        {previewSentence}
-        <DrawerContent>
-          <DrawerHeader className="pb-7">
-            <DrawerTitle>Iconiq registry</DrawerTitle>
-            <DrawerDescription>
-              Prepare the drawer example for the component docs.
-            </DrawerDescription>
-          </DrawerHeader>
-          <div className="min-h-0 overflow-y-auto px-4 pb-4">
-            <div className="flex items-start justify-between gap-4 border-border border-b pb-5">
-              <div>
-                <h3 className="font-medium text-[20px] text-foreground tracking-[-0.03em]">
-                  Drawer preview
-                </h3>
-              </div>
-              <Badge color="gray" size="sm">
-                Iconiq
-              </Badge>
-            </div>
-
-            <div className="py-5">
-              <p className="font-medium text-[14px] text-foreground">
-                Registry checklist
-              </p>
-              <p className="mt-1 text-[13px] text-muted-foreground">
-                Keep the install payload and docs preview aligned.
-              </p>
-              <div className="mt-3">
-                {reviewTasks.map((task) => (
-                  <div
-                    className="flex items-center gap-3 border-border border-b py-3 last:border-b-0"
-                    key={task.id}
-                  >
-                    <Checkbox
-                      className="shrink-0"
-                      defaultChecked={task.defaultChecked}
-                      id={`drawer-${task.id}`}
-                    />
-                    <label
-                      className="min-w-0 text-[13px] text-foreground leading-5"
-                      htmlFor={`drawer-${task.id}`}
-                    >
-                      {task.label}
-                    </label>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-          <DrawerFooter className="border-border border-t">
-            <div className="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
-              <DrawerClose asChild>
-                <button
-                  className="inline-flex min-h-11 items-center justify-center rounded-xl border border-border bg-background px-4 font-medium text-[13px] text-foreground transition-colors hover:bg-foreground hover:text-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                  type="button"
-                >
-                  Close
-                </button>
-              </DrawerClose>
-              <button
-                className="inline-flex min-h-11 items-center justify-center rounded-xl border border-foreground bg-foreground px-4 font-medium text-[13px] text-background transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                type="button"
-              >
-                Update docs
-              </button>
-            </div>
-          </DrawerFooter>
-        </DrawerContent>
-      </Drawer>
-    </div>
-  );
-}
-
-export default function RadixBaseDrawerPage() {
+export default function DrawerPage() {
   const details = getDetails();
+  const usageCode = getDrawerDefaultUsageCode(IMPORT_PATH);
 
   return (
-    <ComponentDocsPage
-      breadcrumbs={breadcrumbs}
-      componentName="drawer"
-      description="Reveal focused controls or details without leaving the page."
-      details={details}
-      editHref={`${LINK.GITHUB}/edit/main/app/(site)/overlay-and-popups/drawer/page.tsx`}
-      headerActions={<SharedPrimitiveProviderSwitch />}
-      itemSlug="drawer"
-      pageUrl="/overlay-and-popups/drawer"
-      preInstallationSections={[
-        {
-          id: "credits",
-          title: "Credits",
-          content: (
-            <p className="max-w-3xl text-[14px] text-secondary leading-6">
-              Drawer is built on top of{" "}
-              <a
-                className="font-medium text-foreground underline underline-offset-4"
-                href="https://github.com/emilkowalski/vaul"
-                rel="noreferrer"
-                target="_blank"
-              >
-                Vaul
-              </a>{" "}
-              by{" "}
-              <a
-                className="font-medium text-foreground underline underline-offset-4"
-                href="https://twitter.com/emilkowalski"
-                rel="noreferrer"
-                target="_blank"
-              >
-                emilkowalski
-              </a>
-              .
-            </p>
-          ),
-        },
-      ]}
-      preview={<DrawerPreview />}
-      previewDescription="Tap Review in the sentence to open the registry checklist drawer."
-      title="Drawer"
-      usageCode={usageCode}
-      usageDescription="This Vaul install exposes the familiar compound drawer parts, side-aware placement, drag gestures, a soft overlay fade, and a tuned slide curve for fluid open and close motion."
-      v0PageCode={usageCode}
-    />
+    <DrawerPlaygroundProvider
+      importPath={IMPORT_PATH}
+      ui={DrawerUI as DrawerModule}
+    >
+      {({ preview, renderSettings }) => (
+        <ComponentDocsPage
+          breadcrumbs={breadcrumbs}
+          componentName="drawer"
+          description="Reveal focused controls or details without leaving the page."
+          details={details}
+          detailsDescription="Compound parts cover direction-aware placement, drag gestures, optional close button, scrollable DrawerBody, styled footer actions, and safe-area-aware panel geometry."
+          editHref={`${LINK.GITHUB}/edit/main/app/(site)/overlay-and-popups/drawer/page.tsx`}
+          headerActions={<SharedPrimitiveProviderSwitch />}
+          itemSlug="drawer"
+          pageUrl="/overlay-and-popups/drawer"
+          preInstallationSections={[
+            {
+              id: "credits",
+              title: "Credits",
+              content: (
+                <p className="max-w-3xl text-[14px] text-secondary leading-6">
+                  Drawer is built on top of{" "}
+                  <a
+                    className="font-medium text-foreground underline underline-offset-4"
+                    href="https://github.com/emilkowalski/vaul"
+                    rel="noreferrer"
+                    target="_blank"
+                  >
+                    Vaul
+                  </a>{" "}
+                  by{" "}
+                  <a
+                    className="font-medium text-foreground underline underline-offset-4"
+                    href="https://twitter.com/emilkowalski"
+                    rel="noreferrer"
+                    target="_blank"
+                  >
+                    emilkowalski
+                  </a>
+                  .
+                </p>
+              ),
+            },
+          ]}
+          preview={preview}
+          previewClassName="min-h-[18rem]"
+          previewDescription="Use the playground to switch direction, action tone, controlled state, dismissible behavior, close button visibility, scrollable body, and async footer actions."
+          previewPersonalize={({ onClose }) => renderSettings(onClose)}
+          previewPersonalizeTitle="Drawer"
+          railNotes={[
+            "Use DrawerTrigger asChild when the trigger is already a design-system button or inline control.",
+            "Use DrawerBody for long forms so the header and footer stay visible while the middle section scrolls.",
+          ]}
+          title="Drawer"
+          usageCode={usageCode}
+          usageContent={
+            <div className="max-w-3xl">
+              <h3 className="font-medium text-[15px] text-foreground tracking-[-0.02em]">
+                Responsive dialog pattern
+              </h3>
+              <p className="mt-2 text-[14px] text-secondary leading-6">
+                For desktop-first flows, pair this drawer with a dialog: render{" "}
+                <code className="text-foreground">Dialog</code> from{" "}
+                <code className="text-foreground">md:</code> breakpoints upward
+                and keep <code className="text-foreground">Drawer</code> for
+                mobile. Use the playground direction controls to preview bottom,
+                top, left, and right placements before wiring your responsive
+                breakpoint switch.
+              </p>
+            </div>
+          }
+          usageDescription="This Vaul install exposes compound drawer parts with direction-aware layout, drag gestures, styled footer actions, optional close button, and safe-area-aware panel sizing."
+          v0PageCode={usageCode}
+        />
+      )}
+    </DrawerPlaygroundProvider>
   );
 }

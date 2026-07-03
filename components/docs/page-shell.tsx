@@ -693,6 +693,7 @@ function ComponentDocsPage({
   preview,
   usageCode,
   usageDescription,
+  usageContent,
   details,
   preInstallationSections = [],
   extraSections = [],
@@ -722,6 +723,7 @@ function ComponentDocsPage({
   usageCode: string;
   v0PageCode?: string;
   usageDescription?: ReactNode;
+  usageContent?: ReactNode;
   details: DetailItem[];
   preInstallationSections?: ComponentDocsExtraSection[];
   extraSections?: ComponentDocsExtraSection[];
@@ -885,6 +887,9 @@ function ComponentDocsPage({
                     variantCodes={variantCodes}
                     variantTitles={variantTitles}
                   />
+                  {usageContent ? (
+                    <div className="mt-8">{usageContent}</div>
+                  ) : null}
                 </DocsSection>
 
                 {extraSections.map((section) => (

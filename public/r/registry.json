@@ -691,10 +691,10 @@
       "name": "drawer",
       "type": "registry:ui",
       "registryDependencies": [],
-      "dependencies": ["vaul"],
+      "dependencies": ["vaul", "lucide-react"],
       "devDependencies": [],
       "title": "Drawer",
-      "description": "Compound Vaul drawer primitives with a soft overlay fade, direction-aware layout classes, drag gestures, and tuned fluid slide motion.",
+      "description": "Compound Vaul drawer with direction-aware layout, drag gestures, snap points, size variants, styled footer actions, optional close button, and safe-area-aware panel geometry.",
       "files": [
         {
           "path": "drawer.tsx",

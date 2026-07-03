@@ -112,11 +112,13 @@ export function DocsPlaygroundSegmentedField<T extends string>({
   label,
   onChange,
   options,
+  segmentClassName,
   value,
 }: {
   label?: string;
   onChange: (value: T) => void;
   options: Array<{ label: string; value: T }>;
+  segmentClassName?: string;
   value: T;
 }) {
   const segments = (
@@ -129,6 +131,7 @@ export function DocsPlaygroundSegmentedField<T extends string>({
             aria-pressed={active}
             className={cn(
               "min-w-0 flex-1 truncate rounded-xl px-2 py-1.5 font-medium text-[12px] transition-colors",
+              segmentClassName,
               active
                 ? docsPlaygroundSegmentActiveClassName
                 : "text-[#5c5c61] hover:text-[#111113] dark:text-[#a1a1a6] dark:hover:text-zinc-100"

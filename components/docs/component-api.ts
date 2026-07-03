@@ -3905,6 +3905,13 @@ const drawerApiDetails: DetailItem[] = [
           "Allows overlay click, Escape, and drag gestures to close the drawer. Controlled drawers can disable this when a flow must be completed explicitly.",
       }),
       field({
+        name: "handleOnly",
+        type: "boolean",
+        defaultValue: "false",
+        description:
+          "When true, drag-to-close is limited to a Vaul Handle part instead of the full panel surface.",
+      }),
+      field({
         name: "snapPoints",
         type: "(number | string)[]",
         description:
@@ -3912,8 +3919,8 @@ const drawerApiDetails: DetailItem[] = [
       }),
     ],
     notes: [
-      "The root accepts the full Vaul Root prop surface, including drag callbacks, activeSnapPoint, closeThreshold, shouldScaleBackground, and container.",
-      "Direction defaults to bottom at the Vaul layer, while the docs preview switches between bottom on small screens and right on larger screens.",
+      "The root accepts the full Vaul Root prop surface, including drag callbacks, activeSnapPoint, closeThreshold, shouldScaleBackground, nested, and container.",
+      "Direction defaults to bottom at the Vaul layer. Use the docs playground to preview top, left, and right placements.",
     ],
   },
   {
@@ -3970,7 +3977,7 @@ const drawerApiDetails: DetailItem[] = [
     id: "drawer-content",
     title: "DrawerContent",
     summary:
-      "Portals the overlay and animated panel, applies direction-aware layout classes, and renders the optional bottom drag handle.",
+      "Portals the overlay and animated panel, applies direction-aware layout classes, and supports an optional close button.",
     fields: [
       field({
         name: "children",
@@ -3984,9 +3991,110 @@ const drawerApiDetails: DetailItem[] = [
         description:
           "Merged with the direction-aware panel geometry and surface classes.",
       }),
+      field({
+        name: "size",
+        type: '"sm" | "default" | "lg" | "full"',
+        defaultValue: '"default"',
+        description:
+          "Controls panel width for left and right drawers and max height for top and bottom drawers.",
+      }),
+      field({
+        name: "showCloseButton",
+        type: "boolean",
+        defaultValue: "false",
+        description:
+          "Renders an absolute close button in the panel corner. Useful for side drawers and quick dismissal.",
+      }),
+      field({
+        name: "showOverlay",
+        type: "boolean",
+        defaultValue: "true",
+        description:
+          "Toggles the default overlay. Set false for non-modal surfaces or custom overlay composition.",
+      }),
+      field({
+        name: "overlayClassName",
+        type: "string",
+        description: "Merged onto DrawerOverlay when showOverlay is true.",
+      }),
     ],
     notes: [
-      "DrawerContent marks rendered children as non-draggable so selecting text inside the panel does not trigger Vaul's drag-to-close gesture.",
+      "DrawerBody marks only the scrollable middle section as non-draggable so text selection does not trigger drag-to-close.",
+      "DrawerContent applies safe-area padding and max-height caps for mobile notches and home indicators.",
+    ],
+  },
+  {
+    id: "drawer-body",
+    title: "DrawerBody",
+    summary:
+      "Scrollable middle section between header and footer with drag disabled for text selection.",
+    fields: [
+      field({
+        name: "children",
+        type: "ReactNode",
+        required: true,
+        description: "Scrollable drawer content.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description: "Merged with the default body scroll classes.",
+      }),
+    ],
+  },
+  {
+    id: "drawer-actions",
+    title: "DrawerAction / DrawerCancel",
+    summary:
+      "Styled footer buttons with squircle corners and optional closeOnClick control for async flows.",
+    fields: [
+      field({
+        name: "variant",
+        type: '"default" | "destructive"',
+        description:
+          "DrawerAction tone. DrawerCancel uses the muted secondary style.",
+      }),
+      field({
+        name: "closeOnClick",
+        type: "boolean",
+        defaultValue: "true",
+        description:
+          "When false, the click handler runs without closing the drawer. Useful for async submit flows.",
+      }),
+      field({
+        name: "asChild",
+        type: "boolean",
+        description: "Compose onto an existing button element.",
+      }),
+    ],
+  },
+  {
+    id: "drawer-media",
+    title: "DrawerMedia",
+    summary:
+      "Optional icon slot for headers, matching the dialog media treatment.",
+    fields: [
+      field({
+        name: "children",
+        type: "ReactNode",
+        required: true,
+        description: "Icon or media rendered inside the circular slot.",
+      }),
+    ],
+  },
+  {
+    id: "drawer-nested",
+    title: "DrawerNested",
+    summary:
+      "Nested Vaul root for stacking a second drawer above an open drawer.",
+    fields: [
+      field({
+        name: "children",
+        type: "ReactNode",
+        required: true,
+        description:
+          "Nested drawer composition rendered above the parent drawer.",
+      }),
     ],
   },
   {
@@ -4097,7 +4205,7 @@ const drawerApiDetails: DetailItem[] = [
         name: "overlay",
         type: "built-in",
         description:
-          "A fixed full-screen overlay fades in behind the drawer and uses a subtle black tint with backdrop blur support.",
+          "A fixed full-screen overlay fades in behind the drawer with a stronger black tint and backdrop blur support.",
       }),
       field({
         name: "content",
@@ -4107,12 +4215,11 @@ const drawerApiDetails: DetailItem[] = [
       }),
     ],
     notes: [
-      "Bottom drawers show the handle by default; top, left, and right drawers keep the content surface clean unless you add your own handle.",
-      "DrawerContent marks rendered children as non-draggable so selecting text inside the panel does not trigger Vaul's drag-to-close gesture.",
-      "Top and bottom drawers cap at 80vh, while left and right drawers use a three-quarter width with a small-screen max width at the sm breakpoint.",
+      "DrawerBody marks only the scrollable middle section as non-draggable so text selection does not trigger drag-to-close.",
+      "Size variants control width for side drawers and safe-area-aware max height for top and bottom drawers.",
     ],
   },
-  registryItem("drawer.json", ["vaul"]),
+  registryItem("drawer.json", ["vaul", "lucide-react"]),
 ];
 
 const dropdownApiDetails: DetailItem[] = [
