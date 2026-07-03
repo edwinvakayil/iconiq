@@ -110,7 +110,7 @@ export default function RadixBaseAlertDialogPage() {
           componentName={provider.componentName}
           description="Confirmation dialog for destructive or high-stakes actions."
           details={details}
-          detailsDescription="Compound parts cover custom triggers, controlled and uncontrolled state, destructive or default actions, async confirmation, media slots, and reduced-motion behavior."
+          detailsDescription="Compound parts cover custom triggers, controlled and uncontrolled state, destructive or default actions, async confirmation, and reduced-motion behavior."
           editHref={`${LINK.GITHUB}/edit/main/app/(site)/overlay-and-popups/alert-dialog/page.tsx`}
           headerActions={
             <ProviderSwitch
@@ -121,8 +121,8 @@ export default function RadixBaseAlertDialogPage() {
           itemSlug="alert-dialog"
           pageUrl="/overlay-and-popups/alert-dialog"
           preview={preview}
-          previewClassName="min-h-[320px]"
-          previewDescription="Use the playground to switch destructive/default tone, controlled state, custom triggers, async close behavior, and the media slot."
+          previewClassName="min-h-[18rem]"
+          previewDescription="Use the playground to switch destructive/default tone, controlled state, custom triggers, and async close behavior."
           previewPersonalize={({ onClose }) => renderSettings(onClose)}
           previewPersonalizeTitle="Alert Dialog"
           railNotes={[

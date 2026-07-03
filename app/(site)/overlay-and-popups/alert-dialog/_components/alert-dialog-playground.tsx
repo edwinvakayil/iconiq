@@ -1,6 +1,6 @@
 "use client";
 
-import { AlertTriangle, CheckCircle2, Trash2 } from "lucide-react";
+import { Trash2 } from "lucide-react";
 import {
   type ComponentType,
   type ReactNode,
@@ -59,7 +59,6 @@ export type AlertDialogModule = {
   AlertDialogDescription: ComponentType<AlertDialogSlotProps>;
   AlertDialogFooter: ComponentType<AlertDialogSlotProps>;
   AlertDialogHeader: ComponentType<AlertDialogSlotProps>;
-  AlertDialogMedia: ComponentType<AlertDialogSlotProps>;
   AlertDialogTitle: ComponentType<AlertDialogSlotProps>;
   AlertDialogTrigger: ComponentType<AlertDialogButtonProps>;
   alertDialogTriggerClassName: string;
@@ -71,7 +70,6 @@ type AlertDialogPlaygroundState = {
   asyncAction: boolean;
   controlled: boolean;
   customTrigger: boolean;
-  showMedia: boolean;
   smallTrigger: boolean;
 };
 
@@ -80,7 +78,6 @@ const ALERT_DIALOG_DEFAULT_STATE: AlertDialogPlaygroundState = {
   asyncAction: false,
   controlled: true,
   customTrigger: true,
-  showMedia: true,
   smallTrigger: true,
 };
 
@@ -94,7 +91,6 @@ function getScenarioCopy(state: AlertDialogPlaygroundState) {
     return {
       actionLabel: state.asyncAction ? "Publishing..." : "Publish",
       body: "This makes the draft visible to everyone on the team. You can still roll back from history afterward.",
-      icon: CheckCircle2,
       title: "Publish this draft?",
       trigger: "Publish",
     };
@@ -103,7 +99,6 @@ function getScenarioCopy(state: AlertDialogPlaygroundState) {
   return {
     actionLabel: state.asyncAction ? "Deleting..." : "Delete",
     body: "This action permanently removes the item from your workspace. You will not be able to recover it later.",
-    icon: AlertTriangle,
     title: "Delete this item?",
     trigger: "Delete",
   };
@@ -125,10 +120,10 @@ function buildTriggerCode(state: AlertDialogPlaygroundState) {
   }
 
   const className = state.smallTrigger
-    ? ' className="h-8 min-h-8 px-3 py-0 text-[13px]"'
-    : "";
+    ? "alertDialogTriggerSmClassName"
+    : "alertDialogTriggerClassName";
 
-  return `      <AlertDialogTrigger${className}>${label}</AlertDialogTrigger>`;
+  return `      <AlertDialogTrigger className={${className}}>${label}</AlertDialogTrigger>`;
 }
 
 function generateAlertDialogCode(
@@ -136,14 +131,9 @@ function generateAlertDialogCode(
   importPath: string
 ) {
   const needsState = state.controlled || state.asyncAction;
-  const needsMedia = state.showMedia;
-  const triggerImports = state.customTrigger
-    ? [
-        state.smallTrigger
-          ? "alertDialogTriggerSmClassName"
-          : "alertDialogTriggerClassName",
-      ]
-    : [];
+  const triggerClassImport = state.smallTrigger
+    ? "alertDialogTriggerSmClassName"
+    : "alertDialogTriggerClassName";
   const imports = [
     "AlertDialog",
     "AlertDialogAction",
@@ -152,34 +142,22 @@ function generateAlertDialogCode(
     "AlertDialogDescription",
     "AlertDialogFooter",
     "AlertDialogHeader",
-    ...(needsMedia ? ["AlertDialogMedia"] : []),
     "AlertDialogTitle",
     "AlertDialogTrigger",
-    ...triggerImports,
+    triggerClassImport,
   ];
-  const iconImport =
-    needsMedia && state.actionVariant === "destructive"
-      ? '\nimport { AlertTriangle } from "lucide-react";'
-      : needsMedia
-        ? '\nimport { CheckCircle2 } from "lucide-react";'
-        : "";
   const trigger = buildTriggerCode(state);
   const copy = getScenarioCopy(state);
-  const icon =
-    state.actionVariant === "destructive" ? "AlertTriangle" : "CheckCircle2";
   const stateHook = needsState
-    ? `\n  const [open, setOpen] = useState(false);
+    ? state.asyncAction
+      ? `\n  const [open, setOpen] = useState(false);
   const [pending, setPending] = useState(false);
+`
+      : `\n  const [open, setOpen] = useState(false);
 `
     : "\n";
   const rootProps = needsState ? " onOpenChange={setOpen} open={open}" : "";
   const contentProps = needsState ? " open={open}" : "";
-  const media = needsMedia
-    ? `          <AlertDialogMedia>
-            <${icon} className="size-5" />
-          </AlertDialogMedia>
-`
-    : "";
   const actionProps = [
     state.actionVariant === "default" ? 'variant="default"' : "",
     state.asyncAction ? "closeOnClick={false}" : "",
@@ -196,7 +174,7 @@ function generateAlertDialogCode(
   ].filter(Boolean);
   const actionAttrs = actionProps.length > 0 ? ` ${actionProps.join(" ")}` : "";
 
-  return `"use client";${needsState ? '\n\nimport { useState } from "react";' : ""}${iconImport}
+  return `"use client";${needsState ? '\n\nimport { useState } from "react";' : ""}
 import {
   ${imports.join(",\n  ")},
 } from "${importPath}";
@@ -206,16 +184,14 @@ export function AlertDialogPreview() {${stateHook}
     <AlertDialog${rootProps}>
 ${trigger}
       <AlertDialogContent${contentProps}>
-        <div className="flex items-start gap-4">
-${media}          <AlertDialogHeader>
-            <AlertDialogTitle>${copy.title}</AlertDialogTitle>
-            <AlertDialogDescription>
-              ${copy.body}
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-        </div>
+        <AlertDialogHeader>
+          <AlertDialogTitle>${copy.title}</AlertDialogTitle>
+          <AlertDialogDescription>
+            ${copy.body}
+          </AlertDialogDescription>
+        </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel disabled={pending}>Cancel</AlertDialogCancel>
+          <AlertDialogCancel${state.asyncAction ? " disabled={pending}" : ""}>Cancel</AlertDialogCancel>
           <AlertDialogAction${actionAttrs}>
             ${copy.actionLabel}
           </AlertDialogAction>
@@ -229,6 +205,9 @@ ${media}          <AlertDialogHeader>
 export function getAlertDialogDefaultUsageCode(importPath: string) {
   return generateAlertDialogCode(ALERT_DIALOG_DEFAULT_STATE, importPath);
 }
+
+const previewSentenceClassName =
+  "flex flex-wrap items-center justify-center gap-x-2 gap-y-1.5 text-balance text-[13px] text-muted-foreground leading-snug tracking-tight sm:text-sm";
 
 function AlertDialogPlaygroundPreview({
   state,
@@ -245,14 +224,12 @@ function AlertDialogPlaygroundPreview({
     AlertDialogDescription,
     AlertDialogFooter,
     AlertDialogHeader,
-    AlertDialogMedia,
     AlertDialogTitle,
     AlertDialogTrigger,
     alertDialogTriggerClassName,
     alertDialogTriggerSmClassName,
   } = ui;
   const copy = useMemo(() => getScenarioCopy(state), [state]);
-  const Icon = copy.icon;
   const [open, setOpen] = useState(false);
   const [pending, setPending] = useState(false);
   const controlled = state.controlled || state.asyncAction;
@@ -269,11 +246,7 @@ function AlertDialogPlaygroundPreview({
       </button>
     </AlertDialogTrigger>
   ) : (
-    <AlertDialogTrigger
-      className={
-        state.smallTrigger ? "h-8 min-h-8 px-3 py-0 text-[13px]" : undefined
-      }
-    >
+    <AlertDialogTrigger className={triggerClassName}>
       {copy.trigger}
     </AlertDialogTrigger>
   );
@@ -291,12 +264,12 @@ function AlertDialogPlaygroundPreview({
   };
 
   return (
-    <div className="flex min-h-[320px] items-center justify-center p-6">
+    <div className="flex min-h-[18rem] items-center justify-center p-6">
       <AlertDialog
         onOpenChange={controlled ? setOpen : undefined}
         open={controlled ? open : undefined}
       >
-        <div className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1.5 text-balance text-[13px] text-muted-foreground leading-snug tracking-tight sm:text-sm">
+        <p className={previewSentenceClassName}>
           <span>
             {state.actionVariant === "destructive"
               ? "This cannot be undone."
@@ -305,25 +278,12 @@ function AlertDialogPlaygroundPreview({
           <span>Tap</span>
           {trigger}
           <span>to continue.</span>
-        </div>
+        </p>
         <AlertDialogContent open={controlled ? open : undefined}>
-          <div className="flex items-start gap-4">
-            {state.showMedia ? (
-              <AlertDialogMedia
-                className={
-                  state.actionVariant === "default"
-                    ? "bg-[color:color-mix(in_oklch,var(--adlg-action-surface),transparent_90%)] text-[color:var(--adlg-action-surface)]"
-                    : undefined
-                }
-              >
-                <Icon className="size-5" />
-              </AlertDialogMedia>
-            ) : null}
-            <AlertDialogHeader>
-              <AlertDialogTitle>{copy.title}</AlertDialogTitle>
-              <AlertDialogDescription>{copy.body}</AlertDialogDescription>
-            </AlertDialogHeader>
-          </div>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{copy.title}</AlertDialogTitle>
+            <AlertDialogDescription>{copy.body}</AlertDialogDescription>
+          </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel disabled={pending}>Cancel</AlertDialogCancel>
             <AlertDialogAction
@@ -384,11 +344,6 @@ function AlertDialogPlaygroundSettings({
         checked={state.smallTrigger}
         label="Small trigger"
         onChange={(smallTrigger) => onChange({ smallTrigger })}
-      />
-      <DocsPlaygroundToggleField
-        checked={state.showMedia}
-        label="Media slot"
-        onChange={(showMedia) => onChange({ showMedia })}
       />
     </DocsPlaygroundPanel>
   );

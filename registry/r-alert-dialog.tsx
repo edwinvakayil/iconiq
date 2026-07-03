@@ -258,11 +258,14 @@ const AlertDialogTrigger = React.forwardRef<
     <AlertDialogPrimitive.Trigger
       {...props}
       asChild={asChild}
-      className={cn(
-        alertDialogThemeClassName,
-        alertDialogTriggerClassName,
-        className
-      )}
+      className={
+        asChild
+          ? cn(alertDialogThemeClassName, className)
+          : cn(
+              alertDialogThemeClassName,
+              className ?? alertDialogTriggerClassName
+            )
+      }
       ref={ref as React.Ref<HTMLButtonElement>}
       type={asChild ? undefined : type}
     >
