@@ -133,34 +133,33 @@ export function AvatarAutoInitials() {
     code: `"use client";
 
 import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
+  Dropdown,
+  DropdownContent,
+  DropdownItem,
+  DropdownTrigger,
 } from "@/components/ui/r-dropdown";
 
 export function AvatarDropdown() {
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button aria-label="Open account menu" size="icon" variant="ghost">
-          <Avatar>
-            <AvatarImage src="/assets/shadcn.jpg" alt="shadcn/ui" />
-            <AvatarFallback>SU</AvatarFallback>
-          </Avatar>
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <DropdownMenuItem>Profile</DropdownMenuItem>
-        <DropdownMenuItem>Settings</DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+    <Dropdown variant="action">
+      <DropdownTrigger
+        aria-label="Open account menu"
+        className="h-11 w-11 overflow-hidden rounded-full border-border/80 p-0 shadow-none"
+        showChevron={false}
+        triggerShape="avatar"
+      >
+        <img
+          alt=""
+          className="h-full w-full object-cover"
+          src="/assets/shadcn.jpg"
+        />
+        <span className="sr-only">Open account menu</span>
+      </DropdownTrigger>
+      <DropdownContent align="end">
+        <DropdownItem>Profile</DropdownItem>
+        <DropdownItem>Settings</DropdownItem>
+      </DropdownContent>
+    </Dropdown>
   );
 }`,
   },

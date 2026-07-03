@@ -4234,7 +4234,7 @@ const dropdownApiDetails: DetailItem[] = [
         type: "ReactNode",
         required: true,
         description:
-          "Compose DropdownTrigger, DropdownContent, DropdownItem, and optional helpers like DropdownValue or DropdownSeparator inside the root.",
+          "Compose DropdownTrigger, DropdownContent, DropdownItem, and optional helpers like DropdownValue, DropdownSeparator, or DropdownSub inside the root.",
       }),
       field({
         name: "value",
@@ -4274,7 +4274,33 @@ const dropdownApiDetails: DetailItem[] = [
         type: '"select" | "action"',
         defaultValue: "select",
         description:
-          "Use select when items should commit a persistent value with a checkmark, or action when items should behave like immediate commands.",
+          "Use select when items should commit a persistent value with a checkmark, or action when items should behave like immediate commands. For form fields, prefer the dedicated r-select install.",
+      }),
+      field({
+        name: "modal",
+        type: "boolean",
+        defaultValue: "false",
+        description:
+          "When true, Radix traps focus and blocks outside interaction while the menu is open.",
+      }),
+      field({
+        name: "disabled",
+        type: "boolean",
+        defaultValue: "false",
+        description:
+          "Disables the trigger and prevents opening the menu from the root.",
+      }),
+      field({
+        name: "name",
+        type: "string",
+        description:
+          "Optional form field name. In select mode, renders a hidden input that submits the current value.",
+      }),
+      field({
+        name: "required",
+        type: "boolean",
+        description:
+          "Marks the hidden select input as required when name is provided.",
       }),
       field({
         name: "className",
@@ -4284,9 +4310,9 @@ const dropdownApiDetails: DetailItem[] = [
       }),
     ],
     notes: [
-      "The menu stays local to the trigger wrapper and is absolutely positioned under it instead of being portaled to document.body.",
-      "Escape and outside clicks close the menu. This version does not ship a full roving-focus keyboard model like Radix dropdown-menu.",
-      "While open, users can move through items with Arrow keys, Home, End, or typeahead matching based on each item's visible label or textValue.",
+      "Radix DropdownMenu.Root handles open state, focus restoration, outside interactions, and keyboard typeahead.",
+      "The menu content is portaled and collision-aware. Escape and outside clicks close the menu.",
+      "Shadcn-style aliases such as DropdownMenu and DropdownMenuItem are exported from the same file.",
     ],
   },
   {
@@ -4309,6 +4335,13 @@ const dropdownApiDetails: DetailItem[] = [
           "Hides the default chevron when you want a cleaner custom trigger, such as an avatar-only action menu.",
       }),
       field({
+        name: "triggerShape",
+        type: '"default" | "avatar"',
+        defaultValue: "default",
+        description:
+          "Use avatar to skip squircle corner styling on circular image triggers.",
+      }),
+      field({
         name: "className",
         type: "string",
         description: "Merged onto the trigger button shell.",
@@ -4316,11 +4349,13 @@ const dropdownApiDetails: DetailItem[] = [
       field({
         name: "disabled",
         type: "boolean",
-        description: "Prevents opening and dims the trigger styling.",
+        description:
+          "Prevents opening and dims the trigger styling. Root disabled also applies when this prop is omitted.",
       }),
     ],
     notes: [
-      "The trigger is always rendered as a button in this version, so custom trigger visuals should be passed as children and styled with className.",
+      "The trigger is always rendered as a motion button with a subtle press scale. Custom trigger visuals should be passed as children and styled with className.",
+      "ArrowDown and ArrowUp on the trigger open the menu and move focus to the first or last enabled item.",
     ],
   },
   {
@@ -4363,14 +4398,26 @@ const dropdownApiDetails: DetailItem[] = [
         name: "align",
         type: '"start" | "center" | "end"',
         defaultValue: "start",
-        description: "Horizontal alignment relative to the trigger wrapper.",
+        description: "Alignment relative to the trigger along the cross axis.",
+      }),
+      field({
+        name: "side",
+        type: '"top" | "right" | "bottom" | "left"',
+        defaultValue: "bottom",
+        description: "Preferred placement relative to the trigger.",
+      }),
+      field({
+        name: "avoidCollisions",
+        type: "boolean",
+        defaultValue: "true",
+        description:
+          "When true, Radix flips or shifts the menu to stay inside the viewport.",
       }),
       field({
         name: "sideOffset",
         type: "number",
         defaultValue: "8",
-        description:
-          "Vertical gap between the trigger and the dropdown surface.",
+        description: "Gap between the trigger and the dropdown surface.",
       }),
       field({
         name: "className",
@@ -4380,8 +4427,9 @@ const dropdownApiDetails: DetailItem[] = [
       }),
     ],
     notes: [
-      "The content stays mounted only while the menu is open, animates its bounds as labels or groups change, and constrains long menus with internal scrolling.",
-      "The surface always opens below the trigger and still clamps horizontally to stay inside the viewport.",
+      "The content is portaled, animates open/close with Iconiq motion, and constrains long menus with a Radix Scroll Area hover scrollbar.",
+      'When you pass className="w-full", the surface maps to the trigger-width CSS variable so select triggers keep matching widths.',
+      "The panel exposes id for aria-controls and uses listbox or menu role based on the root variant.",
     ],
   },
   {
@@ -4411,7 +4459,7 @@ const dropdownApiDetails: DetailItem[] = [
       }),
       field({
         name: "onClick",
-        type: "(event: MouseEvent<HTMLButtonElement>) => void",
+        type: "(event: MouseEvent<HTMLDivElement>) => void",
         description:
           "Runs before the item closes the menu. Action menus typically use this for immediate commands like profile or logout.",
       }),
@@ -4422,9 +4470,141 @@ const dropdownApiDetails: DetailItem[] = [
       }),
     ],
     notes: [
-      "Select items do not render a filled selected background in this version; only the trailing checkmark indicates the chosen value.",
+      "Select items show a trailing checkmark and aria-selected when the item value matches the root value.",
+      "Keyboard and pointer focus share the same animated row highlight.",
       "If you omit value in select mode, the item behaves like a plain closing action and will not update the current value.",
     ],
+  },
+  {
+    id: "dropdown-checkbox-item",
+    title: "DropdownCheckboxItem",
+    summary:
+      "Toggle row for multi-select action menus. Checked state is controlled with checked and onCheckedChange.",
+    fields: [
+      field({
+        name: "children",
+        type: "ReactNode",
+        required: true,
+        description: "Row label and optional leading icon.",
+      }),
+      field({
+        name: "checked",
+        type: "boolean | 'indeterminate'",
+        description: "Controlled checked state for the row.",
+      }),
+      field({
+        name: "onCheckedChange",
+        type: "(checked: boolean) => void",
+        description: "Called when the row toggles checked state.",
+      }),
+      field({
+        name: "disabled",
+        type: "boolean",
+        description: "Prevents interaction and dims the row.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description: "Merged onto the checkbox row shell.",
+      }),
+    ],
+    notes: [
+      "DropdownMenuCheckboxItem is exported as a shadcn-compatible alias.",
+    ],
+  },
+  {
+    id: "dropdown-radio-group",
+    title: "DropdownRadioGroup",
+    summary:
+      "Groups radio rows that commit a single value inside action or select menus.",
+    fields: [
+      field({
+        name: "children",
+        type: "ReactNode",
+        required: true,
+        description: "Usually DropdownRadioItem children.",
+      }),
+      field({
+        name: "value",
+        type: "string",
+        description: "Controlled selected value for the radio group.",
+      }),
+      field({
+        name: "onValueChange",
+        type: "(value: string) => void",
+        description: "Called when a radio item is chosen.",
+      }),
+    ],
+    notes: [
+      "DropdownRadioItem values also register with DropdownValue when variant is select.",
+    ],
+  },
+  {
+    id: "dropdown-radio-item",
+    title: "DropdownRadioItem",
+    summary: "Single radio row with a trailing dot indicator.",
+    fields: [
+      field({
+        name: "children",
+        type: "ReactNode",
+        required: true,
+        description: "Row label and optional leading icon.",
+      }),
+      field({
+        name: "value",
+        type: "string",
+        required: true,
+        description: "Radio value committed when the row is chosen.",
+      }),
+      field({
+        name: "textValue",
+        type: "string",
+        description:
+          "Optional explicit label used by DropdownValue and typeahead.",
+      }),
+      field({
+        name: "disabled",
+        type: "boolean",
+        description: "Prevents interaction and dims the row.",
+      }),
+    ],
+    notes: [],
+  },
+  {
+    id: "dropdown-sub",
+    title: "DropdownSub",
+    summary:
+      "Nested submenu root. Compose DropdownSubTrigger and DropdownSubContent inside it.",
+    fields: [
+      field({
+        name: "children",
+        type: "ReactNode",
+        required: true,
+        description: "DropdownSubTrigger followed by DropdownSubContent.",
+      }),
+    ],
+    notes: [
+      "DropdownMenuSub, DropdownMenuSubTrigger, and DropdownMenuSubContent are exported as aliases.",
+    ],
+  },
+  {
+    id: "dropdown-shortcut",
+    title: "DropdownShortcut",
+    summary: "Muted trailing shortcut label helper for action menu rows.",
+    fields: [
+      field({
+        name: "children",
+        type: "ReactNode",
+        required: true,
+        description: "Shortcut text such as ⌘K or Ctrl+S.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description: "Merged onto the shortcut span.",
+      }),
+    ],
+    notes: [],
   },
   {
     id: "dropdown-group",
@@ -4501,10 +4681,15 @@ const dropdownApiDetails: DetailItem[] = [
       }),
     ],
     notes: [
-      "The base separator uses the shared border token and a small vertical margin between item groups.",
+      "The separator renders a one-pixel rule using the dropdown border token.",
     ],
   },
-  registryItem("dropdown.json", ["motion", "lucide-react"]),
+  registryItem("r-dropdown.json", [
+    "@radix-ui/react-dropdown-menu",
+    "@radix-ui/react-scroll-area",
+    "motion",
+    "lucide-react",
+  ]),
 ];
 
 const fileUploadApiDetails: DetailItem[] = [
