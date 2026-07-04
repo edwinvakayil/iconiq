@@ -641,6 +641,12 @@ const REGISTRY_UI_META: Record<
       "Spring-animated AI prompt with model controls and voice or send.",
     dependencies: ["@base-ui/react", "motion", "lucide-react"],
   },
+  "setup-checklist": {
+    title: "Setup Checklist",
+    description:
+      "Animated onboarding checklist card with staggered task rows, a drawn checkmark badge, and a floating progress pill with a spring-smoothed pie.",
+    dependencies: ["motion", "lucide-react"],
+  },
   popover: {
     title: "Popover",
     description:

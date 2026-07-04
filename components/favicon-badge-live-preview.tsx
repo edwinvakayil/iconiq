@@ -7,20 +7,20 @@ import { cn } from "@/lib/utils";
 import { FaviconBadge } from "@/registry/favicon-badge";
 
 const previewSentenceClassName =
-  "flex flex-wrap items-center justify-center gap-x-2 gap-y-2 text-balance font-medium text-lg text-neutral-800 leading-snug tracking-tight sm:text-xl dark:text-neutral-100";
+  "flex flex-wrap items-center justify-center gap-x-2 gap-y-2 text-balance font-medium text-foreground text-lg leading-snug tracking-tight sm:text-xl";
 
 const inlineWebsiteTextClassName =
-  "font-medium text-lg leading-snug tracking-tight sm:text-xl";
+  "font-medium text-foreground text-lg leading-snug tracking-tight sm:text-xl";
 
 const inlineWebsiteInputClassName =
-  "relative z-10 border-0 bg-transparent p-0 text-neutral-800 caret-transparent outline-none placeholder:text-muted-foreground focus-visible:outline-none dark:text-neutral-100";
+  "relative z-10 border-0 bg-transparent p-0 text-foreground caret-transparent outline-none placeholder:text-muted-foreground focus-visible:outline-none";
 
 function BlinkingCaret({ left }: { left: number }) {
   return (
     <motion.span
       animate={{ opacity: [1, 1, 0, 0] }}
       aria-hidden
-      className="pointer-events-none absolute top-1/2 h-[0.92em] w-px -translate-y-1/2 bg-neutral-800 dark:bg-neutral-100"
+      className="pointer-events-none absolute top-1/2 h-[0.92em] w-px -translate-y-1/2 bg-foreground"
       style={{ left }}
       transition={{
         duration: 1,

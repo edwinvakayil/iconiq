@@ -1335,6 +1335,21 @@
       ]
     },
     {
+      "name": "setup-checklist",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": ["motion", "lucide-react"],
+      "devDependencies": [],
+      "title": "Setup Checklist",
+      "description": "Animated onboarding checklist card with staggered task rows, a drawn checkmark badge, and a floating progress pill with a spring-smoothed pie.",
+      "files": [
+        {
+          "path": "setup-checklist.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "shimmer-text",
       "type": "registry:ui",
       "registryDependencies": [],
