@@ -1,4 +1,4 @@
-import { type ReactNode } from "react";
+import type { ReactNode } from "react";
 
 import { DesignSectionRulers } from "@/components/design/design-section-rulers";
 import { GridCornerDots } from "@/components/design/line-grid";
@@ -40,8 +40,8 @@ export function HomeShowcaseRow({
       </div>
       <GridCornerDots
         className="z-3 hidden md:block"
-        columnWeights={columnWeights}
         columns={columnWeights.length}
+        columnWeights={columnWeights}
         rows={1}
       />
     </div>

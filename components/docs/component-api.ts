@@ -5470,6 +5470,82 @@ const promptBoxApiDetails: DetailItem[] = [
   registryItem("prompt-box.json", ["@base-ui/react", "motion", "lucide-react"]),
 ];
 
+const setupChecklistApiDetails: DetailItem[] = [
+  {
+    id: "setup-checklist",
+    title: "SetupChecklist",
+    summary:
+      "Onboarding checklist card with staggered task rows, toggleable completion badges, and a floating progress pill with an animated pie readout.",
+    fields: [
+      field({
+        name: "items",
+        type: "SetupChecklistItem[]",
+        required: true,
+        description:
+          "Tasks to render. Each item has `id`, `title`, and optional `description` and `icon` for the leading tile.",
+      }),
+      field({
+        name: "title",
+        type: "string",
+        description: 'Card heading. Defaults to "Onboarding Checklist".',
+      }),
+      field({
+        name: "description",
+        type: "string",
+        description:
+          "Muted copy under the heading. Pass an empty string to hide it.",
+      }),
+      field({
+        name: "completedIds",
+        type: "string[]",
+        description:
+          "Controlled list of completed item ids when the parent owns checklist state.",
+      }),
+      field({
+        name: "defaultCompletedIds",
+        type: "string[]",
+        description: "Initial completed item ids for uncontrolled usage.",
+      }),
+      field({
+        name: "onCompletedChange",
+        type: "(completedIds: string[]) => void",
+        description:
+          "Called with the next completed id list whenever a row is toggled.",
+      }),
+      field({
+        name: "onItemToggle",
+        type: "(id: string, completed: boolean) => void",
+        description:
+          "Called with the toggled item id and its new completion state.",
+      }),
+      field({
+        name: "showProgress",
+        type: "boolean",
+        description:
+          "Show the floating progress pill under the card. Defaults to true.",
+      }),
+      field({
+        name: "progressLabel",
+        type: "string",
+        description:
+          'Label inside the progress pill. Defaults to "Onboarding Progress".',
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description: "Extra classes for the outer wrapper.",
+      }),
+    ],
+    notes: [
+      "Click a row to toggle completion — the green badge pops in with a spring and the checkmark draws itself in.",
+      "Rows stagger in on mount with a soft rise; completed rows swap to a muted fill with a quiet crossfade.",
+      "The progress pill percentage and pie wedge are driven by the same spring, so both settle together.",
+      "All entrance, badge, and press motion collapses to simple fades when the user prefers reduced motion.",
+    ],
+  },
+  registryItem("setup-checklist.json", ["motion", "lucide-react"]),
+];
+
 const dialogApiDetails: DetailItem[] = [
   {
     id: "dialog-root",
@@ -10862,6 +10938,7 @@ export {
   fileTreeApiDetails,
   popoverApiDetails,
   promptBoxApiDetails,
+  setupChecklistApiDetails,
   accordionApiDetails,
   progressApiDetails,
   radioGroupApiDetails,

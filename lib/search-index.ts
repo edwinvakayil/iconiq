@@ -68,6 +68,8 @@ const componentSummaries: Record<string, string> = {
     "Input OTP docs in the Inputs & Forms section with Base UI OTP Field slots, spring focus motion, character entrance, and a blinking caret on the active cell.",
   "/blocks/prompt-box":
     "Prompt box docs in the Blocks section with a compact-to-expanded AI prompt field, spring resize, model footer controls, and send or voice actions.",
+  "/blocks/setup-checklist":
+    "Setup checklist docs in the Blocks section with an animated onboarding card, staggered task rows, drawn checkmark badges, and a floating progress pill.",
   "/overlay-and-popups/hover-card":
     "Hover card docs in the Overlay & Popups section with a provider switch that swaps between a Base UI popover-backed install and a Radix Hover Card primitive install.",
   "/overlay-and-popups/popover":
@@ -198,6 +200,15 @@ const extraComponentKeywordsBySlug: Record<string, string[]> = {
     "composer",
     "textarea",
     "ask anything",
+  ],
+  "setup-checklist": [
+    "setup checklist",
+    "onboarding",
+    "checklist",
+    "tasks",
+    "getting started",
+    "progress",
+    "todo",
   ],
   infiniteribbon: [
     "infinite ribbon",

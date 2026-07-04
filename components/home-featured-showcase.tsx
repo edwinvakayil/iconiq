@@ -2,15 +2,16 @@
 
 import { useEffect, useState } from "react";
 import { InlinePreviewSelect } from "@/app/(site)/components/_components/inline-preview-select";
-import { FaviconBadgeLivePreview } from "@/components/favicon-badge-live-preview";
 import {
-  homeShowcaseColSpan,
   HomeShowcasePanel,
+  homeShowcaseColSpan,
 } from "@/components/design/home-showcase-panel";
+import { FaviconBadgeLivePreview } from "@/components/favicon-badge-live-preview";
 import {
   HomeShowcaseGrid,
   HomeShowcaseRow,
 } from "@/components/home-showcase-grid";
+import { cn } from "@/lib/utils";
 import {
   Avatar,
   AvatarBadge,
@@ -26,7 +27,6 @@ import { Progress } from "@/registry/r-progress";
 import { RollingDigits } from "@/registry/rolling-digits";
 import { Skeleton } from "@/registry/skeleton";
 import { Timezone } from "@/registry/timezone";
-import { cn } from "@/lib/utils";
 
 const featuredAccordionItems: AccordionItem[] = [
   {
@@ -158,7 +158,10 @@ export function HomeFeaturedShowcase() {
       <HomeShowcaseGrid className="mt-8 sm:mt-10">
         <HomeShowcaseRow columnWeights={[7, 5]}>
           <HomeShowcasePanel
-            className={cn(homeShowcaseColSpan[7], "min-h-[220px] md:min-h-[280px]")}
+            className={cn(
+              homeShowcaseColSpan[7],
+              "min-h-[220px] md:min-h-[280px]"
+            )}
             href="/texts/dia-text"
             title="Dia Text"
           >
@@ -175,7 +178,10 @@ export function HomeFeaturedShowcase() {
           </HomeShowcasePanel>
 
           <HomeShowcasePanel
-            className={cn(homeShowcaseColSpan[5], "min-h-[240px] md:min-h-[280px]")}
+            className={cn(
+              homeShowcaseColSpan[5],
+              "min-h-[240px] md:min-h-[280px]"
+            )}
             href="/display-and-content/favicon-badge"
             title="Favicon Badge"
           >
@@ -185,7 +191,10 @@ export function HomeFeaturedShowcase() {
 
         <HomeShowcaseRow columnWeights={[7, 5]}>
           <HomeShowcasePanel
-            className={cn(homeShowcaseColSpan[7], "min-h-[260px] md:min-h-[360px]")}
+            className={cn(
+              homeShowcaseColSpan[7],
+              "min-h-[260px] md:min-h-[360px]"
+            )}
             href="/navigation/accordion"
             title="Accordion"
           >
@@ -196,7 +205,10 @@ export function HomeFeaturedShowcase() {
           </HomeShowcasePanel>
 
           <HomeShowcasePanel
-            className={cn(homeShowcaseColSpan[5], "min-h-[340px] md:min-h-[400px]")}
+            className={cn(
+              homeShowcaseColSpan[5],
+              "min-h-[340px] md:min-h-[400px]"
+            )}
             href="/display-and-content/skeleton"
             title="Skeleton"
           >
@@ -223,7 +235,10 @@ export function HomeFeaturedShowcase() {
 
         <HomeShowcaseRow columnWeights={[7, 5]}>
           <HomeShowcasePanel
-            className={cn(homeShowcaseColSpan[7], "min-h-[260px] md:min-h-[360px]")}
+            className={cn(
+              homeShowcaseColSpan[7],
+              "min-h-[260px] md:min-h-[360px]"
+            )}
             href="/display-and-content/avatar"
             title="Avatar"
           >
@@ -252,7 +267,10 @@ export function HomeFeaturedShowcase() {
           </HomeShowcasePanel>
 
           <HomeShowcasePanel
-            className={cn(homeShowcaseColSpan[5], "min-h-[340px] md:min-h-[380px]")}
+            className={cn(
+              homeShowcaseColSpan[5],
+              "min-h-[340px] md:min-h-[380px]"
+            )}
             href="/display-and-content/progress"
             title="Progress"
           >
@@ -262,7 +280,10 @@ export function HomeFeaturedShowcase() {
 
         <HomeShowcaseRow columnWeights={[4, 4, 4]}>
           <HomeShowcasePanel
-            className={cn(homeShowcaseColSpan[4], "min-h-[340px] md:min-h-[380px]")}
+            className={cn(
+              homeShowcaseColSpan[4],
+              "min-h-[340px] md:min-h-[380px]"
+            )}
             href="/display-and-content/calendar"
             title="Calendar"
           >
@@ -275,7 +296,10 @@ export function HomeFeaturedShowcase() {
           </HomeShowcasePanel>
 
           <HomeShowcasePanel
-            className={cn(homeShowcaseColSpan[4], "min-h-[260px] md:min-h-[400px]")}
+            className={cn(
+              homeShowcaseColSpan[4],
+              "min-h-[260px] md:min-h-[400px]"
+            )}
             href="/display-and-content/rolling-digits"
             title="Rolling Digits"
           >
@@ -283,7 +307,10 @@ export function HomeFeaturedShowcase() {
           </HomeShowcasePanel>
 
           <HomeShowcasePanel
-            className={cn(homeShowcaseColSpan[4], "min-h-[340px] md:min-h-[380px]")}
+            className={cn(
+              homeShowcaseColSpan[4],
+              "min-h-[340px] md:min-h-[380px]"
+            )}
             href="/display-and-content/badge"
             title="Badge"
           >
@@ -293,7 +320,10 @@ export function HomeFeaturedShowcase() {
 
         <HomeShowcaseRow columnWeights={[12]}>
           <HomeShowcasePanel
-            className={cn(homeShowcaseColSpan[12], "min-h-[260px] md:min-h-[320px]")}
+            className={cn(
+              homeShowcaseColSpan[12],
+              "min-h-[260px] md:min-h-[320px]"
+            )}
             href="/display-and-content/timezone"
             title="Timezone"
           >

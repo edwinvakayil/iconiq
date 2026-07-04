@@ -240,7 +240,7 @@ export function Header() {
     <header
       className={cn(
         "fixed top-0 right-0 left-0 z-[150] w-full border-border/50 bg-background",
-        isHome && "overflow-visible dark:border-b dark:border-border/40",
+        isHome && "overflow-visible dark:border-border/40 dark:border-b",
         !isHome && "border-b"
       )}
     >

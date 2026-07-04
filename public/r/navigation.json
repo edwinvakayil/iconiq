@@ -7,6 +7,11 @@
           "slug": "prompt-box",
           "label": "Prompt Box",
           "href": "/blocks/prompt-box"
+        },
+        {
+          "slug": "setup-checklist",
+          "label": "Setup Checklist",
+          "href": "/blocks/setup-checklist"
         }
       ]
     },
