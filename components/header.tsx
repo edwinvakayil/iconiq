@@ -240,7 +240,7 @@ export function Header() {
     <header
       className={cn(
         "fixed top-0 right-0 left-0 z-[150] w-full border-border/50 bg-background",
-        isHome && "overflow-visible",
+        isHome && "overflow-visible dark:border-b dark:border-border/40",
         !isHome && "border-b"
       )}
     >
@@ -256,9 +256,7 @@ export function Header() {
         <div className="flex items-center gap-2 lg:gap-3">
           <SiteSearch variant="desktop" />
           <GitHubStarsLink starCount={starCount} />
-          {isHome ? null : (
-            <SiteThemeToggle className="size-8 rounded-md text-neutral-950 hover:bg-accent hover:text-foreground dark:text-white dark:hover:bg-input/20 dark:hover:text-white" />
-          )}
+          <SiteThemeToggle className="size-8 rounded-md text-neutral-950 hover:bg-accent hover:text-foreground dark:text-white dark:hover:bg-input/20 dark:hover:text-white" />
         </div>
       </div>
     </header>

@@ -541,7 +541,7 @@ export function HomeHero() {
   const showcase = (
     <motion.div
       animate={animateEntrance ? entranceState : false}
-      className="w-full text-left"
+      className="w-full overflow-visible text-left"
       initial={animateEntrance ? "hidden" : false}
       variants={showcaseVariants}
     >
@@ -559,7 +559,7 @@ export function HomeHero() {
       {animateEntrance ? (
         <motion.div
           animate={entranceState}
-          className="w-full px-4 sm:px-6 lg:px-42"
+          className="w-full overflow-visible px-4 sm:px-6 lg:px-42"
           initial="hidden"
           variants={containerVariants}
         >

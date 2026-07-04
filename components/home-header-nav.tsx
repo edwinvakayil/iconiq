@@ -29,10 +29,7 @@ export function HomeHeaderNav({ className }: { className?: string }) {
   const homeNavLinks = getHomeNavSectionLinks();
 
   return (
-    <MotionNavigationMenu
-      className={cn("ml-3 justify-start", className)}
-      viewportClassName="bg-white dark:bg-black"
-    >
+    <MotionNavigationMenu className={cn("ml-3 justify-start", className)}>
       <MotionNavigationMenuList className="gap-0.5">
         {homeNavLinks.map((link) => (
           <NavTopLevelLink href={link.href} key={link.label}>
