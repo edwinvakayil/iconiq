@@ -5520,12 +5520,13 @@ const setupChecklistApiDetails: DetailItem[] = [
   },
   {
     id: "setup-checklist-structure",
-    title: "SetupChecklistCard, Header, Title, Description, List",
+    title: "SetupChecklistCard, Header, Title, Description, List, Action",
     summary:
-      "Structural parts that compose the card shell. Card animates in with a spring, Header wraps the Title heading and muted Description copy, and List staggers its items on mount. Each accepts `children` and an optional `className`.",
+      "Structural parts that compose the card shell. Card animates in with a spring, Header wraps the Title heading and muted Description copy, List staggers its items on mount, and Action is a footer slot for your own CTA such as a submit button. Each accepts `children` and an optional `className`.",
     notes: [
       "SetupChecklistCard renders the bordered card surface with the entrance spring.",
       "SetupChecklistList renders a ul and staggers each SetupChecklistItem in with a soft rise.",
+      "SetupChecklistAction places your own button under the list — pair it with completedIds or onCompletedChange in the parent to enable submit when everything is done.",
       "Because the copy is composed as children, the title, description, and progress label are fully yours — nothing is hardcoded in the component.",
     ],
   },
@@ -5557,6 +5558,12 @@ const setupChecklistApiDetails: DetailItem[] = [
         name: "icon",
         type: "ReactNode",
         description: "Leading icon rendered in a bordered tile.",
+      }),
+      field({
+        name: "onClick",
+        type: "(id: string) => void",
+        description:
+          "Called on row click alongside the completion toggle, e.g. to navigate to the task.",
       }),
       field({
         name: "className",

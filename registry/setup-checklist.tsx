@@ -60,7 +60,9 @@ function collectItemIds(children: ReactNode, ids: string[]): string[] {
       return;
     }
 
-    if (child.type === SetupChecklistItem) {
+    const type = child.type as { isSetupChecklistItem?: boolean };
+
+    if (type === SetupChecklistItem || type.isSetupChecklistItem === true) {
       const { id } = child.props as SetupChecklistItemProps;
 
       if (id && !ids.includes(id)) {
@@ -263,11 +265,35 @@ function DrawnCheck() {
   );
 }
 
+/** Footer slot inside the card for a CTA, e.g. a submit button. */
+export function SetupChecklistAction({
+  children,
+  className,
+}: {
+  children: ReactNode;
+  className?: string;
+}) {
+  const reduceMotion = useReducedMotion() === true;
+
+  return (
+    <motion.div
+      animate={{ opacity: 1, y: 0 }}
+      className={cn("mt-5 flex justify-end gap-2", className)}
+      initial={reduceMotion ? false : { opacity: 0, y: 10 }}
+      transition={{ ...SPRING, delay: 0.2 }}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
 export type SetupChecklistItemProps = {
   id: string;
   title: ReactNode;
   description?: ReactNode;
   icon?: ReactNode;
+  /** Called on row click alongside the completion toggle. */
+  onClick?: (id: string) => void;
   className?: string;
 };
 
@@ -276,6 +302,7 @@ export function SetupChecklistItem({
   title,
   description,
   icon,
+  onClick,
   className,
 }: SetupChecklistItemProps) {
   const { completed, toggle } = useSetupChecklistContext("SetupChecklistItem");
@@ -299,7 +326,10 @@ export function SetupChecklistItem({
             : "border-foreground/8 bg-transparent hover:bg-muted/40",
           className
         )}
-        onClick={() => toggle(id)}
+        onClick={() => {
+          toggle(id);
+          onClick?.(id);
+        }}
         type="button"
         whileTap={reduceMotion ? undefined : { scale: 0.985 }}
       >
@@ -350,6 +380,9 @@ export function SetupChecklistItem({
   );
 }
 
+/** Identity-independent marker so children traversal survives HMR module swaps. */
+SetupChecklistItem.isSetupChecklistItem = true;
+
 const PROGRESS_SPRING = {
   type: "spring" as const,
   stiffness: 110,
@@ -381,7 +414,12 @@ function ProgressPie({
         strokeWidth="1.5"
       />
       <motion.circle
-        animate={{ pathLength: clampFraction(fraction) }}
+        animate={{
+          // Slight overshoot at 100% closes the hairline seam SVG leaves
+          // where the dash meets its own start.
+          pathLength:
+            clampFraction(fraction) >= 1 ? 1.05 : clampFraction(fraction),
+        }}
         className="text-foreground"
         cx="10"
         cy="10"
