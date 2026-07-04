@@ -5475,25 +5475,14 @@ const setupChecklistApiDetails: DetailItem[] = [
     id: "setup-checklist",
     title: "SetupChecklist",
     summary:
-      "Onboarding checklist card with staggered task rows, toggleable completion badges, and a floating progress pill with an animated pie readout.",
+      "Compound root that owns completion state and shares it through context with every checklist part. Renders the outer wrapper around the card and progress pill.",
     fields: [
       field({
-        name: "items",
-        type: "SetupChecklistItem[]",
+        name: "children",
+        type: "ReactNode",
         required: true,
         description:
-          "Tasks to render. Each item has `id`, `title`, and optional `description` and `icon` for the leading tile.",
-      }),
-      field({
-        name: "title",
-        type: "string",
-        description: 'Card heading. Defaults to "Onboarding Checklist".',
-      }),
-      field({
-        name: "description",
-        type: "string",
-        description:
-          "Muted copy under the heading. Pass an empty string to hide it.",
+          "Composition surface. Place SetupChecklistCard with the header and list inside, and SetupChecklistProgress after the card.",
       }),
       field({
         name: "completedIds",
@@ -5519,28 +5508,87 @@ const setupChecklistApiDetails: DetailItem[] = [
           "Called with the toggled item id and its new completion state.",
       }),
       field({
-        name: "showProgress",
-        type: "boolean",
-        description:
-          "Show the floating progress pill under the card. Defaults to true.",
-      }),
-      field({
-        name: "progressLabel",
-        type: "string",
-        description:
-          'Label inside the progress pill. Defaults to "Onboarding Progress".',
-      }),
-      field({
         name: "className",
         type: "string",
         description: "Extra classes for the outer wrapper.",
       }),
     ],
     notes: [
-      "Click a row to toggle completion — the green badge pops in with a spring and the checkmark draws itself in.",
-      "Rows stagger in on mount with a soft rise; completed rows swap to a muted fill with a quiet crossfade.",
-      "The progress pill percentage and pie wedge are driven by the same spring, so both settle together.",
+      "Progress is derived from the SetupChecklistItem elements composed under the root, so the pill always reflects the rendered rows.",
       "All entrance, badge, and press motion collapses to simple fades when the user prefers reduced motion.",
+    ],
+  },
+  {
+    id: "setup-checklist-structure",
+    title: "SetupChecklistCard, Header, Title, Description, List",
+    summary:
+      "Structural parts that compose the card shell. Card animates in with a spring, Header wraps the Title heading and muted Description copy, and List staggers its items on mount. Each accepts `children` and an optional `className`.",
+    notes: [
+      "SetupChecklistCard renders the bordered card surface with the entrance spring.",
+      "SetupChecklistList renders a ul and staggers each SetupChecklistItem in with a soft rise.",
+      "Because the copy is composed as children, the title, description, and progress label are fully yours — nothing is hardcoded in the component.",
+    ],
+  },
+  {
+    id: "setup-checklist-item",
+    title: "SetupChecklistItem",
+    summary:
+      "One toggleable task row with an icon tile, title, and description. Registers itself with the root so the progress fraction tracks mounted items.",
+    fields: [
+      field({
+        name: "id",
+        type: "string",
+        required: true,
+        description:
+          "Stable id used in completedIds, defaultCompletedIds, and the toggle callbacks.",
+      }),
+      field({
+        name: "title",
+        type: "ReactNode",
+        required: true,
+        description: "Row heading.",
+      }),
+      field({
+        name: "description",
+        type: "ReactNode",
+        description: "Muted supporting copy under the title.",
+      }),
+      field({
+        name: "icon",
+        type: "ReactNode",
+        description: "Leading icon rendered in a bordered tile.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description: "Extra classes for the row button.",
+      }),
+    ],
+    notes: [
+      "Click a row to toggle completion — the green badge pops in with a spring and the checkmark draws itself in.",
+      "Completed rows swap to a muted fill with a quiet crossfade and dimmed title.",
+    ],
+  },
+  {
+    id: "setup-checklist-progress",
+    title: "SetupChecklistProgress",
+    summary:
+      "Floating pill that reads the completion fraction from context and renders your label with an animated percentage and pie wedge.",
+    fields: [
+      field({
+        name: "children",
+        type: "ReactNode",
+        description:
+          "Label rendered before the percentage, e.g. Onboarding Progress. Omit to show the percentage alone.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description: "Extra classes for the pill wrapper row.",
+      }),
+    ],
+    notes: [
+      "The percentage and pie wedge are driven by the same spring, so both settle together.",
     ],
   },
   registryItem("setup-checklist.json", ["motion", "lucide-react"]),
