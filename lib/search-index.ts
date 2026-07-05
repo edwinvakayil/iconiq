@@ -72,6 +72,8 @@ const componentSummaries: Record<string, string> = {
     "Setup checklist docs in the Blocks section with an animated onboarding card, staggered task rows, drawn checkmark badges, and a floating progress pill.",
   "/blocks/team-invitation":
     "Team invitation docs in the Blocks section with fluid morphing variants for inviting members, managing the team, assigning roles, and tracking pending invites.",
+  "/blocks/logo-carousel":
+    "Logo carousel docs in the Blocks section with a multi-column grid that cycles through logos using a staggered wave animation.",
   "/blocks/testimonials":
     "Testimonials docs in the Blocks section with an inline quote wall where hovering one quote blurs the rest and reveals the author attribution.",
   "/overlay-and-popups/hover-card":

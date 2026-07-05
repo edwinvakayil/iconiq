@@ -24,6 +24,7 @@ export const SITE_SECTIONS = [
   {
     label: "Blocks",
     children: [
+      { label: "Logo Carousel", href: "/blocks/logo-carousel" },
       { label: "Prompt Box", href: "/blocks/prompt-box" },
       { label: "Setup Checklist", href: "/blocks/setup-checklist" },
       { label: "Team Invitation", href: "/blocks/team-invitation" },

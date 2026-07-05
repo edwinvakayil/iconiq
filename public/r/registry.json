@@ -882,6 +882,19 @@
       ]
     },
     {
+      "name": "logo-carousal",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": [],
+      "devDependencies": [],
+      "files": [
+        {
+          "path": "logo-carousal.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "morph-texts",
       "type": "registry:ui",
       "registryDependencies": [],

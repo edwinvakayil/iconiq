@@ -5800,6 +5800,47 @@ const teamInvitationApiDetails: DetailItem[] = [
   registryItem("team-invitation.json", ["motion", "lucide-react"]),
 ];
 
+const logosCarouselApiDetails: DetailItem[] = [
+  {
+    id: "logos-carousel",
+    title: "LogosCarousel",
+    summary:
+      "Root container that distributes logo children across columns and cycles through them with a staggered wave animation.",
+    fields: [
+      field({
+        name: "children",
+        type: "ReactNode",
+        required: true,
+        description:
+          "Logo elements to cycle through. Each child is rendered as a single logo slot.",
+      }),
+      field({
+        name: "columnCount",
+        type: "number",
+        defaultValue: "4",
+        description:
+          "Number of columns to spread logos across. Capped at the total number of logos.",
+      }),
+      field({
+        name: "direction",
+        type: '"ltr" | "rtl"',
+        defaultValue: '"ltr"',
+        description:
+          "Direction the ripple wave sweeps across columns: left-to-right or right-to-left.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description: "Extra classes applied to the grid wrapper.",
+      }),
+    ],
+    notes: [
+      "Animation is paused when the carousel scrolls out of view or the page loses focus.",
+      "All motion collapses to an instant swap under reduced motion preferences.",
+    ],
+  },
+];
+
 const testimonialsApiDetails: DetailItem[] = [
   {
     id: "testimonials",
@@ -11320,6 +11361,7 @@ export {
   promptBoxApiDetails,
   setupChecklistApiDetails,
   teamInvitationApiDetails,
+  logosCarouselApiDetails,
   testimonialsApiDetails,
   accordionApiDetails,
   progressApiDetails,
