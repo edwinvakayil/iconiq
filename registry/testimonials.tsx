@@ -70,7 +70,7 @@ export function Testimonials({
         // it to all quotes in one synchronous style/paint pass, so there is
         // no per-element timing drift (that drift is what reads as a wave
         // when the same effect is driven from React state instead).
-        "group/wall max-w-3xl text-pretty font-medium text-xl leading-[1.75] tracking-[-0.01em] motion-reduce:[--testimonial-blur:0px]",
+        "group/wall max-w-3xl text-justify font-medium text-xl leading-[1.75] tracking-[-0.01em] motion-reduce:[--testimonial-blur:0px]",
         className
       )}
       style={
