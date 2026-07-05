@@ -653,6 +653,12 @@ const REGISTRY_UI_META: Record<
       "Team invitation block with fluid morphing variants for inviting members, managing the team, assigning roles, and tracking pending invites.",
     dependencies: ["motion", "lucide-react"],
   },
+  testimonials: {
+    title: "Testimonials",
+    description:
+      "Inline testimonial wall where hovering one quote blurs and dims the rest while the author attribution reveals beside the highlighted quote. Pure CSS :has()-driven hover state — no per-frame JS animation.",
+    dependencies: [],
+  },
   popover: {
     title: "Popover",
     description:

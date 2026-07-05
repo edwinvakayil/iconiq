@@ -17,6 +17,11 @@
           "slug": "team-invitation",
           "label": "Team Invitation",
           "href": "/blocks/team-invitation"
+        },
+        {
+          "slug": "testimonials",
+          "label": "Testimonials",
+          "href": "/blocks/testimonials"
         }
       ]
     },

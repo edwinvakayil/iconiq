@@ -5798,6 +5798,100 @@ const teamInvitationApiDetails: DetailItem[] = [
   registryItem("team-invitation.json", ["motion", "lucide-react"]),
 ];
 
+const testimonialsApiDetails: DetailItem[] = [
+  {
+    id: "testimonials",
+    title: "Testimonials",
+    summary:
+      "Compound root that renders the quotes as one flowing paragraph and owns which quote is highlighted. Hovering or focusing a quote dims and blurs every other quote through context.",
+    fields: [
+      field({
+        name: "children",
+        type: "ReactNode",
+        required: true,
+        description:
+          "Composition surface. Place one Testimonial per quote — the root indexes them in order to alternate tones and track the highlight.",
+      }),
+      field({
+        name: "blur",
+        type: "number",
+        defaultValue: "4",
+        description:
+          "Blur radius in px applied to the non-highlighted quotes while one is active.",
+      }),
+      field({
+        name: "dimOpacity",
+        type: "number",
+        defaultValue: "0.2",
+        description:
+          "Opacity the non-highlighted quotes fade to while one is active.",
+      }),
+      field({
+        name: "onActiveChange",
+        type: "(index: number | null) => void",
+        description:
+          "Called with the highlighted quote index, or null when the pointer leaves.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description:
+          "Extra classes for the paragraph wrapper — override the max width, text size, or leading here.",
+      }),
+    ],
+    notes: [
+      "The dim collapses to a plain opacity fade when the user prefers reduced motion.",
+    ],
+  },
+  {
+    id: "testimonials-item",
+    title: "Testimonial",
+    summary:
+      "One inline quote: a small avatar, your quote text, and an attribution that springs in after the text while the quote is highlighted. Quotes alternate strong and muted tones by position.",
+    fields: [
+      field({
+        name: "name",
+        type: "string",
+        required: true,
+        description:
+          "Author name revealed in the accent-colored attribution while the quote is highlighted.",
+      }),
+      field({
+        name: "title",
+        type: "ReactNode",
+        description: "Author role or company shown under the name.",
+      }),
+      field({
+        name: "avatar",
+        type: "string",
+        description:
+          "Avatar image URL. Falls back to the author's initials when missing or broken.",
+      }),
+      field({
+        name: "emphasis",
+        type: '"strong" | "muted"',
+        description:
+          "Text tone at rest. Omit to alternate automatically by position.",
+      }),
+      field({
+        name: "children",
+        type: "ReactNode",
+        required: true,
+        description: "The quote text.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description: "Extra classes for the quote span.",
+      }),
+    ],
+    notes: [
+      "Quotes are keyboard focusable, so the highlight and attribution also work without a pointer.",
+    ],
+  },
+  registryItem("testimonials.json", []),
+];
+
 const dialogApiDetails: DetailItem[] = [
   {
     id: "dialog-root",
@@ -11192,6 +11286,7 @@ export {
   promptBoxApiDetails,
   setupChecklistApiDetails,
   teamInvitationApiDetails,
+  testimonialsApiDetails,
   accordionApiDetails,
   progressApiDetails,
   radioGroupApiDetails,

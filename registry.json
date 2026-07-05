@@ -1485,6 +1485,21 @@
       ]
     },
     {
+      "name": "testimonials",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": [],
+      "devDependencies": [],
+      "title": "Testimonials",
+      "description": "Inline testimonial wall where hovering one quote blurs and dims the rest while the author attribution reveals beside the highlighted quote. Pure CSS :has()-driven hover state — no per-frame JS animation.",
+      "files": [
+        {
+          "path": "testimonials.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "text-inertia",
       "type": "registry:ui",
       "registryDependencies": [],
