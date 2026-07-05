@@ -5601,6 +5601,203 @@ const setupChecklistApiDetails: DetailItem[] = [
   registryItem("setup-checklist.json", ["motion", "lucide-react"]),
 ];
 
+const teamInvitationApiDetails: DetailItem[] = [
+  {
+    id: "team-invitation",
+    title: "TeamInvitation",
+    summary:
+      "Compound root that owns the active variant plus working member, pending-invite, and email state, and shares it through context with every part. Renders the outer wrapper around the card.",
+    fields: [
+      field({
+        name: "children",
+        type: "ReactNode",
+        required: true,
+        description:
+          "Composition surface. Place TeamInvitationCard with the header, tabs, and panels inside.",
+      }),
+      field({
+        name: "variant",
+        type: "string",
+        description:
+          "Controlled active variant when the parent owns which panel is shown. Matches TeamInvitationTab and TeamInvitationPanel values.",
+      }),
+      field({
+        name: "defaultVariant",
+        type: "string",
+        description: "Initial variant for uncontrolled usage.",
+      }),
+      field({
+        name: "onVariantChange",
+        type: "(variant: string) => void",
+        description: "Called when a variant tab is selected.",
+      }),
+      field({
+        name: "members",
+        type: "TeamMember[]",
+        description:
+          "Seed member list ({ id, name, email, role, avatar? }). The root keeps a working copy so role changes and removals animate locally.",
+      }),
+      field({
+        name: "pendingInvites",
+        type: "PendingInvite[]",
+        description:
+          "Seed pending invite list ({ id, email, sentAt? }). Invites submitted from TeamInvitationInviteField are appended here.",
+      }),
+      field({
+        name: "roles",
+        type: "string[]",
+        description:
+          "Assignable roles shown in role dropdowns and as TeamInvitationRoleGroups sections.",
+      }),
+      field({
+        name: "onInvite",
+        type: "(email: string) => void",
+        description:
+          "Called with the trimmed email when the invite button is pressed or Enter is hit in the field.",
+      }),
+      field({
+        name: "onRoleChange",
+        type: "(id: string, role: string) => void",
+        description: "Called when a member is assigned a new role.",
+      }),
+      field({
+        name: "onRemove",
+        type: "(id: string) => void",
+        description: "Called when a member is removed.",
+      }),
+      field({
+        name: "onResend",
+        type: "(id: string) => void",
+        description: "Called when a pending invite's resend button is pressed.",
+      }),
+      field({
+        name: "onCancelInvite",
+        type: "(id: string) => void",
+        description: "Called when a pending invite is cancelled.",
+      }),
+      field({
+        name: "onClose",
+        type: "() => void",
+        description:
+          "Renders the header close button and is called when it is pressed. Omit to hide the button.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description: "Extra classes for the outer wrapper.",
+      }),
+    ],
+    notes: [
+      "Nothing is hardcoded: variants, tab labels, icons, section labels, and empty-state copy are all composed as children or props.",
+      "All entrance, morph, and press motion collapses to simple fades when the user prefers reduced motion.",
+    ],
+  },
+  {
+    id: "team-invitation-structure",
+    title: "TeamInvitationCard, Header, Title, Description, SectionLabel",
+    summary:
+      "Structural parts that compose the card shell. Card animates in with a spring and morphs its height between variants, Header wraps an optional icon tile, your Title and Description, and the close button when onClose is set on the root. Each accepts `children` and an optional `className`.",
+    notes: [
+      "TeamInvitationCard renders the bordered card surface with the entrance spring and fluid height morph.",
+      "TeamInvitationHeader takes an optional `icon` rendered in a bordered tile before your heading copy.",
+      "TeamInvitationSectionLabel is the shared heading used by the section parts — reuse it for your own panel content.",
+    ],
+  },
+  {
+    id: "team-invitation-tabs",
+    title: "TeamInvitationTabs, TeamInvitationTab",
+    summary:
+      "Icon-bar style variant switcher. Tabs renders the row under a divider; each Tab is an icon pill that stretches open on a spring to reveal its label when its value matches the active variant.",
+    fields: [
+      field({
+        name: "value",
+        type: "string",
+        required: true,
+        description:
+          "Variant id. Selecting the tab reveals the TeamInvitationPanel with the same value.",
+      }),
+      field({
+        name: "icon",
+        type: "ReactNode",
+        description: "Icon shown while the tab is collapsed and expanded.",
+      }),
+      field({
+        name: "children",
+        type: "ReactNode",
+        required: true,
+        description: "Label revealed while the tab is active.",
+      }),
+    ],
+    notes: [
+      "The active pill expands and its neighbors slide aside via Motion layout springs, so the row always fits without truncation.",
+    ],
+  },
+  {
+    id: "team-invitation-panels",
+    title: "TeamInvitationPanels, TeamInvitationPanel",
+    summary:
+      "Panels walks its children, mounts only the panel whose value matches the active variant, and crossfades between them through a soft blur. Panel is the animated wrapper for one variant's content.",
+    fields: [
+      field({
+        name: "value",
+        type: "string",
+        required: true,
+        description:
+          "Variant id paired with the TeamInvitationTab of the same value.",
+      }),
+      field({
+        name: "children",
+        type: "ReactNode",
+        required: true,
+        description:
+          "Panel content — section parts below or any custom markup.",
+      }),
+    ],
+  },
+  {
+    id: "team-invitation-sections",
+    title: "InviteField, MemberList, RoleGroups, PendingList",
+    summary:
+      'Prebuilt sections that read state from the root: TeamInvitationInviteField renders the email input and invite button, TeamInvitationMemberList renders member rows with a role dropdown (action="role"), a role badge with remove (action="remove"), or no control (action="none"), TeamInvitationRoleGroups groups members under one heading per role, and TeamInvitationPendingList renders pending invites with resend and cancel.',
+    fields: [
+      field({
+        name: "label",
+        type: "ReactNode",
+        description:
+          "Section heading rendered with TeamInvitationSectionLabel. On TeamInvitationInviteField this sits above the field row.",
+      }),
+      field({
+        name: "buttonLabel",
+        type: "ReactNode",
+        required: true,
+        description: "Invite button copy on TeamInvitationInviteField.",
+      }),
+      field({
+        name: "placeholder",
+        type: "string",
+        description: "Input placeholder on TeamInvitationInviteField.",
+      }),
+      field({
+        name: "action",
+        type: '"role" | "remove" | "none"',
+        description:
+          "Trailing control per row on TeamInvitationMemberList. Defaults to role.",
+      }),
+      field({
+        name: "emptyMessage",
+        type: "ReactNode",
+        description:
+          "Dashed empty-state row shown when a list or role group has no entries. Omit to render nothing.",
+      }),
+    ],
+    notes: [
+      "Member rows carry a layoutId, so changing a role in TeamInvitationRoleGroups flies the row between groups instead of remounting it.",
+      "Avatars load from the given URL and fall back to initials in a bordered tile when the image is missing or fails to load.",
+    ],
+  },
+  registryItem("team-invitation.json", ["motion", "lucide-react"]),
+];
+
 const dialogApiDetails: DetailItem[] = [
   {
     id: "dialog-root",
@@ -10994,6 +11191,7 @@ export {
   popoverApiDetails,
   promptBoxApiDetails,
   setupChecklistApiDetails,
+  teamInvitationApiDetails,
   accordionApiDetails,
   progressApiDetails,
   radioGroupApiDetails,

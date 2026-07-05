@@ -647,6 +647,12 @@ const REGISTRY_UI_META: Record<
       "Animated onboarding checklist card with staggered task rows, a drawn checkmark badge, and a floating progress pill with a spring-smoothed pie.",
     dependencies: ["motion", "lucide-react"],
   },
+  "team-invitation": {
+    title: "Team Invitation",
+    description:
+      "Team invitation block with fluid morphing variants for inviting members, managing the team, assigning roles, and tracking pending invites.",
+    dependencies: ["motion", "lucide-react"],
+  },
   popover: {
     title: "Popover",
     description:
