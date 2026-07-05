@@ -1,13 +1,33 @@
+import { createElement, type ReactNode } from "react";
+
 import type { DetailField, DetailItem } from "@/components/docs/page-shell";
 
 function field(config: DetailField): DetailField {
   return config;
 }
 
+function creditLink(label: string, href: string): ReactNode {
+  return createElement(
+    "span",
+    null,
+    "Design credit: ",
+    createElement(
+      "a",
+      {
+        href,
+        target: "_blank",
+        rel: "noreferrer",
+        className: "underline underline-offset-2 hover:text-foreground",
+      },
+      label
+    )
+  );
+}
+
 function registryItem(
   registryPath: string,
   dependencies: string[],
-  notes: string[] = []
+  notes: ReactNode[] = []
 ): DetailItem {
   const dependencySummary =
     dependencies.length > 0 ? dependencies.join(", ") : "none";
@@ -5889,7 +5909,11 @@ const testimonialsApiDetails: DetailItem[] = [
       "Quotes are keyboard focusable, so the highlight and attribution also work without a pointer.",
     ],
   },
-  registryItem("testimonials.json", []),
+  registryItem(
+    "testimonials.json",
+    [],
+    [creditLink("Devouring Details", "https://devouringdetails.com/")]
+  ),
 ];
 
 const dialogApiDetails: DetailItem[] = [

@@ -154,8 +154,16 @@ export function Testimonial({
     <span
       className={cn(
         // group/quote scopes the attribution reveal below to this exact
-        // quote, independent of the wall-wide dim rule.
-        "group/quote relative inline cursor-default outline-none [filter:blur(0px)] [transition:filter_0.3s_cubic-bezier(0.32,0.72,0,1),opacity_0.2s_ease-out,color_0.3s_ease] motion-reduce:transition-none",
+        // quote, independent of the wall-wide dim rule. Padding (canceled
+        // by an equal negative margin, so nothing visually shifts) claims
+        // the surrounding word-gap and inter-line leading as part of this
+        // quote's own hoverable box: browsers size a wrapped line's hit
+        // fragment to the glyph metrics, not the full line-height, so
+        // without this the leading between wrapped lines is dead space
+        // that belongs to no quote. Vertical padding on an inline element
+        // never affects line-box spacing, so this is purely an expanded
+        // hit area, not a layout change.
+        "group/quote relative -mx-[0.15em] -my-[0.3em] inline cursor-pointer px-[0.15em] py-[0.3em] outline-none [filter:blur(0px)] [transition:filter_0.3s_cubic-bezier(0.32,0.72,0,1),opacity_0.2s_ease-out,color_0.3s_ease] motion-reduce:transition-none",
         tone === "strong" ? "text-foreground" : "text-muted-foreground",
         "hover:z-[1] hover:text-foreground focus-visible:z-[1] focus-visible:text-foreground",
         "group-has-[[data-testimonial-quote]:is(:hover,:focus-visible)]/wall:not-hover:not-focus-visible:opacity-[var(--testimonial-dim)]",

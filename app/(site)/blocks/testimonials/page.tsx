@@ -167,7 +167,7 @@ export default function TestimonialsPage() {
         { label: "Testimonials" },
       ]}
       componentName="testimonials"
-      description="Inline testimonial wall where hovering one quote blurs and dims the rest while the author attribution springs in beside the highlighted quote."
+      description="Interactive testimonial wall that dims the rest and reveals the highlighted author."
       details={testimonialsApiDetails}
       detailsDescription="Testimonials is a compound component: the root renders the quotes as one flowing paragraph, indexes each Testimonial in order to alternate strong and muted tones, and owns which quote is highlighted. Each Testimonial renders its avatar, quote text, and an attribution that appears only while that quote is active. The blur radius and dim opacity are configurable on the root, and everything collapses to a plain opacity fade under reduced motion."
       editHref={`${LINK.GITHUB}/edit/main/app/(site)/blocks/testimonials/page.tsx`}
