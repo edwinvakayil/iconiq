@@ -12,6 +12,11 @@
           "slug": "setup-checklist",
           "label": "Setup Checklist",
           "href": "/blocks/setup-checklist"
+        },
+        {
+          "slug": "team-invitation",
+          "label": "Team Invitation",
+          "href": "/blocks/team-invitation"
         }
       ]
     },

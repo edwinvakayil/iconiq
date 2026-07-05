@@ -1470,6 +1470,21 @@
       ]
     },
     {
+      "name": "team-invitation",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": ["motion", "lucide-react"],
+      "devDependencies": [],
+      "title": "Team Invitation",
+      "description": "Team invitation block with fluid morphing variants for inviting members, managing the team, assigning roles, and tracking pending invites.",
+      "files": [
+        {
+          "path": "team-invitation.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "text-inertia",
       "type": "registry:ui",
       "registryDependencies": [],

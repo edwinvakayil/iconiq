@@ -70,6 +70,8 @@ const componentSummaries: Record<string, string> = {
     "Prompt box docs in the Blocks section with a compact-to-expanded AI prompt field, spring resize, model footer controls, and send or voice actions.",
   "/blocks/setup-checklist":
     "Setup checklist docs in the Blocks section with an animated onboarding card, staggered task rows, drawn checkmark badges, and a floating progress pill.",
+  "/blocks/team-invitation":
+    "Team invitation docs in the Blocks section with fluid morphing variants for inviting members, managing the team, assigning roles, and tracking pending invites.",
   "/overlay-and-popups/hover-card":
     "Hover card docs in the Overlay & Popups section with a provider switch that swaps between a Base UI popover-backed install and a Radix Hover Card primitive install.",
   "/overlay-and-popups/popover":
@@ -209,6 +211,15 @@ const extraComponentKeywordsBySlug: Record<string, string[]> = {
     "getting started",
     "progress",
     "todo",
+  ],
+  "team-invitation": [
+    "team invitation",
+    "invite members",
+    "manage team",
+    "role management",
+    "pending invites",
+    "share",
+    "collaboration",
   ],
   infiniteribbon: [
     "infinite ribbon",

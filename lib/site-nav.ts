@@ -16,6 +16,7 @@ export const SITE_SECTIONS = [
     children: [
       { label: "Prompt Box", href: "/blocks/prompt-box" },
       { label: "Setup Checklist", href: "/blocks/setup-checklist" },
+      { label: "Team Invitation", href: "/blocks/team-invitation" },
     ],
   },
   {
