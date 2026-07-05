@@ -240,7 +240,7 @@ export function TeamInvitationCard({
     <motion.section
       animate={{ opacity: 1, y: 0, scale: 1 }}
       className={cn(
-        "relative overflow-hidden rounded-3xl border border-foreground/8 bg-card p-5 sm:p-6",
+        "relative overflow-visible rounded-3xl border border-foreground/8 bg-card p-5 sm:p-6",
         className
       )}
       initial={reduceMotion ? false : { opacity: 0, y: 16, scale: 0.98 }}
@@ -478,7 +478,7 @@ export function TeamInvitationPanels({ children }: { children: ReactNode }) {
   return (
     <motion.div
       animate={height === null ? undefined : { height }}
-      className="overflow-hidden"
+      className="relative overflow-visible"
       initial={false}
       transition={reduceMotion ? { duration: 0 } : MORPH_SPRING}
     >
@@ -573,7 +573,7 @@ function MemberAvatar({ member }: { member: TeamMember }) {
       // biome-ignore lint/performance/noImgElement: registry components stay framework-agnostic.
       <img
         alt={member.name}
-        className="size-12 shrink-0 rounded-xl object-cover"
+        className="size-12 shrink-0 rounded-full object-cover"
         height={48}
         onError={() => setBroken(true)}
         src={member.avatar}
@@ -603,7 +603,7 @@ function RoleSelect({
 
   return (
     <div
-      className="relative shrink-0"
+      className={cn("relative shrink-0", open && "z-[2147483647]")}
       onBlur={(event) => {
         if (!event.currentTarget.contains(event.relatedTarget)) {
           setOpen(false);
@@ -629,7 +629,7 @@ function RoleSelect({
         {open ? (
           <motion.ul
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            className="absolute right-0 z-10 mt-2 min-w-36 origin-top-right rounded-xl border border-foreground/10 bg-card p-1 shadow-lg"
+            className="absolute right-0 z-[2147483647] mt-2 min-w-36 origin-top-right rounded-xl border border-foreground/10 bg-card p-1 shadow-lg"
             exit={
               reduceMotion ? { opacity: 0 } : { opacity: 0, scale: 0.94, y: -4 }
             }
