@@ -7,7 +7,7 @@ import {
   Sidebar001Item,
   Sidebar001Section,
 } from "@/components/sidebar-001";
-import { SITE_SECTIONS } from "@/lib/site-nav";
+import { HIDDEN_NAV_HREFS, SITE_SECTIONS } from "@/lib/site-nav";
 import { cn } from "@/lib/utils";
 
 type SidebarItem = {
@@ -22,10 +22,12 @@ type SidebarSection = {
 
 const sections: SidebarSection[] = SITE_SECTIONS.map((section) => ({
   title: section.label,
-  items: section.children.map((item) => ({
-    label: item.label,
-    href: item.href,
-  })),
+  items: section.children
+    .filter((item) => !HIDDEN_NAV_HREFS.includes(item.href))
+    .map((item) => ({
+      label: item.label,
+      href: item.href,
+    })),
 }));
 
 export function DocsSidebarNavContent({

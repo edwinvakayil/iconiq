@@ -10,6 +10,16 @@ export const BASE_LINKS = [
   { label: "MCP", href: "/mcp" },
 ] as const;
 
+/**
+ * Hrefs to keep out of the rendered nav surfaces (desktop sidebar, mobile
+ * nav, navigation.json) while leaving them in SITE_SECTIONS so the pages
+ * still work as component doc pages (breadcrumbs, footer, prev/next, etc).
+ */
+export const HIDDEN_NAV_HREFS: readonly string[] = [
+  "/blocks/setup-checklist",
+  "/blocks/team-invitation",
+];
+
 export const SITE_SECTIONS = [
   {
     label: "Blocks",
@@ -17,6 +27,7 @@ export const SITE_SECTIONS = [
       { label: "Prompt Box", href: "/blocks/prompt-box" },
       { label: "Setup Checklist", href: "/blocks/setup-checklist" },
       { label: "Team Invitation", href: "/blocks/team-invitation" },
+      { label: "Testimonials", href: "/blocks/testimonials" },
     ],
   },
   {

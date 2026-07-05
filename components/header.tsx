@@ -12,7 +12,7 @@ import { SiteThemeToggle } from "@/components/ui/site-theme-toggle";
 import { LINK } from "@/constants";
 import { isSplitDocsPage } from "@/lib/is-component-doc-page";
 import { recordGithubClick } from "@/lib/record-github-click";
-import { SITE_SECTIONS } from "@/lib/site-nav";
+import { HIDDEN_NAV_HREFS, SITE_SECTIONS } from "@/lib/site-nav";
 import { cn } from "@/lib/utils";
 import { Popover, PopoverContent, PopoverTrigger } from "@/registry/popover";
 
@@ -37,10 +37,12 @@ type GitHubStarsCache = {
 
 const mobileNavSections: HeaderSection[] = SITE_SECTIONS.map((section) => ({
   title: section.label,
-  items: section.children.map((item) => ({
-    label: item.label,
-    href: item.href,
-  })),
+  items: section.children
+    .filter((item) => !HIDDEN_NAV_HREFS.includes(item.href))
+    .map((item) => ({
+      label: item.label,
+      href: item.href,
+    })),
 }));
 
 function formatStarCount(n: number): string {

@@ -9,14 +9,9 @@
           "href": "/blocks/prompt-box"
         },
         {
-          "slug": "setup-checklist",
-          "label": "Setup Checklist",
-          "href": "/blocks/setup-checklist"
-        },
-        {
-          "slug": "team-invitation",
-          "label": "Team Invitation",
-          "href": "/blocks/team-invitation"
+          "slug": "testimonials",
+          "label": "Testimonials",
+          "href": "/blocks/testimonials"
         }
       ]
     },
