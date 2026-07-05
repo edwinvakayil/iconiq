@@ -2,7 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { SITE } from "../constants";
-import { SITE_SECTIONS } from "../lib/site-nav";
+import { HIDDEN_NAV_HREFS, SITE_SECTIONS } from "../lib/site-nav";
 import { components } from "./registry-components";
 import type { Schema } from "./registry-schema";
 
@@ -34,11 +34,13 @@ function buildNavigationManifest() {
   return {
     sections: SITE_SECTIONS.map((section) => ({
       label: section.label,
-      items: section.children.map((child) => ({
-        slug: child.href.split("/").pop() ?? child.href,
-        label: child.label,
-        href: child.href,
-      })),
+      items: section.children
+        .filter((child) => !HIDDEN_NAV_HREFS.includes(child.href))
+        .map((child) => ({
+          slug: child.href.split("/").pop() ?? child.href,
+          label: child.label,
+          href: child.href,
+        })),
     })),
     fallbackCategory: "More Components",
     aliases: NAVIGATION_ALIASES,

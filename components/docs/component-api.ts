@@ -6,24 +6,6 @@ function field(config: DetailField): DetailField {
   return config;
 }
 
-function creditLink(label: string, href: string): ReactNode {
-  return createElement(
-    "span",
-    null,
-    "Design credit: ",
-    createElement(
-      "a",
-      {
-        href,
-        target: "_blank",
-        rel: "noreferrer",
-        className: "underline underline-offset-2 hover:text-foreground",
-      },
-      label
-    )
-  );
-}
-
 function registryItem(
   registryPath: string,
   dependencies: string[],
@@ -5912,7 +5894,35 @@ const testimonialsApiDetails: DetailItem[] = [
   registryItem(
     "testimonials.json",
     [],
-    [creditLink("Devouring Details", "https://devouringdetails.com/")]
+    [
+      createElement(
+        "span",
+        null,
+        "Built by ",
+        createElement(
+          "a",
+          {
+            href: "https://www.edwinvakayil.info/",
+            target: "_blank",
+            rel: "noreferrer",
+            className: "underline underline-offset-2 hover:text-foreground",
+          },
+          "Edwin"
+        ),
+        ". Inspired by the inline testimonial layout from ",
+        createElement(
+          "a",
+          {
+            href: "https://rauno.me/",
+            target: "_blank",
+            rel: "noreferrer",
+            className: "underline underline-offset-2 hover:text-foreground",
+          },
+          "Rauno Freiberg"
+        ),
+        "."
+      ),
+    ]
   ),
 ];
 
