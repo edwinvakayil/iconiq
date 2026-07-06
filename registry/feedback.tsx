@@ -21,8 +21,8 @@ import { cn } from "@/lib/utils";
 
 /** Horizontal padding on the collapsed pill (px-3 on each side). */
 const COLLAPSED_PADDING_X = 14;
-/** Used only as a sane pre-measurement fallback — corrected on mount. */
-const DEFAULT_COLLAPSED_WIDTH = 200;
+/** Starts at 0 — corrected to the real content width before the pill fades in. */
+const DEFAULT_COLLAPSED_WIDTH = 0;
 const COLLAPSED_HEIGHT = 36;
 const EXPANDED_WIDTH = 336;
 const EXPANDED_HEIGHT = 220;
