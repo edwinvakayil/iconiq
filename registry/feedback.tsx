@@ -20,10 +20,10 @@ import {
 import { cn } from "@/lib/utils";
 
 /** Horizontal padding on the collapsed pill (px-3 on each side). */
-const COLLAPSED_PADDING_X = 12;
+const COLLAPSED_PADDING_X = 14;
 /** Used only as a sane pre-measurement fallback — corrected on mount. */
-const DEFAULT_COLLAPSED_WIDTH = 220;
-const COLLAPSED_HEIGHT = 46;
+const DEFAULT_COLLAPSED_WIDTH = 200;
+const COLLAPSED_HEIGHT = 36;
 const EXPANDED_WIDTH = 336;
 const EXPANDED_HEIGHT = 220;
 const EXPANDED_RADIUS = 20;
@@ -153,7 +153,7 @@ function CollapsedTrigger({
     <motion.button
       animate={{ opacity: 1, transition: { delay: 0.08 } }}
       aria-expanded={false}
-      className="absolute top-0 left-0 flex items-center px-3 text-left"
+      className="absolute top-0 left-0 flex items-center justify-center"
       data-slot="feedback-form-trigger"
       exit={{ opacity: 0, transition: fadeTransition }}
       initial={reduceMotion ? false : { opacity: 0 }}
@@ -163,19 +163,19 @@ function CollapsedTrigger({
       transition={reduceMotion ? INSTANT : undefined}
       type="button"
     >
-      <span className="flex items-center gap-2" ref={contentRef}>
+      <span className="flex items-center gap-1.5" ref={contentRef}>
         <motion.span
           aria-hidden="true"
           className="size-2.5 shrink-0 rounded-full bg-[var(--color-brand,#3b82f6)]"
           layoutId={dotLayoutId}
           transition={labelTransition}
         />
-        <span className="whitespace-nowrap font-semibold text-foreground leading-none">
+        <span className="whitespace-nowrap font-semibold text-foreground text-xs leading-none">
           {label}
         </span>
-        <span aria-hidden="true" className="h-4 w-px shrink-0 bg-border" />
+        <span aria-hidden="true" className="h-3 w-px shrink-0 bg-border" />
         <motion.span
-          className="shrink-0 font-medium text-muted-foreground leading-none"
+          className="shrink-0 font-medium text-muted-foreground text-xs leading-none"
           layoutId={labelLayoutId}
           transition={labelTransition}
         >
@@ -414,7 +414,7 @@ export function FeedbackForm({
         borderRadius: open ? EXPANDED_RADIUS : COLLAPSED_RADIUS,
       }}
       className={cn(
-        "relative overflow-hidden border border-border bg-card text-sm shadow-[0_10px_30px_-18px_rgba(0,0,0,0.35)]",
+        "relative overflow-hidden border border-border bg-white text-sm shadow-[0_10px_30px_-18px_rgba(0,0,0,0.35)] dark:bg-zinc-950",
         className
       )}
       data-slot="feedback-form"
