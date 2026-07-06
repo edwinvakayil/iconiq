@@ -6008,6 +6008,71 @@ const testimonialsApiDetails: DetailItem[] = [
   ),
 ];
 
+const scrollProgressApiDetails: DetailItem[] = [
+  {
+    id: "scroll-progress",
+    title: "ScrollProgress",
+    summary:
+      "Fixed ruler-style scroll indicator. Ticks fill from the top down as the page scrolls, and a percentage label tracks the fill boundary — both driven by a single rAF-throttled scroll listener.",
+    fields: [
+      field({
+        name: "position",
+        type: '"left" | "right" | "bottom-left" | "bottom-right"',
+        defaultValue: '"right"',
+        description:
+          "Which side or corner of the viewport the ruler docks to. The percentage label always reads inward, toward the page content.",
+      }),
+      field({
+        name: "tickCount",
+        type: "number",
+        defaultValue: "20",
+        description: "Number of tick marks drawn along the ruler.",
+      }),
+      field({
+        name: "height",
+        type: "number",
+        defaultValue: "160",
+        description: "Ruler height in pixels.",
+      }),
+      field({
+        name: "width",
+        type: "number",
+        defaultValue: "14",
+        description: "Ruler width in pixels — how far the tick marks extend.",
+      }),
+      field({
+        name: "showLabel",
+        type: "boolean",
+        defaultValue: "true",
+        description: "Show the numeric percentage readout beside the ruler.",
+      }),
+      field({
+        name: "container",
+        type: "RefObject<HTMLElement | null>",
+        description:
+          "Track a scrollable element instead of the page. Only controls which element's scroll position is read — does not affect CSS positioning. Omit to track window scroll.",
+      }),
+      field({
+        name: "positionMode",
+        type: '"fixed" | "absolute"',
+        defaultValue: '"fixed"',
+        description:
+          'Override CSS position. Defaults to `"fixed"` so the ruler is always anchored to the viewport edge. Pass `"absolute"` to dock it inside a `relative` ancestor instead.',
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description: "Extra classes applied to the fixed outer wrapper.",
+      }),
+    ],
+    notes: [
+      "Progress is read from document scroll position (or `container`'s scroll position) and clamped to the 0–100 range; content shorter than the scroll area reports 0.",
+      "The fill height and label position both use a short CSS transition, so scroll updates read as one fluid motion instead of stepping between rAF samples.",
+      "The wrapper is `pointer-events-none`, so it never blocks clicks on the page underneath.",
+    ],
+  },
+];
+
 const dialogApiDetails: DetailItem[] = [
   {
     id: "dialog-root",
@@ -11405,6 +11470,7 @@ export {
   logosCarouselApiDetails,
   feedbackFormApiDetails,
   testimonialsApiDetails,
+  scrollProgressApiDetails,
   accordionApiDetails,
   progressApiDetails,
   radioGroupApiDetails,

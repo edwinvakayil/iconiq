@@ -1333,6 +1333,21 @@
       ]
     },
     {
+      "name": "scroll-progress",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": [],
+      "devDependencies": [],
+      "title": "Scroll Progress",
+      "description": "Ruler-style scroll indicator with tick marks that fill in as the page scrolls and a live percentage readout, dockable to either side or bottom corner of the viewport or a scrollable container.",
+      "files": [
+        {
+          "path": "scroll-progress.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "select",
       "type": "registry:ui",
       "registryDependencies": [],

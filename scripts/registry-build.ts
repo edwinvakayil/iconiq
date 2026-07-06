@@ -667,6 +667,12 @@ const REGISTRY_UI_META: Record<
       "Collapsed pill that morphs into an expanded feedback panel with a send button, loading state, and a textarea, driven by pure CSS transitions with asymmetric open/close easing.",
     dependencies: ["lucide-react"],
   },
+  "scroll-progress": {
+    title: "Scroll Progress",
+    description:
+      "Ruler-style scroll indicator with tick marks that fill in as the page scrolls and a live percentage readout, dockable to either side or bottom corner of the viewport or a scrollable container.",
+    dependencies: [],
+  },
   popover: {
     title: "Popover",
     description:

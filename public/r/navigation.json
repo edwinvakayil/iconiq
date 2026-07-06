@@ -19,6 +19,11 @@
           "href": "/blocks/prompt-box"
         },
         {
+          "slug": "scroll-progress",
+          "label": "Scroll Progress",
+          "href": "/blocks/scroll-progress"
+        },
+        {
           "slug": "testimonials",
           "label": "Testimonials",
           "href": "/blocks/testimonials"

@@ -78,6 +78,8 @@ const componentSummaries: Record<string, string> = {
     "Feedback form docs in the Blocks section with a collapsed pill that morphs into an expanded panel with a textarea, using a single auto-sizing container.",
   "/blocks/testimonials":
     "Testimonials docs in the Blocks section with an inline quote wall where hovering one quote blurs the rest and reveals the author attribution.",
+  "/blocks/scroll-progress":
+    "Scroll progress docs in the Blocks section with a ruler-style tick indicator, a live percentage readout, and dockable side or corner positions.",
   "/overlay-and-popups/hover-card":
     "Hover card docs in the Overlay & Popups section with a provider switch that swaps between a Base UI popover-backed install and a Radix Hover Card primitive install.",
   "/overlay-and-popups/popover":
@@ -235,6 +237,16 @@ const extraComponentKeywordsBySlug: Record<string, string[]> = {
     "wall of love",
     "hover blur",
     "praise",
+  ],
+  "scroll-progress": [
+    "scroll progress",
+    "scroll indicator",
+    "reading progress",
+    "scrollbar",
+    "ruler",
+    "tick marks",
+    "percentage",
+    "blog progress",
   ],
   infiniteribbon: [
     "infinite ribbon",
