@@ -3,7 +3,7 @@
   "name": "feedback",
   "type": "registry:ui",
   "registryDependencies": [],
-  "dependencies": ["lucide-react"],
+  "dependencies": ["lucide-react", "motion"],
   "devDependencies": [],
   "files": [
     {

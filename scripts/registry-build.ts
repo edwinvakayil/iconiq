@@ -665,7 +665,13 @@ const REGISTRY_UI_META: Record<
     title: "Feedback Form",
     description:
       "Collapsed pill that morphs into an expanded feedback panel with a send button, loading state, and a textarea, driven by pure CSS transitions with asymmetric open/close easing.",
-    dependencies: ["lucide-react"],
+    dependencies: ["lucide-react", "motion"],
+  },
+  "logo-carousal": {
+    title: "Logo Carousel",
+    description:
+      "Multi-column logo grid that cycles through sponsor logos with a staggered wave animation.",
+    dependencies: ["motion"],
   },
   "scroll-progress": {
     title: "Scroll Progress",

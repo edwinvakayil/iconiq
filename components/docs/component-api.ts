@@ -5839,6 +5839,28 @@ const logosCarouselApiDetails: DetailItem[] = [
       "All motion collapses to an instant swap under reduced motion preferences.",
     ],
   },
+  registryItem(
+    "logo-carousal.json",
+    ["motion"],
+    [
+      createElement(
+        "span",
+        null,
+        "Built by Edwin. Inspired by the inline testimonial layout from ",
+        createElement(
+          "a",
+          {
+            href: "https://rai.nu",
+            target: "_blank",
+            rel: "noopener noreferrer",
+            className: "underline underline-offset-2",
+          },
+          "Rauno Freiberg"
+        ),
+        "."
+      ),
+    ]
+  ),
 ];
 
 const feedbackFormApiDetails: DetailItem[] = [
@@ -5880,6 +5902,28 @@ const feedbackFormApiDetails: DetailItem[] = [
       "Collapses instantly with no motion under reduced motion preferences.",
     ],
   },
+  registryItem(
+    "feedback.json",
+    ["lucide-react", "motion"],
+    [
+      createElement(
+        "span",
+        null,
+        "Built by Edwin. Inspired by the inline testimonial layout from ",
+        createElement(
+          "a",
+          {
+            href: "https://rai.nu",
+            target: "_blank",
+            rel: "noopener noreferrer",
+            className: "underline underline-offset-2",
+          },
+          "Rauno Freiberg"
+        ),
+        "."
+      ),
+    ]
+  ),
 ];
 
 const testimonialsApiDetails: DetailItem[] = [

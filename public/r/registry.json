@@ -751,7 +751,7 @@
       "name": "feedback",
       "type": "registry:ui",
       "registryDependencies": [],
-      "dependencies": ["lucide-react"],
+      "dependencies": ["lucide-react", "motion"],
       "devDependencies": [],
       "title": "Feedback Form",
       "description": "Collapsed pill that morphs into an expanded feedback panel with a send button, loading state, and a textarea, driven by pure CSS transitions with asymmetric open/close easing.",
@@ -900,8 +900,10 @@
       "name": "logo-carousal",
       "type": "registry:ui",
       "registryDependencies": [],
-      "dependencies": [],
+      "dependencies": ["motion"],
       "devDependencies": [],
+      "title": "Logo Carousel",
+      "description": "Multi-column logo grid that cycles through sponsor logos with a staggered wave animation.",
       "files": [
         {
           "path": "logo-carousal.tsx",
