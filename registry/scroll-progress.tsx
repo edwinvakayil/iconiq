@@ -1,6 +1,6 @@
 "use client";
 
-import { type RefObject, useEffect, useState } from "react";
+import { type RefObject, useEffect, useRef } from "react";
 
 import { cn } from "@/lib/utils";
 
@@ -32,37 +32,6 @@ function getProgress(el: HTMLElement | null): number {
       document.documentElement.clientHeight;
   if (scrollable <= 0) return 0;
   return Math.min(100, Math.max(0, (scrollTop / scrollable) * 100));
-}
-
-function useScrollProgress(container?: RefObject<HTMLElement | null>): number {
-  const [progress, setProgress] = useState(0);
-
-  useEffect(() => {
-    const target: HTMLElement | Window = container?.current ?? window;
-    let raf = 0;
-
-    const measure = () => {
-      raf = 0;
-      setProgress(getProgress(container?.current ?? null));
-    };
-
-    const onScroll = () => {
-      if (raf) return;
-      raf = requestAnimationFrame(measure);
-    };
-
-    measure();
-    target.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll, { passive: true });
-
-    return () => {
-      target.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
-      if (raf) cancelAnimationFrame(raf);
-    };
-  }, [container]);
-
-  return progress;
 }
 
 function Ticks({ count, tone }: { count: number; tone: "solid" | "muted" }) {
@@ -101,8 +70,32 @@ export function ScrollProgress({
   container,
   className,
 }: ScrollProgressProps) {
-  const progress = useScrollProgress(container);
+  const fillRef = useRef<HTMLDivElement>(null);
+  const labelWrapRef = useRef<HTMLDivElement>(null);
+  const labelTextRef = useRef<HTMLSpanElement>(null);
   const labelSide = LABEL_SIDE[position];
+
+  useEffect(() => {
+    const target: HTMLElement | Window = container?.current ?? window;
+
+    const update = () => {
+      const pct = getProgress(container?.current ?? null);
+      const pctStr = `${pct}%`;
+      if (fillRef.current) fillRef.current.style.height = pctStr;
+      if (labelWrapRef.current) labelWrapRef.current.style.top = pctStr;
+      if (labelTextRef.current)
+        labelTextRef.current.textContent = String(Math.round(pct));
+    };
+
+    update();
+    target.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("resize", update, { passive: true });
+
+    return () => {
+      target.removeEventListener("scroll", update);
+      window.removeEventListener("resize", update);
+    };
+  }, [container]);
 
   return (
     <div
@@ -119,8 +112,9 @@ export function ScrollProgress({
         <Ticks count={tickCount} tone="muted" />
 
         <div
-          className="absolute inset-x-0 top-0 overflow-hidden transition-[height] duration-75 ease-out"
-          style={{ height: `${progress}%` }}
+          className="absolute inset-x-0 top-0 overflow-hidden"
+          ref={fillRef}
+          style={{ height: "0%" }}
         >
           <div style={{ height, width: "100%" }}>
             <Ticks count={tickCount} tone="solid" />
@@ -130,16 +124,20 @@ export function ScrollProgress({
         {showLabel && (
           <div
             className={cn(
-              "absolute flex items-center gap-1 transition-[top] duration-75 ease-out",
+              "absolute flex items-center gap-1",
               labelSide === "right"
                 ? "left-full -translate-y-1/2 pl-1.5"
                 : "right-full -translate-y-1/2 flex-row-reverse pr-1.5"
             )}
-            style={{ top: `${progress}%` }}
+            ref={labelWrapRef}
+            style={{ top: "0%" }}
           >
             <span aria-hidden="true" className="h-px w-2 bg-foreground" />
-            <span className="font-medium text-foreground text-xs tabular-nums">
-              {Math.round(progress)}
+            <span
+              className="font-medium text-foreground text-xs tabular-nums"
+              ref={labelTextRef}
+            >
+              0
             </span>
           </div>
         )}
