@@ -74,6 +74,8 @@ const componentSummaries: Record<string, string> = {
     "Team invitation docs in the Blocks section with fluid morphing variants for inviting members, managing the team, assigning roles, and tracking pending invites.",
   "/blocks/logo-carousel":
     "Logo carousel docs in the Blocks section with a multi-column grid that cycles through logos using a staggered wave animation.",
+  "/blocks/feedback-form":
+    "Feedback form docs in the Blocks section with a collapsed pill that morphs into an expanded panel with a textarea, using a single auto-sizing container.",
   "/blocks/testimonials":
     "Testimonials docs in the Blocks section with an inline quote wall where hovering one quote blurs the rest and reveals the author attribution.",
   "/overlay-and-popups/hover-card":

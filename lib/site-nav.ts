@@ -24,6 +24,7 @@ export const SITE_SECTIONS = [
   {
     label: "Blocks",
     children: [
+      { label: "Feedback Form", href: "/blocks/feedback-form" },
       { label: "Logo Carousel", href: "/blocks/logo-carousel" },
       { label: "Prompt Box", href: "/blocks/prompt-box" },
       { label: "Setup Checklist", href: "/blocks/setup-checklist" },

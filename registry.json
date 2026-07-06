@@ -748,6 +748,21 @@
       ]
     },
     {
+      "name": "feedback",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": ["lucide-react"],
+      "devDependencies": [],
+      "title": "Feedback Form",
+      "description": "Collapsed pill that morphs into an expanded feedback panel with a send button, loading state, and a textarea, driven by pure CSS transitions with asymmetric open/close easing.",
+      "files": [
+        {
+          "path": "feedback.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "file-tree",
       "type": "registry:ui",
       "registryDependencies": [],

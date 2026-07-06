@@ -5841,6 +5841,47 @@ const logosCarouselApiDetails: DetailItem[] = [
   },
 ];
 
+const feedbackFormApiDetails: DetailItem[] = [
+  {
+    id: "feedback-form",
+    title: "FeedbackForm",
+    summary:
+      "Collapsed pill that morphs into an expanded feedback panel with a send button and a textarea. A single container animates its own size and corner radius via Motion's layout animations, so no width or height values need to be hardcoded.",
+    fields: [
+      field({
+        name: "label",
+        type: "string",
+        defaultValue: '"Iconiq UI"',
+        description:
+          "Text shown next to the indicator dot in the collapsed pill, to the left of the Feedback trigger.",
+      }),
+      field({
+        name: "placeholder",
+        type: "string",
+        description:
+          "Placeholder shown in the expanded textarea. Unset by default — pass your own copy.",
+      }),
+      field({
+        name: "onSubmit",
+        type: "(value: string) => void | Promise<void>",
+        description:
+          "Called with the trimmed value when the Send button is clicked or Cmd/Ctrl+Enter is pressed. Return a promise to keep the Send button in a loading state until it resolves — the panel only collapses back to the pill after that. Throwing keeps the panel open so the user can retry.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description: "Extra classes applied to the outer morphing container.",
+      }),
+    ],
+    notes: [
+      "The Send button is disabled until the textarea has a non-empty value, and again while a submission is in flight.",
+      "Clicking outside the panel or pressing Escape collapses it back to the pill without submitting — both are ignored while a submission is in flight.",
+      "The container uses a single `layout` animation to resize and reshape between the pill and panel. Opening uses a snappy spring; closing uses a tween instead so the shrink doesn't overshoot and bounce.",
+      "Collapses instantly with no motion under reduced motion preferences.",
+    ],
+  },
+];
+
 const testimonialsApiDetails: DetailItem[] = [
   {
     id: "testimonials",
@@ -11362,6 +11403,7 @@ export {
   setupChecklistApiDetails,
   teamInvitationApiDetails,
   logosCarouselApiDetails,
+  feedbackFormApiDetails,
   testimonialsApiDetails,
   accordionApiDetails,
   progressApiDetails,

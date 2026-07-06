@@ -4,6 +4,11 @@
       "label": "Blocks",
       "items": [
         {
+          "slug": "feedback-form",
+          "label": "Feedback Form",
+          "href": "/blocks/feedback-form"
+        },
+        {
           "slug": "logo-carousel",
           "label": "Logo Carousel",
           "href": "/blocks/logo-carousel"
