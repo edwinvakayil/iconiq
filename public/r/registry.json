@@ -588,6 +588,21 @@
       ]
     },
     {
+      "name": "code-block",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": ["motion", "lucide-react"],
+      "devDependencies": [],
+      "title": "Code Block",
+      "description": "Editor-style code block with a filename tab, a top-right spring-crossfade copy button, a bottom status bar with language and line count, line numbers, built-in theme-aware syntax highlighting, and line emphasis.",
+      "files": [
+        {
+          "path": "code-block.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "color-picker",
       "type": "registry:ui",
       "registryDependencies": [],

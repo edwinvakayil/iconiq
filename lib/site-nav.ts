@@ -25,6 +25,7 @@ export const SITE_SECTIONS = [
     label: "Blocks",
     children: [
       { label: "AI Input", href: "/blocks/ai-input" },
+      { label: "Code Block", href: "/blocks/code-block" },
       { label: "Feedback Form", href: "/blocks/feedback-form" },
       { label: "Logo Carousel", href: "/blocks/logo-carousel" },
       { label: "Scroll Progress", href: "/blocks/scroll-progress" },

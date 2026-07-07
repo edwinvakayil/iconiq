@@ -68,6 +68,8 @@ const componentSummaries: Record<string, string> = {
     "Input OTP docs in the Inputs & Forms section with Base UI OTP Field slots, spring focus motion, character entrance, and a blinking caret on the active cell.",
   "/blocks/ai-input":
     "AI input docs in the Blocks section with a chat-style composer, agent and model selector chips, sent-message bubbles, and an Apple Intelligence-style gradient wave that sweeps the surface after a message is sent.",
+  "/blocks/code-block":
+    "Code block docs in the Blocks section with an editor-style surface, a filename tab, a top-right spring-crossfade copy button, a bottom status bar with language and line count, line numbers, built-in theme-aware syntax highlighting, and line emphasis.",
   "/blocks/setup-checklist":
     "Setup checklist docs in the Blocks section with an animated onboarding card, staggered task rows, drawn checkmark badges, and a floating progress pill.",
   "/blocks/team-invitation":
@@ -211,6 +213,16 @@ const extraComponentKeywordsBySlug: Record<string, string[]> = {
     "send effect",
     "agent picker",
     "model picker",
+  ],
+  "code-block": [
+    "code block",
+    "syntax highlighting",
+    "code snippet",
+    "copy code",
+    "line numbers",
+    "highlight lines",
+    "pre",
+    "filename header",
   ],
   "setup-checklist": [
     "setup checklist",

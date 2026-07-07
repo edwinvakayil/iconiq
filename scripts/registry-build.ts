@@ -644,6 +644,12 @@ const REGISTRY_UI_META: Record<
     dependencies: ["@base-ui/react", "motion", "lucide-react"],
     registryDependencies: ["b-switch"],
   },
+  "code-block": {
+    title: "Code Block",
+    description:
+      "Editor-style code block with a filename tab, a top-right spring-crossfade copy button, a bottom status bar with language and line count, line numbers, built-in theme-aware syntax highlighting, and line emphasis.",
+    dependencies: ["motion", "lucide-react"],
+  },
   "setup-checklist": {
     title: "Setup Checklist",
     description:

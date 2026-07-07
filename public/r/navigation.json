@@ -9,6 +9,11 @@
           "href": "/blocks/ai-input"
         },
         {
+          "slug": "code-block",
+          "label": "Code Block",
+          "href": "/blocks/code-block"
+        },
+        {
           "slug": "feedback-form",
           "label": "Feedback Form",
           "href": "/blocks/feedback-form"

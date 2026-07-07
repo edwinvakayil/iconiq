@@ -5513,6 +5513,89 @@ const aiInputApiDetails: DetailItem[] = [
   registryItem("ai-input.json", ["motion", "lucide-react"]),
 ];
 
+const codeBlockApiDetails: DetailItem[] = [
+  {
+    id: "code-block",
+    title: "CodeBlock",
+    summary:
+      "Editor-style code surface with a filename tab that joins the code area, a copy button pinned to the top-right corner, a bottom status bar showing language and line count, and a line-numbered body with built-in lightweight syntax highlighting. Follows the site theme.",
+    fields: [
+      field({
+        name: "code",
+        type: "string",
+        required: true,
+        description:
+          "Source code to render. Leading and trailing blank lines are trimmed before display; copying always writes the original string.",
+      }),
+      field({
+        name: "language",
+        type: "string",
+        description:
+          "Language shown in the bottom status bar, e.g. `ts` or `python`, and used to pick the tab accent dot color. Purely presentational — the built-in highlighter is language-agnostic. Omit to show only the line count.",
+      }),
+      field({
+        name: "filename",
+        type: "string",
+        description:
+          "Filename rendered inside the editor-style tab at the top. Omit to skip the tab strip entirely — the copy button then floats over the code, still top right.",
+      }),
+      field({
+        name: "icon",
+        type: "ReactNode",
+        description:
+          "Optional icon rendered in the tab in place of the accent dot, e.g. a framework logo. SVG children are sized to 14px automatically.",
+      }),
+      field({
+        name: "showLineNumbers",
+        type: "boolean",
+        defaultValue: "true",
+        description:
+          "Render the line-number gutter. Numbers stay pinned to the left edge while long lines scroll horizontally.",
+      }),
+      field({
+        name: "highlightLines",
+        type: "number[]",
+        description:
+          "1-based line numbers to emphasize. Highlighted rows get an indigo-tinted background and a left accent bar.",
+      }),
+      field({
+        name: "maxHeight",
+        type: "number | string",
+        defaultValue: "384",
+        description:
+          "Max body height before the code scrolls vertically. Accepts a pixel number or any CSS length.",
+      }),
+      field({
+        name: "onCopy",
+        type: "(code: string) => void",
+        description:
+          "Called with the code after it has been written to the clipboard.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description: "Extra classes for the outer shell.",
+      }),
+    ],
+    notes: [
+      "The surface follows the site theme: a white editor pane in light mode and a near-black one in dark mode, including the token palette.",
+      "The filename renders as an editor tab whose bottom edge merges into the code area; the tab strip is skipped entirely when `filename` is omitted.",
+      "The copy button is always in the top-right corner: in the tab strip when there is a filename, or floating over the code as a blurred glass chip when there is not.",
+      "The bottom status bar shows the language and the rendered line count, and echoes a Copied to clipboard confirmation on its right side while the copied state is active.",
+      "The line-number gutter is a bordered, opaque sticky column, so long lines slide underneath it on horizontal scroll instead of showing through the digits.",
+      "Clicking copy crossfades the clipboard icon into an emerald check with a transform-only spring while the label swaps from Copy to Copied inside a fixed-width slot, so nothing shifts layout — then it swaps back after two seconds.",
+      "All copy motion is transform and opacity only (no layout animation), keeping the swap smooth, and it collapses to instant state changes when the user prefers reduced motion.",
+      "Highlighting is a small built-in regex tokenizer — keywords, strings, numbers, comments, JSX tags, properties, calls, and types — so the component ships with zero highlighter dependencies.",
+      "The tab accent dot picks a per-language color (yellow for js, blue for ts, and so on) and falls back to indigo.",
+      "Rows glow softly on hover; `highlightLines` rows get an indigo gradient wash that fades to the right, an accent bar, and indigo line numbers instead.",
+      "The tab accent dot carries a soft glow in its language color, and text selection inside the code uses an indigo tint.",
+      "The body scrolls both ways: horizontally for long lines and vertically past `maxHeight`.",
+      "Copying tries the async clipboard API first and falls back to a hidden textarea with the legacy copy command when the API is unavailable, e.g. inside sandboxed iframes.",
+    ],
+  },
+  registryItem("code-block.json", ["motion", "lucide-react"]),
+];
+
 const setupChecklistApiDetails: DetailItem[] = [
   {
     id: "setup-checklist",
@@ -11513,6 +11596,7 @@ const tooltipApiDetails: DetailItem[] = [
 
 export {
   aiInputApiDetails,
+  codeBlockApiDetails,
   alertApiDetails,
   alertDialogApiDetails,
   avatarApiDetails,
