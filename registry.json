@@ -19,6 +19,21 @@
       ]
     },
     {
+      "name": "ai-input",
+      "type": "registry:ui",
+      "registryDependencies": ["b-switch"],
+      "dependencies": ["motion", "lucide-react"],
+      "devDependencies": [],
+      "title": "AI Input",
+      "description": "Chat-style AI composer with agent and model chips, sent-message bubbles, and an Apple Intelligence-style gradient wave on send.",
+      "files": [
+        {
+          "path": "ai-input.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "alert",
       "type": "registry:ui",
       "registryDependencies": [],
@@ -937,21 +952,6 @@
       "files": [
         {
           "path": "popover.tsx",
-          "type": "registry:ui"
-        }
-      ]
-    },
-    {
-      "name": "prompt-box",
-      "type": "registry:ui",
-      "registryDependencies": [],
-      "dependencies": ["@base-ui/react", "motion", "lucide-react"],
-      "devDependencies": [],
-      "title": "Prompt Box",
-      "description": "Spring-animated AI prompt with model controls and voice or send.",
-      "files": [
-        {
-          "path": "prompt-box.tsx",
           "type": "registry:ui"
         }
       ]

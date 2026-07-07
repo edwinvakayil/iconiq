@@ -4,6 +4,11 @@
       "label": "Blocks",
       "items": [
         {
+          "slug": "ai-input",
+          "label": "AI Input",
+          "href": "/blocks/ai-input"
+        },
+        {
           "slug": "feedback-form",
           "label": "Feedback Form",
           "href": "/blocks/feedback-form"
@@ -12,11 +17,6 @@
           "slug": "logo-carousel",
           "label": "Logo Carousel",
           "href": "/blocks/logo-carousel"
-        },
-        {
-          "slug": "prompt-box",
-          "label": "Prompt Box",
-          "href": "/blocks/prompt-box"
         },
         {
           "slug": "scroll-progress",

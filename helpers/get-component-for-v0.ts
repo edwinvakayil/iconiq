@@ -462,19 +462,6 @@ export function DrawerPreview() {
     "    </div>\n" +
     "  )\n" +
     "}\n",
-  "prompt-box":
-    '"use client";\n\n' +
-    `import { PromptInput, type PromptSettingGroup } from "@/components/ui/prompt-box"\n\n` +
-    "const settingGroups: PromptSettingGroup[] = [\n" +
-    '  { id: "model", label: "Model", display: "featured", options: [{ value: "sonnet-4.6", label: "Sonnet 4.6" }] },\n' +
-    "]\n\n" +
-    "export default function Page() {\n" +
-    "  return (\n" +
-    '    <div className="mx-auto flex min-h-svh w-full max-w-md items-center justify-center p-8">\n' +
-    '      <PromptInput placeholder="Ask anything" settingGroups={settingGroups} onSubmit={(value) => console.log(value)} />\n' +
-    "    </div>\n" +
-    "  )\n" +
-    "}\n",
   radiogroup:
     '"use client";\n\n' +
     `import RadioGroup from "@/components/ui/r-radio-group"\n` +

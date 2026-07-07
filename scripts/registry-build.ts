@@ -637,11 +637,12 @@ const REGISTRY_UI_META: Record<
       "Compound file tree with nested FileTreeItem rows, Base UI Button folder toggles, extension-aware icons, hover highlight tracking, and optional blue emphasis for new files.",
     dependencies: ["@base-ui/react", "motion", "lucide-react"],
   },
-  "prompt-box": {
-    title: "Prompt Box",
+  "ai-input": {
+    title: "AI Input",
     description:
-      "Spring-animated AI prompt with model controls and voice or send.",
-    dependencies: ["@base-ui/react", "motion", "lucide-react"],
+      "Chat-style AI composer with agent and model chips, sent-message bubbles, and an Apple Intelligence-style gradient wave on send.",
+    dependencies: ["motion", "lucide-react"],
+    registryDependencies: ["b-switch"],
   },
   "setup-checklist": {
     title: "Setup Checklist",

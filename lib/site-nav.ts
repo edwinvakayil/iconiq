@@ -24,9 +24,9 @@ export const SITE_SECTIONS = [
   {
     label: "Blocks",
     children: [
+      { label: "AI Input", href: "/blocks/ai-input" },
       { label: "Feedback Form", href: "/blocks/feedback-form" },
       { label: "Logo Carousel", href: "/blocks/logo-carousel" },
-      { label: "Prompt Box", href: "/blocks/prompt-box" },
       { label: "Scroll Progress", href: "/blocks/scroll-progress" },
       { label: "Setup Checklist", href: "/blocks/setup-checklist" },
       { label: "Team Invitation", href: "/blocks/team-invitation" },

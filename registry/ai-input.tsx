@@ -1,9 +1,22 @@
 "use client";
 
-import { Input as InputPrimitive } from "@base-ui/react/input";
-import { Check, ChevronRight } from "lucide-react";
-import { AnimatePresence, LayoutGroup, motion } from "motion/react";
 import {
+  ArrowUp,
+  Check,
+  ChevronDown,
+  ChevronLeft,
+  ChevronRight,
+  Mic,
+  Plus,
+} from "lucide-react";
+import {
+  AnimatePresence,
+  LayoutGroup,
+  motion,
+  useReducedMotion,
+} from "motion/react";
+import {
+  type ComponentType,
   Fragment,
   type ReactNode,
   useCallback,
@@ -15,23 +28,34 @@ import {
 } from "react";
 import { createPortal, flushSync } from "react-dom";
 
-const TRANSITION = {
-  type: "spring" as const,
-  stiffness: 380,
+import { Switch } from "@/components/ui/b-switch";
+
+const WAVE_DURATION_MS = 1000;
+const MAX_TEXTAREA_HEIGHT = 132;
+
+/** Spring used by the shared hover highlight that glides between plus-menu rows. */
+const HOVER_SPRING = {
+  type: "spring",
+  stiffness: 460,
   damping: 34,
+  mass: 0.58,
+} as const;
+
+/** Apple Intelligence-style spectrum used by the send wave. */
+const WAVE_WASH_GRADIENT =
+  "linear-gradient(180deg, transparent, rgba(34,211,238,0.07), rgba(59,130,246,0.09), rgba(217,70,239,0.1), rgba(244,63,94,0.09), rgba(249,115,22,0.08), transparent)";
+
+export type AIInputOption = {
+  value: string;
+  label: string;
 };
 
-const COLLAPSED_HEIGHT = 48;
-const MIN_EXPANDED_HEIGHT = 113;
-const MAX_EXPANDED_HEIGHT = 300;
-const FOOTER_HEIGHT = 46;
-const MIN_TEXTAREA_PANEL_HEIGHT = MIN_EXPANDED_HEIGHT - FOOTER_HEIGHT;
-const MAX_TEXTAREA_PANEL_HEIGHT = MAX_EXPANDED_HEIGHT - FOOTER_HEIGHT;
+export type AIInputMessage = {
+  id: number;
+  text: string;
+};
 
-const promptFieldClassName =
-  "w-full border-0 bg-transparent text-base leading-5 text-foreground shadow-none outline-none placeholder:font-medium placeholder:text-muted-foreground focus:outline-none focus-visible:outline-none focus-visible:ring-0 sm:text-sm sm:leading-[17px]";
-
-const promptFieldCollapsedClassName = promptFieldClassName;
+// ─── Settings dropdown types ────────────────────────────────────────────────
 
 export type PromptSettingOption = {
   value: string;
@@ -55,35 +79,18 @@ export type PromptMenuAction = {
   onSelect: () => void;
 };
 
-export type PromptPlusMenuOption = {
-  value: string;
-  label: string;
-};
-
-export type PromptPlusMenuItem = {
-  id: string;
-  label: string;
-  icon?: ReactNode;
-  shortcut?: string;
-  onSelect?: () => void;
-  options?: PromptPlusMenuOption[];
-  onOptionSelect?: (value: string) => void;
-};
+// ─── Settings dropdown helpers ───────────────────────────────────────────────
 
 function getDefaultSettings(
   groups: PromptSettingGroup[],
   defaults?: Record<string, string>
 ) {
-  return groups.reduce<Record<string, string>>((settings, group) => {
+  return groups.reduce<Record<string, string>>((acc, group) => {
     const preferred = defaults?.[group.id];
-    const hasPreferred = group.options.some(
-      (option) => option.value === preferred
-    );
-
-    settings[group.id] =
+    const hasPreferred = group.options.some((opt) => opt.value === preferred);
+    acc[group.id] =
       hasPreferred && preferred ? preferred : (group.options[0]?.value ?? "");
-
-    return settings;
+    return acc;
   }, {});
 }
 
@@ -124,7 +131,6 @@ function getPanelWidth(viewportWidth: number) {
 function useCompactViewport() {
   const [isCompact, setIsCompact] = useState(() => {
     if (typeof window === "undefined") return false;
-
     return window.matchMedia(`(max-width: ${COMPACT_VIEWPORT_WIDTH - 1}px)`)
       .matches;
   });
@@ -134,10 +140,8 @@ function useCompactViewport() {
       `(max-width: ${COMPACT_VIEWPORT_WIDTH - 1}px)`
     );
     const update = () => setIsCompact(mediaQuery.matches);
-
     update();
     mediaQuery.addEventListener("change", update);
-
     return () => mediaQuery.removeEventListener("change", update);
   }, []);
 
@@ -150,10 +154,8 @@ function usePrefersHover() {
   useEffect(() => {
     const mediaQuery = window.matchMedia("(hover: hover) and (pointer: fine)");
     const update = () => setPrefersHover(mediaQuery.matches);
-
     update();
     mediaQuery.addEventListener("change", update);
-
     return () => mediaQuery.removeEventListener("change", update);
   }, []);
 
@@ -162,11 +164,9 @@ function usePrefersHover() {
 
 function useIsMounted() {
   const [mounted, setMounted] = useState(false);
-
   useEffect(() => {
     setMounted(true);
   }, []);
-
   return mounted;
 }
 
@@ -193,20 +193,15 @@ function useDropdownDismiss({
 
     const handlePointerDown = (event: PointerEvent) => {
       const target = event.target as Node;
-
       if (triggerRef.current?.contains(target)) return;
       if (isInsideDropdownPanel(target)) return;
-
       onClose();
     };
 
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key !== "Escape") return;
-
       event.stopPropagation();
-
       if (onEscape?.()) return;
-
       onClose();
     };
 
@@ -284,10 +279,7 @@ const EFFORT_BAR_LEVELS: Record<
 };
 
 function normalizeEffortLevel(value: string): EffortLevel {
-  if (value === "low" || value === "medium" || value === "high") {
-    return value;
-  }
-
+  if (value === "low" || value === "medium" || value === "high") return value;
   return "medium";
 }
 
@@ -297,6 +289,12 @@ function getEffortGroupId(groups: PromptSettingGroup[]) {
     groups.find((group) => group.display === "submenu")?.id
   );
 }
+
+const SETTINGS_TRANSITION = {
+  type: "spring" as const,
+  stiffness: 380,
+  damping: 34,
+};
 
 function EffortBarsIcon({ level }: { level: EffortLevel }) {
   const bars = EFFORT_BAR_LEVELS[level];
@@ -320,7 +318,7 @@ function EffortBarsIcon({ level }: { level: EffortLevel }) {
           initial={false}
           key={BAR_XS[index]}
           rx={1}
-          transition={TRANSITION}
+          transition={SETTINGS_TRANSITION}
           width={BAR_WIDTH}
           x={BAR_XS[index]}
         />
@@ -400,25 +398,27 @@ type SubmenuPosition = {
   origin: SubmenuOrigin;
 };
 
+type DropdownSide = "top" | "bottom";
+
+type DropdownPosition = {
+  left: number;
+  side: DropdownSide;
+  top?: number;
+  bottom?: number;
+  maxHeight: number;
+};
+
 function getMainDropdownMotion(side: DropdownSide, instantClose = false) {
   const offsetY = side === "bottom" ? -10 : 10;
 
   return {
-    animate: {
-      opacity: 1,
-      scale: 1,
-      y: 0,
-    },
+    animate: { opacity: 1, scale: 1, y: 0 },
     exit: {
       opacity: 0,
       scale: instantClose ? 1 : 0.98,
       y: instantClose ? 0 : offsetY * 0.65,
     },
-    initial: {
-      opacity: 0,
-      scale: 0.96,
-      y: offsetY,
-    },
+    initial: { opacity: 0, scale: 0.96, y: offsetY },
     transition: instantClose ? { duration: 0 } : dropdownPanelSpring,
   };
 }
@@ -432,10 +432,7 @@ function getMainDropdownInnerMotion(side: DropdownSide, instantClose = false) {
     initial: { opacity: 0, y: offsetY },
     transition: instantClose
       ? { duration: 0 }
-      : {
-          duration: 0.22,
-          ease: [0.22, 1, 0.36, 1] as const,
-        },
+      : { duration: 0.22, ease: [0.22, 1, 0.36, 1] as const },
   };
 }
 
@@ -443,21 +440,13 @@ function getFlyoutSubmenuMotion(origin: SubmenuOrigin, instantClose = false) {
   const offsetX = origin === "right" ? -12 : 12;
 
   return {
-    animate: {
-      opacity: 1,
-      scale: 1,
-      x: 0,
-    },
+    animate: { opacity: 1, scale: 1, x: 0 },
     exit: {
       opacity: 0,
       scale: instantClose ? 1 : 0.98,
       x: instantClose ? 0 : offsetX * 0.55,
     },
-    initial: {
-      opacity: 0,
-      scale: 0.96,
-      x: offsetX,
-    },
+    initial: { opacity: 0, scale: 0.96, x: offsetX },
     transition: instantClose ? { duration: 0 } : dropdownPanelSpring,
   };
 }
@@ -483,12 +472,7 @@ function getSubmenuPosition(
       viewportHeight - top - DROPDOWN_VIEWPORT_MARGIN
     );
 
-    return {
-      left,
-      maxHeight,
-      origin: "below" as const,
-      top,
-    };
+    return { left, maxHeight, origin: "below" as const, top };
   }
 
   const spaceRight =
@@ -523,6 +507,67 @@ function getSubmenuPosition(
     maxHeight,
     origin: openRight ? ("right" as const) : ("left" as const),
     top,
+  };
+}
+
+function getDropdownPosition({
+  align = "start",
+  panelHeight,
+  panelWidth,
+  triggerRect,
+}: {
+  align?: "end" | "start";
+  panelHeight: number;
+  panelWidth: number;
+  triggerRect: DOMRect;
+}): DropdownPosition {
+  const viewportHeight = window.innerHeight;
+  const viewportWidth = window.innerWidth;
+  const effectiveWidth = Math.min(panelWidth, getPanelWidth(viewportWidth));
+
+  const spaceBelow =
+    viewportHeight -
+    triggerRect.bottom -
+    DROPDOWN_SIDE_OFFSET -
+    DROPDOWN_VIEWPORT_MARGIN;
+  const spaceAbove =
+    triggerRect.top - DROPDOWN_SIDE_OFFSET - DROPDOWN_VIEWPORT_MARGIN;
+
+  const openBelow =
+    spaceBelow >= panelHeight
+      ? true
+      : spaceAbove >= panelHeight
+        ? false
+        : spaceBelow >= spaceAbove;
+
+  const desiredLeft =
+    align === "end" ? triggerRect.right - effectiveWidth : triggerRect.left;
+
+  const left = clamp(
+    desiredLeft,
+    DROPDOWN_VIEWPORT_MARGIN,
+    viewportWidth - effectiveWidth - DROPDOWN_VIEWPORT_MARGIN
+  );
+
+  const maxHeight = Math.max(
+    DROPDOWN_MIN_PANEL_HEIGHT,
+    openBelow ? spaceBelow : spaceAbove
+  );
+
+  if (openBelow) {
+    return {
+      left,
+      maxHeight,
+      side: "bottom",
+      top: triggerRect.bottom + DROPDOWN_SIDE_OFFSET,
+    };
+  }
+
+  return {
+    left,
+    maxHeight,
+    side: "top",
+    bottom: viewportHeight - triggerRect.top + DROPDOWN_SIDE_OFFSET,
   };
 }
 
@@ -598,7 +643,7 @@ function DropdownActionItem({
   setActiveItemId,
 }: {
   label: string;
-  icon?: React.ReactNode;
+  icon?: ReactNode;
   shortcut?: string;
   onSelect: () => void;
   activeItemId: string | null;
@@ -716,7 +761,6 @@ function SubmenuInlinePanel({
   submenuOptions: ReactNode;
 }) {
   if (!isOpen) return null;
-
   return <div className="px-1 pb-1">{submenuOptions}</div>;
 }
 
@@ -853,7 +897,6 @@ function DropdownSubmenu({
   useEffect(() => {
     const previousCompact = wasCompactRef.current;
     wasCompactRef.current = isCompact;
-
     if (previousCompact === false && isCompact && isOpen) {
       onOpenChange(false);
     }
@@ -986,78 +1029,7 @@ function DropdownSubmenu({
   );
 }
 
-type DropdownSide = "top" | "bottom";
-
-type DropdownPosition = {
-  left: number;
-  side: DropdownSide;
-  top?: number;
-  bottom?: number;
-  maxHeight: number;
-};
-
-function getDropdownPosition({
-  align = "start",
-  panelHeight,
-  panelWidth,
-  triggerRect,
-}: {
-  align?: "end" | "start";
-  panelHeight: number;
-  panelWidth: number;
-  triggerRect: DOMRect;
-}): DropdownPosition {
-  const viewportHeight = window.innerHeight;
-  const viewportWidth = window.innerWidth;
-  const effectiveWidth = Math.min(panelWidth, getPanelWidth(viewportWidth));
-
-  const spaceBelow =
-    viewportHeight -
-    triggerRect.bottom -
-    DROPDOWN_SIDE_OFFSET -
-    DROPDOWN_VIEWPORT_MARGIN;
-  const spaceAbove =
-    triggerRect.top - DROPDOWN_SIDE_OFFSET - DROPDOWN_VIEWPORT_MARGIN;
-
-  const openBelow =
-    spaceBelow >= panelHeight
-      ? true
-      : spaceAbove >= panelHeight
-        ? false
-        : spaceBelow >= spaceAbove;
-
-  const desiredLeft =
-    align === "end" ? triggerRect.right - effectiveWidth : triggerRect.left;
-
-  const left = clamp(
-    desiredLeft,
-    DROPDOWN_VIEWPORT_MARGIN,
-    viewportWidth - effectiveWidth - DROPDOWN_VIEWPORT_MARGIN
-  );
-
-  const maxHeight = Math.max(
-    DROPDOWN_MIN_PANEL_HEIGHT,
-    openBelow ? spaceBelow : spaceAbove
-  );
-
-  if (openBelow) {
-    return {
-      left,
-      maxHeight,
-      side: "bottom",
-      top: triggerRect.bottom + DROPDOWN_SIDE_OFFSET,
-    };
-  }
-
-  return {
-    left,
-    maxHeight,
-    side: "top",
-    bottom: viewportHeight - triggerRect.top + DROPDOWN_SIDE_OFFSET,
-  };
-}
-
-function SettingsDropdown({
+export function SettingsDropdown({
   groups,
   values,
   menuActions = [],
@@ -1067,7 +1039,7 @@ function SettingsDropdown({
   groups: PromptSettingGroup[];
   values: Record<string, string>;
   menuActions?: PromptMenuAction[];
-  onOpenChange: (open: boolean) => void;
+  onOpenChange?: (open: boolean) => void;
   onValueChange: (groupId: string, value: string) => void;
 }) {
   const [open, setOpen] = useState(false);
@@ -1090,8 +1062,7 @@ function SettingsDropdown({
   const handleOpenChange = useCallback(
     (nextOpen: boolean) => {
       setOpen(nextOpen);
-      onOpenChange(nextOpen);
-
+      onOpenChange?.(nextOpen);
       if (!nextOpen) {
         setActiveItemId(null);
         setOpenSubmenuId(null);
@@ -1102,28 +1073,21 @@ function SettingsDropdown({
 
   const dismissDropdown = useCallback(
     (instant = false) => {
-      if (instant) {
-        setInstantDismiss(true);
-      }
+      if (instant) setInstantDismiss(true);
       handleOpenChange(false);
     },
     [handleOpenChange]
   );
 
   useEffect(() => {
-    if (open) {
-      setInstantDismiss(false);
-    }
+    if (open) setInstantDismiss(false);
   }, [open]);
 
   const handleSubmenuSelect = useCallback(
     (groupId: string, value: string) => {
       onValueChange(groupId, value);
       setOpenSubmenuId(null);
-
-      if (!isCompact) {
-        dismissDropdown(true);
-      }
+      if (!isCompact) dismissDropdown(true);
     },
     [dismissDropdown, isCompact, onValueChange]
   );
@@ -1137,13 +1101,7 @@ function SettingsDropdown({
     const panelHeight = panel?.offsetHeight ?? DROPDOWN_ESTIMATED_HEIGHT;
     const panelWidth = panel?.offsetWidth ?? DROPDOWN_PANEL_WIDTH;
 
-    setPosition(
-      getDropdownPosition({
-        panelHeight,
-        panelWidth,
-        triggerRect,
-      })
-    );
+    setPosition(getDropdownPosition({ panelHeight, panelWidth, triggerRect }));
   }, []);
 
   useLayoutEffect(() => {
@@ -1155,9 +1113,7 @@ function SettingsDropdown({
     let observer: ResizeObserver | undefined;
 
     if (panel) {
-      observer = new ResizeObserver(() => {
-        updatePosition();
-      });
+      observer = new ResizeObserver(() => updatePosition());
       observer.observe(panel);
     }
 
@@ -1176,7 +1132,6 @@ function SettingsDropdown({
       setOpenSubmenuId(null);
       return true;
     }
-
     return false;
   }, [openSubmenuId]);
 
@@ -1192,7 +1147,6 @@ function SettingsDropdown({
       handleOpenChange(false);
       return;
     }
-
     updatePosition();
     handleOpenChange(true);
   }, [handleOpenChange, open, updatePosition]);
@@ -1288,7 +1242,6 @@ function SettingsDropdown({
                             ) {
                               return;
                             }
-
                             setActiveItemId(null);
                             setOpenSubmenuId(null);
                           }
@@ -1320,7 +1273,6 @@ function SettingsDropdown({
                           group,
                           values[group.id] ?? ""
                         );
-
                         if (!selected) return null;
 
                         return (
@@ -1396,690 +1348,672 @@ function SettingsDropdown({
   );
 }
 
-function PlusMenuDropdown({
-  items,
-  onOpenChange,
+// ─── Plus menu ───────────────────────────────────────────────────────────────
+
+export type AIInputMenuItem = {
+  value: string;
+  /** Not needed for separators. */
+  label?: string;
+  icon?: ComponentType<{ className?: string }>;
+  /** "action" (default) fires onMenuSelect, "toggle" renders a switch, "separator" draws a divider. */
+  type?: "action" | "toggle" | "separator";
+  /** Initial state for toggle items. */
+  defaultChecked?: boolean;
+  /** Keyboard shortcut shown on the right of action items (e.g. "⌘U"). */
+  shortcut?: string;
+  /** Called when this action item is clicked, in addition to onMenuSelect. */
+  onClick?: () => void;
+  /** Called when this toggle item changes, in addition to onMenuToggle. */
+  onCheckedChange?: (checked: boolean) => void;
+  /** Nested items turn an action into a submenu (one level deep). */
+  items?: AIInputMenuItem[];
+};
+
+function OptionMenu({
+  align = "start",
+  ariaLabel,
+  chipClassName,
+  onChange,
+  options,
+  value,
 }: {
-  items: PromptPlusMenuItem[];
-  onOpenChange: (open: boolean) => void;
+  align?: "start" | "end";
+  ariaLabel: string;
+  chipClassName: string;
+  onChange: (value: string) => void;
+  options: AIInputOption[];
+  value: string;
 }) {
   const [open, setOpen] = useState(false);
-  const [openSubmenuId, setOpenSubmenuId] = useState<string | null>(null);
-  const [activeItemId, setActiveItemId] = useState<string | null>(null);
-  const highlightLayoutId = useId();
-  const prefersHover = usePrefersHover();
-  const [position, setPosition] = useState<DropdownPosition>({
-    left: 0,
-    maxHeight: DROPDOWN_ESTIMATED_HEIGHT,
-    side: "top",
-    top: 0,
-  });
-  const triggerRef = useRef<HTMLButtonElement>(null);
-  const panelRef = useRef<HTMLDivElement>(null);
-  const isCompact = useCompactViewport();
-  const mounted = useIsMounted();
-  const [instantDismiss, setInstantDismiss] = useState(false);
-
-  const handleOpenChange = useCallback(
-    (nextOpen: boolean) => {
-      setOpen(nextOpen);
-      onOpenChange(nextOpen);
-
-      if (!nextOpen) {
-        setActiveItemId(null);
-        setOpenSubmenuId(null);
-      }
-    },
-    [onOpenChange]
-  );
-
-  const dismissDropdown = useCallback(
-    (instant = false) => {
-      if (instant) {
-        setInstantDismiss(true);
-      }
-      handleOpenChange(false);
-    },
-    [handleOpenChange]
-  );
+  const [upward, setUpward] = useState(false);
+  const [hoveredValue, setHoveredValue] = useState<string | null>(null);
+  const hoverLayoutId = useId();
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (open) {
-      setInstantDismiss(false);
-    }
-  }, [open]);
-
-  const updatePosition = useCallback(() => {
-    const trigger = triggerRef.current;
-    if (!trigger) return;
-
-    const triggerRect = trigger.getBoundingClientRect();
-    const panel = panelRef.current;
-    const panelHeight = panel?.offsetHeight ?? DROPDOWN_ESTIMATED_HEIGHT;
-    const panelWidth = panel?.offsetWidth ?? DROPDOWN_PANEL_WIDTH;
-
-    setPosition(
-      getDropdownPosition({
-        align: "end",
-        panelHeight,
-        panelWidth,
-        triggerRect,
-      })
-    );
-  }, []);
-
-  useLayoutEffect(() => {
     if (!open) return;
 
-    updatePosition();
+    const handlePointerDown = (event: PointerEvent) => {
+      if (containerRef.current?.contains(event.target as Node)) return;
+      setOpen(false);
+    };
 
-    const panel = panelRef.current;
-    let observer: ResizeObserver | undefined;
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setOpen(false);
+    };
 
-    if (panel) {
-      observer = new ResizeObserver(updatePosition);
-      observer.observe(panel);
-    }
-
-    window.addEventListener("resize", updatePosition);
-    window.addEventListener("scroll", updatePosition, true);
+    document.addEventListener("pointerdown", handlePointerDown);
+    document.addEventListener("keydown", handleKeyDown);
 
     return () => {
-      observer?.disconnect();
-      window.removeEventListener("resize", updatePosition);
-      window.removeEventListener("scroll", updatePosition, true);
+      document.removeEventListener("pointerdown", handlePointerDown);
+      document.removeEventListener("keydown", handleKeyDown);
     };
-  }, [open, updatePosition]);
+  }, [open]);
 
-  const handleEscape = useCallback(() => {
-    if (openSubmenuId) {
-      setOpenSubmenuId(null);
-      return true;
-    }
-
-    return false;
-  }, [openSubmenuId]);
-
-  useDropdownDismiss({
-    onClose: () => handleOpenChange(false),
-    onEscape: handleEscape,
-    open,
-    triggerRef,
-  });
-
-  const toggleOpen = useCallback(() => {
-    if (open) {
-      handleOpenChange(false);
-      return;
-    }
-
-    updatePosition();
-    handleOpenChange(true);
-  }, [handleOpenChange, open, updatePosition]);
-
-  const mainDropdownMotion = getMainDropdownMotion(
-    position.side,
-    instantDismiss
-  );
-  const mainDropdownInnerMotion = getMainDropdownInnerMotion(
-    position.side,
-    instantDismiss
-  );
+  const selected =
+    options.find((option) => option.value === value) ?? options[0];
 
   return (
-    <>
+    <div className="relative min-w-0" ref={containerRef}>
       <button
         aria-expanded={open}
         aria-haspopup="menu"
-        aria-label="Add attachment"
-        className={`mr-9 ml-auto flex items-center justify-center rounded-full py-1 transition-colors ${open ? "text-foreground" : "text-foreground/50 hover:text-foreground"}`}
-        onClick={toggleOpen}
-        onMouseDown={(event) => event.preventDefault()}
-        ref={triggerRef}
+        aria-label={ariaLabel}
+        className={chipClassName}
+        onClick={() => {
+          if (!open && containerRef.current) {
+            const rect = containerRef.current.getBoundingClientRect();
+            setUpward(window.innerHeight - rect.bottom < 160);
+          }
+          setHoveredValue(null);
+          setOpen((previous) => !previous);
+        }}
         type="button"
       >
-        <PlusIcon />
+        <span className="truncate">{selected?.label}</span>
+        <ChevronDown
+          aria-hidden="true"
+          className={`size-3.5 shrink-0 text-muted-foreground transition-transform ${open ? "rotate-180" : ""}`}
+        />
       </button>
-      {mounted &&
-        createPortal(
-          <AnimatePresence initial={false}>
-            {open ? (
-              <motion.div
-                animate={mainDropdownMotion.animate}
-                aria-label="Add options"
-                className={dropdownPanelClassName}
-                data-prompt-dropdown-panel=""
-                exit={mainDropdownMotion.exit}
-                initial={mainDropdownMotion.initial}
-                key="prompt-plus-dropdown"
-                ref={panelRef}
-                role="menu"
-                style={{
-                  left: position.left,
-                  maxHeight: position.maxHeight,
-                  transformOrigin:
-                    position.side === "bottom" ? "top right" : "bottom right",
-                  ...(position.side === "bottom"
-                    ? { top: position.top }
-                    : { bottom: position.bottom }),
+      <AnimatePresence>
+        {open ? (
+          <motion.div
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            aria-label={ariaLabel}
+            className={`absolute z-50 w-max min-w-52 max-w-[calc(100vw-2rem)] rounded-2xl border border-border bg-card p-1 shadow-[0_10px_28px_-18px_rgba(0,0,0,0.25)] ${align === "end" ? "right-0" : "left-0"} ${upward ? `bottom-full mb-2 ${align === "end" ? "origin-bottom-right" : "origin-bottom-left"}` : `top-full mt-2 ${align === "end" ? "origin-top-right" : "origin-top-left"}`}`}
+            exit={{ opacity: 0, scale: 0.97, y: upward ? 4 : -4 }}
+            initial={{ opacity: 0, scale: 0.96, y: upward ? 6 : -6 }}
+            onMouseLeave={() => setHoveredValue(null)}
+            role="menu"
+            transition={{ duration: 0.16, ease: "easeOut" }}
+          >
+            {options.map((option) => (
+              <button
+                aria-checked={option.value === selected?.value}
+                className="relative isolate flex w-full items-center justify-between gap-3 rounded-xl px-3 py-2 text-left text-sm"
+                key={option.value}
+                onClick={() => {
+                  onChange(option.value);
+                  setOpen(false);
                 }}
-                transition={mainDropdownMotion.transition}
+                onMouseEnter={() => setHoveredValue(option.value)}
+                role="menuitemradio"
+                type="button"
               >
-                <LayoutGroup>
-                  <motion.div
-                    animate={mainDropdownInnerMotion.animate}
-                    className="space-y-0.5"
-                    exit={mainDropdownInnerMotion.exit}
-                    initial={mainDropdownInnerMotion.initial}
-                    onMouseLeave={
-                      prefersHover
-                        ? (event) => {
-                            const related = event.relatedTarget as Node | null;
-                            if (
-                              related instanceof Element &&
-                              related.closest("[data-prompt-dropdown-panel]")
-                            ) {
-                              return;
-                            }
-
-                            setActiveItemId(null);
-                            setOpenSubmenuId(null);
-                          }
-                        : undefined
-                    }
-                    transition={mainDropdownInnerMotion.transition}
-                  >
-                    {items.map((item) => {
-                      if (item.options?.length) {
-                        const group: PromptSettingGroup = {
-                          id: item.id,
-                          label: item.label,
-                          display: "submenu",
-                          options: item.options.map((option) => ({
-                            value: option.value,
-                            label: option.label,
-                          })),
-                        };
-
-                        return (
-                          <DropdownSubmenu
-                            activeItemId={activeItemId}
-                            group={group}
-                            highlightLayoutId={highlightLayoutId}
-                            icon={item.icon}
-                            isOpen={openSubmenuId === item.id}
-                            key={item.id}
-                            onOpenChange={(nextOpen) => {
-                              setOpenSubmenuId(nextOpen ? item.id : null);
-                            }}
-                            onSelect={(value) => {
-                              item.onOptionSelect?.(value);
-                              setOpenSubmenuId(null);
-
-                              if (!isCompact) {
-                                dismissDropdown(true);
-                              }
-                            }}
-                            selectedValue=""
-                            setActiveItemId={setActiveItemId}
-                            submenuHighlightLayoutId={`${highlightLayoutId}-${item.id}-sub`}
-                            submenuId={item.id}
-                            triggerLabel={item.label}
-                          />
-                        );
-                      }
-
-                      return (
-                        <DropdownActionItem
-                          activeItemId={activeItemId}
-                          highlightLayoutId={`${highlightLayoutId}-plus-${item.id}`}
-                          icon={item.icon}
-                          key={item.id}
-                          label={item.label}
-                          onSelect={() => {
-                            item.onSelect?.();
-                            handleOpenChange(false);
-                          }}
-                          setActiveItemId={setActiveItemId}
-                          shortcut={item.shortcut}
-                        />
-                      );
-                    })}
-                  </motion.div>
-                </LayoutGroup>
-              </motion.div>
-            ) : null}
-          </AnimatePresence>,
-          document.body
-        )}
-    </>
+                {hoveredValue === option.value ? (
+                  <motion.span
+                    className="absolute inset-0 -z-10 rounded-[inherit] bg-accent/70"
+                    layoutId={hoverLayoutId}
+                    transition={HOVER_SPRING}
+                  />
+                ) : null}
+                <span className="truncate">{option.label}</span>
+                {option.value === selected?.value ? (
+                  <Check
+                    aria-hidden="true"
+                    className="size-4 shrink-0 text-foreground"
+                  />
+                ) : null}
+              </button>
+            ))}
+          </motion.div>
+        ) : null}
+      </AnimatePresence>
+    </div>
   );
 }
 
-function ArrowUpIcon() {
+function SendWave({ reducedMotion }: { reducedMotion: boolean }) {
   return (
-    <svg
+    <motion.div
+      animate={{ opacity: 1 }}
       aria-hidden="true"
-      fill="none"
-      height="12"
-      viewBox="0 0 14 14"
-      width="12"
+      className="pointer-events-none absolute inset-0 z-10 overflow-hidden rounded-[inherit]"
+      exit={{ opacity: 0 }}
+      initial={{ opacity: 1 }}
+      transition={{ duration: 0.25, ease: "easeOut" }}
     >
-      <path
-        d="M7 12V2M7 2L2.5 6.5M7 2L11.5 6.5"
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth="1.75"
+      <motion.div
+        animate={reducedMotion ? { y: "-17%" } : { y: "-105%" }}
+        className="absolute inset-x-0 top-0 h-[150%] blur-xl"
+        initial={{ y: "55%" }}
+        style={{ background: WAVE_WASH_GRADIENT }}
+        transition={
+          reducedMotion ? { duration: 0 } : { duration: 0.7, ease: "easeOut" }
+        }
       />
-    </svg>
+    </motion.div>
   );
 }
 
-function MicIcon() {
-  return (
-    <svg
-      aria-hidden="true"
-      fill="none"
-      height="13"
-      viewBox="0 0 14 14"
-      width="13"
-    >
-      <rect
-        height="7"
-        rx="2"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        width="4"
-        x="5"
-        y="1"
-      />
-      <path
-        d="M2.75 6.5V7a4.25 4.25 0 0 0 8.5 0v-.5M7 11.25V13"
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeWidth="1.5"
-      />
-    </svg>
-  );
-}
+const PLUS_PANEL_HEIGHT = 260;
 
-function PlusIcon() {
-  return (
-    <svg
-      aria-hidden="true"
-      fill="none"
-      height="14"
-      viewBox="0 0 14 14"
-      width="14"
-    >
-      <path
-        d="M7 2.5V11.5M2.5 7H11.5"
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeWidth="1.5"
-      />
-    </svg>
-  );
-}
-
-export type PromptInputProps = {
-  onSubmit?: (value: string) => void;
-  placeholder?: string;
-  menuActions?: PromptMenuAction[];
-  plusMenuItems?: PromptPlusMenuItem[];
-  settingGroups?: PromptSettingGroup[];
-  settings?: Record<string, string>;
-  defaultSettings?: Record<string, string>;
-  onSettingsChange?: (settings: Record<string, string>) => void;
+const plusSlideVariants = {
+  enter: (dir: number) => ({ opacity: 0, x: dir * 10 }),
+  visible: { opacity: 1, x: 0 },
+  exit: (dir: number) => ({ opacity: 0, x: dir * -10 }),
 };
 
-export function PromptInput({
-  onSubmit,
-  placeholder,
-  menuActions = [],
-  plusMenuItems = [],
+function collectToggleDefaults(items: AIInputMenuItem[]) {
+  const defaults: Record<string, boolean> = {};
+
+  for (const item of items) {
+    if (item.type === "toggle") {
+      defaults[item.value] = item.defaultChecked ?? false;
+    }
+    for (const child of item.items ?? []) {
+      if (child.type === "toggle") {
+        defaults[child.value] = child.defaultChecked ?? false;
+      }
+    }
+  }
+
+  return defaults;
+}
+
+function PlusMenuIcon({
+  icon: Icon,
+}: {
+  icon?: ComponentType<{ className?: string }>;
+}) {
+  if (!Icon) return null;
+  return (
+    <span aria-hidden="true">
+      <Icon className="size-[15px] shrink-0 text-foreground/60" />
+    </span>
+  );
+}
+
+function PlusMenu({
+  items,
+  onSelect,
+  onToggle,
+}: {
+  items: AIInputMenuItem[];
+  onSelect?: (value: string) => void;
+  onToggle?: (value: string, checked: boolean) => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const [upward, setUpward] = useState(false);
+  const [toggles, setToggles] = useState<Record<string, boolean>>(() =>
+    collectToggleDefaults(items)
+  );
+  const [activeSubmenu, setActiveSubmenu] = useState<string | null>(null);
+  const [slideDir, setSlideDir] = useState(1);
+  const [hoveredValue, setHoveredValue] = useState<string | null>(null);
+  const hoverLayoutId = useId();
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!open) return;
+
+    const handlePointerDown = (event: PointerEvent) => {
+      if (containerRef.current?.contains(event.target as Node)) return;
+      setOpen(false);
+    };
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setOpen(false);
+    };
+
+    document.addEventListener("pointerdown", handlePointerDown);
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.removeEventListener("pointerdown", handlePointerDown);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [open]);
+
+  const handleOpen = () => {
+    if (!open) {
+      if (containerRef.current) {
+        const rect = containerRef.current.getBoundingClientRect();
+        setUpward(window.innerHeight - rect.bottom < PLUS_PANEL_HEIGHT);
+      }
+      setActiveSubmenu(null);
+      setSlideDir(1);
+      setHoveredValue(null);
+    }
+    setOpen((previous) => !previous);
+  };
+
+  const handleToggle = (item: AIInputMenuItem, checked: boolean) => {
+    setToggles((previous) => ({ ...previous, [item.value]: checked }));
+    item.onCheckedChange?.(checked);
+    onToggle?.(item.value, checked);
+  };
+
+  const handleAction = (item: AIInputMenuItem) => {
+    item.onClick?.();
+    onSelect?.(item.value);
+    setOpen(false);
+  };
+
+  const openSub = (value: string) => {
+    setSlideDir(1);
+    setActiveSubmenu(value);
+    setHoveredValue(null);
+  };
+
+  const closeSub = () => {
+    setSlideDir(-1);
+    setActiveSubmenu(null);
+    setHoveredValue(null);
+  };
+
+  const hoverHighlight = (key: string) =>
+    hoveredValue === key ? (
+      <motion.span
+        className="absolute inset-0 -z-10 rounded-[inherit] bg-accent/70"
+        layoutId={hoverLayoutId}
+        transition={HOVER_SPRING}
+      />
+    ) : null;
+
+  const renderItem = (item: AIInputMenuItem, inSubmenu: boolean) => {
+    if (item.type === "separator") {
+      return <div className="mx-1 my-0.5 h-px bg-border" key={item.value} />;
+    }
+
+    if (item.type === "toggle") {
+      return (
+        <div
+          className="relative isolate flex items-center justify-between gap-3 rounded-xl px-3 py-1.5"
+          key={item.value}
+          onMouseEnter={() => setHoveredValue(item.value)}
+        >
+          {hoverHighlight(item.value)}
+          <div className="flex items-center gap-3">
+            <PlusMenuIcon icon={item.icon} />
+            <span className="text-sm">{item.label}</span>
+          </div>
+          <Switch
+            checked={toggles[item.value] ?? false}
+            onCheckedChange={(checked) => handleToggle(item, checked)}
+            size="sm"
+          />
+        </div>
+      );
+    }
+
+    if (!inSubmenu && item.items && item.items.length > 0) {
+      return (
+        <button
+          className="relative isolate flex w-full items-center justify-between gap-3 rounded-xl px-3 py-2 text-left text-sm"
+          key={item.value}
+          onClick={() => openSub(item.value)}
+          onMouseEnter={() => setHoveredValue(item.value)}
+          type="button"
+        >
+          {hoverHighlight(item.value)}
+          <div className="flex items-center gap-3">
+            <PlusMenuIcon icon={item.icon} />
+            {item.label}
+          </div>
+          <ChevronRight
+            aria-hidden="true"
+            className="size-3.5 text-foreground/40"
+          />
+        </button>
+      );
+    }
+
+    return (
+      <button
+        className="relative isolate flex w-full items-center justify-between gap-3 rounded-xl px-3 py-2 text-left text-sm"
+        key={item.value}
+        onClick={() => handleAction(item)}
+        onMouseEnter={() => setHoveredValue(item.value)}
+        type="button"
+      >
+        {hoverHighlight(item.value)}
+        <div className="flex items-center gap-3">
+          <PlusMenuIcon icon={item.icon} />
+          {item.label}
+        </div>
+        {item.shortcut ? (
+          <span className="shrink-0 text-muted-foreground text-xs">
+            {item.shortcut}
+          </span>
+        ) : null}
+      </button>
+    );
+  };
+
+  const activeParent = activeSubmenu
+    ? items.find((item) => item.value === activeSubmenu)
+    : undefined;
+
+  return (
+    <div className="relative" ref={containerRef}>
+      <button
+        aria-expanded={open}
+        aria-haspopup="menu"
+        aria-label="More options"
+        className="flex size-8 shrink-0 items-center justify-center rounded-full text-foreground/70 transition-colors hover:text-foreground sm:size-9"
+        onClick={handleOpen}
+        type="button"
+      >
+        <Plus aria-hidden="true" className="size-4" />
+      </button>
+
+      <AnimatePresence>
+        {open ? (
+          <motion.div
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            className={`absolute left-0 z-50 w-max min-w-64 max-w-[calc(100vw-2rem)] overflow-hidden rounded-2xl border border-border bg-card p-1 shadow-[0_10px_28px_-18px_rgba(0,0,0,0.25)] ${upward ? "bottom-full mb-2 origin-bottom-left" : "top-full mt-2 origin-top-left"}`}
+            exit={{ opacity: 0, scale: 0.97, y: upward ? 4 : -4 }}
+            initial={{ opacity: 0, scale: 0.96, y: upward ? 6 : -6 }}
+            onMouseLeave={() => setHoveredValue(null)}
+            transition={{ duration: 0.16, ease: "easeOut" }}
+          >
+            <AnimatePresence custom={slideDir} initial={false} mode="wait">
+              {activeParent ? (
+                <motion.div
+                  animate="visible"
+                  custom={slideDir}
+                  exit="exit"
+                  initial="enter"
+                  key={activeParent.value}
+                  transition={{ duration: 0.13, ease: "easeOut" }}
+                  variants={plusSlideVariants}
+                >
+                  <button
+                    className="relative isolate flex w-full items-center gap-2 rounded-xl px-3 py-2 text-left font-medium text-sm"
+                    onClick={closeSub}
+                    onMouseEnter={() => setHoveredValue("__back")}
+                    type="button"
+                  >
+                    {hoverHighlight("__back")}
+                    <ChevronLeft
+                      aria-hidden="true"
+                      className="size-4 shrink-0 text-muted-foreground"
+                    />
+                    {activeParent.label}
+                  </button>
+                  <div className="mx-1 my-0.5 h-px bg-border" />
+                  {(activeParent.items ?? []).map((item) =>
+                    renderItem(item, true)
+                  )}
+                </motion.div>
+              ) : (
+                <motion.div
+                  animate="visible"
+                  custom={slideDir}
+                  exit="exit"
+                  initial="enter"
+                  key="main"
+                  transition={{ duration: 0.13, ease: "easeOut" }}
+                  variants={plusSlideVariants}
+                >
+                  {items.map((item) => renderItem(item, false))}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </motion.div>
+        ) : null}
+      </AnimatePresence>
+    </div>
+  );
+}
+
+// ─── Public component ────────────────────────────────────────────────────────
+
+export type AIInputProps = {
+  /** Options for the agent chip on the left. */
+  agents?: AIInputOption[];
+  defaultAgent?: string;
+  /** Setting groups for the settings dropdown (model, effort, etc.). */
+  settingGroups?: PromptSettingGroup[];
+  defaultSettings?: Record<string, string>;
+  /** Action items shown at the top of the settings dropdown. */
+  menuActions?: PromptMenuAction[];
+  /** Items for the plus menu: actions, toggles, separators, and one-level submenus. */
+  menuItems?: AIInputMenuItem[];
+  placeholder?: string;
+  /** Render sent messages as chat bubbles above the composer. */
+  showMessages?: boolean;
+  onSend?: (
+    message: string,
+    meta: { agent: string; settings: Record<string, string> }
+  ) => void;
+  onMicClick?: () => void;
+  /** Fired when the plus button is clicked and no menuItems are provided. */
+  onPlusClick?: () => void;
+  /** Fired when an action item (or submenu item) is selected in the plus menu. */
+  onMenuSelect?: (value: string) => void;
+  /** Fired when a toggle item in the plus menu changes. */
+  onMenuToggle?: (value: string, checked: boolean) => void;
+  /** Fired when the agent chip selection changes. */
+  onAgentChange?: (value: string) => void;
+  /** Fired when any setting in the settings dropdown changes. */
+  onSettingsChange?: (settings: Record<string, string>) => void;
+  className?: string;
+};
+
+export function AIInput({
+  agents = [],
+  defaultAgent,
   settingGroups = [],
-  settings: settingsProp,
   defaultSettings,
+  menuActions = [],
+  menuItems = [],
+  placeholder = "Ask for follow-up changes",
+  showMessages = true,
+  onSend,
+  onMicClick,
+  onPlusClick,
+  onMenuSelect,
+  onMenuToggle,
+  onAgentChange,
   onSettingsChange,
-}: PromptInputProps) {
-  const [expanded, setExpanded] = useState(false);
+  className,
+}: AIInputProps) {
   const [value, setValue] = useState("");
-  const valueRef = useRef(value);
-  valueRef.current = value;
+  const [messages, setMessages] = useState<AIInputMessage[]>([]);
+  const [waveRun, setWaveRun] = useState(0);
+  const [agent, setAgent] = useState(
+    () => defaultAgent ?? agents[0]?.value ?? ""
+  );
   const [internalSettings, setInternalSettings] = useState(() =>
     getDefaultSettings(settingGroups, defaultSettings)
   );
-  const isSettingsControlled = settingsProp !== undefined;
-  const settings = isSettingsControlled ? settingsProp : internalSettings;
-  const [settingsOpen, setSettingsOpen] = useState(false);
-  const [plusOpen, setPlusOpen] = useState(false);
-  const settingsOpenRef = useRef(settingsOpen);
-  const plusOpenRef = useRef(plusOpen);
-  settingsOpenRef.current = settingsOpen;
-  plusOpenRef.current = plusOpen;
-  const [expandedHeight, setExpandedHeight] = useState(MIN_EXPANDED_HEIGHT);
+  const nextMessageIdRef = useRef(0);
+  const waveTimeoutRef = useRef<number | undefined>(undefined);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const messagesRef = useRef<HTMLDivElement>(null);
+  const reducedMotion = useReducedMotion() ?? false;
   const hasValue = value.trim() !== "";
-  const inputRef = useRef<HTMLElement | null>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const textareaPanelHeight = expandedHeight - FOOTER_HEIGHT;
-  const isPanelScrollable = textareaPanelHeight >= MAX_TEXTAREA_PANEL_HEIGHT;
-  const showSettings = settingGroups.length > 0 || menuActions.length > 0;
 
-  const updateSettings = useCallback(
-    (groupId: string, nextValue: string) => {
-      const nextSettings = { ...settings, [groupId]: nextValue };
+  useEffect(() => () => window.clearTimeout(waveTimeoutRef.current), []);
 
-      if (!isSettingsControlled) {
-        setInternalSettings(nextSettings);
-      }
-
-      onSettingsChange?.(nextSettings);
-    },
-    [isSettingsControlled, onSettingsChange, settings]
-  );
-
-  useEffect(() => {
-    if (isSettingsControlled) return;
-
-    setInternalSettings((previous) => {
-      const defaults = getDefaultSettings(settingGroups, defaultSettings);
-      const next = { ...defaults };
-
-      for (const group of settingGroups) {
-        const previousValue = previous[group.id];
-        const isValid = group.options.some(
-          (option) => option.value === previousValue
-        );
-
-        if (isValid && previousValue) {
-          next[group.id] = previousValue;
-        }
-      }
-
-      return next;
-    });
-  }, [defaultSettings, isSettingsControlled, settingGroups]);
-
-  const syncExpandedHeight = useCallback(() => {
-    const element = inputRef.current;
-    if (!(element instanceof HTMLTextAreaElement)) return;
+  const syncHeight = useCallback(() => {
+    const element = textareaRef.current;
+    if (!element) return;
 
     element.style.height = "auto";
-    const contentHeight = element.scrollHeight;
-    const nextPanelHeight = Math.min(
-      MAX_TEXTAREA_PANEL_HEIGHT,
-      Math.max(MIN_TEXTAREA_PANEL_HEIGHT, contentHeight)
-    );
-
-    setExpandedHeight(nextPanelHeight + FOOTER_HEIGHT);
-
-    if (nextPanelHeight >= MAX_TEXTAREA_PANEL_HEIGHT) {
-      element.style.height = "100%";
-      return;
-    }
-
-    element.style.height = `${contentHeight}px`;
+    element.style.height = `${Math.min(element.scrollHeight, MAX_TEXTAREA_HEIGHT)}px`;
   }, []);
 
-  useLayoutEffect(() => {
-    if (!expanded) {
-      setExpandedHeight(MIN_EXPANDED_HEIGHT);
-      return;
-    }
+  const handleSend = useCallback(() => {
+    const trimmed = value.trim();
+    if (trimmed === "") return;
 
-    const frame = requestAnimationFrame(() => {
-      syncExpandedHeight();
-    });
-
-    return () => cancelAnimationFrame(frame);
-  }, [expanded, syncExpandedHeight]);
-
-  const handleValueChange = useCallback(
-    (nextValue: string) => {
-      setValue(nextValue);
-
-      if (!expanded) return;
-
-      requestAnimationFrame(() => {
-        syncExpandedHeight();
-      });
-    },
-    [expanded, syncExpandedHeight]
-  );
-
-  const expand = () => {
-    setExpanded(true);
-    requestAnimationFrame(() => {
-      inputRef.current?.focus();
-    });
-  };
-
-  const maybeCollapse = useCallback(() => {
-    requestAnimationFrame(() => {
-      if (settingsOpenRef.current || plusOpenRef.current) return;
-      if (valueRef.current.trim() !== "") return;
-
-      const active = document.activeElement;
-      if (active instanceof Element) {
-        if (isInsideDropdownPanel(active)) return;
-        if (containerRef.current?.contains(active)) return;
-      }
-
-      setExpanded(false);
-    });
-  }, []);
-
-  const handleBlur = useCallback(
-    (event: React.FocusEvent<HTMLDivElement>) => {
-      const related = event.relatedTarget as Node | null;
-
-      if (related instanceof Element) {
-        if (isInsideDropdownPanel(related)) return;
-        if (containerRef.current?.contains(related)) return;
-      }
-
-      maybeCollapse();
-    },
-    [maybeCollapse]
-  );
-
-  const handleSubmit = useCallback(() => {
-    if (settingsOpenRef.current || plusOpenRef.current) return;
-    if (value.trim() === "") return;
-
-    onSubmit?.(value);
+    nextMessageIdRef.current += 1;
+    setMessages((previous) => [
+      ...previous,
+      { id: nextMessageIdRef.current, text: trimmed },
+    ]);
+    onSend?.(trimmed, { agent, settings: internalSettings });
     setValue("");
-    setExpanded(false);
-  }, [onSubmit, value]);
 
-  const handleTextareaKeyDown = useCallback(
+    requestAnimationFrame(() => {
+      const element = textareaRef.current;
+      if (element) element.style.height = "auto";
+
+      messagesRef.current?.scrollTo({
+        top: messagesRef.current.scrollHeight,
+        behavior: reducedMotion ? "auto" : "smooth",
+      });
+    });
+
+    setWaveRun((run) => run + 1);
+    window.clearTimeout(waveTimeoutRef.current);
+    waveTimeoutRef.current = window.setTimeout(() => {
+      setWaveRun(0);
+    }, WAVE_DURATION_MS);
+  }, [agent, internalSettings, onSend, reducedMotion, value]);
+
+  const handleKeyDown = useCallback(
     (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
       if (event.key === "Enter" && !event.shiftKey) {
         event.preventDefault();
-        handleSubmit();
-        return;
-      }
-
-      if (event.key === "Escape") {
-        if (settingsOpenRef.current || plusOpenRef.current) return;
-        if (value.trim() === "") {
-          setExpanded(false);
-        }
+        handleSend();
       }
     },
-    [handleSubmit, value]
+    [handleSend]
   );
 
-  useEffect(() => {
-    if (!expanded) {
-      setSettingsOpen(false);
-      setPlusOpen(false);
-    }
-  }, [expanded]);
-
   return (
-    <motion.div
-      animate={{
-        maxWidth: expanded ? 440 : 320,
-        height: expanded ? expandedHeight : COLLAPSED_HEIGHT,
-      }}
-      className="relative mx-auto w-full overflow-hidden border border-border bg-card"
-      data-prompt-input-root=""
-      initial={false}
-      onBlur={handleBlur}
-      ref={containerRef}
-      style={{ borderRadius: 24 }}
-      transition={TRANSITION}
-    >
-      <AnimatePresence initial={false} mode="popLayout">
-        {expanded ? (
-          <motion.div
-            className="absolute inset-x-0 top-0"
-            key="textarea"
-            style={{ height: textareaPanelHeight }}
-          >
-            <InputPrimitive
-              aria-label="Prompt"
-              className="relative h-full w-full"
-              onValueChange={handleValueChange}
-              placeholder={placeholder}
-              ref={inputRef}
-              render={(props) => (
-                <textarea
-                  {...props}
-                  className={`${props.className ?? ""} ${promptFieldClassName} block h-full min-h-0 w-full resize-none pt-4 pr-14 pl-5 outline-none ${isPanelScrollable ? "overflow-y-auto overscroll-contain" : "overflow-hidden"}`}
-                  onKeyDown={(event) => {
-                    props.onKeyDown?.(event);
-                    handleTextareaKeyDown(event);
-                  }}
-                />
-              )}
-              value={value}
-            />
-          </motion.div>
-        ) : (
-          <motion.div
-            className="absolute inset-x-0 top-0 flex items-center px-5"
-            key="placeholder"
-            style={{ height: COLLAPSED_HEIGHT }}
-          >
-            <InputPrimitive
-              aria-label="Open prompt input"
-              className={`${promptFieldCollapsedClassName} block h-5 min-w-0 flex-1 cursor-text border-0 bg-transparent p-0 font-medium text-muted-foreground leading-5 sm:h-auto sm:leading-[17px]`}
-              onMouseDown={(event) => {
-                event.preventDefault();
-                expand();
-              }}
-              placeholder={placeholder}
-              readOnly
-            />
-          </motion.div>
-        )}
-      </AnimatePresence>
+    <div className={`w-full ${className ?? ""}`}>
+      {showMessages && messages.length > 0 ? (
+        <div
+          className="mb-4 flex max-h-72 flex-col gap-2 overflow-y-auto overscroll-contain px-1 py-1"
+          ref={messagesRef}
+        >
+          <AnimatePresence initial={false}>
+            {messages.map((message) => (
+              <motion.div
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                className="max-w-[85%] self-end whitespace-pre-wrap break-words rounded-3xl rounded-br-lg bg-muted px-4 py-2.5 text-[15px] text-foreground leading-relaxed sm:text-sm"
+                initial={{ opacity: 0, scale: 0.96, y: 10 }}
+                key={message.id}
+                layout="position"
+                transition={{ type: "spring", stiffness: 420, damping: 34 }}
+              >
+                {message.text}
+              </motion.div>
+            ))}
+          </AnimatePresence>
+        </div>
+      ) : null}
 
-      {/* Footer is pinned at its final position from the top — it never moves
-          as the surface grows; the container edge sweeps over and reveals it. */}
-      <AnimatePresence>
-        {expanded && (
-          <motion.div
-            animate={{
-              opacity: 1,
-              transition: { duration: 0.2, delay: 0.08, ease: "easeOut" },
-            }}
-            className="absolute inset-x-0 flex translate-y-px items-center gap-5 px-5 pt-2"
-            exit={{
-              opacity: 0,
-              transition: { duration: 0.16, ease: "easeIn" },
-            }}
-            initial={{ opacity: 0 }}
-            style={{ top: textareaPanelHeight }}
-          >
-            {showSettings ? (
+      <div className="@container relative rounded-[28px] border border-border bg-card shadow-[0_10px_26px_-22px_rgba(0,0,0,0.14)]">
+        <AnimatePresence>
+          {waveRun > 0 ? (
+            <SendWave
+              key={`send-wave-${waveRun}`}
+              reducedMotion={reducedMotion}
+            />
+          ) : null}
+        </AnimatePresence>
+
+        <textarea
+          aria-label="Message"
+          className="block max-h-[132px] w-full resize-none bg-transparent px-4 pt-4 pb-1 text-base text-foreground leading-6 outline-none placeholder:text-muted-foreground sm:px-5 sm:text-sm"
+          onChange={(event) => {
+            setValue(event.target.value);
+            syncHeight();
+          }}
+          onKeyDown={handleKeyDown}
+          placeholder={placeholder}
+          ref={textareaRef}
+          rows={1}
+          value={value}
+        />
+
+        <div className="flex items-center gap-1.5 px-2.5 pt-1 pb-2.5 sm:gap-2 sm:px-3 sm:pb-3">
+          {menuItems.length > 0 ? (
+            <PlusMenu
+              items={menuItems}
+              onSelect={onMenuSelect}
+              onToggle={onMenuToggle}
+            />
+          ) : (
+            <button
+              aria-label="Add attachment"
+              className="flex size-8 shrink-0 items-center justify-center rounded-full text-foreground/70 transition-colors hover:text-foreground sm:size-9"
+              onClick={onPlusClick}
+              type="button"
+            >
+              <Plus aria-hidden="true" className="size-4" />
+            </button>
+          )}
+
+          {agents.length > 0 ? (
+            <OptionMenu
+              ariaLabel="Select agent"
+              chipClassName="flex w-full min-w-14 items-center gap-1.5 rounded-full bg-muted px-3 py-1.5 font-medium text-foreground text-sm transition-colors hover:bg-accent sm:px-3.5 sm:py-2"
+              onChange={(next) => {
+                setAgent(next);
+                onAgentChange?.(next);
+              }}
+              options={agents}
+              value={agent}
+            />
+          ) : null}
+
+          <div className="ml-auto flex shrink-0 items-center gap-1 sm:gap-1.5">
+            {settingGroups.length > 0 || menuActions.length > 0 ? (
               <SettingsDropdown
                 groups={settingGroups}
                 menuActions={menuActions}
-                onOpenChange={(nextOpen) => {
-                  setSettingsOpen(nextOpen);
-                  if (nextOpen) {
-                    setPlusOpen(false);
-                    return;
-                  }
-                  maybeCollapse();
+                onValueChange={(groupId, val) => {
+                  const next = { ...internalSettings, [groupId]: val };
+                  setInternalSettings(next);
+                  onSettingsChange?.(next);
                 }}
-                onValueChange={updateSettings}
-                values={settings}
+                values={internalSettings}
               />
             ) : null}
-            {plusMenuItems.length > 0 ? (
-              <PlusMenuDropdown
-                items={plusMenuItems}
-                onOpenChange={(nextOpen) => {
-                  setPlusOpen(nextOpen);
-                  if (nextOpen) {
-                    setSettingsOpen(false);
-                    return;
-                  }
-                  maybeCollapse();
-                }}
-              />
-            ) : (
-              <button
-                aria-label="Add attachment"
-                className="mr-9 ml-auto flex items-center justify-center rounded-full py-1 text-foreground/50 transition-colors hover:text-foreground"
-                type="button"
-              >
-                <PlusIcon />
-              </button>
-            )}
-          </motion.div>
-        )}
-      </AnimatePresence>
 
-      {/* Send button — visible only when expanded */}
-      <AnimatePresence>
-        {expanded && (
-          <motion.button
-            animate={{ opacity: 1, scale: 1 }}
-            aria-label={hasValue ? "Send prompt" : "Use voice input"}
-            className="absolute right-2 bottom-2 flex size-8 items-center justify-center bg-accent text-accent-foreground transition-opacity hover:opacity-90"
-            exit={{ opacity: 0, scale: 0.85 }}
-            initial={{ opacity: 0, scale: 0.85 }}
-            key="send"
-            onClick={handleSubmit}
-            style={{ borderRadius: 9999 }}
-            transition={{ duration: 0.15, ease: "easeOut" }}
-            type="button"
-          >
-            <AnimatePresence initial={false} mode="popLayout">
-              {hasValue ? (
-                <motion.span
-                  animate={{ opacity: 1, scale: 1 }}
-                  className="flex items-center justify-center"
-                  exit={{ opacity: 0, scale: 0.5 }}
-                  initial={{ opacity: 0, scale: 0.5 }}
-                  key="arrow"
-                  transition={{ duration: 0.15, ease: "easeOut" }}
-                >
-                  <ArrowUpIcon />
-                </motion.span>
-              ) : (
-                <motion.span
-                  animate={{ opacity: 1, scale: 1 }}
-                  className="flex items-center justify-center"
-                  exit={{ opacity: 0, scale: 0.5 }}
-                  initial={{ opacity: 0, scale: 0.5 }}
-                  key="mic"
-                  transition={{ duration: 0.15, ease: "easeOut" }}
-                >
-                  <MicIcon />
-                </motion.span>
-              )}
-            </AnimatePresence>
-          </motion.button>
-        )}
-      </AnimatePresence>
-    </motion.div>
+            <button
+              aria-label="Use voice input"
+              className="@[21rem]:flex hidden size-8 shrink-0 items-center justify-center rounded-full text-foreground/60 transition-colors hover:text-foreground sm:size-9"
+              onClick={onMicClick}
+              type="button"
+            >
+              <Mic aria-hidden="true" className="size-[18px]" />
+            </button>
+
+            <button
+              aria-label="Send message"
+              className={`flex size-8 shrink-0 items-center justify-center rounded-full transition-all sm:size-9 ${hasValue ? "bg-foreground text-background hover:opacity-90" : "bg-muted-foreground/50 text-background"}`}
+              onClick={handleSend}
+              type="button"
+            >
+              <ArrowUp
+                aria-hidden="true"
+                className="size-4"
+                strokeWidth={2.25}
+              />
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }

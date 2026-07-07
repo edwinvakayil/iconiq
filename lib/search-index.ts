@@ -66,8 +66,8 @@ const componentSummaries: Record<string, string> = {
     "Input docs in the Inputs & Forms section for a text field with a spring-animated caret.",
   "/inputs-and-forms/input-otp":
     "Input OTP docs in the Inputs & Forms section with Base UI OTP Field slots, spring focus motion, character entrance, and a blinking caret on the active cell.",
-  "/blocks/prompt-box":
-    "Prompt box docs in the Blocks section with a compact-to-expanded AI prompt field, spring resize, model footer controls, and send or voice actions.",
+  "/blocks/ai-input":
+    "AI input docs in the Blocks section with a chat-style composer, agent and model selector chips, sent-message bubbles, and an Apple Intelligence-style gradient wave that sweeps the surface after a message is sent.",
   "/blocks/setup-checklist":
     "Setup checklist docs in the Blocks section with an animated onboarding card, staggered task rows, drawn checkmark badges, and a floating progress pill.",
   "/blocks/team-invitation":
@@ -202,14 +202,15 @@ const extraComponentKeywordsBySlug: Record<string, string[]> = {
     "2fa",
     "auth code",
   ],
-  "prompt-box": [
-    "prompt",
-    "chat input",
+  "ai-input": [
     "ai input",
+    "chat composer",
     "message box",
-    "composer",
-    "textarea",
-    "ask anything",
+    "gradient wave",
+    "apple intelligence",
+    "send effect",
+    "agent picker",
+    "model picker",
   ],
   "setup-checklist": [
     "setup checklist",

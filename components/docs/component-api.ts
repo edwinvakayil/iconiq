@@ -5401,75 +5401,116 @@ const inputOtpApiDetails: DetailItem[] = [
   registryItem("input-otp.json", ["@base-ui/react", "motion"]),
 ];
 
-const promptBoxApiDetails: DetailItem[] = [
+const aiInputApiDetails: DetailItem[] = [
   {
-    id: "prompt-input",
-    title: "PromptInput",
+    id: "ai-input",
+    title: "AIInput",
     summary:
-      "Expandable prompt surface that grows from a compact pill into a textarea with model controls, attachment action, and send or voice affordances.",
+      "Chat-style composer that stacks sent messages above the input as bubbles, exposes agent and model selector chips, and plays an Apple Intelligence-style gradient wave inside the surface when a message is sent.",
     fields: [
       field({
-        name: "onSubmit",
-        type: "(value: string) => void",
+        name: "agents",
+        type: "AIInputOption[]",
         description:
-          "Called with the trimmed prompt when the user presses Enter without Shift or clicks the send button.",
+          "Options for the agent chip on the left of the footer. Each option has `value` and `label`. Omit to hide the chip.",
+      }),
+      field({
+        name: "defaultAgent",
+        type: "string",
+        description:
+          "Initially selected agent value. Falls back to the first agent option.",
+      }),
+      field({
+        name: "models",
+        type: "AIInputOption[]",
+        description:
+          "Options for the model chip on the right of the footer. Omit to hide the chip.",
+      }),
+      field({
+        name: "defaultModel",
+        type: "string",
+        description:
+          "Initially selected model value. Falls back to the first model option.",
+      }),
+      field({
+        name: "menuItems",
+        type: "AIInputMenuItem[]",
+        description:
+          'Items for the plus menu. Each item has `value`, `label`, and optional `icon`. Set `type` to `"toggle"` for a switch row (with optional `defaultChecked`) or `"separator"` for a divider. Action items accept a per-item `onClick` and toggles a per-item `onCheckedChange`, firing alongside the component-level callbacks. Pass nested `items` to turn an action into a one-level submenu with a slide transition and back button. Omit to make the plus button a plain attachment button.',
       }),
       field({
         name: "placeholder",
         type: "string",
-        description:
-          "Placeholder copy for the collapsed and expanded prompt field.",
+        defaultValue: '"Ask for follow-up changes"',
+        description: "Placeholder copy for the textarea.",
       }),
       field({
-        name: "menuActions",
-        type: "PromptMenuAction[]",
+        name: "showMessages",
+        type: "boolean",
+        defaultValue: "true",
         description:
-          "Optional dropdown actions rendered above setting groups. Each action has `label`, optional `icon`, and `onSelect`.",
+          "Render sent messages as right-aligned chat bubbles above the composer. Disable when you render your own thread.",
       }),
       field({
-        name: "plusMenuItems",
-        type: "PromptPlusMenuItem[]",
+        name: "onSend",
+        type: "(message: string, meta: { agent: string; model: string }) => void",
         description:
-          "Items for the plus-button add menu. Actions use `onSelect` with optional `shortcut`. Submenus pass `options` and `onOptionSelect`.",
+          "Called with the trimmed message and the current agent and model picks when the user presses Enter or clicks send.",
       }),
       field({
-        name: "settingGroups",
-        type: "PromptSettingGroup[]",
-        description:
-          'Grouped settings for the footer menu. Use `display: "featured"` for a selected summary row, `display: "submenu"` for a value row with flyout, and `moreMenuLabel` for an extra picker row (e.g. More models). Options support optional `description` text.',
+        name: "onMicClick",
+        type: "() => void",
+        description: "Called when the microphone button is clicked.",
       }),
       field({
-        name: "settings",
-        type: "Record<string, string>",
+        name: "onPlusClick",
+        type: "() => void",
         description:
-          "Controlled map of selected values keyed by setting group id.",
+          "Called when the plus button is clicked and no `menuItems` are provided.",
       }),
       field({
-        name: "defaultSettings",
-        type: "Record<string, string>",
+        name: "onMenuSelect",
+        type: "(value: string) => void",
         description:
-          "Initial selected values for uncontrolled usage, keyed by setting group id.",
+          "Called with the item's `value` when an action item — top-level or inside a submenu — is selected in the plus menu.",
       }),
       field({
-        name: "onSettingsChange",
-        type: "(settings: Record<string, string>) => void",
+        name: "onMenuToggle",
+        type: "(value: string, checked: boolean) => void",
         description:
-          "Called when the user picks a new option in any settings group.",
+          "Called when a toggle item in the plus menu is switched on or off.",
+      }),
+      field({
+        name: "onAgentChange",
+        type: "(value: string) => void",
+        description:
+          "Called with the new agent value when the agent chip selection changes.",
+      }),
+      field({
+        name: "onModelChange",
+        type: "(value: string) => void",
+        description:
+          "Called with the new model value when the model chip selection changes.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description: "Extra classes for the outer wrapper.",
       }),
     ],
     notes: [
-      "Built on Base UI Input — collapsed state uses a read-only field, expanded state renders a textarea through the `render` prop.",
-      "Click the collapsed field to expand and focus the prompt input.",
-      "Press Enter to submit when the field has content; Shift+Enter inserts a newline.",
-      "The expanded surface starts compact and grows with your prompt up to 300px, then scrolls inside the textarea.",
-      "Press Escape or blur away with an empty draft to collapse back to the compact pill.",
-      "The settings menu shows optional `menuActions`, then featured model rows, submenu rows with current values, and optional more-menu flyouts separated by dividers.",
-      "The plus button opens an optional add menu when `plusMenuItems` is provided. Items support icons, keyboard shortcuts, and nested submenus.",
-      "The footer reveals the settings popover and plus add menu while expanded.",
-      "The trailing action button shows a microphone icon when empty and an arrow icon once text is entered.",
+      "Press Enter to send; Shift+Enter inserts a newline. Empty drafts are ignored.",
+      "The textarea auto-grows with the draft up to 132px, then scrolls.",
+      "Clicking send (or pressing Enter) plays the gradient wave once: a tall, softly blurred multicolor band rises from the bottom to the top of the composer in a single pass, then fades out.",
+      "The wave only appears after a message is sent — never while typing.",
+      "The wave sweep collapses to a static gradient fade when the user prefers reduced motion.",
+      "Agent and model chips open lightweight spring-animated menus that dismiss on outside click or Escape.",
+      "The plus menu is fully data-driven via `menuItems`: actions, switch toggles, separators, and one-level submenus that slide in with a back button.",
+      "The plus menu flips to open downward automatically when there is not enough room above the composer.",
+      "The send button lifts to full contrast once the draft has content.",
     ],
   },
-  registryItem("prompt-box.json", ["@base-ui/react", "motion", "lucide-react"]),
+  registryItem("ai-input.json", ["motion", "lucide-react"]),
 ];
 
 const setupChecklistApiDetails: DetailItem[] = [
@@ -11471,6 +11512,7 @@ const tooltipApiDetails: DetailItem[] = [
 ];
 
 export {
+  aiInputApiDetails,
   alertApiDetails,
   alertDialogApiDetails,
   avatarApiDetails,
@@ -11508,7 +11550,6 @@ export {
   faqProApiDetails,
   fileTreeApiDetails,
   popoverApiDetails,
-  promptBoxApiDetails,
   setupChecklistApiDetails,
   teamInvitationApiDetails,
   logosCarouselApiDetails,

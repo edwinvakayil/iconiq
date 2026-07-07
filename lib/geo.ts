@@ -4,6 +4,7 @@ import fs from "node:fs";
 
 import {
   accordionApiDetails,
+  aiInputApiDetails,
   alertApiDetails,
   autocompleteApiDetails,
   avatarApiDetails,
@@ -39,7 +40,6 @@ import {
   morphTextsApiDetails,
   popoverApiDetails,
   progressApiDetails,
-  promptBoxApiDetails,
   radialButtonApiDetails,
   radioGroupApiDetails,
   revealTextApiDetails,
@@ -187,7 +187,7 @@ const COMPONENT_API_DETAILS: Record<string, DetailItem[]> = {
   infiniteribbon: infiniteRibbonApiDetails,
   input: inputApiDetails,
   "input-otp": inputOtpApiDetails,
-  "prompt-box": promptBoxApiDetails,
+  "ai-input": aiInputApiDetails,
   "hover-card": hoverCardApiDetails,
   "icon-bar": iconBarApiDetails,
   "flux-button": fluxButtonApiDetails,
