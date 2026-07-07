@@ -57,7 +57,7 @@ export default function CodeBlockPage() {
         { label: "Code Block" },
       ]}
       componentName="code-block"
-      description="Editor-style code block with a filename tab, a top-right copy button, a bottom status bar with language and line count, line numbers, built-in syntax highlighting, and a smooth copy-to-copied swap. White in light mode, dark in dark mode."
+      description="Editor-style code block with syntax highlighting, line numbers, copy button, and dark mode."
       details={codeBlockApiDetails}
       detailsDescription="CodeBlock looks like a real editor pane: the filename sits in a tab that joins the code area below it, the copy button is pinned to the top-right corner, and a slim status bar along the bottom shows the language and the line count. Without a filename the tab strip disappears and the copy button floats over the code as a glass chip, still top right. The whole surface follows the site theme — white in light mode, near-black in dark mode — including the token palette. The body is highlighted by a small built-in tokenizer, so there is no highlighter dependency to install. Clicking copy writes the code to the clipboard and crossfades the clipboard icon into a check with a transform-only spring while the label swaps from Copy to Copied in a fixed-width slot, so nothing shifts or stutters, then swaps back two seconds later."
       editHref={`${LINK.GITHUB}/edit/main/app/(site)/blocks/code-block/page.tsx`}
