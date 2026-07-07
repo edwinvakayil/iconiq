@@ -641,7 +641,7 @@ const REGISTRY_UI_META: Record<
     title: "AI Input",
     description:
       "Chat-style AI composer with agent and model chips, sent-message bubbles, and an Apple Intelligence-style gradient wave on send.",
-    dependencies: ["motion", "lucide-react"],
+    dependencies: ["@base-ui/react", "motion", "lucide-react"],
     registryDependencies: ["b-switch"],
   },
   "setup-checklist": {

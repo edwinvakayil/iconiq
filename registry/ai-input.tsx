@@ -1,5 +1,6 @@
 "use client";
 
+import { Input as InputPrimitive } from "@base-ui/react/input";
 import {
   ArrowUp,
   Check,
@@ -103,13 +104,13 @@ function getSelectedOption(group: PromptSettingGroup, value: string) {
 }
 
 const dropdownPanelClassName =
-  "fixed z-[400] w-[min(17rem,calc(100vw-1.5rem))] overflow-y-auto overscroll-contain rounded-2xl border border-border/60 bg-card py-1.5 text-sm shadow-[0_10px_28px_-20px_rgba(0,0,0,0.14)] outline-none [-webkit-overflow-scrolling:touch]";
+  "fixed z-[400] w-[min(14.5rem,calc(100vw-1.5rem))] overflow-y-auto overscroll-contain rounded-xl border border-border/60 bg-card py-1 text-sm shadow-[0_10px_28px_-20px_rgba(0,0,0,0.14)] outline-none [-webkit-overflow-scrolling:touch]";
 
 const DROPDOWN_SIDE_OFFSET = 8;
 const DROPDOWN_VIEWPORT_MARGIN = 12;
 const DROPDOWN_SUBMENU_OFFSET = 4;
-const DROPDOWN_PANEL_WIDTH = 272;
-const DROPDOWN_ESTIMATED_HEIGHT = 280;
+const DROPDOWN_PANEL_WIDTH = 232;
+const DROPDOWN_ESTIMATED_HEIGHT = 240;
 const COMPACT_VIEWPORT_WIDTH = 640;
 const DROPDOWN_MIN_PANEL_HEIGHT = 160;
 
@@ -328,7 +329,7 @@ function EffortBarsIcon({ level }: { level: EffortLevel }) {
 }
 
 const dropdownSubmenuTriggerClassName =
-  "relative flex min-h-11 w-full cursor-pointer items-center gap-3 rounded-lg px-3 py-2.5 text-left text-sm outline-none transition-colors focus-visible:outline-none";
+  "relative flex min-h-9 w-full cursor-pointer items-center gap-2.5 rounded-lg px-2.5 py-1.5 text-left text-sm outline-none transition-colors focus-visible:outline-none";
 
 function DropdownFeaturedRow({
   description,
@@ -338,11 +339,11 @@ function DropdownFeaturedRow({
   label: string;
 }) {
   return (
-    <div className="flex items-start justify-between gap-3 px-3 py-3">
+    <div className="flex items-start justify-between gap-2.5 px-2.5 py-2">
       <div className="min-w-0">
         <p className="font-medium text-foreground leading-tight">{label}</p>
         {description ? (
-          <p className="mt-1 text-muted-foreground text-xs leading-snug">
+          <p className="mt-0.5 text-muted-foreground text-xs leading-snug">
             {description}
           </p>
         ) : null}
@@ -357,7 +358,7 @@ function DropdownFeaturedRow({
 }
 
 const dropdownOptionClassName =
-  "relative flex min-h-11 w-full cursor-pointer scroll-m-1 touch-manipulation items-center justify-between gap-3 rounded-lg px-3 py-2.5 text-left text-sm outline-none transition-colors focus-visible:text-foreground focus-visible:outline-none";
+  "relative flex min-h-9 w-full cursor-pointer scroll-m-1 touch-manipulation items-center justify-between gap-2.5 rounded-lg px-2.5 py-1.5 text-left text-sm outline-none transition-colors focus-visible:text-foreground focus-visible:outline-none";
 
 const dropdownOptionHighlightClassName =
   "absolute inset-x-1 inset-y-0.5 rounded-lg bg-accent/65";
@@ -1172,7 +1173,7 @@ export function SettingsDropdown({
     <>
       <button
         aria-expanded={open}
-        aria-haspopup="dialog"
+        aria-haspopup="menu"
         aria-label={`Select settings: ${triggerLabel}`}
         className="flex min-w-0 max-w-[calc(100%-3rem)] items-center gap-1.5 rounded-full py-1 text-sm transition-colors hover:text-foreground"
         onClick={toggleOpen}
@@ -1724,10 +1725,12 @@ function PlusMenu({
         {open ? (
           <motion.div
             animate={{ opacity: 1, scale: 1, y: 0 }}
+            aria-label="More options"
             className={`absolute left-0 z-50 w-max min-w-64 max-w-[calc(100vw-2rem)] overflow-hidden rounded-2xl border border-border bg-card p-1 shadow-[0_10px_28px_-18px_rgba(0,0,0,0.25)] ${upward ? "bottom-full mb-2 origin-bottom-left" : "top-full mt-2 origin-top-left"}`}
             exit={{ opacity: 0, scale: 0.97, y: upward ? 4 : -4 }}
             initial={{ opacity: 0, scale: 0.96, y: upward ? 6 : -6 }}
             onMouseLeave={() => setHoveredValue(null)}
+            role="menu"
             transition={{ duration: 0.16, ease: "easeOut" }}
           >
             <AnimatePresence custom={slideDir} initial={false} mode="wait">
@@ -1931,17 +1934,17 @@ export function AIInput({
           ) : null}
         </AnimatePresence>
 
-        <textarea
+        <InputPrimitive
           aria-label="Message"
           className="block max-h-[132px] w-full resize-none bg-transparent px-4 pt-4 pb-1 text-base text-foreground leading-6 outline-none placeholder:text-muted-foreground sm:px-5 sm:text-sm"
-          onChange={(event) => {
-            setValue(event.target.value);
+          onValueChange={(next) => {
+            setValue(next);
             syncHeight();
           }}
-          onKeyDown={handleKeyDown}
           placeholder={placeholder}
-          ref={textareaRef}
-          rows={1}
+          render={
+            <textarea onKeyDown={handleKeyDown} ref={textareaRef} rows={1} />
+          }
           value={value}
         />
 
@@ -2001,7 +2004,8 @@ export function AIInput({
 
             <button
               aria-label="Send message"
-              className={`flex size-8 shrink-0 items-center justify-center rounded-full transition-all sm:size-9 ${hasValue ? "bg-foreground text-background hover:opacity-90" : "bg-muted-foreground/50 text-background"}`}
+              className={`flex size-8 shrink-0 items-center justify-center rounded-full transition-all sm:size-9 ${hasValue ? "bg-foreground text-background hover:opacity-90" : "cursor-default bg-muted-foreground/50 text-background"}`}
+              disabled={!hasValue}
               onClick={handleSend}
               type="button"
             >
