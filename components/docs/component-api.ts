@@ -5513,6 +5513,117 @@ const aiInputApiDetails: DetailItem[] = [
   registryItem("ai-input.json", ["motion", "lucide-react"]),
 ];
 
+const bannerApiDetails: DetailItem[] = [
+  {
+    id: "banner",
+    title: "Banner",
+    summary:
+      "Full-bleed announcement bar for the top of the screen with four gradient tones, a ringed icon and message on the left, an outlined action and dismiss on the right end, and a fluid spring morph that melts the bar into a centered confirmation pill when its action is clicked.",
+    fields: [
+      field({
+        name: "children",
+        type: "ReactNode",
+        required: true,
+        description:
+          "Announcement message, left-aligned next to the icon. Inline links and bold spans are fine.",
+      }),
+      field({
+        name: "variant",
+        type: '"default" | "info" | "success" | "error"',
+        defaultValue: '"default"',
+        description:
+          "Visual tone of the gradient surface. Default is an inverted near-black bar that flips to white in dark mode; info sweeps sky to indigo, success emerald to teal, and error rose to red — all with white text and a looping light sheen.",
+      }),
+      field({
+        name: "icon",
+        type: "ReactNode",
+        description:
+          "Icon rendered inside the leading ring. Each variant ships a matching default — alert circle, info, check circle, octagon — and passing null hides the ring entirely.",
+      }),
+      field({
+        name: "actionLabel",
+        type: "string",
+        description:
+          "Label for the outlined action button on the right end. Omit to render a banner with no action.",
+      }),
+      field({
+        name: "actionHref",
+        type: "string",
+        description:
+          "Renders the action as a link and appends a small arrow that nudges right on hover. Omit to render a plain button driven by onAction.",
+      }),
+      field({
+        name: "onAction",
+        type: "() => void",
+        description: "Called when the action is clicked.",
+      }),
+      field({
+        name: "morphMessage",
+        type: "string",
+        description:
+          "Enables the fluid morph: after the action is clicked, the full-width bar shrinks and rounds into a centered confirmation pill showing this message, then dismisses itself.",
+      }),
+      field({
+        name: "morphIcon",
+        type: "ReactNode",
+        description:
+          "Icon inside the confirmation pill. Defaults to a bold check.",
+      }),
+      field({
+        name: "morphDuration",
+        type: "number",
+        defaultValue: "2400",
+        description:
+          "How long the confirmation pill stays on screen before the banner dismisses itself, in milliseconds. Pass 0 to keep the pill until the user or parent closes it.",
+      }),
+      field({
+        name: "dismissible",
+        type: "boolean",
+        defaultValue: "true",
+        description:
+          "Show the dismiss button on the right edge. Dismissing collapses the banner's height so content below slides up smoothly.",
+      }),
+      field({
+        name: "onDismiss",
+        type: "() => void",
+        description:
+          "Called when the banner dismisses — via the X button or automatically after a morph completes.",
+      }),
+      field({
+        name: "open",
+        type: "boolean",
+        description:
+          "Controlled visibility. The banner animates out when this turns false; omit to let the banner manage its own visibility.",
+      }),
+      field({
+        name: "fixed",
+        type: "boolean",
+        defaultValue: "false",
+        description:
+          "Pin the banner to the top of the viewport with a fixed position instead of rendering in document flow.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description: "Extra classes for the positioning wrapper.",
+      }),
+    ],
+    notes: [
+      "The bar is full-bleed with a bottom border only, so it sits flush against the top of the screen; the ringed icon and message sit on the left and the outlined action plus dismiss X sit at the right end.",
+      "Every surface is a gradient: the inverted default runs near-black and flips to white in dark mode, while info, success, and error sweep sky-to-indigo, emerald-to-teal, and rose-to-red with white text.",
+      "A soft diagonal light sweep loops across every variant; it pauses while the pill is showing and is skipped entirely under reduced motion.",
+      "Clicking an action with morphMessage set plays the fluid morph: the surface animates from a full-width squared bar to a centered fully-rounded pill in one spring-driven layout animation, while the bar content crossfades into the confirmation through a soft blur and scale.",
+      "The confirmation pill lingers for morphDuration, then the banner folds its height shut and fires onDismiss.",
+      "Dismissing with the X collapses height and opacity together, so the page content below slides up instead of jumping.",
+      "Link actions (actionHref) get a trailing arrow that nudges right on hover; button actions (onAction only) stay plain, which reads better for verbs like Undo.",
+      "The confirmation pill uses role=status, so screen readers announce the morph message politely.",
+      "Every animation — entrance, morph, sheen, collapse — drops to instant state changes when the user prefers reduced motion.",
+      "The banner mounts with a gentle height-and-fade entrance; pass fixed to pin it above the page instead of rendering in flow.",
+    ],
+  },
+  registryItem("banner.json", ["motion", "lucide-react"]),
+];
+
 const codeBlockApiDetails: DetailItem[] = [
   {
     id: "code-block",
@@ -11596,6 +11707,7 @@ const tooltipApiDetails: DetailItem[] = [
 
 export {
   aiInputApiDetails,
+  bannerApiDetails,
   codeBlockApiDetails,
   alertApiDetails,
   alertDialogApiDetails,

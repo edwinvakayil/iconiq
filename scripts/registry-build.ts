@@ -79,6 +79,12 @@ const REGISTRY_UI_META: Record<
     registryDependencies?: string[];
   }
 > = {
+  banner: {
+    title: "Banner",
+    description:
+      "Top-of-screen announcement banner with four gradient tones, a left-aligned ringed icon and message, a right-aligned outlined action, a dismiss collapse, and a fluid spring morph that melts the bar into a confirmation pill when its action is clicked.",
+    dependencies: ["motion", "lucide-react"],
+  },
   badge: {
     title: "Badge",
     description:
