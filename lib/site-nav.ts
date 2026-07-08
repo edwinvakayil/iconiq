@@ -33,6 +33,7 @@ export const SITE_SECTIONS = [
       { label: "Setup Checklist", href: "/blocks/setup-checklist" },
       { label: "Team Invitation", href: "/blocks/team-invitation" },
       { label: "Testimonials", href: "/blocks/testimonials" },
+      { label: "Thinking Indicator", href: "/blocks/thinking-indicator" },
     ],
   },
   {

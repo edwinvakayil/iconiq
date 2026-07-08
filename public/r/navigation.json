@@ -37,6 +37,11 @@
           "slug": "testimonials",
           "label": "Testimonials",
           "href": "/blocks/testimonials"
+        },
+        {
+          "slug": "thinking-indicator",
+          "label": "Thinking Indicator",
+          "href": "/blocks/thinking-indicator"
         }
       ]
     },

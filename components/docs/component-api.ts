@@ -5624,6 +5624,55 @@ const bannerApiDetails: DetailItem[] = [
   registryItem("banner.json", ["motion", "lucide-react"]),
 ];
 
+const thinkingIndicatorApiDetails: DetailItem[] = [
+  {
+    id: "thinking-indicator",
+    title: "ThinkingIndicator",
+    summary:
+      "Compact AI loading state for chat interfaces: a sparkle glyph that fluidly morphs into a circle and back while rotating, next to status words that cycle through a soft blur-and-slide with a shimmer sweeping across each one.",
+    fields: [
+      field({
+        name: "words",
+        type: "string[]",
+        required: true,
+        description:
+          'Status words cycled through while the indicator is visible, e.g. ["Thinking", "Reasoning", "Planning"]. Pass a single word to pin the label without cycling, or an empty array for a glyph-only indicator.',
+      }),
+      field({
+        name: "interval",
+        type: "number",
+        defaultValue: "3200",
+        description:
+          "How long each word stays on screen before the next slides in, in milliseconds.",
+      }),
+      field({
+        name: "showIcon",
+        type: "boolean",
+        defaultValue: "true",
+        description:
+          "Show the morphing sparkle glyph before the label. Set to false for a text-only indicator, e.g. inline before a streamed reply.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description: "Extra classes for the flex wrapper.",
+      }),
+    ],
+    notes: [
+      "The glyph is an SVG path whose keyframes — four-point sparkle, two asymmetric blobs, circle — share the same command structure, so Motion interpolates the `d` attribute as one continuous liquid morph; the blobs make it wobble like a droplet while the shape spins on a linear rotation and gently breathes.",
+      "A small companion twinkle is choreographed on the same timeline: it blooms at the midpoint of the cycle, exactly when the main glyph has condensed into the circle, then fades as the sparkle re-forms.",
+      "The glyph is filled with a currentColor gradient whose stops only vary opacity, so it gains depth without hardcoding a palette.",
+      "Words swap with a spring-driven slide through a soft blur, and each word carries its own shimmer: a highlight band sweeps across the text on a linear loop, sized to the word's length.",
+      "The column reserves the width of the longest word with an invisible sizer, so the layout never shifts as words of different lengths cycle through.",
+      "The wrapper is role=status with a static sr-only label, and the cycling display is aria-hidden — screen readers hear one announcement instead of one per cycle.",
+      "Under prefers-reduced-motion the morph, shimmer, and word cycling all stop; a static glyph and the first word carry the same meaning without the movement.",
+      "The component owns no typography: the label inherits font size and weight from the parent, and the glyph and gap are sized in em, so the whole indicator scales with a single text size utility on className.",
+      "Colors come straight from theme tokens — the wrapper defaults to text-muted-foreground (overridable via className), the glyph rides currentColor, and the shimmer sweeps the theme's foreground over its muted foreground in light and dark alike.",
+    ],
+  },
+  registryItem("thinking-indicator.json", ["motion"]),
+];
+
 const codeBlockApiDetails: DetailItem[] = [
   {
     id: "code-block",
@@ -11708,6 +11757,7 @@ const tooltipApiDetails: DetailItem[] = [
 export {
   aiInputApiDetails,
   bannerApiDetails,
+  thinkingIndicatorApiDetails,
   codeBlockApiDetails,
   alertApiDetails,
   alertDialogApiDetails,

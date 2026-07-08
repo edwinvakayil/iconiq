@@ -1620,6 +1620,21 @@
       ]
     },
     {
+      "name": "thinking-indicator",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": ["motion"],
+      "devDependencies": [],
+      "title": "Thinking Indicator",
+      "description": "AI loading state with a sparkle glyph that wobbles through liquid blob keyframes into a circle while a companion twinkle blooms on the same timeline, cycling status words that slide through a soft blur, a per-word shimmer sweep, layout-stable width, and reduced-motion aware behavior.",
+      "files": [
+        {
+          "path": "thinking-indicator.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "timezone",
       "type": "registry:ui",
       "registryDependencies": [],

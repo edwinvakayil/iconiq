@@ -79,6 +79,12 @@ const REGISTRY_UI_META: Record<
     registryDependencies?: string[];
   }
 > = {
+  "thinking-indicator": {
+    title: "Thinking Indicator",
+    description:
+      "AI loading state with a sparkle glyph that wobbles through liquid blob keyframes into a circle while a companion twinkle blooms on the same timeline, cycling status words that slide through a soft blur, a per-word shimmer sweep, layout-stable width, and reduced-motion aware behavior.",
+    dependencies: ["motion"],
+  },
   banner: {
     title: "Banner",
     description:

@@ -84,6 +84,8 @@ const componentSummaries: Record<string, string> = {
     "Testimonials docs in the Blocks section with an inline quote wall where hovering one quote blurs the rest and reveals the author attribution.",
   "/blocks/scroll-progress":
     "Scroll progress docs in the Blocks section with a ruler-style tick indicator, a live percentage readout, and dockable side or corner positions.",
+  "/blocks/thinking-indicator":
+    "Thinking indicator docs in the Blocks section with a fluid morphing sparkle glyph, cycling status words that slide through a soft blur, and a shimmer sweep across the label — an AI loading state for chat interfaces.",
   "/overlay-and-popups/hover-card":
     "Hover card docs in the Overlay & Popups section with a provider switch that swaps between a Base UI popover-backed install and a Radix Hover Card primitive install.",
   "/overlay-and-popups/popover":
@@ -273,6 +275,18 @@ const extraComponentKeywordsBySlug: Record<string, string[]> = {
     "tick marks",
     "percentage",
     "blog progress",
+  ],
+  "thinking-indicator": [
+    "thinking indicator",
+    "thinking",
+    "ai loading",
+    "loading state",
+    "chat loading",
+    "reasoning",
+    "sparkle",
+    "shimmer",
+    "status words",
+    "streaming",
   ],
   infiniteribbon: [
     "infinite ribbon",
