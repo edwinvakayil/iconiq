@@ -85,6 +85,12 @@ const REGISTRY_UI_META: Record<
       "AI loading state with a sparkle glyph that wobbles through liquid blob keyframes into a circle while a companion twinkle blooms on the same timeline, cycling status words that slide through a soft blur, a per-word shimmer sweep, layout-stable width, and reduced-motion aware behavior.",
     dependencies: ["motion"],
   },
+  "reasoning-steps": {
+    title: "Reasoning Steps",
+    description:
+      "Base UI collapsible reasoning trace for AI replies with a shimmering trigger label and no status icon, per-step dots that pop into checkmarks once done, a self-timing elapsed-seconds readout, a crossfading collapsed preview of the current step, and a staggered vertical timeline once expanded.",
+    dependencies: ["@base-ui/react", "motion", "lucide-react"],
+  },
   banner: {
     title: "Banner",
     description:

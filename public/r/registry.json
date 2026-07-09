@@ -1335,6 +1335,21 @@
       ]
     },
     {
+      "name": "reasoning-steps",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": ["@base-ui/react", "motion", "lucide-react"],
+      "devDependencies": [],
+      "title": "Reasoning Steps",
+      "description": "Base UI collapsible reasoning trace for AI replies with a shimmering trigger label and no status icon, per-step dots that pop into checkmarks once done, a self-timing elapsed-seconds readout, a crossfading collapsed preview of the current step, and a staggered vertical timeline once expanded.",
+      "files": [
+        {
+          "path": "reasoning-steps.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "reveal-text",
       "type": "registry:ui",
       "registryDependencies": [],

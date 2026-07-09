@@ -5673,6 +5673,157 @@ const thinkingIndicatorApiDetails: DetailItem[] = [
   registryItem("thinking-indicator.json", ["motion"]),
 ];
 
+const reasoningStepsApiDetails: DetailItem[] = [
+  {
+    id: "reasoning-steps",
+    title: "ReasoningSteps",
+    summary:
+      "Compound root for an AI reasoning trace. Owns open state and a registry of the mounted ReasoningStep children, and shares both through context with ReasoningStepsTrigger and every nested part.",
+    fields: [
+      field({
+        name: "children",
+        type: "ReactNode",
+        required: true,
+        description:
+          "Composition surface. Place a ReasoningStepsTrigger followed by a ReasoningStepsContent inside.",
+      }),
+      field({
+        name: "duration",
+        type: "number",
+        description:
+          'Elapsed reasoning time in seconds, shown in the trigger once greater than 0. Omit to let the root time itself for as long as any mounted step has status "active".',
+      }),
+      field({
+        name: "defaultOpen",
+        type: "boolean",
+        defaultValue: "false",
+        description: "Initial open state for uncontrolled usage.",
+      }),
+      field({
+        name: "open",
+        type: "boolean",
+        description:
+          "Controlled open state. Pair with onOpenChange to drive the panel yourself.",
+      }),
+      field({
+        name: "onOpenChange",
+        type: "(open: boolean) => void",
+        description: "Called when the trigger is clicked.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description: "Extra classes for the outer card.",
+      }),
+    ],
+    notes: [
+      "Built on Base UI's Collapsible primitive: the trigger and panel get real aria-expanded/aria-controls wiring for free, and the panel is kept mounted so its close transition can play instead of snapping shut.",
+      "Each ReasoningStep registers its id, label, and status with the root on mount and unregisters on unmount, so the trigger's label, elapsed clock, and collapsed preview always reflect exactly what's rendered.",
+    ],
+  },
+  {
+    id: "reasoning-steps-trigger",
+    title: "ReasoningStepsTrigger",
+    summary:
+      'The disclosure row: just the label and the elapsed-seconds readout — no status icon and no chevron. children defaults to "Reasoning".',
+    notes: [
+      "No icon runs next to the label. Instead, the label itself gets a looping shimmer sweep clipped to the text while any step is active, and settles to plain text once nothing is in flight.",
+      "While collapsed, a small preview line beneath the label slides and blurs between step labels as the active step changes, so the current step stays visible without opening the panel.",
+    ],
+  },
+  {
+    id: "reasoning-steps-content",
+    title: "ReasoningStepsContent",
+    summary:
+      'The panel: renders its ReasoningStep children in a ul and measures its own natural height with a ResizeObserver instead of animating to Motion\'s "auto", so the spring never overshoots under a scaled ancestor.',
+    notes: [
+      "The connecting line under a step is only drawn between rendered steps — it's hidden automatically on whichever step ends up last, with no isLast bookkeeping required from the consumer.",
+    ],
+  },
+  {
+    id: "reasoning-step",
+    title: "ReasoningStep",
+    summary:
+      'One row in the timeline. Steps marked "pending" render nothing at all — mount a step once it\'s actually active or done and its reveal animation plays automatically.',
+    fields: [
+      field({
+        name: "label",
+        type: "ReactNode",
+        required: true,
+        description:
+          "Step heading shown in the timeline and the collapsed preview.",
+      }),
+      field({
+        name: "status",
+        type: '"pending" | "active" | "done"',
+        defaultValue: '"done"',
+        description:
+          'The in-flight step should be "active"; steps not yet reached should be omitted or "pending", which renders nothing.',
+      }),
+      field({
+        name: "description",
+        type: "ReactNode",
+        description: "Muted supporting copy under the label.",
+      }),
+      field({
+        name: "id",
+        type: "string",
+        description:
+          "Stable identity used for the root's registry. Auto-generated when omitted.",
+      }),
+      field({
+        name: "children",
+        type: "ReactNode",
+        description:
+          "Nest ReasoningStepDetails and/or ReasoningStepSources under a step's description.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description: "Extra classes for the row.",
+      }),
+    ],
+    notes: [
+      'The row\'s glyph is a plain dot for "active" that pops into a small check icon for "done" — no border, no spin, no loop, just a quick spring crossfade the one time status actually changes.',
+      "The reveal — a height-and-fade spring — plays every time a step mounts, which is exactly when it flips from not-rendered (pending) to active or done.",
+    ],
+  },
+  {
+    id: "reasoning-step-details",
+    title: "ReasoningStepDetails",
+    summary:
+      "A small nested collapsible for drilling into a step's reasoning, with its own local open state and a ResizeObserver-measured panel — no chevron, just the summary text as the trigger.",
+    fields: [
+      field({
+        name: "summary",
+        type: "ReactNode",
+        required: true,
+        description: 'Always-visible trigger label, e.g. "See the tradeoffs".',
+      }),
+      field({
+        name: "defaultOpen",
+        type: "boolean",
+        defaultValue: "false",
+        description: "Initial open state.",
+      }),
+    ],
+  },
+  {
+    id: "reasoning-step-sources",
+    title: "ReasoningStepSources, ReasoningStepSource, ReasoningStepImage",
+    summary:
+      "Optional citation and attachment parts for a step. Sources wraps a row of Source pills in a flex-wrap container; each Source blurs and scales in and renders as a link when given href. Image blurs in an attached screenshot or diagram with an optional caption.",
+    notes: [
+      "ReasoningStepSource renders an anchor when href is passed (opened in a new tab) and a plain span otherwise.",
+    ],
+  },
+  registryItem("reasoning-steps.json", [
+    "@base-ui/react",
+    "motion",
+    "lucide-react",
+  ]),
+];
+
 const codeBlockApiDetails: DetailItem[] = [
   {
     id: "code-block",
@@ -11758,6 +11909,7 @@ export {
   aiInputApiDetails,
   bannerApiDetails,
   thinkingIndicatorApiDetails,
+  reasoningStepsApiDetails,
   codeBlockApiDetails,
   alertApiDetails,
   alertDialogApiDetails,

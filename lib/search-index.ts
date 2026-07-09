@@ -86,6 +86,8 @@ const componentSummaries: Record<string, string> = {
     "Scroll progress docs in the Blocks section with a ruler-style tick indicator, a live percentage readout, and dockable side or corner positions.",
   "/blocks/thinking-indicator":
     "Thinking indicator docs in the Blocks section with a fluid morphing sparkle glyph, cycling status words that slide through a soft blur, and a shimmer sweep across the label — an AI loading state for chat interfaces.",
+  "/blocks/reasoning-steps":
+    "Reasoning steps docs in the Blocks section with a Base UI collapsible reasoning trace, a shimmering trigger label with no status icon, per-step dots that pop into checkmarks once done, a live elapsed-time readout, and a connected vertical timeline of steps.",
   "/overlay-and-popups/hover-card":
     "Hover card docs in the Overlay & Popups section with a provider switch that swaps between a Base UI popover-backed install and a Radix Hover Card primitive install.",
   "/overlay-and-popups/popover":
@@ -287,6 +289,17 @@ const extraComponentKeywordsBySlug: Record<string, string[]> = {
     "shimmer",
     "status words",
     "streaming",
+  ],
+  "reasoning-steps": [
+    "reasoning steps",
+    "reasoning",
+    "chain of thought",
+    "thought process",
+    "ai trace",
+    "collapsible",
+    "timeline",
+    "thought for seconds",
+    "step by step",
   ],
   infiniteribbon: [
     "infinite ribbon",
