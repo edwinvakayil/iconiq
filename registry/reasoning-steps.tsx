@@ -664,7 +664,11 @@ function ReasoningStep({
     >
       <div className="flex gap-3 pb-4">
         <div className="flex flex-col items-center">
-          <StepGlyph reduceMotion={reduceMotion} status={status} />
+          {/* h-5 matches the label's leading-5 line box, so the glyph
+              centers on the same line instead of sitting flush at the top. */}
+          <div className="flex h-5 items-center justify-center">
+            <StepGlyph reduceMotion={reduceMotion} status={status} />
+          </div>
           <span
             aria-hidden="true"
             className={cn(
@@ -673,7 +677,7 @@ function ReasoningStep({
             )}
           />
         </div>
-        <div className="min-w-0 flex-1 pt-px">
+        <div className="min-w-0 flex-1">
           <p
             className={cn(
               "text-[13px] leading-5 transition-colors duration-300",
