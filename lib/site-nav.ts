@@ -32,6 +32,7 @@ export const SITE_SECTIONS = [
       { label: "Reasoning Steps", href: "/blocks/reasoning-steps" },
       { label: "Scroll Progress", href: "/blocks/scroll-progress" },
       { label: "Setup Checklist", href: "/blocks/setup-checklist" },
+      { label: "Streaming Text", href: "/blocks/streaming-text" },
       { label: "Team Invitation", href: "/blocks/team-invitation" },
       { label: "Testimonials", href: "/blocks/testimonials" },
       { label: "Thinking Indicator", href: "/blocks/thinking-indicator" },

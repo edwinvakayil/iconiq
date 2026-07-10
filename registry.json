@@ -1515,6 +1515,21 @@
       ]
     },
     {
+      "name": "streaming-text",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": ["motion"],
+      "devDependencies": [],
+      "title": "Streaming Text",
+      "description": "Word-by-word AI text streaming where each word fades in crisply wearing a blue gradient, then crossfades into the theme foreground once settled — black in light mode, white in dark — with a pulsing gradient dot at the stream head, natural prose wrapping, sr-only full-text announcement, and reduced-motion aware behavior.",
+      "files": [
+        {
+          "path": "streaming-text.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "switch",
       "type": "registry:ui",
       "registryDependencies": [],

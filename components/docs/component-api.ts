@@ -5673,6 +5673,74 @@ const thinkingIndicatorApiDetails: DetailItem[] = [
   registryItem("thinking-indicator.json", ["motion"]),
 ];
 
+const streamingTextApiDetails: DetailItem[] = [
+  {
+    id: "streaming-text",
+    title: "StreamingText",
+    summary:
+      "Word-by-word text reveal for AI replies: each word fades in crisply wearing a blue gradient, glows for a beat, then crossfades into the theme foreground — black in light mode, white in dark.",
+    fields: [
+      field({
+        name: "text",
+        type: "string",
+        required: true,
+        description:
+          "The full text to stream in word by word. Newlines are preserved as paragraph breaks, each costing one streaming tick so paragraphs read as a natural beat. Changing it restarts the stream from the first word.",
+      }),
+      field({
+        name: "speed",
+        type: "number",
+        defaultValue: "120",
+        description: "Milliseconds between each word appearing.",
+      }),
+      field({
+        name: "delay",
+        type: "number",
+        defaultValue: "0",
+        description: "Milliseconds to wait before the first word appears.",
+      }),
+      field({
+        name: "settleDelay",
+        type: "number",
+        defaultValue: "300",
+        description:
+          "How long a word wears the blue gradient before settling into the theme foreground, in milliseconds. The default keeps the blue trail to a handful of words; raise it for a longer trail behind the stream head.",
+      }),
+      field({
+        name: "showCursor",
+        type: "boolean",
+        defaultValue: "true",
+        description:
+          "Show a small pulsing gradient dot riding the stream head while words are still landing. It pops away when the stream completes.",
+      }),
+      field({
+        name: "onComplete",
+        type: "() => void",
+        description:
+          "Called exactly once, on the tick that reveals the last word. Under reduced motion it fires immediately, since the full text is already visible.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description: "Extra classes for the wrapping span.",
+      }),
+    ],
+    notes: [
+      "Each word is an inline grid stacking two copies of itself: a blue gradient copy on top and a text-foreground copy underneath. The settle is a true crossfade between them, so the handoff stays theme-correct — words end black in light mode and white in dark without any color math.",
+      "The entrance is a plain opacity fade — no rise, no scale, no blur, no spring — so glyphs never smear or wobble as they land; the fade runs several times longer than the streaming cadence, so four to five words are always mid-fade at staggered opacities and the reveal reads as one continuous gradient wave.",
+      "Every animated value in the component is opacity — nothing repaints text mid-stream — and each word is memoized so words already on screen skip React entirely on every streaming tick, keeping long streams lag-free.",
+      "Consecutive words sample a triple-wide version of the gradient at stepped, ping-ponging offsets, so the blue trail reads as one continuous ribbon of color flowing across several words instead of every word restarting at sky. The offset is static paint — it never animates, so it costs nothing per frame.",
+      "Ticks are scheduled against the stream's start time rather than chained end-to-end, so render latency can never accumulate into a drifting, stuttering cadence; changing the text resets the stream during render, so no frame ever flashes the new text at the old progress.",
+      "The stream head is a small gradient dot with a soft glow that breathes with its pulse while words are landing, then scales away once the last word has arrived.",
+      "Screen readers hear the full text once from an sr-only span; the animated word-by-word display is aria-hidden, so nothing is announced per word.",
+      "Under prefers-reduced-motion the stream is skipped entirely: the full text renders statically in the foreground color with no gradient and no cursor.",
+      "The component owns no typography — size, weight, and line-height are inherited from the parent or set via className, and the cursor is sized in em so it scales with the text.",
+      "Words wrap naturally: each word is an inline element followed by a normal space, so the stream reflows like ordinary prose at any container width — and newlines in the text are preserved as real paragraph breaks.",
+    ],
+  },
+  registryItem("streaming-text.json", ["motion"]),
+];
+
 const reasoningStepsApiDetails: DetailItem[] = [
   {
     id: "reasoning-steps",
@@ -11909,6 +11977,7 @@ export {
   aiInputApiDetails,
   bannerApiDetails,
   thinkingIndicatorApiDetails,
+  streamingTextApiDetails,
   reasoningStepsApiDetails,
   codeBlockApiDetails,
   alertApiDetails,

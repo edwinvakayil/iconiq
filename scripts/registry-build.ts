@@ -85,6 +85,12 @@ const REGISTRY_UI_META: Record<
       "AI loading state with a sparkle glyph that wobbles through liquid blob keyframes into a circle while a companion twinkle blooms on the same timeline, cycling status words that slide through a soft blur, a per-word shimmer sweep, layout-stable width, and reduced-motion aware behavior.",
     dependencies: ["motion"],
   },
+  "streaming-text": {
+    title: "Streaming Text",
+    description:
+      "Word-by-word AI text streaming where each word fades in crisply wearing a blue gradient, then crossfades into the theme foreground once settled — black in light mode, white in dark — with a pulsing gradient dot at the stream head, natural prose wrapping, sr-only full-text announcement, and reduced-motion aware behavior.",
+    dependencies: ["motion"],
+  },
   "reasoning-steps": {
     title: "Reasoning Steps",
     description:

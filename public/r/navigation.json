@@ -39,6 +39,11 @@
           "href": "/blocks/scroll-progress"
         },
         {
+          "slug": "streaming-text",
+          "label": "Streaming Text",
+          "href": "/blocks/streaming-text"
+        },
+        {
           "slug": "testimonials",
           "label": "Testimonials",
           "href": "/blocks/testimonials"
