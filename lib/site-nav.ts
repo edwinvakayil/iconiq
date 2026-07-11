@@ -29,6 +29,7 @@ export const SITE_SECTIONS = [
       { label: "Code Block", href: "/blocks/code-block" },
       { label: "Feedback Form", href: "/blocks/feedback-form" },
       { label: "Logo Carousel", href: "/blocks/logo-carousel" },
+      { label: "Message", href: "/blocks/message" },
       { label: "Reasoning Steps", href: "/blocks/reasoning-steps" },
       { label: "Scroll Progress", href: "/blocks/scroll-progress" },
       { label: "Setup Checklist", href: "/blocks/setup-checklist" },

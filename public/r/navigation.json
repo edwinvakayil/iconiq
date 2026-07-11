@@ -29,6 +29,11 @@
           "href": "/blocks/logo-carousel"
         },
         {
+          "slug": "message",
+          "label": "Message",
+          "href": "/blocks/message"
+        },
+        {
           "slug": "reasoning-steps",
           "label": "Reasoning Steps",
           "href": "/blocks/reasoning-steps"

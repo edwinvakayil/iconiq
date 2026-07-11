@@ -957,6 +957,21 @@
       ]
     },
     {
+      "name": "message",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": ["motion"],
+      "devDependencies": [],
+      "title": "Message",
+      "description": "Composable chat message primitives — group, row, avatar, bubble, header, and footer — where each message slides in beside its composer with a bouncy spring: sent messages arrive from the right, received from the left, morphing up from the bubble's tail corner and bouncing back once as they land, plus reduced-motion aware behavior.",
+      "files": [
+        {
+          "path": "message.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "morph-texts",
       "type": "registry:ui",
       "registryDependencies": [],

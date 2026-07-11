@@ -91,6 +91,12 @@ const REGISTRY_UI_META: Record<
       "Word-by-word AI text streaming where each word fades in crisply wearing a blue gradient, then crossfades into the theme foreground once settled — black in light mode, white in dark — with a pulsing gradient dot at the stream head, natural prose wrapping, sr-only full-text announcement, and reduced-motion aware behavior.",
     dependencies: ["motion"],
   },
+  message: {
+    title: "Message",
+    description:
+      "Composable chat message primitives — group, row, avatar, bubble, header, and footer — where each message slides in beside its composer with a bouncy spring: sent messages arrive from the right, received from the left, morphing up from the bubble's tail corner and bouncing back once as they land, plus reduced-motion aware behavior.",
+    dependencies: ["motion"],
+  },
   "reasoning-steps": {
     title: "Reasoning Steps",
     description:

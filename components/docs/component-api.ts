@@ -5741,6 +5741,112 @@ const streamingTextApiDetails: DetailItem[] = [
   registryItem("streaming-text.json", ["motion"]),
 ];
 
+const messageApiDetails: DetailItem[] = [
+  {
+    id: "message",
+    title: "Message",
+    summary:
+      "The message row. Owns the alignment that everything else reads from — sent messages (align='end') slide in from the right, received messages (align='start') from the left — and plays the fluid spring entrance.",
+    fields: [
+      field({
+        name: "align",
+        type: '"start" | "end"',
+        defaultValue: '"start"',
+        description:
+          "Which side the message belongs to. 'end' reads as sent — row reversed, bubble on the right, entrance from the right. 'start' reads as received — bubble on the left, entrance from the left.",
+      }),
+      field({
+        name: "animated",
+        type: "boolean",
+        defaultValue: "true",
+        description:
+          "Play the slide-in entrance on mount. Set to false for history that is already on screen, so only newly arriving messages animate.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description: "Extra classes for the message row.",
+      }),
+    ],
+    notes: [
+      "The entrance is one spring driving x, scale, and opacity together: the row starts 24px toward its own side at 90% scale, overshoots its resting spot, and bounces back once before settling — one fluid gesture with a playful landing rather than a slide plus a pop.",
+      "The transform origin sits at the bubble's tail corner — bottom-left for received, bottom-right for sent — so the slight scale-up reads as the bubble morphing out of that corner, the way a message feels like it surfaces from the composer.",
+      "The slide distance is deliberately small: the message should feel like it appears beside where it was written, not like it crosses the screen.",
+      "Alignment is broadcast through data attributes (data-align, group/message), so avatar, content, and footer all flip sides from this single prop.",
+      "Under prefers-reduced-motion the entrance is dropped entirely and the message simply appears in place.",
+    ],
+  },
+  {
+    id: "message-bubble",
+    title: "MessageBubble",
+    summary:
+      "The pill that holds the message text. Muted for received, primary for sent, or ghost for bare text.",
+    fields: [
+      field({
+        name: "variant",
+        type: '"default" | "primary" | "ghost"',
+        defaultValue: '"default"',
+        description:
+          "default is a muted pill for received messages, primary is a filled primary pill for sent messages, and ghost drops the pill entirely for plain-text replies like streamed AI responses.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description: "Extra classes for the bubble.",
+      }),
+    ],
+    notes: [
+      "The bubble sizes to its content (w-fit) and wraps long words, so one-liners stay pills while paragraphs grow into rounded blocks.",
+      "Colors come straight from theme tokens — bg-muted/text-foreground and bg-primary/text-primary-foreground — so both variants hold up in light and dark without extra classes.",
+      "MessageHeader and MessageFooter detect a ghost bubble via its data-variant attribute and drop their horizontal padding to line up with the bare text.",
+    ],
+  },
+  {
+    id: "message-structure",
+    title:
+      "MessageGroup, MessageAvatar, MessageContent, MessageHeader, MessageFooter",
+    summary:
+      "Layout parts composed inside and around Message. All of them read the row's alignment from context-free data attributes, so the only prop you set is align on Message.",
+    fields: [
+      field({
+        name: "MessageGroup",
+        type: "div",
+        description:
+          "Vertical stack for a conversation — messages and gaps, nothing else.",
+      }),
+      field({
+        name: "MessageAvatar",
+        type: "div",
+        description:
+          "Circular avatar slot anchored to the bottom of the row, next to the bubble's tail. Rises above the footer when one is present.",
+      }),
+      field({
+        name: "MessageContent",
+        type: "div",
+        description:
+          "Column holding bubble, header, and footer. Right-aligns its children when the message is align='end'.",
+      }),
+      field({
+        name: "MessageHeader",
+        type: "div",
+        description:
+          "Small muted label above the bubble — sender name, role, or channel.",
+      }),
+      field({
+        name: "MessageFooter",
+        type: "div",
+        description:
+          "Small muted label below the bubble — timestamps or delivery state. Right-aligns on sent messages.",
+      }),
+    ],
+    notes: [
+      "Every part is a plain div with a data-slot attribute, so all of them accept arbitrary props and restyle cleanly through className.",
+      "Because the entrance lives on Message, list-level composition stays trivial: map your messages, set align per sender, and each new row animates in from its own side as it mounts.",
+    ],
+  },
+  registryItem("message.json", ["motion"]),
+];
+
 const reasoningStepsApiDetails: DetailItem[] = [
   {
     id: "reasoning-steps",
@@ -11978,6 +12084,7 @@ export {
   bannerApiDetails,
   thinkingIndicatorApiDetails,
   streamingTextApiDetails,
+  messageApiDetails,
   reasoningStepsApiDetails,
   codeBlockApiDetails,
   alertApiDetails,
