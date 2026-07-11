@@ -74,13 +74,14 @@ const SIDES = {
   },
 } as const;
 
-/** Delay before the reply lands, long enough for the sent message's bounce
- *  to finish reading as its own gesture. */
-const REPLY_BEAT = 900;
+/** Delay before each message lands — the sent message waits one beat after
+ *  mount and the reply waits another, so both entrances read as their own
+ *  gesture instead of everything arriving at once. */
+const MESSAGE_BEAT = 900;
 
-/** How long after the reply mounts before the replay control appears —
- *  roughly the reply's entrance, so the button only shows once every
- *  message has fully landed. */
+/** How long after the last message mounts before the replay control appears —
+ *  roughly its entrance, so the button only shows once every message has
+ *  fully landed. */
 const REPLAY_REVEAL = 600;
 
 const MessagePlaygroundContext = createContext<{
@@ -191,38 +192,42 @@ function PlaygroundMessage({
   );
 }
 
-/** Plays the exchange once per mount: the sent message lands first and the
- *  reply follows a beat later, so both entrance directions are always shown.
- *  Remounted (via key) on every option change and replay — which also hides
- *  the replay control again until the new run has fully landed. */
+/** Plays the exchange once per mount: the group starts empty, the sent
+ *  message lands after one beat and the reply after another, so both
+ *  entrance directions read as their own gesture. Remounted (via key) on
+ *  every option change and replay — which also hides the replay control
+ *  again until the new run has fully landed. */
 function PlaygroundConversation() {
   const { state, replay } = useMessagePlayground();
-  const [showReply, setShowReply] = useState(!state.animated);
+  // How many messages are on screen. Skipped entirely when not animating.
+  const [step, setStep] = useState(state.animated ? 0 : 2);
   const [complete, setComplete] = useState(!state.animated);
 
   useEffect(() => {
-    if (showReply) {
+    if (step >= 2) {
       return;
     }
-    const timer = setTimeout(() => setShowReply(true), REPLY_BEAT);
+    const timer = setTimeout(() => setStep(step + 1), MESSAGE_BEAT);
     return () => clearTimeout(timer);
-  }, [showReply]);
+  }, [step]);
 
   // The replay control appears only once the reply's entrance has settled,
   // so it never shows while messages are still landing.
   useEffect(() => {
-    if (!showReply || complete) {
+    if (step < 2 || complete) {
       return;
     }
     const timer = setTimeout(() => setComplete(true), REPLAY_REVEAL);
     return () => clearTimeout(timer);
-  }, [showReply, complete]);
+  }, [step, complete]);
 
   return (
     <>
       <MessageGroup className="gap-3">
-        <PlaygroundMessage side="sent" variant={state.sentVariant} />
-        {showReply && (
+        {step >= 1 && (
+          <PlaygroundMessage side="sent" variant={state.sentVariant} />
+        )}
+        {step >= 2 && (
           <PlaygroundMessage side="received" variant={state.receivedVariant} />
         )}
       </MessageGroup>
