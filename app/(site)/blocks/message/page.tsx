@@ -47,7 +47,7 @@ export default function MessagePage() {
         <ComponentDocsPage
           breadcrumbs={breadcrumbs}
           componentName="message"
-          description="Composable chat message primitives with a fluid slide-in entrance: sent messages surface from the right, received messages from the left, each morphing up from its bubble's tail corner and bouncing back once as it lands."
+          description="Chat message primitives with fluid slide-in animations from each bubble's tail."
           details={messageApiDetails}
           detailsDescription="Message is the row that owns alignment and plays the entrance; everything else composes inside it. The entrance is a single spring driving x, scale, and opacity together — the row starts a small step toward its own side at 90% scale, with the transform origin pinned to the bubble's tail corner, overshoots its resting spot, and bounces back once before settling, so the message reads as morphing out of the composer rather than sliding across the screen. MessageBubble supplies the pill (muted, primary, or ghost), MessageAvatar anchors to the bubble's tail, and MessageHeader/MessageFooter carry the small muted labels. Alignment flows from the single align prop through data attributes, and the whole entrance is dropped under prefers-reduced-motion."
           editHref={`${LINK.GITHUB}/edit/main/app/(site)/blocks/message/page.tsx`}
