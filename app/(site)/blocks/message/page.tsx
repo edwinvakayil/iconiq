@@ -55,7 +55,7 @@ export default function MessagePage() {
           pageUrl="/blocks/message"
           preview={preview}
           previewClassName="min-h-[24rem]"
-          previewDescription="The exchange always plays both sides: the sent message springs in from the right in its primary pill, and the reply follows a beat later from the left in muted. Use the floating sliders control in the bottom-right corner to open settings — pick each side's bubble style and toggle avatar, header, footer, and the animation itself. Every change replays the conversation and updates the Usage code to match."
+          previewDescription="The exchange always plays both sides: the sent message springs in from the right in its primary pill, and the reply follows a beat later from the left in muted — hit Replay to run it again. Use the floating sliders control in the bottom-right corner to open settings — pick each side's bubble style and toggle avatar, header, footer, and the animation itself. Every change replays the conversation and updates the Usage code to match."
           previewPersonalize={({ onClose }) => renderSettings(onClose)}
           previewPersonalizeTitle="Message"
           railNotes={[

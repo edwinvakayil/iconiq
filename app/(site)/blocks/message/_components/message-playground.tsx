@@ -1,5 +1,6 @@
 "use client";
 
+import { motion } from "motion/react";
 import {
   createContext,
   type ReactNode,
@@ -77,9 +78,15 @@ const SIDES = {
  *  to finish reading as its own gesture. */
 const REPLY_BEAT = 900;
 
+/** How long after the reply mounts before the replay control appears —
+ *  roughly the reply's entrance, so the button only shows once every
+ *  message has fully landed. */
+const REPLAY_REVEAL = 600;
+
 const MessagePlaygroundContext = createContext<{
   state: MessagePlaygroundState;
   replayToken: number;
+  replay: () => void;
 } | null>(null);
 
 function useMessagePlayground() {
@@ -186,10 +193,12 @@ function PlaygroundMessage({
 
 /** Plays the exchange once per mount: the sent message lands first and the
  *  reply follows a beat later, so both entrance directions are always shown.
- *  Remounted (via key) on every option change and replay. */
+ *  Remounted (via key) on every option change and replay — which also hides
+ *  the replay control again until the new run has fully landed. */
 function PlaygroundConversation() {
-  const { state } = useMessagePlayground();
+  const { state, replay } = useMessagePlayground();
   const [showReply, setShowReply] = useState(!state.animated);
+  const [complete, setComplete] = useState(!state.animated);
 
   useEffect(() => {
     if (showReply) {
@@ -199,13 +208,37 @@ function PlaygroundConversation() {
     return () => clearTimeout(timer);
   }, [showReply]);
 
+  // The replay control appears only once the reply's entrance has settled,
+  // so it never shows while messages are still landing.
+  useEffect(() => {
+    if (!showReply || complete) {
+      return;
+    }
+    const timer = setTimeout(() => setComplete(true), REPLAY_REVEAL);
+    return () => clearTimeout(timer);
+  }, [showReply, complete]);
+
   return (
-    <MessageGroup className="gap-3">
-      <PlaygroundMessage side="sent" variant={state.sentVariant} />
-      {showReply && (
-        <PlaygroundMessage side="received" variant={state.receivedVariant} />
+    <>
+      <MessageGroup className="gap-3">
+        <PlaygroundMessage side="sent" variant={state.sentVariant} />
+        {showReply && (
+          <PlaygroundMessage side="received" variant={state.receivedVariant} />
+        )}
+      </MessageGroup>
+      {complete && (
+        <motion.button
+          animate={{ opacity: 1 }}
+          className="self-start px-1 text-muted-foreground text-xs transition-colors hover:text-foreground"
+          initial={{ opacity: 0 }}
+          onClick={replay}
+          transition={{ duration: 0.3, ease: "easeOut" }}
+          type="button"
+        >
+          Replay ↺
+        </motion.button>
       )}
-    </MessageGroup>
+    </>
   );
 }
 
@@ -213,7 +246,7 @@ function MessagePlaygroundPreview() {
   const { state, replayToken } = useMessagePlayground();
 
   return (
-    <div className="flex min-h-[16rem] w-full max-w-md flex-col justify-center py-10">
+    <div className="flex min-h-[16rem] w-full max-w-md flex-col gap-6 py-10">
       <PlaygroundConversation
         // Remounting on every option change replays the whole exchange, so
         // each tweak in the settings panel is immediately visible in motion.
@@ -226,26 +259,18 @@ function MessagePlaygroundPreview() {
 function MessagePlaygroundSettings({
   onChange,
   onClose,
-  onReplay,
   onReset,
   state,
 }: {
   onChange: (next: Partial<MessagePlaygroundState>) => void;
   onClose?: () => void;
-  onReplay: () => void;
   onReset: () => void;
   state: MessagePlaygroundState;
 }) {
   return (
     <DocsPlaygroundPanel
       footer={
-        <div className="flex flex-col gap-1">
-          <DocsPlaygroundClearButton
-            label="Replay conversation"
-            onClick={onReplay}
-          />
-          <DocsPlaygroundClearButton label="Reset options" onClick={onReset} />
-        </div>
+        <DocsPlaygroundClearButton label="Reset options" onClick={onReset} />
       }
       onClose={onClose}
       title="Message"
@@ -319,18 +344,19 @@ export function MessagePlaygroundProvider({
     [setPlaygroundCode]
   );
 
+  const replay = () => setReplayToken((token) => token + 1);
+
   const renderSettings = (onClose: () => void) => (
     <MessagePlaygroundSettings
       onChange={updateState}
       onClose={onClose}
-      onReplay={() => setReplayToken((token) => token + 1)}
       onReset={resetState}
       state={state}
     />
   );
 
   return (
-    <MessagePlaygroundContext.Provider value={{ state, replayToken }}>
+    <MessagePlaygroundContext.Provider value={{ state, replayToken, replay }}>
       {children({
         preview: <MessagePlaygroundPreview />,
         renderSettings,
