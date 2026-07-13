@@ -798,6 +798,12 @@ const REGISTRY_UI_META: Record<
       "Animated Radix switch with spring thumb travel, pressure-like thumb squash, foreground track fill, and optional inline label.",
     dependencies: ["@radix-ui/react-switch", "motion"],
   },
+  "wheel-picker": {
+    title: "Wheel Picker",
+    description:
+      "iOS-style wheel picker with a 3D barrel, drag and flick inertia, detent snapping, velocity-driven motion blur, a per-row emphasis morph into the selection lens, optional looping columns, and reduced-motion aware springs.",
+    dependencies: ["motion"],
+  },
   avatar: {
     title: "Avatar",
     description:

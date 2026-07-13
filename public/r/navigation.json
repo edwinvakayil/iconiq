@@ -257,6 +257,11 @@
           "slug": "theme-toggle",
           "label": "Theme Toggle",
           "href": "/inputs-and-forms/theme-toggle"
+        },
+        {
+          "slug": "wheel-picker",
+          "label": "Wheel Picker",
+          "href": "/inputs-and-forms/wheel-picker"
         }
       ]
     },

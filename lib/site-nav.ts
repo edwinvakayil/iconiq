@@ -91,6 +91,7 @@ export const SITE_SECTIONS = [
       { label: "Slider", href: "/inputs-and-forms/slider" },
       { label: "Switch", href: "/inputs-and-forms/switch" },
       { label: "Theme Toggle", href: "/inputs-and-forms/theme-toggle" },
+      { label: "Wheel Picker", href: "/inputs-and-forms/wheel-picker" },
     ],
   },
   {

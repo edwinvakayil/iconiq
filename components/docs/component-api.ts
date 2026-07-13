@@ -7406,6 +7406,139 @@ const colorPickerApiDetails: DetailItem[] = [
   ]),
 ];
 
+const wheelPickerApiDetails: DetailItem[] = [
+  {
+    id: "wheel-picker",
+    title: "WheelPicker",
+    summary:
+      "Root shell that sizes the barrel, aligns every column to the same detent grid, and gives each column a rounded selection lens on that grid.",
+    fields: [
+      field({
+        name: "children",
+        type: "ReactNode",
+        required: true,
+        description:
+          "One or more WheelPickerColumn parts laid out side by side over the shared lens.",
+      }),
+      field({
+        name: "visibleCount",
+        type: "3 | 5 | 7",
+        defaultValue: "5",
+        description:
+          "Odd number of rows visible on the barrel. Also sets the curvature — more rows means a deeper cylinder.",
+      }),
+      field({
+        name: "itemHeight",
+        type: "number",
+        defaultValue: "44",
+        description:
+          "Row height in px shared by every column, the detent grid, and the lens.",
+      }),
+      field({
+        name: "lens",
+        type: "boolean",
+        defaultValue: "true",
+        description:
+          "Renders a rounded lens segment behind each column's selected row, like the iOS picker highlight.",
+      }),
+      field({
+        name: "aria-label",
+        type: "string",
+        description: "Accessible label for the picker group.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description:
+          "Merged onto the root shell for width, padding, or card chrome overrides.",
+      }),
+    ],
+  },
+  {
+    id: "wheel-picker-column",
+    title: "WheelPickerColumn",
+    summary:
+      "One scrollable wheel. Drag, flick, mouse wheel, tap a row, or use arrow keys — every input settles onto a detent with the same spring.",
+    fields: [
+      field({
+        name: "options",
+        type: "WheelPickerOption[]",
+        required: true,
+        description:
+          "Rows to render. Each option is a plain string or { value, label?, disabled? }. Disabled rows are skipped when snapping.",
+      }),
+      field({
+        name: "value",
+        type: "string",
+        description:
+          "Controlled selected value. External changes animate the wheel to the matching row.",
+      }),
+      field({
+        name: "defaultValue",
+        type: "string",
+        description:
+          "Starting value for uncontrolled usage. Falls back to the first enabled option.",
+      }),
+      field({
+        name: "onChange",
+        type: "(value: string, option: { value; label }) => void",
+        description:
+          "Fires as the wheel ticks past each detent while scrolling, matching iOS picker behavior.",
+      }),
+      field({
+        name: "onValueCommit",
+        type: "(value: string, option: { value; label }) => void",
+        description:
+          "Fires once the wheel settles on a detent after a drag, flick, scroll, tap, or key press ends.",
+      }),
+      field({
+        name: "loop",
+        type: "boolean",
+        defaultValue: "false",
+        description:
+          "Wraps the column infinitely, like iOS hours and minutes. Columns shorter than visibleCount + 2 fall back to bounded scrolling automatically.",
+      }),
+      field({
+        name: "disabled",
+        type: "boolean",
+        defaultValue: "false",
+        description: "Disables interaction and lowers the column opacity.",
+      }),
+      field({
+        name: "name",
+        type: "string",
+        description: "Hidden input name for native form submission.",
+      }),
+      field({
+        name: "aria-label",
+        type: "string",
+        description: "Accessible label for the column listbox.",
+      }),
+      field({
+        name: "id",
+        type: "string",
+        description:
+          "Root element id used for the aria-activedescendant option wiring.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description:
+          "Merged onto the column for width or flex overrides — columns are flex-1 by default.",
+      }),
+    ],
+    notes: [
+      "The barrel is real 3D: rows rotate around a cylinder with perspective, fading and folding away toward the edges under a gradient mask.",
+      "The selected row morphs continuously — a single text layer mixes its color from muted to foreground and scales up as it enters the lens, so emphasis tracks the scroll position frame by frame with no ghosting.",
+      "Flicks project release velocity onto the detent grid and settle with a gently bouncing spring; dragging past the ends of a bounded column rubber-bands like iOS.",
+      "Fast spins smear the rows with a velocity-driven motion blur that eases away as the wheel settles, like a physical drum.",
+      "Each column is a focusable listbox with aria-activedescendant wiring, arrow key, PageUp/PageDown, Home, and End support.",
+      "Snapping springs collapse to quick eased tweens when prefers-reduced-motion is on.",
+    ],
+  },
+  registryItem("wheel-picker.json", ["motion"]),
+];
+
 const accordionApiDetails: DetailItem[] = [
   {
     id: "accordion-item",
@@ -12101,6 +12234,7 @@ export {
   checkboxApiDetails,
   checkboxGroupApiDetails,
   colorPickerApiDetails,
+  wheelPickerApiDetails,
   autocompleteApiDetails,
   comboboxApiDetails,
   commandPaletteApiDetails,

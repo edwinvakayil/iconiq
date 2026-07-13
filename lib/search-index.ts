@@ -138,6 +138,8 @@ const componentSummaries: Record<string, string> = {
     "Async button in the Buttons & Actions section with idle, loading, and success states.",
   "/inputs-and-forms/theme-toggle":
     "Animated light/dark pill switch with sun and moon icons.",
+  "/inputs-and-forms/wheel-picker":
+    "Wheel picker docs in the Inputs & Forms section with an iOS-style 3D barrel, drag and flick inertia, detent snapping, velocity motion blur, looping columns, and per-column selection lenses.",
   "/display-and-content/verified-badge":
     "X-style verified badge in the Display & Content section with shimmer or static variants.",
   "/display-and-content/carousel":
@@ -169,6 +171,15 @@ const extraComponentKeywordsBySlug: Record<string, string[]> = {
     "navigation",
   ],
   charts: ["chart", "recharts", "bar chart", "data visualization", "graph"],
+  "wheel-picker": [
+    "wheel picker",
+    "wheelpicker",
+    "ios picker",
+    "date wheel",
+    "drum picker",
+    "picker",
+    "time picker",
+  ],
   "color-picker": [
     "color picker",
     "colorpicker",
