@@ -7,6 +7,7 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/home-button";
+import { HomeMcpCta } from "@/components/home-mcp-cta";
 import { cn } from "@/lib/utils";
 import { useMotionTier } from "@/providers/motion-tier";
 
@@ -573,11 +574,13 @@ export function HomeHero() {
             {content}
           </motion.div>
           {showcase}
+          <HomeMcpCta />
         </motion.div>
       ) : (
         <div className="w-full px-4 sm:px-6 lg:px-42">
           <div className="w-full max-w-[760px] text-left">{content}</div>
           {showcase}
+          <HomeMcpCta />
         </div>
       )}
     </section>
