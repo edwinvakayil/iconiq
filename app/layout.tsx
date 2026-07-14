@@ -4,7 +4,7 @@ import "./globals.css";
 
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
-import { Geist, Geist_Mono, Nunito } from "next/font/google";
+import { Geist, Geist_Mono } from "next/font/google";
 
 import { SITE } from "@/constants";
 import { MotionTierProvider } from "@/providers/motion-tier";
@@ -22,12 +22,6 @@ const geistMono = Geist_Mono({
 const geistSans = Geist({
   subsets: ["latin"],
   variable: "--font-sans",
-  display: "swap",
-});
-
-const nunitoRounded = Nunito({
-  subsets: ["latin"],
-  variable: "--font-rounded",
   display: "swap",
 });
 
@@ -49,7 +43,7 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      className={`${geistMono.variable} ${geistSans.variable} ${nunitoRounded.variable}`}
+      className={`${geistMono.variable} ${geistSans.variable}`}
       lang="en"
       suppressHydrationWarning
     >

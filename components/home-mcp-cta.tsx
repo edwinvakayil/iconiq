@@ -32,7 +32,7 @@ export function HomeMcpCta() {
         <div className="relative grid gap-10 px-6 py-14 sm:px-12 sm:py-20 md:grid-cols-2 md:items-center md:gap-14 lg:px-16">
           <div>
             <h2
-              className="max-w-[20ch] text-balance font-[family-name:var(--font-rounded)] font-semibold text-[clamp(1.4rem,4.4vw,1.85rem)] text-white leading-[1.12] tracking-[-0.025em] [text-shadow:0_1px_12px_rgba(0,0,0,0.25)] sm:text-[2.15rem] sm:leading-[1.08]"
+              className="max-w-[28ch] text-balance font-semibold text-[clamp(1.4rem,4.4vw,1.85rem)] text-white leading-[1.12] tracking-[-0.025em] [text-shadow:0_1px_12px_rgba(0,0,0,0.25)] sm:text-[2.15rem] sm:leading-[1.08]"
               id="home-mcp-cta-heading"
             >
               Install {SITE.NAME} components straight from your editor.
@@ -40,7 +40,7 @@ export function HomeMcpCta() {
           </div>
 
           <div>
-            <p className="max-w-[560px] text-[15px] text-white/90 leading-7 [text-shadow:0_1px_8px_rgba(0,0,0,0.2)] sm:text-[16px]">
+            <p className="max-w-[560px] font-medium text-[15px] text-white/90 leading-7 [text-shadow:0_1px_8px_rgba(0,0,0,0.2)] sm:text-[16px]">
               Connect {SITE.SHORT_NAME} UI to shadcn MCP and install editable
               components straight from your AI editor. Prefer browsing? Explore
               every component in the marketplace.
