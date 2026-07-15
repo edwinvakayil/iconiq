@@ -27,6 +27,7 @@ export const SITE_SECTIONS = [
       { label: "AI Input", href: "/blocks/ai-input" },
       { label: "Banner", href: "/blocks/banner" },
       { label: "Code Block", href: "/blocks/code-block" },
+      { label: "Contribution Graph", href: "/blocks/contribution-graph" },
       { label: "Feedback Form", href: "/blocks/feedback-form" },
       { label: "Logo Carousel", href: "/blocks/logo-carousel" },
       { label: "Message", href: "/blocks/message" },

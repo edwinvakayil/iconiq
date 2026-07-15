@@ -12212,8 +12212,195 @@ const tooltipApiDetails: DetailItem[] = [
   ]),
 ];
 
+const contributionGraphApiDetails: DetailItem[] = [
+  {
+    id: "contribution-graph",
+    title: "ContributionGraph",
+    summary:
+      "The provider that resolves the dataset and layout every other part reads from context. Feed it raw Activity data, or just a GitHub username and it fetches the last year of contributions itself.",
+    fields: [
+      field({
+        name: "data",
+        type: "Activity[]",
+        description:
+          "Raw activities to render — objects with an ISO date, a count, and a level between 0 and maxLevel. Missing days inside the range are filled with level 0. When provided, data wins over username and no fetch happens.",
+      }),
+      field({
+        name: "username",
+        type: "string",
+        description:
+          "GitHub username to fetch contributions for from github-contributions-api.jogruber.de (rolling last year). While loading, the grid renders as a shimmering skeleton; on failure it collapses to a quiet inline error. Responses are cached in memory per username, so remounts replay the entrance without refetching.",
+      }),
+      field({
+        name: "animated",
+        type: "boolean",
+        defaultValue: "true",
+        description:
+          "Play the level-by-level reveal: the muted grid fades in as a canvas, then blocks light up in rounds from lightest to darkest green with a springy pop. Set to false to render the finished grid immediately.",
+      }),
+      field({
+        name: "blockSize",
+        type: "number",
+        defaultValue: "12",
+        description: "Side length of one day block, in pixels.",
+      }),
+      field({
+        name: "blockMargin",
+        type: "number",
+        defaultValue: "4",
+        description: "Gap between blocks, in pixels.",
+      }),
+      field({
+        name: "blockRadius",
+        type: "number",
+        defaultValue: "2",
+        description: "Corner radius of each block, in pixels.",
+      }),
+      field({
+        name: "fontSize",
+        type: "number",
+        defaultValue: "14",
+        description: "Font size for month labels and footer text, in pixels.",
+      }),
+      field({
+        name: "labels",
+        type: "Labels",
+        description:
+          "Overrides for month names, weekday names, the total-count template ({{count}} and {{year}} placeholders), and the legend's Less/More text.",
+      }),
+      field({
+        name: "maxLevel",
+        type: "number",
+        defaultValue: "4",
+        description:
+          "Highest activity level in the data. Blocks outside 0..maxLevel throw a RangeError.",
+      }),
+      field({
+        name: "totalCount",
+        type: "number",
+        description:
+          "Explicit total for ContributionGraphTotalCount. Defaults to the fetched yearly total for username data, or the sum of counts otherwise.",
+      }),
+      field({
+        name: "weekStart",
+        type: "0 | 1 | 2 | 3 | 4 | 5 | 6",
+        defaultValue: "0",
+        description: "Which weekday starts a column (0 is Sunday).",
+      }),
+    ],
+    notes: [
+      "The entrance paints the canvas first: level-0 cells fade in together, then each activity level pops in as its own round — light greens first, darkest last — with a small deterministic jitter per block so every round shimmers in rather than snapping on at once.",
+      "Under prefers-reduced-motion the entrance is dropped entirely and blocks simply appear in place.",
+      "For server-side fetching, cache the same API call with unstable_cache in a server component and pass the result through data and totalCount — see the Server-side data section.",
+    ],
+  },
+  {
+    id: "contribution-graph-calendar",
+    title: "ContributionGraphCalendar",
+    summary:
+      "The SVG grid. Renders month labels along the top and calls your render prop once per day with the activity, weekIndex, and dayIndex to render as a block.",
+    fields: [
+      field({
+        name: "children",
+        type: "({ activity, dayIndex, weekIndex }) => ReactNode",
+        required: true,
+        description:
+          "Render prop for one day cell — usually a ContributionGraphBlock forwarded the same three arguments.",
+      }),
+      field({
+        name: "hideMonthLabels",
+        type: "boolean",
+        defaultValue: "false",
+        description: "Drop the month labels row above the grid.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description:
+          "Extra classes for the scroll container. The grid scrolls horizontally when wider than its parent.",
+      }),
+    ],
+  },
+  {
+    id: "contribution-graph-block",
+    title: "ContributionGraphBlock",
+    summary:
+      "One day cell. Carries the GitHub-green level ramp via data-level classes, a native tooltip with the exact count and date, a hover pop, and its slot in the wave entrance.",
+    fields: [
+      field({
+        name: "activity",
+        type: "Activity",
+        required: true,
+        description:
+          "The day to render, as passed by the calendar render prop.",
+      }),
+      field({
+        name: "weekIndex",
+        type: "number",
+        required: true,
+        description:
+          "Column index, used for x position and the block's reveal jitter.",
+      }),
+      field({
+        name: "dayIndex",
+        type: "number",
+        required: true,
+        description:
+          "Row index, used for y position and the block's reveal jitter.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description:
+          "Extra classes for the rect. The default green ramp targets data-level, so you can swap the palette with your own data-[level] fills.",
+      }),
+    ],
+    notes: [
+      "Each block exposes data-count, data-date, and data-level attributes for custom styling or tooltip libraries, and hovering scales the block up in place.",
+      "Pass children to replace the built-in <title> tooltip.",
+    ],
+  },
+  {
+    id: "contribution-graph-footer",
+    title: "ContributionGraphFooter",
+    summary:
+      "Layout row under the calendar for the total count and legend. Plain flex container — style it with className.",
+  },
+  {
+    id: "contribution-graph-total-count",
+    title: "ContributionGraphTotalCount",
+    summary:
+      "The activity summary line. Formats the total through the labels.totalCount template, shows a pulsing Loading contributions… while a username fetch is in flight, and accepts a render prop for full control.",
+    fields: [
+      field({
+        name: "children",
+        type: "({ totalCount, year }) => ReactNode",
+        description: "Render prop replacing the default formatted text.",
+      }),
+    ],
+    notes: [
+      "For username data the default template reads {{count}} contributions in the last year, since the window rolls rather than tracking a calendar year.",
+    ],
+  },
+  {
+    id: "contribution-graph-legend",
+    title: "ContributionGraphLegend",
+    summary:
+      "The Less→More level swatches, using the same green ramp as the blocks. Accepts a render prop to draw custom swatches per level.",
+    fields: [
+      field({
+        name: "children",
+        type: "({ level }) => ReactNode",
+        description: "Render prop replacing the default swatch for each level.",
+      }),
+    ],
+  },
+  registryItem("contribution-graph.json", ["date-fns"]),
+];
+
 export {
   aiInputApiDetails,
+  contributionGraphApiDetails,
   bannerApiDetails,
   thinkingIndicatorApiDetails,
   streamingTextApiDetails,

@@ -19,6 +19,11 @@
           "href": "/blocks/code-block"
         },
         {
+          "slug": "contribution-graph",
+          "label": "Contribution Graph",
+          "href": "/blocks/contribution-graph"
+        },
+        {
           "slug": "feedback-form",
           "label": "Feedback Form",
           "href": "/blocks/feedback-form"

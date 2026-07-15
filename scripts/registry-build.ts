@@ -125,6 +125,12 @@ const REGISTRY_UI_META: Record<
       "Searchable single-select input with inline filtering, arrow-key navigation, animated dropdown motion, and an optional clear action.",
     dependencies: ["@base-ui/react", "motion", "lucide-react"],
   },
+  "contribution-graph": {
+    title: "Contribution Graph",
+    description:
+      "GitHub-style contribution calendar with compound calendar, block, total-count, and legend parts — pass raw Activity data or just a GitHub username and it fetches and caches the last year of contributions itself, shimmers a skeleton grid while loading, then fades the muted grid in and lights the greens up level by level — lightest to darkest — with springy pops, plus hover pops, native per-day tooltips, and reduced-motion aware behavior.",
+    dependencies: ["date-fns"],
+  },
   "context-menu": {
     title: "Context Menu",
     description:

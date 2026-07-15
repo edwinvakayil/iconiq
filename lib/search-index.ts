@@ -72,6 +72,8 @@ const componentSummaries: Record<string, string> = {
     "Banner docs in the Blocks section with a top-of-screen announcement bar in four gradient tones, a ringed icon and message on the left, an outlined action on the right end, a dismiss collapse, and a fluid spring morph that melts the bar into a confirmation pill when its action is clicked.",
   "/blocks/code-block":
     "Code block docs in the Blocks section with an editor-style surface, a filename tab, a top-right spring-crossfade copy button, a bottom status bar with language and line count, line numbers, built-in theme-aware syntax highlighting, and line emphasis.",
+  "/blocks/contribution-graph":
+    "Contribution graph docs in the Blocks section with a GitHub-style activity calendar that fetches a username's last year of contributions, shimmers while loading, and lights the green blocks up level by level with a springy charging-up entrance.",
   "/blocks/setup-checklist":
     "Setup checklist docs in the Blocks section with an animated onboarding card, staggered task rows, drawn checkmark badges, and a floating progress pill.",
   "/blocks/team-invitation":
@@ -241,6 +243,16 @@ const extraComponentKeywordsBySlug: Record<string, string[]> = {
     "morph",
     "dismissible",
     "sticky",
+  ],
+  "contribution-graph": [
+    "contribution graph",
+    "github",
+    "activity calendar",
+    "heatmap",
+    "commit graph",
+    "green squares",
+    "contributions",
+    "activity graph",
   ],
   "code-block": [
     "code block",
