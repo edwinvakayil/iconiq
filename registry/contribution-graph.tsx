@@ -16,14 +16,18 @@ import {
 import {
   type CSSProperties,
   createContext,
+  type FocusEvent,
   Fragment,
   type HTMLAttributes,
+  type MouseEvent,
   type ReactNode,
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from "react";
+import { createPortal } from "react-dom";
 import { cn } from "@/lib/utils";
 
 export type Activity = {
@@ -252,6 +256,204 @@ const useContributionGraph = () => {
   }
 
   return context;
+};
+
+type BlockTooltipPayload = {
+  activity: Activity;
+  x: number;
+  y: number;
+  content?: ReactNode;
+};
+
+type BlockTooltipApi = {
+  show: (payload: BlockTooltipPayload) => void;
+  hide: () => void;
+};
+
+const BlockTooltipApiContext = createContext<BlockTooltipApi | null>(null);
+const BlockTooltipStateContext = createContext<BlockTooltipPayload | null>(
+  null
+);
+
+const useBlockTooltipApi = () => useContext(BlockTooltipApiContext);
+
+const usePrefersReducedMotion = () => {
+  const [reduced, setReduced] = useState(false);
+
+  useEffect(() => {
+    const query = window.matchMedia("(prefers-reduced-motion: reduce)");
+    setReduced(query.matches);
+
+    const onChange = (event: MediaQueryListEvent) => setReduced(event.matches);
+    query.addEventListener("change", onChange);
+    return () => query.removeEventListener("change", onChange);
+  }, []);
+
+  return reduced;
+};
+
+const formatCommitLabel = (count: number) =>
+  `${count} commit${count === 1 ? "" : "s"}`;
+
+const formatActivityDate = (date: string) =>
+  new Intl.DateTimeFormat("en", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  }).format(parseISO(date));
+
+/** One shared floating tooltip for the whole grid. Positioning SVG cells with
+ *  per-block Radix roots glitches on fast hover; this tracks the active cell
+ *  and slides to it instead. */
+const ContributionGraphBlockTooltip = () => {
+  const tooltip = useContext(BlockTooltipStateContext);
+  const prefersReducedMotion = usePrefersReducedMotion();
+  const [mounted, setMounted] = useState(false);
+  const [exitPayload, setExitPayload] = useState<BlockTooltipPayload | null>(
+    null
+  );
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (tooltip) {
+      setExitPayload(tooltip);
+    }
+  }, [tooltip]);
+
+  const isOpen = tooltip !== null;
+
+  useEffect(() => {
+    if (isOpen) {
+      const frame = requestAnimationFrame(() => setVisible(true));
+      return () => cancelAnimationFrame(frame);
+    }
+
+    setVisible(false);
+    const timeout = window.setTimeout(() => setExitPayload(null), 160);
+    return () => window.clearTimeout(timeout);
+  }, [isOpen]);
+
+  const payload = tooltip ?? exitPayload;
+
+  if (!(mounted && payload)) {
+    return null;
+  }
+
+  const scale = prefersReducedMotion || visible ? 1 : 0.96;
+
+  return createPortal(
+    <div
+      aria-hidden
+      className="pointer-events-none fixed z-50"
+      style={{
+        left: payload.x,
+        top: payload.y,
+        opacity: visible ? 1 : 0,
+        transform: `translate(-50%, calc(-100% - 8px)) scale(${scale})`,
+        transitionProperty: prefersReducedMotion
+          ? "opacity"
+          : "left, top, opacity, transform",
+        transitionDuration: prefersReducedMotion
+          ? "120ms"
+          : "140ms, 140ms, 160ms, 200ms",
+        transitionTimingFunction: prefersReducedMotion
+          ? "ease"
+          : "cubic-bezier(0.22, 1, 0.36, 1), cubic-bezier(0.22, 1, 0.36, 1), ease, cubic-bezier(0.34, 1.56, 0.64, 1)",
+      }}
+    >
+      <div className="relative rounded-lg border border-white/10 bg-zinc-950 px-2.5 py-1 text-white shadow-[0_8px_26px_-8px_rgba(0,0,0,0.55)] dark:border-black/10 dark:bg-zinc-100 dark:text-zinc-950">
+        {payload.content ?? (
+          <div className="flex items-baseline gap-1.5 whitespace-nowrap text-[11px] leading-none">
+            <span className="font-semibold">
+              {formatCommitLabel(payload.activity.count)}
+            </span>
+            <span className="text-zinc-400 dark:text-zinc-600">
+              on {formatActivityDate(payload.activity.date)}
+            </span>
+          </div>
+        )}
+        <span
+          aria-hidden
+          className="absolute top-full left-1/2 -mt-px -translate-x-1/2 border-x-[5px] border-x-transparent border-t-[6px] border-t-zinc-950 dark:border-t-zinc-100"
+        />
+      </div>
+    </div>,
+    document.body
+  );
+};
+
+const ContributionGraphTooltipProvider = ({
+  children,
+}: {
+  children: ReactNode;
+}) => {
+  const [tooltip, setTooltip] = useState<BlockTooltipPayload | null>(null);
+  const hideTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const api = useMemo<BlockTooltipApi>(
+    () => ({
+      show: (payload) => {
+        if (hideTimeoutRef.current) {
+          clearTimeout(hideTimeoutRef.current);
+          hideTimeoutRef.current = null;
+        }
+        setTooltip(payload);
+      },
+      hide: () => {
+        if (hideTimeoutRef.current) {
+          clearTimeout(hideTimeoutRef.current);
+        }
+        // Brief delay so moving between adjacent cells doesn't flicker.
+        hideTimeoutRef.current = setTimeout(() => {
+          setTooltip(null);
+          hideTimeoutRef.current = null;
+        }, 40);
+      },
+    }),
+    []
+  );
+
+  useEffect(
+    () => () => {
+      if (hideTimeoutRef.current) {
+        clearTimeout(hideTimeoutRef.current);
+      }
+    },
+    []
+  );
+
+  // The tooltip is positioned in viewport space from a hover-time measurement,
+  // so any scroll (page or the calendar's own horizontal scroller) or resize
+  // would leave it stranded. Dismiss it immediately instead of tracking.
+  useEffect(() => {
+    const dismiss = () => {
+      if (hideTimeoutRef.current) {
+        clearTimeout(hideTimeoutRef.current);
+        hideTimeoutRef.current = null;
+      }
+      setTooltip(null);
+    };
+
+    window.addEventListener("scroll", dismiss, true);
+    window.addEventListener("resize", dismiss);
+    return () => {
+      window.removeEventListener("scroll", dismiss, true);
+      window.removeEventListener("resize", dismiss);
+    };
+  }, []);
+
+  return (
+    <BlockTooltipApiContext.Provider value={api}>
+      <BlockTooltipStateContext.Provider value={tooltip}>
+        {children}
+        <ContributionGraphBlockTooltip />
+      </BlockTooltipStateContext.Provider>
+    </BlockTooltipApiContext.Provider>
+  );
 };
 
 const fillHoles = (activities: Activity[]): Activity[] => {
@@ -512,7 +714,9 @@ export const ContributionGraph = ({
         {...props}
       >
         {animated ? <style>{ENTRANCE_KEYFRAMES}</style> : null}
-        {children}
+        <ContributionGraphTooltipProvider>
+          {children}
+        </ContributionGraphTooltipProvider>
       </div>
     </ContributionGraphContext.Provider>
   );
@@ -521,12 +725,14 @@ export const ContributionGraph = ({
 export type ContributionGraphBlockProps = HTMLAttributes<SVGRectElement> & {
   activity: Activity;
   dayIndex: number;
+  showTooltip?: boolean;
   weekIndex: number;
 };
 
 export const ContributionGraphBlock = ({
   activity,
   dayIndex,
+  showTooltip = true,
   weekIndex,
   className,
   style,
@@ -542,6 +748,17 @@ export const ContributionGraphBlock = ({
     loading,
     maxLevel,
   } = useContributionGraph();
+  const tooltipApi = useBlockTooltipApi();
+
+  // If tooltips are turned off (or the cell unmounts) while its bubble is open,
+  // there's no pointer-leave to close it — dismiss to be safe.
+  useEffect(() => {
+    if (showTooltip) {
+      return;
+    }
+
+    tooltipApi?.hide();
+  }, [showTooltip, tooltipApi]);
 
   if (activity.level < 0 || activity.level > maxLevel) {
     throw new RangeError(
@@ -564,8 +781,25 @@ export const ContributionGraphBlock = ({
     : `${entranceDelay}ms`;
   const showEntrance = animated && !loading;
 
+  const revealTooltip = (
+    event: MouseEvent<SVGRectElement> | FocusEvent<SVGRectElement>
+  ) => {
+    if (!(showTooltip && tooltipApi) || loading) {
+      return;
+    }
+
+    const rect = event.currentTarget.getBoundingClientRect();
+    tooltipApi.show({
+      activity,
+      x: rect.left + rect.width / 2,
+      y: rect.top,
+      content: children,
+    });
+  };
+
   return (
     <rect
+      aria-label={`${formatCommitLabel(activity.count)} on ${activity.date}`}
       className={cn(
         "origin-center [transform-box:fill-box]",
         LEVEL_CLASSES,
@@ -583,6 +817,10 @@ export const ContributionGraphBlock = ({
       data-date={activity.date}
       data-level={activity.level}
       height={blockSize}
+      onBlur={showTooltip ? () => tooltipApi?.hide() : undefined}
+      onFocus={showTooltip ? revealTooltip : undefined}
+      onMouseEnter={showTooltip ? revealTooltip : undefined}
+      onMouseLeave={showTooltip ? () => tooltipApi?.hide() : undefined}
       rx={blockRadius}
       ry={blockRadius}
       style={{
@@ -593,13 +831,7 @@ export const ContributionGraphBlock = ({
       x={(blockSize + blockMargin) * weekIndex}
       y={labelHeight + (blockSize + blockMargin) * dayIndex}
       {...props}
-    >
-      {children ?? (
-        <title>
-          {`${activity.count} contribution${activity.count === 1 ? "" : "s"} on ${activity.date}`}
-        </title>
-      )}
-    </rect>
+    />
   );
 };
 
@@ -651,13 +883,13 @@ export const ContributionGraphCalendar = ({
     >
       <svg
         aria-busy={loading}
+        aria-label="Contribution graph"
         className="block overflow-visible"
         height={height}
         key={contentKey}
         viewBox={`0 0 ${width} ${height}`}
         width={width}
       >
-        <title>Contribution Graph</title>
         {!hideMonthLabels && (
           <g className="fill-current">
             {monthLabels.map(({ label, weekIndex }) => (
@@ -770,8 +1002,12 @@ export const ContributionGraphLegend = ({
         children ? (
           <Fragment key={level}>{children({ level })}</Fragment>
         ) : (
-          <svg height={blockSize} key={level} width={blockSize}>
-            <title>{`${level} contributions`}</title>
+          <svg
+            aria-label={`${level} contributions`}
+            height={blockSize}
+            key={level}
+            width={blockSize}
+          >
             <rect
               className={cn("stroke-[1px] stroke-border", LEVEL_CLASSES)}
               data-level={level}

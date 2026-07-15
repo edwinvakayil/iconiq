@@ -41,6 +41,7 @@ type ContributionGraphPlaygroundState = {
   scale: BlockScale;
   palette: PaletteName;
   animated: boolean;
+  tooltip: boolean;
   monthLabels: boolean;
   footer: boolean;
 };
@@ -50,6 +51,7 @@ const DEFAULT_STATE: ContributionGraphPlaygroundState = {
   scale: "medium",
   palette: "emerald",
   animated: true,
+  tooltip: false,
   monthLabels: true,
   footer: true,
 };
@@ -147,6 +149,7 @@ const levelClasses =
     "            activity={activity}",
     ...(levelClasses ? ["            className={levelClasses}"] : []),
     "            dayIndex={dayIndex}",
+    ...(state.tooltip ? [] : ["            showTooltip={false}"]),
     "            weekIndex={weekIndex}",
     "          />",
   ];
@@ -220,6 +223,7 @@ function ContributionGraphPlaygroundPreview() {
               activity={activity}
               className={levelClasses}
               dayIndex={dayIndex}
+              showTooltip={state.tooltip}
               weekIndex={weekIndex}
             />
           )}
@@ -231,11 +235,11 @@ function ContributionGraphPlaygroundPreview() {
               <ContributionGraphLegend>
                 {({ level }) => (
                   <svg
+                    aria-label={`${level} contributions`}
                     height={preset.blockSize}
                     key={level}
                     width={preset.blockSize}
                   >
-                    <title>{`${level} contributions`}</title>
                     <rect
                       className={cn("stroke-[1px] stroke-border", levelClasses)}
                       data-level={level}
@@ -353,6 +357,11 @@ function ContributionGraphPlaygroundSettings({
         checked={state.animated}
         label="Animated"
         onChange={(animated) => onChange({ animated })}
+      />
+      <DocsPlaygroundToggleField
+        checked={state.tooltip}
+        label="Tooltip"
+        onChange={(tooltip) => onChange({ tooltip })}
       />
       <DocsPlaygroundToggleField
         checked={state.monthLabels}

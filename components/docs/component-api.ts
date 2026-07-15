@@ -12325,7 +12325,7 @@ const contributionGraphApiDetails: DetailItem[] = [
     id: "contribution-graph-block",
     title: "ContributionGraphBlock",
     summary:
-      "One day cell. Carries the GitHub-green level ramp via data-level classes, a native tooltip with the exact count and date, a hover pop, and its slot in the wave entrance.",
+      "One day cell. Carries the GitHub-green level ramp via data-level classes, a custom tooltip with the exact commit count and date, a hover pop, and its slot in the wave entrance.",
     fields: [
       field({
         name: "activity",
@@ -12349,6 +12349,13 @@ const contributionGraphApiDetails: DetailItem[] = [
           "Row index, used for y position and the block's reveal jitter.",
       }),
       field({
+        name: "showTooltip",
+        type: "boolean",
+        defaultValue: "true",
+        description:
+          "Shows the styled commit count and date tooltip on hover or keyboard focus.",
+      }),
+      field({
         name: "className",
         type: "string",
         description:
@@ -12356,8 +12363,8 @@ const contributionGraphApiDetails: DetailItem[] = [
       }),
     ],
     notes: [
-      "Each block exposes data-count, data-date, and data-level attributes for custom styling or tooltip libraries, and hovering scales the block up in place.",
-      "Pass children to replace the built-in <title> tooltip.",
+      "Each block exposes data-count, data-date, and data-level attributes for custom styling, and hovering scales the block up in place.",
+      "Tooltips use one shared floating layer for the whole graph so the bubble follows cleanly between cells. Pass children to replace the default content, or showTooltip={false} to disable it.",
     ],
   },
   {

@@ -105,7 +105,7 @@ export default function ContributionGraphPage() {
           componentName="contribution-graph"
           description="GitHub-style contribution calendar that turns a year of activity into a wall of green — pass a username and it fetches, caches, and animates the data itself."
           details={contributionGraphApiDetails}
-          detailsDescription="ContributionGraph is the provider: give it raw Activity data or just a GitHub username and it resolves the weeks grid, total count, and year that every other part reads from context. ContributionGraphCalendar draws the SVG grid and hands each day to your render prop, ContributionGraphBlock is one animated day cell with a native tooltip, and the footer parts carry the total count and the Less→More legend. While a username fetch is in flight the same grid renders as a shimmering skeleton, and when the data lands the muted grid fades in and the greens light up level by level, lightest to darkest."
+          detailsDescription="ContributionGraph is the provider: give it raw Activity data or just a GitHub username and it resolves the weeks grid, total count, and year that every other part reads from context. ContributionGraphCalendar draws the SVG grid and hands each day to your render prop, ContributionGraphBlock is one animated day cell with a styled commit-count tooltip, and the footer parts carry the total count and the Less→More legend. While a username fetch is in flight the same grid renders as a shimmering skeleton, and when the data lands the muted grid fades in and the greens light up level by level, lightest to darkest."
           editHref={`${LINK.GITHUB}/edit/main/app/(site)/blocks/contribution-graph/page.tsx`}
           extraSections={[
             {
