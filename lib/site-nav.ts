@@ -147,6 +147,36 @@ export const SITE_SECTIONS = [
   },
 ] as const;
 
+/**
+ * Component categories for the home navbar "Components" dropdown.
+ * Blocks is excluded because it gets its own top-level link.
+ */
+export function getComponentCategoryLinks() {
+  return SITE_SECTIONS.filter((section) => section.label !== "Blocks").map(
+    (section) => {
+      const visibleChildren = section.children.filter(
+        (item) => !HIDDEN_NAV_HREFS.includes(item.href)
+      );
+      const firstChild = visibleChildren[0];
+
+      return {
+        label: section.label,
+        href: firstChild?.href ?? "/",
+        count: visibleChildren.length,
+      };
+    }
+  );
+}
+
+export function getFirstBlockHref() {
+  const blocks = SITE_SECTIONS.find((section) => section.label === "Blocks");
+  const firstVisible = blocks?.children.find(
+    (item) => !HIDDEN_NAV_HREFS.includes(item.href)
+  );
+
+  return firstVisible?.href ?? "/";
+}
+
 export const HOME_NAV_SECTION_LABELS = [
   "Display & Content",
   "Inputs & Forms",
