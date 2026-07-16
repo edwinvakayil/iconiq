@@ -446,7 +446,7 @@ function HeroCtas({
   const links = (
     <>
       <HeroViewComponentsButton />
-      <VercelOssBadge className="ml-1 sm:ml-2" />
+      <VercelOssBadge className="ml-1 max-sm:mt-3 max-sm:ml-0 max-sm:basis-full sm:ml-2" />
     </>
   );
 

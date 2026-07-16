@@ -356,7 +356,7 @@ export function HomeFeaturedShowcase() {
     >
       <div>
         <h3
-          className="max-w-[18ch] font-light text-[clamp(0.9rem,3.4vw,1.85rem)] text-foreground tracking-[-0.07em] sm:max-w-none sm:whitespace-nowrap"
+          className="font-light text-[clamp(0.9rem,3.4vw,1.85rem)] text-foreground tracking-[-0.07em] whitespace-nowrap"
           id="home-featured-showcase-heading"
         >
           Every component, live and ready to explore.
