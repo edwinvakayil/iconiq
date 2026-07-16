@@ -5,6 +5,7 @@ import {
   ChevronLeft,
   CodeXml,
   Copy,
+  Github,
   Maximize,
   Minimize,
   RotateCcw,
@@ -17,6 +18,7 @@ import {
   motion,
   type PanInfo,
 } from "motion/react";
+import Link from "next/link";
 import type { ReactNode } from "react";
 import * as React from "react";
 import * as ReactDOM from "react-dom";
@@ -25,6 +27,8 @@ import { CommandMenu } from "@/components/command-menu";
 import { HighlightedCode } from "@/components/docs/code-snippet";
 import { docsPlaygroundPanelClassName } from "@/components/docs/playground/docs-playground-styles";
 import { ThemeToggle } from "@/components/docs/split/theme-toggle";
+import { LINK } from "@/constants";
+import { recordGithubClick } from "@/lib/record-github-click";
 import { cn } from "@/lib/utils";
 import type { CommandMenuGroupDef } from "@/registry/command-palette";
 
@@ -62,6 +66,7 @@ const previewToolbarIconClass =
   "flex size-full items-center justify-center rounded-2xl text-current transition-all ease-in-out active:scale-95";
 
 export function DocsPreviewToolbar({
+  githubHref = LINK.GITHUB,
   hasSourceCode,
   isExpanded,
   onReload,
@@ -70,6 +75,7 @@ export function DocsPreviewToolbar({
   searchGroups,
   showSource,
 }: {
+  githubHref?: string;
   hasSourceCode: boolean;
   isExpanded: boolean;
   onReload: () => void;
@@ -81,7 +87,7 @@ export function DocsPreviewToolbar({
   return (
     <section
       aria-label="Preview controls"
-      className="fixed top-6 right-6 z-[99] flex select-none items-center gap-1 rounded-2xl border border-border/40 bg-white/70 p-1.5 shadow-card backdrop-blur-xl dark:border-white/[0.06] dark:bg-[#121212]/75 dark:shadow-none"
+      className="fixed top-6 right-6 isolate z-[99] flex select-none items-center gap-1 overflow-hidden rounded-2xl border border-border/50 bg-white p-1.5 shadow-[0_4px_12px_-8px_rgba(0,0,0,0.1)] dark:border-white/10 dark:bg-[#121212] dark:shadow-[0_4px_12px_-8px_rgba(0,0,0,0.35)]"
     >
       <PreviewToolbarCell>
         <CommandMenu
@@ -148,6 +154,19 @@ export function DocsPreviewToolbar({
             "!size-full !rounded-2xl !border-0 !bg-transparent hover:!bg-transparent shadow-none"
           )}
         />
+      </PreviewToolbarCell>
+
+      <PreviewToolbarCell>
+        <Link
+          aria-label="View repository on GitHub"
+          className={previewToolbarIconClass}
+          href={githubHref}
+          onClick={recordGithubClick}
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <Github className="size-4" />
+        </Link>
       </PreviewToolbarCell>
     </section>
   );
