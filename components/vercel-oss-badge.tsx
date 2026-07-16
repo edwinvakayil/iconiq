@@ -3,7 +3,8 @@ import Image from "next/image";
 import { cn } from "@/lib/utils";
 
 const VERCEL_OSS_BADGE_SRC = "/vercel-oss-program-badge-2026.svg";
-const VERCEL_OSS_PROGRAM_URL = "https://vercel.com/blog/vercel-open-source-program-spring-2026-cohort#iconiq";
+const VERCEL_OSS_PROGRAM_URL =
+  "https://vercel.com/blog/vercel-open-source-program-spring-2026-cohort#iconiq";
 
 function VercelOssBadge({ className }: { className?: string }) {
   return (
