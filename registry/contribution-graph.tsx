@@ -870,15 +870,30 @@ export const ContributionGraphCalendar = ({
     [weeks, labels.months]
   );
 
+  const scrollToLatest = (container: HTMLDivElement | null) => {
+    if (!container) {
+      return;
+    }
+
+    const scrollToEnd = () => {
+      container.scrollLeft = container.scrollWidth - container.clientWidth;
+    };
+
+    scrollToEnd();
+    requestAnimationFrame(scrollToEnd);
+  };
+
   return (
     <div
-      // The padding (offset by the negative margin) keeps hover-scaled edge
-      // blocks inside the clip boundary instead of being cut off.
       className={cn(
         "-m-1 max-w-full overflow-x-auto overflow-y-hidden p-1",
         "[&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-border hover:[&::-webkit-scrollbar-thumb]:bg-muted-foreground/40 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar]:h-1",
         className
       )}
+      // The padding (offset by the negative margin) keeps hover-scaled edge
+      // blocks inside the clip boundary instead of being cut off.
+      key={contentKey}
+      ref={scrollToLatest}
       {...props}
     >
       <svg
