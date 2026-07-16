@@ -8,6 +8,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/home-button";
 import { HomeMcpCta } from "@/components/home-mcp-cta";
+import { VercelOssBadge } from "@/components/vercel-oss-badge";
 import { cn } from "@/lib/utils";
 import { useMotionTier } from "@/providers/motion-tier";
 
@@ -441,7 +442,12 @@ function HeroCtas({
   animateEntrance: boolean;
   useFullMotion: boolean;
 }) {
-  const links = <HeroViewComponentsButton />;
+  const links = (
+    <>
+      <HeroViewComponentsButton />
+      <VercelOssBadge className="ml-1 sm:ml-2" />
+    </>
+  );
 
   if (!animateEntrance) {
     return <div className={heroCtaRowClassName}>{links}</div>;

@@ -1,29 +1,3 @@
-import Image from "next/image";
-
-const VERCEL_OSS_BADGE_SRC = "/vercel-oss-program-badge-2026.svg";
-const VERCEL_OSS_PROGRAM_URL = "https://vercel.com/open-source-program";
-
-function VercelOssBadge() {
-  return (
-    <a
-      className="inline-flex transition-opacity hover:opacity-85"
-      href={VERCEL_OSS_PROGRAM_URL}
-      rel="noopener noreferrer"
-      target="_blank"
-    >
-      <Image
-        alt="Vercel OSS Program"
-        className="h-5 w-auto"
-        height={24}
-        src={VERCEL_OSS_BADGE_SRC}
-        unoptimized
-        width={240}
-      />
-      <span className="sr-only">Vercel Open Source Program</span>
-    </a>
-  );
-}
-
 const Footer = () => {
   return (
     <footer className="w-full border-neutral-200/50 border-t bg-background dark:border-neutral-800/50 dark:bg-background">
@@ -50,10 +24,6 @@ const Footer = () => {
             </a>{" "}
             :)
           </p>
-        </div>
-
-        <div className="flex shrink-0 items-center sm:justify-end">
-          <VercelOssBadge />
         </div>
       </div>
     </footer>
