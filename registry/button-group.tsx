@@ -1108,7 +1108,7 @@ function SegmentedControl({
               role="radio"
               tabIndex={isSelected && !isOptionDisabled ? 0 : -1}
               type="button"
-              whileTap={isOptionDisabled ? undefined : { scale: 0.98 }}
+              whileTap={isOptionDisabled ? undefined : { scale: 0.96 }}
             >
               {isSelected ? (
                 <motion.span

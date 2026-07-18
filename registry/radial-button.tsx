@@ -280,7 +280,7 @@ const RadialButton = React.forwardRef<HTMLButtonElement, RadialButtonProps>(
         }}
         ref={setMergedRef}
         type={type}
-        whileTap={isDisabled ? undefined : { scale: 0.985 }}
+        whileTap={isDisabled ? undefined : { scale: 0.96 }}
       >
         <motion.span
           animate={{ scale: showFill && coverSize > 0 ? 1 : 0 }}

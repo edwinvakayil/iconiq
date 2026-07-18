@@ -774,7 +774,7 @@ function CheckboxGroupRow({
   const whileTap =
     rowInteractive && !prefersReducedMotion
       ? {
-          scale: 0.985,
+          scale: 0.96,
           y: 0,
           transition: springTap,
         }

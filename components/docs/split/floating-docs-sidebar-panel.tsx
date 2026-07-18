@@ -117,7 +117,7 @@ export function FloatingDocsSidebarPanel() {
   }
 
   return ReactDOM.createPortal(
-    <AnimatePresence>
+    <AnimatePresence initial={false}>
       {isOpen && layout ? (
         <motion.aside
           animate={{ x: 0 }}

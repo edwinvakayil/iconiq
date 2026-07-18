@@ -46,7 +46,7 @@ const menuItemClass =
   "relative flex w-full items-center gap-2.5 px-2.5 py-2 text-left font-medium text-[13px] text-zinc-700 transition-[background-color,color] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] before:pointer-events-none before:absolute before:inset-0 before:bg-zinc-100/90 before:opacity-0 before:transition-opacity before:duration-300 before:ease-[cubic-bezier(0.22,1,0.36,1)] hover:before:opacity-100 dark:text-zinc-300 dark:before:bg-zinc-800/80";
 
 const segmentClass =
-  "relative overflow-hidden transition-[color,transform] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] before:pointer-events-none before:absolute before:inset-0 before:bg-zinc-200/60 before:opacity-0 before:transition-opacity before:duration-300 before:ease-[cubic-bezier(0.22,1,0.36,1)] hover:before:opacity-100 active:scale-[0.985] dark:before:bg-zinc-800/70";
+  "relative overflow-hidden transition-[color,transform] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] before:pointer-events-none before:absolute before:inset-0 before:bg-zinc-200/60 before:opacity-0 before:transition-opacity before:duration-300 before:ease-[cubic-bezier(0.22,1,0.36,1)] hover:before:opacity-100 active:scale-[0.96] dark:before:bg-zinc-800/70";
 
 export function PageContextMenu({
   content,
@@ -130,14 +130,18 @@ export function PageContextMenu({
             <span className="relative size-3.5">
               <Copy
                 className={cn(
-                  "absolute inset-0 size-3.5 transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]",
-                  copied ? "scale-75 opacity-0" : "scale-100 opacity-100"
+                  "absolute inset-0 size-3.5 transition-[opacity,transform,filter] duration-300 ease-[cubic-bezier(0.2,0,0,1)]",
+                  copied
+                    ? "scale-[0.25] opacity-0 blur-[4px]"
+                    : "scale-100 opacity-100 blur-none"
                 )}
               />
               <Check
                 className={cn(
-                  "absolute inset-0 size-3.5 transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]",
-                  copied ? "scale-100 opacity-100" : "scale-75 opacity-0"
+                  "absolute inset-0 size-3.5 transition-[opacity,transform,filter] duration-300 ease-[cubic-bezier(0.2,0,0,1)]",
+                  copied
+                    ? "scale-100 opacity-100 blur-none"
+                    : "scale-[0.25] opacity-0 blur-[4px]"
                 )}
               />
             </span>

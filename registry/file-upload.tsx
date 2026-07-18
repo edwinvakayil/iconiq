@@ -1541,8 +1541,12 @@ function FileUploadRowMeta({
               }
               aria-hidden
               className="flex h-4 w-4 items-center justify-center rounded-full bg-foreground text-background"
-              exit={prefersReducedMotion ? undefined : { scale: 0, opacity: 0 }}
-              initial={prefersReducedMotion ? false : { scale: 0, opacity: 0 }}
+              exit={
+                prefersReducedMotion ? undefined : { scale: 0.95, opacity: 0 }
+              }
+              initial={
+                prefersReducedMotion ? false : { scale: 0.95, opacity: 0 }
+              }
               transition={listTransition}
             >
               <Check className="h-2.5 w-2.5" strokeWidth={3} />

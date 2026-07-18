@@ -510,7 +510,7 @@ function SelectOptionRow({
       title={option.label}
       transition={PRESS_SPRING}
       variants={itemVariants}
-      whileTap={{ scale: 0.985 }}
+      whileTap={{ scale: 0.96 }}
     >
       {showActiveHighlight && isActive ? (
         <motion.span
@@ -1034,7 +1034,7 @@ export function Select({
         ref={triggerRef}
         transition={buttonTransition}
         type="button"
-        whileTap={{ scale: 0.985 }}
+        whileTap={{ scale: 0.96 }}
       >
         <span
           className={cn(

@@ -423,7 +423,7 @@ function BreadcrumbEllipsisMenuRow({
         role="menuitem"
         tabIndex={isActive ? 0 : -1}
         title={label}
-        whileTap={{ scale: 0.985 }}
+        whileTap={{ scale: 0.96 }}
       >
         {isActive ? (
           <motion.span

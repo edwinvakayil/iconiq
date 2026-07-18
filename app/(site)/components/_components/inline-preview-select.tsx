@@ -165,7 +165,7 @@ export function InlinePreviewSelect<T extends string>({
   const menu =
     menuStyle && typeof document !== "undefined"
       ? createPortal(
-          <AnimatePresence>
+          <AnimatePresence initial={false}>
             {open ? (
               <motion.ul
                 animate={{ ...menuMotion.animate, x: "-50%" }}

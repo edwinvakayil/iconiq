@@ -260,8 +260,20 @@ export function DocsCodeSnippet({
                 <motion.span
                   animate={{ opacity: 1, rotate: 0, scale: 1, y: 0 }}
                   className="absolute inset-0 flex items-center justify-center"
-                  exit={{ opacity: 0, rotate: 8, scale: 0.72, y: -2 }}
-                  initial={{ opacity: 0, rotate: -8, scale: 0.72, y: 2 }}
+                  exit={{
+                    opacity: 0,
+                    rotate: 8,
+                    scale: 0.25,
+                    y: -2,
+                    filter: "blur(4px)",
+                  }}
+                  initial={{
+                    opacity: 0,
+                    rotate: -8,
+                    scale: 0.25,
+                    y: 2,
+                    filter: "blur(4px)",
+                  }}
                   key="copied"
                   transition={{
                     duration: 0.22,
@@ -274,8 +286,20 @@ export function DocsCodeSnippet({
                 <motion.span
                   animate={{ opacity: 1, rotate: 0, scale: 1, y: 0 }}
                   className="absolute inset-0 flex items-center justify-center"
-                  exit={{ opacity: 0, rotate: -8, scale: 0.72, y: -2 }}
-                  initial={{ opacity: 0, rotate: 8, scale: 0.72, y: 2 }}
+                  exit={{
+                    opacity: 0,
+                    rotate: -8,
+                    scale: 0.25,
+                    y: -2,
+                    filter: "blur(4px)",
+                  }}
+                  initial={{
+                    opacity: 0,
+                    rotate: 8,
+                    scale: 0.25,
+                    y: 2,
+                    filter: "blur(4px)",
+                  }}
                   key="copy"
                   transition={{
                     duration: 0.22,

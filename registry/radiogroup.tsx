@@ -164,7 +164,7 @@ export const RadioGroup: React.FC<RadioGroupProps> = ({
             key={option.value}
             transition={{ delay: index * 0.05, duration: 0.3 }}
             whileHover={{ x: 2 }}
-            whileTap={{ scale: 0.98 }}
+            whileTap={{ scale: 0.96 }}
           >
             <input
               aria-describedby={descriptionId}
@@ -218,8 +218,8 @@ export const RadioGroup: React.FC<RadioGroupProps> = ({
                     <motion.div
                       animate={{ scale: 1, opacity: 1 }}
                       className="absolute h-1.5 w-1.5 rounded-full bg-background"
-                      exit={{ scale: 0, opacity: 0 }}
-                      initial={{ scale: 0, opacity: 0 }}
+                      exit={{ scale: 0.95, opacity: 0 }}
+                      initial={{ scale: 0.95, opacity: 0 }}
                       transition={{
                         type: "spring",
                         stiffness: 500,

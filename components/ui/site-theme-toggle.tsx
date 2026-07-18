@@ -27,7 +27,7 @@ const SiteThemeToggle = ({ className }: SiteThemeToggleProps) => {
       aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
       aria-pressed={isDark}
       className={cn(
-        "relative flex size-9 cursor-pointer items-center justify-center rounded-full text-neutral-600 transition-colors hover:bg-neutral-100 hover:text-neutral-900 focus-visible:outline-1 focus-visible:outline-primary dark:text-neutral-400 dark:hover:bg-white/10 dark:hover:text-white",
+        "relative flex size-9 cursor-pointer items-center justify-center rounded-full text-neutral-600 transition-[background-color,color,transform] hover:bg-neutral-100 hover:text-neutral-900 focus-visible:outline-1 focus-visible:outline-primary active:scale-[0.96] dark:text-neutral-400 dark:hover:bg-white/10 dark:hover:text-white",
         className
       )}
       onClick={handleChangeTheme}
@@ -37,11 +37,11 @@ const SiteThemeToggle = ({ className }: SiteThemeToggleProps) => {
     >
       <SunIcon
         aria-hidden="true"
-        className="size-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0"
+        className="size-5 rotate-0 scale-100 transition-[transform,opacity] dark:-rotate-90 dark:scale-0"
       />
       <MoonIcon
         aria-hidden="true"
-        className="absolute size-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100"
+        className="absolute size-5 rotate-90 scale-0 transition-[transform,opacity] dark:rotate-0 dark:scale-100"
       />
     </button>
   );

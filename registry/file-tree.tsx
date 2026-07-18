@@ -569,8 +569,8 @@ function FolderIcon({
         <motion.span
           animate={{ scale: 1, opacity: 1, rotate: 0 }}
           className="inline-flex"
-          exit={{ scale: 0.5, opacity: 0, rotate: 15 }}
-          initial={{ scale: 0.5, opacity: 0, rotate: -15 }}
+          exit={{ scale: 0.95, opacity: 0, rotate: 15 }}
+          initial={{ scale: 0.95, opacity: 0, rotate: -15 }}
           key={isOpen ? "open" : "close"}
           transition={{
             type: "spring",

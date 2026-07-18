@@ -156,7 +156,7 @@ function HoverHighlight() {
   const { enabled } = useContext(EffectsContext);
 
   return (
-    <AnimatePresence>
+    <AnimatePresence initial={false}>
       {enabled && hovered && hoverRect ? (
         <motion.div
           animate={{

@@ -564,8 +564,8 @@ function AvatarTooltipBubble({
           <motion.span
             animate={reduceMotion ? undefined : { scale: 1 }}
             className={tooltipArrowClassName}
-            exit={reduceMotion ? undefined : { scale: 0 }}
-            initial={reduceMotion ? undefined : { scale: 0 }}
+            exit={reduceMotion ? undefined : { scale: 0.95, opacity: 0 }}
+            initial={reduceMotion ? undefined : { scale: 0.95, opacity: 0 }}
             transition={motionConfig.arrowTransition}
           />
           {content}

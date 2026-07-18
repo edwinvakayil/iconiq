@@ -230,7 +230,7 @@ export function DocsPlaygroundSelectMenu<T extends string>({
   const menu =
     open && typeof document !== "undefined"
       ? createPortal(
-          <AnimatePresence>
+          <AnimatePresence initial={false}>
             <div
               className="fixed z-[400]"
               data-playground-select-menu={menuId}

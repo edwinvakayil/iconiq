@@ -249,13 +249,13 @@ function getButtonAnimate(
 ) {
   if (animatedWidth) {
     return {
-      scale: canAnimate && isPressed ? 0.985 : 1,
+      scale: canAnimate && isPressed ? 0.96 : 1,
       width: animatedWidth,
     };
   }
 
   return {
-    scale: canAnimate && isPressed ? 0.985 : 1,
+    scale: canAnimate && isPressed ? 0.96 : 1,
   };
 }
 

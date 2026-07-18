@@ -198,7 +198,7 @@ const Avatar = forwardRef<HTMLDivElement, AvatarProps>(
         ref={ref}
         transition={rootTransition}
         whileHover={{ scale: 1.02, y: -1, transition: rootTransition }}
-        whileTap={{ scale: 0.995, y: 0, transition: { duration: 0.1 } }}
+        whileTap={{ scale: 0.96, y: 0, transition: { duration: 0.1 } }}
         {...props}
       >
         <AvatarPrimitive.Root className="relative flex h-full w-full items-center justify-center overflow-hidden rounded-full bg-linear-to-br from-neutral-950 via-neutral-800 to-neutral-700 text-white shadow-[0_18px_40px_rgba(15,23,42,0.16)] dark:from-neutral-100 dark:via-neutral-200 dark:to-neutral-300 dark:text-neutral-900">

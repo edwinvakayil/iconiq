@@ -331,7 +331,7 @@ export function SetupChecklistItem({
           onClick?.(id);
         }}
         type="button"
-        whileTap={reduceMotion ? undefined : { scale: 0.985 }}
+        whileTap={reduceMotion ? undefined : { scale: 0.96 }}
       >
         {icon ? (
           <span
@@ -358,16 +358,16 @@ export function SetupChecklistItem({
             </span>
           ) : null}
         </span>
-        <AnimatePresence>
+        <AnimatePresence initial={false}>
           {isCompleted ? (
             <motion.span
               animate={{ scale: 1, opacity: 1 }}
               className="absolute top-3.5 right-3.5 flex size-5 items-center justify-center rounded-full bg-emerald-500 text-white"
-              exit={{ scale: 0.4, opacity: 0 }}
+              exit={{ scale: 0.25, opacity: 0, filter: "blur(4px)" }}
               initial={
                 reduceMotion
                   ? { scale: 1, opacity: 1 }
-                  : { scale: 0.4, opacity: 0 }
+                  : { scale: 0.25, opacity: 0, filter: "blur(4px)" }
               }
               transition={BADGE_SPRING}
             >

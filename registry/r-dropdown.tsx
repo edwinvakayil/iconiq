@@ -488,7 +488,7 @@ export const DropdownTrigger = React.forwardRef<
           }}
           ref={(node) => mergeRefs(ref, node)}
           type="button"
-          whileTap={disabled ? undefined : { scale: 0.98 }}
+          whileTap={disabled ? undefined : { scale: 0.96 }}
           {...props}
         >
           <span className="flex min-w-0 flex-1 items-center gap-2">
@@ -770,7 +770,7 @@ export const DropdownItem = React.forwardRef<HTMLDivElement, DropdownItemProps>(
             <motion.span
               animate={{ opacity: 1, scale: 1, y: 0 }}
               className="relative z-10 flex size-5 shrink-0 items-center justify-center text-[color:var(--dd-foreground)]"
-              initial={{ opacity: 0, scale: 0.78, y: 1 }}
+              initial={{ opacity: 0, scale: 0.96, y: 1 }}
               transition={CHECK_SPRING}
             >
               <Check className="h-4 w-4" />

@@ -31,13 +31,13 @@ export const selectionToolbarStyles = {
     "transition-[transform,background-color,color,box-shadow] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]",
     "hover:scale-[1.06] hover:bg-neutral-700 hover:text-white",
     "hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.07),0_8px_18px_-10px_rgba(0,0,0,0.55)]",
-    "active:scale-[0.94] active:duration-150 active:ease-[cubic-bezier(0.34,1.2,0.64,1)]",
+    "active:scale-[0.96] active:duration-150 active:ease-[cubic-bezier(0.34,1.2,0.64,1)]",
     "disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:scale-100 disabled:hover:bg-transparent disabled:hover:shadow-none",
     "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/20 focus-visible:ring-offset-1 focus-visible:ring-offset-neutral-800",
     "motion-reduce:transition-colors motion-reduce:active:scale-100 motion-reduce:hover:scale-100"
   ),
   toolbarButtonIconClassName:
-    "inline-flex transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover/btn:scale-110 group-active/btn:scale-95 motion-reduce:transform-none",
+    "inline-flex transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover/btn:scale-110 group-active/btn:scale-[0.96] motion-reduce:transform-none",
 } as const;
 
 const VIEWPORT_MARGIN = 8;

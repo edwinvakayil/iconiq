@@ -804,7 +804,7 @@ const FluxButton = React.forwardRef<HTMLButtonElement, FluxButtonProps>(
                 whileTap={
                   isLocked || !animateEnabled || variant === "link"
                     ? undefined
-                    : { scale: 0.988 }
+                    : { scale: 0.96 }
                 }
               >
                 <span className="relative z-10 inline-flex w-full items-center justify-center">
