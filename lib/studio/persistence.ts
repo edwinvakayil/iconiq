@@ -7,11 +7,15 @@
  */
 
 import { createContainer, createNodeId } from "./tree";
-import type {
-  ContainerNode,
-  StudioNode,
-  StudioProject,
-  TextTag,
+import {
+  type ContainerNode,
+  type NodePlace,
+  type PlaceValue,
+  type SpacingSides,
+  type StudioNode,
+  type StudioProject,
+  type TextTag,
+  uniformSides,
 } from "./types";
 
 export const STORAGE_KEY = "iconiq-studio-project-v1";
@@ -22,12 +26,57 @@ type SanitizedBase = Pick<StudioNode, "id"> &
   Partial<
     Pick<
       StudioNode,
-      "name" | "hidden" | "customClasses" | "width" | "height" | "margin"
+      | "name"
+      | "hidden"
+      | "customClasses"
+      | "width"
+      | "height"
+      | "margin"
+      | "padding"
+      | "place"
     >
   >;
 
+const PLACE_VALUES = new Set(["auto", "start", "center", "end"]);
+
+function sanitizePlace(value: unknown): NodePlace | undefined {
+  if (!value || typeof value !== "object") {
+    return undefined;
+  }
+  const raw = value as Record<string, unknown>;
+  const axis = (input: unknown): PlaceValue =>
+    typeof input === "string" && PLACE_VALUES.has(input)
+      ? (input as PlaceValue)
+      : "auto";
+  const place = { h: axis(raw.h), v: axis(raw.v) };
+  return place.h === "auto" && place.v === "auto" ? undefined : place;
+}
+
+/** Accepts the current per-side shape or a legacy uniform number. */
+function sanitizeSides(value: unknown): SpacingSides | undefined {
+  if (typeof value === "number" && value > 0) {
+    return uniformSides(value);
+  }
+  if (value && typeof value === "object") {
+    const raw = value as Record<string, unknown>;
+    const side = (input: unknown) =>
+      typeof input === "number" && input >= 0 ? input : 0;
+    return {
+      top: side(raw.top),
+      right: side(raw.right),
+      bottom: side(raw.bottom),
+      left: side(raw.left),
+    };
+  }
+  return undefined;
+}
+
 function sanitizeBase(node: Record<string, unknown>): SanitizedBase {
+  const margin = sanitizeSides(node.margin);
+  const padding = sanitizeSides(node.padding);
+  const place = sanitizePlace(node.place);
   return {
+    ...(place ? { place } : {}),
     id: typeof node.id === "string" ? node.id : createNodeId(),
     ...(typeof node.name === "string" ? { name: node.name } : {}),
     ...(node.hidden === true ? { hidden: true } : {}),
@@ -40,7 +89,8 @@ function sanitizeBase(node: Record<string, unknown>): SanitizedBase {
     ...(node.height && typeof node.height === "object"
       ? { height: node.height as StudioNode["height"] }
       : {}),
-    ...(typeof node.margin === "number" ? { margin: node.margin } : {}),
+    ...(margin ? { margin } : {}),
+    ...(padding ? { padding } : {}),
   };
 }
 
@@ -58,15 +108,23 @@ function sanitizeContainer(
   base: SanitizedBase
 ): StudioNode {
   const defaults = createContainer();
+  const layout = {
+    ...defaults.layout,
+    ...(node.layout && typeof node.layout === "object"
+      ? (node.layout as ContainerNode["layout"])
+      : {}),
+  };
+  // Migrate the legacy uniform layout.padding into per-side base padding.
+  const migratedPadding =
+    !base.padding && layout.padding > 0
+      ? uniformSides(layout.padding)
+      : base.padding;
+  layout.padding = 0;
   return {
     ...base,
+    ...(migratedPadding ? { padding: migratedPadding } : {}),
     kind: "container",
-    layout: {
-      ...defaults.layout,
-      ...(node.layout && typeof node.layout === "object"
-        ? (node.layout as ContainerNode["layout"])
-        : {}),
-    },
+    layout,
     style: {
       ...defaults.style,
       ...(node.style && typeof node.style === "object"
@@ -189,12 +247,13 @@ export function createDefaultProject(): StudioProject {
   const root: ContainerNode = {
     id: "root",
     kind: "container",
+    padding: uniformSides(32),
     layout: {
       mode: "flex",
       direction: "column",
       wrap: false,
       gap: 24,
-      padding: 32,
+      padding: 0,
       align: "stretch",
       justify: "start",
       columns: 2,
@@ -205,21 +264,26 @@ export function createDefaultProject(): StudioProject {
       border: false,
       shadow: "none",
       maxWidth: 0,
+      fullHeight: false,
     },
     children: [
       {
         id: "starter-heading",
-        kind: "text",
-        tag: "h2",
-        text: "Welcome to Iconiq Studio",
-        muted: false,
+        kind: "component",
+        component: "typography",
+        props: {
+          variant: "h2",
+          text: "Welcome to Iconiq Studio",
+        },
       },
       {
         id: "starter-copy",
-        kind: "text",
-        tag: "p",
-        text: "Drag components from the left, tune them on the right, then export clean React + Tailwind.",
-        muted: true,
+        kind: "component",
+        component: "typography",
+        props: {
+          variant: "paragraph-md",
+          text: "Drag components from the left, tune them on the right, then export clean React + Tailwind.",
+        },
       },
       {
         id: "starter-actions",
@@ -240,6 +304,7 @@ export function createDefaultProject(): StudioProject {
           border: false,
           shadow: "none",
           maxWidth: 0,
+          fullHeight: false,
         },
         children: [
           {

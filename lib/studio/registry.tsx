@@ -13,6 +13,7 @@ import {
   ChevronsUpDownIcon,
   CircleUserIcon,
   CreditCardIcon,
+  ImageIcon,
   Link2Icon,
   LoaderCircleIcon,
   type LucideIcon,
@@ -23,12 +24,13 @@ import {
   TagIcon,
   TextCursorInputIcon,
   ToggleLeftIcon,
+  TypeIcon,
 } from "lucide-react";
 import type { ReactNode } from "react";
 
 import { Accordion } from "@/registry/accordion";
 import { Alert } from "@/registry/alert";
-import { Avatar } from "@/registry/avatar";
+import { Avatar, AvatarImage } from "@/registry/avatar";
 import { Badge } from "@/registry/badge";
 import { Breadcrumbs } from "@/registry/breadcrumbs";
 import { Button } from "@/registry/button";
@@ -44,7 +46,14 @@ import { Input } from "@/registry/input";
 import { Spinner } from "@/registry/spinner";
 import { Switch } from "@/registry/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/registry/tabs";
+import {
+  TYPOGRAPHY_SAMPLE_TEXT,
+  TYPOGRAPHY_VARIANT_META,
+  Typography,
+  type TypographyVariant,
+} from "@/registry/typography";
 
+import { CATALOG_STUDIO_DEFS } from "./catalog-defs";
 import {
   type CodegenRegistry,
   classNameProp,
@@ -59,6 +68,14 @@ import type { ComponentNode } from "./types";
 /* Schema types                                                        */
 /* ------------------------------------------------------------------ */
 
+/** One editable field inside a `fieldList` item. */
+export type FieldSpec = {
+  key: string;
+  label: string;
+  input: "text" | "textarea" | "image";
+  placeholder?: string;
+};
+
 export type PropControl =
   | { kind: "text"; key: string; label: string }
   | { kind: "textarea"; key: string; label: string }
@@ -70,21 +87,49 @@ export type PropControl =
       options: Array<{ label: string; value: string }>;
     }
   | { kind: "stringList"; key: string; label: string; itemLabel: string }
-  | { kind: "itemList"; key: string; label: string };
+  | { kind: "itemList"; key: string; label: string }
+  /** Single image URL with a thumbnail preview. */
+  | { kind: "image"; key: string; label: string }
+  /**
+   * Ordered list of records with typed fields (text / textarea / image) —
+   * used by multi-item components such as Testimonials or Logo Carousel.
+   */
+  | {
+      kind: "fieldList";
+      key: string;
+      label: string;
+      /** Singular noun for the add button and item headers, e.g. "Testimonial". */
+      itemNoun: string;
+      fields: FieldSpec[];
+      /** Template used when the user adds a new item. */
+      newItem: () => Record<string, string>;
+    };
 
 export type StudioCategory =
-  | "Inputs"
+  | "Structure"
+  | "Blocks"
+  | "Buttons & Actions"
+  | "Display & Content"
+  | "Feedback & Alerts"
+  | "Inputs & Forms"
+  | "Layout & Toolbars"
   | "Navigation"
-  | "Disclosure"
-  | "Feedback"
-  | "Layout";
+  | "Overlay & Popups"
+  | "Special One"
+  | "Texts";
 
 export const STUDIO_CATEGORIES: StudioCategory[] = [
-  "Inputs",
+  "Structure",
+  "Blocks",
+  "Buttons & Actions",
+  "Display & Content",
+  "Feedback & Alerts",
+  "Inputs & Forms",
+  "Layout & Toolbars",
   "Navigation",
-  "Disclosure",
-  "Feedback",
-  "Layout",
+  "Overlay & Popups",
+  "Special One",
+  "Texts",
 ];
 
 export type StudioComponentDef = {
@@ -96,6 +141,8 @@ export type StudioComponentDef = {
   keywords?: string[];
   /** Components like Card accept dropped children. */
   acceptsChildren?: boolean;
+  /** Allow clicks on the live preview while editing (e.g. Flux Button). */
+  interactivePreview?: boolean;
   /** Name passed to `npx iconiq add`. Null for pure-HTML built-ins. */
   cli: string | null;
   imports: ImportSpec[];
@@ -138,7 +185,7 @@ function omitDefault<T>(value: T, defaultValue: T): T | undefined {
 const buttonDef: StudioComponentDef = {
   type: "button",
   label: "Button",
-  category: "Inputs",
+  category: "Buttons & Actions",
   description: "Ripple button with variants and spring press feedback.",
   icon: MousePointerClickIcon,
   cli: "button",
@@ -207,7 +254,7 @@ const buttonDef: StudioComponentDef = {
 const inputDef: StudioComponentDef = {
   type: "input",
   label: "Input",
-  category: "Inputs",
+  category: "Inputs & Forms",
   description: "Text field with floating shell, label and description.",
   icon: TextCursorInputIcon,
   cli: "input",
@@ -265,7 +312,7 @@ const inputDef: StudioComponentDef = {
 const checkboxDef: StudioComponentDef = {
   type: "checkbox",
   label: "Checkbox",
-  category: "Inputs",
+  category: "Inputs & Forms",
   description: "Animated checkbox with a drawn check mark.",
   icon: SquareCheckIcon,
   cli: "checkbox",
@@ -294,7 +341,7 @@ const checkboxDef: StudioComponentDef = {
 const switchDef: StudioComponentDef = {
   type: "switch",
   label: "Switch",
-  category: "Inputs",
+  category: "Inputs & Forms",
   description: "Spring toggle with squash-and-stretch thumb.",
   icon: ToggleLeftIcon,
   cli: "switch",
@@ -470,7 +517,7 @@ const breadcrumbsDef: StudioComponentDef = {
 const accordionDef: StudioComponentDef = {
   type: "accordion",
   label: "Accordion",
-  category: "Disclosure",
+  category: "Navigation",
   description: "Spring-height disclosure list.",
   icon: ChevronsUpDownIcon,
   cli: "accordion",
@@ -539,7 +586,7 @@ const accordionDef: StudioComponentDef = {
 const alertDef: StudioComponentDef = {
   type: "alert",
   label: "Alert",
-  category: "Feedback",
+  category: "Feedback & Alerts",
   description: "Inline alert with semantic appearances.",
   icon: BellIcon,
   cli: "alert",
@@ -599,7 +646,7 @@ const alertDef: StudioComponentDef = {
 const badgeDef: StudioComponentDef = {
   type: "badge",
   label: "Badge",
-  category: "Feedback",
+  category: "Display & Content",
   description: "Status badge with semantic colors and dot variant.",
   icon: TagIcon,
   cli: "badge",
@@ -676,7 +723,7 @@ const badgeDef: StudioComponentDef = {
 const spinnerDef: StudioComponentDef = {
   type: "spinner",
   label: "Spinner",
-  category: "Feedback",
+  category: "Display & Content",
   description: "Loading indicator: ring, dots or matrix.",
   icon: LoaderCircleIcon,
   cli: "spinner",
@@ -722,7 +769,7 @@ const spinnerDef: StudioComponentDef = {
 const cardDef: StudioComponentDef = {
   type: "card",
   label: "Card",
-  category: "Layout",
+  category: "Display & Content",
   description: "Surface with header and droppable content area.",
   icon: CreditCardIcon,
   acceptsChildren: true,
@@ -795,14 +842,17 @@ const cardDef: StudioComponentDef = {
 const avatarDef: StudioComponentDef = {
   type: "avatar",
   label: "Avatar",
-  category: "Layout",
+  category: "Display & Content",
   description: "Initials avatar with optional image and tooltip.",
   icon: CircleUserIcon,
   cli: "avatar",
-  imports: [{ names: ["Avatar"], path: "@/components/ui/avatar" }],
-  defaultProps: () => ({ name: "Ada Lovelace", size: "default" }),
+  imports: [
+    { names: ["Avatar", "AvatarImage"], path: "@/components/ui/avatar" },
+  ],
+  defaultProps: () => ({ name: "Ada Lovelace", size: "default", src: "" }),
   controls: [
     { kind: "text", key: "name", label: "Name" },
+    { kind: "image", key: "src", label: "Image" },
     {
       kind: "select",
       key: "size",
@@ -814,25 +864,36 @@ const avatarDef: StudioComponentDef = {
       ],
     },
   ],
-  render: (props) => (
-    <Avatar
-      name={str(props.name, "Ada Lovelace")}
-      size={str(props.size, "default") as "sm" | "default" | "lg"}
-    />
-  ),
-  emit: (node) => ({
-    tag: "Avatar",
-    props: {
-      name: str(node.props.name, "Ada Lovelace"),
-      size: omitDefault(str(node.props.size, "default"), "default"),
-    },
-  }),
+  render: (props) => {
+    const src = str(props.src);
+    const name = str(props.name, "Ada Lovelace");
+    return (
+      <Avatar
+        name={name}
+        size={str(props.size, "default") as "sm" | "default" | "lg"}
+      >
+        {src ? <AvatarImage alt={name} src={src} /> : null}
+      </Avatar>
+    );
+  },
+  emit: (node) => {
+    const src = str(node.props.src);
+    const name = str(node.props.name, "Ada Lovelace");
+    return {
+      tag: "Avatar",
+      props: {
+        name,
+        size: omitDefault(str(node.props.size, "default"), "default"),
+      },
+      children: src ? [{ tag: "AvatarImage", props: { alt: name, src } }] : [],
+    };
+  },
 };
 
 const dividerDef: StudioComponentDef = {
   type: "divider",
-  label: "Divider",
-  category: "Layout",
+  label: "Separator",
+  category: "Layout & Toolbars",
   description: "Hairline separator between sections.",
   icon: MinusIcon,
   cli: null,
@@ -867,11 +928,165 @@ const dividerDef: StudioComponentDef = {
   }),
 };
 
+const TYPOGRAPHY_VARIANT_OPTIONS = Object.entries(TYPOGRAPHY_VARIANT_META).map(
+  ([value, meta]) => ({ label: meta.label, value })
+);
+
+const typographyDef: StudioComponentDef = {
+  type: "typography",
+  label: "Typography",
+  category: "Structure",
+  description: "Headings, labels, paragraphs, and subheadings.",
+  icon: TypeIcon,
+  cli: "typography",
+  imports: [{ names: ["Typography"], path: "@/components/ui/typography" }],
+  defaultProps: () => ({
+    variant: "h2",
+    text: "Welcome to Iconiq Studio",
+  }),
+  controls: [
+    {
+      kind: "select",
+      key: "variant",
+      label: "Style",
+      options: TYPOGRAPHY_VARIANT_OPTIONS,
+    },
+    { kind: "textarea", key: "text", label: "Text" },
+  ],
+  render: (props) => (
+    <Typography variant={str(props.variant, "h2") as TypographyVariant}>
+      {str(props.text, TYPOGRAPHY_SAMPLE_TEXT)}
+    </Typography>
+  ),
+  emit: (node) => ({
+    tag: "Typography",
+    props: {
+      variant: omitDefault(str(node.props.variant, "h2"), "h2"),
+    },
+    children: [str(node.props.text, TYPOGRAPHY_SAMPLE_TEXT)],
+  }),
+};
+
 /* ------------------------------------------------------------------ */
 /* Registry                                                            */
 /* ------------------------------------------------------------------ */
 
-export const STUDIO_COMPONENTS: StudioComponentDef[] = [
+const IMAGE_FIT_CLASSES: Record<string, string> = {
+  cover: "object-cover",
+  contain: "object-contain",
+};
+
+const IMAGE_RADIUS_CLASSES: Record<string, string | null> = {
+  none: null,
+  md: "rounded-md",
+  lg: "rounded-lg",
+  xl: "rounded-xl",
+  full: "rounded-full",
+};
+
+const IMAGE_ASPECT_CLASSES: Record<string, string> = {
+  auto: "h-auto",
+  video: "aspect-video",
+  square: "aspect-square",
+  portrait: "aspect-[3/4]",
+};
+
+function imageClasses(props: Record<string, unknown>): string[] {
+  const classes = ["w-full"];
+  classes.push(
+    IMAGE_ASPECT_CLASSES[str(props.aspect, "auto")] ?? "h-auto",
+    IMAGE_FIT_CLASSES[str(props.fit, "cover")] ?? "object-cover"
+  );
+  const radius = IMAGE_RADIUS_CLASSES[str(props.radius, "lg")];
+  if (radius) {
+    classes.push(radius);
+  }
+  return classes;
+}
+
+const imageDef: StudioComponentDef = {
+  type: "image",
+  label: "Image",
+  category: "Display & Content",
+  description: "Plain image with fit, radius and aspect controls.",
+  icon: ImageIcon,
+  keywords: ["img", "picture", "photo", "media"],
+  cli: null,
+  imports: [],
+  defaultProps: () => ({
+    src: "/assets/gradient.png",
+    alt: "Decorative gradient",
+    fit: "cover",
+    radius: "lg",
+    aspect: "video",
+  }),
+  controls: [
+    { kind: "image", key: "src", label: "Source" },
+    { kind: "text", key: "alt", label: "Alt text" },
+    {
+      kind: "select",
+      key: "aspect",
+      label: "Aspect ratio",
+      options: [
+        { label: "Natural", value: "auto" },
+        { label: "16:9", value: "video" },
+        { label: "Square", value: "square" },
+        { label: "3:4", value: "portrait" },
+      ],
+    },
+    {
+      kind: "select",
+      key: "fit",
+      label: "Fit",
+      options: [
+        { label: "Cover", value: "cover" },
+        { label: "Contain", value: "contain" },
+      ],
+    },
+    {
+      kind: "select",
+      key: "radius",
+      label: "Radius",
+      options: [
+        { label: "None", value: "none" },
+        { label: "Medium", value: "md" },
+        { label: "Large", value: "lg" },
+        { label: "XL", value: "xl" },
+        { label: "Full", value: "full" },
+      ],
+    },
+  ],
+  render: (props) => {
+    const src = str(props.src);
+    if (!src) {
+      return (
+        <div className="flex aspect-video w-full items-center justify-center rounded-lg border border-border/70 border-dashed bg-muted/30 text-muted-foreground text-xs">
+          Set an image URL in the inspector
+        </div>
+      );
+    }
+    return (
+      // biome-ignore lint/performance/noImgElement: canvas renders arbitrary user URLs; next/image needs domain config
+      // biome-ignore lint/correctness/useImageSize: sized by aspect/width controls; intrinsic size unknown
+      <img
+        alt={str(props.alt)}
+        className={imageClasses(props).join(" ")}
+        src={src}
+      />
+    );
+  },
+  emit: (node) => ({
+    tag: "img",
+    props: {
+      alt: str(node.props.alt),
+      className: classNameProp(imageClasses(node.props)),
+      src: str(node.props.src, "/assets/gradient.png"),
+    },
+  }),
+};
+
+const CORE_STUDIO_COMPONENTS: StudioComponentDef[] = [
+  typographyDef,
   buttonDef,
   inputDef,
   checkboxDef,
@@ -885,6 +1100,12 @@ export const STUDIO_COMPONENTS: StudioComponentDef[] = [
   cardDef,
   avatarDef,
   dividerDef,
+  imageDef,
+];
+
+export const STUDIO_COMPONENTS: StudioComponentDef[] = [
+  ...CORE_STUDIO_COMPONENTS,
+  ...CATALOG_STUDIO_DEFS,
 ];
 
 export const STUDIO_COMPONENT_MAP: Record<string, StudioComponentDef> =

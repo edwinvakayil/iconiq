@@ -39,6 +39,7 @@ import {
   type DropIndicator,
   type DropTarget,
   type NewNodeSpec,
+  type NodePlace,
   type StudioMode,
   type StudioNode,
   type StudioProject,
@@ -91,6 +92,12 @@ export type StudioStore = {
   remove: (ids: string[]) => void;
   duplicate: (ids: string[]) => void;
   wrapSelection: () => void;
+  /**
+   * Position the selection inside its parent. A multi-selection is grouped
+   * into a stack first so it moves as one unit. Centering vertically at the
+   * page root also enables full height so the placement is visible.
+   */
+  placeSelection: (place: NodePlace | undefined) => void;
   copySelection: () => void;
   paste: () => void;
   shiftSelected: (delta: -1 | 1) => void;
@@ -108,7 +115,14 @@ export type StudioStore = {
     patch: Partial<
       Pick<
         StudioNode,
-        "name" | "hidden" | "customClasses" | "width" | "height" | "margin"
+        | "name"
+        | "hidden"
+        | "customClasses"
+        | "width"
+        | "height"
+        | "margin"
+        | "padding"
+        | "place"
       >
     >
   ) => void;
@@ -324,6 +338,44 @@ export const useStudioStore = create<StudioStore>((set, get) => {
       if (wrapperId) {
         set({ selection: [wrapperId] });
       }
+    },
+
+    placeSelection: (place) => {
+      const { selection, project } = get();
+      if (selection.length === 0) {
+        return;
+      }
+      pushHistory(`place:${selection.join(",")}`);
+
+      let tree = project.root;
+      let targetId = selection[0];
+
+      // A multi-selection moves as one unit: group it first.
+      if (selection.length > 1) {
+        const wrapped = wrapInContainer(tree, selection);
+        if (!wrapped.wrapperId) {
+          return;
+        }
+        tree = wrapped.tree;
+        targetId = wrapped.wrapperId;
+      }
+
+      tree = updateNode(tree, targetId, (node) => ({ ...node, place }));
+
+      // "Center of canvas" needs vertical room: give the page height when
+      // the placed node sits directly in the root.
+      const location = findParent(tree, targetId);
+      if (
+        place &&
+        place.v !== "auto" &&
+        location?.parent.id === tree.id &&
+        !tree.style.fullHeight
+      ) {
+        tree = { ...tree, style: { ...tree.style, fullHeight: true } };
+      }
+
+      setRoot(tree);
+      set({ selection: [targetId] });
     },
 
     copySelection: () => {

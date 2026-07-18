@@ -11,7 +11,11 @@ import { useCallback, useEffect, useRef } from "react";
 
 import { getComponentDef } from "@/lib/studio/registry";
 import { useStudioStore } from "@/lib/studio/store";
-import { DEVICE_WIDTHS, type DragState } from "@/lib/studio/types";
+import {
+  DEVICE_VIEWPORT_HEIGHTS,
+  DEVICE_WIDTHS,
+  type DragState,
+} from "@/lib/studio/types";
 import { cn } from "@/lib/utils";
 
 import { CanvasNode } from "./canvas-node";
@@ -227,10 +231,18 @@ export function StudioCanvas({
           className={cn(
             canvasTheme === "dark" && "dark",
             "h-fit shrink-0 overflow-clip rounded-xl border border-border bg-background text-foreground shadow-2xl transition-[width] duration-300 ease-out",
+            // Inside the frame, `min-h-screen` means the device viewport, not
+            // the browser window — keeps full-height pages true to export.
+            "[&_.min-h-screen]:min-h-[var(--studio-vh)]",
             mode === "edit" && "select-none"
           )}
           data-studio-canvas
-          style={{ width: DEVICE_WIDTHS[device] }}
+          style={
+            {
+              width: DEVICE_WIDTHS[device],
+              "--studio-vh": `${DEVICE_VIEWPORT_HEIGHTS[device]}px`,
+            } as React.CSSProperties
+          }
         >
           <CanvasNode isRoot node={root} />
         </div>

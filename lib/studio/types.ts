@@ -23,7 +23,29 @@ export type JustifyContent =
 /** Spacing values are px on the Tailwind spacing scale (snapped on edit). */
 export type SpacingValue = number;
 
-export type SizeMode = "auto" | "full" | "fixed";
+/** Per-side spacing in px on the Tailwind scale. */
+export type SpacingSides = {
+  top: number;
+  right: number;
+  bottom: number;
+  left: number;
+};
+
+export function uniformSides(value: number): SpacingSides {
+  return { top: value, right: value, bottom: value, left: value };
+}
+
+export type SizeMode = "auto" | "fit" | "full" | "fixed";
+
+/** One axis of a node's position within its parent. */
+export type PlaceValue = "auto" | "start" | "center" | "end";
+
+/**
+ * Per-node placement inside the parent, expressed semantically and resolved
+ * to `self-*` / auto-margin utilities based on the parent's flow direction —
+ * so a single component can sit centered without touching its siblings.
+ */
+export type NodePlace = { h: PlaceValue; v: PlaceValue };
 
 export type NodeSize = {
   mode: SizeMode;
@@ -51,8 +73,12 @@ type BaseNode = {
   customClasses?: string;
   width?: NodeSize;
   height?: NodeSize;
-  /** Uniform margin in px, snapped to the Tailwind scale. */
-  margin?: SpacingValue;
+  /** Per-side margin in px, snapped to the Tailwind scale. */
+  margin?: SpacingSides;
+  /** Per-side padding in px, snapped to the Tailwind scale. */
+  padding?: SpacingSides;
+  /** Position within the parent (self-alignment + auto margins). */
+  place?: NodePlace;
 };
 
 export type ContainerLayout = {
@@ -74,6 +100,12 @@ export type ContainerStyle = {
   shadow: ContainerShadow;
   /** Optional max-width in px (snapped). 0 = none. */
   maxWidth: number;
+  /**
+   * Stretch to at least the viewport height (`min-h-screen`). Combined with
+   * center alignment this lets content sit in the middle of the page instead
+   * of always flowing from the top.
+   */
+  fullHeight: boolean;
 };
 
 export type ContainerNode = BaseNode & {
@@ -153,6 +185,13 @@ export const DEVICE_WIDTHS: Record<Device, number> = {
   desktop: 1200,
   tablet: 768,
   mobile: 390,
+};
+
+/** Emulated viewport height per device — what `min-h-screen` means on canvas. */
+export const DEVICE_VIEWPORT_HEIGHTS: Record<Device, number> = {
+  desktop: 800,
+  tablet: 1024,
+  mobile: 844,
 };
 
 export type CanvasTheme = "light" | "dark";

@@ -9,7 +9,9 @@
 import {
   baseNodeClasses,
   containerClasses,
+  containerFlow,
   dedupeClasses,
+  type ParentFlow,
   textClasses,
 } from "./tailwind";
 import { collectComponents, getChildren } from "./tree";
@@ -204,8 +206,12 @@ export function classNameProp(classes: string[]): string | undefined {
   return deduped.length > 0 ? deduped.join(" ") : undefined;
 }
 
-function mergeBaseClasses(element: JsxElement, node: StudioNode): JsxElement {
-  const base = baseNodeClasses(node);
+function mergeBaseClasses(
+  element: JsxElement,
+  node: StudioNode,
+  parentFlow: ParentFlow
+): JsxElement {
+  const base = baseNodeClasses(node, parentFlow);
   if (base.length === 0) {
     return element;
   }
@@ -224,7 +230,8 @@ function mergeBaseClasses(element: JsxElement, node: StudioNode): JsxElement {
 
 export function emitNode(
   node: StudioNode,
-  registry: CodegenRegistry
+  registry: CodegenRegistry,
+  parentFlow: ParentFlow = "column"
 ): JsxElement | null {
   if (node.hidden) {
     return null;
@@ -233,18 +240,18 @@ export function emitNode(
   if (node.kind === "text") {
     return {
       tag: node.tag,
-      props: { className: classNameProp(textClasses(node)) },
+      props: { className: classNameProp(textClasses(node, parentFlow)) },
       children: node.text ? [node.text] : [],
     };
   }
 
   if (node.kind === "container") {
     const children = node.children
-      .map((child) => emitNode(child, registry))
+      .map((child) => emitNode(child, registry, containerFlow(node)))
       .filter((child): child is JsxElement => child !== null);
     return {
       tag: "div",
-      props: { className: classNameProp(containerClasses(node)) },
+      props: { className: classNameProp(containerClasses(node, parentFlow)) },
       children,
     };
   }
@@ -253,10 +260,11 @@ export function emitNode(
   if (!emitter) {
     return null;
   }
+  // Dropped children of components (e.g. CardContent) flow as a column.
   const children = (node.children ?? [])
-    .map((child) => emitNode(child, registry))
+    .map((child) => emitNode(child, registry, "column"))
     .filter((child): child is JsxElement => child !== null);
-  return mergeBaseClasses(emitter(node, children), node);
+  return mergeBaseClasses(emitter(node, children), node, parentFlow);
 }
 
 /* ------------------------------------------------------------------ */

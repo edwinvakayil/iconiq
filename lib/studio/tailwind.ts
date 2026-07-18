@@ -6,7 +6,21 @@
  * when no utility exists (fixed widths that fall off the scale).
  */
 
-import type { ContainerNode, NodeSize, StudioNode, TextNode } from "./types";
+import type {
+  ContainerNode,
+  NodePlace,
+  NodeSize,
+  SpacingSides,
+  StudioNode,
+  TextNode,
+} from "./types";
+
+/** Flow of the parent a node sits in — drives self-alignment mapping. */
+export type ParentFlow = "row" | "column" | "grid";
+
+export function containerFlow(node: ContainerNode): ParentFlow {
+  return node.layout.mode === "grid" ? "grid" : node.layout.direction;
+}
 
 const WHITESPACE_REGEX = /\s+/;
 
@@ -82,6 +96,9 @@ const WIDTH_SCALE: Record<number, string> = {
 function sizeClass(axis: "w" | "h", size: NodeSize | undefined): string | null {
   if (!size || size.mode === "auto") {
     return null;
+  }
+  if (size.mode === "fit") {
+    return `${axis}-fit`;
   }
   if (size.mode === "full") {
     return `${axis}-full`;
@@ -163,12 +180,115 @@ function pushClass(list: string[], value: string | null | undefined) {
   }
 }
 
-/** Classes shared by every node kind (size, margin, custom). */
-export function baseNodeClasses(node: StudioNode): string[] {
+/**
+ * Per-side spacing classes with the tightest utility spelling: one `m-4`
+ * when uniform, `my-*`/`mx-*` pairs when symmetric, individual `mt-*`… only
+ * when truly asymmetric. Zero sides emit nothing.
+ */
+export function sideSpacingClasses(
+  prefix: "m" | "p",
+  sides: SpacingSides | undefined
+): string[] {
+  if (!sides) {
+    return [];
+  }
+  const { top, right, bottom, left } = sides;
+  if (top === 0 && right === 0 && bottom === 0 && left === 0) {
+    return [];
+  }
+  const classes: string[] = [];
+  if (top === right && right === bottom && bottom === left) {
+    pushClass(classes, spacingClass(prefix, top));
+    return classes;
+  }
+  if (top === bottom && left === right) {
+    pushClass(classes, spacingClass(`${prefix}y`, top));
+    pushClass(classes, spacingClass(`${prefix}x`, left));
+    return classes;
+  }
+  pushClass(classes, spacingClass(`${prefix}t`, top));
+  pushClass(classes, spacingClass(`${prefix}r`, right));
+  pushClass(classes, spacingClass(`${prefix}b`, bottom));
+  pushClass(classes, spacingClass(`${prefix}l`, left));
+  return classes;
+}
+
+const SELF_ALIGN_CLASSES: Record<"start" | "center" | "end", string> = {
+  start: "self-start",
+  center: "self-center",
+  end: "self-end",
+};
+
+const JUSTIFY_SELF_CLASSES: Record<"start" | "center" | "end", string> = {
+  start: "justify-self-start",
+  center: "justify-self-center",
+  end: "justify-self-end",
+};
+
+/**
+ * Resolve a node's semantic placement into utilities, relative to the parent
+ * flow: cross axis uses `self-*`, main axis uses auto margins (the classic
+ * `mx-auto` / `my-auto` idiom), grids use `justify-self-*` + `self-*`.
+ */
+function gridPlaceClasses(place: NodePlace): string[] {
+  const classes: string[] = [];
+  if (place.h !== "auto") {
+    classes.push(JUSTIFY_SELF_CLASSES[place.h]);
+  }
+  if (place.v !== "auto") {
+    classes.push(SELF_ALIGN_CLASSES[place.v]);
+  }
+  return classes;
+}
+
+/** Main-axis placement in a flex parent via the auto-margin idiom. */
+function mainAxisPlaceClass(
+  main: "start" | "center" | "end",
+  isColumn: boolean
+): string {
+  if (main === "center") {
+    return isColumn ? "my-auto" : "mx-auto";
+  }
+  const [before, after] = isColumn ? ["mt", "mb"] : ["ml", "mr"];
+  return main === "start" ? `${after}-auto` : `${before}-auto`;
+}
+
+export function placeClasses(
+  place: NodePlace | undefined,
+  parentFlow: ParentFlow
+): string[] {
+  if (!place || (place.h === "auto" && place.v === "auto")) {
+    return [];
+  }
+  if (parentFlow === "grid") {
+    return gridPlaceClasses(place);
+  }
+
+  const isColumn = parentFlow === "column";
+  const cross = isColumn ? place.h : place.v;
+  const main = isColumn ? place.v : place.h;
+
+  const classes: string[] = [];
+  if (cross !== "auto") {
+    classes.push(SELF_ALIGN_CLASSES[cross]);
+  }
+  if (main !== "auto") {
+    classes.push(mainAxisPlaceClass(main, isColumn));
+  }
+  return classes;
+}
+
+/** Classes shared by every node kind (size, margin, padding, placement…). */
+export function baseNodeClasses(
+  node: StudioNode,
+  parentFlow: ParentFlow = "column"
+): string[] {
   const classes: string[] = [];
   pushClass(classes, sizeClass("w", node.width));
   pushClass(classes, sizeClass("h", node.height));
-  pushClass(classes, spacingClass("m", node.margin ?? 0));
+  classes.push(...placeClasses(node.place, parentFlow));
+  classes.push(...sideSpacingClasses("m", node.margin));
+  classes.push(...sideSpacingClasses("p", node.padding));
   if (node.customClasses) {
     classes.push(...node.customClasses.split(WHITESPACE_REGEX).filter(Boolean));
   }
@@ -176,7 +296,10 @@ export function baseNodeClasses(node: StudioNode): string[] {
 }
 
 /** The complete, export-ready class list for a container node. */
-export function containerClasses(node: ContainerNode): string[] {
+export function containerClasses(
+  node: ContainerNode,
+  parentFlow: ParentFlow = "column"
+): string[] {
   const { layout, style } = node;
   const classes: string[] = [];
 
@@ -206,13 +329,16 @@ export function containerClasses(node: ContainerNode): string[] {
     classes.push("border", "border-border");
   }
   pushClass(classes, SHADOW_CLASSES[style.shadow]);
+  if (style.fullHeight) {
+    classes.push("min-h-screen");
+  }
   if (style.maxWidth > 0) {
     classes.push(
       MAX_WIDTH_SCALE[style.maxWidth] ?? `max-w-[${style.maxWidth}px]`
     );
   }
 
-  classes.push(...baseNodeClasses(node));
+  classes.push(...baseNodeClasses(node, parentFlow));
   return dedupeClasses(classes);
 }
 
@@ -225,13 +351,23 @@ const TEXT_TAG_CLASSES: Record<TextNode["tag"], string> = {
   span: "text-sm",
 };
 
-export function textClasses(node: TextNode): string[] {
+/** Typography-only classes — used by the canvas, whose wrapper carries base. */
+export function textStyleClasses(node: TextNode): string[] {
   const classes = TEXT_TAG_CLASSES[node.tag].split(" ");
   if (node.muted) {
     classes.push("text-muted-foreground");
   }
-  classes.push(...baseNodeClasses(node));
-  return dedupeClasses(classes);
+  return classes;
+}
+
+export function textClasses(
+  node: TextNode,
+  parentFlow: ParentFlow = "column"
+): string[] {
+  return dedupeClasses([
+    ...textStyleClasses(node),
+    ...baseNodeClasses(node, parentFlow),
+  ]);
 }
 
 export function dedupeClasses(classes: string[]): string[] {

@@ -20,7 +20,9 @@ import { useStudioStore } from "@/lib/studio/store";
 import {
   baseNodeClasses,
   containerClasses,
-  textClasses,
+  containerFlow,
+  type ParentFlow,
+  textStyleClasses,
 } from "@/lib/studio/tailwind";
 import type {
   ComponentNode,
@@ -128,9 +130,11 @@ function SelectionChrome({
 const ContainerView = memo(function ContainerView({
   node,
   isRoot,
+  parentFlow,
 }: {
   node: ContainerNode;
   isRoot?: boolean;
+  parentFlow: ParentFlow;
 }) {
   const { isSelected, isHovered, isDropParent, isEditing } = useNodeInteraction(
     node.id
@@ -147,11 +151,13 @@ const ContainerView = memo(function ContainerView({
   return (
     <div
       className={cn(
-        containerClasses(node).join(" "),
+        containerClasses(node, parentFlow).join(" "),
         "relative",
         isEditing && isEmpty && "min-h-16",
         isEditing && !isRoot && "rounded-[3px]",
-        isRoot && "min-h-full"
+        // tw-merge would drop the style's min-h-screen in favor of this
+        // canvas-only fallback, so skip it for full-height pages.
+        isRoot && !node.style.fullHeight && "min-h-full"
       )}
       {...{
         [NODE_ATTR]: node.id,
@@ -160,7 +166,17 @@ const ContainerView = memo(function ContainerView({
         [DIRECTION_ATTR]:
           node.layout.mode === "grid" ? "grid" : node.layout.direction,
       }}
-      onPointerDown={isRoot ? undefined : handlers.onPointerDown}
+      onPointerDown={
+        isRoot
+          ? (event) => {
+              // Clicking the page background (incl. the gap between children)
+              // returns to the Page panel so gap/padding stay reachable.
+              if (event.target === event.currentTarget) {
+                useStudioStore.getState().clearSelection();
+              }
+            }
+          : handlers.onPointerDown
+      }
       onPointerEnter={isRoot ? undefined : handlers.onPointerEnter}
       onPointerLeave={isRoot ? undefined : handlers.onPointerLeave}
     >
@@ -170,7 +186,11 @@ const ContainerView = memo(function ContainerView({
         </span>
       ) : null}
       {node.children.map((child) => (
-        <CanvasNode key={child.id} node={child} />
+        <CanvasNode
+          key={child.id}
+          node={child}
+          parentFlow={containerFlow(node)}
+        />
       ))}
       {isRoot ? null : (
         <SelectionChrome
@@ -190,7 +210,13 @@ const ContainerView = memo(function ContainerView({
   );
 });
 
-const TextView = memo(function TextView({ node }: { node: TextNode }) {
+const TextView = memo(function TextView({
+  node,
+  parentFlow,
+}: {
+  node: TextNode;
+  parentFlow: ParentFlow;
+}) {
   const { isSelected, isHovered, isDropParent, isEditing } = useNodeInteraction(
     node.id
   );
@@ -199,7 +225,7 @@ const TextView = memo(function TextView({ node }: { node: TextNode }) {
 
   return (
     <div
-      className={cn("relative", baseNodeClasses(node).join(" "))}
+      className={cn("relative", baseNodeClasses(node, parentFlow).join(" "))}
       {...{ [NODE_ATTR]: node.id, [NODE_ROOT_ATTR]: "" }}
       onPointerDown={handlers.onPointerDown}
       onPointerEnter={handlers.onPointerEnter}
@@ -207,7 +233,7 @@ const TextView = memo(function TextView({ node }: { node: TextNode }) {
     >
       <Tag
         className={cn(
-          textClasses(node).join(" "),
+          textStyleClasses(node).join(" "),
           isEditing && "cursor-default select-none"
         )}
       >
@@ -225,8 +251,10 @@ const TextView = memo(function TextView({ node }: { node: TextNode }) {
 
 const ComponentView = memo(function ComponentView({
   node,
+  parentFlow,
 }: {
   node: ComponentNode;
+  parentFlow: ParentFlow;
 }) {
   const { isSelected, isHovered, isDropParent, isEditing } = useNodeInteraction(
     node.id
@@ -261,7 +289,7 @@ const ComponentView = memo(function ComponentView({
         </span>
       ) : null}
       {(node.children ?? []).map((child) => (
-        <CanvasNode key={child.id} node={child} />
+        <CanvasNode key={child.id} node={child} parentFlow="column" />
       ))}
     </div>
   ) : undefined;
@@ -270,14 +298,19 @@ const ComponentView = memo(function ComponentView({
     <div
       className={cn(
         "relative flex min-w-0 flex-col items-stretch",
-        baseNodeClasses(node).join(" ")
+        baseNodeClasses(node, parentFlow).join(" ")
       )}
       {...{ [NODE_ATTR]: node.id, [NODE_ROOT_ATTR]: "" }}
       onPointerDown={handlers.onPointerDown}
       onPointerEnter={handlers.onPointerEnter}
       onPointerLeave={handlers.onPointerLeave}
     >
-      <div className={cn("min-w-0", isEditing && "pointer-events-none")}>
+      <div
+        className={cn(
+          "min-w-0",
+          isEditing && !def.interactivePreview && "pointer-events-none"
+        )}
+      >
         {def.render(node.props, droppableChildren)}
       </div>
       <SelectionChrome
@@ -293,18 +326,22 @@ const ComponentView = memo(function ComponentView({
 export const CanvasNode = memo(function CanvasNode({
   node,
   isRoot,
+  parentFlow = "column",
 }: {
   node: StudioNode;
   isRoot?: boolean;
+  parentFlow?: ParentFlow;
 }) {
   if (node.hidden) {
     return null;
   }
   if (node.kind === "container") {
-    return <ContainerView isRoot={isRoot} node={node} />;
+    return (
+      <ContainerView isRoot={isRoot} node={node} parentFlow={parentFlow} />
+    );
   }
   if (node.kind === "text") {
-    return <TextView node={node} />;
+    return <TextView node={node} parentFlow={parentFlow} />;
   }
-  return <ComponentView node={node} />;
+  return <ComponentView node={node} parentFlow={parentFlow} />;
 });

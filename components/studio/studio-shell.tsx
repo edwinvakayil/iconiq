@@ -30,6 +30,15 @@ export function StudioShell() {
     hydrate();
   }, [hydrate]);
 
+  // Full Tailwind vocabulary on canvas: the browser build of Tailwind
+  // generates any utility it finds in the DOM at runtime, so custom classes
+  // typed in the inspector render even when the compiled CSS lacks them.
+  useEffect(() => {
+    import("@tailwindcss/browser").catch(() => {
+      // Offline or blocked: canvas falls back to the compiled subset.
+    });
+  }, []);
+
   // Start with the whole frame visible.
   useEffect(() => {
     const frame = requestAnimationFrame(fitToScreen);

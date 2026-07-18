@@ -6,10 +6,8 @@
  */
 
 import {
-  HeadingIcon,
   LayoutGridIcon,
   type LucideIcon,
-  PilcrowIcon,
   RectangleHorizontalIcon,
   RectangleVerticalIcon,
   SearchIcon,
@@ -61,22 +59,6 @@ const LAYOUT_ENTRIES: PaletteEntry[] = [
     icon: LayoutGridIcon,
     spec: { kind: "container", preset: "grid" },
     keywords: "container grid columns layout",
-  },
-  {
-    key: "heading",
-    label: "Heading",
-    description: "Semantic heading text.",
-    icon: HeadingIcon,
-    spec: { kind: "text", tag: "h2" },
-    keywords: "text title heading typography",
-  },
-  {
-    key: "paragraph",
-    label: "Paragraph",
-    description: "Body copy text block.",
-    icon: PilcrowIcon,
-    spec: { kind: "text", tag: "p" },
-    keywords: "text body copy paragraph typography",
   },
 ];
 
@@ -162,11 +144,20 @@ export function StudioPalette() {
       entry.label.toLowerCase().includes(normalized);
 
     const result: Array<{ title: string; entries: PaletteEntry[] }> = [];
-    const layout = LAYOUT_ENTRIES.filter(matches);
-    if (layout.length > 0) {
-      result.push({ title: "Structure", entries: layout });
-    }
     for (const category of STUDIO_CATEGORIES) {
+      if (category === "Structure") {
+        const layout = LAYOUT_ENTRIES.filter(matches);
+        const structureComponents = STUDIO_COMPONENTS.filter(
+          (def) => def.category === "Structure"
+        )
+          .map(componentEntry)
+          .filter(matches);
+        const entries = [...layout, ...structureComponents];
+        if (entries.length > 0) {
+          result.push({ title: category, entries });
+        }
+        continue;
+      }
       const entries = STUDIO_COMPONENTS.filter(
         (def) => def.category === category
       )

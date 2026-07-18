@@ -5,9 +5,17 @@
  * deliberately lighter than the animated registry components it edits.
  */
 
-import { MinusIcon, PlusIcon } from "lucide-react";
-import { useId } from "react";
+import {
+  ImagePlusIcon,
+  Link2Icon,
+  MinusIcon,
+  PlusIcon,
+  Unlink2Icon,
+} from "lucide-react";
+import { useId, useState } from "react";
 
+import { SPACING_OPTIONS } from "@/lib/studio/tailwind";
+import { type SpacingSides, uniformSides } from "@/lib/studio/types";
 import { cn } from "@/lib/utils";
 
 /**
@@ -58,6 +66,52 @@ export function TextControl({
       placeholder={placeholder}
       value={value}
     />
+  );
+}
+
+/**
+ * Image URL input with a live thumbnail. Accepts absolute URLs or paths under
+ * /public (e.g. /assets/av1.png). The thumbnail hides itself while the URL
+ * doesn't resolve.
+ */
+export function ImageUrlControl({
+  value,
+  onChange,
+  placeholder = "https://… or /assets/…",
+}: {
+  value: string;
+  onChange: (value: string) => void;
+  placeholder?: string;
+}) {
+  return (
+    <div className="flex items-center gap-1.5">
+      {value ? (
+        // biome-ignore lint/performance/noImgElement: previews arbitrary user URLs; next/image needs domain config
+        <img
+          alt=""
+          className="size-7 shrink-0 rounded-md border border-border object-cover"
+          height={28}
+          onError={(event) => {
+            event.currentTarget.style.visibility = "hidden";
+          }}
+          onLoad={(event) => {
+            event.currentTarget.style.visibility = "visible";
+          }}
+          src={value}
+          width={28}
+        />
+      ) : (
+        <span className="flex size-7 shrink-0 items-center justify-center rounded-md border border-border border-dashed text-muted-foreground/60">
+          <ImagePlusIcon className="size-3" />
+        </span>
+      )}
+      <input
+        className={inputClassName}
+        onChange={(event) => onChange(event.target.value)}
+        placeholder={placeholder}
+        value={value}
+      />
+    </div>
   );
 }
 
@@ -206,6 +260,94 @@ export function SteppedNumberControl({
       >
         <PlusIcon className="size-3" />
       </button>
+    </div>
+  );
+}
+
+const SIDE_LABELS: Array<{ key: keyof SpacingSides; label: string }> = [
+  { key: "top", label: "Top" },
+  { key: "bottom", label: "Bottom" },
+  { key: "left", label: "Left" },
+  { key: "right", label: "Right" },
+];
+
+function sidesAreUniform(sides: SpacingSides): boolean {
+  return (
+    sides.top === sides.right &&
+    sides.right === sides.bottom &&
+    sides.bottom === sides.left
+  );
+}
+
+/**
+ * Box-model spacing editor. Linked mode edits all four sides at once;
+ * unlinking reveals a per-side stepper for top / bottom / left / right.
+ */
+export function SpacingSidesControl({
+  label,
+  value,
+  onChange,
+}: {
+  label: string;
+  value: SpacingSides | undefined;
+  onChange: (value: SpacingSides) => void;
+}) {
+  const sides = value ?? uniformSides(0);
+  const [linked, setLinked] = useState(() => sidesAreUniform(sides));
+
+  return (
+    <div className="flex flex-col gap-1.5 text-[12px]">
+      <div className="flex items-center justify-between">
+        <span className="font-medium text-muted-foreground">{label}</span>
+        <button
+          aria-label={linked ? `Edit ${label} per side` : `Link ${label} sides`}
+          className={cn(
+            "flex size-5 cursor-pointer items-center justify-center rounded transition-colors",
+            linked
+              ? "text-muted-foreground hover:text-foreground"
+              : "bg-accent text-foreground"
+          )}
+          onClick={() => {
+            if (!linked) {
+              // Re-linking collapses to the top value for all sides.
+              onChange(uniformSides(sides.top));
+            }
+            setLinked(!linked);
+          }}
+          title={linked ? "Edit each side" : "Link all sides"}
+          type="button"
+        >
+          {linked ? (
+            <Link2Icon className="size-3" />
+          ) : (
+            <Unlink2Icon className="size-3" />
+          )}
+        </button>
+      </div>
+      {linked ? (
+        <SteppedNumberControl
+          format={(step) => `${step}px`}
+          onChange={(next) => onChange(uniformSides(next))}
+          steps={SPACING_OPTIONS}
+          value={sides.top}
+        />
+      ) : (
+        <div className="grid grid-cols-2 gap-1.5">
+          {SIDE_LABELS.map(({ key, label: sideLabel }) => (
+            <div className="flex flex-col gap-0.5" key={key}>
+              <span className="text-[10px] text-muted-foreground uppercase tracking-wide">
+                {sideLabel}
+              </span>
+              <SteppedNumberControl
+                format={(step) => `${step}`}
+                onChange={(next) => onChange({ ...sides, [key]: next })}
+                steps={SPACING_OPTIONS}
+                value={sides[key]}
+              />
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

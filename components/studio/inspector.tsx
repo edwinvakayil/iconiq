@@ -11,15 +11,23 @@ import {
   AlignEndHorizontalIcon,
   AlignStartHorizontalIcon,
   BoxSelectIcon,
+  ChevronDownIcon,
+  ChevronUpIcon,
   CopyPlusIcon,
+  CornerLeftUpIcon,
   GroupIcon,
   Trash2Icon,
 } from "lucide-react";
 
-import { getComponentDef, type PropControl } from "@/lib/studio/registry";
+import { recordList } from "@/lib/studio/prop-items";
+import {
+  type FieldSpec,
+  getComponentDef,
+  type PropControl,
+} from "@/lib/studio/registry";
 import { useStudioStore } from "@/lib/studio/store";
 import { MAX_WIDTH_OPTIONS, SPACING_OPTIONS } from "@/lib/studio/tailwind";
-import { findNode } from "@/lib/studio/tree";
+import { findNode, findParent } from "@/lib/studio/tree";
 import type {
   ContainerNode,
   NodeSize,
@@ -27,11 +35,14 @@ import type {
   TextNode,
   TextTag,
 } from "@/lib/studio/types";
+import { cn } from "@/lib/utils";
 
 import {
   Field,
+  ImageUrlControl,
   SegmentedControl,
   SelectControl,
+  SpacingSidesControl,
   SteppedNumberControl,
   TextareaControl,
   TextControl,
@@ -200,9 +211,147 @@ function ControlRenderer({
         </Field>
       );
     }
+    case "image":
+      return (
+        <Field label={control.label}>
+          <ImageUrlControl
+            onChange={onChange}
+            value={typeof value === "string" ? value : ""}
+          />
+        </Field>
+      );
+    case "fieldList":
+      return (
+        <FieldListControl control={control} onChange={onChange} value={value} />
+      );
     default:
       return null;
   }
+}
+
+/** Per-field input inside a fieldList item card. */
+function FieldInput({
+  field,
+  value,
+  onChange,
+}: {
+  field: FieldSpec;
+  value: string;
+  onChange: (value: string) => void;
+}) {
+  if (field.input === "image") {
+    return (
+      <ImageUrlControl
+        onChange={onChange}
+        placeholder={field.placeholder}
+        value={value}
+      />
+    );
+  }
+  if (field.input === "textarea") {
+    return <TextareaControl onChange={onChange} value={value} />;
+  }
+  return (
+    <TextControl
+      onChange={onChange}
+      placeholder={field.placeholder ?? field.label}
+      value={value}
+    />
+  );
+}
+
+/**
+ * Editor for ordered lists of records (testimonials, logos, slides…). Items
+ * can be added, removed and reordered; each field renders its declared input.
+ */
+function FieldListControl({
+  control,
+  value,
+  onChange,
+}: {
+  control: Extract<PropControl, { kind: "fieldList" }>;
+  value: unknown;
+  onChange: (value: unknown) => void;
+}) {
+  const items = recordList(value);
+  const noun = control.itemNoun.toLowerCase();
+
+  const updateItem = (index: number, patch: Record<string, string>) => {
+    const updated = [...items];
+    updated[index] = { ...updated[index], ...patch };
+    onChange(updated);
+  };
+
+  const moveItem = (index: number, delta: -1 | 1) => {
+    const target = index + delta;
+    if (target < 0 || target >= items.length) {
+      return;
+    }
+    const updated = [...items];
+    const [moved] = updated.splice(index, 1);
+    updated.splice(target, 0, moved);
+    onChange(updated);
+  };
+
+  return (
+    <Field label={control.label}>
+      <div className="flex flex-col gap-2">
+        {items.map((item, index) => (
+          <div
+            className="flex flex-col gap-1.5 rounded-md border border-border p-1.5"
+            key={index}
+          >
+            <div className="flex items-center gap-0.5">
+              <span className="flex-1 font-medium text-[10px] text-muted-foreground uppercase tracking-wide">
+                {control.itemNoun} {index + 1}
+              </span>
+              <button
+                aria-label={`Move ${noun} up`}
+                className="cursor-pointer rounded p-0.5 text-muted-foreground transition-colors hover:text-foreground disabled:pointer-events-none disabled:opacity-30"
+                disabled={index === 0}
+                onClick={() => moveItem(index, -1)}
+                type="button"
+              >
+                <ChevronUpIcon className="size-3" />
+              </button>
+              <button
+                aria-label={`Move ${noun} down`}
+                className="cursor-pointer rounded p-0.5 text-muted-foreground transition-colors hover:text-foreground disabled:pointer-events-none disabled:opacity-30"
+                disabled={index === items.length - 1}
+                onClick={() => moveItem(index, 1)}
+                type="button"
+              >
+                <ChevronDownIcon className="size-3" />
+              </button>
+              <button
+                aria-label={`Remove ${noun}`}
+                className="cursor-pointer rounded p-0.5 text-muted-foreground transition-colors hover:text-red-500"
+                onClick={() => onChange(items.filter((_, i) => i !== index))}
+                type="button"
+              >
+                <Trash2Icon className="size-3" />
+              </button>
+            </div>
+            {control.fields.map((field) => (
+              <FieldInput
+                field={field}
+                key={field.key}
+                onChange={(next) => updateItem(index, { [field.key]: next })}
+                value={item[field.key] ?? ""}
+              />
+            ))}
+          </div>
+        ))}
+        <button
+          className="cursor-pointer rounded-md border border-border border-dashed py-1 text-[11px] text-muted-foreground transition-colors hover:border-solid hover:text-foreground"
+          onClick={() => onChange([...items, control.newItem()])}
+          type="button"
+        >
+          Add {noun}
+        </button>
+      </div>
+    </Field>
+  );
 }
 
 /* ------------------------------------------------------------------ */
@@ -211,7 +360,8 @@ function ControlRenderer({
 
 const SIZE_OPTIONS = [
   { label: "Auto", value: "auto" },
-  { label: "Fill", value: "full" },
+  { label: "Fit", value: "fit", title: "Hug the content" },
+  { label: "Fill", value: "full", title: "Fill the parent" },
   { label: "Fixed", value: "fixed" },
 ];
 
@@ -259,10 +409,65 @@ function SizeField({
   );
 }
 
+const PLACE_AXIS: Array<"start" | "center" | "end"> = [
+  "start",
+  "center",
+  "end",
+];
+
+/**
+ * 3×3 placement of the selection inside its parent (self-alignment + auto
+ * margins) — center one card without touching its siblings. A multi-
+ * selection is grouped into a stack first and moves as one unit. Clicking
+ * the active cell clears back to auto.
+ */
+function PlaceInParentGrid({ node }: { node?: StudioNode }) {
+  const placeSelection = useStudioStore((state) => state.placeSelection);
+  const place = node?.place ?? { h: "auto" as const, v: "auto" as const };
+
+  return (
+    <Field label="Position in parent">
+      <div className="grid w-fit grid-cols-3 gap-0.5 rounded-md border border-border bg-muted/40 p-1">
+        {PLACE_AXIS.flatMap((v) =>
+          PLACE_AXIS.map((h) => {
+            const active = place.v === v && place.h === h;
+            return (
+              <button
+                aria-label={`Place selection ${v} ${h}`}
+                aria-pressed={active}
+                className={cn(
+                  "flex size-6 cursor-pointer items-center justify-center rounded transition-colors duration-100",
+                  active ? "bg-background shadow-sm" : "hover:bg-background/60"
+                )}
+                key={`${v}-${h}`}
+                onClick={() => placeSelection(active ? undefined : { h, v })}
+                title={
+                  active
+                    ? "Clear placement"
+                    : `Place the selection ${v} / ${h} in its parent`
+                }
+                type="button"
+              >
+                <span
+                  className={cn(
+                    "size-1.5 rounded-full transition-colors",
+                    active ? "bg-sky-500" : "bg-muted-foreground/40"
+                  )}
+                />
+              </button>
+            );
+          })
+        )}
+      </div>
+    </Field>
+  );
+}
+
 function LayoutPanel({ node }: { node: StudioNode }) {
   const updateBase = useStudioStore((state) => state.updateBase);
   return (
     <Section title="Sizing & spacing">
+      <PlaceInParentGrid node={node} />
       <SizeField
         label="Width"
         onChange={(width) => updateBase(node.id, { width })}
@@ -273,14 +478,20 @@ function LayoutPanel({ node }: { node: StudioNode }) {
         onChange={(height) => updateBase(node.id, { height })}
         size={node.height}
       />
-      <Field label="Margin">
-        <SteppedNumberControl
-          format={(step) => `${step}px`}
-          onChange={(margin) => updateBase(node.id, { margin })}
-          steps={SPACING_OPTIONS}
-          value={node.margin ?? 0}
+      <SpacingSidesControl
+        key={`margin-${node.id}`}
+        label="Margin"
+        onChange={(margin) => updateBase(node.id, { margin })}
+        value={node.margin}
+      />
+      {node.kind === "container" ? null : (
+        <SpacingSidesControl
+          key={`padding-${node.id}`}
+          label="Padding"
+          onChange={(padding) => updateBase(node.id, { padding })}
+          value={node.padding}
         />
-      </Field>
+      )}
       <Field label="Custom Tailwind classes">
         <TextControl
           onChange={(customClasses) => updateBase(node.id, { customClasses })}
@@ -302,8 +513,66 @@ function LayoutPanel({ node }: { node: StudioNode }) {
 /* Container panels                                                    */
 /* ------------------------------------------------------------------ */
 
+type AnchorAxisValue = "start" | "center" | "end";
+
+const ANCHOR_AXIS: AnchorAxisValue[] = ["start", "center", "end"];
+
+/**
+ * 3×3 content-position picker: one click places the children (e.g. dead
+ * center) by setting align + justify together, mapped through the flex
+ * direction so "middle" always means the visual middle.
+ */
+function ContentPositionGrid({ node }: { node: ContainerNode }) {
+  const updateContainer = useStudioStore((state) => state.updateContainer);
+  const { layout } = node;
+  const isColumn = layout.mode === "grid" || layout.direction === "column";
+
+  // Vertical placement: justify for columns, align for rows (and vice versa).
+  const vertical = isColumn ? layout.justify : layout.align;
+  const horizontal = isColumn ? layout.align : layout.justify;
+
+  const apply = (v: AnchorAxisValue, h: AnchorAxisValue) => {
+    updateContainer(node.id, {
+      layout: isColumn ? { justify: v, align: h } : { justify: h, align: v },
+    });
+  };
+
+  return (
+    <Field label="Content position">
+      <div className="grid w-fit grid-cols-3 gap-0.5 rounded-md border border-border bg-muted/40 p-1">
+        {ANCHOR_AXIS.flatMap((v) =>
+          ANCHOR_AXIS.map((h) => {
+            const active = vertical === v && horizontal === h;
+            return (
+              <button
+                aria-label={`Place content ${v} ${h}`}
+                className={cn(
+                  "flex size-6 cursor-pointer items-center justify-center rounded transition-colors duration-100",
+                  active ? "bg-background shadow-sm" : "hover:bg-background/60"
+                )}
+                key={`${v}-${h}`}
+                onClick={() => apply(v, h)}
+                title={`Place content ${v} / ${h}`}
+                type="button"
+              >
+                <span
+                  className={cn(
+                    "size-1.5 rounded-full transition-colors",
+                    active ? "bg-sky-500" : "bg-muted-foreground/40"
+                  )}
+                />
+              </button>
+            );
+          })
+        )}
+      </div>
+    </Field>
+  );
+}
+
 function ContainerPanel({ node }: { node: ContainerNode }) {
   const updateContainer = useStudioStore((state) => state.updateContainer);
+  const updateBase = useStudioStore((state) => state.updateBase);
   const { layout, style } = node;
 
   return (
@@ -323,6 +592,14 @@ function ContainerPanel({ node }: { node: ContainerNode }) {
             value={layout.mode}
           />
         </Field>
+        <Field inline label="Full height">
+          <ToggleControl
+            onChange={(fullHeight) =>
+              updateContainer(node.id, { style: { fullHeight } })
+            }
+            value={style.fullHeight}
+          />
+        </Field>
         {layout.mode === "flex" ? (
           <>
             <Field label="Direction">
@@ -339,6 +616,7 @@ function ContainerPanel({ node }: { node: ContainerNode }) {
                 value={layout.direction}
               />
             </Field>
+            <ContentPositionGrid node={node} />
             <Field label="Align">
               <SegmentedControl
                 onChange={(align) =>
@@ -421,16 +699,12 @@ function ContainerPanel({ node }: { node: ContainerNode }) {
             value={layout.gap}
           />
         </Field>
-        <Field label="Padding">
-          <SteppedNumberControl
-            format={(step) => `${step}px`}
-            onChange={(padding) =>
-              updateContainer(node.id, { layout: { padding } })
-            }
-            steps={SPACING_OPTIONS}
-            value={layout.padding}
-          />
-        </Field>
+        <SpacingSidesControl
+          key={`padding-${node.id}`}
+          label="Padding"
+          onChange={(padding) => updateBase(node.id, { padding })}
+          value={node.padding}
+        />
       </Section>
       <Section title="Appearance">
         <Field label="Background">
@@ -577,9 +851,10 @@ function ActionsRow({ ids }: { ids: string[] }) {
       <button
         className={actionClass}
         onClick={() => wrapSelection()}
+        title="Group into a stack (⌘G). Shift-click nodes to multi-select."
         type="button"
       >
-        <GroupIcon className="size-3" /> Wrap
+        <GroupIcon className="size-3" /> Group
       </button>
       <button
         className={cnDanger(actionClass)}
@@ -596,6 +871,44 @@ function cnDanger(base: string): string {
   return `${base.replace("hover:text-foreground", "hover:text-red-500")} hover:border-red-200`;
 }
 
+/**
+ * Jump to the containing stack — the fastest route to its Gap/Padding
+ * controls. Selecting the page root maps to the empty selection (Page panel).
+ */
+function SelectParentButton({ nodeId }: { nodeId: string }) {
+  const root = useStudioStore((state) => state.project.root);
+  const select = useStudioStore((state) => state.select);
+  const clearSelection = useStudioStore((state) => state.clearSelection);
+  const location = findParent(root, nodeId);
+
+  if (!location) {
+    return null;
+  }
+  const parentIsRoot = location.parent.id === root.id;
+
+  return (
+    <button
+      className="flex cursor-pointer items-center gap-1 rounded-md border border-border px-1.5 py-0.5 text-[11px] text-muted-foreground transition-colors hover:bg-accent/70 hover:text-foreground"
+      onClick={() => {
+        if (parentIsRoot) {
+          clearSelection();
+        } else {
+          select([location.parent.id]);
+        }
+      }}
+      title={
+        parentIsRoot
+          ? "Select the page (gap, padding…)"
+          : "Select the containing stack (gap, padding…)"
+      }
+      type="button"
+    >
+      <CornerLeftUpIcon className="size-3" />
+      {parentIsRoot ? "Page" : "Parent"}
+    </button>
+  );
+}
+
 export function StudioInspector() {
   const selection = useStudioStore((state) => state.selection);
   const root = useStudioStore((state) => state.project.root);
@@ -609,12 +922,15 @@ export function StudioInspector() {
 
   return (
     <aside className="flex h-full w-64 shrink-0 flex-col border-border border-l bg-background">
-      <div className="border-border border-b px-3 py-2.5">
+      <div className="flex items-center justify-between border-border border-b px-3 py-2.5">
         <p className="font-medium text-[13px] text-foreground">
           {selectedNodes.length === 0 && "Page"}
           {selectedNodes.length === 1 && inspectorTitle(selectedNodes[0])}
           {selectedNodes.length > 1 && `${selectedNodes.length} selected`}
         </p>
+        {selectedNodes.length === 1 ? (
+          <SelectParentButton nodeId={selectedNodes[0].id} />
+        ) : null}
       </div>
       <div className="min-h-0 flex-1 overflow-y-auto">
         {selectedNodes.length === 0 ? <ContainerPanel node={root} /> : null}
@@ -660,9 +976,16 @@ export function StudioInspector() {
         {selectedNodes.length > 1 ? (
           <>
             <ActionsRow ids={selection} />
+            <Section title="Arrange">
+              <PlaceInParentGrid />
+              <p className="text-[11px] text-muted-foreground leading-relaxed">
+                Positioning groups the selection into a stack and moves it as
+                one unit — only these items, not the whole page.
+              </p>
+            </Section>
             <p className="px-3 py-3 text-[12px] text-muted-foreground leading-relaxed">
-              Wrap groups the selection into a stack. Hold Shift and click to
-              add or remove items.
+              Group wraps the selection into a stack (⌘G). Hold Shift and click
+              to add or remove items.
             </p>
           </>
         ) : null}

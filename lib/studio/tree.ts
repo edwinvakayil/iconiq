@@ -45,6 +45,7 @@ export function createContainer(
       border: false,
       shadow: "none",
       maxWidth: 0,
+      fullHeight: false,
       ...overrides.style,
     },
     children: overrides.children ?? [],
@@ -290,14 +291,22 @@ export function wrapInContainer(
   const ordered = siblings.filter((child) => ids.includes(child.id));
   const firstIndex = siblings.findIndex((child) => ids.includes(child.id));
 
+  // The wrapper inherits the parent's flow so grouping is visually a no-op:
+  // stacked items stay stacked, row items stay in a row, spacing preserved.
+  const parentLayout =
+    parent && parent.kind === "container" && parent.layout.mode === "flex"
+      ? parent.layout
+      : null;
+  const direction = parentLayout?.direction ?? "column";
+
   const wrapper = createContainer({
     layout: {
       mode: "flex",
-      direction: ordered.length > 1 ? "row" : "column",
+      direction,
       wrap: false,
-      gap: 16,
+      gap: parentLayout?.gap ?? 16,
       padding: 0,
-      align: ordered.length > 1 ? "center" : "stretch",
+      align: direction === "row" ? "center" : "stretch",
       justify: "start",
       columns: 2,
     },
