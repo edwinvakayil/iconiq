@@ -208,16 +208,18 @@ function CheckboxGroup({
                           exit={{
                             opacity: 0,
                             rotate: -8,
-                            scale: 0.86,
+                            scale: 0.25,
+                            filter: "blur(4px)",
                             transition: {
                               duration: 0.12,
                               ease: [0.4, 0, 1, 1],
                             },
                           }}
                           initial={{
-                            opacity: 0.92,
+                            opacity: 0,
                             rotate: -5,
-                            scale: 0.78,
+                            scale: 0.25,
+                            filter: "blur(4px)",
                           }}
                           key="check"
                           transition={springCheck}

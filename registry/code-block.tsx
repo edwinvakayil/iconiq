@@ -223,7 +223,7 @@ function CopyButton({
       data-slot="code-block-copy"
       onClick={onCopy}
       type="button"
-      whileTap={reducedMotion ? undefined : { scale: 0.95 }}
+      whileTap={reducedMotion ? undefined : { scale: 0.96 }}
     >
       <span className="relative size-3.5">
         <AnimatePresence initial={false}>
@@ -231,8 +231,8 @@ function CopyButton({
             <motion.span
               animate={{ opacity: 1, scale: 1 }}
               className="absolute inset-0 flex items-center justify-center"
-              exit={{ opacity: 0, scale: 0.4 }}
-              initial={{ opacity: 0, scale: 0.4 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              initial={{ opacity: 0, scale: 0.95 }}
               key="check"
               transition={iconTransition}
             >
@@ -242,8 +242,8 @@ function CopyButton({
             <motion.span
               animate={{ opacity: 1, scale: 1 }}
               className="absolute inset-0 flex items-center justify-center"
-              exit={{ opacity: 0, scale: 0.4 }}
-              initial={{ opacity: 0, scale: 0.4 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              initial={{ opacity: 0, scale: 0.95 }}
               key="copy"
               transition={iconTransition}
             >

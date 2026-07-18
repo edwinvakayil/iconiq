@@ -125,7 +125,7 @@ function MobileNav({ className }: { className?: string }) {
       <PopoverTrigger asChild>
         <button
           className={cn(
-            "h-8 touch-manipulation items-center justify-start gap-2.5 p-0 hover:bg-transparent focus-visible:bg-transparent focus-visible:ring-0 active:bg-transparent dark:hover:bg-transparent",
+            "after:-translate-1/2 relative h-8 touch-manipulation items-center justify-start gap-2.5 p-0 after:absolute after:top-1/2 after:left-1/2 after:size-11 hover:bg-transparent focus-visible:bg-transparent focus-visible:ring-0 active:bg-transparent dark:hover:bg-transparent",
             className
           )}
           type="button"
@@ -134,13 +134,13 @@ function MobileNav({ className }: { className?: string }) {
             <div className="relative size-4">
               <span
                 className={cn(
-                  "absolute left-0 block h-0.5 w-4 bg-foreground transition-all duration-100",
+                  "absolute left-0 block h-0.5 w-4 bg-foreground transition-transform duration-100",
                   open ? "top-[0.45rem] -rotate-45" : "top-1"
                 )}
               />
               <span
                 className={cn(
-                  "absolute left-0 block h-0.5 w-4 bg-foreground transition-all duration-100",
+                  "absolute left-0 block h-0.5 w-4 bg-foreground transition-transform duration-100",
                   open ? "top-[0.45rem] rotate-45" : "top-2.5"
                 )}
               />

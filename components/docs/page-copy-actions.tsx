@@ -84,18 +84,18 @@ export function PageCopyActions({
           <span className="relative inline-flex size-4 shrink-0 items-center justify-center">
             <Copy
               className={cn(
-                "absolute size-4 text-muted-foreground transition-all dark:text-[#b5b5b5]",
+                "absolute size-4 text-muted-foreground transition-[opacity,transform,filter] duration-300 ease-[cubic-bezier(0.2,0,0,1)] dark:text-[#b5b5b5]",
                 copied
-                  ? "scale-70 opacity-0 blur-[2px]"
+                  ? "scale-[0.25] opacity-0 blur-[4px]"
                   : "scale-100 opacity-100 blur-none"
               )}
             />
             <Check
               className={cn(
-                "absolute size-4 text-emerald-500 transition-all",
+                "absolute size-4 text-emerald-500 transition-[opacity,transform,filter] duration-300 ease-[cubic-bezier(0.2,0,0,1)]",
                 copied
                   ? "scale-100 opacity-100 blur-none"
-                  : "scale-70 opacity-0 blur-[2px]"
+                  : "scale-[0.25] opacity-0 blur-[4px]"
               )}
             />
           </span>

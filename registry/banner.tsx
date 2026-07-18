@@ -180,7 +180,7 @@ function BannerDismiss({
       )}
       onClick={onClick}
       type="button"
-      whileTap={reducedMotion ? undefined : { scale: 0.9 }}
+      whileTap={reducedMotion ? undefined : { scale: 0.96 }}
     >
       <X className="size-4" />
     </motion.button>

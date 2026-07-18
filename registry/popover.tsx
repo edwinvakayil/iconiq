@@ -149,7 +149,7 @@ const PopoverContentPanel = React.forwardRef<
         scale: 0.985,
         filter: "blur(4px)",
         ...initialOffset[resolvedSide],
-        transition: { duration: 0.2, ease: "easeIn" },
+        transition: { duration: 0.2, ease: "easeOut" },
       }}
       initial={{
         opacity: 0,

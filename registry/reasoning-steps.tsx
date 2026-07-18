@@ -245,7 +245,7 @@ function StepGlyph({
         {status === "done" ? (
           <motion.span
             animate={{ scale: 1, opacity: 1 }}
-            initial={reduceMotion ? false : { scale: 0.5, opacity: 0 }}
+            initial={reduceMotion ? false : { scale: 0.96, opacity: 0 }}
             key="done"
             transition={GLYPH_SPRING}
           >
@@ -255,7 +255,7 @@ function StepGlyph({
           <motion.span
             animate={{ scale: 1, opacity: 1 }}
             className="size-1.5 rounded-full bg-foreground"
-            initial={reduceMotion ? false : { scale: 0.5, opacity: 0 }}
+            initial={reduceMotion ? false : { scale: 0.96, opacity: 0 }}
             key="active"
             transition={GLYPH_SPRING}
           />
@@ -568,7 +568,7 @@ function ReasoningStepsTrigger({
           <motion.button
             {...restTriggerProps}
             transition={TRIGGER_PRESS}
-            whileTap={reduceMotion ? undefined : { scale: 0.99 }}
+            whileTap={reduceMotion ? undefined : { scale: 0.96 }}
           >
             <TriggerLabel
               activeStep={activeStep}

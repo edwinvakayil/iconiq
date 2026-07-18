@@ -298,11 +298,11 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         animate={
           animatedWidth
             ? {
-                scale: canAnimate && isPressed ? 0.985 : 1,
+                scale: canAnimate && isPressed ? 0.96 : 1,
                 width: animatedWidth,
               }
             : {
-                scale: canAnimate && isPressed ? 0.985 : 1,
+                scale: canAnimate && isPressed ? 0.96 : 1,
               }
         }
         className={cn(

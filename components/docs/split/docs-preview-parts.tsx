@@ -51,7 +51,7 @@ function PreviewToolbarCell({
   return (
     <div
       className={cn(
-        "flex size-8 shrink-0 items-center justify-center rounded-2xl bg-zinc-200/65 text-foreground/65 dark:bg-zinc-800/75",
+        "flex size-8 shrink-0 items-center justify-center rounded-[10px] bg-zinc-200/65 text-foreground/65 dark:bg-zinc-800/75",
         active &&
           "bg-foreground text-background dark:bg-zinc-100 dark:text-zinc-900",
         className
@@ -63,7 +63,7 @@ function PreviewToolbarCell({
 }
 
 const previewToolbarIconClass =
-  "flex size-full items-center justify-center rounded-2xl text-current transition-all ease-in-out active:scale-95";
+  "flex size-full items-center justify-center rounded-[10px] text-current transition-[color,transform] ease-in-out active:scale-[0.96]";
 
 export function DocsPreviewToolbar({
   githubHref = LINK.GITHUB,
@@ -290,7 +290,7 @@ export function DocsPreviewSettingsToggle({
         aria-label={active ? "Close settings" : "Open settings"}
         aria-pressed={active}
         className={cn(
-          "pointer-events-auto flex size-11 items-center justify-center rounded-full border border-border/40 bg-white/80 text-foreground/70 shadow-[0_8px_32px_rgba(0,0,0,0.08)] backdrop-blur-xl transition-all ease-in-out hover:text-foreground active:scale-95 dark:border-white/[0.06] dark:bg-[#121212]/80",
+          "pointer-events-auto flex size-11 items-center justify-center rounded-full border border-border/40 bg-white/80 text-foreground/70 shadow-[0_8px_32px_rgba(0,0,0,0.08)] backdrop-blur-xl transition-[color,transform] ease-in-out hover:text-foreground active:scale-[0.96] dark:border-white/[0.06] dark:bg-[#121212]/80",
           active &&
             "bg-foreground text-background dark:bg-zinc-100 dark:text-zinc-900"
         )}
@@ -313,7 +313,7 @@ export function DocsPreviewSettingsPanel({
   title: string;
 }) {
   return (
-    <AnimatePresence>
+    <AnimatePresence initial={false}>
       {show ? (
         <motion.aside
           animate={{ opacity: 1, y: 0 }}
@@ -522,7 +522,7 @@ export function DocsPreviewPersonalizeDrawer({
   }
 
   return ReactDOM.createPortal(
-    <AnimatePresence>
+    <AnimatePresence initial={false}>
       {showPersonalize ? (
         <motion.div
           animate={{ y: 0 }}
@@ -642,7 +642,7 @@ export function DocsPreviewSourceDrawer({
   }
 
   return ReactDOM.createPortal(
-    <AnimatePresence>
+    <AnimatePresence initial={false}>
       {showSource ? (
         <motion.div
           animate={{ y: 0 }}

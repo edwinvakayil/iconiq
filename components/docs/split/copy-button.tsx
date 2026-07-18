@@ -25,7 +25,7 @@ export function CopyButton({
   return (
     <button
       aria-label={copied ? "Copied" : "Copy code"}
-      className={`${absolute ? "absolute top-3 right-3" : ""} z-10 rounded-lg p-2 transition-all duration-200 ${
+      className={`${absolute ? "absolute top-3 right-3" : ""} z-10 rounded-lg p-2 transition-colors duration-200 ${
         copied
           ? "bg-transparent text-green-600 dark:text-green-400"
           : "bg-transparent text-zinc-500 hover:text-zinc-950 dark:text-zinc-400 dark:hover:text-zinc-50"

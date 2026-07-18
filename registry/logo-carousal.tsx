@@ -105,7 +105,7 @@ const LogoColumn = memo(function LogoColumn({
         {logos[0]}
       </div>
 
-      <AnimatePresence mode="sync">
+      <AnimatePresence initial={false} mode="sync">
         <motion.div
           animate={{
             opacity: 1,

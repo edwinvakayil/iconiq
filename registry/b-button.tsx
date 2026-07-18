@@ -336,14 +336,14 @@ const loadingLabelVariants = {
   exit: {
     filter: "blur(3px)",
     opacity: 0,
-    scale: 0.985,
+    scale: 0.96,
     transition: loadingLabelExitTransition,
     y: -4,
   },
   initial: {
     filter: "blur(3px)",
     opacity: 0,
-    scale: 0.985,
+    scale: 0.96,
     y: 4,
   },
 } as const;
@@ -373,7 +373,7 @@ function getButtonAnimate(
   reduceMotion: boolean | null
 ) {
   const shouldReduceMotion = reduceMotion === true;
-  const pressScale = canAnimate && isPressed && !shouldReduceMotion ? 0.985 : 1;
+  const pressScale = canAnimate && isPressed && !shouldReduceMotion ? 0.96 : 1;
 
   if (animatedWidth) {
     return {

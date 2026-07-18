@@ -191,7 +191,7 @@ const autocompleteListThumbClassName =
   "relative rounded-full bg-muted-foreground/50 bg-[color:color-mix(in_oklch,var(--ic-muted-foreground),transparent_35%)]";
 
 const autocompleteInputShellClassName =
-  "group flex h-11 w-full items-center gap-1 border border-input bg-background pl-3 pr-2 text-base transition-all sm:text-sm hover:border-ring/40 focus-within:border-ring focus-within:ring-1 focus-within:ring-ring/25 [&:has(input[aria-invalid=true])]:border-destructive [&:has(input[aria-invalid=true])]:ring-1 [&:has(input[aria-invalid=true])]:ring-destructive/20 dark:[&:has(input[aria-invalid=true])]:border-destructive/50 dark:[&:has(input[aria-invalid=true])]:ring-destructive/40";
+  "group flex h-11 w-full items-center gap-1 border border-input bg-background pl-3 pr-2 text-base transition-[border-color,box-shadow] sm:text-sm hover:border-ring/40 focus-within:border-ring focus-within:ring-1 focus-within:ring-ring/25 [&:has(input[aria-invalid=true])]:border-destructive [&:has(input[aria-invalid=true])]:ring-1 [&:has(input[aria-invalid=true])]:ring-destructive/20 dark:[&:has(input[aria-invalid=true])]:border-destructive/50 dark:[&:has(input[aria-invalid=true])]:ring-destructive/40";
 
 const autocompleteInputClassName =
   "h-full w-full min-w-0 flex-1 bg-transparent text-[16px] text-foreground placeholder:text-muted-foreground focus:outline-none disabled:cursor-not-allowed sm:text-sm";
@@ -389,7 +389,7 @@ function AutocompleteTrigger({
       aria-expanded={open}
       aria-label={open ? "Collapse suggestions" : "Open suggestions"}
       className={cn(
-        "flex size-8 shrink-0 items-center justify-center text-muted-foreground transition hover:bg-accent/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/30 disabled:cursor-not-allowed disabled:opacity-50",
+        "flex size-8 shrink-0 items-center justify-center text-muted-foreground transition-colors hover:bg-accent/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/30 disabled:cursor-not-allowed disabled:opacity-50",
         controlCornerClassName,
         className
       )}

@@ -20,8 +20,8 @@ const instantTransition = { duration: 0 } as const;
 
 const dotMotion = {
   animate: { scale: 1, opacity: 1 },
-  exit: { scale: 0, opacity: 0 },
-  initial: { scale: 0, opacity: 0 },
+  exit: { scale: 0.95, opacity: 0 },
+  initial: { scale: 0.95, opacity: 0 },
   transition: {
     type: "spring" as const,
     stiffness: 500,

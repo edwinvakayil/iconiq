@@ -624,7 +624,7 @@ function DropdownOption({
         <motion.span
           animate={{ opacity: 1, scale: 1, y: 0 }}
           className="relative z-10 flex size-5 shrink-0 items-center justify-center text-foreground"
-          initial={{ opacity: 0, scale: 0.78, y: 1 }}
+          initial={{ opacity: 0, scale: 0.96, y: 1 }}
           transition={dropdownCheckSpring}
         >
           <Check className="h-4 w-4" />
@@ -2004,7 +2004,7 @@ export function AIInput({
 
             <button
               aria-label="Send message"
-              className={`flex size-8 shrink-0 items-center justify-center rounded-full transition-all sm:size-9 ${hasValue ? "bg-foreground text-background hover:opacity-90" : "cursor-default bg-muted-foreground/50 text-background"}`}
+              className={`flex size-8 shrink-0 items-center justify-center rounded-full transition-[background-color,opacity,transform] sm:size-9 ${hasValue ? "bg-foreground text-background hover:opacity-90" : "cursor-default bg-muted-foreground/50 text-background"}`}
               disabled={!hasValue}
               onClick={handleSend}
               type="button"

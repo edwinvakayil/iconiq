@@ -1078,7 +1078,7 @@ function SelectItem({
             style={itemStyle}
             transition={PRESS_SPRING}
             variants={itemVariants}
-            whileTap={isDisabled ? undefined : { scale: 0.985 }}
+            whileTap={isDisabled ? undefined : { scale: 0.96 }}
           >
             {isActive ? (
               <motion.span

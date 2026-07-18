@@ -198,7 +198,7 @@ const popupMotion = {
 };
 
 const comboboxInputShellClassName =
-  "group flex w-full items-center gap-1 border border-input bg-background pl-3.5 pr-1 text-base transition-all sm:text-sm hover:border-ring/40 focus-within:border-ring focus-within:ring-1 focus-within:ring-ring/25 [&:has(input[aria-invalid=true])]:border-destructive [&:has(input[aria-invalid=true])]:ring-1 [&:has(input[aria-invalid=true])]:ring-destructive/20 dark:[&:has(input[aria-invalid=true])]:border-destructive/50 dark:[&:has(input[aria-invalid=true])]:ring-destructive/40";
+  "group flex w-full items-center gap-1 border border-input bg-background pl-3.5 pr-1 text-base transition-[border-color,box-shadow] sm:text-sm hover:border-ring/40 focus-within:border-ring focus-within:ring-1 focus-within:ring-ring/25 [&:has(input[aria-invalid=true])]:border-destructive [&:has(input[aria-invalid=true])]:ring-1 [&:has(input[aria-invalid=true])]:ring-destructive/20 dark:[&:has(input[aria-invalid=true])]:border-destructive/50 dark:[&:has(input[aria-invalid=true])]:ring-destructive/40";
 
 const comboboxInputClassName =
   "h-full w-full flex-1 bg-transparent text-[16px] text-foreground placeholder:text-muted-foreground focus:outline-none disabled:cursor-not-allowed sm:text-sm";
@@ -385,7 +385,7 @@ function ComboboxTrigger({
       aria-expanded={open}
       aria-label={open ? "Collapse options" : "Open options"}
       className={cn(
-        "flex size-8 shrink-0 items-center justify-center text-muted-foreground transition hover:bg-accent/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/30 disabled:cursor-not-allowed disabled:opacity-50",
+        "flex size-8 shrink-0 items-center justify-center text-muted-foreground transition-colors hover:bg-accent/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/30 disabled:cursor-not-allowed disabled:opacity-50",
         controlCornerClassName,
         className
       )}
@@ -767,8 +767,16 @@ function ComboboxItemCheckmark({
           <motion.span
             animate={{ scale: 1, rotate: 0 }}
             className="text-primary"
-            exit={prefersReducedMotion ? undefined : { scale: 0, rotate: 90 }}
-            initial={prefersReducedMotion ? false : { scale: 0, rotate: -90 }}
+            exit={
+              prefersReducedMotion
+                ? undefined
+                : { scale: 0.95, rotate: 90, opacity: 0 }
+            }
+            initial={
+              prefersReducedMotion
+                ? false
+                : { scale: 0.95, rotate: -90, opacity: 0 }
+            }
             transition={
               prefersReducedMotion ? INSTANT_TRANSITION : checkmarkTransition
             }
@@ -1035,7 +1043,7 @@ function ComboboxChip({
         <ComboboxPrimitive.ChipRemove
           aria-label="Remove item"
           className={cn(
-            "-ml-1 flex size-5 items-center justify-center opacity-50 transition hover:bg-accent/60 hover:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/30",
+            "-ml-1 flex size-5 items-center justify-center opacity-50 transition-colors hover:bg-accent/60 hover:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/30",
             controlCornerXsClassName
           )}
           data-slot="combobox-chip-remove"

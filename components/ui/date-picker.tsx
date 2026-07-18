@@ -25,7 +25,7 @@ const datePickerTriggerCornerClassName =
   "rounded-lg supports-[corner-shape:squircle]:corner-squircle supports-[corner-shape:squircle]:rounded-[11px]";
 
 const datePickerInputShellClassName = cn(
-  "group flex w-full items-center border border-border bg-card text-left text-foreground text-sm transition-all focus-within:border-foreground/30 hover:border-foreground/30",
+  "group flex w-full items-center border border-border bg-card text-left text-foreground text-sm transition-[border-color,box-shadow] focus-within:border-foreground/30 hover:border-foreground/30",
   "[&:has(input:disabled)]:cursor-not-allowed [&:has(input:disabled)]:opacity-50",
   "[&:has(input[aria-invalid=true])]:border-destructive"
 );

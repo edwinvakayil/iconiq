@@ -167,8 +167,8 @@ export function Tooltip({
                   <motion.span
                     animate={{ scale: 1 }}
                     className={tooltipArrowClassName}
-                    exit={{ scale: 0 }}
-                    initial={{ scale: 0 }}
+                    exit={{ scale: 0.95, opacity: 0 }}
+                    initial={{ scale: 0.95, opacity: 0 }}
                     transition={{
                       type: "spring",
                       stiffness: 500,

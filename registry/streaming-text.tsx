@@ -257,8 +257,8 @@ const StreamingText = forwardRef<HTMLSpanElement, StreamingTextProps>(
                         // breathes with the pulse at zero per-frame cost.
                         "shadow-[0_0_0.7em_rgba(56,189,248,0.55)] dark:shadow-[0_0_0.7em_rgba(125,211,252,0.45)]"
                       )}
-                      exit={{ opacity: 0, scale: 0 }}
-                      initial={{ opacity: 0, scale: 0 }}
+                      exit={{ opacity: 0, scale: 0.95 }}
+                      initial={{ opacity: 0, scale: 0.95 }}
                       transition={{
                         opacity: {
                           duration: 1.2,

@@ -64,7 +64,7 @@ export function Checkbox({
         className="relative flex h-5 w-5 items-center justify-center rounded border"
         initial={false}
         transition={{ type: "spring", stiffness: 500, damping: 30 }}
-        whileTap={{ scale: 0.88 }}
+        whileTap={{ scale: 0.96 }}
       >
         <motion.svg
           animate={value ? "checked" : "unchecked"}

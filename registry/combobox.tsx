@@ -370,13 +370,13 @@ export function Combobox({
                         />
                       )}
                       <span className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center">
-                        <AnimatePresence>
+                        <AnimatePresence initial={false}>
                           {isSelected && (
                             <motion.span
-                              animate={{ scale: 1, rotate: 0 }}
+                              animate={{ scale: 1, rotate: 0, opacity: 1 }}
                               className="text-primary"
-                              exit={{ scale: 0, rotate: 90 }}
-                              initial={{ scale: 0, rotate: -90 }}
+                              exit={{ scale: 0.95, rotate: 90, opacity: 0 }}
+                              initial={{ scale: 0.95, rotate: -90, opacity: 0 }}
                               transition={{
                                 type: "spring",
                                 stiffness: 500,
@@ -424,7 +424,7 @@ export function Combobox({
     >
       <div
         className={cn(
-          "group flex h-11 w-full items-center gap-2 border border-input bg-background px-3.5 text-base shadow-sm transition-all sm:text-sm",
+          "group flex h-11 w-full items-center gap-2 border border-input bg-background px-3.5 text-base shadow-sm transition-[border-color,box-shadow] sm:text-sm",
           controlCornerClassName,
           "hover:border-ring/40 hover:shadow",
           "focus-within:border-ring focus-within:ring-2 focus-within:ring-ring/30",
@@ -481,7 +481,7 @@ export function Combobox({
           <button
             aria-label="Clear selection"
             className={cn(
-              "flex h-10 w-10 shrink-0 items-center justify-center text-muted-foreground opacity-70 transition hover:bg-accent/60 hover:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/30",
+              "flex h-10 w-10 shrink-0 items-center justify-center text-muted-foreground opacity-70 transition-colors hover:bg-accent/60 hover:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/30",
               controlCornerClassName
             )}
             onClick={(e) => {
