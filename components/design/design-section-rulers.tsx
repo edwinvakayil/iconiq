@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 
-const hatchCornerClass =
+export const hatchCornerClass =
   "bg-[repeating-linear-gradient(45deg,color-mix(in_oklch,var(--muted-foreground)_40%,transparent)_0,color-mix(in_oklch,var(--muted-foreground)_40%,transparent)_1px,transparent_0,transparent_50%)] bg-size-[5px_5px] bg-fixed opacity-80";
 
 export function DesignSectionRulers({ className }: { className?: string }) {

@@ -7,8 +7,8 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/home-button";
-import { HomeCommunityVoices } from "@/components/home-community-voices";
 import { HomeMcpCta } from "@/components/home-mcp-cta";
+import { HomeSponsors } from "@/components/home-sponsors";
 import { VercelOssBadge } from "@/components/vercel-oss-badge";
 import { cn } from "@/lib/utils";
 import { useMotionTier } from "@/providers/motion-tier";
@@ -582,14 +582,14 @@ export function HomeHero() {
           </motion.div>
           {showcase}
           <HomeMcpCta />
-          <HomeCommunityVoices />
+          <HomeSponsors />
         </motion.div>
       ) : (
         <div className="w-full px-4 sm:px-6 lg:px-42">
           <div className="w-full max-w-[760px] text-left">{content}</div>
           {showcase}
           <HomeMcpCta />
-          <HomeCommunityVoices />
+          <HomeSponsors />
         </div>
       )}
     </section>
