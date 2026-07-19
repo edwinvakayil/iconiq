@@ -972,6 +972,21 @@
       ]
     },
     {
+      "name": "marker",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": ["motion"],
+      "devDependencies": [],
+      "title": "Marker",
+      "description": "Hand-drawn text annotations — wavy, circle, highlight, underline, and more — that draw themselves in like ink as they scroll into view, with an optional animate prop for a fully static render.",
+      "files": [
+        {
+          "path": "marker.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "message",
       "type": "registry:ui",
       "registryDependencies": [],

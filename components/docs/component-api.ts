@@ -1222,6 +1222,77 @@ const weekCalendarApiDetails: DetailItem[] = [
   registryItem("week-calendar.json", ["motion", "lucide-react", "date-fns"]),
 ];
 
+const markerApiDetails: DetailItem[] = [
+  {
+    id: "marker",
+    title: "Marker",
+    summary:
+      "Hand-drawn text annotation with a sketchy, displacement-filtered ink stroke that draws itself in like a pen when it scrolls into view.",
+    fields: [
+      field({
+        name: "children",
+        type: "ReactNode",
+        description: "Text or inline content to annotate.",
+      }),
+      field({
+        name: "variant",
+        type: '"wavy" | "circle" | "highlight" | "underline" | "line" | "dottedUnderline" | "doubleUnderline" | "strikethrough" | "crossOut" | "arrow" | "bracket" | "box"',
+        defaultValue: '"wavy"',
+        description: "Hand-drawn annotation style.",
+      }),
+      field({
+        name: "color",
+        type: "string",
+        description:
+          "Overrides the variant's default ink color. Accepts a Tailwind text-color class, such as text-pink-400.",
+      }),
+      field({
+        name: "animate",
+        type: "boolean",
+        defaultValue: "true",
+        description:
+          "Whether the decoration draws itself in when scrolled into view. Set to false to render it fully static.",
+      }),
+      field({
+        name: "duration",
+        type: "number",
+        defaultValue: "0.7",
+        description: "Draw duration in seconds for a single stroke.",
+      }),
+      field({
+        name: "delay",
+        type: "number",
+        defaultValue: "0",
+        description: "Delay in seconds before the draw-in starts.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description: "Optional class names applied to the wrapping span.",
+      }),
+    ],
+    notes: [
+      "Every stroke is rendered as an SVG path run through an feTurbulence/feDisplacementMap filter, so straight geometry reads as a slightly imperfect, hand-drawn line.",
+      "Multi-stroke variants — circle, doubleUnderline, crossOut, arrow, bracket — draw their second stroke on a short stagger after the first, like a second pen pass.",
+      "line and dottedUnderline aren't SVG paths, so they draw in with a matching left-to-right scale reveal instead of a path trace.",
+      "Filter ids are scoped per instance with useId, so multiple Marker instances on one page never collide.",
+    ],
+  },
+  {
+    id: "marker-motion",
+    title: "Motion behavior",
+    summary:
+      "The draw-in plays once per instance, the first time it scrolls into view, and always respects prefers-reduced-motion.",
+    notes: [
+      "Animation is driven by whileInView with viewport once: true, so each Marker draws itself in a single time and stays drawn on subsequent scrolls.",
+      "When useReducedMotion() reports a reduced-motion preference, or when animate is false, every stroke renders fully drawn immediately with no motion.",
+      "Stroke variants animate through Motion's pathLength, which works for any curve without measuring the path in JavaScript.",
+      "The highlight fill can't use pathLength since it has no stroke to trace, so it sweeps in with a left-anchored scaleX instead.",
+    ],
+  },
+  registryItem("marker.json", ["motion"]),
+];
+
 const chartsApiDetails: DetailItem[] = [
   {
     id: "chart-container",
@@ -12512,6 +12583,7 @@ export {
   calendarApiDetails,
   datePickerApiDetails,
   weekCalendarApiDetails,
+  markerApiDetails,
   cardApiDetails,
   chartsApiDetails,
   breadcrumbsApiDetails,

@@ -428,6 +428,12 @@ const REGISTRY_UI_META: Record<
       "Week strip that morphs into a full month grid, with a shared-layout spring pill and a draggable grabber handle.",
     dependencies: ["motion", "lucide-react", "date-fns"],
   },
+  marker: {
+    title: "Marker",
+    description:
+      "Hand-drawn text annotations — wavy, circle, highlight, underline, and more — that draw themselves in like ink as they scroll into view, with an optional animate prop for a fully static render.",
+    dependencies: ["motion"],
+  },
   card: {
     title: "Card",
     description:

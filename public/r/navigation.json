@@ -144,6 +144,11 @@
           "href": "/display-and-content/favicon-badge"
         },
         {
+          "slug": "marker",
+          "label": "Marker",
+          "href": "/display-and-content/marker"
+        },
+        {
           "slug": "progress",
           "label": "Progress",
           "href": "/display-and-content/progress"

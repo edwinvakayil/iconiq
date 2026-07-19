@@ -36,6 +36,8 @@ const componentSummaries: Record<string, string> = {
     "Week calendar docs in the Display & Content section for a week strip that morphs into a full month grid, with a shared-layout spring selection pill and a draggable grabber handle.",
   "/display-and-content/favicon-badge":
     "Circular website favicon badge in the Display & Content section with optional label text and spring entrance animation.",
+  "/display-and-content/marker":
+    "Marker docs in the Display & Content section for hand-drawn text annotations — wavy, circle, highlight, underline, and more — that draw themselves in like ink as they scroll into view, with an optional animate prop.",
   "/display-and-content/charts":
     "Charts docs in the Display & Content section, using the shared Iconiq Recharts shell with provider options visible but disabled because there is no Radix UI or Base UI variant.",
   "/display-and-content/rolling-digits":
@@ -166,6 +168,16 @@ const componentSummaries: Record<string, string> = {
 
 const extraComponentKeywordsBySlug: Record<string, string[]> = {
   card: ["panel", "surface", "container"],
+  marker: [
+    "text annotation",
+    "highlighter",
+    "hand-drawn underline",
+    "sketch underline",
+    "rough notation",
+    "wavy underline",
+    "circle annotation",
+    "strikethrough",
+  ],
   "week-calendar": [
     "week calendar",
     "week strip",
