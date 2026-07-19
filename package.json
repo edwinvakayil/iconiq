@@ -26,7 +26,7 @@
   },
   "dependencies": {
     "@base-ui/react": "^1.5.0",
-    "@flags-sdk/vercel": "^1.4.0",
+    "@flags-sdk/vercel": "^1.4.5",
     "@radix-ui/react-accordion": "^1.2.14",
     "@radix-ui/react-alert-dialog": "^1.1.16",
     "@radix-ui/react-avatar": "^1.2.1",
