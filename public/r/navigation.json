@@ -182,6 +182,11 @@
           "slug": "verified-badge",
           "label": "Verified Badge",
           "href": "/display-and-content/verified-badge"
+        },
+        {
+          "slug": "week-calendar",
+          "label": "Week Calendar",
+          "href": "/display-and-content/week-calendar"
         }
       ]
     },

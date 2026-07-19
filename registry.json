@@ -1774,6 +1774,21 @@
       ]
     },
     {
+      "name": "week-calendar",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": ["motion", "lucide-react", "date-fns"],
+      "devDependencies": [],
+      "title": "Week Calendar",
+      "description": "Week strip that morphs into a full month grid, with a shared-layout spring pill and a draggable grabber handle.",
+      "files": [
+        {
+          "path": "week-calendar.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "wheel-picker",
       "type": "registry:ui",
       "registryDependencies": [],

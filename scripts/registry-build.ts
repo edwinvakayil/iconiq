@@ -422,6 +422,12 @@ const REGISTRY_UI_META: Record<
     ],
     registryDependencies: ["calendar"],
   },
+  "week-calendar": {
+    title: "Week Calendar",
+    description:
+      "Week strip that morphs into a full month grid, with a shared-layout spring pill and a draggable grabber handle.",
+    dependencies: ["motion", "lucide-react", "date-fns"],
+  },
   card: {
     title: "Card",
     description:

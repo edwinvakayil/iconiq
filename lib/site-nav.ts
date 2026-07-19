@@ -70,6 +70,7 @@ export const SITE_SECTIONS = [
       { label: "Table", href: "/display-and-content/table" },
       { label: "Timezone", href: "/display-and-content/timezone" },
       { label: "Verified Badge", href: "/display-and-content/verified-badge" },
+      { label: "Week Calendar", href: "/display-and-content/week-calendar" },
     ],
   },
   {

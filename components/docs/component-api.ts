@@ -1131,6 +1131,97 @@ const datePickerApiDetails: DetailItem[] = [
   ),
 ];
 
+const weekCalendarApiDetails: DetailItem[] = [
+  {
+    id: "week-calendar",
+    title: "WeekCalendar",
+    summary:
+      "Week strip that morphs into a full month grid. A shared-layout spring pill glides between selected and today cells, week and month changes cross-dissolve with a soft blur, and the grid expands or collapses through a draggable grabber handle.",
+    fields: [
+      field({
+        name: "selected",
+        type: "Date | null",
+        description:
+          "Controlled selected day. Pass null to clear the highlight.",
+      }),
+      field({
+        name: "defaultSelected",
+        type: "Date | null",
+        defaultValue: "today",
+        description:
+          "Initial selected day for uncontrolled usage when selected is not provided.",
+      }),
+      field({
+        name: "onSelect",
+        type: "(date: Date) => void",
+        description:
+          "Called when the user taps a day, including days outside the active month while expanded.",
+      }),
+      field({
+        name: "expanded",
+        type: "boolean",
+        description:
+          "Controlled morph state. false renders the week strip, true renders the full month grid.",
+      }),
+      field({
+        name: "defaultExpanded",
+        type: "boolean",
+        defaultValue: "false",
+        description:
+          "Initial expanded state for uncontrolled usage when expanded is not provided.",
+      }),
+      field({
+        name: "onExpandedChange",
+        type: "(expanded: boolean) => void",
+        description:
+          "Called whenever the week/month morph toggles, from a grabber-handle drag or Enter/Space when it's focused.",
+      }),
+      field({
+        name: "weekStartsOn",
+        type: "0 | 1 | 2 | 3 | 4 | 5 | 6",
+        defaultValue: "0",
+        description:
+          "Overrides the first day of the week for both the weekday header and the rendered grid.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description: "Optional class names applied to the root surface.",
+      }),
+    ],
+    notes: [
+      "Controlled mode: pass selected and/or expanded and respond to onSelect and onExpandedChange.",
+      "Uncontrolled mode: omit the controlled props and optionally seed with defaultSelected or defaultExpanded.",
+      "Selecting a day re-centers the anchor week, so collapsing after picking a day in a different week always shows that day's week.",
+    ],
+  },
+  {
+    id: "week-calendar-gestures",
+    title: "Gestures and morph behavior",
+    summary:
+      "Swipe the week strip to change weeks, drag the grabber handle to morph between week and month, and use the chevrons for single-step navigation.",
+    notes: [
+      "Collapsed: drag horizontally or use the chevrons to move by one week; the row cross-dissolves with a soft blur.",
+      "Expanded: the chevrons move by one month; the previously visible week stays anchored in place while the remaining weeks of the month spring in above and below it.",
+      "The grabber handle beneath the grid toggles on a vertical drag past a small threshold, or Enter/Space when it's focused — a plain tap does nothing.",
+      "The selected-day pill and the today ring share a layoutId per instance, so Motion animates them between cells instead of cutting between positions.",
+    ],
+  },
+  {
+    id: "week-calendar-a11y",
+    title: "Motion and accessibility",
+    summary:
+      "Spring transitions respect prefers-reduced-motion, and selection state is announced for screen readers.",
+    notes: [
+      "Day buttons expose aria-pressed for the selected day and a full spoken date via aria-label.",
+      "The expand toggle exposes aria-expanded, and a polite live region announces the currently selected date.",
+      "All layoutId and enter/exit springs are skipped when useReducedMotion() reports a reduced-motion preference, falling back to instant state changes.",
+      "Theme colors come from CSS variables, so the surface follows light/dark mode without client-side palette hydration.",
+    ],
+  },
+  registryItem("week-calendar.json", ["motion", "lucide-react", "date-fns"]),
+];
+
 const chartsApiDetails: DetailItem[] = [
   {
     id: "chart-container",
@@ -12420,6 +12511,7 @@ export {
   badgeApiDetails,
   calendarApiDetails,
   datePickerApiDetails,
+  weekCalendarApiDetails,
   cardApiDetails,
   chartsApiDetails,
   breadcrumbsApiDetails,

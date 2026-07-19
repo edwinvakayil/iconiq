@@ -32,6 +32,8 @@ const componentSummaries: Record<string, string> = {
     "Calendar docs in the Display & Content section with single and range selection, bounds, modifiers, locale labels, playground controls, and DatePicker pairing.",
   "/display-and-content/date-picker":
     "Date picker docs in the Display & Content section with a collapsible trigger and the shared Iconiq Calendar panel, spring open motion, and close-on-select behavior.",
+  "/display-and-content/week-calendar":
+    "Week calendar docs in the Display & Content section for a week strip that morphs into a full month grid, with a shared-layout spring selection pill and a draggable grabber handle.",
   "/display-and-content/favicon-badge":
     "Circular website favicon badge in the Display & Content section with optional label text and spring entrance animation.",
   "/display-and-content/charts":
@@ -164,6 +166,16 @@ const componentSummaries: Record<string, string> = {
 
 const extraComponentKeywordsBySlug: Record<string, string[]> = {
   card: ["panel", "surface", "container"],
+  "week-calendar": [
+    "week calendar",
+    "week strip",
+    "ios calendar",
+    "morphing calendar",
+    "month grid",
+    "date strip",
+    "reminders",
+    "swipe calendar",
+  ],
   "command-palette": [
     "command menu",
     "command palette",
