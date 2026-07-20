@@ -38,6 +38,8 @@ const componentSummaries: Record<string, string> = {
     "Circular website favicon badge in the Display & Content section with optional label text and spring entrance animation.",
   "/display-and-content/marker":
     "Marker docs in the Display & Content section for hand-drawn text annotations — wavy, circle, highlight, underline, and more — that draw themselves in like ink as they scroll into view, with an optional animate prop.",
+  "/display-and-content/rating":
+    "Rating docs in the Display & Content section for a compound Rating and RatingButton star rating control with hover preview, keyboard support, configurable size on the root, and a minimal scale-and-color transition.",
   "/display-and-content/charts":
     "Charts docs in the Display & Content section, using the shared Iconiq Recharts shell with provider options visible but disabled because there is no Radix UI or Base UI variant.",
   "/display-and-content/rolling-digits":
@@ -187,6 +189,18 @@ const extraComponentKeywordsBySlug: Record<string, string[]> = {
     "date strip",
     "reminders",
     "swipe calendar",
+  ],
+  rating: [
+    "star rating",
+    "star input",
+    "review stars",
+    "ios rating",
+    "app store rating",
+    "feedback stars",
+    "score",
+    "star size",
+    "icon size",
+    "large stars",
   ],
   "command-palette": [
     "command menu",

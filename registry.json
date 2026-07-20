@@ -1380,6 +1380,21 @@
       ]
     },
     {
+      "name": "rating",
+      "type": "registry:ui",
+      "registryDependencies": [],
+      "dependencies": ["@radix-ui/react-use-controllable-state", "motion"],
+      "devDependencies": [],
+      "title": "Rating",
+      "description": "Compound star rating built from Rating and RatingButton — hover to preview, click or use arrow keys to set the value, with configurable size on the root, a springy scale pop, and color fade that ripples across the stars.",
+      "files": [
+        {
+          "path": "rating.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "reasoning-steps",
       "type": "registry:ui",
       "registryDependencies": [],

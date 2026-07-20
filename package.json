@@ -49,6 +49,7 @@
     "@radix-ui/react-toggle-group": "^1.1.13",
     "@radix-ui/react-toolbar": "^1.1.14",
     "@radix-ui/react-tooltip": "^1.2.12",
+    "@radix-ui/react-use-controllable-state": "^1.2.3",
     "@sentry/nextjs": "^10.64.0",
     "@toolwind/corner-shape": "0.0.8-3",
     "@vercel/analytics": "^2.0.1",

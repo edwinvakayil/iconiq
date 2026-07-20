@@ -1293,6 +1293,127 @@ const markerApiDetails: DetailItem[] = [
   registryItem("marker.json", ["motion"]),
 ];
 
+const ratingApiDetails: DetailItem[] = [
+  {
+    id: "rating",
+    title: "Rating",
+    summary:
+      "Compound star rating root. Manages the current value, icon size, and shared interaction state for its RatingButton children — render one RatingButton per star.",
+    fields: [
+      field({
+        name: "children",
+        type: "ReactNode",
+        description: "One RatingButton per star. Their count is the scale.",
+      }),
+      field({
+        name: "value",
+        type: "number",
+        description: "Controlled rating value. Pair with onValueChange.",
+      }),
+      field({
+        name: "defaultValue",
+        type: "number",
+        defaultValue: "0",
+        description: "Initial rating for uncontrolled usage.",
+      }),
+      field({
+        name: "onValueChange",
+        type: "(value: number) => void",
+        description: "Called with the new value on click or arrow key.",
+      }),
+      field({
+        name: "onChange",
+        type: "(event, value: number) => void",
+        description:
+          "Lower-level change handler that also receives the originating mouse or keyboard event.",
+      }),
+      field({
+        name: "readOnly",
+        type: "boolean",
+        defaultValue: "false",
+        description:
+          "Renders every RatingButton as a native disabled button, for showing an existing rating without interaction.",
+      }),
+      field({
+        name: "size",
+        type: "number",
+        defaultValue: "20",
+        description:
+          "Icon size in pixels for all RatingButton children. Individual buttons can override with their own size prop.",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description: "Optional class names applied to the root element.",
+      }),
+    ],
+    notes: [
+      'The root is a role="radiogroup" (with aria-readonly reflecting readOnly) and moves DOM focus to the active star whenever keyboard navigation changes it.',
+      "Arrow Right/Left step the value by one once a star has focus; holding Shift or Cmd/Ctrl jumps straight to the last or first star.",
+      "Hovering a RatingButton previews that value without committing it — leaving the group falls back to the committed value.",
+      "Clicking the star that already matches the current value clears the rating back to 0.",
+      "Pass size on Rating to set the icon size for every star at once — individual RatingButton children can override when needed.",
+      "Children are normalized with Children.toArray, so conditionally rendering a RatingButton (e.g. `{cond && <RatingButton />}`) never leaves a gap in the star sequence or an inflated Arrow/Home/End total.",
+      'Accepts the rest of div\'s props (id, style, data-*, aria-*, and so on), so aria-label="Rating" can be overridden with your own label.',
+    ],
+  },
+  {
+    id: "rating-button",
+    title: "RatingButton",
+    summary:
+      "Renders a single star as an ARIA radio. Must be used inside Rating — reads shared state from context rather than taking a value prop directly.",
+    fields: [
+      field({
+        name: "icon",
+        type: "ReactElement",
+        defaultValue: "<StarIcon />",
+        description:
+          "Icon element to render. Swap in any icon — a Lucide icon or a custom SVG — as long as it accepts size and className.",
+      }),
+      field({
+        name: "size",
+        type: "number",
+        description:
+          "Icon size in pixels, forwarded to the icon element. Falls back to the parent Rating's size (default 20).",
+      }),
+      field({
+        name: "className",
+        type: "string",
+        description: "Optional class names applied to the button.",
+      }),
+      field({
+        name: "index",
+        type: "number",
+        description:
+          "Position in the scale. Injected automatically by Rating from child order — you don't need to pass it yourself.",
+      }),
+    ],
+    notes: [
+      'Each star is role="radio" with aria-checked reflecting whether it exactly matches the current value, and an aria-label ("Rate 3 stars") for its accessible name — the icon itself carries no text alternative.',
+      "Size inherits from the parent Rating (default 20px) unless overridden on the button itself.",
+      "The icon's fill is toggled with the fill-current utility, so the icon element must leave its own fill unset and rely on the root SVG's fill for that to take effect.",
+      "The default star icon is a single shared element reused across every instance, since it has no per-instance state — cloneElement still produces a distinct element per star.",
+    ],
+  },
+  {
+    id: "rating-motion",
+    title: "Motion behavior",
+    summary:
+      "Each star bounces through a couple of visible oscillations as it crosses the filled threshold, with a color fade underneath and a per-star stagger that ripples the effect across the row.",
+    notes: [
+      "Scale animates through a deliberately underdamped Motion spring, so it swings past its resting size a few times before settling — a real bounce, not a single overshoot.",
+      "Color still fades with a plain CSS transition, layered underneath the spring so the fill change reads as smooth rather than an abrupt swap.",
+      "Each star's spring is delayed by its index, so hovering across the row or jumping several values at once ripples left to right instead of popping all at once.",
+      "Hover adds its own quick scale-up, and tap adds a scale-down, independent of the fill animation, for tactile feedback while scanning the row.",
+      "When prefers-reduced-motion is set, every spring and stagger is skipped and stars snap directly to their resting scale.",
+    ],
+  },
+  registryItem("rating.json", [
+    "@radix-ui/react-use-controllable-state",
+    "motion",
+  ]),
+];
+
 const chartsApiDetails: DetailItem[] = [
   {
     id: "chart-container",
@@ -12584,6 +12705,7 @@ export {
   datePickerApiDetails,
   weekCalendarApiDetails,
   markerApiDetails,
+  ratingApiDetails,
   cardApiDetails,
   chartsApiDetails,
   breadcrumbsApiDetails,

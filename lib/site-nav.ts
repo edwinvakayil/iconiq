@@ -64,6 +64,7 @@ export const SITE_SECTIONS = [
       { label: "Favicon Badge", href: "/display-and-content/favicon-badge" },
       { label: "Marker", href: "/display-and-content/marker" },
       { label: "Progress", href: "/display-and-content/progress" },
+      { label: "Rating", href: "/display-and-content/rating" },
       { label: "Rolling Digits", href: "/display-and-content/rolling-digits" },
       { label: "Skeleton", href: "/display-and-content/skeleton" },
       { label: "Spinner", href: "/display-and-content/spinner" },

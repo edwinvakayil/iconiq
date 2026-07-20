@@ -154,6 +154,11 @@
           "href": "/display-and-content/progress"
         },
         {
+          "slug": "rating",
+          "label": "Rating",
+          "href": "/display-and-content/rating"
+        },
+        {
           "slug": "rolling-digits",
           "label": "Rolling Digits",
           "href": "/display-and-content/rolling-digits"

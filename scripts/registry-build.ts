@@ -434,6 +434,12 @@ const REGISTRY_UI_META: Record<
       "Hand-drawn text annotations — wavy, circle, highlight, underline, and more — that draw themselves in like ink as they scroll into view, with an optional animate prop for a fully static render.",
     dependencies: ["motion"],
   },
+  rating: {
+    title: "Rating",
+    description:
+      "Compound star rating built from Rating and RatingButton — hover to preview, click or use arrow keys to set the value, with configurable size on the root, a springy scale pop, and color fade that ripples across the stars.",
+    dependencies: ["@radix-ui/react-use-controllable-state", "motion"],
+  },
   card: {
     title: "Card",
     description:
