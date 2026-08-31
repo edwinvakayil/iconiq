@@ -50,7 +50,7 @@
     "@radix-ui/react-toolbar": "^1.1.19",
     "@radix-ui/react-tooltip": "^1.2.12",
     "@radix-ui/react-use-controllable-state": "^1.2.6",
-    "@sentry/nextjs": "^10.70.0",
+    "@sentry/nextjs": "^10.72.0",
     "@toolwind/corner-shape": "0.0.8-3",
     "@vercel/analytics": "^2.0.1",
     "@vercel/speed-insights": "^2.0.0",
